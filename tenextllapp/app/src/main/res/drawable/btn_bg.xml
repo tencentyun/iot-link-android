@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/btn_rad4_color_0052d9" android:state_enabled="true" />
+
+    <item android:drawable="@drawable/btn_rad4_color_0063e5" android:state_pressed="true" />
+
+    <item android:drawable="@drawable/btn_rad4_color_0063e5" android:state_hovered="true" />
+
+    <item android:drawable="@drawable/btn_rad4_color_660052d9" />
+
+</selector>

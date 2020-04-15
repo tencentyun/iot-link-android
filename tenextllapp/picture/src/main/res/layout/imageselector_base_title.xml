@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/common_normal_title_height_size"
+    android:background="@color/imageselector_titlebar_bg"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/iv_title_back"
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/imageselector_title_back_btn" />
+
+    <TextView
+        android:id="@+id/tv_title_left_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/iv_title_back"
+        android:text="图片"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/common_normal_font_size" />
+    
+     <TextView
+        android:gravity="center"
+        android:id="@+id/tv_title_commit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/imageselector_default_margin_right"
+        android:background="@drawable/imageselector_title_submit_btn"
+        android:padding="@dimen/imageselector_default_padding"
+        android:textColor="@color/imageselector_default_text_selector"
+        android:textSize="@dimen/common_normal_font_size" /> 
+
+</RelativeLayout>

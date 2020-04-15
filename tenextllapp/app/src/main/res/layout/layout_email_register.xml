@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="185dp">
+
+    <com.view.check.VerifyEdit
+            android:id="@+id/et_register_email"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:textCursorDrawable="@drawable/edit_blue_cursor"
+            android:layout_marginStart="24dp"
+            android:background="@color/white"
+            android:hint="@string/email_address"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_cccccc"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintBottom_toBottomOf="@+id/line_register_email"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/iv_register_email_clear" />
+
+    <ImageView
+            android:id="@+id/iv_register_email_clear"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="24dp"
+            android:padding="3dp"
+            android:src="@mipmap/icon_clear"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/et_register_email"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_register_email" />
+
+    <View
+            android:id="@+id/line_register_email"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="134dp"
+            android:layout_marginEnd="24dp"
+            android:background="@color/gray_dddddd"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+            android:id="@+id/tv_register_email_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red_eb3d3d"
+            android:textSize="@dimen/ts_10"
+            app:layout_constraintLeft_toLeftOf="@+id/line_register_email"
+            app:layout_constraintTop_toBottomOf="@+id/line_register_email" />
+
+    <TextView
+            android:id="@+id/tv_register_to_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/mobile_phone_number_to_register"
+            android:textColor="@color/blue_0052d9"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

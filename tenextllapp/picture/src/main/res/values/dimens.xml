@@ -1,0 +1,28 @@
+<resources>
+
+    <!-- 公共设置 -->
+    <!-- 下文字体 -->
+    <dimen name="common_normal_title_height_size">45dp</dimen>
+    <!-- 正文字体 -->
+    <dimen name="common_normal_font_size">17sp</dimen>
+    <dimen name="common_edit_height">30dp</dimen>
+    <!-- 说明字体 -->
+    <dimen name="common_describe_font_size">15sp</dimen>
+
+    <!-- 图片浏览器 -->
+    <dimen name="space_size">2dp</dimen>
+    <dimen name="imageselector_folder_cover_size">72dp</dimen>
+    <dimen name="imageselector_default_image_size">120dp</dimen>
+    <dimen name="imageselector_default_margin_right">10dp</dimen>
+    <dimen name="imageselector_default_margin_left">10dp</dimen>
+    <dimen name="imageselector_default_padding">5dp</dimen>
+    <dimen name="imageselector_default_bottom_text_size">12sp</dimen>
+
+
+    <dimen name="border_thickness">3dp</dimen>
+    <dimen name="corner_thickness">5dp</dimen>
+    <dimen name="guideline_thickness">1px</dimen>
+    <dimen name="corner_length">20dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+</resources>

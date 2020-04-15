@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/device_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".activity.DeviceDetailsActivity">
+
+    <!--    返回键-->
+    <include android:id="@+id/menu_device_detail"
+            layout="@layout/menu_back_layout"/>
+
+    <TextView
+            android:id="@+id/tv_device_alias_title"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="120dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/device_name"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+            android:id="@+id/tv_device_alias_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginEnd="48dp"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:textColor="@color/gray_cccccc"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_device_alias_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_device_alias_title" />
+
+    <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="13dp"
+            android:src="@mipmap/icon_right_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_device_alias_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_device_alias_title" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/gray_F2F4F5"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_alias_title" />
+
+    <TextView
+            android:id="@+id/tv_device_info_title"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/device_info"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_alias_title" />
+
+
+    <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="13dp"
+
+            android:src="@mipmap/icon_right_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_device_info_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_device_info_title" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/gray_F2F4F5"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_info_title" />
+
+
+    <TextView
+            android:id="@+id/tv_device_room_setting"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/room_setting"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_info_title" />
+
+
+    <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="13dp"
+            android:src="@mipmap/icon_right_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_device_room_setting"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_device_room_setting" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/gray_F2F4F5"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_room_setting" />
+
+    <TextView
+            android:id="@+id/tv_device_share"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/device_share"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_room_setting" />
+
+
+    <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="13dp"
+            android:src="@mipmap/icon_right_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_device_share"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_device_share" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/gray_F2F4F5"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_share" />
+
+    <TextView
+            android:id="@+id/tv_device_delete"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/btn_rad4_color_e54545"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_share" />
+
+    <View
+            android:id="@+id/device_detail_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.7"
+            android:background="@color/black"
+            android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
