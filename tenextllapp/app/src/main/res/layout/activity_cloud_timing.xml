@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".activity.CloudTimingActivity">
+
+    <include
+            android:id="@+id/menu_cloud_timing"
+            layout="@layout/menu_back_layout" />
+
+    <com.view.recyclerview.CRecyclerView
+            android:id="@+id/crv_cloud_timing"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu_cloud_timing" />
+
+
+    <RelativeLayout
+            android:id="@+id/rl_no_timing_project"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu_cloud_timing">
+
+        <ImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:src="@mipmap/image_no_timer"
+                android:layout_above="@+id/tv_no_timing_project"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="60dp" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tv_no_timing_project"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="38dp"
+                android:text="@string/no_and_add_timer"
+                android:textColor="@color/gray_cccccc"
+                android:textSize="@dimen/ts_14" />
+
+        <TextView
+                android:id="@+id/tv_no_timing_project"
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/btn_rad4_color_0052d9"
+                android:gravity="center"
+                android:text="@string/add_timer"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_20" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

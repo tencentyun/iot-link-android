@@ -1,0 +1,49 @@
+package com.kitlink.holder
+
+import android.content.Context
+import android.view.View
+import android.view.ViewGroup
+import com.kitlink.R
+import com.kitlink.entity.DevicePropertyEntity
+import com.util.date.DateFormatUtil
+import com.view.recyclerview.CRecyclerView
+import kotlinx.android.synthetic.main.control_simple_medium.view.*
+
+/**
+ * 暗黑主题小按钮：
+ */
+class ControlSimpleSmallHolder : CRecyclerView.CViewHolder<DevicePropertyEntity> {
+
+    constructor(context: Context, parent: ViewGroup, resId: Int) : super(context, parent, resId)
+
+    override fun show(position: Int) {
+        entity?.run {
+            itemView.tv_simple_medium_name.text = name
+            if (isBoolType()) {
+                itemView.simple_medium_switch.visibility = View.VISIBLE
+                itemView.tv_simple_medium_value.visibility = View.GONE
+                itemView.iv_simple_medium_next.visibility = View.GONE
+                itemView.simple_medium_switch.isChecked = (getValue() == "1")
+                itemView.simple_medium_switch.setOnClickListener {
+                    recyclerItemView?.doAction(this@ControlSimpleSmallHolder, it, position)
+                }
+                itemView.setOnClickListener(null)
+            } else {
+                itemView.simple_medium_switch.visibility = View.GONE
+                itemView.tv_simple_medium_value.visibility = View.VISIBLE
+                itemView.iv_simple_medium_next.visibility = View.VISIBLE
+                itemView.simple_medium_switch.setOnClickListener(null)
+                itemView.setOnClickListener {
+                    recyclerItemView?.doAction(this@ControlSimpleSmallHolder, it, position)
+                }
+            }
+            itemView.tv_simple_medium_value.text = getValueText()
+            when (id) {
+                "color" -> itemView.iv_simple_medium.setImageResource(R.mipmap.icon_control_color)
+                "power_switch" -> itemView.iv_simple_medium.setImageResource(R.mipmap.icon_control_switch)
+                else -> itemView.iv_simple_medium.setImageResource(R.mipmap.icon_control_brightness)
+            }
+        }
+    }
+
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <include
+            android:id="@+id/connecting"
+            layout="@layout/connecting"
+            android:visibility="visible" />
+
+    <include
+            android:id="@+id/connected"
+            layout="@layout/connected"
+            android:visibility="gone" />
+
+    <include
+            android:id="@+id/unconnected"
+            layout="@layout/unconnected"
+            android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

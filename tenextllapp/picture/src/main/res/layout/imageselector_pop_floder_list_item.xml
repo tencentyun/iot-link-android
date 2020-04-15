@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/imageselector_default_padding"
+    android:background="@drawable/imageselector_pop_list_item_selector" >
+
+    <ImageView
+        android:id="@+id/iv_folder_first_img"
+        android:layout_width="@dimen/imageselector_folder_cover_size"
+        android:layout_height="@dimen/imageselector_folder_cover_size"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/imageselector_default_margin_left"
+        android:scaleType="centerCrop"
+        android:src="@drawable/imageselector_default_error"
+        tools:src="@drawable/btn_back" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_toLeftOf="@+id/iv_indicator_select"
+        android:layout_toRightOf="@+id/iv_folder_first_img"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/tv_folder_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/common_normal_font_size"
+            tools:text="img" />
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/tv_folder_img_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#AFAFAF"
+            android:textSize="@dimen/imageselector_default_bottom_text_size"
+            tools:text="1张" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_indicator_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/imageselector_default_check" />
+
+</RelativeLayout>

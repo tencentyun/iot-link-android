@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black" >
+
+    <GridView
+        android:id="@+id/gv_imageselector_show_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:columnWidth="@dimen/imageselector_default_image_size"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth" />
+
+    <TextView
+        android:id="@+id/tv_found_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/imageselector_bottom_category_bg"
+        android:padding="@dimen/imageselector_default_padding"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/common_normal_font_size" />
+
+    <RelativeLayout
+        android:id="@+id/rl_footer_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_normal_title_height_size"
+        android:layout_alignParentBottom="true"
+        android:background="@color/imageselector_bottom_category_bg"
+        android:clickable="true" >
+
+        <Button
+            android:id="@+id/btn_category"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/imageselector_bottom_indicator"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:singleLine="true"
+            android:textColor="@color/imageselector_folder_text_selector"
+            android:textSize="@dimen/common_normal_font_size" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/btn_preview"
+            android:background="#8828292A" />
+
+        <Button
+            android:id="@+id/btn_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:minHeight="1dp"
+            android:minWidth="1dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/imageselector_folder_text_selector"
+            android:textSize="@dimen/common_normal_font_size"
+            tools:text="预览(1)" />
+    </RelativeLayout>
+
+</RelativeLayout>

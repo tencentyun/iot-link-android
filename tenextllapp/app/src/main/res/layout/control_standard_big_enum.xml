@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="388dp"
+        android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/tv_standard_big_enum_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:text="颜色"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_20" />
+
+    <TextView
+            android:id="@+id/tv_standard_big_enum_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:text="红色"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_36" />
+
+    <com.view.recyclerview.CRecyclerView
+            android:id="@+id/crv_standard_big_enum"
+            android:layout_width="match_parent"
+            android:layout_marginTop="44dp"
+            android:layout_height="140dp" />
+
+</LinearLayout>

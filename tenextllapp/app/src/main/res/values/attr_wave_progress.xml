@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="WaveProgress">
+        <attr name="wave_progress" format="integer" />
+        <attr name="wave_background" format="color|reference" />
+        <attr name="wave_first_background" format="color|reference" />
+        <attr name="wave_second_background" format="color|reference" />
+        <attr name="wave_height" format="dimension" />
+        <attr name="wave_width" format="dimension" />
+        <attr name="wave_duration" format="integer" />
+    </declare-styleable>
+</resources>

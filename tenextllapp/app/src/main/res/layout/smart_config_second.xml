@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <EditText
+            android:id="@+id/tv_select_wifi"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@color/translucent"
+            android:maxLines="1"
+            android:textColor="@color/black_333333"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/smart_second_line"
+            app:layout_constraintLeft_toLeftOf="@+id/smart_second_line"
+            app:layout_constraintRight_toLeftOf="@+id/iv_select_wifi" />
+
+    <ImageView
+            android:id="@+id/iv_select_wifi"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="11dp"
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/icon_black_next"
+            app:layout_constraintTop_toTopOf="@+id/tv_select_wifi"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_select_wifi"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    <View
+            android:id="@+id/smart_second_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="87dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/gray_dddddd"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+            android:id="@+id/smart_second_wifi_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="85dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/gray_dddddd"
+            app:layout_constraintTop_toBottomOf="@+id/smart_second_line" />
+
+
+    <com.view.check.VerifyEdit
+            android:id="@+id/et_select_wifi_pwd"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@color/translucent"
+            android:textCursorDrawable="@drawable/edit_blue_cursor"
+            android:hint="@string/smart_config_second_hint"
+            android:imeOptions="actionNone"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="#BABABA"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintBottom_toBottomOf="@+id/smart_second_wifi_pwd"
+            app:layout_constraintLeft_toLeftOf="@+id/smart_second_wifi_pwd"
+            app:layout_constraintRight_toLeftOf="@+id/iv_wifi_eye" />
+
+    <ImageView
+            android:id="@+id/iv_wifi_eye_clear"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="11dp"
+            android:src="@mipmap/icon_clear"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/et_select_wifi_pwd"
+            app:layout_constraintRight_toLeftOf="@+id/iv_wifi_eye"
+            app:layout_constraintTop_toTopOf="@id/et_select_wifi_pwd" />
+
+    <ImageView
+            android:id="@+id/iv_wifi_eye"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="11dp"
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/icon_invisible"
+            app:layout_constraintTop_toTopOf="@+id/et_select_wifi_pwd"
+            app:layout_constraintBottom_toBottomOf="@+id/et_select_wifi_pwd"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+            android:id="@+id/tv_wifi_commit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintTop_toBottomOf="@+id/smart_second_wifi_pwd" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
