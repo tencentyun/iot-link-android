@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:background="@mipmap/control_dark_light">
+
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
+
+    <TextView
+            android:id="@+id/tv_dark_big_int_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="亮度"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_20"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+            android:id="@+id/tv_dark_big_int_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="42%"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_36"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dark_big_int_name" />
+
+    <View
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/sp_dark_big_int"
+            app:layout_constraintLeft_toLeftOf="@+id/sp_dark_big_int"
+            app:layout_constraintRight_toRightOf="@+id/sp_dark_big_int"
+            android:background="@drawable/control_big_int_line_white"/>
+
+    <com.view.progress.SeekProgress
+            android:id="@+id/sp_dark_big_int"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="37dp"
+            android:layout_marginTop="58dp"
+            android:layout_marginEnd="37dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dark_big_int_value"
+            app:seek_bar_color="@drawable/control_dark_progress_bar"
+            app:seek_bar_radius="20dp"
+            app:seek_progress="42"
+            app:seek_first_color="@drawable/control_dark_first_progress"
+            app:seek_height="20dp"
+            app:seek_progress_background="@color/white"
+            app:seek_show_text="false" />
+
+    <ImageView
+            android:id="@+id/iv_dark_big_int_minus"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/icon_minus_white"
+            app:layout_constraintLeft_toLeftOf="@+id/sp_dark_big_int"
+            app:layout_constraintTop_toBottomOf="@+id/sp_dark_big_int" />
+
+    <ImageView
+            android:id="@+id/iv_dark_big_int_plus"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/icon_plus_white"
+            app:layout_constraintRight_toRightOf="@+id/sp_dark_big_int"
+            app:layout_constraintTop_toBottomOf="@+id/sp_dark_big_int" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

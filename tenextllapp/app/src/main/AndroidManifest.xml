@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.kitlink">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 读写短信的权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" /> <!-- 腾讯地图新增开始 -->
+    <!-- Android Q新增权限，允许应用在后台发起定位，如应用target为Q，请添加此权限 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- 如果设置了target >= 28 如果需要启动后台定位则必须声明这个权限 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 通过GPS得到精确位置 -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
+    <!-- 通过网络得到粗略位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 访问网络，某些位置信息需要从网络服务器获取 -->
+    <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
+    <!-- 访问WiFi状态，需要WiFi信息用于网络定位 -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> -->
+    <!-- 修改WiFi状态，发起WiFi扫描, 需要WiFi信息用于网络定位 -->
+    <!-- <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> -->
+    <!-- 访问网络状态, 检测网络的可用性，需要网络运营商相关信息用于网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 访问网络的变化, 需要某些信息用于网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 访问手机当前状态, 需要某些信息用于网络定位 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+            android:name=".App"
+            android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            android:usesCleartextTraffic="true">
+        <activity android:name=".activity.DeviceInfoActivity"></activity>
+        <activity android:name=".activity.SelectRoomActivity" />
+        <activity android:name=".activity.ShareActivity" />
+        <activity android:name=".activity.WeekRepeatActivity" />
+        <activity android:name=".activity.MemberActivity" />
+        <activity android:name=".activity.RoomActivity" />
+        <activity android:name=".activity.InviteMemberActivity" />
+        <activity android:name=".activity.FamilyAddressActivity" />
+        <activity android:name=".activity.FamilyListActivity" />
+        <activity android:name=".activity.ShareUserListActivity" />
+        <activity android:name=".activity.AddTimerActivity" />
+        <activity android:name=".activity.FamilyActivity" />
+        <activity android:name=".activity.RoomListActivity" />
+        <activity android:name=".activity.AddRoomActivity" />
+        <activity android:name=".activity.AddFamilyActivity" />
+        <activity android:name=".activity.CloudTimingActivity" /> <!-- 信鸽Android P -->
+        <uses-library
+                android:name="org.apache.http.legacy"
+                android:required="false" />
+
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".activity.LoginActivity"
+                android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.WebActivity" />
+        <activity android:name=".activity.DeviceDetailsActivity" />
+        <activity android:name=".activity.SmartConnectActivity" />
+        <activity android:name=".activity.ControlPanelActivity" />
+        <activity android:name=".activity.ResetPasswordActivity" />
+        <activity android:name=".activity.BindMobilePhoneActivity" />
+        <activity android:name=".activity.AboutUsActivity" />
+        <activity android:name=".activity.HelpCenterActivity" />
+        <activity
+                android:name=".activity.FeedbackActivity"
+                android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activity.UserInfoActivity" />
+        <activity android:name=".activity.SetPasswordActivity" />
+        <activity android:name=".activity.GetCodeActivity" />
+        <activity android:name=".activity.ForgotPasswordActivity" />
+        <activity android:name=".activity.CountryCodeActivity" />
+        <activity android:name=".activity.SoftApActivity" />
+        <activity android:name=".activity.AddDeviceActivity" />
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.MessageActivity" /> <!-- 微信回调 -->
+        <activity
+                android:name=".wxapi.WXEntryActivity"
+                android:exported="true"
+                android:label="@string/app_name"
+                android:launchMode="singleTask"
+                android:taskAffinity="com.kitlink"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <receiver android:name=".MessageReceiver">
+            <intent-filter>
+                <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE" />
+                <action android:name="com.tencent.android.xg.vip.action.FEEDBACK" />
+            </intent-filter>
+        </receiver> <!-- 腾讯地地图 meta-data -->
+        <meta-data
+                android:name="TencentMapSDK"
+                android:value="DB4BZ-63LKW-NRLRG-RSKZF-XJ63E-IXFUG" />
+    </application>
+
+</manifest>

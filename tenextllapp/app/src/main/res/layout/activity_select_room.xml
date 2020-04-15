@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.SelectRoomActivity">
+
+    <include
+            android:id="@+id/menu_select_room"
+            layout="@layout/menu_back_layout" />
+
+    <com.view.recyclerview.CRecyclerView
+            android:id="@+id/crv_select_room"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu_select_room" />
+
+
+    <RelativeLayout
+            android:id="@+id/rl_no_room"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu_select_room">
+
+        <ImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:src="@mipmap/image_no_device"
+                android:layout_above="@+id/tv_no_room_hint"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp" />
+
+        <TextView
+                android:id="@+id/tv_no_room_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="38dp"
+                android:text="@string/no_room"
+                android:textColor="@color/gray_cccccc"
+                android:textSize="@dimen/ts_14" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
