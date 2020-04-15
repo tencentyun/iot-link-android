@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- View配置 -->
+    <string name="view_MainTabCarActivity">com.yho.base.MainTabCarActivity</string>
+</resources>

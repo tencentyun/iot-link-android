@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/imageselector_camera_gv_item_bg" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawablePadding="@dimen/imageselector_default_padding"
+        android:drawableTop="@drawable/imageselector_asy"
+        android:gravity="center_horizontal"
+        android:text="@string/imageselector_camera_gv_item_tv"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/common_normal_font_size" />
+
+</FrameLayout>

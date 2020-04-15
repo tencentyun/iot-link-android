@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/tv_head_family_name_title"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/family_name"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+            android:id="@+id/tv_head_family_name"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="110dp"
+            android:layout_marginEnd="48dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical|right"
+            android:maxLines="1"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="我的家"
+            android:textColor="@color/gray_cccccc"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_head_family_name_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_head_family_name_title" />
+
+    <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="20dp"
+
+            android:src="@mipmap/icon_right_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_head_family_name_title"
+            app:layout_constraintRight_toRightOf="@+id/tv_head_family_name_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_head_family_name_title" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_head_family_name_title" />
+
+    <TextView
+            android:id="@+id/tv_head_room_manage_title"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/room_manager"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_head_family_name_title" />
+
+    <TextView
+            android:id="@+id/tv_head_room_manage"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="110dp"
+            android:layout_marginEnd="48dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical|right"
+            android:maxLines="1"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:visibility="invisible"
+            android:text="3个房间"
+            android:textColor="@color/gray_cccccc"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_head_room_manage_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_head_room_manage_title" />
+
+    <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="20dp"
+
+            android:src="@mipmap/icon_right_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_head_room_manage_title"
+            app:layout_constraintRight_toRightOf="@+id/tv_head_room_manage_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_head_room_manage_title" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_head_room_manage_title" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_head_family_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_head_room_manage_title">
+
+        <TextView
+                android:id="@+id/tv_head_family_invite"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/invite_family_member"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_18"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginEnd="20dp"
+
+                android:src="@mipmap/icon_right_arrow"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_head_family_invite"
+                app:layout_constraintRight_toRightOf="@+id/tv_head_family_invite"
+                app:layout_constraintTop_toTopOf="@+id/tv_head_family_invite" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/gray_F2F2F2"
+            app:layout_constraintTop_toBottomOf="@+id/cl_head_family_invite" />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/family_member"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_head_family_invite" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

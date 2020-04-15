@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/family"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.FamilyActivity">
+
+    <include
+            android:id="@+id/family_menu"
+            layout="@layout/menu_back_layout" />
+
+    <com.view.recyclerview.CRecyclerView
+            android:id="@+id/crv_member_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/family_menu" />
+    
+    <View
+            android:id="@+id/family_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.7"
+            android:background="@color/black"
+            android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
