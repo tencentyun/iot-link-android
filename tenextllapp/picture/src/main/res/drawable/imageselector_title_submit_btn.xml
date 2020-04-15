@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="true" android:state_pressed="true"><shape android:shape="rectangle">
+            <corners android:radius="2dp" />
+
+            <solid android:color="@color/imageselector_sumbit_btn_press_bg" />
+        </shape></item>
+    <item android:state_enabled="true"><shape android:shape="rectangle">
+            <corners android:radius="2dp" />
+
+            <solid android:color="@color/imageselector_sumbit_btn_enabled_bg" />
+        </shape></item>
+    <item><shape android:shape="rectangle">
+            <corners android:radius="2dp" />
+
+            <solid android:color="@color/imageselector_sumbit_btn_unenabled_bg" />
+        </shape></item>
+
+</selector>
