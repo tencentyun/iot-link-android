@@ -58,20 +58,20 @@ class MainActivity : PActivity(), MyCallback {
                 R.mipmap.main_tab_1_normal, R.mipmap.main_tab_1_hover
             )
         )
-           /* .addMenu(
-                BottomItemEntity(
-                    getString(R.string.main_tab_2),
-                    R.color.main_tab_normal, R.color.main_tab_hover,
-                    R.mipmap.main_tab_2_normal, R.mipmap.main_tab_2_hover
-                )
-            )*/
-            .addMenu(
-                BottomItemEntity(
-                    getString(R.string.main_tab_3),
-                    R.color.main_tab_normal, R.color.main_tab_hover,
-                    R.mipmap.main_tab_3_normal, R.mipmap.main_tab_3_hover
-                )
-            ).showMenu()
+       /* .addMenu(
+            BottomItemEntity(
+                getString(R.string.main_tab_2),
+                R.color.main_tab_normal, R.color.main_tab_hover,
+                R.mipmap.main_tab_2_normal, R.mipmap.main_tab_2_hover
+            )
+        )*/
+        .addMenu(
+            BottomItemEntity(
+                getString(R.string.main_tab_3),
+                R.color.main_tab_normal, R.color.main_tab_hover,
+                R.mipmap.main_tab_3_normal, R.mipmap.main_tab_3_hover
+            )
+        ).showMenu()
         fragments.clear()
         fragments.add(HomeFragment())
 //        fragments.add(SceneFragment())
