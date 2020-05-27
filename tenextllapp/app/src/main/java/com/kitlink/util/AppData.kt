@@ -50,6 +50,9 @@ class AppData private constructor() {
     // 共享设备列表
     val shareDeviceList = arrayListOf<DeviceEntity>()
 
+    // 推荐设备分类列表
+    val recommendDeviceCategoryList = arrayListOf<DeviceCategoryEntity>()
+
     /**
      * 重置刷新级别到设备级别
      */
