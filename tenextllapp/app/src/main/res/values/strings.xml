@@ -177,7 +177,7 @@
     <string name="exit_toast_title">退出添加设备</string>
     <string name="exit_toast_content">当前正在添加设备，是否退出？</string>
     <string name="share_success">分享发送成功</string>
-    
+
     <string name="factory_name">厂家名称</string>
     <string name="product_model">产品型号</string>
     <string name="mac_address">MAC地址</string>
@@ -262,4 +262,15 @@
     <string name="family">\t\t家庭\t\t</string>
     <string name="notify">\t\t通知\t\t</string>
 
+    <!--设备分类-->
+    <string name="scanned_devices">已发现如下设备</string>
+    <string name="scanning_device">正在扫描设备</string>
+    <string name="bluetooth_adapter_invalid">当前蓝牙适配器不可用</string>
+    <string name="need_open_bluetooth">发现设备需开启手机蓝牙(10001)</string>
+    <string name="scanning_retry">重试</string>
+    <string name="connect">连接</string>
+    <string name="all_device">全部</string>
+    <string name="living_room">客厅</string>
+    <string name="bedroom">卧室</string>
+    <string name="kitchen">厨房</string>
 </resources>

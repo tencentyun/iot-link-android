@@ -93,4 +93,11 @@ object RequestCode {
     const val bind_share_device = 6008
 
     /*************设备分享接口结束**************/
+
+    /*************设备推荐接口开始**************/
+    const val get_parent_category_list = 7000
+    const val get_recommend_device_list = 7001
+    /*************设备推荐接口结束**************/
+
+
 }
