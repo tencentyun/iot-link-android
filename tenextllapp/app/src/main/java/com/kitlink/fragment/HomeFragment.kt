@@ -10,6 +10,7 @@ import com.kitlink.App
 import com.kitlink.R
 import com.kitlink.activity.AddDeviceActivity
 import com.kitlink.activity.ControlPanelActivity
+import com.kitlink.activity.DeviceCategoryActivity
 import com.kitlink.entity.DeviceEntity
 import com.kitlink.entity.FamilyEntity
 import com.kitlink.holder.*
@@ -191,7 +192,8 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
                 position: Int
             ) {
                 when (position) {
-                    0 -> jumpActivity(AddDeviceActivity::class.java)
+//                    0 -> jumpActivity(AddDeviceActivity::class.java)
+                    0 -> jumpActivity(DeviceCategoryActivity::class.java)
                     1 -> {
                     }
                     2 -> {
