@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         package="com.kitlink">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -27,6 +28,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 访问网络的变化, 需要某些信息用于网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 访问手机当前状态, 需要某些信息用于网络定位 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <application
             android:name=".App"
@@ -36,8 +39,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
-            android:usesCleartextTraffic="true">
-        <activity android:name=".activity.DeviceInfoActivity"></activity>
+            android:usesCleartextTraffic="true"
+            tools:replace="android:allowBackup">
+        <activity android:name=".activity.DeviceCategoryActivity"/>
+        <activity android:name=".activity.DeviceInfoActivity" />
         <activity android:name=".activity.SelectRoomActivity" />
         <activity android:name=".activity.ShareActivity" />
         <activity android:name=".activity.WeekRepeatActivity" />

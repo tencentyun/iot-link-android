@@ -27,7 +27,7 @@ class HttpRequest private constructor() {
     companion object {
         val instance = HttpRequestHolder.request
 
-        const val APP_KEY = "aBCuYQcbDMGlzZTMU"
+        const val APP_KEY = "***REMOVED***"
         const val APP_SECRECY = "***REMOVED***"
 
         const val HOST = "https://iot.cloud.tencent.com/api/"
@@ -1006,5 +1006,28 @@ class HttpRequest private constructor() {
     }
 
     /****************************************   设备分享接口结束   *******************************************************/
+
+    /****************************************   设备推荐接口开始   *******************************************************/
+
+    /**
+     * 获取产品推荐父类别列表
+     */
+    fun getParentCategoryList(callback: MyCallback) {
+        val param = tokenParams("AppGetParentCategoryList")
+        tokenPost(param, callback, RequestCode.get_parent_category_list)
+    }
+
+    /**
+     * 推荐产品子类别列表
+     */
+    fun getRecommList(
+        categoryKey: String,
+        callback: MyCallback
+    ) {
+        val param = tokenParams("AppGetRecommList")
+        param["CategoryKey"] = categoryKey
+        tokenPost(param, callback, RequestCode.get_recommend_device_list)
+    }
+    /****************************************   设备推荐接口结束   *******************************************************/
 
 }
