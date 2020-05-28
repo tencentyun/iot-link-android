@@ -4,6 +4,7 @@ import android.text.TextUtils
 import android.view.View
 import com.kitlink.App
 import com.kitlink.R
+import com.kitlink.activity.SoftApActivity
 import com.mvp.IPresenter
 import com.mvp.presenter.ConnectPresenter
 import com.mvp.view.ConnectView
@@ -97,6 +98,7 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
             }
             tv_tab_connect_way, tv_add_new_device -> {
                 activity?.finish()
+                jumpActivity(SoftApActivity::class.java)
             }
             tv_back_to_home_page -> {
                 backToMain()
