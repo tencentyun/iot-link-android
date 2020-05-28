@@ -11,19 +11,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/btn_star_big_on"/>
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:srcCompat="@drawable/icon_warning"/>
 
         <TextView
                 android:text="@string/bluetooth_adapter_invalid"
                 android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
     <TextView
+            android:layout_marginTop="5dp"
             android:text="@string/scanning_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:textColor="@color/blue_006EFF"/>
 </LinearLayout>

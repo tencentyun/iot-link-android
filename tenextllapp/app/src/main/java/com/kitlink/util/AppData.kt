@@ -53,6 +53,15 @@ class AppData private constructor() {
     // 推荐设备分类列表
     val recommendDeviceCategoryList = arrayListOf<DeviceCategoryEntity>()
 
+    // 屏幕宽度
+    var screenWith = 0
+
+    // 当前VerticalTab位置
+    var tabPosition = 0
+
+    // 设备的类目数
+    var numOfCategories = 0
+
     /**
      * 重置刷新级别到设备级别
      */
