@@ -97,6 +97,8 @@ object RequestCode {
     /*************设备推荐接口开始**************/
     const val get_parent_category_list = 7000
     const val get_recommend_device_list = 7001
+    const val get_products_config = 7002
+    const val describe_product_config = 7003
     /*************设备推荐接口结束**************/
 
 
