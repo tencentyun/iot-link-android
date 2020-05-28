@@ -1,9 +1,9 @@
 package com.kitlink.entity
 
 class RecommDeviceEntity {
-    var CategoryId = 0
+
+    var ProductId = ""
     var IconUrl = ""
-    var CategoryKey = ""
-    var CategoryName = ""
+    var ProductName = ""
     var ListOrder = 0
 }
