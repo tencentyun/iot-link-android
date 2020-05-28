@@ -107,5 +107,5 @@ dependencies {
     implementation project(path: ':view-release')
 
     //垂直TabLayout
-    implementation 'q.rorbin:VerticalTabLayout:1.2.1'
+    implementation 'q.rorbin:VerticalTabLayout:1.2.9'
 }

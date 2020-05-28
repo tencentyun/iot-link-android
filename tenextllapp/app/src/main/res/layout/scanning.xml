@@ -3,17 +3,21 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="horizontal"
         android:gravity="center"
+        android:paddingBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <ImageView
             android:id="@+id/iv_loading_cirecle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/btn_star_big_on"/>
+            app:srcCompat="@drawable/svg_icon_loading"/>
 
     <TextView
+            android:layout_marginStart="5dp"
             android:text="@string/scanning_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="18sp"
             android:textColor="@color/black"/>
 </LinearLayout>

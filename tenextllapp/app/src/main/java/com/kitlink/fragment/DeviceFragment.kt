@@ -5,14 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
-import android.widget.BaseAdapter
-import android.widget.GridView
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import com.kitlink.App
 import com.kitlink.R
+import com.kitlink.activity.SmartConnectActivity
+import com.kitlink.activity.SoftApActivity
+import com.kitlink.entity.CategoryDeviceEntity
+import com.kitlink.entity.ProdConfigDetailEntity
 import com.kitlink.entity.RecommDeviceEntity
 import com.kitlink.response.BaseResponse
+import com.kitlink.response.ProductsConfigResponse
 import com.kitlink.response.RecommDeviceListResponse
 import com.kitlink.util.HttpRequest
 import com.kitlink.util.JsonManager
@@ -21,16 +23,17 @@ import com.kitlink.util.RequestCode
 import com.mvp.IPresenter
 import com.squareup.picasso.Picasso
 import com.util.L
+import kotlinx.android.synthetic.main.fragment_devices.*
+import kotlin.math.ceil
 
 
-class DeviceFragment : BaseFragment, MyCallback{
+class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnItemClickListener{
 
-    var mContext : Context
-    constructor(c: Context) {
-        mContext = c
-    }
-
-    var devicesGridView : GridView? = null
+    private var mContext : Context = c
+    private var devicesGridView : GridView? = null
+    var recommendDevicesGridView : GridView? = null
+    var categoryList = arrayListOf<CategoryDeviceEntity>()
+    var productList = arrayListOf<RecommDeviceEntity>()
 
     override fun getPresenter(): IPresenter? {
         return null
@@ -52,6 +55,8 @@ class DeviceFragment : BaseFragment, MyCallback{
         val view = inflater.inflate(getContentView(), container, false)
         if (getContentView() != 0) {
             devicesGridView = view.findViewById(R.id.gv_devices)
+            recommendDevicesGridView = view.findViewById(R.id.gv_recommend_devices)
+            setListener()
             HttpRequest.instance.getRecommList(categoryKey, this)
         }
         return view
@@ -66,27 +71,92 @@ class DeviceFragment : BaseFragment, MyCallback{
             RequestCode.get_recommend_device_list -> {
                 if (response.isSuccess()) {
                     response.parse(RecommDeviceListResponse::class.java)?.run {
-                        L.e("推荐设备分类列表：${JsonManager.toJson(CategoryList)}")
-                        devicesGridView!!.adapter = GridAdapter(mContext, CategoryList)
+                        if (ProductList.size > 0) {
+                            productList = ProductList
+                            recommendDevicesGridView!!.adapter = GridAdapter(mContext, ProductList, true)
+                            setGridViewHeightByChildren(recommendDevicesGridView!!)
+                        } else {
+                            tv_recommend.visibility = View.GONE
+                            split_line.visibility = View.GONE
+                            gv_recommend_devices.visibility = View.GONE
+                        }
+                        categoryList = CategoryList
+                        devicesGridView!!.adapter = GridAdapter(mContext, CategoryList, false)
+                        setGridViewHeightByChildren(devicesGridView!!)
+                    }
+                }
+            }
+            RequestCode.get_products_config -> {
+                if (response.isSuccess()) {
+                    response.parse(ProductsConfigResponse::class.java)?.run {
+                        val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
+                        val wifiConfigTypeList = config.WifiConfTypeList
+                        if (wifiConfigTypeList == "{}") {
+                            jumpActivity(SmartConnectActivity::class.java)
+                        } else if (wifiConfigTypeList.contains("[")) {
+                            val typeList = JsonManager.parseArray(wifiConfigTypeList)
+                            if (typeList.size > 0 && typeList[0] == "softap") {
+                                jumpActivity(SoftApActivity::class.java)
+                            } else {
+                                jumpActivity(SmartConnectActivity::class.java)
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        if (view != null && parent != null) {
+            when (parent.id) {
+                R.id.gv_recommend_devices->{
+                    val productsList  = arrayListOf<String>()
+                    productsList.add(productList[position].ProductId)
+                    HttpRequest.instance.getProductsConfig(productsList, this)
+                    Toast.makeText(view.context, productList[position].ProductName + " is clicked", Toast.LENGTH_LONG).show()
+                }
+                R.id.gv_devices->{
+                    Toast.makeText(view.context, categoryList[position].CategoryName + " is clicked", Toast.LENGTH_LONG).show()
+                    jumpActivity(SmartConnectActivity::class.java)
+                }
+            }
+        }
+    }
+
+    fun setListener() {
+        devicesGridView?.onItemClickListener = this
+        recommendDevicesGridView?.onItemClickListener = this
+    }
+
+    private fun setGridViewHeightByChildren(gridView : GridView) {
+        val adaper: ListAdapter? = gridView.adapter ?: return
+        var totalHeight = 0
+        val lineNum = ceil((adaper?.count?.toDouble() ?: 0.0) / 3.0)
+        val item: View? = adaper?.getView(0,null, gridView)
+        if (item != null) {
+            totalHeight = ((App.data.screenWith/5 + if (lineNum > 1) 120 else 50) * lineNum).toInt()
+        }
+        val params = gridView.layoutParams
+        params.height = totalHeight
+        gridView.layoutParams = params
+    }
+
     class GridAdapter : BaseAdapter {
-        var recommDeviceList : List<RecommDeviceEntity>? = null
+        var deviceList : List<Any>? = null
         var context : Context? = null
         var inflater : LayoutInflater? = null
+        var isRecommDeviceList : Boolean = false
 
-        constructor(contxt : Context, list : List<RecommDeviceEntity>) {
+        constructor(contxt : Context, list : List<Any>, value : Boolean) {
             context = contxt
-            recommDeviceList = list
+            deviceList = list
+            isRecommDeviceList = value
             inflater = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
         }
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            var viewHolder : ViewHolder
-            var retView : View
+            val viewHolder : ViewHolder
+            val retView : View
             if (convertView == null) {
                 viewHolder = ViewHolder()
                 retView = LayoutInflater.from(parent?.context). inflate(R.layout.device_item, parent, false)
@@ -98,14 +168,23 @@ class DeviceFragment : BaseFragment, MyCallback{
                 retView = convertView
             }
 
-            viewHolder.text.text = recommDeviceList?.get(position)?.CategoryName
-            val url = recommDeviceList?.get(position)?.IconUrl
-            Picasso.with(context).load(url).into(viewHolder.image)
+            val url: String
+            if (isRecommDeviceList) {
+                val entity = deviceList?.get(position) as RecommDeviceEntity
+                viewHolder.text.text = entity.ProductName
+                url = entity.IconUrl
+            } else {
+                val entity = deviceList?.get(position) as CategoryDeviceEntity
+                viewHolder.text.text = entity.CategoryName
+                url = entity.IconUrl
+            }
+            Picasso.with(context).load(url).placeholder(R.drawable.device_placeholder)
+                .resize(App.data.screenWith/5,App.data.screenWith/5).centerCrop().into(viewHolder.image)
             return retView
         }
 
         override fun getItem(position: Int): Any? {
-            return recommDeviceList?.get(position)
+            return deviceList?.get(position)
         }
 
         override fun getItemId(position: Int): Long {
@@ -113,7 +192,7 @@ class DeviceFragment : BaseFragment, MyCallback{
         }
 
         override fun getCount(): Int {
-            return recommDeviceList?.size?: 0
+            return deviceList?.size?: 0
         }
 
         inner class ViewHolder {

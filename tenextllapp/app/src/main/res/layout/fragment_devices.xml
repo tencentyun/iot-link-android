@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="UselessParent">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/tv_recommend"
+                android:text="@string/recommend"
+                android:textColor="@color/gray"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <GridView
+                android:id="@+id/gv_recommend_devices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:verticalSpacing="10dp"
+                android:numColumns="3"
+                android:listSelector="@color/translucent"
+                tools:ignore="NestedScrolling" />
+        <View
+                android:id="@+id/split_line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@color/gray_F5F5F5" />
         <GridView
                 android:id="@+id/gv_devices"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:numColumns="3"/>
+                android:layout_height="wrap_content"
+                android:verticalSpacing="20dp"
+                android:numColumns="3"
+                android:listSelector="@color/translucent"
+                tools:ignore="NestedScrolling" />
+        </LinearLayout>
+        </ScrollView>
 </LinearLayout>
