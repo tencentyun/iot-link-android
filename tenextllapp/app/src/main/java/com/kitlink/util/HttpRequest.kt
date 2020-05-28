@@ -1028,6 +1028,21 @@ class HttpRequest private constructor() {
         param["CategoryKey"] = categoryKey
         tokenPost(param, callback, RequestCode.get_recommend_device_list)
     }
+
+    fun getProductsConfig(productIds: List<String>, callback: MyCallback) {
+        val param = tokenParams("AppGetProductsConfig")
+        param["ProductIds"] = productIds
+        tokenPost(param, callback, RequestCode.get_products_config)
+    }
+
+    fun describeProductConfig(productId: String, type: String, callback: MyCallback) {
+        val param = tokenParams("DescribeProductConfig")
+        param["ProductId"] = productId
+        param["Type"] = type
+        param["Uin"] = "weichuantest"
+        param["AppId"] = APP_KEY
+        tokenPost(param, callback, RequestCode.describe_product_config)
+    }
     /****************************************   设备推荐接口结束   *******************************************************/
 
 }
