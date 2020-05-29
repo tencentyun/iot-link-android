@@ -66,6 +66,8 @@ object RequestCode {
     const val control_panel = 3009
     const val device_product = 3010
     const val send_share_invite = 3011
+    const val get_bind_device_token = 3012
+    const val check_device_bind_token_state = 3013
 
     /*************设备接口结束**************/
 

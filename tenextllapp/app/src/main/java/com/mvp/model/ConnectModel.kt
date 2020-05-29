@@ -15,10 +15,8 @@ import com.kitlink.device.softap.SoftAPStep
 import com.kitlink.device.softap.SoftApTask
 import com.kitlink.fragment.WifiFragment
 import com.kitlink.response.BaseResponse
-import com.kitlink.util.ConnectionListener
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.kitlink.util.Reconnect
+import com.kitlink.response.DeviceBindTokenStateResponse
+import com.kitlink.util.*
 import com.mvp.ParentModel
 import com.mvp.view.ConnectView
 import com.util.L
@@ -28,11 +26,19 @@ import com.util.L
  */
 class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallback {
 
+    private val TAG = this.javaClass.simpleName
+    private val maxTime = 100   // 执行最大时间间隔
+    private val interval = 2    // 每次执行的时间间隔
+    private val unKnowError = 99  // 每次执行的时间间隔
+
     var smartConfig: SmartConfigService? = null
     var softAP: SoftAPService? = null
     var ssid = ""
     var bssid = ""
     var password = ""
+    @Volatile
+    var checkDeviceBindTokenStateStarted = false
+    private var deviceInfo: DeviceInfo? = null
 
     var type = WifiFragment.smart_config
 
@@ -50,8 +56,9 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
      */
     private val smartConfigListener = object : SmartConfigListener {
         override fun onSuccess(deviceInfo: DeviceInfo) {
+            this@ConnectModel.deviceInfo = deviceInfo
             this.onStep(SmartConfigStep.STEP_DEVICE_BOUND)
-            wifiBindDevice(deviceInfo)
+            checkDeviceBindTokenState()
         }
 
         override fun deviceConnectToWifi(result: IEsptouchResult) {
@@ -87,12 +94,13 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             L.e("ssid:$ssid")
             it.startConnect(task, smartConfigListener)
         }
+        deviceInfo = null
     }
 
-    private var deviceInfo: DeviceInfo? = null
+
     private val connectionListener = object : ConnectionListener {
         override fun onConnected() {
-            wifiBindDevice(deviceInfo!!)
+            checkDeviceBindTokenState()
         }
     }
 
@@ -125,6 +133,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
      * 开始自助配网
      */
     fun startSoftAppConnect() {
+
         softAP?.let {
             val location = Location("temp")
             location.longitude = 0.0
@@ -138,6 +147,60 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             L.e("ssid:$ssid,password:$password")
             it.startConnect(task, softAPListener)
         }
+        deviceInfo = null
+    }
+
+    private fun checkDeviceBindTokenState() {
+        if (checkDeviceBindTokenStateStarted) return
+
+        var maxTimes2Try = maxTime / interval
+        var currentNo = 0
+
+        // 开启线程做网络请求
+        Thread(Runnable {
+            checkDeviceBindTokenState(currentNo, maxTimes2Try, interval)
+        }).start()
+        checkDeviceBindTokenStateStarted = true
+    }
+
+    private fun checkDeviceBindTokenState(currentNo: Int, maxTimes: Int, interval: Int) {
+        // 结束递归的条件，避免失败后的无限递归
+        if (currentNo >= maxTimes || currentNo < 0) {
+            Reconnect.instance.stop(connectionListener)
+            checkDeviceBindTokenStateStarted = false
+            softAPListener.onFail(unKnowError.toString(), "获取设备与 oken 的绑定状态失败")
+            return
+        }
+
+        val nextNo = currentNo + 1
+        HttpRequest.instance.checkDeviceBindTokenState(object: MyCallback{
+            override fun fail(msg: String?, reqCode: Int) {
+                // 失败进行到下一次的递归
+                Thread.sleep(interval.toLong() * 1000)
+                checkDeviceBindTokenState(nextNo, maxTimes, interval)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                // 只要有一次成功，就回调成功
+                response.parse(DeviceBindTokenStateResponse::class.java)?.State.let {
+                    when(it) {
+                        2 -> {
+                            Reconnect.instance.stop(connectionListener)
+                            checkDeviceBindTokenStateStarted = false
+                            Thread(Runnable {
+                                wifiBindDevice(deviceInfo!!)
+                            }).start()
+                        } else -> {
+                            // 主线程回调，子线程开启新的网络请求，避免阻塞主线程
+                            Thread(Runnable{
+                                Thread.sleep(interval.toLong() * 1000)
+                                checkDeviceBindTokenState(nextNo, maxTimes, interval)
+                            }).start()
+                        }
+                    }
+                }
+            }
+        })
     }
 
     /**
@@ -149,20 +212,20 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
 
     override fun fail(msg: String?, reqCode: Int) {
         L.e(msg ?: "")
+        softAPListener.onFail(unKnowError.toString(), "获取家庭与设备绑定关系失败")
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
         if (response.isSuccess()) {
-            if (type == WifiFragment.smart_config) {
-                smartConfigListener.onStep(SmartConfigStep.STEP_LINK_SUCCESS)
-            } else {
-                softAPListener.onStep(SoftAPStep.STEP_LINK_SUCCESS)
+            when(type) {
+                WifiFragment.smart_config -> smartConfigListener.onStep(SmartConfigStep.STEP_LINK_SUCCESS)
+                WifiFragment.soft_ap -> softAPListener.onStep(SoftAPStep.STEP_LINK_SUCCESS)
             }
             view?.connectSuccess()
         } else {
             view?.connectFail("bind_fail", response.msg)
         }
-        //绑定操作响应后，不论结果如何,一律停止监听。
+        //绑定操作响应后，不论结果如何，一律停止监听。
         Reconnect.instance.stop(connectionListener)
     }
 

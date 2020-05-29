@@ -10,6 +10,10 @@ enum class SmartConfigStep {
      */
     STEP_DEVICE_CONNECTING,
     /**
+     * 发送wifi信息给设备
+     */
+    STEP_SEND_WIFI_INFO,
+    /**
      * 设备成功连接到wifi
      */
     STEP_DEVICE_CONNECTED_TO_WIFI,

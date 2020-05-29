@@ -1,18 +1,24 @@
 package com.kitlink.activity
 
 import android.text.TextUtils
+import android.util.Log
 import com.kitlink.R
 import com.kitlink.fragment.*
 import com.kitlink.popup.CommonPopupWindow
 import com.mvp.IPresenter
 import com.util.T
 import com.kitlink.activity.BaseActivity
+import com.mvp.presenter.GetBindDeviceTokenPresenter
+import com.mvp.view.GetBindDeviceTokenView
+import com.util.L
 import kotlinx.android.synthetic.main.activity_smart_connect.*
 
 /**
  * 智能配网
  */
-class SmartConnectActivity : BaseActivity() {
+class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
+
+    private lateinit var presenter: GetBindDeviceTokenPresenter
 
     private lateinit var scStepFragment: SCStepFragment
     private lateinit var wifiFragment: WifiFragment
@@ -25,6 +31,7 @@ class SmartConnectActivity : BaseActivity() {
     }
 
     override fun initView() {
+        presenter = GetBindDeviceTokenPresenter(this)
         scStepFragment = SCStepFragment()
         scStepFragment.onNextListener = object : SCStepFragment.OnNextListener {
             override fun onNext() {
@@ -42,12 +49,9 @@ class SmartConnectActivity : BaseActivity() {
                     T.show(getString(R.string.connecting_to_wifi))
                     return
                 }
-                showTitle(
-                    getString(R.string.smart_config_third_connect_progress)
-                    , getString(R.string.close)
-                )
+
                 connectProgressFragment.setWifiInfo(ssid, bssid!!, password)
-                showFragment(connectProgressFragment, wifiFragment)
+                presenter.getBindDeviceToken()
             }
         }
         connectProgressFragment = ConnectProgressFragment(WifiFragment.smart_config)
@@ -126,5 +130,18 @@ class SmartConnectActivity : BaseActivity() {
     override fun onDestroy() {
         closePopup?.dismiss()
         super.onDestroy()
+    }
+
+    override fun onSuccess(token: String) {
+        L.e("getToken onSuccess token:" + token)
+        showTitle(
+            getString(R.string.smart_config_third_connect_progress)
+            , getString(R.string.close)
+        )
+        showFragment(connectProgressFragment, wifiFragment)
+    }
+
+    override fun onFail(msg: String) {
+        L.e("getToken onFail msg:" + msg)
     }
 }

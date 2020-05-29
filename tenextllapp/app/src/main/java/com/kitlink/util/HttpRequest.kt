@@ -8,6 +8,7 @@ import com.retrofit.StringRequest
 import com.util.L
 import java.util.*
 import com.retrofit.Callback
+import com.util.ip.IPUtil
 import kotlin.collections.HashMap
 
 /**
@@ -35,8 +36,9 @@ class HttpRequest private constructor() {
         const val APP_API = "studioapp"
         //        const val APP_API = "studioapp/appapi"
         const val TOKEN_API = "exploreropen/tokenapi"
-        //        const val TOKEN_API = "studioapp/tokenapi"
+        const val GET_BIND_DEV_TOKEN_API = "studioapp/tokenapi"
         const val APP_COS_AUTH = "studioapp/AppCosAuth"
+
     }
 
     /**
@@ -681,27 +683,20 @@ class HttpRequest private constructor() {
      * WIFI配网绑定设备
      */
     fun wifiBindDevice(familyId: String, deviceInfo: DeviceInfo, callback: MyCallback) {
-        val param = tokenParams("AppSigBindDeviceInFamily")
+        val param = HashMap<String, Any>()
+
+        param["RequestId"] = UUID.randomUUID().toString()
+        param["ClientIp"] = IPUtil.getHostIP()
+        param["Action"] = "AppTokenBindDeviceFamily"
+        param["AccessToken"] = App.data.getToken()
+        param["IotAppID"] = APP_KEY
+        param["UserID"] = App.data.userInfo.UserID
+        param["Token"] = App.data.bindDeviceToken
         param["FamilyId"] = familyId
         param["ProductId"] = deviceInfo.productId
         param["DeviceName"] = deviceInfo.deviceName
-        param["Signature"] = deviceInfo.signature
-        param["DeviceTimestamp"] = deviceInfo.timestamp
-        param["ConnId"] = deviceInfo.connId
-//        tokenPost(param, callback, RequestCode.wifi_bind_device)
-        L.e("WIFI配网请求参数：${JsonManager.toJson(param)}")
-        HttpUtil.postJson(HOST + TOKEN_API, JsonManager.toJson(param), object : HttpCallBack {
-            override fun onSuccess(response: String) {
-                L.e("响应${param["Action"]}", response)
-                JsonManager.parseJson(response, BaseResponse::class.java)?.run {
-                    callback.success(this, RequestCode.wifi_bind_device)
-                }
-            }
 
-            override fun onError(error: String) {
-                callback.fail(error, RequestCode.wifi_bind_device)
-            }
-        })
+        tokenPost(param, callback, RequestCode.wifi_bind_device)
     }
 
     /**
@@ -780,6 +775,37 @@ class HttpRequest private constructor() {
         param["DeviceName"] = deviceName
         param["ToUserID"] = userId
         tokenPost(param, callback, RequestCode.send_share_invite)
+    }
+
+    /**
+     * 获取绑定设备的 token
+     */
+    fun getBindDevToken(callback: MyCallback) {
+        val param = HashMap<String, Any>()
+        param["RequestId"] = UUID.randomUUID().toString()
+        param["ClientIp"] = IPUtil.getHostIP()
+        param["Action"] = "AppCreateDeviceBindToken"
+        param["AccessToken"] = App.data.getToken()
+        param["IotAppID"] = APP_KEY
+        param["UserID"] = App.data.userInfo.UserID
+
+        tokenPost(param, callback, RequestCode.get_bind_device_token)
+    }
+
+    /**
+     * 检查设备绑定 token 的状态
+     */
+    fun checkDeviceBindTokenState(callback: MyCallback) {
+        val param = HashMap<String, Any>()
+        param["RequestId"] = UUID.randomUUID().toString()
+        param["ClientIp"] = IPUtil.getHostIP()
+        param["Action"] = "AppGetDeviceBindTokenState"
+        param["AccessToken"] = App.data.getToken()
+        param["IotAppID"] = APP_KEY
+        param["UserID"] = App.data.userInfo.UserID
+        param["Token"] = App.data.bindDeviceToken
+
+        tokenPost(param, callback, RequestCode.check_device_bind_token_state)
     }
 
     /****************************************   设备接口结束  ************************************************/

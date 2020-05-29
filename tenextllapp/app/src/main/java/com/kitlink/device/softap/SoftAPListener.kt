@@ -1,7 +1,6 @@
 package com.kitlink.device.softap
 
 import com.kitlink.device.DeviceInfo
-import com.kitlink.device.TCLinkException
 
 interface SoftAPListener {
 
