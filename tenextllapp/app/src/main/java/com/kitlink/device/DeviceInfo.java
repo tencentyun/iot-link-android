@@ -11,48 +11,57 @@ import java.util.Arrays;
  * Copyright (c) 2018 Tencent Cloud. All Rights Reserved.
  */
 public class DeviceInfo {
-    private final String mProductId;
-    private final String mDeviceName;
-    private final String mSignature;
-    private final long mTimestamp;
-    private final JSONArray mErrorLogs;
-    private final String mErrorLogStr;
-    private final String mConnId;
+    private String mProductId;
+    private String mDeviceName;
+    private String mSignature;
+    private long mTimestamp;
+    private JSONArray mErrorLogs;
+    private String mErrorLogStr;
 
     public DeviceInfo(String json) {
         mTimestamp = System.currentTimeMillis() / 1000;
-        mConnId = "";
         mErrorLogs = null;
         mErrorLogStr = "";
-        String productId = "";
-        String deviceName = "";
-        String signature = "";
         try {
             JSONObject obj = new JSONObject(json);
-            productId = obj.getString("ProductId");
-            deviceName = obj.getString("DeviceName");
-            signature = obj.getString("Signature");
+            if (obj.has("ProductId")) {
+                mProductId = obj.getString("ProductId");
+            }
+            if (obj.has("DeviceName")) {
+                mDeviceName = obj.getString("DeviceName");
+            }
+            if (obj.has("Signature")) {
+                mSignature = obj.getString("Signature");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mProductId = productId;
-        mDeviceName = deviceName;
-        mSignature = signature;
     }
 
     public DeviceInfo(final JSONObject jsonObject) throws JSONException {
-        int cmdType = jsonObject.getInt("cmdType");
-        mProductId = jsonObject.getString("productId");
-        mDeviceName = jsonObject.getString("deviceName");
-        mSignature = jsonObject.getString("signature");
-        mTimestamp = jsonObject.getLong("timestamp");
-        mConnId = jsonObject.getString("connId");
-        mErrorLogs = jsonObject.getJSONArray("errorLogs");
-        String[] logArray = new String[mErrorLogs.length()];
-        for (int i = 0; i < mErrorLogs.length(); i++) {
-            logArray[i] = mErrorLogs.getString(i);
+        if (jsonObject.has("cmdType")) {
+            int cmdType = jsonObject.getInt("cmdType");
         }
-        mErrorLogStr = Arrays.toString(logArray);
+        if (jsonObject.has("productId")) {
+            mProductId = jsonObject.getString("productId");
+        }
+        if (jsonObject.has("deviceName")) {
+            mDeviceName = jsonObject.getString("deviceName");
+        }
+        if (jsonObject.has("signature")) {
+            mSignature = jsonObject.getString("signature");
+        }
+        if (jsonObject.has("timestamp")) {
+            mTimestamp = jsonObject.getLong("timestamp");
+        }
+        if (jsonObject.has("errorLogs")) {
+            mErrorLogs = jsonObject.getJSONArray("errorLogs");
+            String[] logArray = new String[mErrorLogs.length()];
+            for (int i = 0; i < mErrorLogs.length(); i++) {
+                logArray[i] = mErrorLogs.getString(i);
+            }
+            mErrorLogStr = Arrays.toString(logArray);
+        }
     }
 
     public String getProductId() {
@@ -65,10 +74,6 @@ public class DeviceInfo {
 
     public String getSignature() {
         return mSignature;
-    }
-
-    public String getConnId() {
-        return mConnId;
     }
 
     public long getTimestamp() {

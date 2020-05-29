@@ -3,48 +3,32 @@ package com.kitlink.device.softap
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.text.TextUtils
+import com.kitlink.device.ConfigService
 import com.kitlink.device.DeviceInfo
-import com.kitlink.util.JsonManager
-import com.kitlink.util.Weak
-import com.kitlink.util.PingUtil
+import com.kitlink.util.*
 import com.util.L
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
-import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import kotlin.concurrent.thread
 
-class SoftAPService(context: Context) {
+class SoftAPService(context: Context) : ConfigService(){
+
+    private val TAG = this.javaClass.simpleName
 
     companion object {
         const val SEND_WIFI_FAIL = 0
-        const val CONNECT_TO_WIFI_FAIL = 5
-        const val SIGNATURE_FAIL = 1
-        const val TIMEOUT_FAIL = 2
         const val LISTEN_WIFI_FAIL = 3
-        const val LISTEN_SIGNATURE_FAIL = 4
     }
 
     private var context by Weak {
         context.applicationContext
     }
-    //    private var host = "192.168.4.1"
-    private var host = ""
-    private val port = 8266
-    private lateinit var socketClient: DatagramSocket
-    private val deviceReplyKey = "deviceReply"
-    private lateinit var task: SoftApTask
 
-    //第一步发送wifi信息到设备
-    private var firstSuccess = false
-    private var secondSuccess = false
-    //是否执行run
-    private var hasRun = false
+    private lateinit var task: SoftApTask
 
     private var listener: SoftAPListener? = null
 
@@ -54,64 +38,67 @@ class SoftAPService(context: Context) {
 
     private fun createClient() {
         (context?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.let {
-            socketClient = DatagramSocket(port)
+            socket = DatagramSocket(port)
             L.e("gateway=${it.dhcpInfo.gateway}")
             host = intToIp(it.dhcpInfo.gateway)
         }
     }
 
     /**
-     *
      * gateway=17082560 192.168.4.1
-     * int转化为ip地址
+     * int 转化为 ip 地址
      */
     private fun intToIp(paramInt: Int): String {
-        return ((paramInt and 0xFF).toString() + "." + (0xFF and (paramInt shr 8)) + "." + (0xFF and (paramInt shr 16)) + "."
-                + (0xFF and (paramInt shr 24)))
+        return ((paramInt and 0xFF).toString() + "." + (0xFF and (paramInt shr 8)) + "." +
+                (0xFF and (paramInt shr 16)) + "." + (0xFF and (paramInt shr 24)))
     }
 
     /**
      * 停止设备配网
      */
     fun stopConnect() {
-        firstSuccess = false
-        secondSuccess = false
+        sendWifiInfoSuccess = false
         hasRun = false
-        socketClient.close()
+        socket?.close()
     }
 
     /**
-     * 开始soft ap配网
+     * 开始 soft ap 配网
      */
     fun startConnect(task: SoftApTask, listener: SoftAPListener) {
-        L.e("开始soft ap配网")
+        L.e("开始 soft ap 配网")
         hasRun = true
         this.task = task
         this.listener = listener
         listener.onStep(SoftAPStep.STEP_LINK_START)
         thread {
-            sendWifi()
-            if (firstSuccess && hasRun) {
-                getSignature()
+            sendUdpPacketWithWifiInfo()
+            // 向硬件设备发送 wifi 账号/密码成功后，断开 tcp/ip 链接（用于发送 udp 报文的链接）
+            if (sendWifiInfoSuccess && hasRun) {
+                stopConnect()
             }
         }
     }
 
-    private fun sendWifi() {
-        val firstMsg = genLinkString(task.mSsid, task.mPassword).toByteArray()
+    /**
+     * 通过 udp 报文发送 wifi 的账号/密码
+     */
+    private fun sendUdpPacketWithWifiInfo() {
+
+        val wifiMsg = genLinkString(task.mSsid, task.mPassword).toByteArray()
         val datagramPacket =
-            DatagramPacket(firstMsg, firstMsg.size, InetAddress.getByName(host), port)
-        receiverFirst()
+            DatagramPacket(wifiMsg, wifiMsg.size, InetAddress.getByName(host), port)
+        recvWifiMsgFeedback()
         listener?.onStep(SoftAPStep.STEP_SEND_WIFI_INFO)
         try {
-            var c = 0
-            while (!firstSuccess && hasRun && c < 10) {
-                L.e("正在发送wifi信息")
-                socketClient?.send(datagramPacket)
-                c++
+            var times = 0
+            while (!sendWifiInfoSuccess && hasRun && times < maxTimes2Try) {
+                L.d("正在发送wifi信息")
+                socket?.send(datagramPacket)
+                times++
                 Thread.sleep(1000)
             }
-            if (!firstSuccess && c >= 10) {
+            if (!sendWifiInfoSuccess && times >= maxTimes2Try) {
                 fail(SEND_WIFI_FAIL, "请检查是否正确连接热点")
             }
         } catch (e: Exception) {
@@ -120,56 +107,29 @@ class SoftAPService(context: Context) {
         }
     }
 
-    private fun getSignature() {
-        val secondMsg = genRequestDeviceInfoString().toByteArray()
-        listener?.onStep(SoftAPStep.STEP_DEVICE_CONNECTED_TO_WIFI)
-        val datagramPacket =
-            DatagramPacket(secondMsg, secondMsg.size, InetAddress.getByName(host), port)
-        receiverSecond()
-        var count = 0
-        try {
-            while (!secondSuccess && hasRun && count < 10) {
-                L.e("正在获取设备签名:$count")
-                socketClient?.send(datagramPacket)
-                Thread.sleep(2000)
-                count++
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            fail(CONNECT_TO_WIFI_FAIL, "设备联网失败")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fail(SIGNATURE_FAIL, "获取设备签名失败")
-            return
-        }
-        if (!secondSuccess && count >= 10) {
-            fail(TIMEOUT_FAIL, "获取设备签名超时")
-        }
-        stopConnect()
-    }
-
     /**
-     * 监听发送wifi信息到设备
+     * 监听发送 wifi 信息到设备
      */
-    private fun receiverFirst() {
+    private fun recvWifiMsgFeedback() {
         thread(start = true) {
             val receiver = ByteArray(1024)
             try {
-                while (!firstSuccess && hasRun) {
+                while (!sendWifiInfoSuccess && hasRun) {
                     L.e("开始监听wifi信息发送回复")
-                    socketClient.receive(DatagramPacket(receiver, receiver.size))
-                    val reader = BufferedReader(ByteArrayInputStream(receiver).reader())
-                    var resp = ""
-                    var line = reader.readLine()
-                    while (line != null) {
-                        resp += line
-                        line = reader.readLine()
+                    socket?.receive(DatagramPacket(receiver, receiver.size))
+                    ByteArrayInputStream(receiver).use {
+                        BufferedReader(it.reader()).use {
+                            var resp = ""
+                            var line = it.readLine()
+                            while (line != null) {
+                                resp += line
+                                line = it.readLine()
+                            }
+
+                            checkWifiUDPResp(resp)
+                        }
                     }
-                    // 成功返回：{"cmdType":2,"deviceReply":"dataRecived"}
-                    L.e("接收到回复：$resp")
-                    firstSuccess =
-                        !TextUtils.isEmpty(resp) && JSONObject(resp).has("deviceReply")
-                                && JSONObject(resp).getString("deviceReply") == "dataRecived"
+
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -179,23 +139,27 @@ class SoftAPService(context: Context) {
     }
 
     /**
-     * 监听获取设备签名
+     * 检查设备对应 udp 报文的相应内容
      */
-    private fun receiverSecond() {
-        var hasReceiver = false
-        thread(start = true) {
-            val receiver = ByteArray(1024)
-            try {
-                while (!hasReceiver && !secondSuccess && hasRun) {
-                    hasReceiver = true
-                    L.e("开始监听设备签名回复")
-                    socketClient.receive(DatagramPacket(receiver, receiver.size))
-                    val reader = BufferedReader(ByteArrayInputStream(receiver).reader())
-                    reader(reader)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                fail(LISTEN_SIGNATURE_FAIL, "监听设备签名失败")
+    private fun checkWifiUDPResp(resp: String) {
+
+        // 成功返回：{"cmdType":2,"productId":"0BCDALFUO8","deviceName":"dev4","protoVersion":"2.0"}
+        if (TextUtils.isEmpty(resp)) {
+            sendWifiInfoSuccess = false
+            L.e("设备没有对 udp 报文做响应")
+
+        } else {
+            var resJson = JSONObject(resp)
+            if (resJson == null)  return
+            L.e("接收到回复：${resJson}")
+
+            sendWifiInfoSuccess = resJson.has("productId") && resJson.has("deviceName")
+
+            if (sendWifiInfoSuccess) {
+                listener?.onStep(SoftAPStep.STEP_GOT_DEVICE_INFO)
+                val deviceInfo = DeviceInfo(resJson)
+                listener?.onSuccess(deviceInfo)
+                reconnectedWifi(deviceInfo)
             }
         }
     }
@@ -219,120 +183,6 @@ class SoftAPService(context: Context) {
         listener?.onFail(code.toString(), message)
         L.e(message)
         stopConnect()
-    }
-
-    /**
-     * requestDeviceInfo
-     * <p>
-     * 成功响应：
-     * {
-     * "cmdType":  2,
-     * "productId": "HH92MED4FI",
-     * "deviceName":   "wifi",
-     * "connId":   "happy",
-     * "signature":    "f3e3b550dd0a63c63e69661498693fbab989215c",
-     * "timestamp":    1562127932,
-     * "wifiState":    "connected"
-     * }
-     * <p>
-     * 若wifi已连接，且连接出错，立刻响应错误：
-     * {
-     * "cmdType":  2,
-     * "deviceReply":  "Current_Error",
-     * "log":  "MQTT connect error! (1, -28928)"
-     * }
-     * <p>
-     * 新连接上，且上次有错误日志，则先响应若干条：
-     * {
-     * "cmdType":  2,
-     * "deviceReply":  "Previous_Error",
-     * "log":  "TCP socket bind error!(16, 112)"
-     * }
-     */
-    private fun reader(bufferedReader: BufferedReader) {
-        try {
-            var jsonStr = ""
-            var errorStr = ""
-            try {
-                val nowStr = bufferedReader.readLine()
-                if (!TextUtils.isEmpty(nowStr)) {
-                    jsonStr += nowStr
-                }
-            } catch (e: Exception) {
-            }
-            L.e("response:$jsonStr")
-            val msgArray = processReceivedJSONString(jsonStr)
-            var hasCurrentError = false
-            var deviceInfoObj = JSONObject()
-            val connectionErrorArray = JSONArray()
-            L.e("msgArray:$msgArray")
-            for (msgInfo in msgArray) {
-                if (msgInfo.has(deviceReplyKey)) {
-                    val deviceReplyType = msgInfo.getString(deviceReplyKey)
-                    if (deviceReplyType == "Current_Error") {
-                        hasCurrentError = true
-                        errorStr = errorStr + msgInfo.getString("log") + ';'.toString()
-                        connectionErrorArray.put(msgInfo)
-                    } else if (deviceReplyType == "Previous_Error") {
-                        errorStr = errorStr + msgInfo.getString("log") + ';'.toString()
-                        connectionErrorArray.put(msgInfo)
-                    }
-                } else if (msgInfo.has("wifiState")) {
-                    deviceInfoObj = msgInfo
-                }
-            }
-            deviceInfoObj.put("errorLogs", connectionErrorArray)
-            if (hasCurrentError) {//网络连接失败
-                fail(SIGNATURE_FAIL, "设备返回结果为联网失败")
-            }
-            if (deviceInfoObj.getString("wifiState") == "connected") {
-                secondSuccess = true
-                listener?.onStep(SoftAPStep.STEP_GOT_DEVICE_INFO)
-                val deviceInfo = DeviceInfo(deviceInfoObj)
-                listener?.onSuccess(deviceInfo)
-                reconnectedWifi(deviceInfo)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    @Throws(JSONException::class)
-    private fun genLinkString(ssid: String, password: String): String {
-        val jsonObject = JSONObject()
-        jsonObject.put("cmdType", 1)
-        jsonObject.put("ssid", ssid)
-        jsonObject.put("password", password)
-        return jsonObject.toString()
-    }
-
-    @Throws(IOException::class)
-    private fun sendMessage(message: ByteArray) {
-        socketClient?.let {
-            it.send(DatagramPacket(message, message.size, InetAddress.getByName(host), port))
-        }
-    }
-
-    @Throws(JSONException::class)
-    private fun genRequestDeviceInfoString(): String {
-        val jsonObject = JSONObject()
-        jsonObject.put("cmdType", 0)
-        jsonObject.put("timestamp", System.currentTimeMillis() / 1000)
-        return jsonObject.toString()
-    }
-
-    @Throws(JSONException::class)
-    private fun processReceivedJSONString(jsonString: String): List<JSONObject> {
-        L.e("start parse response")
-        val json = jsonString.replace("}{", "}&Split&{")
-        val jsonArr = json.split("&Split&")
-        val jsonObjectArray = ArrayList<JSONObject>()
-
-        jsonArr.forEach {
-            jsonObjectArray.add(JSONObject(it))
-        }
-        L.e("start parse response success")
-        return jsonObjectArray
     }
 
 }
