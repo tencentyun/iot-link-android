@@ -26,6 +26,7 @@ class AppData private constructor() {
 
     //信鸽token
     var xg_token = ""
+    var bindDeviceToken = ""
     //用户
     private var user: User? = null
     var userInfo = UserInfo()
