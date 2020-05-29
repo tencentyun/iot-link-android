@@ -4,11 +4,14 @@ import com.kitlink.R
 import com.kitlink.fragment.*
 import com.kitlink.popup.CommonPopupWindow
 import com.mvp.IPresenter
-import com.kitlink.activity.BaseActivity
+import com.mvp.presenter.GetBindDeviceTokenPresenter
+import com.mvp.view.GetBindDeviceTokenView
+import com.util.L
 import kotlinx.android.synthetic.main.activity_soft_ap.*
 
-class SoftApActivity : BaseActivity() {
+class SoftApActivity : PActivity(), GetBindDeviceTokenView {
 
+    private lateinit var presenter: GetBindDeviceTokenPresenter
     private var ssid = ""
     private var bssid = ""
     private var password = ""
@@ -25,6 +28,7 @@ class SoftApActivity : BaseActivity() {
     }
 
     override fun initView() {
+        presenter = GetBindDeviceTokenPresenter(this)
         softAppStepFragment = SoftAppStepFragment()
         wifiFragment = WifiFragment(WifiFragment.soft_ap)
         softHotspotFragment = SoftHotspotFragment()
@@ -60,11 +64,7 @@ class SoftApActivity : BaseActivity() {
                     it.bssid = if (bssid == null) "" else bssid
                     it.password = password
                 }
-                showFragment(softHotspotFragment, wifiFragment)
-                showTitle(
-                    getString(R.string.soft_ap),
-                    getString(R.string.close)
-                )
+                presenter.getBindDeviceToken()
             }
         }
         softHotspotFragment.onNextListener = object : SoftHotspotFragment.OnNextListener {
@@ -140,9 +140,26 @@ class SoftApActivity : BaseActivity() {
         }
     }
 
+    override fun getPresenter(): IPresenter? {
+        return presenter
+    }
+
     override fun onDestroy() {
         closePopup?.dismiss()
         super.onDestroy()
+    }
+
+    override fun onSuccess(token: String) {
+        showFragment(softHotspotFragment, wifiFragment)
+        showTitle(
+            getString(R.string.soft_ap),
+            getString(R.string.close)
+        )
+        L.e("getToken onSuccess token:" + token)
+    }
+
+    override fun onFail(msg: String) {
+        L.e("getToken onFail msg:" + msg)
     }
 
 }
