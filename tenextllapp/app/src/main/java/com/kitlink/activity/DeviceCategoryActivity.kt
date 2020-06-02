@@ -87,9 +87,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             RequestCode.get_parent_category_list-> {
                 if (response.isSuccess()) {
                     response.parse(DeviceCategoryListResponse::class.java)?.run {
-                        L.e("推荐设备分类列表：${JsonManager.toJson(List)}")
-                        App.data.recommendDeviceCategoryList.clear()
-                        App.data.recommendDeviceCategoryList.addAll(List)
+                        App.data.recommendDeviceCategoryList = List
                         val adapter = MyTabAdapter()
                         for (item in List) {
                             adapter.titleList.add(item.CategoryName)

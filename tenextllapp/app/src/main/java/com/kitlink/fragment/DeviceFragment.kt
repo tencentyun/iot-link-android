@@ -114,10 +114,8 @@ class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnIte
                     val productsList  = arrayListOf<String>()
                     productsList.add(productList[position].ProductId)
                     HttpRequest.instance.getProductsConfig(productsList, this)
-                    Toast.makeText(view.context, productList[position].ProductName + " is clicked", Toast.LENGTH_LONG).show()
                 }
                 R.id.gv_devices->{
-                    Toast.makeText(view.context, categoryList[position].CategoryName + " is clicked", Toast.LENGTH_LONG).show()
                     jumpActivity(SmartConnectActivity::class.java)
                 }
             }
