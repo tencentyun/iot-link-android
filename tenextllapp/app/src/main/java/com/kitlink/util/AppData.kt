@@ -51,7 +51,7 @@ class AppData private constructor() {
     val shareDeviceList = arrayListOf<DeviceEntity>()
 
     // 推荐设备分类列表
-    val recommendDeviceCategoryList = arrayListOf<DeviceCategoryEntity>()
+    var recommendDeviceCategoryList = arrayListOf<DeviceCategoryEntity>()
 
     // 屏幕宽度
     var screenWith = 0
