@@ -12,6 +12,7 @@ import com.kitlink.device.TCLinkException
 import com.kitlink.device.softap.SoftAPService
 import com.kitlink.device.softap.SoftAPStep
 import com.kitlink.util.PingUtil
+import com.kitlink.util.WifiUtil
 import com.util.L
 import org.json.JSONArray
 import org.json.JSONException
@@ -49,6 +50,14 @@ class SmartConfigService(context: Context) : ConfigService() {
 
     fun startConnect(task: SmartConfigTask, listener: SmartConfigListener) {
         this.listener = listener
+
+        // 如果不是 2.4GHz 的 wifi 快速失败
+        if (!WifiUtil.is24GHz(context)) {
+            this.listener?.onFail(
+                TCLinkException("CONNECT_TO_DEVICE_FAILURE", "wifi 的频率不是 2.4GHz"))
+            return
+        }
+
         this.task = task
         thread(start = true) {
             try {
