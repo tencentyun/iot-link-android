@@ -1,0 +1,19 @@
+<script type="text/javascript">
+  function openCamera(){
+      JsBridge.openCamera();
+  }
+
+  function deleteFile(){
+      JsBridge.deleteTempImage("path");
+  }
+
+  function captureSuccess(){
+      alert("java 调用 js 方法");
+  }
+</script>
+</head>
+<body>
+<input type="button" value="调用" onClick="openCamera()" />
+<input type="button" value="删除" onClick="deleteFile()" />
+
+</body>
