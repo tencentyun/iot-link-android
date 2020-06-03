@@ -19,3 +19,5 @@ jobs:
           java-version: 1.8
       - name: Build with Gradle
         run: tenextllapp/gradlew build
+      - name: Package apk with Gradle
+        run: cd tenextllapp && ./gradlew assembleRelease && cd ..
