@@ -23,7 +23,6 @@ class GetBindDeviceTokenModel(view: GetBindDeviceTokenView) : ParentModel<GetBin
 
     override fun fail(msg: String?, reqCode: Int) {
         isCommit = false
-        Log.e("XXX", "GetBindDeviceTokenModel fail msg:" + msg)
         view?.onFail(msg!!)
     }
 
