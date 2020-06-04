@@ -21,3 +21,7 @@ jobs:
         run: tenextllapp/gradlew build
       - name: Package apk with Gradle
         run: cd tenextllapp && ./gradlew assembleRelease && cd ..
+      - name: Archive the generated Apk
+        uses: actions/upload-artifact@v2
+        with:
+          path: tenextllapp/app/build/outputs/apk/**/*.apk
