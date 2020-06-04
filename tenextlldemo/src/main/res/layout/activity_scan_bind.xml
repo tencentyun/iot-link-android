@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ScanBindActivity">
+
+    <include
+        android:id="@+id/menu_scan_bind"
+        layout="@layout/menu_back_layout" />
+
+    <EditText
+        android:id="@+id/et_scan_signature"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/gray_F2F4F5"
+        android:hint="扫码获取到的设备签名"
+        app:layout_constraintTop_toBottomOf="@+id/menu_scan_bind" />
+
+    <TextView
+        android:id="@+id/btn_scan_bind"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_rad4_color_006eff"
+        android:gravity="center"
+        android:text="绑定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_20"
+        app:layout_constraintTop_toBottomOf="@+id/et_scan_signature" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

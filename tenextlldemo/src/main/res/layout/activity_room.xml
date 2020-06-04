@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/room_contain"
+    android:background="@color/white"
+    tools:context=".activity.RoomActivity">
+
+    <include
+        android:id="@+id/room_setting_menu"
+        layout="@layout/menu_back_layout" />
+
+    <TextView
+        android:id="@+id/tv_room_setting_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="房间名称"
+        android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintBottom_toBottomOf="@+id/line_room_setting" />
+
+    <TextView
+        android:id="@+id/tv_room_setting_name"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginEnd="58dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:text="大厅"
+        android:textColor="@color/gray_cccccc"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintBottom_toBottomOf="@+id/line_room_setting"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="20dp"
+
+        android:src="@mipmap/icon_right_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_room_setting_title"
+        app:layout_constraintRight_toRightOf="@+id/tv_room_setting_title"
+        app:layout_constraintTop_toTopOf="@+id/tv_room_setting_title" />
+
+    <View
+        android:id="@+id/line_room_setting"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/gray_F5F5F5"
+        app:layout_constraintTop_toBottomOf="@+id/room_setting_menu" />
+
+
+    <TextView
+        android:id="@+id/tv_delete_room"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_rad4_color_e54545"
+        android:gravity="center"
+        android:text="@string/delete_room"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_20"
+        app:layout_constraintTop_toBottomOf="@+id/line_room_setting" />
+
+    <View
+        android:id="@+id/room_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7"
+        android:background="@color/black"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.InviteMemberActivity">
+
+    <include
+        android:id="@+id/menu_invite_member"
+        layout="@layout/menu_back_layout" />
+
+
+    <EditText
+        android:id="@+id/et_invite_account"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:hint="手机号/邮箱"
+        android:maxLines="1"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/menu_invite_member" />
+
+    <TextView
+        android:id="@+id/tv_invite_commit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/invite"
+        android:textSize="@dimen/ts_20"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@drawable/btn_rad4_color_006eff"
+        app:layout_constraintTop_toBottomOf="@+id/et_invite_account" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

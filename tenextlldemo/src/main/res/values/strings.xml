@@ -1,0 +1,104 @@
+<resources>
+    <string name="app_name">TenextSDKDemo</string>
+
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="verify">确认</string>
+    <string name="confirm">确定</string>
+    <string name="invite">邀请</string>
+    <string name="share">分享</string>
+    <string name="commit">提交</string>
+    <string name="refuse">拒绝</string>
+    <string name="accept">接受</string>
+    <string name="agree">同意</string>
+    <string name="save">保存</string>
+
+
+    <string name="add_device">添加设备</string>
+    <string name="device_list">设备列表</string>
+
+    <string name="scan_add">扫码添加</string>
+    <string name="smart_config">智能配网</string>
+    <string name="soft_ap">自助配网</string>
+
+    <string name="personal_info">个人信息</string>
+    <string name="message_notify">消息通知</string>
+    <string name="feedback">意见反馈</string>
+    <string name="nick">昵称</string>
+    <string name="telephone_number">手机号</string>
+    <string name="modify_password">修改密码</string>
+    <string name="logout">退出登录</string>
+    <string name="set_avatar">设置头像</string>
+    <string name="take_photo">拍照</string>
+    <string name="select_local_album">选择图库</string>
+
+    <!--家庭管理-->
+    <string name="family_manager">家庭管理</string>
+    <string name="family_name">家庭名称</string>
+    <string name="invite_family_member">邀请家庭成员</string>
+    <string name="family_member">家庭成员</string>
+    <string name="add_family">添加家庭</string>
+    <string name="family_address">家庭位置</string>
+    <string name="empty_family">请输入家庭名称</string>
+    <string name="empty_room">请输入房间名称</string>
+    <string name="add_room">添加房间</string>
+    <string name="room_manager">房间管理</string>
+    <string name="family_detail">家庭详情</string>
+    <string name="delete_family">删除家庭</string>
+    <string name="exit_family">退出家庭</string>
+    <string name="invite_member">邀请成员</string>
+    <string name="room_setting">房间设置</string>
+    <string name="delete_room">删除房间</string>
+    <string name="room_name">家庭名称</string>
+    <string name="member_setting">成员设置</string>
+    <string name="member_name">成员名称</string>
+    <string name="member_role">角色</string>
+    <string name="member_account">关联账号</string>
+    <string name="role_owner">所有者</string>
+    <string name="role_member">成员</string>
+    <string name="delete_member">移除成员</string>
+
+    <!--popup toast-->
+    <string name="toast_delete_family_title">您确定要删除该家庭吗？</string>
+    <string name="toast_delete_family_content">删除家庭后，系统将清除所有的成员与家庭数据，该家庭下的设备也将被删除</string>
+    <string name="toast_exit_family_title">您确定要退出该家庭吗？</string>
+    <string name="toast_exit_family_content">退出家庭后，可重新接受邀请</string>
+    <string name="toast_delete_room_title">您确定要删除该房间吗？</string>
+    <string name="toast_delete_room_content">删除房间后，系统将清除房间数据，该房间下的设备也将被删除</string>
+    <string name="toast_delete_member_title">您确定要删除该成员吗？</string>
+    <string name="toast_delete_member_content">删除成员后，可重新邀请</string>
+    <string name="delete_toast_title">确定要删除设备码？</string>
+    <string name="delete_toast_content">删除后数据无法直接恢复</string>
+
+    <string name="device">\t\t设备\t\t</string>
+    <string name="family">\t\t家庭\t\t</string>
+    <string name="notify">\t\t通知\t\t</string>
+    <string name="empty_message">暂无消息</string>
+
+    <!--云端定时-->
+    <string name="cloud_timing">云端定时</string>
+    <string name="add_timer">添加定时</string>
+    <string name="modify_timer">修改定时</string>
+    <string name="timer_name">定时名称</string>
+    <string name="action_name">动作名称</string>
+    <string name="repeat">重复</string>
+    <string name="work_day">工作日</string>
+    <string name="weekend">周末</string>
+    <string name="device_action">设备动作</string>
+    <string name="delete_action">删除动作</string>
+    <string name="timing_name">名称设置</string>
+    <string name="no_and_add_timer">当前暂无云端定时，点击按钮进行添加</string>
+    <string name="every_sunday">每周日</string>
+    <string name="every_monday">每周一</string>
+    <string name="every_tuesday">每周二</string>
+    <string name="every_wednesday">每周三</string>
+    <string name="every_thursday">每周四</string>
+    <string name="every_friday">每周五</string>
+    <string name="every_saturday">每周六</string>
+
+    <!--设备分享-->
+    <string name="device_share">设备分享</string>
+    <string name="share_device">共享设备</string>
+    <string name="add_share">添加分享</string>
+
+</resources>

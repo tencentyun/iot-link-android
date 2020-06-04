@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.FeedbackActivity">
+
+    <!--    返回键-->
+    <include
+        android:id="@+id/feedback_sbhv"
+        layout="@layout/menu_back_layout" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/feedback"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintBottom_toTopOf="@+id/et_feedback_problem"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_sbhv" />
+
+    <TextView
+        android:id="@+id/tv_feedback_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="0/200"
+        android:textColor="@color/black_888888"
+        android:textSize="@dimen/ts_12"
+        app:layout_constraintBottom_toTopOf="@+id/et_feedback_problem"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_sbhv" />
+
+    <EditText
+        android:id="@+id/et_feedback_problem"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="57dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/gray_F5F5F5"
+        android:hint="请填写10个字以上文字以便我们更好的帮助您"
+        android:text="反馈测试反馈测试反馈测试"
+        android:gravity="left"
+        android:maxLength="100"
+        android:padding="16dp"
+        android:textColor="@color/black_333333"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_sbhv" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="相关截图"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_feedback_problem" />
+
+   <EditText
+       android:id="@+id/et_picture"
+       android:layout_width="match_parent"
+       android:layout_height="40dp"
+       android:layout_marginStart="20dp"
+       android:layout_marginBottom="20dp"
+       android:hint="图片地址"
+       android:text="https://iotexplore-app-1256872341.cos.ap-guangzhou.myqcloud.com/iotexplorer-app-logs/user_43761249044926464/temp_crop.jpg"
+       android:background="@color/gray_F5F5F5"
+       android:layout_marginTop="60dp"
+       app:layout_constraintTop_toBottomOf="@+id/et_feedback_problem"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="联系方式"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintBottom_toTopOf="@+id/et_feedback_phone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_picture" />
+
+    <EditText
+        android:id="@+id/et_feedback_phone"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/gray_F5F5F5"
+        android:hint="手机号码/邮箱"
+        android:text="13800138000"
+        android:inputType="phone|textEmailAddress"
+        android:maxLength="200"
+        android:maxLines="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/black_333333"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintTop_toBottomOf="@+id/et_picture" />
+
+    <TextView
+        android:id="@+id/tv_feedback_commit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_rad4_color_006eff"
+        android:gravity="center"
+        android:text="@string/commit"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_20"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_feedback_phone" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_feedback_commit" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

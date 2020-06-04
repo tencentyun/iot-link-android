@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="translucent">#00FFFFFF</color>
+    <color name="line_F2F4F5">#F2F4F5</color>
+    <color name="line_555869">#555869</color>
+
+    <!--    主页面-->
+    <color name="main_tab_normal">@color/black_888888</color>
+    <color name="main_tab_hover">@color/blue_006EFF</color>
+    <color name="line">#EAEAEA</color>
+
+    <!--    蓝色-->
+    <color name="blue_006EFF">#006EFF</color>
+    <color name="blue_0063E5">#0063E5</color>
+    <color name="blue_33006EFF">#33006EFF</color>
+    <color name="blue_8BBDFF">#8BBDFF</color>
+
+    <!--    黑色-->
+    <color name="black">#000000</color>
+    <color name="black_333333">#333333</color>
+    <color name="black_888888">#888888</color>
+    <color name="black_999999">#999999</color>
+    <!--    灰色-->
+    <color name="gray_bbbbbb">#BBBBBB</color>
+    <color name="gray_cccccc">#CCCCCC</color>
+    <color name="gray_d7d7d7">#D7D7D7</color>
+    <color name="gray_dcdcdc">#DCDCDC</color>
+    <color name="gray_dddddd">#DDDDDD</color>
+    <color name="gray_F2F2F2">#F2F2F2</color>
+    <color name="gray_F2F4F5">#F2F4F5</color>
+    <color name="gray_F5F5F5">#F5F5F5</color>
+    <color name="gray_F7F9FA">#F7F9FA</color>
+    <color name="gray_e6e6e6">#E6E6E6</color>
+    <!--红色-->
+    <color name="red_eb3d3d">#EB3D3D</color>
+    <color name="red_e54545">#E54545</color>
+
+    <!--绿色-->
+    <color name="green_1aad19">#1AAD19</color>
+</resources>

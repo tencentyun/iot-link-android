@@ -1,0 +1,2 @@
+include ':app', ':qrcode', ':tenextll', ':util', ':picture', ':view-release'
+include ':tenextlldemo'

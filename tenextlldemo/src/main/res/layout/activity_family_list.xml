@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.FamilyListActivity">
+
+    <include
+        android:id="@+id/family_list_menu"
+        layout="@layout/menu_back_layout" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_family_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_add_family"
+        app:layout_constraintTop_toBottomOf="@+id/family_list_menu" />
+
+    <TextView
+        android:id="@+id/tv_add_family"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_rad4_color_006eff"
+        android:gravity="center"
+        android:text="@string/add_family"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_20"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

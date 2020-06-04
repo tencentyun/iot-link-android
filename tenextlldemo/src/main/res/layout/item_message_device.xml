@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:ios="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+                android:id="@+id/iv_icon_message"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="25dp"
+                android:src="@mipmap/icon_light"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/tv_message_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:text="警告"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_16"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@+id/iv_icon_message"
+                app:layout_constraintTop_toTopOf="@+id/iv_icon_message" />
+
+        <TextView
+                android:id="@+id/tv_message_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="设备已经离线"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_12"
+                app:layout_constraintLeft_toRightOf="@+id/iv_icon_message"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_message_title" />
+
+        <TextView
+                android:id="@+id/tv_message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:text="2017-09-10  16:20"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_12"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_message_title"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_message_title" />
+
+        <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/gray_F5F5F5"
+                app:layout_constraintTop_toBottomOf="@+id/iv_icon_message" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+            android:id="@+id/rl_delete_message"
+            android:layout_width="57dp"
+            android:layout_height="match_parent"
+            android:background="@color/red_e54545">
+
+        <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/ic_delete" />
+    </RelativeLayout>
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

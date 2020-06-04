@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    android:gravity="center_vertical"
+    android:minWidth="60dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:text="家庭"
+    android:id="@+id/tv_family_name"
+    android:textColor="@color/black_333333"
+    android:textSize="@dimen/ts_18"
+    android:textStyle="bold" />

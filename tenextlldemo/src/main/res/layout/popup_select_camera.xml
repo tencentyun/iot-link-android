@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="323dp"
+        android:background="@drawable/popup_select_camera_bg"
+        android:orientation="vertical">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/set_avatar"
+            android:textStyle="bold"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_20" />
+
+    <TextView
+            android:id="@+id/popup_take_photo"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/take_photo"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_24" />
+
+    <TextView
+            android:id="@+id/popup_select_local_album"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/select_local_album"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_24" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="#F2F4F5" />
+
+    <TextView
+            android:id="@+id/tv_popup_select_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/btn_rad4_color_e6e6e6"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/black_999999"
+            android:textSize="20sp" />
+
+</LinearLayout>

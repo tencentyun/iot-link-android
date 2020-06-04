@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/number_popup"
+    android:layout_width="match_parent"
+    android:layout_height="226dp"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/tv_number_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="标题"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_18" />
+
+    <TextView
+        android:id="@+id/tv_number_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="59dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:gravity="center_vertical"
+        android:text="删除动作"
+        android:textColor="@color/blue_006EFF"
+        android:textSize="@dimen/ts_18"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_number_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_number_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="10%"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_24"
+        android:textStyle="bold" />
+
+    <SeekBar
+        android:id="@+id/sp_popup_seek_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_above="@+id/tv_number_commit"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:scrollbarSize="20dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/tv_number_commit"
+        android:background="@color/gray_F2F2F2" />
+
+    <TextView
+        android:id="@+id/tv_number_commit"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="@string/confirm"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_18" />
+
+</RelativeLayout>

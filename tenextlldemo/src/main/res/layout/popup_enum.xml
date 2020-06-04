@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+    <TextView
+            android:id="@+id/tv_popup_enum_title"
+            android:layout_width="wrap_content"
+            android:layout_height="59dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:text="标题"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18" />
+
+    <TextView
+            android:id="@+id/tv_popup_enum_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="59dp"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="20dp"
+            android:visibility="invisible"
+            android:text="删除动作"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/blue_006EFF"
+            android:textSize="@dimen/ts_18" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_popup_enum_title"
+            android:background="@color/gray_F2F2F2" />
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_popup_enum"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="56dp" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/tv_enum_commit"
+            android:background="@color/gray_F2F2F2" />
+
+    <TextView
+            android:id="@+id/tv_enum_commit"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_below="@+id/rv_popup_enum"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_18" />
+
+
+</RelativeLayout>

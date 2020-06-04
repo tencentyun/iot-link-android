@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.tenext.demo.view.RoundImageView
+                android:id="@+id/iv_item_share_user"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:src="@mipmap/image_default_portrait"
+                app:layout_constraintBottom_toTopOf="@+id/item_share_user_line2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/tv_item_user_alias"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_18"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_item_share_user"
+                app:layout_constraintLeft_toRightOf="@+id/iv_item_share_user"
+                app:layout_constraintRight_toLeftOf="@+id/tv_item_user_date"
+                app:layout_constraintTop_toTopOf="@+id/iv_item_share_user" />
+
+        <TextView
+                android:id="@+id/tv_item_user_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:text="2020-01-08  14：02"
+                android:textColor="@color/gray_cccccc"
+                android:textSize="@dimen/ts_16"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_item_share_user"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_item_share_user" />
+
+        <View
+                android:id="@+id/item_share_user_line2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/gray_F5F5F5"
+                app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+            android:id="@+id/rl_delete_share_user"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@color/red_e54545">
+
+        <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/ic_delete" />
+    </RelativeLayout>
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

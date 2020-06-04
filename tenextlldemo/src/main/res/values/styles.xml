@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/blue_006EFF</item>
+        <item name="colorPrimaryDark">@color/blue_006EFF</item>
+        <item name="colorAccent">@color/blue_006EFF</item>
+    </style>
+
+    <style name="PopupWindowCamera" parent="android:Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/camera_in</item>
+        <item name="android:windowExitAnimation">@anim/camera_out</item>
+    </style>
+
+    <style name="PopupWindowCommon" parent="android:Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/common_in</item>
+        <item name="android:windowExitAnimation">@anim/common_out</item>
+    </style>
+
+</resources>

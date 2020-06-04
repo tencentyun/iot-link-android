@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tenext.demo">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activity.BindMobilePhoneActivity"/>
+        <activity android:name=".activity.ForgotPasswordActivity"/>
+        <activity android:name=".activity.SetPasswordActivity" />
+        <activity android:name=".activity.ShareDeviceListActivity" />
+        <activity android:name=".activity.ShareDeviceActivity" />
+        <activity android:name=".activity.ShareUserListActivity" />
+        <activity android:name=".activity.SelectRoomActivity" />
+        <activity android:name=".activity.WeekRepeatActivity" />
+        <activity android:name=".activity.AddTimingProjectActivity" />
+        <activity android:name=".activity.TimingProjectActivity" />
+        <activity android:name=".activity.ConnectDeviceActivity" />
+        <activity android:name=".activity.ScanBindActivity" />
+        <activity android:name=".activity.AddRoomActivity" />
+        <activity android:name=".activity.RoomActivity" />
+        <activity android:name=".activity.MemberActivity" />
+        <activity android:name=".activity.InviteMemberActivity" />
+        <activity android:name=".activity.RoomListActivity" />
+        <activity android:name=".activity.FamilyActivity" />
+        <activity android:name=".activity.AddFamilyActivity" />
+        <activity android:name=".activity.FeedbackActivity" />
+        <activity android:name=".activity.MessageActivity" />
+        <activity android:name=".activity.PersonalInfoActivity" />
+        <activity android:name=".activity.FamilyListActivity" />
+        <activity android:name=".activity.ControlPanelActivity" />
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.AddDeviceActivity" />
+    </application>
+
+</manifest>
