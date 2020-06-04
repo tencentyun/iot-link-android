@@ -24,4 +24,4 @@ jobs:
       - name: Archive the generated Apk
         uses: actions/upload-artifact@v2
         with:
-          path: tenextllapp/app/build/outputs/apk/release/app-release.apk
+          path: tenextllapp/app/build/outputs/apk/**/*.apk
