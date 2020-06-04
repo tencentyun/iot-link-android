@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.BindMobilePhoneActivity">
+
+    <include layout="@layout/menu_back_layout"
+        android:id="@+id/menu_bind_phone"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bind_phone_guideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6" />
+
+    <EditText
+        android:id="@+id/et_bind_phone"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="100dp"
+        android:inputType="phone"
+        android:layout_marginEnd="20dp"
+        android:hint="手机号"
+        android:maxLines="1"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/menu_bind_phone" />
+
+    <EditText
+        android:id="@+id/et_bind_code"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="10dp"
+        android:hint="验证码"
+        android:maxLength="6"
+        android:inputType="number"
+        android:maxLines="1"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bind_phone_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/et_bind_phone" />
+
+    <Button
+        android:id="@+id/btn_bind_phone_get_code"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:text="获取验证码"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toRightOf="@+id/bind_phone_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/et_bind_code" />
+
+    <Button
+        android:id="@+id/btn_bind_phone_commit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:text="绑定"
+        app:layout_constraintTop_toBottomOf="@+id/et_bind_code" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

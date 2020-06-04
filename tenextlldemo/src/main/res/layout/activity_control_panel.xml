@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/control_panel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ControlPanelActivity">
+
+    <include
+        android:id="@+id/menu_control_panel"
+        layout="@layout/menu_back_layout" />
+
+    <TextView
+        android:id="@+id/tv_delete_device"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center_vertical"
+        android:text="删除"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintBottom_toBottomOf="@+id/menu_control_panel"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/menu_control_panel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:gravity="center_vertical"
+        android:text="面板主题："
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menu_control_panel" />
+
+    <TextView
+        android:id="@+id/tv_panel_theme"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menu_control_panel" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_control_panel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/card_nav_bar"
+        app:layout_constraintTop_toBottomOf="@+id/tv_panel_theme" />
+
+    <!--NavBar-->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_template"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_template"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:src="@android:drawable/ic_lock_power_off" />
+
+                <TextView
+                    android:id="@+id/tv_template_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="4dp"
+                    android:text="标题"
+                    android:textColor="@color/black_333333"
+                    android:textSize="@dimen/ts_10" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_timing_project"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_timing_project"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:src="@android:drawable/ic_menu_today" />
+
+                <TextView
+                    android:id="@+id/tv_timing_project"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="4dp"
+                    android:text="云端定时"
+                    android:textColor="@color/black_333333"
+                    android:textSize="@dimen/ts_10" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:id="@+id/control_panel_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:alpha="0.7"
+        android:background="@color/black"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

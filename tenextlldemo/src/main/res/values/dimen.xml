@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="password_max_length">20</integer>
+
+    <dimen name="ts_10">10sp</dimen>
+    <dimen name="ts_12">12sp</dimen>
+    <dimen name="ts_14">14sp</dimen>
+    <dimen name="ts_16">16sp</dimen>
+    <dimen name="ts_18">18sp</dimen>
+    <dimen name="ts_20">20sp</dimen>
+    <dimen name="ts_24">24sp</dimen>
+    <dimen name="ts_34">34sp</dimen>
+
+    <dimen name="title_text_size_32">32sp</dimen>
+    <dimen name="title_text_size_34">32sp</dimen>
+
+    <dimen name="margin_start_15">15dp</dimen>
+    <dimen name="margin_end_15">15dp</dimen>
+
+    <dimen name="margin_start_20">20dp</dimen>
+    <dimen name="margin_end_20">20dp</dimen>
+
+    <dimen name="margin_start_30">30dp</dimen>
+    <dimen name="margin_end_30">30dp</dimen>
+
+    <dimen name="margin_top_60">60dp</dimen>
+
+</resources>

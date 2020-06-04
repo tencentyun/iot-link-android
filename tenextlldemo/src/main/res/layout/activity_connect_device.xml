@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ConnectDeviceActivity">
+
+    <include
+        android:id="@+id/menu_smart_config"
+        layout="@layout/menu_back_layout" />
+
+    <TextView
+        android:id="@+id/tv_select_wifi"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@color/translucent"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:text="未连接WIFI"
+        android:textColor="@color/black_333333"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/smart_second_line"
+        app:layout_constraintLeft_toLeftOf="@+id/smart_second_line"
+        app:layout_constraintRight_toLeftOf="@+id/iv_select_wifi" />
+
+    <ImageView
+        android:id="@+id/iv_select_wifi"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="15dp"
+        android:padding="11dp"
+        android:src="@mipmap/icon_black_next"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_select_wifi"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_select_wifi" />
+
+    <View
+        android:id="@+id/smart_second_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="87dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/gray_dddddd"
+        app:layout_constraintTop_toBottomOf="@+id/menu_smart_config" />
+
+    <View
+        android:id="@+id/smart_second_wifi_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="85dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/gray_dddddd"
+        app:layout_constraintTop_toBottomOf="@+id/smart_second_line" />
+
+
+    <EditText
+        android:id="@+id/et_select_wifi_pwd"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/translucent"
+        android:hint="请输入手机连接Wi-Fi密码"
+        android:imeOptions="actionNone"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="#BABABA"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintBottom_toBottomOf="@+id/smart_second_wifi_pwd"
+        app:layout_constraintLeft_toLeftOf="@+id/smart_second_wifi_pwd"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_progress_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="配网进度："
+        android:textSize="@dimen/ts_18"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_select_wifi_pwd" />
+
+    <TextView
+        android:id="@+id/tv_progress_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_14"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_progress_title"
+        app:layout_constraintLeft_toRightOf="@+id/tv_progress_title"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_progress_title" />
+
+    <TextView
+        android:id="@+id/tv_select_hotspot"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_rad4_color_006eff"
+        android:gravity="center"
+        android:text="保存WIFI信息并选择热点"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_18"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/smart_second_wifi_pwd" />
+
+    <TextView
+        android:id="@+id/tv_reselect_hotspot"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="160dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_rad4_color_006eff"
+        android:gravity="center"
+        android:text="重新选择热点"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintTop_toBottomOf="@+id/smart_second_wifi_pwd" />
+
+    <TextView
+        android:id="@+id/tv_start_connect"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_rad4_color_006eff"
+        android:gravity="center"
+        android:text="开始配网"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintTop_toBottomOf="@+id/smart_second_wifi_pwd" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
