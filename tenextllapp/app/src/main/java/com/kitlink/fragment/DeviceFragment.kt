@@ -1,13 +1,18 @@
 package com.kitlink.fragment
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.kitlink.App
 import com.kitlink.R
+import com.kitlink.activity.BaseActivity
+import com.kitlink.activity.DeviceCategoryActivity
 import com.kitlink.activity.SmartConnectActivity
 import com.kitlink.activity.SoftApActivity
 import com.kitlink.entity.CategoryDeviceEntity
@@ -31,9 +36,19 @@ class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnIte
 
     private var mContext : Context = c
     private var devicesGridView : GridView? = null
-    var recommendDevicesGridView : GridView? = null
-    var categoryList = arrayListOf<CategoryDeviceEntity>()
-    var productList = arrayListOf<RecommDeviceEntity>()
+    private var recommendDevicesGridView : GridView? = null
+    private var categoryList = arrayListOf<CategoryDeviceEntity>()
+    private var productList = arrayListOf<RecommDeviceEntity>()
+    private var isRecommDeviceClicked = false
+    private var recommDeviceIndex = 0
+
+
+    private var permissions = arrayOf(
+        Manifest.permission.ACCESS_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
     override fun getPresenter(): IPresenter? {
         return null
@@ -109,15 +124,47 @@ class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnIte
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (view != null && parent != null) {
-            when (parent.id) {
-                R.id.gv_recommend_devices->{
-                    val productsList  = arrayListOf<String>()
-                    productsList.add(productList[position].ProductId)
-                    HttpRequest.instance.getProductsConfig(productsList, this)
+
+            if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+                when (parent.id) {
+                    R.id.gv_recommend_devices->{
+                        isRecommDeviceClicked = true
+                        recommDeviceIndex = position
+                    }
+                    R.id.gv_devices->{
+                        isRecommDeviceClicked = false
+                    }
                 }
-                R.id.gv_devices->{
-                    jumpActivity(SmartConnectActivity::class.java)
+                requestPermissions(permissions,1)
+            } else {
+                when (parent.id) {
+                    R.id.gv_recommend_devices->{
+                        val productsList  = arrayListOf<String>()
+                        productsList.add(productList[position].ProductId)
+                        HttpRequest.instance.getProductsConfig(productsList, this)
+                    }
+                    R.id.gv_devices->{
+                        jumpActivity(SmartConnectActivity::class.java)
+                    }
                 }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if (isRecommDeviceClicked) {
+                val productsList  = arrayListOf<String>()
+                productsList.add(productList[recommDeviceIndex].ProductId)
+                HttpRequest.instance.getProductsConfig(productsList, this)
+            } else {
+                jumpActivity(SmartConnectActivity::class.java)
             }
         }
     }
