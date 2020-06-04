@@ -53,3 +53,4 @@ def apk = file('app/build/outputs/apk/release/app-release.apk')
 artifacts {
     archives apk
 }
+
