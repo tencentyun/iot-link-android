@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.FamilyActivity">
+
+    <include
+        android:id="@+id/add_family_menu"
+        layout="@layout/menu_back_layout" />
+
+    <EditText
+        android:id="@+id/et_family_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:hint="填写家庭名称"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintBottom_toBottomOf="@+id/line_add_family1" />
+
+    <View
+        android:id="@+id/line_add_family1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/gray_F5F5F5"
+        app:layout_constraintTop_toBottomOf="@+id/add_family_menu" />
+
+    <EditText
+        android:id="@+id/et_family_address"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:hint="@string/family_address"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        app:layout_constraintBottom_toTopOf="@+id/line_add_family2"
+        app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />
+
+    <View
+        android:id="@+id/line_add_family2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/gray_F5F5F5"
+        app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />
+
+    <TextView
+        android:id="@+id/btn_add_family"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_rad4_color_006eff"
+        android:gravity="center"
+        android:text="@string/confirm"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_20"
+        app:layout_constraintTop_toBottomOf="@+id/line_add_family2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
