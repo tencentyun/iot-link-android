@@ -1,5 +1,6 @@
 package com.kitlink.activity
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -29,6 +30,7 @@ import com.mvp.IPresenter
 import com.qrcode.Constant
 import com.qrcode.ScannerActivity
 import com.util.L
+import com.util.T
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_device_category.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -41,6 +43,11 @@ import q.rorbin.verticaltablayout.widget.TabView
 
 
 class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerItemView, View.OnClickListener, VerticalTabLayout.OnTabSelectedListener{
+
+    private var permissions = arrayOf(
+        Manifest.permission.CAMERA
+    )
+
     override fun getPresenter(): IPresenter? {
         return null
     }
@@ -102,6 +109,15 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     }
                 }
             }
+            RequestCode.scan_bind_device-> {
+                if (response.isSuccess()) {
+                    T.show("添加成功")
+                    App.data.setRefreshLevel(2)
+                    finish()
+                } else {
+                    T.show(response.msg)
+                }
+            }
         }
     }
 
@@ -121,10 +137,22 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         return 0
     }
 
+    override fun permissionAllGranted() {
+        startActivityForResult(Intent(this, ScannerActivity::class.java), 103)
+    }
+
+    override fun permissionDenied(permission: String) {
+        requestPermission(arrayOf(permission))
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             iv_scann -> {
-                startActivityForResult(Intent(this, ScannerActivity::class.java), 103)
+                if (checkPermissions(permissions)) {
+                    startActivityForResult(Intent(this, ScannerActivity::class.java), 103)
+                } else {
+                    requestPermission(permissions)
+                }
             }
             iv_question -> {
                 jumpActivity(HelpCenterActivity::class.java)
