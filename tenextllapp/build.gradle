@@ -17,6 +17,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'maven'
+}
+
 allprojects {
     repositories {
         google()
@@ -30,10 +34,23 @@ allprojects {
             url "https://jitpack.io"
         }
     }
-
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "https://oss.sonatype.org/content/groups/public")
+            pom.project {
+                groupId "com.tencent.iot"
+                artifactId "iot-android-ll"
+            }
+        }
+    }
+}
+
+def apk = file('app/build/outputs/apk/release/app-release.apk')
+
+artifacts {
+    archives apk
 }
 
