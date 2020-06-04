@@ -24,5 +24,7 @@ jobs:
         run: tenextllapp/gradlew build
       - name: Package apk with Gradle
         run: cd tenextllapp && ./gradlew assembleRelease && cd ..
+
       - name: Upload apk to Maven
         run: cd tenextllapp && ./gradlew uploadArchives && cd ..
+
