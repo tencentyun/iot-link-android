@@ -31,4 +31,3 @@ jobs:
           path: tenextllapp/app/build/outputs/apk/**/*.apk
       - name: Publish Package
         run: cd tenextllapp && ./gradlew publish && cd ..
-
