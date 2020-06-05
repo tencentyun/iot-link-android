@@ -48,7 +48,7 @@ publishing {
     publications {
         mavenApk(MavenPublication) {
             groupId 'com.tencent.iot.explorer'
-            artifactId 'iot-android-core'
+            artifactId 'iot-android-ll'
             version '1.0.0-SNAPSHOT'
             artifact file('build/outputs/aar/tenextll-release.aar')
         }
