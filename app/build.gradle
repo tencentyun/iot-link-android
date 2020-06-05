@@ -4,9 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'signing'
-
-apply plugin: 'maven-publish'
+//apply plugin: 'maven-publish'
 
 android {
     signingConfigs {
@@ -120,31 +118,25 @@ dependencies {
 }
 
 
-publishing {
-    publications {
-        mavenApk(MavenPublication) {
-            groupId 'com.tencent.iot'
-            artifactId 'iot-android-ll'
-            version '1.0.0'
-            artifact file('build/outputs/apk/release/app-release.apk')
-        }
-    }
-    repositories {
-        maven {
-            name = "OSSRH"
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-//                def releasesRepoUrl = "./"
-//                def snapshotsRepoUrl = "./"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = System.getenv("SONATYPE_USERNAME")
-                password = System.getenv("SONATYPE_PASSWORD")
-            }
-        }
-    }
-}
-
-//signing {
-//    sign publishing.publications.mavenApk
+//publishing {
+//    publications {
+//        mavenApk(MavenPublication) {
+//            groupId 'com.tencent.iot.explorer'
+//            artifactId 'iot-android-ll'
+//            version '1.0.0-SNAPSHOT'
+//            artifact file('build/outputs/apk/release/app-release.apk')
+//        }
+//    }
+//    repositories {
+//        maven {
+//            name = "OSSRH"
+//            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+//            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+//            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+//            credentials {
+//                username = System.getenv("SONATYPE_USERNAME")
+//                password = System.getenv("SONATYPE_PASSWORD")
+//            }
+//        }
+//    }
 //}
