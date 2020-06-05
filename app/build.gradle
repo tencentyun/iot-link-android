@@ -145,6 +145,6 @@ publishing {
     }
 }
 
-signing {
-    sign publishing.publications.mavenApk
-}
+//signing {
+//    sign publishing.publications.mavenApk
+//}
