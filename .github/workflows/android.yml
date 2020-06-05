@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+  SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+
 jobs:
   build:
 
@@ -25,3 +29,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: tenextllapp/app/build/outputs/apk/**/*.apk
+      - name: Publish Package
+        run: cd tenextllapp && ./gradlew publish && cd ..
+
