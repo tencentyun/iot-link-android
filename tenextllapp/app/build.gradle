@@ -125,6 +125,7 @@ publishing {
             groupId 'com.tencent.iot'
             artifactId 'iot-android-ll'
             version '1.0.0'
+            artifact file('build/outputs/apk/release/app-release.apk')
         }
     }
     repositories {
@@ -132,6 +133,8 @@ publishing {
             name = "OSSRH"
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+//                def releasesRepoUrl = "./"
+//                def snapshotsRepoUrl = "./"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
                 username = System.getenv("SONATYPE_USERNAME")
@@ -141,6 +144,6 @@ publishing {
     }
 }
 
-//signing {
-//    sign publishing.publications.mavenApk
-//}
+signing {
+    sign publishing.publications.mavenApk
+}
