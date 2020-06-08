@@ -18,10 +18,16 @@ jobs:
         with:
           java-version: 1.8
       - name: Build with Gradle
-        run: tenextllapp/gradlew build
-      - name: Package apk with Gradle
-        run: cd tenextllapp && ./gradlew assembleRelease && cd ..
+        run: ./gradlew build
+      - name: Package apk and aar with Gradle
+        run: ./gradlew assembleRelease
       - name: Archive the generated Apk
         uses: actions/upload-artifact@v2
         with:
-          path: tenextllapp/app/build/outputs/apk/**/*.apk
+          name: apk
+          path: app/build/outputs/apk/**/*.apk
+      - name: Archive the generated Aar
+        uses: actions/upload-artifact@v2
+        with:
+          name: aar
+          path: tenextll/build/outputs/aar/*.aar
