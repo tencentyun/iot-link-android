@@ -49,7 +49,7 @@ publishing {
         mavenAar(MavenPublication) {
             groupId 'com.tencent.iot'
             artifactId 'iot-android-ll'
-            version '1.0.0'
+            version '1.0.0-SNAPSHOT'
             artifact file('build/outputs/aar/tenextll-release.aar')
         }
     }
