@@ -9,12 +9,16 @@
             layout="@layout/head_home1" />
 
     <ImageView
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:src="@mipmap/image_no_device"
-            app:layout_constraintBottom_toTopOf="@+id/tv_no_device_hint"
+            android:id="@+id/iv_no_device_add"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:src="@drawable/image_no_device"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/head_home1"
+            app:layout_constraintVertical_bias="0.45" />
 
     <TextView
             android:id="@+id/tv_no_device_hint"
@@ -26,20 +30,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-            android:id="@+id/tv_no_device_add"
-            android:layout_width="200dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/btn_rad4_color_0052d9"
-            android:gravity="center"
-            android:text="@string/add_device"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_20"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_no_device_hint" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
 </androidx.constraintlayout.widget.ConstraintLayout>

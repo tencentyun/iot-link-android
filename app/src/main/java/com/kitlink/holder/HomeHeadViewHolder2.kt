@@ -27,8 +27,8 @@ class HomeHeadViewHolder2 : CRecyclerView.HeadViewHolder<FamilyEntity> {
         itemView.iv_more.visibility = View.GONE
         itemView.iv_audio.visibility = View.GONE
 
-        itemView.tv_no_device_add.setOnClickListener {
-            headListener?.doAction(this, itemView.tv_no_device_add, 0)
+        itemView.iv_no_device_add.setOnClickListener {
+            headListener?.doAction(this, itemView.iv_no_device_add, 0)
         }
         itemView.iv_audio.setOnClickListener {
             headListener?.doAction(this, itemView.iv_audio, 1)

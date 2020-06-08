@@ -4,6 +4,7 @@ import android.text.TextUtils
 import android.view.View
 import com.kitlink.App
 import com.kitlink.R
+import com.kitlink.activity.HelpCenterActivity
 import com.kitlink.activity.SoftApActivity
 import com.mvp.IPresenter
 import com.mvp.presenter.ConnectPresenter
@@ -72,6 +73,7 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
         tv_tab_connect_way.setOnClickListener(this)
         tv_add_new_device.setOnClickListener(this)
         tv_back_to_home_page.setOnClickListener(this)
+        tv_connect_more_cause.setOnClickListener(this)
 
         wp_connected.setOnIncreaseListener(object : WaveProgress.OnIncreaseListener {
             override fun finish(view: WaveProgress, progress: Int) {
@@ -102,6 +104,9 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
             }
             tv_back_to_home_page -> {
                 backToMain()
+            }
+            tv_connect_more_cause -> {
+                jumpActivity(HelpCenterActivity::class.java)
             }
         }
     }
