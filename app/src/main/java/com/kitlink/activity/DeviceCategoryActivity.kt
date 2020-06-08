@@ -2,9 +2,11 @@ package com.kitlink.activity
 
 import android.Manifest
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.view.View
@@ -23,7 +25,6 @@ import com.kitlink.holder.DeviceListViewHolder
 import com.kitlink.response.BaseResponse
 import com.kitlink.response.DeviceCategoryListResponse
 import com.kitlink.util.HttpRequest
-import com.kitlink.util.JsonManager
 import com.kitlink.util.MyCallback
 import com.kitlink.util.RequestCode
 import com.mvp.IPresenter
@@ -33,8 +34,10 @@ import com.util.L
 import com.util.T
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_device_category.*
+import kotlinx.android.synthetic.main.bluetooth_adapter_invalid.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
+import kotlinx.android.synthetic.main.not_found_device.*
 import kotlinx.android.synthetic.main.scanning.*
 import q.rorbin.verticaltablayout.VerticalTabLayout
 import q.rorbin.verticaltablayout.adapter.TabAdapter
@@ -43,6 +46,8 @@ import q.rorbin.verticaltablayout.widget.TabView
 
 
 class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerItemView, View.OnClickListener, VerticalTabLayout.OnTabSelectedListener{
+
+    private val handler = Handler()
 
     private var permissions = arrayOf(
         Manifest.permission.CAMERA
@@ -61,13 +66,21 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
     }
 
+
+    private val runnable = Runnable {
+        iv_loading_cirecle.clearAnimation()
+        scanning.visibility = View.GONE
+        not_found_dev.visibility = View.VISIBLE
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        beginScanning()
+    }
+
     override fun onResume() {
         super.onResume()
         App.data.screenWith = getScreenWidth()
-        val rotateAnimation : Animation = AnimationUtils.loadAnimation(this, R.anim.circle_rotate)
-        val interpolator =  LinearInterpolator()
-        rotateAnimation.interpolator = interpolator
-        iv_loading_cirecle.startAnimation(rotateAnimation)
         HttpRequest.instance.getParentCategoryList(this)
         Thread.sleep(150)
         vtab_device_category.setTabSelected(App.data.tabPosition)
@@ -83,6 +96,8 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         iv_scann.setOnClickListener(this)
         iv_question.setOnClickListener(this)
         vtab_device_category.addOnTabSelectedListener(this)
+        retry_to_scann01.setOnClickListener(this)
+        retry_to_scann02.setOnClickListener(this)
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -157,6 +172,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             iv_question -> {
                 jumpActivity(HelpCenterActivity::class.java)
             }
+            retry_to_scann01, retry_to_scann02 -> {
+                beginScanning()
+            }
         }
     }
 
@@ -214,6 +232,32 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         val metrics = DisplayMetrics()
         wm.defaultDisplay.getMetrics(metrics)
         return metrics.widthPixels
+    }
+
+    private fun isBluetoothValid() : Boolean {
+        val adapter  = BluetoothAdapter.getDefaultAdapter()
+        return adapter?.isEnabled ?: false
+    }
+
+    private fun beginScanning() {
+        val rotateAnimation : Animation = AnimationUtils.loadAnimation(this, R.anim.circle_rotate)
+        val interpolator =  LinearInterpolator()
+        rotateAnimation.interpolator = interpolator
+        if (isBluetoothValid()) {
+            scanning.visibility = View.VISIBLE
+            not_found_dev.visibility = View.GONE
+            scann_fail.visibility = View.GONE
+            iv_loading_cirecle.startAnimation(rotateAnimation)
+            handler.postDelayed(runnable, 15000)
+        } else {
+            scann_fail.visibility = View.VISIBLE
+            scanning.visibility = View.GONE
+            not_found_dev.visibility = View.GONE
+        }
+    }
+
+    private fun stopScanning() {
+
     }
 
     class MyTabAdapter : TabAdapter {
