@@ -34,6 +34,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: aar
-          path: tenextll/build/outputs/aar/**/*.aar
+          path: tenextll/build/outputs/aar/*.aar
       - name: Publish apk to Maven
         run: ./gradlew publish
