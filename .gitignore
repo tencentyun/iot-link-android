@@ -3,3 +3,6 @@ view-release/
 local.properties
 .gradle/
 .idea/
+build/
+tenextll/build/
+tenextlldemo/build/
