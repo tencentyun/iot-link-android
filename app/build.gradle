@@ -123,7 +123,7 @@ publishing {
         mavenApk(MavenPublication) {
             groupId 'com.tencent.iot.explorer'
             artifactId 'iot-android-ll'
-            version '1.0.0-SNAPSHOT'
+            version '1.0.0'
             artifact file('build/outputs/apk/release/app-release.apk')
         }
     }
