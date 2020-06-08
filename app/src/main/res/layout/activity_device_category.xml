@@ -79,6 +79,13 @@
             android:layout_width="match_parent"
             android:visibility="gone"
             android:layout_marginTop="10dp"/>
+    <include
+            android:id="@+id/not_found_dev"
+            layout="@layout/not_found_device"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"/>
 
     <include
             android:id="@+id/scann_success"
