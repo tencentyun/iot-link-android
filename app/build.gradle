@@ -120,7 +120,7 @@ dependencies {
 
 //publishing {
 //    publications {
-//        mavenApk(MavenPublication) {
+//        apk(MavenPublication) {
 //            groupId 'com.tencent.iot.explorer'
 //            artifactId 'iot-android-ll'
 //            version '1.0.0-SNAPSHOT'
