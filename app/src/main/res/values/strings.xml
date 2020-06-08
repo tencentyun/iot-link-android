@@ -265,8 +265,8 @@
     <!--设备分类-->
     <string name="scanned_devices">已发现如下设备</string>
     <string name="scanning_device">正在扫描附近设备</string>
-    <string name="bluetooth_adapter_invalid">当前蓝牙适配器不可用</string>
-    <string name="need_open_bluetooth">发现设备需开启手机蓝牙(10001)</string>
+    <string name="bluetooth_adapter_invalid">发现设备需开启手机蓝牙(10001)</string>
+    <string name="not_found_device">未发现设备，请确认设备已开启</string>
     <string name="scanning_retry">重试</string>
     <string name="connect">连接</string>
     <string name="all_device">全部</string>
