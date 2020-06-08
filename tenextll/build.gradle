@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'maven-publish'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -43,3 +44,25 @@ dependencies {
 
 }
 
+def libVersion = '1.0.0-SNAPSHOT'
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId 'com.tencent.iot'
+            artifactId 'iot-android-ll'
+            version libVersion
+            artifact file('build/outputs/aar/tenextll-release.aar')
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = libVersion.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = System.getenv("SONATYPE_USERNAME")
+                password = System.getenv("SONATYPE_PASSWORD")
+            }
+        }
+    }
+}
