@@ -1,11 +1,10 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
-import com.tenext.demo.R
-import com.tenext.demo.fragment.DeviceFragment
-import com.tenext.demo.fragment.MeFragment
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.core.demo.fragment.MeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {

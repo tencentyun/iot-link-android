@@ -1,14 +1,14 @@
-package com.tenext.demo.fragment
+package com.tencent.iot.explorer.link.core.demo.fragment
 
 import android.view.View
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.response.BaseResponse
-import com.tenext.demo.App
-import com.tenext.demo.R
-import com.tenext.demo.activity.*
-import com.tenext.demo.log.L
-import com.tenext.demo.response.UserInfoResponse
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.demo.App
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.activity.*
+import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.response.UserInfoResponse
 import kotlinx.android.synthetic.main.fragment_me.*
 
 class MeFragment : BaseFragment(), MyCallback {
