@@ -1,18 +1,18 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.response.BaseResponse
-import com.tenext.auth.response.FamilyListResponse
-import com.tenext.auth.util.JsonManager
-import com.tenext.demo.App
-import com.tenext.demo.R
-import com.tenext.demo.adapter.FamilyListAdapter
-import com.tenext.demo.adapter.OnItemListener
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.log.L
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.FamilyListResponse
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.demo.App
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.adapter.FamilyListAdapter
+import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.log.L
 import kotlinx.android.synthetic.main.activity_family_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

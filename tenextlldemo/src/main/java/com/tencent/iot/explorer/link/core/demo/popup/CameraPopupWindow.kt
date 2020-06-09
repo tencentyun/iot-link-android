@@ -1,4 +1,4 @@
-package com.tenext.demo.popup
+package com.tencent.iot.explorer.link.core.demo.popup
 
 import android.app.Activity
 import android.content.Intent
@@ -6,9 +6,8 @@ import android.provider.MediaStore
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import com.tenext.demo.popup.ParentPopupWindow
-import com.tenext.demo.R
-import com.tenext.demo.util.ImageSelect
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.util.ImageSelect
 import kotlinx.android.synthetic.main.popup_select_camera.view.*
 
 /**

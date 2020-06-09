@@ -1,18 +1,18 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.entity.Family
-import com.tenext.auth.entity.Room
-import com.tenext.auth.response.BaseResponse
-import com.tenext.auth.response.RoomListResponse
-import com.tenext.demo.R
-import com.tenext.demo.adapter.OnItemListener
-import com.tenext.demo.adapter.RoomListAdapter
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.log.L
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.adapter.RoomListAdapter
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.log.L
 import kotlinx.android.synthetic.main.activity_room_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

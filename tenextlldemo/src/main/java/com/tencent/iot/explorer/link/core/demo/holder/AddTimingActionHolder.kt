@@ -1,10 +1,10 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.fastjson.JSONObject
-import com.tenext.auth.entity.ControlPanel
+import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
 import kotlinx.android.synthetic.main.item_device_action.view.*
 
 class AddTimingActionHolder : BaseHolder<ControlPanel> {

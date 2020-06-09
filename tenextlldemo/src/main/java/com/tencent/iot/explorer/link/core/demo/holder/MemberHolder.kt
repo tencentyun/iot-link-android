@@ -1,11 +1,11 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.text.TextUtils
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import com.tenext.demo.R
-import com.tenext.demo.entity.Member
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.entity.Member
 import kotlinx.android.synthetic.main.item_member.view.*
 
 class MemberHolder : BaseHolder<Member> {
