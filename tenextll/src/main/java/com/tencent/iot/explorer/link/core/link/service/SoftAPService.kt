@@ -1,13 +1,13 @@
-package com.tenext.link.service
+package com.tencent.iot.explorer.link.core.link.service
 
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.text.TextUtils
-import com.tenext.auth.util.WifiUtil
-import com.tenext.link.entity.DeviceInfo
-import com.tenext.link.entity.DeviceTask
-import com.tenext.link.listener.SoftAPListener
-import com.tenext.log.L
+import com.tencent.iot.explorer.link.core.auth.util.WifiUtil
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.DeviceTask
+import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
+import com.tencent.iot.explorer.link.core.log.L
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONException

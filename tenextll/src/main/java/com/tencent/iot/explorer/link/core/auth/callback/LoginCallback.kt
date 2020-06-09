@@ -1,6 +1,6 @@
-package com.tenext.auth.callback
+package com.tencent.iot.explorer.link.core.auth.callback
 
-import com.tenext.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.entity.User
 
 /**
  * 登录成功回调

@@ -1,4 +1,4 @@
-package com.tenext.auth.entity
+package com.tencent.iot.explorer.link.core.auth.entity
 
 /**
  * 设备状态
