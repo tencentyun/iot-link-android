@@ -1,10 +1,9 @@
-package com.tenext.auth.service
+package com.tencent.iot.explorer.link.core.auth.service
 
 import android.text.TextUtils
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.impl.FamilyImpl
-import com.tenext.log.L
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.impl.FamilyImpl
 
 internal class FamilyService : BaseService(), FamilyImpl {
 

@@ -1,16 +1,16 @@
-package com.tenext.auth.socket
+package com.tencent.iot.explorer.link.core.auth.socket
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.util.Base64
-import com.tenext.auth.message.resp.HeartMessage
-import com.tenext.auth.message.payload.Payload
-import com.tenext.auth.message.payload.PayloadMessage
-import com.tenext.auth.message.resp.RespFailMessage
-import com.tenext.auth.message.resp.RespSuccessMessage
-import com.tenext.auth.message.resp.ResponseMessage
-import com.tenext.auth.socket.callback.DispatchCallback
-import com.tenext.auth.socket.callback.HeartCallback
-import com.tenext.log.L
+import com.tencent.iot.explorer.link.core.auth.message.resp.HeartMessage
+import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
+import com.tencent.iot.explorer.link.core.auth.message.payload.PayloadMessage
+import com.tencent.iot.explorer.link.core.auth.message.resp.RespFailMessage
+import com.tencent.iot.explorer.link.core.auth.message.resp.RespSuccessMessage
+import com.tencent.iot.explorer.link.core.auth.message.resp.ResponseMessage
+import com.tencent.iot.explorer.link.core.auth.socket.callback.DispatchCallback
+import com.tencent.iot.explorer.link.core.auth.socket.callback.HeartCallback
+import com.tencent.iot.explorer.link.core.log.L
 import java.lang.Exception
 
 open class DispatchMsgHandler {

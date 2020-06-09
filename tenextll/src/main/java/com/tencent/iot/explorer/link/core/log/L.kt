@@ -1,4 +1,4 @@
-package com.tenext.log
+package com.tencent.iot.explorer.link.core.log
 
 import android.util.Log
 

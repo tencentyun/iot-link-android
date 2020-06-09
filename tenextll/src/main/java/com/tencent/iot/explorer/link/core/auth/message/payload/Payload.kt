@@ -1,4 +1,4 @@
-package com.tenext.auth.message.payload
+package com.tencent.iot.explorer.link.core.auth.message.payload
 
 class Payload {
 

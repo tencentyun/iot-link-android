@@ -1,4 +1,4 @@
-package com.tenext.auth.entity
+package com.tencent.iot.explorer.link.core.auth.entity
 
 /**
  * 控制面板UI

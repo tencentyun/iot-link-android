@@ -1,7 +1,7 @@
-package com.tenext.auth.entity
+package com.tencent.iot.explorer.link.core.auth.entity
 
 import com.alibaba.fastjson.JSON
-import com.tenext.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 
 class EventParam {
 
