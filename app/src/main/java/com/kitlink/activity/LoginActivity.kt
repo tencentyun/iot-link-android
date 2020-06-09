@@ -68,6 +68,24 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
         super.onPause()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val account = intent?.getStringExtra("account")?:""
+        val pwd = intent?.getStringExtra("password")?:""
+        if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(pwd)) {
+            when (account.contains("@")) {
+                true -> {
+                    presenter.setEmailData(account, pwd)
+                    presenter.emailCommit()
+                }
+                else -> {
+                    presenter.setPhoneData(account, pwd)
+                    presenter.phoneCommit()
+                }
+            }
+        }
+    }
+
     override fun initView() {
         if (!checkPermissions(permissions)) {
             requestPermission(permissions)

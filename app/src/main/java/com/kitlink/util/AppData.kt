@@ -90,6 +90,10 @@ class AppData private constructor() {
         this.familyEntity = familyList[position]
     }
 
+    fun setCurrentRoom(position: Int) {
+        this.currentRoom = roomList[position]
+    }
+
     /**
      * 获取当前房间
      */
