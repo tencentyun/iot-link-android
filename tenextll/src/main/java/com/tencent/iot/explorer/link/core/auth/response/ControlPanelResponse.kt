@@ -1,6 +1,6 @@
-package com.tenext.auth.response
+package com.tencent.iot.explorer.link.core.auth.response
 
-import com.tenext.auth.entity.PanelData
+import com.tencent.iot.explorer.link.core.auth.entity.PanelData
 
 /**
  * 控制面板数据

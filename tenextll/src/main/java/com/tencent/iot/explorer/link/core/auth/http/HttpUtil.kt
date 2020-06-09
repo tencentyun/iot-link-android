@@ -1,4 +1,4 @@
-package com.tenext.auth.http
+package com.tencent.iot.explorer.link.core.auth.http
 
 import android.text.TextUtils
 import kotlinx.coroutines.CoroutineScope

@@ -1,6 +1,6 @@
-package com.tenext.auth.entity
+package com.tencent.iot.explorer.link.core.auth.entity
 
-import com.tenext.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 
 /**
  * 面板实体

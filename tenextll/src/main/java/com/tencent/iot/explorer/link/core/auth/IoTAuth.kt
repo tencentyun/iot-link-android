@@ -1,19 +1,19 @@
-package com.tenext.auth
+package com.tencent.iot.explorer.link.core.auth
 
 import android.text.TextUtils
-import com.tenext.auth.entity.Device
-import com.tenext.auth.entity.Family
-import com.tenext.auth.entity.Room
-import com.tenext.auth.entity.User
-import com.tenext.auth.impl.*
-import com.tenext.auth.listener.LoginExpiredListener
-import com.tenext.auth.message.upload.ActivePushMessage
-import com.tenext.auth.message.upload.ArrayString
-import com.tenext.auth.service.*
-import com.tenext.auth.socket.WSClientManager
-import com.tenext.auth.socket.callback.ActivePushCallback
-import com.tenext.auth.socket.callback.MessageCallback
-import com.tenext.log.L
+import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.impl.*
+import com.tencent.iot.explorer.link.core.auth.listener.LoginExpiredListener
+import com.tencent.iot.explorer.link.core.auth.message.upload.ActivePushMessage
+import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
+import com.tencent.iot.explorer.link.core.auth.service.*
+import com.tencent.iot.explorer.link.core.auth.socket.WSClientManager
+import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
+import com.tencent.iot.explorer.link.core.auth.socket.callback.MessageCallback
+import com.tencent.iot.explorer.link.core.log.L
 
 /**
  * SDK授权认证管理

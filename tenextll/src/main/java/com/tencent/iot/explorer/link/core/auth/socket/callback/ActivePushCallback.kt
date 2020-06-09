@@ -1,6 +1,6 @@
-package com.tenext.auth.socket.callback
+package com.tencent.iot.explorer.link.core.auth.socket.callback
 
-import com.tenext.auth.message.payload.Payload
+import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 
 /**
  * 设备接收到下发数据回调

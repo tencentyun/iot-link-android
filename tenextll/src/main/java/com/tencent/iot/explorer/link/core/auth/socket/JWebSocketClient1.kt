@@ -1,6 +1,6 @@
-package com.tenext.auth.socket
+package com.tencent.iot.explorer.link.core.auth.socket
 
-import com.tenext.log.L
+import com.tencent.iot.explorer.link.core.log.L
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI

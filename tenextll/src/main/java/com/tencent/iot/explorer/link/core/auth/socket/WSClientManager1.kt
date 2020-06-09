@@ -1,18 +1,18 @@
 package com.auth.socket
 
 import android.text.TextUtils
-import com.tenext.auth.message.payload.Payload
-import com.tenext.auth.message.resp.RespFailMessage
-import com.tenext.auth.message.resp.RespSuccessMessage
-import com.tenext.auth.message.upload.IotMsg
-import com.tenext.auth.socket.DispatchMsgHandler
-import com.tenext.auth.socket.JWebSocketClient1
-import com.tenext.auth.socket.callback.ActivePushCallback
-import com.tenext.auth.socket.callback.DispatchCallback
-import com.tenext.auth.socket.callback.MessageCallback
-import com.tenext.auth.socket.entity.RequestEntity
-import com.tenext.auth.util.WifiUtil
-import com.tenext.log.L
+import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
+import com.tencent.iot.explorer.link.core.auth.message.resp.RespFailMessage
+import com.tencent.iot.explorer.link.core.auth.message.resp.RespSuccessMessage
+import com.tencent.iot.explorer.link.core.auth.message.upload.IotMsg
+import com.tencent.iot.explorer.link.core.auth.socket.DispatchMsgHandler
+import com.tencent.iot.explorer.link.core.auth.socket.JWebSocketClient1
+import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
+import com.tencent.iot.explorer.link.core.auth.socket.callback.DispatchCallback
+import com.tencent.iot.explorer.link.core.auth.socket.callback.MessageCallback
+import com.tencent.iot.explorer.link.core.auth.socket.entity.RequestEntity
+import com.tencent.iot.explorer.link.core.auth.util.WifiUtil
+import com.tencent.iot.explorer.link.core.log.L
 import java.net.URI
 import java.util.*
 

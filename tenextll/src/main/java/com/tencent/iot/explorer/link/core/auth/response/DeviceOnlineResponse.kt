@@ -1,6 +1,6 @@
-package com.tenext.auth.response
+package com.tencent.iot.explorer.link.core.auth.response
 
-import com.tenext.auth.entity.DeviceOnline
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceOnline
 
 /**
  * 设备在线状态响应实体

@@ -1,8 +1,8 @@
-package com.tenext.auth.socket.callback
+package com.tencent.iot.explorer.link.core.auth.socket.callback
 
-import com.tenext.auth.message.payload.Payload
-import com.tenext.auth.message.resp.RespFailMessage
-import com.tenext.auth.message.resp.RespSuccessMessage
+import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
+import com.tencent.iot.explorer.link.core.auth.message.resp.RespFailMessage
+import com.tencent.iot.explorer.link.core.auth.message.resp.RespSuccessMessage
 
 interface DispatchCallback {
 

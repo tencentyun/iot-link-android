@@ -1,8 +1,8 @@
-package com.tenext.auth.service
+package com.tencent.iot.explorer.link.core.auth.service
 
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.impl.VerifyImpl
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.impl.VerifyImpl
 
 /**
  * 验证码相关Service

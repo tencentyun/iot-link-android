@@ -1,7 +1,7 @@
-package com.tenext.auth.response
+package com.tencent.iot.explorer.link.core.auth.response
 
 import com.alibaba.fastjson.JSON
-import com.tenext.auth.entity.DeviceStatus
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceStatus
 
 /**
  * 设备当前数据

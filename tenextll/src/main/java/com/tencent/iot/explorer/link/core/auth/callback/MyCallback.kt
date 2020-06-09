@@ -1,6 +1,6 @@
-package com.tenext.auth.callback
+package com.tencent.iot.explorer.link.core.auth.callback
 
-import com.tenext.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 
 /**
  *  响应回调

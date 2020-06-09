@@ -1,4 +1,4 @@
-package com.tenext.auth.util
+package com.tencent.iot.explorer.link.core.auth.util
 
 import java.lang.ref.WeakReference
 import kotlin.reflect.KProperty

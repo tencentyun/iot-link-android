@@ -1,7 +1,6 @@
-package com.tenext.auth.impl
+package com.tencent.iot.explorer.link.core.auth.impl
 
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 
 interface ShareImpl {
 

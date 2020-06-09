@@ -1,4 +1,4 @@
-package com.tenext.auth.consts
+package com.tencent.iot.explorer.link.core.auth.consts
 
 object RequestCode {
 

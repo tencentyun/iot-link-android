@@ -1,6 +1,6 @@
-package com.tenext.auth.response
+package com.tencent.iot.explorer.link.core.auth.response
 
-import com.tenext.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.Family
 
 class FamilyListResponse {
 

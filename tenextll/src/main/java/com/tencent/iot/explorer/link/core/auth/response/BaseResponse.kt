@@ -1,6 +1,6 @@
-package com.tenext.auth.response
+package com.tencent.iot.explorer.link.core.auth.response
 
-import com.tenext.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 
 /**
  * 基础响应实体

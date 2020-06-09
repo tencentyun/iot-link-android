@@ -1,6 +1,6 @@
-package com.tenext.auth.message.resp
+package com.tencent.iot.explorer.link.core.auth.message.resp
 
-import com.tenext.auth.message.upload.IotMsg
+import com.tencent.iot.explorer.link.core.auth.message.upload.IotMsg
 
 class HeartMessage : IotMsg() {
 

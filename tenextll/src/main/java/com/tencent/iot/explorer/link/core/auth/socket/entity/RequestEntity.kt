@@ -1,7 +1,7 @@
-package com.tenext.auth.socket.entity
+package com.tencent.iot.explorer.link.core.auth.socket.entity
 
-import com.tenext.auth.message.upload.IotMsg
-import com.tenext.auth.socket.callback.MessageCallback
+import com.tencent.iot.explorer.link.core.auth.message.upload.IotMsg
+import com.tencent.iot.explorer.link.core.auth.socket.callback.MessageCallback
 
 class RequestEntity(requestId: Int, msg: IotMsg) {
 

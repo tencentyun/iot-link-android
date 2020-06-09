@@ -1,8 +1,8 @@
-package com.tenext.link.service
+package com.tencent.iot.explorer.link.core.link.service
 
 import android.content.Context
-import com.tenext.link.entity.DeviceTask
-import com.tenext.auth.util.Weak
+import com.tencent.iot.explorer.link.core.link.entity.DeviceTask
+import com.tencent.iot.explorer.link.core.auth.util.Weak
 
 abstract class DeviceService(context: Context, task: DeviceTask) {
 

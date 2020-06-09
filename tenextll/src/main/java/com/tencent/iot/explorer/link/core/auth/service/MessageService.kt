@@ -1,8 +1,8 @@
-package com.tenext.auth.service
+package com.tencent.iot.explorer.link.core.auth.service
 
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.impl.MessageImpl
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.impl.MessageImpl
 
 internal class MessageService : BaseService(), MessageImpl {
 

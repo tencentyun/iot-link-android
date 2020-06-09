@@ -1,4 +1,4 @@
-package com.tenext.link.exception;
+package com.tencent.iot.explorer.link.core.link.exception;
 
 /**
  * Created by rongerwu on 2018/9/13.
