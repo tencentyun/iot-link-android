@@ -1,7 +1,7 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.Manifest
-import com.tenext.demo.R
+import com.tencent.iot.explorer.link.core.demo.R
 import kotlinx.android.synthetic.main.activity_add_device.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

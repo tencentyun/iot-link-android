@@ -1,4 +1,4 @@
-package com.tenext.demo
+package com.tencent.iot.explorer.link.core.demo
 
 /**
  * 数据执有者

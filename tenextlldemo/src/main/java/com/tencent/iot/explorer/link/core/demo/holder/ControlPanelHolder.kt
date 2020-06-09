@@ -1,8 +1,8 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.view.ViewGroup
-import com.tenext.auth.entity.ControlPanel
+import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
 import kotlinx.android.synthetic.main.item_control_panel.view.*
 
 class ControlPanelHolder : BaseHolder<ControlPanel> {

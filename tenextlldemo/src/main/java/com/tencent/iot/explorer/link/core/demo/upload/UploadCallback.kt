@@ -1,4 +1,4 @@
-package com.tenext.demo.upload
+package com.tencent.iot.explorer.link.core.demo.upload
 
 interface UploadCallback {
 

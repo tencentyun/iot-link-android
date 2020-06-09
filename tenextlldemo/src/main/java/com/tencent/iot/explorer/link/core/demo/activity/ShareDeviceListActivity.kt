@@ -1,19 +1,19 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.entity.Device
-import com.tenext.auth.response.BaseResponse
-import com.tenext.auth.response.DeviceListResponse
-import com.tenext.demo.R
-import com.tenext.demo.adapter.DeviceAdapter
-import com.tenext.demo.adapter.OnItemListener
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.log.L
-import com.tenext.demo.response.ShareDeviceListRespone
-import com.tenext.demo.view.MyDivider
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.DeviceListResponse
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.adapter.DeviceAdapter
+import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.response.ShareDeviceListRespone
+import com.tencent.iot.explorer.link.core.demo.view.MyDivider
 import kotlinx.android.synthetic.main.activity_share_device_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
