@@ -1,4 +1,4 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
-import com.tenext.demo.adapter.BaseAdapter
+import com.tencent.iot.explorer.link.core.demo.adapter.BaseAdapter
 
 abstract class BaseHolder<T : Any> : RecyclerView.ViewHolder {
 

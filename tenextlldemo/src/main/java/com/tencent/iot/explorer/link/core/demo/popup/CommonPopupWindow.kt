@@ -1,12 +1,11 @@
-package com.tenext.demo.popup
+package com.tencent.iot.explorer.link.core.demo.popup
 
 import android.app.Activity
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import com.tenext.demo.popup.ParentPopupWindow
-import com.tenext.demo.R
+import com.tencent.iot.explorer.link.core.demo.R
 import kotlinx.android.synthetic.main.popup_common.view.*
 
 class CommonPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
