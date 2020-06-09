@@ -97,7 +97,7 @@ class AddDeviceActivity : PActivity(), MyCallback {
      * 绑定虚拟设备
      */
     private fun bindDevice(signature: String) {
-        HttpRequest.instance.scanBindDevice(App.data.getCurrentFamily().FamilyId, signature, this)
+        HttpRequest.instance.scanBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId, signature, this)
     }
 
     override fun fail(msg: String?, reqCode: Int) {

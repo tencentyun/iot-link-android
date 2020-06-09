@@ -11,6 +11,7 @@ import com.kitlink.activity.BaseActivity
 import com.mvp.presenter.GetBindDeviceTokenPresenter
 import com.mvp.view.GetBindDeviceTokenView
 import com.util.L
+import com.util.check.LocationUtil
 import kotlinx.android.synthetic.main.activity_smart_connect.*
 
 /**
@@ -40,6 +41,9 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
                     getString(R.string.smart_config_second_title),
                     getString(R.string.cancel)
                 )
+                if (!LocationUtil.isLocationServiceEnable(this@SmartConnectActivity)) {
+                    T.showLonger("请您打开手机位置以便获取WIFI名称")
+                }
             }
         }
         wifiFragment = WifiFragment(WifiFragment.smart_config)

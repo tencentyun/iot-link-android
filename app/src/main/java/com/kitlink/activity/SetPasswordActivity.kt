@@ -1,5 +1,6 @@
 package com.kitlink.activity
 
+import android.app.Activity
 import android.content.Intent
 import com.kitlink.R
 import com.mvp.IPresenter
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class SetPasswordActivity : PActivity(), SetPasswordView {
 
     private lateinit var presenter: SetPasswordPresenter
+    private var pwd = ""
 
     companion object {
         const val ACTION = "action"
@@ -54,6 +56,7 @@ class SetPasswordActivity : PActivity(), SetPasswordView {
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         tv_set_password_commit.setOnClickListener {
+            pwd = et_set_password.text.trim().toString()
             presenter.setPassword(
                 et_set_password.text.trim().toString(),
                 et_verify_set_password.text.trim().toString()
@@ -90,6 +93,8 @@ class SetPasswordActivity : PActivity(), SetPasswordView {
         T.show(getString(R.string.set_password_success))
         val intent = Intent(this, LoginActivity::class.java)
         intent.putExtra(GetCodeActivity.PHONE, phoneNumber)
+        intent.putExtra("account", phoneNumber)
+        intent.putExtra("password", pwd)
         startActivity(intent)
         finish()
     }
@@ -98,6 +103,8 @@ class SetPasswordActivity : PActivity(), SetPasswordView {
         T.show(getString(R.string.set_password_success))
         val intent = Intent(this, LoginActivity::class.java)
         intent.putExtra(GetCodeActivity.EMAIL, email)
+        intent.putExtra("account", email)
+        intent.putExtra("password", pwd)
         startActivity(intent)
         finish()
     }

@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.kitlink.App
 import com.kitlink.R
+import com.kitlink.customview.MyScrollView
 import com.kitlink.device.DeviceInfo
 import com.kitlink.fragment.DeviceFragment
 import com.kitlink.holder.DeviceListViewHolder
@@ -98,6 +99,22 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         vtab_device_category.addOnTabSelectedListener(this)
         retry_to_scann01.setOnClickListener(this)
         retry_to_scann02.setOnClickListener(this)
+        my_scroll_view.setScrollChangedListener(object: MyScrollView.ScrollChangedListener{
+            override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
+                val height = scanner_bar.height + gray_line_0.height + linearlayout_scann.height
+                if (scrollY >= height && vtab_device_category.parent ==container_normal) {
+                    container_normal.removeView(vtab_device_category)
+                    gray_line_1.visibility = View.GONE
+                    container_top.visibility = View.VISIBLE
+                    container_top.addView(vtab_device_category)
+                } else if (scrollY < height && vtab_device_category.parent ==container_top){
+                    gray_line_1.visibility = View.VISIBLE
+                    container_top.visibility = View.GONE
+                    container_top.removeView(vtab_device_category)
+                    container_normal.addView(vtab_device_category, 0)
+                }
+            }
+        })
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -194,9 +211,14 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                         contains("\"DeviceName\"") and contains("\"Signature\"") -> {//真实设备
                             val deviceInfo = DeviceInfo(this)
                             if (!TextUtils.isEmpty(deviceInfo.productId)) {
-//                                wifiBindDevice(deviceInfo)
                                 bindDevice(deviceInfo.signature)
                             }
+                        }
+                        contains("page=softap") -> {
+                            jumpActivity(SoftApActivity::class.java)
+                        }
+                        contains("page=smartconfig") -> {
+                            jumpActivity(SmartConnectActivity::class.java)
                         }
                         else -> {//之前旧版本虚拟设备二维码只有签名
                             bindDevice(this)
@@ -211,7 +233,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
      * 绑定虚拟设备
      */
     private fun bindDevice(signature: String) {
-        HttpRequest.instance.scanBindDevice(App.data.getCurrentFamily().FamilyId, signature, this)
+        HttpRequest.instance.scanBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId, signature, this)
     }
 
     private fun generateFragments() : List<Fragment>{
@@ -272,6 +294,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         }
 
         override fun getBackground(position: Int): Int {
+            if (position == 0) return R.drawable.tab
             return 0
         }
 
@@ -295,6 +318,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             if (i != position)
                 vtab_device_category.getTabAt(i).setBackgroundColor(resources.getColor(R.color.gray_F5F5F5))
         }
-        tab?.setBackgroundColor(resources.getColor(R.color.white))
+        tab?.setBackground(R.drawable.tab)
     }
 }

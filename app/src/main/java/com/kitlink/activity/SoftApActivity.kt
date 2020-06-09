@@ -7,6 +7,8 @@ import com.mvp.IPresenter
 import com.mvp.presenter.GetBindDeviceTokenPresenter
 import com.mvp.view.GetBindDeviceTokenView
 import com.util.L
+import com.util.T
+import com.util.check.LocationUtil
 import kotlinx.android.synthetic.main.activity_soft_ap.*
 
 class SoftApActivity : PActivity(), GetBindDeviceTokenView {
@@ -55,6 +57,9 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
                     getString(R.string.cancel)
                 )
                 showFragment(wifiFragment, softAppStepFragment)
+                if (!LocationUtil.isLocationServiceEnable(this@SoftApActivity)) {
+                    T.showLonger("请您打开手机位置以便获取WIFI名称")
+                }
             }
         }
         wifiFragment.onCommitWifiListener = object : WifiFragment.OnCommitWifiListener {
