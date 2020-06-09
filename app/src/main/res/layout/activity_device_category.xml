@@ -1,127 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".activity.DeviceCategoryActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".activity.DeviceCategoryActivity">
 
-    <include layout="@layout/menu_back_layout"
-            android:id="@+id/add_device_title" />
-
-    <View
-            android:id="@+id/gray_line_0"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="@color/gray_F5F5F5"
-            app:layout_constraintTop_toBottomOf="@+id/add_device_title" />
-
-    <TextView
-            android:id="@+id/tv_scanned_device"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:paddingStart="15dp"
-            android:paddingEnd="0dp"
-            android:text="@string/scanned_devices"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ts_18"
-            android:visibility="invisible"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gray_line_0" />
-
-    <ImageView
-            android:id="@+id/iv_scann"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/iv_question"
-            app:layout_constraintHorizontal_bias="0.88"
-            app:layout_constraintStart_toEndOf="@+id/tv_scanned_device"
-            app:layout_constraintTop_toBottomOf="@+id/gray_line_0"
-            app:srcCompat="@drawable/svg_icon_scan" />
-
-    <ImageView
-            android:id="@+id/iv_question"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gray_line_0"
-            app:srcCompat="@drawable/svg_icon_question" />
+    <include
+        android:id="@+id/add_device_title"
+        layout="@layout/menu_back_layout" />
 
     <LinearLayout
-            android:id="@+id/linearlayout_scann"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_scanned_device">
-    <include
-            android:id="@+id/scanning"
-            layout="@layout/scanning"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:visibility="visible"
-            android:layout_marginTop="10dp"/>
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <include
-            android:id="@+id/scann_fail"
-            layout="@layout/bluetooth_adapter_invalid"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_marginTop="10dp"/>
-    <include
-            android:id="@+id/not_found_dev"
-            layout="@layout/not_found_device"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_marginTop="10dp"/>
-
-    <include
-            android:id="@+id/scann_success"
-            layout="@layout/scanned_devices"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_marginTop="10dp"/>
-    </LinearLayout>
-
-    <View
-            android:id="@+id/gray_line_1"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="@color/gray_F5F5F5"
-            app:layout_constraintTop_toBottomOf="@+id/linearlayout_scann" />
-
-    <q.rorbin.verticaltablayout.VerticalTabLayout
-            android:id="@+id/vtab_device_category"
+        <LinearLayout
+            android:id="@+id/container_top"
             android:layout_width="100dp"
-            android:layout_height="0dp"
-            android:background="@color/gray_F5F5F5"
-            app:indicator_color="@color/white"
-            app:indicator_gravity="fill"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gray_line_1"
-            app:tab_height="50dp"
-            app:tab_mode="scrollable" />
-    <FrameLayout
-            android:id="@+id/devce_fragment_container"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="vertical"/>
+
+        <com.kitlink.customview.MyScrollView
+            android:id="@+id/my_scroll_view"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/vtab_device_category"
-            app:layout_constraintTop_toBottomOf="@+id/gray_line_1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            tools:ignore="NestedWeights">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/gray_line_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/gray_F5F5F5" />
+
+                <RelativeLayout
+                    android:id="@+id/scanner_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/tv_scanned_device"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="5dp"
+                        android:text="@string/scanned_devices"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/ts_18"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/iv_scann"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_toStartOf="@+id/iv_question"
+                        app:srcCompat="@drawable/svg_icon_scan" />
+
+                    <ImageView
+                        android:id="@+id/iv_question"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/svg_icon_question" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearlayout_scann"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp">
+
+                    <include
+                        android:id="@+id/scanning"
+                        layout="@layout/scanning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:visibility="visible" />
+
+                    <include
+                        android:id="@+id/scann_fail"
+                        layout="@layout/bluetooth_adapter_invalid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/not_found_dev"
+                        layout="@layout/not_found_device"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/scann_success"
+                        layout="@layout/scanned_devices"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/gray_line_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/gray_F5F5F5" />
+
+                <LinearLayout
+                    android:id="@+id/container_normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <q.rorbin.verticaltablayout.VerticalTabLayout
+                        android:id="@+id/vtab_device_category"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/gray_F5F5F5"
+                        app:indicator_color="@color/white"
+                        app:indicator_gravity="fill"
+                        app:tab_height="50dp"
+                        app:tab_mode="scrollable" />
+
+                    <FrameLayout
+                        android:id="@+id/devce_fragment_container"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.kitlink.customview.MyScrollView>
+    </LinearLayout>
+</LinearLayout>

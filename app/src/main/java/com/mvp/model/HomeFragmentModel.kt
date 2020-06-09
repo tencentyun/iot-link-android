@@ -55,6 +55,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
      */
     fun tabRoom(position: Int) {
         roomId = roomList[position].RoomId
+        App.data.setCurrentRoom(position)
         refreshDeviceList()
     }
 
