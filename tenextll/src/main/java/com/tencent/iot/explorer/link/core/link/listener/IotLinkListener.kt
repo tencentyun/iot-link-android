@@ -1,6 +1,6 @@
-package com.tenext.link.listener
+package com.tencent.iot.explorer.link.core.link.listener
 
-import com.tenext.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 
 interface IotLinkListener {
 

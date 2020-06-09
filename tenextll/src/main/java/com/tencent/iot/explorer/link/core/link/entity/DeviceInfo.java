@@ -1,4 +1,4 @@
-package com.tenext.link.entity;
+package com.tencent.iot.explorer.link.core.link.entity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

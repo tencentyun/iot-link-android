@@ -1,4 +1,4 @@
-package com.tenext.auth.entity
+package com.tencent.iot.explorer.link.core.auth.entity
 
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON

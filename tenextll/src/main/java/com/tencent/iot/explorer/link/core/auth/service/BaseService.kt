@@ -1,17 +1,15 @@
-package com.tenext.auth.service
+package com.tencent.iot.explorer.link.core.auth.service
 
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.http.HttpCallBack
-import com.tenext.auth.http.HttpUtil
-import com.tenext.auth.response.BaseResponse
-import com.tenext.auth.util.JsonManager
-import com.tenext.auth.util.SignatureUtil
-import com.tenext.log.L
-import kotlinx.coroutines.processNextEventInCurrentThread
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.http.HttpCallBack
+import com.tencent.iot.explorer.link.core.auth.http.HttpUtil
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.auth.util.SignatureUtil
+import com.tencent.iot.explorer.link.core.log.L
 import java.util.*
 import kotlin.collections.HashMap
-import kotlin.coroutines.coroutineContext
 
 /**
  * 接口请求文件

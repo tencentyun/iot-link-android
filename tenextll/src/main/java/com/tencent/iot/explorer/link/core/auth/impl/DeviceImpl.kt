@@ -1,10 +1,10 @@
-package com.tenext.auth.impl
+package com.tencent.iot.explorer.link.core.auth.impl
 
-import com.tenext.auth.callback.ControlPanelCallback
-import com.tenext.auth.callback.DeviceCallback
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.entity.*
-import com.tenext.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.auth.callback.ControlPanelCallback
+import com.tencent.iot.explorer.link.core.auth.callback.DeviceCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.*
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import java.util.*
 
 interface DeviceImpl {
