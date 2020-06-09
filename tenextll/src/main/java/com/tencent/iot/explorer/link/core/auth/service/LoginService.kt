@@ -1,13 +1,13 @@
-package com.tenext.auth.service
+package com.tencent.iot.explorer.link.core.auth.service
 
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.LoginCallback
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.entity.User
-import com.tenext.auth.impl.LoginImpl
-import com.tenext.auth.response.BaseResponse
-import com.tenext.auth.response.LoginResponse
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.LoginCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.impl.LoginImpl
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.LoginResponse
 
 internal class LoginService : BaseService(), LoginImpl {
 

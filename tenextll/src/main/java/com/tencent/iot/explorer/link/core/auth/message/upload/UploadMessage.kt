@@ -1,6 +1,6 @@
-package com.tenext.auth.message.upload
+package com.tencent.iot.explorer.link.core.auth.message.upload
 
-import com.tenext.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 
 open class UploadMessage : IotMsg() {
 

@@ -1,6 +1,6 @@
-package com.tenext.link
+package com.tencent.iot.explorer.link.core.link
 
-import com.tenext.link.service.DeviceService
+import com.tencent.iot.explorer.link.core.link.service.DeviceService
 
 /**
  * 配网

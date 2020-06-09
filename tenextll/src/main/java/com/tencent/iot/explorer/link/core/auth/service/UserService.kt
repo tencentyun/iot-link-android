@@ -1,9 +1,9 @@
-package com.tenext.auth.service
+package com.tencent.iot.explorer.link.core.auth.service
 
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.impl.UserImpl
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.impl.UserImpl
 
 /**
  * 用户信息相关Service

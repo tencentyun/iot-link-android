@@ -1,16 +1,14 @@
-package com.tenext.auth.service
+package com.tencent.iot.explorer.link.core.auth.service
 
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.ControlPanelCallback
-import com.tenext.auth.callback.DeviceCallback
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.entity.*
-import com.tenext.auth.impl.DeviceImpl
-import com.tenext.auth.response.*
-import com.tenext.link.entity.DeviceInfo
-import com.tenext.log.L
-import java.util.*
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.ControlPanelCallback
+import com.tencent.iot.explorer.link.core.auth.callback.DeviceCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.entity.*
+import com.tencent.iot.explorer.link.core.auth.impl.DeviceImpl
+import com.tencent.iot.explorer.link.core.auth.response.*
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import kotlin.collections.ArrayList
 
 internal class DeviceService : BaseService(), DeviceImpl {

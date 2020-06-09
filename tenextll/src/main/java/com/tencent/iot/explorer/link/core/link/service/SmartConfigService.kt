@@ -1,14 +1,14 @@
-package com.tenext.link.service
+package com.tencent.iot.explorer.link.core.link.service
 
 import android.content.Context
 import android.text.TextUtils
 import com.espressif.iot.esptouch.EsptouchTask
 import com.espressif.iot.esptouch.IEsptouchResult
-import com.tenext.link.entity.DeviceInfo
-import com.tenext.link.entity.DeviceTask
-import com.tenext.link.exception.TCLinkException
-import com.tenext.link.listener.SmartConfigListener
-import com.tenext.log.L
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.DeviceTask
+import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
+import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
+import com.tencent.iot.explorer.link.core.log.L
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

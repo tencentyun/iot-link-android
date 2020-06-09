@@ -1,6 +1,6 @@
-package com.tenext.auth.listener
+package com.tencent.iot.explorer.link.core.auth.listener
 
-import com.tenext.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.entity.User
 
 /**
  * 登录过期监听器
