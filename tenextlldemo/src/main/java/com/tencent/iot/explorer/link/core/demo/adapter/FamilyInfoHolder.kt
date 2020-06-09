@@ -1,10 +1,10 @@
-package com.tenext.demo.adapter
+package com.tencent.iot.explorer.link.core.demo.adapter
 
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.tenext.auth.entity.Family
-import com.tenext.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
 import kotlinx.android.synthetic.main.item_family_info.view.*
 
 class FamilyInfoHolder : BaseHolder<Family> {

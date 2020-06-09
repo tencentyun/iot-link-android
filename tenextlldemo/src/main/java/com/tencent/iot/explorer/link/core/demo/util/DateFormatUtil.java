@@ -1,4 +1,4 @@
-package com.tenext.demo.util;
+package com.tencent.iot.explorer.link.core.demo.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
