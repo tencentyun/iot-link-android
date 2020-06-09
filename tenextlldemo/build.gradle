@@ -8,7 +8,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.tenext.demo"
+        applicationId "com.tencent.iot.explorer.link.core.demo"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 3
@@ -35,7 +35,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
+ 
     //WebSocket
     implementation "org.java-websocket:Java-WebSocket:1.4.0"
     //kotlin协程

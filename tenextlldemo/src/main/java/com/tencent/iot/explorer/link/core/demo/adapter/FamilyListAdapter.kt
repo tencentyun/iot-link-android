@@ -1,11 +1,11 @@
-package com.tenext.demo.adapter
+package com.tencent.iot.explorer.link.core.demo.adapter
 
 import android.content.Context
 import android.view.ViewGroup
-import com.tenext.auth.entity.Family
-import com.tenext.demo.R
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.holder.FamilyListHolder
+import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.holder.FamilyListHolder
 
 class FamilyListAdapter(context: Context, list: List<Family>) : BaseAdapter(context, list) {
 

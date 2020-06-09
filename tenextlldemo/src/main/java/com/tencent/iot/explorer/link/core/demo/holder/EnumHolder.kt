@@ -1,11 +1,11 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.view.ViewGroup
-import com.tenext.auth.entity.Mapping
-import com.tenext.demo.R
-import com.tenext.demo.log.L
-import com.tenext.demo.popup.EnumPopupWindow
+import com.tencent.iot.explorer.link.core.auth.entity.Mapping
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.popup.EnumPopupWindow
 import kotlinx.android.synthetic.main.item_enum.view.*
 
 class EnumHolder : BaseHolder<Mapping> {

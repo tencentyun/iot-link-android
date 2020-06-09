@@ -1,11 +1,11 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.text.TextUtils
 import android.widget.Toast
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.LoginCallback
-import com.tenext.auth.entity.User
-import com.tenext.demo.R
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.LoginCallback
+import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.demo.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 /**

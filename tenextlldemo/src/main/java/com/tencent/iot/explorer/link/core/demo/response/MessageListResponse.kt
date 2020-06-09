@@ -1,6 +1,6 @@
-package com.tenext.demo.response
+package com.tencent.iot.explorer.link.core.demo.response
 
-import com.tenext.demo.entity.IotMessage
+import com.tencent.iot.explorer.link.core.demo.entity.IotMessage
 
 /**
  * 消息列表响应实体

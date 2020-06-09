@@ -1,6 +1,6 @@
-package com.tenext.demo.response
+package com.tencent.iot.explorer.link.core.demo.response
 
-import com.tenext.demo.entity.UserInfo
+import com.tencent.iot.explorer.link.core.demo.entity.UserInfo
 
 /**
  *  用户信息响应实体

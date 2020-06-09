@@ -1,16 +1,16 @@
-package com.tenext.demo.adapter
+package com.tencent.iot.explorer.link.core.demo.adapter
 
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TimePicker
 import com.alibaba.fastjson.JSONObject
-import com.tenext.auth.entity.ControlPanel
-import com.tenext.demo.R
-import com.tenext.demo.entity.TimingProject
-import com.tenext.demo.holder.AddTimingFooterHolder
-import com.tenext.demo.holder.AddTimingActionHolder
-import com.tenext.demo.holder.AddTimingHeaderHolder
-import com.tenext.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.entity.TimingProject
+import com.tencent.iot.explorer.link.core.demo.holder.AddTimingFooterHolder
+import com.tencent.iot.explorer.link.core.demo.holder.AddTimingActionHolder
+import com.tencent.iot.explorer.link.core.demo.holder.AddTimingHeaderHolder
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
 
 class AddTimingProjectAdapter : BaseAdapter {
 

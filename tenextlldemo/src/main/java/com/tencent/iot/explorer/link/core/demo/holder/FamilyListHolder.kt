@@ -1,9 +1,9 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.tenext.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.Family
 import kotlinx.android.synthetic.main.item_family_list.view.*
 
 /**

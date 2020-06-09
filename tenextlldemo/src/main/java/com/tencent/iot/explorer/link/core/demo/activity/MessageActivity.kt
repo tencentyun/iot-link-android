@@ -1,19 +1,19 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.response.BaseResponse
-import com.tenext.demo.R
-import com.tenext.demo.adapter.MessageAdapter
-import com.tenext.demo.adapter.OnItemListener
-import com.tenext.demo.entity.IotMessage
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.log.L
-import com.tenext.demo.response.MessageListResponse
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.adapter.MessageAdapter
+import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.entity.IotMessage
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.response.MessageListResponse
 import kotlinx.android.synthetic.main.activity_message.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

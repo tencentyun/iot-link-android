@@ -1,10 +1,10 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.view.ViewGroup
-import com.tenext.demo.R
-import com.tenext.demo.entity.IotMessage
-import com.tenext.demo.util.DateFormatUtil
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.entity.IotMessage
+import com.tencent.iot.explorer.link.core.demo.util.DateFormatUtil
 import kotlinx.android.synthetic.main.item_message_device.view.*
 
 /**

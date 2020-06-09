@@ -1,6 +1,6 @@
-package com.tenext.demo.response
+package com.tencent.iot.explorer.link.core.demo.response
 
-import com.tenext.demo.entity.ShareUser
+import com.tencent.iot.explorer.link.core.demo.entity.ShareUser
 
 class ShareUserResponse {
     var Users: List<ShareUser>? = null

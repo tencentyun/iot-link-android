@@ -1,4 +1,4 @@
-package com.tenext.demo.upload
+package com.tencent.iot.explorer.link.core.demo.upload
 
 import android.content.Context
 import android.text.TextUtils
@@ -16,11 +16,11 @@ import com.tencent.cos.xml.transfer.TransferManager
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider
 import com.tencent.qcloud.core.auth.QCloudCredentials
 import com.tencent.qcloud.core.auth.SessionQCloudCredentials
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.response.BaseResponse
-import com.tenext.auth.service.BaseService
-import com.tenext.auth.util.JsonManager
-import com.tenext.demo.log.L
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.service.BaseService
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.demo.log.L
 
 internal class UploadService : BaseService(), UploadImpl {
 

@@ -1,17 +1,17 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.text.TextUtils
 import android.view.View
-import com.tenext.demo.popup.CommonPopupWindow
+import com.tencent.iot.explorer.link.core.demo.popup.CommonPopupWindow
 import com.squareup.picasso.Picasso
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.entity.Family
-import com.tenext.auth.response.BaseResponse
-import com.tenext.demo.App
-import com.tenext.demo.R
-import com.tenext.demo.entity.Member
-import com.tenext.demo.log.L
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.demo.App
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.entity.Member
+import com.tencent.iot.explorer.link.core.demo.log.L
 import kotlinx.android.synthetic.main.activity_member.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

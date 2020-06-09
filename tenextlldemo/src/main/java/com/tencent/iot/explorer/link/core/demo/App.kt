@@ -1,11 +1,10 @@
-package com.tenext.demo
+package com.tencent.iot.explorer.link.core.demo
 
 import android.app.Application
-import android.util.Log
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.entity.User
-import com.tenext.auth.listener.LoginExpiredListener
-import com.tenext.demo.log.L
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.listener.LoginExpiredListener
+import com.tencent.iot.explorer.link.core.demo.log.L
 
 class App : Application() {
 

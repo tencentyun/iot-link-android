@@ -1,12 +1,12 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.text.TextUtils
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.response.BaseResponse
-import com.tenext.demo.App
-import com.tenext.demo.R
-import com.tenext.demo.log.L
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.demo.App
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.log.L
 import kotlinx.android.synthetic.main.activity_scan_bind.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

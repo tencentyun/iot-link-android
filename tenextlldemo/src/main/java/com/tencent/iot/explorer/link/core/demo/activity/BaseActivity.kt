@@ -1,4 +1,4 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -10,9 +10,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.tenext.demo.App
-import com.tenext.demo.DataHolder
-import com.tenext.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.App
+import com.tencent.iot.explorer.link.core.demo.DataHolder
 
 /**
  * baseActivity

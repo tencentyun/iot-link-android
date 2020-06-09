@@ -1,10 +1,10 @@
-package com.tenext.demo
+package com.tencent.iot.explorer.link.core.demo
 
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.entity.Family
-import com.tenext.auth.entity.Room
-import com.tenext.demo.activity.BaseActivity
-import com.tenext.demo.entity.UserInfo
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
+import com.tencent.iot.explorer.link.core.demo.entity.UserInfo
 import java.util.*
 
 /**

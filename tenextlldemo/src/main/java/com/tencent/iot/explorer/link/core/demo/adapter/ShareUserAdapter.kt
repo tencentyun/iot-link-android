@@ -1,10 +1,10 @@
-package com.tenext.demo.adapter
+package com.tencent.iot.explorer.link.core.demo.adapter
 
 import android.content.Context
 import android.view.ViewGroup
-import com.tenext.demo.R
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.holder.ShareUserHolder
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.holder.ShareUserHolder
 
 class ShareUserAdapter : BaseAdapter {
     constructor(context: Context, list: List<Any>) : super(context, list)

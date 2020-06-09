@@ -1,22 +1,21 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.Switch
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.alibaba.fastjson.JSON
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.entity.Device
-import com.tenext.auth.response.BaseResponse
-import com.tenext.demo.R
-import com.tenext.demo.adapter.OnItemListener
-import com.tenext.demo.adapter.TimingProjectAdapter
-import com.tenext.demo.entity.TimingProject
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.log.L
-import com.tenext.demo.response.TimingListResponse
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.adapter.TimingProjectAdapter
+import com.tencent.iot.explorer.link.core.demo.entity.TimingProject
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.response.TimingListResponse
 import kotlinx.android.synthetic.main.activity_timing_project.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

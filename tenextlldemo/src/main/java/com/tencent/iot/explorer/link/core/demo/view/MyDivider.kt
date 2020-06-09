@@ -1,4 +1,4 @@
-package com.tenext.demo.view
+package com.tencent.iot.explorer.link.core.demo.view
 
 import android.graphics.Rect
 import android.view.View

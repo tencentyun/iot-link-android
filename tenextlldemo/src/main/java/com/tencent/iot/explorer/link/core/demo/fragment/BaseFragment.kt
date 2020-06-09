@@ -1,14 +1,13 @@
-package com.tenext.demo.fragment
+package com.tencent.iot.explorer.link.core.demo.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import com.tenext.demo.DataHolder
+import com.tencent.iot.explorer.link.core.demo.DataHolder
 
 abstract class BaseFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.tenext.demo.popup
+package com.tencent.iot.explorer.link.core.demo.popup
 
 import android.app.Activity
 import android.content.Context

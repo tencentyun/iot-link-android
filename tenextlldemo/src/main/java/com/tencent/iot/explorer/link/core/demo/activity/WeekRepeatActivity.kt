@@ -1,13 +1,13 @@
-package com.tenext.demo.activity
+package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tenext.demo.R
-import com.tenext.demo.adapter.BaseAdapter
-import com.tenext.demo.entity.TimingProject
-import com.tenext.demo.entity.WeekRepeat
-import com.tenext.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.adapter.BaseAdapter
+import com.tencent.iot.explorer.link.core.demo.entity.TimingProject
+import com.tencent.iot.explorer.link.core.demo.entity.WeekRepeat
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
 import kotlinx.android.synthetic.main.activity_week_repeat.*
 import kotlinx.android.synthetic.main.item_week_repeat.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

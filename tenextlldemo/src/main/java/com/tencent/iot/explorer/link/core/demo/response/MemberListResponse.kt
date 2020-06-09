@@ -1,6 +1,6 @@
-package com.tenext.demo.response
+package com.tencent.iot.explorer.link.core.demo.response
 
-import com.tenext.demo.entity.Member
+import com.tencent.iot.explorer.link.core.demo.entity.Member
 
 /**
  * 家庭成员列表响应实体

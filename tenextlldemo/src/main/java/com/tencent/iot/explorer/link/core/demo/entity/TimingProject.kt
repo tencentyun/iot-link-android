@@ -1,4 +1,4 @@
-package com.tenext.demo.entity
+package com.tencent.iot.explorer.link.core.demo.entity
 
 import com.alibaba.fastjson.JSON
 import java.lang.StringBuilder

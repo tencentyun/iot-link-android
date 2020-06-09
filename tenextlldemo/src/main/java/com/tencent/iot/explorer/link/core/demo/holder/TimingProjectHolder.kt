@@ -1,14 +1,13 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.fastjson.JSON
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.entity.ControlPanel
-import com.tenext.auth.util.JsonManager
-import com.tenext.demo.entity.TimingProject
-import com.tenext.demo.log.L
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.demo.entity.TimingProject
 import kotlinx.android.synthetic.main.item_timing_project.view.*
 import java.lang.StringBuilder
 import java.util.Comparator

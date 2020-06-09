@@ -1,9 +1,7 @@
-package com.tenext.demo.view
+package com.tencent.iot.explorer.link.core.demo.view
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.NinePatchDrawable
 import android.util.AttributeSet
 
 import androidx.appcompat.widget.AppCompatImageView

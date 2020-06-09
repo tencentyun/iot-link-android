@@ -1,14 +1,13 @@
-package com.tenext.demo.adapter
+package com.tencent.iot.explorer.link.core.demo.adapter
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.tenext.demo.R
-import com.tenext.demo.entity.IotMessage
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.holder.MessageDeviceHolder
-import com.tenext.demo.holder.MessageFamilyHolder
-import com.tenext.demo.holder.MessageNotifyHolder
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.entity.IotMessage
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.holder.MessageDeviceHolder
+import com.tencent.iot.explorer.link.core.demo.holder.MessageFamilyHolder
+import com.tencent.iot.explorer.link.core.demo.holder.MessageNotifyHolder
 
 class MessageAdapter : BaseAdapter {
 

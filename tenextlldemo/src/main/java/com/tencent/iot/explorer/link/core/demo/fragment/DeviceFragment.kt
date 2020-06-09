@@ -1,27 +1,27 @@
-package com.tenext.demo.fragment
+package com.tencent.iot.explorer.link.core.demo.fragment
 
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tenext.auth.IoTAuth
-import com.tenext.auth.callback.DeviceCallback
-import com.tenext.auth.callback.MyCallback
-import com.tenext.auth.consts.RequestCode
-import com.tenext.auth.entity.Device
-import com.tenext.auth.entity.Room
-import com.tenext.auth.response.BaseResponse
-import com.tenext.auth.response.RoomListResponse
-import com.tenext.demo.App
-import com.tenext.demo.R
-import com.tenext.demo.adapter.DeviceAdapter
-import com.tenext.demo.adapter.FamilyAdapter
-import com.tenext.demo.adapter.RoomAdapter
-import com.tenext.auth.response.FamilyListResponse
-import com.tenext.demo.activity.AddDeviceActivity
-import com.tenext.demo.activity.ControlPanelActivity
-import com.tenext.demo.adapter.OnItemListener
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.view.MyDivider
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.DeviceCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
+import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
+import com.tencent.iot.explorer.link.core.demo.App
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.adapter.DeviceAdapter
+import com.tencent.iot.explorer.link.core.demo.adapter.FamilyAdapter
+import com.tencent.iot.explorer.link.core.demo.adapter.RoomAdapter
+import com.tencent.iot.explorer.link.core.auth.response.FamilyListResponse
+import com.tencent.iot.explorer.link.core.demo.activity.AddDeviceActivity
+import com.tencent.iot.explorer.link.core.demo.activity.ControlPanelActivity
+import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.view.MyDivider
 import kotlinx.android.synthetic.main.fragment_device.*
 
 class DeviceFragment : BaseFragment(), MyCallback {

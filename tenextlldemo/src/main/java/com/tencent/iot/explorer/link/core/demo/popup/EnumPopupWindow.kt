@@ -1,20 +1,19 @@
-package com.tenext.demo.popup
+package com.tencent.iot.explorer.link.core.demo.popup
 
 import android.app.Activity
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.alibaba.fastjson.JSONObject
-import com.tenext.auth.entity.BoolDefine
-import com.tenext.auth.entity.EnumDefine
-import com.tenext.auth.entity.Mapping
-import com.tenext.auth.entity.ProductDefine
-import com.tenext.demo.R
-import com.tenext.demo.adapter.EnumAdapter
-import com.tenext.demo.adapter.OnItemListener
-import com.tenext.demo.holder.BaseHolder
-import com.tenext.demo.holder.EnumHolder
+import com.tencent.iot.explorer.link.core.auth.entity.BoolDefine
+import com.tencent.iot.explorer.link.core.auth.entity.EnumDefine
+import com.tencent.iot.explorer.link.core.auth.entity.Mapping
+import com.tencent.iot.explorer.link.core.auth.entity.ProductDefine
+import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.adapter.EnumAdapter
+import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.holder.EnumHolder
 import kotlinx.android.synthetic.main.popup_enum.view.*
 
 /**

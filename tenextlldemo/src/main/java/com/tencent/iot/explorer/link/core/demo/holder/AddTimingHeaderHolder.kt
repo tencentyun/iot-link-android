@@ -1,9 +1,9 @@
-package com.tenext.demo.holder
+package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TimePicker
-import com.tenext.demo.entity.TimingProject
+import com.tencent.iot.explorer.link.core.demo.entity.TimingProject
 import kotlinx.android.synthetic.main.head_add_timing.view.*
 
 class AddTimingHeaderHolder : BaseHolder<TimingProject> {
