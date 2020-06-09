@@ -25,4 +25,9 @@ public class T {
         }
     }
 
+    public static void showLonger(String text) {
+        if (context != null) {
+            Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+        }
+    }
 }

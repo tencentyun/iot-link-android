@@ -672,9 +672,10 @@ class HttpRequest private constructor() {
     /**
      * 扫码绑定设备
      */
-    fun scanBindDevice(familyId: String, signature: String, callback: MyCallback) {
+    fun scanBindDevice(familyId: String, roomId: String, signature: String, callback: MyCallback) {
         val param = tokenParams("AppSecureAddDeviceInFamily")
         param["FamilyId"] = familyId
+        param["RoomId"] = roomId
         param["DeviceSignature"] = signature
         tokenPost(param, callback, RequestCode.scan_bind_device)
     }
