@@ -29,11 +29,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: apk
-          path: app/build/outputs/apk/**/*.apk
+          path: app/build/outputs/apk/release/*release.apk
       - name: Archive the generated Aar
         uses: actions/upload-artifact@v2
         with:
           name: aar
-          path: tenextll/build/outputs/aar/*.aar
+          path: tenextll/build/outputs/aar/*release.aar
       - name: Publish apk to Maven
         run: ./gradlew publish
