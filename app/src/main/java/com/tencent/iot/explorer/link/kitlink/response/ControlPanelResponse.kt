@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.ControlPanelEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ControlPanelEntity
 
 /**
  * 控制面板数据

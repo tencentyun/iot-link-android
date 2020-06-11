@@ -1,4 +1,4 @@
-package com.auth.message.payload
+package com.tencent.iot.explorer.link.auth.message.payload
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject

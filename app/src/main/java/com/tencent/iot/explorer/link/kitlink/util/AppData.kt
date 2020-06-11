@@ -1,11 +1,11 @@
-package com.kitlink.util
+package com.tencent.iot.explorer.link.kitlink.util
 
 import android.content.Context
 import android.text.TextUtils
-import com.kitlink.App
-import com.kitlink.activity.BaseActivity
-import com.kitlink.consts.CommonField
-import com.kitlink.entity.*
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.util.L
 import com.util.SharePreferenceUtil
 import com.view.recyclerview.SelectedArrayList

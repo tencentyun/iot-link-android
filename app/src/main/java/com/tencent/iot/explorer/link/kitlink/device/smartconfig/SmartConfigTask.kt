@@ -1,4 +1,4 @@
-package com.kitlink.device.smartconfig
+package com.tencent.iot.explorer.link.kitlink.device.smartconfig
 
 import android.location.Location
 

@@ -1,4 +1,4 @@
-package com.kitlink;
+package com.tencent.iot.explorer.link.kitlink;
 
 import android.content.Context;
 import android.content.Intent;

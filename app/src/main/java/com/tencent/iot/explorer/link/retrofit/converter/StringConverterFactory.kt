@@ -1,4 +1,4 @@
-package com.retrofit.converter
+package com.tencent.iot.explorer.link.retrofit.converter
 
 import okhttp3.RequestBody
 import okhttp3.ResponseBody

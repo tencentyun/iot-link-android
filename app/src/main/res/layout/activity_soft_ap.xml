@@ -8,7 +8,7 @@
         android:background="@color/white"
         tools:context=".activity.SoftApActivity">
 
-    <com.kitlink.util.StatusBarHeightView
+    <com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView
             android:id="@+id/sbhv_soft_ap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                     android:background="@color/gray_e6e6e6" />
         </RelativeLayout>
 
-    </com.kitlink.util.StatusBarHeightView>
+    </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
 
     <FrameLayout
             android:id="@+id/container_soft_ap"

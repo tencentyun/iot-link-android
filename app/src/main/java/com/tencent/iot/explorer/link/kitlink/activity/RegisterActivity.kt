@@ -1,14 +1,14 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
-import com.kitlink.R
-import com.kitlink.consts.CommonField
-import com.kitlink.consts.SocketConstants
-import com.mvp.IPresenter
-import com.mvp.presenter.RegisterPresenter
-import com.mvp.view.RegisterView
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.RegisterPresenter
+import com.tencent.iot.explorer.link.mvp.view.RegisterView
 import com.util.L
 import com.util.T
 import com.util.keyboard.KeyBoardUtils

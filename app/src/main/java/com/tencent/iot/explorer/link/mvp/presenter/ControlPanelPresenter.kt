@@ -1,8 +1,8 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.mvp.ParentPresenter
-import com.mvp.model.ControlPanelModel
-import com.mvp.view.ControlPanelView
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.model.ControlPanelModel
+import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 
 class ControlPanelPresenter(view: ControlPanelView) : ParentPresenter<ControlPanelModel, ControlPanelView>(view) {
     override fun getIModel(view: ControlPanelView): ControlPanelModel {

@@ -1,16 +1,16 @@
-package com.mvp.model
+package com.tencent.iot.explorer.link.mvp.model
 
-import com.kitlink.entity.FamilyEntity
-import com.kitlink.entity.FamilyInfoEntity
-import com.kitlink.entity.MemberEntity
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.FamilyInfoResponse
-import com.kitlink.response.MemberListResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.kitlink.util.RequestCode
-import com.mvp.ParentModel
-import com.mvp.view.FamilyView
+import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.kitlink.entity.FamilyInfoEntity
+import com.tencent.iot.explorer.link.kitlink.entity.MemberEntity
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.FamilyInfoResponse
+import com.tencent.iot.explorer.link.kitlink.response.MemberListResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.mvp.ParentModel
+import com.tencent.iot.explorer.link.mvp.view.FamilyView
 import com.util.L
 import com.util.T
 

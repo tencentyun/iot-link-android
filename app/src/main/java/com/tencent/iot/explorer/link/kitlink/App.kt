@@ -1,17 +1,17 @@
-package com.kitlink
+package com.tencent.iot.explorer.link.kitlink
 
 import android.app.Application
 import android.content.Intent
 import androidx.multidex.MultiDex
-import com.auth.IoTAuth
-import com.kitlink.activity.LoginActivity
-import com.kitlink.util.AppData
-import com.kitlink.util.Weak
+import com.tencent.iot.explorer.link.auth.IoTAuth
+import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
+import com.tencent.iot.explorer.link.kitlink.util.AppData
+import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.android.tpush.XGPushConfig
 import com.util.L
 import com.util.SharePreferenceUtil
 import com.util.T
-import com.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 
 /**
  * APP

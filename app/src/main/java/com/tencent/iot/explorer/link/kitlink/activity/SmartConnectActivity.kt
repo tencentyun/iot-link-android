@@ -1,15 +1,12 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.text.TextUtils
-import android.util.Log
-import com.kitlink.R
-import com.kitlink.fragment.*
-import com.kitlink.popup.CommonPopupWindow
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.fragment.*
+import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.util.T
-import com.kitlink.activity.BaseActivity
-import com.mvp.presenter.GetBindDeviceTokenPresenter
-import com.mvp.view.GetBindDeviceTokenView
+import com.tencent.iot.explorer.link.mvp.presenter.GetBindDeviceTokenPresenter
+import com.tencent.iot.explorer.link.mvp.view.GetBindDeviceTokenView
 import com.util.L
 import com.util.check.LocationUtil
 import kotlinx.android.synthetic.main.activity_smart_connect.*

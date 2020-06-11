@@ -1,17 +1,16 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.text.TextUtils
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.CreateRoomResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.CreateRoomResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.util.L
 import com.util.T
-import com.kitlink.activity.BaseActivity
-import com.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import kotlinx.android.synthetic.main.activity_add_room.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.*
 
