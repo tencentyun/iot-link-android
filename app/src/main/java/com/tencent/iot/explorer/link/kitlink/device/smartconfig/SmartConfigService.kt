@@ -54,7 +54,7 @@ class SmartConfigService(context: Context) : ConfigService() {
                 this.listener?.onStep(SmartConfigStep.STEP_LINK_START)
 
                 esptouchTask = EsptouchTask(this.task?.mSsid, this.task?.mBssid,
-                    this.task?.mPassword, false, context!!.applicationContext)
+                    this.task?.mPassword, context!!.applicationContext)
                 esptouchTask?.let {
                     this.listener?.onStep(SmartConfigStep.STEP_DEVICE_CONNECTING)
 
