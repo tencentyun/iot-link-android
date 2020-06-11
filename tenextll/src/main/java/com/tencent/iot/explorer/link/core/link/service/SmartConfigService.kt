@@ -64,7 +64,6 @@ class SmartConfigService(context: Context, task: DeviceTask) : DeviceService(con
                 ssid,
                 mTask.mBssid,
                 mTask.mPassword,
-                false,
                 context!!
             )
             L.d("SmartConfigService", "正在连接到$ssid,${mTask.mBssid},${mTask.mPassword}")
