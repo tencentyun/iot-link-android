@@ -1,20 +1,19 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest.permission
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
-import com.kitlink.R
-import com.kitlink.util.HttpCallBack
-import com.kitlink.util.HttpUtil
-import com.kitlink.util.JsonManager
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.util.HttpCallBack
+import com.tencent.iot.explorer.link.kitlink.util.HttpUtil
+import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 import com.tencent.map.geolocation.TencentLocation
 import com.tencent.map.geolocation.TencentLocationListener
 import com.tencent.map.geolocation.TencentLocationManager
 import com.tencent.map.geolocation.TencentLocationRequest
 import com.tencent.mapsdk.raster.model.*
-import com.tencent.tencentmap.mapsdk.map.CameraUpdateFactory
 import com.tencent.tencentmap.mapsdk.map.TencentMap
 import com.util.L
 import kotlinx.android.synthetic.main.activity_family_address.*

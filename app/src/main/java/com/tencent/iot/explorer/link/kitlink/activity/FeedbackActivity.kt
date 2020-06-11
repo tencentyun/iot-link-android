@@ -1,4 +1,4 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
 import android.content.Context
@@ -11,19 +11,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kitlink.R
-import com.kitlink.holder.FeedbackViewHolder
-import com.kitlink.popup.CameraPopupWindow
-import com.kitlink.response.BaseResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.mvp.model.UploadModel
-import com.mvp.view.UploadView
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.holder.FeedbackViewHolder
+import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.mvp.model.UploadModel
+import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.cos.xml.exception.CosXmlClientException
 import com.util.L
 import com.util.T
 import com.view.recyclerview.CRecyclerView
-import com.kitlink.activity.BaseActivity
 import com.yho.image.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_feedback.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

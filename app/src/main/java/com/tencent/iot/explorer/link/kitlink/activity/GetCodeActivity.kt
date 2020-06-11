@@ -1,15 +1,15 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
-import com.kitlink.R
-import com.kitlink.util.Weak
-import com.mvp.IPresenter
-import com.mvp.presenter.GetCodePresenter
-import com.mvp.view.GetCodeView
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.util.Weak
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.GetCodePresenter
+import com.tencent.iot.explorer.link.mvp.view.GetCodeView
 import com.util.L
 import com.util.T
 import com.util.keyboard.KeyBoardUtils

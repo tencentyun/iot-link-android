@@ -1,7 +1,7 @@
-package com.auth.message.upload
+package com.tencent.iot.explorer.link.auth.message.upload
 
-import com.auth.IoTAuth
-import com.auth.consts.SocketField
+import com.tencent.iot.explorer.link.auth.IoTAuth
+import com.tencent.iot.explorer.link.auth.consts.SocketField
 
 open class IotMsg {
 

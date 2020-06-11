@@ -1,23 +1,20 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.entity.RoomEntity
-import com.kitlink.holder.RoomListFootHolder
-import com.kitlink.holder.RoomListViewHolder
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.RoomListResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
+import com.tencent.iot.explorer.link.kitlink.holder.RoomListFootHolder
+import com.tencent.iot.explorer.link.kitlink.holder.RoomListViewHolder
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.RoomListResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.util.L
 import com.view.recyclerview.CRecyclerView
-import com.kitlink.activity.BaseActivity
-import com.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import kotlinx.android.synthetic.main.activity_room_list.*
-import kotlinx.android.synthetic.main.foot_room_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 /**

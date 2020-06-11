@@ -1,11 +1,11 @@
-package com.auth
+package com.tencent.iot.explorer.link.auth
 
-import com.auth.message.upload.ActivePushMessage
-import com.auth.message.upload.ArrayString
-import com.auth.socket.WSClientManager
-import com.auth.socket.callback.ActivePushCallback
-import com.auth.socket.callback.MessageCallback
-import com.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.auth.message.upload.ActivePushMessage
+import com.tencent.iot.explorer.link.auth.message.upload.ArrayString
+import com.tencent.iot.explorer.link.auth.socket.WSClientManager
+import com.tencent.iot.explorer.link.auth.socket.callback.ActivePushCallback
+import com.tencent.iot.explorer.link.auth.socket.callback.MessageCallback
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.util.L
 
 /**

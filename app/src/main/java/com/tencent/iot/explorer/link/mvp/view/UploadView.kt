@@ -1,4 +1,4 @@
-package com.mvp.view
+package com.tencent.iot.explorer.link.mvp.view
 
 import com.tencent.cos.xml.exception.CosXmlClientException
 

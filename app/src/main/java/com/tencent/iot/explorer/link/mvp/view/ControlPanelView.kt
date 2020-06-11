@@ -1,8 +1,7 @@
-package com.mvp.view
+package com.tencent.iot.explorer.link.mvp.view
 
-import com.mvp.ParentView
-import com.alibaba.fastjson.JSONObject
-import com.kitlink.entity.NavBar
+import com.tencent.iot.explorer.link.mvp.ParentView
+import com.tencent.iot.explorer.link.kitlink.entity.NavBar
 
 interface ControlPanelView : ParentView {
 

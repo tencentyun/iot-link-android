@@ -1,8 +1,8 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.mvp.model.GetCodeModel
-import com.mvp.ParentPresenter
-import com.mvp.view.GetCodeView
+import com.tencent.iot.explorer.link.mvp.model.GetCodeModel
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.view.GetCodeView
 
 class GetCodePresenter(view: GetCodeView) : ParentPresenter<GetCodeModel, GetCodeView>(view) {
     override fun getIModel(view: GetCodeView): GetCodeModel {

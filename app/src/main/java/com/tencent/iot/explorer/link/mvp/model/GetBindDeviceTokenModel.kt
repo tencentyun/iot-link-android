@@ -1,15 +1,15 @@
-package com.mvp.model
+package com.tencent.iot.explorer.link.mvp.model
 
 import android.text.TextUtils
 import android.util.Log
 import com.alibaba.fastjson.JSON
-import com.kitlink.App
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.BindDeviceTokenResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.mvp.ParentModel
-import com.mvp.view.GetBindDeviceTokenView
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.BindDeviceTokenResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.mvp.ParentModel
+import com.tencent.iot.explorer.link.mvp.view.GetBindDeviceTokenView
 
 class GetBindDeviceTokenModel(view: GetBindDeviceTokenView) : ParentModel<GetBindDeviceTokenView>(view), MyCallback {
 

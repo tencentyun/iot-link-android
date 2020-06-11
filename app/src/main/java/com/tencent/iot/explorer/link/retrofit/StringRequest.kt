@@ -1,12 +1,12 @@
-package com.retrofit
+package com.tencent.iot.explorer.link.retrofit
 
 import android.util.Log
-import com.retrofit.adapter.StringCallAdapterFactory
-import com.retrofit.converter.StringConverterFactory
-import com.retrofit.request.GetRequest
-import com.retrofit.request.JsonRequest
-import com.retrofit.request.PostRequest
-import com.retrofit.request.UploadRequest
+import com.tencent.iot.explorer.link.retrofit.adapter.StringCallAdapterFactory
+import com.tencent.iot.explorer.link.retrofit.converter.StringConverterFactory
+import com.tencent.iot.explorer.link.retrofit.request.GetRequest
+import com.tencent.iot.explorer.link.retrofit.request.JsonRequest
+import com.tencent.iot.explorer.link.retrofit.request.PostRequest
+import com.tencent.iot.explorer.link.retrofit.request.UploadRequest
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -68,7 +68,7 @@ class StringRequest private constructor() {
     /**
      * get请求
      */
-    fun get(path: String, callback: com.retrofit.Callback, reqCode: Int) {
+    fun get(path: String, callback: com.tencent.iot.explorer.link.retrofit.Callback, reqCode: Int) {
         retrofit.create(GetRequest::class.java).get(path).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                 call?.cancel()
@@ -94,7 +94,7 @@ class StringRequest private constructor() {
     fun get(
         path: String,
         params: HashMap<String, Any>,
-        callback: com.retrofit.Callback,
+        callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
         retrofit.create(GetRequest::class.java).get(path, params)
@@ -124,7 +124,7 @@ class StringRequest private constructor() {
     fun post(
         path: String,
         params: HashMap<String, Any>,
-        callback: com.retrofit.Callback,
+        callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
         retrofit.create(PostRequest::class.java).post(path, params)
@@ -154,7 +154,7 @@ class StringRequest private constructor() {
     fun postJson(
         path: String,
         json: String,
-        callback: com.retrofit.Callback,
+        callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
         retrofit.create(JsonRequest::class.java).postJson(path, json)
@@ -185,7 +185,7 @@ class StringRequest private constructor() {
         host: String,
         url: String,
         files: List<File>,
-        callback: com.retrofit.Callback,
+        callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
         val builder = Retrofit.Builder().baseUrl(host)
@@ -233,7 +233,7 @@ class StringRequest private constructor() {
         host: String,
         url: String,
         file: File,
-        callback: com.retrofit.Callback,
+        callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
         val builder = Retrofit.Builder().baseUrl(host)

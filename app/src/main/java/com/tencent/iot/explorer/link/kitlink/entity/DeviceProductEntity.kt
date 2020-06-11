@@ -1,6 +1,6 @@
-package com.kitlink.entity
+package com.tencent.iot.explorer.link.kitlink.entity
 
-import com.kitlink.util.JsonManager
+import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 
 /**
  * 设备产品信息实体

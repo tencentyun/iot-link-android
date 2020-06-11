@@ -1,20 +1,18 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
 import android.view.ViewGroup
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.entity.FamilyEntity
-import com.kitlink.holder.FamilyListFootHolder
-import com.kitlink.holder.FamilyListViewHolder
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.FamilyListResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.JsonManager
-import com.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.holder.FamilyListFootHolder
+import com.tencent.iot.explorer.link.kitlink.holder.FamilyListViewHolder
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.FamilyListResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.JsonManager
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.util.L
 import com.view.recyclerview.CRecyclerView
-import com.kitlink.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_family_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
