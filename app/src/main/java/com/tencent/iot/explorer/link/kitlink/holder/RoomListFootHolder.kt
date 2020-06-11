@@ -1,4 +1,4 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.ViewGroup

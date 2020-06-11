@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.util.JsonManager
+import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 
 /**
  * 基础响应实体

@@ -1,21 +1,20 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
 import android.view.ViewGroup
-import com.kitlink.R
-import com.kitlink.entity.DeviceEntity
-import com.kitlink.entity.ShareUserEntity
-import com.kitlink.holder.ShareUserFootHolder
-import com.kitlink.holder.ShareUserHeadHolder
-import com.kitlink.holder.ShareUserHolder
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.ShareUserResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ShareUserEntity
+import com.tencent.iot.explorer.link.kitlink.holder.ShareUserFootHolder
+import com.tencent.iot.explorer.link.kitlink.holder.ShareUserHeadHolder
+import com.tencent.iot.explorer.link.kitlink.holder.ShareUserHolder
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.ShareUserResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.util.L
 import com.view.recyclerview.CRecyclerView
-import com.kitlink.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_share_user_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

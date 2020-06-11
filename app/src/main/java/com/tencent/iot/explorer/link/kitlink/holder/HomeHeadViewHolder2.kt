@@ -1,9 +1,9 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.View
-import com.kitlink.App
-import com.kitlink.entity.FamilyEntity
-import com.kitlink.entity.WeatherEntity
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.kitlink.entity.WeatherEntity
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.head_home1.view.*
 import kotlinx.android.synthetic.main.head_home2.view.*

@@ -1,16 +1,16 @@
-package com.auth.socket
+package com.tencent.iot.explorer.link.auth.socket
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.util.Base64
-import com.auth.message.resp.HeartMessage
-import com.auth.message.MessageConst
-import com.auth.message.payload.Payload
-import com.auth.message.payload.PayloadMessage
-import com.auth.message.resp.RespFailMessage
-import com.auth.message.resp.RespSuccessMessage
-import com.auth.message.resp.ResponseMessage
-import com.auth.socket.callback.DispatchCallback
-import com.auth.socket.callback.HeartCallback
+import com.tencent.iot.explorer.link.auth.message.resp.HeartMessage
+import com.tencent.iot.explorer.link.auth.message.MessageConst
+import com.tencent.iot.explorer.link.auth.message.payload.Payload
+import com.tencent.iot.explorer.link.auth.message.payload.PayloadMessage
+import com.tencent.iot.explorer.link.auth.message.resp.RespFailMessage
+import com.tencent.iot.explorer.link.auth.message.resp.RespSuccessMessage
+import com.tencent.iot.explorer.link.auth.message.resp.ResponseMessage
+import com.tencent.iot.explorer.link.auth.socket.callback.DispatchCallback
+import com.tencent.iot.explorer.link.auth.socket.callback.HeartCallback
 import com.util.L
 import java.lang.Exception
 

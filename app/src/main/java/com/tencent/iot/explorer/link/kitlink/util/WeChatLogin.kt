@@ -1,8 +1,8 @@
-package com.kitlink.util
+package com.tencent.iot.explorer.link.kitlink.util
 
 import android.app.Activity
-import com.kitlink.R
-import com.kitlink.wxapi.WXEntryActivity
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.wxapi.WXEntryActivity
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.util.T

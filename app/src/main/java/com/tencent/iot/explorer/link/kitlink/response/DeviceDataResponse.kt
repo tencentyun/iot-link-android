@@ -1,9 +1,7 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
 import com.alibaba.fastjson.JSON
-import com.kitlink.entity.DeviceDataEntity
-import com.kitlink.entity.DevicePropertyEntity
-import com.kitlink.entity.UI
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceDataEntity
 
 /**
  * 设备当前数据

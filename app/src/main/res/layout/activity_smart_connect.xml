@@ -8,7 +8,7 @@
         android:background="@color/white"
         tools:context=".activity.SmartConnectActivity">
 
-    <com.kitlink.util.StatusBarHeightView
+    <com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView
             android:id="@+id/sbhv_smart_connect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
 
         </RelativeLayout>
 
-    </com.kitlink.util.StatusBarHeightView>
+    </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
 
     <FrameLayout
             android:id="@+id/container_smart_connect"

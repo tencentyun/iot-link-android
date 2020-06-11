@@ -1,4 +1,4 @@
-package com.kitlink.entity
+package com.tencent.iot.explorer.link.kitlink.entity
 
 /**
  *  重复实体

@@ -1,15 +1,13 @@
-package com.mvp.model
+package com.tencent.iot.explorer.link.mvp.model
 
 import android.content.Context
 import android.text.TextUtils
 import com.alibaba.fastjson.JSONObject
-import com.kitlink.consts.CommonField
-import com.kitlink.entity.ParentRespEntity
-import com.kitlink.response.AppCosAuthResponse
-import com.kitlink.response.BaseResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.mvp.view.UploadView
+import com.tencent.iot.explorer.link.kitlink.response.AppCosAuthResponse
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.cos.xml.CosXmlServiceConfig
 import com.tencent.cos.xml.CosXmlSimpleService
 import com.tencent.cos.xml.exception.CosXmlClientException
@@ -24,9 +22,6 @@ import com.tencent.qcloud.core.auth.QCloudCredentialProvider
 import com.tencent.qcloud.core.auth.QCloudCredentials
 import com.tencent.qcloud.core.auth.SessionQCloudCredentials
 import com.util.L
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 上传文件

@@ -1,6 +1,6 @@
-package com.kitlink.device
+package com.tencent.iot.explorer.link.kitlink.device
 
-import com.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.App
 import org.json.JSONException
 import org.json.JSONObject
 import java.net.DatagramSocket

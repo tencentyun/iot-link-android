@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.MessageEntity
+import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
 
 /**
  * 消息列表响应实体

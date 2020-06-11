@@ -1,8 +1,8 @@
-package com.kitlink.wxapi
+package com.tencent.iot.explorer.link.kitlink.wxapi
 
 import android.app.Activity
 import android.os.Bundle
-import com.kitlink.util.WeChatLogin
+import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.modelmsg.SendAuth

@@ -1,7 +1,7 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.CategoryDeviceEntity
-import com.kitlink.entity.RecommDeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.CategoryDeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.RecommDeviceEntity
 
 class RecommDeviceListResponse {
     var RequestId = ""
