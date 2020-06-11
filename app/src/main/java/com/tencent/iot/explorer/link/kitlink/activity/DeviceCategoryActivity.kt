@@ -17,7 +17,6 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.kitlink.customview.MyScrollView
 import com.tencent.iot.explorer.link.kitlink.App
 import com.tencent.iot.explorer.link.kitlink.R
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
@@ -31,6 +30,7 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.qrcode.Constant
 import com.qrcode.ScannerActivity
+import com.tencent.iot.explorer.link.kitlink.customview.MyScrollView
 import com.util.L
 import com.util.T
 import com.view.recyclerview.CRecyclerView

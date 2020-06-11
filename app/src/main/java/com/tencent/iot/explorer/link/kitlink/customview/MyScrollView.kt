@@ -1,4 +1,4 @@
-package com.kitlink.customview
+package com.tencent.iot.explorer.link.kitlink.customview
 
 import android.content.Context
 import android.util.AttributeSet
