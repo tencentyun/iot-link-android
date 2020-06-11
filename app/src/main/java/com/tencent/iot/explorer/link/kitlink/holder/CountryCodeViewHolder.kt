@@ -1,7 +1,7 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.View
-import com.kitlink.entity.CountryCodeEntity
+import com.tencent.iot.explorer.link.kitlink.entity.CountryCodeEntity
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_country_code_value.view.*
 

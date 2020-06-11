@@ -1,4 +1,4 @@
-package com.retrofit.request
+package com.tencent.iot.explorer.link.retrofit.request
 
 
 import okhttp3.MultipartBody

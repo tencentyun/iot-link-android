@@ -1,13 +1,13 @@
-package com.mvp.model
+package com.tencent.iot.explorer.link.mvp.model
 
-import com.kitlink.entity.MessageEntity
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.MessageListResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.kitlink.util.RequestCode
-import com.mvp.ParentModel
-import com.mvp.view.MessageView
+import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.MessageListResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.mvp.ParentModel
+import com.tencent.iot.explorer.link.mvp.view.MessageView
 import com.util.L
 import java.util.*
 

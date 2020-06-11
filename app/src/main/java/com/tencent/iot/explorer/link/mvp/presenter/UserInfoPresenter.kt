@@ -1,9 +1,9 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
 import android.content.Context
-import com.mvp.model.UserInfoModel
-import com.mvp.ParentPresenter
-import com.mvp.view.UserInfoView
+import com.tencent.iot.explorer.link.mvp.model.UserInfoModel
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 
 /**
  * 个人信息

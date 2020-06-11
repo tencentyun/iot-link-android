@@ -1,13 +1,12 @@
-package com.kitlink.util;
+package com.tencent.iot.explorer.link.kitlink.util;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
-import com.kitlink.activity.HelpFeedbackActivity;
+import com.tencent.iot.explorer.link.kitlink.activity.HelpFeedbackActivity;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,16 +1,15 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.view.View
-import com.kitlink.R
-import com.kitlink.consts.SocketConstants
-import com.kitlink.consts.CommonField
-import com.kitlink.response.BaseResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.util.L
-import com.kitlink.activity.PActivity
 import kotlinx.android.synthetic.main.activity_bind_mobile_phone.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

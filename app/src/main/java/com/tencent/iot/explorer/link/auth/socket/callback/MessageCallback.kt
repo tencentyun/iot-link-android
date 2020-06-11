@@ -1,7 +1,7 @@
-package com.auth.socket.callback
+package com.tencent.iot.explorer.link.auth.socket.callback
 
-import com.auth.message.resp.RespFailMessage
-import com.auth.message.resp.RespSuccessMessage
+import com.tencent.iot.explorer.link.auth.message.resp.RespFailMessage
+import com.tencent.iot.explorer.link.auth.message.resp.RespSuccessMessage
 
 /**
  * JWebSocketClient消息发送回调

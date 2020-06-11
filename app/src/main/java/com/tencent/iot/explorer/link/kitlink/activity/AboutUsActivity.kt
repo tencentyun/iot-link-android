@@ -1,9 +1,9 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
-import com.kitlink.R
-import com.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.util.AppInfoUtils
 import kotlinx.android.synthetic.main.activity_about_us.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

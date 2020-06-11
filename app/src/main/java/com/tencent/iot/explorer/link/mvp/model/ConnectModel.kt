@@ -1,24 +1,24 @@
-package com.mvp.model
+package com.tencent.iot.explorer.link.mvp.model
 
 import android.content.Context
 import android.location.Location
 import com.espressif.iot.esptouch.IEsptouchResult
-import com.kitlink.App
-import com.kitlink.device.*
-import com.kitlink.device.smartconfig.SmartConfigListener
-import com.kitlink.device.smartconfig.SmartConfigService
-import com.kitlink.device.smartconfig.SmartConfigStep
-import com.kitlink.device.smartconfig.SmartConfigTask
-import com.kitlink.device.softap.SoftAPListener
-import com.kitlink.device.softap.SoftAPService
-import com.kitlink.device.softap.SoftAPStep
-import com.kitlink.device.softap.SoftApTask
-import com.kitlink.fragment.WifiFragment
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.DeviceBindTokenStateResponse
-import com.kitlink.util.*
-import com.mvp.ParentModel
-import com.mvp.view.ConnectView
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.device.*
+import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigListener
+import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigService
+import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigStep
+import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigTask
+import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPListener
+import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPService
+import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPStep
+import com.tencent.iot.explorer.link.kitlink.device.softap.SoftApTask
+import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.DeviceBindTokenStateResponse
+import com.tencent.iot.explorer.link.kitlink.util.*
+import com.tencent.iot.explorer.link.mvp.ParentModel
+import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import com.util.L
 
 /**

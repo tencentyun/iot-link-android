@@ -1,4 +1,4 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
 import android.app.Activity
@@ -17,18 +17,18 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.kitlink.App
-import com.kitlink.R
 import com.kitlink.customview.MyScrollView
-import com.kitlink.device.DeviceInfo
-import com.kitlink.fragment.DeviceFragment
-import com.kitlink.holder.DeviceListViewHolder
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.DeviceCategoryListResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.kitlink.util.RequestCode
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
+import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.kitlink.holder.DeviceListViewHolder
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryListResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.qrcode.Constant
 import com.qrcode.ScannerActivity
 import com.util.L

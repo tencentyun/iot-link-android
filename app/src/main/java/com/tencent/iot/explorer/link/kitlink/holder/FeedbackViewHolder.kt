@@ -1,9 +1,9 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.text.TextUtils
 import android.view.View
-import com.kitlink.R
-import com.kitlink.activity.FeedbackActivity
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.activity.FeedbackActivity
 import com.view.recyclerview.CRecyclerView
 import com.yho.image.imp.ImageManager
 import kotlinx.android.synthetic.main.item_feekback.view.*

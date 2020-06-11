@@ -1,7 +1,7 @@
-package com.mvp.view
+package com.tencent.iot.explorer.link.mvp.view
 
-import com.kitlink.entity.User
-import com.mvp.ParentView
+import com.tencent.iot.explorer.link.kitlink.entity.User
+import com.tencent.iot.explorer.link.mvp.ParentView
 
 interface LoginView : ParentView {
 

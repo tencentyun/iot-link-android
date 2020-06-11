@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 
 class DeviceListResponse {
     var Total = 0

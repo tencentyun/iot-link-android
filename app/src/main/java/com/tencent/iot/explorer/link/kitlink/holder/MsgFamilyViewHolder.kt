@@ -1,8 +1,8 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.View
-import com.kitlink.R
-import com.kitlink.entity.MessageEntity
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
 import com.util.date.DateFormatUtil
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_message_family.view.*

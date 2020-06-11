@@ -1,9 +1,9 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.kitlink.entity.MessageEntity
-import com.mvp.ParentPresenter
-import com.mvp.model.MessageModel
-import com.mvp.view.MessageView
+import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.model.MessageModel
+import com.tencent.iot.explorer.link.mvp.view.MessageView
 
 class MessagePresenter : ParentPresenter<MessageModel, MessageView> {
     constructor(view: MessageView) : super(view)

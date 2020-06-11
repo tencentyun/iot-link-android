@@ -1,9 +1,9 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.kitlink.activity.SetPasswordActivity
-import com.mvp.model.SetPasswordModel
-import com.mvp.ParentPresenter
-import com.mvp.view.SetPasswordView
+import com.tencent.iot.explorer.link.kitlink.activity.SetPasswordActivity
+import com.tencent.iot.explorer.link.mvp.model.SetPasswordModel
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.view.SetPasswordView
 
 /**
  * 设置密码

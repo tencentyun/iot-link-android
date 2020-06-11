@@ -1,8 +1,8 @@
-package com.kitlink.device.smartconfig
+package com.tencent.iot.explorer.link.kitlink.device.smartconfig
 
 import com.espressif.iot.esptouch.IEsptouchResult
-import com.kitlink.device.DeviceInfo
-import com.kitlink.device.TCLinkException
+import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
+import com.tencent.iot.explorer.link.kitlink.device.TCLinkException
 
 interface SmartConfigListener {
 

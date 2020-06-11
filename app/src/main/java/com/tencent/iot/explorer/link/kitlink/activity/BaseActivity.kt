@@ -1,4 +1,4 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Context
 import android.content.Intent
@@ -9,10 +9,10 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.kitlink.App
-import com.kitlink.consts.CommonField
-import com.kitlink.entity.User
-import com.kitlink.util.DataHolder
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.User
+import com.tencent.iot.explorer.link.kitlink.util.DataHolder
 import com.util.SharePreferenceUtil
 import com.util.T
 import com.view.status.StatusBarUtil

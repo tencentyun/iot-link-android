@@ -1,4 +1,4 @@
-package com.kitlink.fragment
+package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.graphics.Rect
 import android.view.LayoutInflater
@@ -6,17 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.activity.AddDeviceActivity
-import com.kitlink.activity.ControlPanelActivity
-import com.kitlink.activity.DeviceCategoryActivity
-import com.kitlink.entity.DeviceEntity
-import com.kitlink.entity.FamilyEntity
-import com.kitlink.holder.*
-import com.mvp.IPresenter
-import com.mvp.presenter.HomeFragmentPresenter
-import com.mvp.view.HomeFragmentView
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
+import com.tencent.iot.explorer.link.kitlink.activity.DeviceCategoryActivity
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.kitlink.holder.*
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.HomeFragmentPresenter
+import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.util.L

@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.User
+import com.tencent.iot.explorer.link.kitlink.entity.User
 
 /**
  * 登录响应实体

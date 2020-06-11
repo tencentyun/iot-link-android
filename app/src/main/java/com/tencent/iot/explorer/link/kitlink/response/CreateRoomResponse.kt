@@ -1,4 +1,4 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
 /**
  * 新增房间响应实体

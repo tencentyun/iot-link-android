@@ -1,4 +1,4 @@
-package com.kitlink.entity
+package com.tencent.iot.explorer.link.kitlink.entity
 
 /**
  *  设备当前状态实体

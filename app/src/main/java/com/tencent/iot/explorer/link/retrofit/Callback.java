@@ -1,4 +1,4 @@
-package com.retrofit;
+package com.tencent.iot.explorer.link.retrofit;
 
 /**
  * 请求响应回调

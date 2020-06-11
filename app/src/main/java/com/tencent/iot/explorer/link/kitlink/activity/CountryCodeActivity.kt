@@ -1,4 +1,4 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -7,20 +7,17 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.dd.plist.NSArray
 import com.dd.plist.NSDictionary
 import com.dd.plist.PropertyListParser
-import com.kitlink.R
-import com.kitlink.consts.CommonField
-import com.kitlink.entity.CountryCodeEntity
-import com.kitlink.holder.CountryCodeKeyViewHolder
-import com.kitlink.holder.CountryCodeViewHolder
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.CountryCodeEntity
+import com.tencent.iot.explorer.link.kitlink.holder.CountryCodeKeyViewHolder
+import com.tencent.iot.explorer.link.kitlink.holder.CountryCodeViewHolder
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.view.MySideBarView
 import com.view.recyclerview.CRecyclerView
-import com.kitlink.activity.PActivity
-import com.view.status.StatusBarUtil
 import kotlinx.android.synthetic.main.activity_country_code.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

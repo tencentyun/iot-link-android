@@ -1,6 +1,6 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
-import com.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.R
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 /**

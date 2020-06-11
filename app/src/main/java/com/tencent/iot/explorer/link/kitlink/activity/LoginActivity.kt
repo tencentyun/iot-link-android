@@ -1,4 +1,4 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
 import android.animation.Animator
@@ -7,15 +7,15 @@ import android.content.Intent
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.consts.CommonField
-import com.kitlink.entity.User
-import com.kitlink.util.StatusBarUtil
-import com.kitlink.util.WeChatLogin
-import com.mvp.IPresenter
-import com.mvp.presenter.LoginPresenter
-import com.mvp.view.LoginView
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.User
+import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
+import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
+import com.tencent.iot.explorer.link.mvp.view.LoginView
 import com.util.L
 import com.util.T
 import com.util.keyboard.KeyBoardUtils

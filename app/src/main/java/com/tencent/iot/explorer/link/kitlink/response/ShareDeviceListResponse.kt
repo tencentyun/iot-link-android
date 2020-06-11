@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.ShareDeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ShareDeviceEntity
 
 class ShareDeviceListResponse {
     var Total = 0

@@ -1,8 +1,8 @@
-package com.kitlink.fragment
+package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.view.View
-import com.kitlink.R
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.mvp.IPresenter
 
 class SceneFragment : BaseFragment() {
     override fun getContentView(): Int {

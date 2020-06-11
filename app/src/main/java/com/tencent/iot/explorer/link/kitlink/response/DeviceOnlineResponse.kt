@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.DeviceOnlineEntity
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceOnlineEntity
 
 /**
  * 设备在线状态响应实体

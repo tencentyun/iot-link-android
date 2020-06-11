@@ -1,14 +1,14 @@
-package com.kitlink.fragment
+package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.view.View
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.activity.*
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.UserInfoResponse
-import com.kitlink.util.HttpRequest
-import com.mvp.IPresenter
-import com.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.activity.*
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.util.L
 import com.util.T
 import com.yho.image.imp.ImageManager

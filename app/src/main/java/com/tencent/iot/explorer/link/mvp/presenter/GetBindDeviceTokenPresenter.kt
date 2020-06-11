@@ -1,8 +1,8 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.mvp.ParentPresenter
-import com.mvp.model.GetBindDeviceTokenModel
-import com.mvp.view.GetBindDeviceTokenView
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.model.GetBindDeviceTokenModel
+import com.tencent.iot.explorer.link.mvp.view.GetBindDeviceTokenView
 
 class GetBindDeviceTokenPresenter : ParentPresenter<GetBindDeviceTokenModel, GetBindDeviceTokenView> {
 

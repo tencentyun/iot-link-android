@@ -1,18 +1,18 @@
-package com.mvp.model
+package com.tencent.iot.explorer.link.mvp.model
 
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
-import com.kitlink.App
-import com.kitlink.entity.DeviceEntity
-import com.kitlink.entity.RoomEntity
-import com.kitlink.entity.ShareDeviceEntity
-import com.kitlink.entity.WeatherEntity
-import com.kitlink.response.*
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.kitlink.util.RequestCode
-import com.mvp.ParentModel
-import com.mvp.view.HomeFragmentView
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ShareDeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.WeatherEntity
+import com.tencent.iot.explorer.link.kitlink.response.*
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.mvp.ParentModel
+import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 import com.util.L
 
 class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(view), MyCallback {

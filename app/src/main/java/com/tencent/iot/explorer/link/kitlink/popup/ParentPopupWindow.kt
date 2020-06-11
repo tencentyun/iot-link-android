@@ -1,4 +1,4 @@
-package com.kitlink.popup
+package com.tencent.iot.explorer.link.kitlink.popup
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable

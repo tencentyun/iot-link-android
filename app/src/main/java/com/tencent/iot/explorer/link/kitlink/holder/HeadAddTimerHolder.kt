@@ -1,14 +1,11 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TimePicker
-import com.alibaba.fastjson.JSONObject
-import com.kitlink.activity.WeekRepeatActivity
-import com.kitlink.entity.TimerListEntity
+import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.head_add_timer.view.*
-import java.lang.StringBuilder
 
 /**
  * 添加定时任务头部

@@ -1,6 +1,6 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
-import com.mvp.IModel
+import com.tencent.iot.explorer.link.mvp.IModel
 
 abstract class MActivity : BaseActivity() {
 

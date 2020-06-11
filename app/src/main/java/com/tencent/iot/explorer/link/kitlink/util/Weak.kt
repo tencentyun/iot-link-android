@@ -1,4 +1,4 @@
-package com.kitlink.util
+package com.tencent.iot.explorer.link.kitlink.util
 
 import java.lang.ref.WeakReference
 import kotlin.reflect.KProperty

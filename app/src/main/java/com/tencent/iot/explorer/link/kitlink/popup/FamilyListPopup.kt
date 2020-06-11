@@ -1,12 +1,12 @@
-package com.kitlink.popup
+package com.tencent.iot.explorer.link.kitlink.popup
 
 import android.content.Context
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import com.kitlink.R
-import com.kitlink.entity.FamilyEntity
-import com.kitlink.holder.PopupFamilyListHolder
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.kitlink.holder.PopupFamilyListHolder
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.popup_family.view.*
 

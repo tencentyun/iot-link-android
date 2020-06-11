@@ -1,18 +1,18 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import com.kitlink.R
-import com.kitlink.consts.SocketConstants
-import com.kitlink.consts.CommonField
-import com.mvp.IPresenter
-import com.mvp.presenter.ForgotPasswordPresenter
-import com.mvp.view.ForgotPasswordView
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.ForgotPasswordPresenter
+import com.tencent.iot.explorer.link.mvp.view.ForgotPasswordView
 import com.util.T
 import com.util.keyboard.KeyBoardUtils
-import com.kitlink.activity.PActivity
+import com.tencent.iot.explorer.link.kitlink.activity.PActivity
 import com.util.L
 import kotlinx.android.synthetic.main.activity_forgot_password.*
 import kotlinx.android.synthetic.main.layout_email_forgot_pwd.view.*

@@ -1,12 +1,12 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.KeyEvent
 import android.view.ViewGroup
-import com.kitlink.R
-import com.kitlink.entity.DeviceEntity
-import com.kitlink.entity.DevicePropertyEntity
-import com.kitlink.util.DataHolder
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
+import com.tencent.iot.explorer.link.kitlink.util.DataHolder
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_standard_big_switch.view.*
 

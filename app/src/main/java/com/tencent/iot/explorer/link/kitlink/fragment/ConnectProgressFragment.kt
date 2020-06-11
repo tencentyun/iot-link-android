@@ -1,14 +1,14 @@
-package com.kitlink.fragment
+package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.text.TextUtils
 import android.view.View
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.activity.HelpCenterActivity
-import com.kitlink.activity.SoftApActivity
-import com.mvp.IPresenter
-import com.mvp.presenter.ConnectPresenter
-import com.mvp.view.ConnectView
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.activity.HelpCenterActivity
+import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
+import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import com.util.L
 import com.util.T
 import com.view.progress.WaveProgress

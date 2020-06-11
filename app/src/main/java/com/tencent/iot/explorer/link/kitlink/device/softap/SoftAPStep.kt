@@ -1,4 +1,4 @@
-package com.kitlink.device.softap
+package com.tencent.iot.explorer.link.kitlink.device.softap
 
 enum class SoftAPStep {
     /**

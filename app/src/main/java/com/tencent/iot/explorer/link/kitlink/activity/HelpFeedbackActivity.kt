@@ -1,4 +1,4 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
 import android.app.Activity
@@ -13,8 +13,8 @@ import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
 import androidx.core.content.ContextCompat
-import com.kitlink.R
-import com.kitlink.util.JsBridge
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.util.JsBridge
 import com.util.L
 import kotlinx.android.synthetic.main.activity_help_feedback.*
 import java.io.File

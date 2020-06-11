@@ -1,11 +1,11 @@
-package com.kitlink.device.softap
+package com.tencent.iot.explorer.link.kitlink.device.softap
 
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.text.TextUtils
-import com.kitlink.device.ConfigService
-import com.kitlink.device.DeviceInfo
-import com.kitlink.util.*
+import com.tencent.iot.explorer.link.kitlink.device.ConfigService
+import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
+import com.tencent.iot.explorer.link.kitlink.util.*
 import com.util.L
 import org.json.JSONObject
 import java.io.BufferedReader

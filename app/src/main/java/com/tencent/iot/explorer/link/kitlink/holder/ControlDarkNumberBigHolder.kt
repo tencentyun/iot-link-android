@@ -1,12 +1,10 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
-import android.view.View
 import android.view.ViewGroup
-import com.kitlink.entity.DeviceEntity
-import com.kitlink.entity.DevicePropertyEntity
-import com.kitlink.util.DataHolder
-import com.mvp.presenter.ControlPanelPresenter
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
+import com.tencent.iot.explorer.link.kitlink.util.DataHolder
 import com.util.L
 import com.view.progress.SeekProgress
 import com.view.recyclerview.CRecyclerView

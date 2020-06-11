@@ -1,7 +1,7 @@
-package com.auth.message.upload
+package com.tencent.iot.explorer.link.auth.message.upload
 
-import com.auth.consts.SocketField
-import com.kitlink.App
+import com.tencent.iot.explorer.link.auth.consts.SocketField
+import com.tencent.iot.explorer.link.kitlink.App
 import java.util.*
 
 open class YunMessage : IotMsg() {

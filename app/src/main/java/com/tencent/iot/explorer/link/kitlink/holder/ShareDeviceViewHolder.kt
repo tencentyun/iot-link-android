@@ -1,12 +1,9 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
-import android.text.TextUtils
-import android.view.View
 import android.view.ViewGroup
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.view.recyclerview.CRecyclerView
 import com.yho.image.imp.ImageManager
 import kotlinx.android.synthetic.main.item_share_device.view.*

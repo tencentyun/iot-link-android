@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.ShareUserEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ShareUserEntity
 
 /**
  * 分享用户响应实体

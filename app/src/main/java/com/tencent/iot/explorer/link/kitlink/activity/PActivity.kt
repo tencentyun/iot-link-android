@@ -1,6 +1,6 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.IPresenter
 
 /**
  * baseActivity

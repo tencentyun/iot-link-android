@@ -1,4 +1,4 @@
-package com.kitlink.device;
+package com.tencent.iot.explorer.link.kitlink.device;
 
 import org.json.JSONArray;
 import org.json.JSONException;

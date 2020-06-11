@@ -1,10 +1,10 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
 import android.content.Context
-import com.kitlink.fragment.WifiFragment
-import com.mvp.ParentPresenter
-import com.mvp.model.ConnectModel
-import com.mvp.view.ConnectView
+import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.model.ConnectModel
+import com.tencent.iot.explorer.link.mvp.view.ConnectView
 
 class ConnectPresenter(view: ConnectView) :
     ParentPresenter<ConnectModel, ConnectView>(view) {

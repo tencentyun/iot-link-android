@@ -1,4 +1,4 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import com.dd.plist.NSArray
 import com.dd.plist.NSDictionary
 import com.dd.plist.PropertyListParser
-import com.kitlink.R
-import com.kitlink.holder.HelpViewHolder
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.holder.HelpViewHolder
 
 import com.view.recyclerview.CRecyclerView
-import com.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_help_center.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

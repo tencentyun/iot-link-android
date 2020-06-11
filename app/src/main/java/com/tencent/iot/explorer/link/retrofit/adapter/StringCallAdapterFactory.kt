@@ -1,4 +1,4 @@
-package com.retrofit.adapter
+package com.tencent.iot.explorer.link.retrofit.adapter
 
 import retrofit2.CallAdapter
 import retrofit2.Retrofit

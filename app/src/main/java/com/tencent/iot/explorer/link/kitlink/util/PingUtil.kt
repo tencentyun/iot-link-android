@@ -1,4 +1,4 @@
-package com.kitlink.util
+package com.tencent.iot.explorer.link.kitlink.util
 
 import android.annotation.TargetApi
 import android.content.Context

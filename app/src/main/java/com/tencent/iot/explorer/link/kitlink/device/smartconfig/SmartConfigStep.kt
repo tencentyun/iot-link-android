@@ -1,4 +1,4 @@
-package com.kitlink.device.smartconfig
+package com.tencent.iot.explorer.link.kitlink.device.smartconfig
 
 enum class SmartConfigStep {
     /**

@@ -1,11 +1,11 @@
-package com.kitlink.theme
+package com.tencent.iot.explorer.link.kitlink.theme
 
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import com.kitlink.activity.ControlPanelActivity
-import com.kitlink.entity.DevicePropertyEntity
+import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
+import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.view.recyclerview.CRecyclerDivider
 import com.view.recyclerview.CRecyclerView
 

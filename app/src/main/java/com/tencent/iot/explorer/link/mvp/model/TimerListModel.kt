@@ -1,16 +1,15 @@
-package com.mvp.model
+package com.tencent.iot.explorer.link.mvp.model
 
 import com.alibaba.fastjson.JSON
-import com.kitlink.entity.DeviceEntity
-import com.kitlink.entity.TimerListEntity
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.TimerListResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.JsonManager
-import com.kitlink.util.MyCallback
-import com.kitlink.util.RequestCode
-import com.mvp.ParentModel
-import com.mvp.view.TimerListView
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.TimerListResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.mvp.ParentModel
+import com.tencent.iot.explorer.link.mvp.view.TimerListView
 import com.util.L
 import com.util.T
 

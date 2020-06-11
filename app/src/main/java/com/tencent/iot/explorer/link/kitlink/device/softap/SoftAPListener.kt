@@ -1,6 +1,6 @@
-package com.kitlink.device.softap
+package com.tencent.iot.explorer.link.kitlink.device.softap
 
-import com.kitlink.device.DeviceInfo
+import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 
 interface SoftAPListener {
 

@@ -1,16 +1,15 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.entity.MemberEntity
-import com.kitlink.popup.CommonPopupWindow
-import com.kitlink.response.BaseResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.MemberEntity
+import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.util.L
-import com.kitlink.activity.BaseActivity
-import com.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import com.yho.image.imp.ImageManager
 import kotlinx.android.synthetic.main.activity_member.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

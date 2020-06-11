@@ -1,13 +1,13 @@
-package com.kitlink.util
+package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
-import com.kitlink.App
-import com.kitlink.device.DeviceInfo
-import com.kitlink.response.BaseResponse
-import com.retrofit.StringRequest
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.retrofit.StringRequest
 import com.util.L
 import java.util.*
-import com.retrofit.Callback
+import com.tencent.iot.explorer.link.retrofit.Callback
 import com.util.ip.IPUtil
 import kotlin.collections.HashMap
 

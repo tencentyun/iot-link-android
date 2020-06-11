@@ -1,4 +1,4 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.View
 import com.view.recyclerview.CRecyclerView

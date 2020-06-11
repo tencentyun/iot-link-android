@@ -1,4 +1,4 @@
-package com.auth.message.upload
+package com.tencent.iot.explorer.link.auth.message.upload
 
 class ArrayString {
 

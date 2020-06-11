@@ -1,4 +1,4 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.graphics.Color
@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kitlink.R
-import com.kitlink.entity.DevicePropertyEntity
-import com.kitlink.entity.PropertyEntity
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
+import com.tencent.iot.explorer.link.kitlink.entity.PropertyEntity
 import com.view.recyclerview.CRecyclerDivider
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_dark_big_enum.view.*

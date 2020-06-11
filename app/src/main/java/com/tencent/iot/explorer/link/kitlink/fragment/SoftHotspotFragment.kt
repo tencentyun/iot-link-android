@@ -1,12 +1,12 @@
-package com.kitlink.fragment
+package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
 import android.provider.Settings
 import android.view.View
-import com.kitlink.R
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.fragment_soft_hotspot.*
 
 class SoftHotspotFragment : BaseFragment() {

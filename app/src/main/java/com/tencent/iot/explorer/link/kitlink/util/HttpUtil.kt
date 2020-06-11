@@ -1,7 +1,6 @@
-package com.kitlink.util
+package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
-import com.util.L
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.MalformedURLException

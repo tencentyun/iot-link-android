@@ -1,13 +1,13 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kitlink.R
-import com.kitlink.entity.RoomEntity
-import com.kitlink.fragment.BaseFragment
-import com.kitlink.fragment.HomeFragment
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
+import com.tencent.iot.explorer.link.kitlink.fragment.BaseFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.head_home3.view.*
 

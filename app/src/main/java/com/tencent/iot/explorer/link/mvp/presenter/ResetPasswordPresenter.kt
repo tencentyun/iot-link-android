@@ -1,8 +1,8 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.mvp.ParentPresenter
-import com.mvp.model.ResetPasswordModel
-import com.mvp.view.ResetPasswordView
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.model.ResetPasswordModel
+import com.tencent.iot.explorer.link.mvp.view.ResetPasswordView
 
 class ResetPasswordPresenter(view: ResetPasswordView) :
     ParentPresenter<ResetPasswordModel, ResetPasswordView>(view) {

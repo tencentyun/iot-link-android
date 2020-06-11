@@ -1,6 +1,6 @@
-package com.mvp.view
+package com.tencent.iot.explorer.link.mvp.view
 
-import com.mvp.ParentView
+import com.tencent.iot.explorer.link.mvp.ParentView
 
 interface SetPasswordView : ParentView {
 

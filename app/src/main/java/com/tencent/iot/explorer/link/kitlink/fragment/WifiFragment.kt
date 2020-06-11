@@ -1,4 +1,4 @@
-package com.kitlink.fragment
+package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -8,8 +8,8 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
-import com.kitlink.R
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.util.T
 import com.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.fragment_wifi.*

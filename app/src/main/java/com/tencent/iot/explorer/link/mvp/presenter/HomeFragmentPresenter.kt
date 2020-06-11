@@ -1,11 +1,11 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
 import android.text.TextUtils
-import com.kitlink.App
-import com.kitlink.entity.DeviceEntity
-import com.mvp.ParentPresenter
-import com.mvp.model.HomeFragmentModel
-import com.mvp.view.HomeFragmentView
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.model.HomeFragmentModel
+import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 
 /**
  * 设备页面

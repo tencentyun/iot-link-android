@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.MemberEntity
+import com.tencent.iot.explorer.link.kitlink.entity.MemberEntity
 
 /**
  * 家庭成员列表响应实体

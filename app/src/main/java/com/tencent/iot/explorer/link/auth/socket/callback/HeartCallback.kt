@@ -1,6 +1,6 @@
-package com.auth.socket.callback
+package com.tencent.iot.explorer.link.auth.socket.callback
 
-import com.auth.message.resp.HeartMessage
+import com.tencent.iot.explorer.link.auth.message.resp.HeartMessage
 
 interface HeartCallback {
 
