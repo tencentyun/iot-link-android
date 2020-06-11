@@ -1,14 +1,11 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
-import android.text.TextUtils
 import android.view.ViewGroup
-import com.kitlink.R
-import com.kitlink.entity.DevicePropertyEntity
-import com.util.date.DateFormatUtil
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_standard_long.view.*
-import java.lang.Exception
 
 /**
  * 暗黑主题长按钮：布尔类型之外

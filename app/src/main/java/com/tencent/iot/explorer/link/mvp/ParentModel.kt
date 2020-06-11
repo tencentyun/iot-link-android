@@ -1,4 +1,4 @@
-package com.mvp
+package com.tencent.iot.explorer.link.mvp
 
 /**
  * Created by lurs on 2018/3/23 0023.

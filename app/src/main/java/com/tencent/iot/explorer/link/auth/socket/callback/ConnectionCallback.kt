@@ -1,4 +1,4 @@
-package com.auth.socket.callback
+package com.tencent.iot.explorer.link.auth.socket.callback
 
 interface ConnectionCallback {
     fun connected()

@@ -1,4 +1,4 @@
-package com.kitlink.util
+package com.tencent.iot.explorer.link.kitlink.util
 
 /**
  * 数据执有者

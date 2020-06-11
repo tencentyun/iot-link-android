@@ -1,8 +1,8 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.mvp.model.RegisterModel
-import com.mvp.ParentPresenter
-import com.mvp.view.RegisterView
+import com.tencent.iot.explorer.link.mvp.model.RegisterModel
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.view.RegisterView
 
 class RegisterPresenter(view: RegisterView) : ParentPresenter<RegisterModel, RegisterView>(view) {
 

@@ -1,7 +1,7 @@
-package com.kitlink.entity
+package com.tencent.iot.explorer.link.kitlink.entity
 
 import android.text.TextUtils
-import com.kitlink.util.JsonManager
+import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 
 /**
  * 面板实体

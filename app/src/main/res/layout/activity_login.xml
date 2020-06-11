@@ -125,7 +125,7 @@
     </RelativeLayout>
 
     <!--返回键-->
-    <com.kitlink.util.StatusBarHeightView
+    <com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView
             android:id="@+id/sbhv_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
                 android:tint="@color/white"
                 android:visibility="invisible" />
 
-    </com.kitlink.util.StatusBarHeightView>
+    </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
 
     <!--微信登录-->
     <LinearLayout

@@ -1,6 +1,6 @@
-package com.auth.message.upload
+package com.tencent.iot.explorer.link.auth.message.upload
 
-import com.auth.message.MessageConst
+import com.tencent.iot.explorer.link.auth.message.MessageConst
 
 /**
  * 解绑设备

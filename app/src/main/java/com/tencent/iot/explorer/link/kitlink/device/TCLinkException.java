@@ -1,4 +1,4 @@
-package com.kitlink.device;
+package com.tencent.iot.explorer.link.kitlink.device;
 
 /**
  * Created by rongerwu on 2018/9/13.

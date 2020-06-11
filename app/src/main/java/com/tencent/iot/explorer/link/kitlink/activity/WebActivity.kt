@@ -1,4 +1,4 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
 import android.view.ViewGroup
@@ -6,9 +6,9 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.kitlink.R
-import com.mvp.IPresenter
-import com.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_web.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

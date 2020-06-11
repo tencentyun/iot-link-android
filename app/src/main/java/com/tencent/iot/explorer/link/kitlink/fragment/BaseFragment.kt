@@ -1,4 +1,4 @@
-package com.kitlink.fragment
+package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import com.kitlink.App
-import com.kitlink.activity.MainActivity
-import com.kitlink.util.DataHolder
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.activity.MainActivity
+import com.tencent.iot.explorer.link.kitlink.util.DataHolder
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.util.L
 import com.util.T
 

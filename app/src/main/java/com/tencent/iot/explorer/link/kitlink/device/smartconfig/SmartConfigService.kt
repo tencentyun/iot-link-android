@@ -1,30 +1,20 @@
-package com.kitlink.device.smartconfig
+package com.tencent.iot.explorer.link.kitlink.device.smartconfig
 
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import com.espressif.iot.esptouch.EsptouchTask
 import com.espressif.iot.esptouch.IEsptouchResult
-import com.kitlink.App
-import com.kitlink.device.ConfigService
-import com.kitlink.device.DeviceInfo
-import com.kitlink.device.TCLinkException
-import com.kitlink.device.softap.SoftAPService
-import com.kitlink.device.softap.SoftAPStep
-import com.kitlink.util.PingUtil
-import com.kitlink.util.WifiUtil
+import com.tencent.iot.explorer.link.kitlink.device.ConfigService
+import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
+import com.tencent.iot.explorer.link.kitlink.device.TCLinkException
+import com.tencent.iot.explorer.link.kitlink.util.WifiUtil
 import com.util.L
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
-import java.io.IOException
-import java.io.InputStreamReader
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
-import java.net.Socket
 import kotlin.concurrent.thread
 
 class SmartConfigService(context: Context) : ConfigService() {
