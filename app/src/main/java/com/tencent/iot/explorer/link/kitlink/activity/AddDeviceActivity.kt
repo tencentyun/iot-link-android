@@ -1,25 +1,22 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
-import com.kitlink.App
-import com.kitlink.R
-import com.kitlink.response.BaseResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.mvp.IPresenter
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.qrcode.Constant
 import com.qrcode.ScannerActivity
 import com.util.L
 import com.util.T
-import com.kitlink.activity.PActivity
-import com.kitlink.device.DeviceInfo
-import com.kitlink.util.JsonManager
+import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import kotlinx.android.synthetic.main.activity_add_device.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import org.json.JSONObject
 
 /**
  * 添加设备界面

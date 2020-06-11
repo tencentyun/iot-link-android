@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        package="com.kitlink">
+        package="com.tencent.iot.explorer.link.kitlink">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -101,7 +101,7 @@
                 android:exported="true"
                 android:label="@string/app_name"
                 android:launchMode="singleTask"
-                android:taskAffinity="com.kitlink"
+                android:taskAffinity="com.tencent.iot.explorer.link.kitlink"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <receiver android:name=".MessageReceiver">

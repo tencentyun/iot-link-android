@@ -1,4 +1,4 @@
-package com.kitlink.entity
+package com.tencent.iot.explorer.link.kitlink.entity
 
 import com.alibaba.fastjson.JSON
 import java.lang.StringBuilder

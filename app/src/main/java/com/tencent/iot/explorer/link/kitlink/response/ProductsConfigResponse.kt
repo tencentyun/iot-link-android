@@ -1,6 +1,6 @@
-package com.kitlink.response
+package com.tencent.iot.explorer.link.kitlink.response
 
-import com.kitlink.entity.ProductConfigEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductConfigEntity
 
 class ProductsConfigResponse {
     var RequestId = ""

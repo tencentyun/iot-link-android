@@ -1,4 +1,4 @@
-package com.kitlink.consts
+package com.tencent.iot.explorer.link.kitlink.consts
 
 object SocketConstants {
 

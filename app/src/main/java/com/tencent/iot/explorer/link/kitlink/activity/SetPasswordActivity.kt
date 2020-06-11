@@ -1,15 +1,13 @@
-package com.kitlink.activity
+package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.app.Activity
 import android.content.Intent
-import com.kitlink.R
-import com.mvp.IPresenter
-import com.mvp.presenter.SetPasswordPresenter
-import com.mvp.view.SetPasswordView
-import com.util.L
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.SetPasswordPresenter
+import com.tencent.iot.explorer.link.mvp.view.SetPasswordView
 import com.util.T
 import com.util.keyboard.KeyBoardUtils
-import com.kitlink.activity.PActivity
 import kotlinx.android.synthetic.main.activity_set_password.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

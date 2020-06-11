@@ -1,8 +1,8 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.mvp.model.ForgotPasswordModel
-import com.mvp.ParentPresenter
-import com.mvp.view.ForgotPasswordView
+import com.tencent.iot.explorer.link.mvp.model.ForgotPasswordModel
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.view.ForgotPasswordView
 
 class ForgotPasswordPresenter(view: ForgotPasswordView) :
     ParentPresenter<ForgotPasswordModel, ForgotPasswordView>(view) {

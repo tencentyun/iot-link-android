@@ -1,12 +1,12 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.fastjson.JSON
-import com.kitlink.entity.DevicePropertyEntity
-import com.kitlink.entity.TimerListEntity
-import com.kitlink.util.DataHolder
+import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
+import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
+import com.tencent.iot.explorer.link.kitlink.util.DataHolder
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_timer_list.view.*
 import java.lang.StringBuilder

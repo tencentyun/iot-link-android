@@ -1,4 +1,4 @@
-package com.auth.message.resp
+package com.tencent.iot.explorer.link.auth.message.resp
 
 class RespFailMessage {
 

@@ -1,9 +1,9 @@
-package com.kitlink.holder
+package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.ViewGroup
-import com.kitlink.R
-import com.kitlink.entity.ShareUserEntity
+import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.kitlink.entity.ShareUserEntity
 import com.util.date.DateFormatUtil
 import com.view.recyclerview.CRecyclerView
 import com.yho.image.imp.ImageManager

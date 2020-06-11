@@ -1,8 +1,8 @@
-package com.mvp.presenter
+package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.mvp.model.LoginModel
-import com.mvp.ParentPresenter
-import com.mvp.view.LoginView
+import com.tencent.iot.explorer.link.mvp.model.LoginModel
+import com.tencent.iot.explorer.link.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.mvp.view.LoginView
 
 class LoginPresenter : ParentPresenter<LoginModel, LoginView> {
     constructor(view: LoginView) : super(view)

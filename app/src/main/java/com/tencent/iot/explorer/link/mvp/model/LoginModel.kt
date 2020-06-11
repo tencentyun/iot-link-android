@@ -1,13 +1,13 @@
-package com.mvp.model
+package com.tencent.iot.explorer.link.mvp.model
 
-import com.kitlink.App
-import com.kitlink.entity.ParentRespEntity
-import com.kitlink.response.BaseResponse
-import com.kitlink.response.LoginResponse
-import com.kitlink.util.HttpRequest
-import com.kitlink.util.MyCallback
-import com.mvp.ParentModel
-import com.mvp.view.LoginView
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.entity.ParentRespEntity
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.LoginResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.mvp.ParentModel
+import com.tencent.iot.explorer.link.mvp.view.LoginView
 
 class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
 
