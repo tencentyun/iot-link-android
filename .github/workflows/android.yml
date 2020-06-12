@@ -21,6 +21,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - run: |
+          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" > tenextll.jks.asc
+          gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" --batch tenextll.jks.asc > tenextll.jks
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
@@ -29,11 +32,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: apk
-          path: app/build/outputs/apk/**/*.apk
+          path: app/build/outputs/apk/release/*.apk
       - name: Archive the generated Aar
         uses: actions/upload-artifact@v2
         with:
           name: aar
-          path: tenextll/build/outputs/aar/*.aar
+          path: sdk/build/outputs/aar/*.aar
       - name: Publish aar to Maven
         run: ./gradlew publish
