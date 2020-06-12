@@ -9,6 +9,7 @@ on:
 env:
   SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
   SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+  RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
 
 jobs:
   build:
@@ -17,6 +18,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - run: |
+        echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" > tenextll.jks.asc
+        gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" --batch tenextll.jks.asc > tenextll.jks
       - name: set up JDK 1.8
         uses: actions/setup-java@v1
         with:
@@ -34,6 +38,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: aar
-          path: tenextll/build/outputs/aar/*.aar
+          path: sdk/build/outputs/aar/*.aar
       - name: Publish aar to Maven
         run: ./gradlew publish
