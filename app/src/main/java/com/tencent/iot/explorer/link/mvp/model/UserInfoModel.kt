@@ -12,7 +12,7 @@ import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 import com.tencent.cos.xml.exception.CosXmlClientException
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 
 
 /**
