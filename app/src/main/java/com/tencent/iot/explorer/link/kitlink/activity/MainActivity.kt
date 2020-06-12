@@ -16,8 +16,8 @@ import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.android.tpush.XGIOperateCallback
 import com.tencent.android.tpush.XGPushManager
-import com.util.L
-import com.util.T
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
 import com.view.home.BottomItemEntity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.system.exitProcess

@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.kitlink.R
 import com.tencent.iot.explorer.link.kitlink.entity.ShareUserEntity
-import com.util.date.DateFormatUtil
+import com.tencent.iot.explorer.link.util.date.DateFormatUtil
 import com.view.recyclerview.CRecyclerView
 import com.yho.image.imp.ImageManager
 import kotlinx.android.synthetic.main.item_share_user.view.*

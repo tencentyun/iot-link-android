@@ -6,7 +6,7 @@ import android.text.TextUtils
 import com.tencent.iot.explorer.link.kitlink.device.ConfigService
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.util.*
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream

@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
-import com.util.date.DateFormatUtil
+import com.tencent.iot.explorer.link.util.date.DateFormatUtil
 import java.lang.Exception
 
 /**
