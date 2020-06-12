@@ -13,8 +13,8 @@ import com.tencent.iot.explorer.link.kitlink.App
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
 import com.tencent.iot.explorer.link.kitlink.util.DataHolder
-import com.util.SharePreferenceUtil
-import com.util.T
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
+import com.tencent.iot.explorer.link.util.T
 import com.view.status.StatusBarUtil
 import java.util.*
 

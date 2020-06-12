@@ -8,7 +8,7 @@ import com.tencent.iot.explorer.link.kitlink.device.ConfigService
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.device.TCLinkException
 import com.tencent.iot.explorer.link.kitlink.util.WifiUtil
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream

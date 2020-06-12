@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.auth.socket
 
 import com.tencent.iot.explorer.link.auth.socket.callback.ConnectionCallback
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI

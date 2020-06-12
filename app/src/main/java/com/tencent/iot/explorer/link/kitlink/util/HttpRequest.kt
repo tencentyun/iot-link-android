@@ -5,10 +5,10 @@ import com.tencent.iot.explorer.link.kitlink.App
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.retrofit.StringRequest
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import java.util.*
 import com.tencent.iot.explorer.link.retrofit.Callback
-import com.util.ip.IPUtil
+import com.tencent.iot.explorer.link.util.ip.IPUtil
 import kotlin.collections.HashMap
 
 /**

@@ -5,7 +5,7 @@ import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ResetPasswordView
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 
 class ResetPasswordModel(view: ResetPasswordView) : ParentModel<ResetPasswordView>(view),
     MyCallback {

@@ -20,8 +20,8 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.model.UploadModel
 import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.cos.xml.exception.CosXmlClientException
-import com.util.L
-import com.util.T
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
 import com.view.recyclerview.CRecyclerView
 import com.yho.image.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_feedback.*
