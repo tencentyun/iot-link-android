@@ -29,15 +29,7 @@ jobs:
         run: ./gradlew build
       - name: Package apk and aar with Gradle
         run: ./gradlew assembleRelease
-      - name: Archive the generated Apk
-        uses: actions/upload-artifact@v2
-        with:
-          name: apk
-          path: app/build/outputs/apk/**/*.apk
-      - name: Archive the generated Aar
-        uses: actions/upload-artifact@v2
-        with:
-          name: aar
-          path: sdk/build/outputs/aar/*.aar
       - name: Publish aar to Maven
         run: ./gradlew publish
+      - name: Upload apk to PGY
+        run: curl -F 'file=@app/build/outputs/apk/release/app-release.apk' -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
