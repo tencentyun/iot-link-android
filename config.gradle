@@ -1,0 +1,12 @@
+ext {
+    android = [
+            version             : "1.0.24",
+            versionNo           : 24,
+            WXAccessAppId       : "\"wxfb36c49df3a370c7\"",
+            iotLinkAppkey       : "\"mdPgKutfrCZAjWEFi\"",
+            iotLinkAppSecrecy   : "\"cgUcNMLcDPdpEUnNcJPU\"",
+            XgAccessId          : "1500003265",
+            XgAccessKey         : "A8ASZV6FNN78",
+            mapSDKValue         : "DB4BZ-63LKW-NRLRG-RSKZF-XJ63E-IXFUG"
+    ]
+}

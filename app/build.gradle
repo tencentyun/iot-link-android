@@ -25,8 +25,8 @@ android {
         applicationId "com.kitlink"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 24
-        versionName "1.0.24"
+        versionCode rootProject.ext.android.versionNo
+        versionName rootProject.ext.android.version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -42,10 +42,29 @@ android {
 
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            buildConfigField 'String', 'WXAccessAppId', rootProject.ext.android.WXAccessAppId
+            buildConfigField 'String', 'iotLinkAppkey', rootProject.ext.android.iotLinkAppkey
+            buildConfigField 'String', 'iotLinkAppSecrecy', rootProject.ext.android.iotLinkAppSecrecy
+            manifestPlaceholders = [
+                    XG_ACCESS_ID : rootProject.ext.android.XgAccessId,
+                    XG_ACCESS_KEY: rootProject.ext.android.XgAccessKey,
+                    mapSDKValue  : rootProject.ext.android.mapSDKValue,
+            ]
+        }
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'WXAccessAppId', rootProject.ext.android.WXAccessAppId
+            buildConfigField 'String', 'iotLinkAppkey', rootProject.ext.android.iotLinkAppkey
+            buildConfigField 'String', 'iotLinkAppSecrecy', rootProject.ext.android.iotLinkAppSecrecy
+            manifestPlaceholders = [
+                    XG_ACCESS_ID : rootProject.ext.android.XgAccessId,
+                    XG_ACCESS_KEY: rootProject.ext.android.XgAccessKey,
+                    mapSDKValue  : rootProject.ext.android.mapSDKValue,
+            ]
         }
     }
     lintOptions {

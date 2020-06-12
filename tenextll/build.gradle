@@ -43,7 +43,7 @@ dependencies {
 
 }
 
-def libVersion = '1.0.0-SNAPSHOT'
+def libVersion = rootProject.ext.android.version+"-SNAPSHOT"
 publishing {
     publications {
         aar(MavenPublication) {
@@ -59,8 +59,8 @@ publishing {
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
             url = libVersion.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
-                username = System.getenv("SONATYPE_USERNAME")
-                password = System.getenv("SONATYPE_PASSWORD")
+                username = "dev@goodow.com" //System.getenv("SONATYPE_USERNAME")
+                password = "N6QvHBnir@fu42@" //System.getenv("SONATYPE_PASSWORD")
             }
         }
     }
