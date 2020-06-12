@@ -20,8 +20,8 @@ import com.tencent.iot.explorer.link.kitlink.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.util.L
-import com.util.T
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
 import com.view.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.holder.AddTimingFootHolder
 import kotlinx.android.synthetic.main.activity_add_timer.*

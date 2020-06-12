@@ -9,8 +9,8 @@ import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
-import com.util.L
-import com.util.T
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
 import com.view.progress.WaveProgress
 import kotlinx.android.synthetic.main.connected.*
 import kotlinx.android.synthetic.main.connecting.*

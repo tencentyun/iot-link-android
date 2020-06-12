@@ -5,13 +5,11 @@ import android.content.Intent
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
 import com.tencent.iot.explorer.link.kitlink.R
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.util.T
-import com.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.fragment_wifi.*
 import kotlinx.android.synthetic.main.smart_config_second.*
 
