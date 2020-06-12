@@ -7,22 +7,22 @@ apply plugin: 'kotlin-android-extensions'
 android {
     signingConfigs {
         debug {
-            storeFile file('../lurs1.jks')
-            storePassword '888888'
-            keyAlias = 'lurs'
-            keyPassword '888888'
+            storeFile file('../tenextll.jks')
+            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyAlias = 'tenextll'
+            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
         }
         release {
-            storeFile file('../lurs1.jks')
-            storePassword '888888'
-            keyAlias = 'lurs'
-            keyPassword '888888'
+            storeFile file('../tenextll.jks')
+            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyAlias = 'tenextll'
+            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
         }
     }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.kitlink"
+        applicationId "com.tencent.iot.explorer.link.kitlink"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 24

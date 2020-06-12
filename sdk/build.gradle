@@ -50,7 +50,7 @@ publishing {
             groupId 'com.tencent.iot'
             artifactId 'iot-android-ll'
             version libVersion
-            artifact file('build/outputs/aar/tenextll-release.aar')
+            artifact file('build/outputs/aar/sdk-release.aar')
         }
     }
     repositories {
