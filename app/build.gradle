@@ -8,15 +8,15 @@ android {
     signingConfigs {
         debug {
             storeFile file('../tenextll.jks')
-            storePassword '111222'
+            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
             keyAlias = 'tenextll'
-            keyPassword '111222'
+            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
         }
         release {
             storeFile file('../tenextll.jks')
-            storePassword '111222'
+            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
             keyAlias = 'tenextll'
-            keyPassword '111222'
+            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
         }
     }
     compileSdkVersion 29
