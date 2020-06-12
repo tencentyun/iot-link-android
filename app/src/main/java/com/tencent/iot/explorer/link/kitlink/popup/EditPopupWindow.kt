@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.rangeTo
 import com.tencent.iot.explorer.link.kitlink.R
-import com.util.T
+import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.popup_edit.view.*
 
 /**

@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.kitlink.R
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
-import com.util.date.DateFormatUtil
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_dark_medium.view.*
 

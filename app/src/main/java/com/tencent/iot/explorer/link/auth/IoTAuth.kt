@@ -6,7 +6,7 @@ import com.tencent.iot.explorer.link.auth.socket.WSClientManager
 import com.tencent.iot.explorer.link.auth.socket.callback.ActivePushCallback
 import com.tencent.iot.explorer.link.auth.socket.callback.MessageCallback
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 
 /**
  * 长连接管理
