@@ -7,7 +7,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ForgotPasswordView
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 
 class ForgotPasswordModel(view: ForgotPasswordView) : ParentModel<ForgotPasswordView>(view),
     MyCallback {

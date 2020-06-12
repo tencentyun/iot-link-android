@@ -10,9 +10,9 @@ import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.GetCodePresenter
 import com.tencent.iot.explorer.link.mvp.view.GetCodeView
-import com.util.L
-import com.util.T
-import com.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_get_code.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

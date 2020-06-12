@@ -15,7 +15,7 @@ import android.webkit.*
 import androidx.core.content.ContextCompat
 import com.tencent.iot.explorer.link.kitlink.R
 import com.tencent.iot.explorer.link.kitlink.util.JsBridge
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import kotlinx.android.synthetic.main.activity_help_feedback.*
 import java.io.File
 import java.io.FileNotFoundException

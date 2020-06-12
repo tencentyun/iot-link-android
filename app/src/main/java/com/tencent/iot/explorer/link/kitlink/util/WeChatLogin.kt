@@ -5,7 +5,7 @@ import com.tencent.iot.explorer.link.kitlink.R
 import com.tencent.iot.explorer.link.kitlink.wxapi.WXEntryActivity
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
-import com.util.T
+import com.tencent.iot.explorer.link.util.T
 
 
 /**

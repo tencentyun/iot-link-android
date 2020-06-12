@@ -16,11 +16,11 @@ import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
 import com.tencent.iot.explorer.link.mvp.view.LoginView
-import com.util.L
-import com.util.T
-import com.util.keyboard.KeyBoardUtils
-import com.util.keyboard.OnSoftKeyBoardListener
-import com.util.keyboard.SoftKeyBoard
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.util.keyboard.OnSoftKeyBoardListener
+import com.tencent.iot.explorer.link.util.keyboard.SoftKeyBoard
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.layout_email_login.view.*
 import kotlinx.android.synthetic.main.layout_phone_login.view.*

@@ -19,7 +19,7 @@ import com.tencent.iot.explorer.link.kitlink.response.DeviceBindTokenStateRespon
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 
 /**
  * 配网进度、绑定设备

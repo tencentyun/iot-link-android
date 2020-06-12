@@ -15,7 +15,7 @@ import com.tencent.map.geolocation.TencentLocationManager
 import com.tencent.map.geolocation.TencentLocationRequest
 import com.tencent.mapsdk.raster.model.*
 import com.tencent.tencentmap.mapsdk.map.TencentMap
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import kotlinx.android.synthetic.main.activity_family_address.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.*
 

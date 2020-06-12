@@ -7,7 +7,7 @@ import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSuggestion
 import android.os.Build
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

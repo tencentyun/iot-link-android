@@ -75,7 +75,6 @@ dependencies {
     //EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation project(path: ':qrcode')
-    implementation project(path: ':util')
 
     //腾讯对象存储--文件上传
     implementation('com.tencent.qcloud:cosxml-lite:5.4.29') {

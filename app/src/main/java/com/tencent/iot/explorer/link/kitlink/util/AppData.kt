@@ -6,8 +6,8 @@ import com.tencent.iot.explorer.link.kitlink.App
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
-import com.util.L
-import com.util.SharePreferenceUtil
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.view.recyclerview.SelectedArrayList
 import java.util.*
 

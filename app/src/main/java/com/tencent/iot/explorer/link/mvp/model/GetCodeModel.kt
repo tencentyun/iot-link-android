@@ -10,7 +10,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.GetCodeView
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 
 class GetCodeModel(view: GetCodeView) : ParentModel<GetCodeView>(view), MyCallback {
 

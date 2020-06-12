@@ -9,9 +9,9 @@ import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.RegisterPresenter
 import com.tencent.iot.explorer.link.mvp.view.RegisterView
-import com.util.L
-import com.util.T
-import com.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.layout_email_register.view.*
 import kotlinx.android.synthetic.main.layout_phone_register.view.*

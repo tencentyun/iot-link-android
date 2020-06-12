@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_device_action.view.*
 

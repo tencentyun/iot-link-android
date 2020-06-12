@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.tencent.iot.explorer.link.kitlink.R
@@ -10,10 +9,9 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ForgotPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.ForgotPasswordView
-import com.util.T
-import com.util.keyboard.KeyBoardUtils
-import com.tencent.iot.explorer.link.kitlink.activity.PActivity
-import com.util.L
+import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.util.L
 import kotlinx.android.synthetic.main.activity_forgot_password.*
 import kotlinx.android.synthetic.main.layout_email_forgot_pwd.view.*
 import kotlinx.android.synthetic.main.layout_phone_forgot_pwd.view.*

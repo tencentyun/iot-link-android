@@ -10,8 +10,8 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.TimerListView
-import com.util.L
-import com.util.T
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
 
 /**
  * 云端定时列表业务

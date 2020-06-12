@@ -17,7 +17,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import java.util.*
 import kotlin.collections.ArrayList
 

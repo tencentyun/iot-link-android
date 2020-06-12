@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.entity
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.kitlink.util.JsonManager
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 
 /**
  * 产品属性

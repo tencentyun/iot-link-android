@@ -14,7 +14,7 @@ import com.tencent.iot.explorer.link.auth.socket.callback.DispatchCallback
 import com.tencent.iot.explorer.link.auth.socket.callback.MessageCallback
 import com.tencent.iot.explorer.link.auth.socket.entity.RequestEntity
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import com.util.WifiUtil
 import kotlinx.coroutines.*
 import java.net.URI

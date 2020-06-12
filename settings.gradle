@@ -1,2 +1,2 @@
-include ':app', ':qrcode', ':sdk', ':util', ':picture', ':view-release'
+include ':app', ':qrcode', ':sdk', ':picture', ':view-release'
 include ':sdkdemo'

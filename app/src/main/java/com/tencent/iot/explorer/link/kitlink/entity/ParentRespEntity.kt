@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 import java.lang.Exception
 
 /**

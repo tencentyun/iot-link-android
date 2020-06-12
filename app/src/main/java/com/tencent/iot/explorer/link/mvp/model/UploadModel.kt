@@ -21,7 +21,7 @@ import com.tencent.cos.xml.transfer.TransferManager
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider
 import com.tencent.qcloud.core.auth.QCloudCredentials
 import com.tencent.qcloud.core.auth.SessionQCloudCredentials
-import com.util.L
+import com.tencent.iot.explorer.link.util.L
 
 /**
  * 上传文件

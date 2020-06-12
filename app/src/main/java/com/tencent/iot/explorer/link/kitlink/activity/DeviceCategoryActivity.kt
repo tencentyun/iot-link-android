@@ -31,8 +31,8 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.qrcode.Constant
 import com.qrcode.ScannerActivity
 import com.tencent.iot.explorer.link.kitlink.customview.MyScrollView
-import com.util.L
-import com.util.T
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_device_category.*
 import kotlinx.android.synthetic.main.bluetooth_adapter_invalid.*

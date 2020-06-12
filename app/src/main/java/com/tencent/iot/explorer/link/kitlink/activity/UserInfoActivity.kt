@@ -9,14 +9,11 @@ import com.tencent.iot.explorer.link.kitlink.R
 import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.UserInfoPresenter
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
-import com.util.L
-import com.util.T
-import com.util.check.Permission
-import com.tencent.iot.explorer.link.kitlink.activity.PActivity
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
 import com.yho.image.imp.ImageManager
 import com.yho.image.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_user_info.*

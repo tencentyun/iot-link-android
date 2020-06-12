@@ -12,8 +12,8 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.qrcode.Constant
 import com.qrcode.ScannerActivity
-import com.util.L
-import com.util.T
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import kotlinx.android.synthetic.main.activity_add_device.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

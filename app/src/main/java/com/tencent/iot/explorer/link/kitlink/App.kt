@@ -8,9 +8,9 @@ import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
 import com.tencent.iot.explorer.link.kitlink.util.AppData
 import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.android.tpush.XGPushConfig
-import com.util.L
-import com.util.SharePreferenceUtil
-import com.util.T
+import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
+import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 
 /**
