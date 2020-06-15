@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.view.View
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.fragment_soft_ap_step.*
 

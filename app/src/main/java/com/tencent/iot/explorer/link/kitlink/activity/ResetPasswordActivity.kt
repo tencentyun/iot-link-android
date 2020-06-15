@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ResetPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.ResetPasswordView

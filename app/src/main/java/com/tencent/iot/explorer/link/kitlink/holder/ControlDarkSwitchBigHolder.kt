@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.KeyEvent
 import android.view.View
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.util.DataHolder

@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.theme
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.holder.*

@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.kitlink
+package com.tencent.iot.explorer.link
 
 import android.app.Application
 import android.content.Intent
@@ -9,9 +9,9 @@ import com.tencent.iot.explorer.link.kitlink.util.AppData
 import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.util.L
-import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 
 /**
  * APP

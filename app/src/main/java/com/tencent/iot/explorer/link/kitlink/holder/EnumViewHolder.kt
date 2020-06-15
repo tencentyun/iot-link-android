@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.View
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.popup.EnumPopupWindow
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_enum.view.*

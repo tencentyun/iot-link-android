@@ -2,8 +2,8 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.holder.FamilyListFootHolder
 import com.tencent.iot.explorer.link.kitlink.holder.FamilyListViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse

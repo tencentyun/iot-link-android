@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.content.Context
 import android.location.Location
 import com.espressif.iot.esptouch.IEsptouchResult
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.device.*
 import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigListener
 import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigService

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.activity.MainActivity
 import com.tencent.iot.explorer.link.kitlink.util.DataHolder
 import com.tencent.iot.explorer.link.mvp.IPresenter

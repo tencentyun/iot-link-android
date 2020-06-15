@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.text.TextUtils
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.fragment.*
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.util.T

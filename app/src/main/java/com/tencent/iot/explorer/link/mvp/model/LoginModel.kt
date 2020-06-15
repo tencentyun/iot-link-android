@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.mvp.model
 
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.entity.ParentRespEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.LoginResponse

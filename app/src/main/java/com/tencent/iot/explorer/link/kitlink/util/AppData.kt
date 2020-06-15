@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.util
 
 import android.content.Context
 import android.text.TextUtils
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*

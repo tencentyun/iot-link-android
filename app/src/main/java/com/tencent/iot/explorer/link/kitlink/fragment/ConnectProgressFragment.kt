@@ -2,8 +2,8 @@ package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.text.TextUtils
 import android.view.View
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.HelpCenterActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
 import com.tencent.iot.explorer.link.mvp.IPresenter

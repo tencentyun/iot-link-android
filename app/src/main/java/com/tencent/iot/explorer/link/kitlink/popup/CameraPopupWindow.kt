@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.yho.image.imageselectorbrowser.ImageSelectorActivity
 import com.yho.image.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.popup_select_camera.view.*
