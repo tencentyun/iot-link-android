@@ -26,6 +26,7 @@ class App : Application() {
         var language: String? = ""
         //打开测试版本
         const val DEBUG_VERSION: Boolean = true
+        const val PULL_OTHER: Boolean = false
         var activity by Weak<BaseActivity>()
 
         /**
@@ -50,6 +51,7 @@ class App : Application() {
         L.isLog(DEBUG_VERSION)
         //信鸽推送日志开关
         XGPushConfig.enableDebug(applicationContext, DEBUG_VERSION)
+        XGPushConfig.enablePullUpOtherApp(applicationContext, PULL_OTHER)
         language = SharePreferenceUtil.getString(this, CONFIG, "language")
         data.readLocalUser(this)
     }
