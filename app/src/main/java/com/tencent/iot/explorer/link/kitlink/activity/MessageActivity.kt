@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.fragment.MessageFragment
 import kotlinx.android.synthetic.main.activity_message.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.mvp.model
 
 import android.content.Context
 import android.text.TextUtils
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
