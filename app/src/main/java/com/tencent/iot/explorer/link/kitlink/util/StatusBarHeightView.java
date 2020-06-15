@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.iot.explorer.link.kitlink.R;
+import com.tencent.iot.explorer.link.R;
 
 public class StatusBarHeightView extends LinearLayout {
     private int statusBarHeight;

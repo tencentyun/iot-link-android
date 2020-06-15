@@ -3,8 +3,8 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.kitlink.holder.WeekRepeatHolder

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.dd.plist.NSArray
 import com.dd.plist.NSDictionary
 import com.dd.plist.PropertyListParser
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.holder.HelpViewHolder
 
 import com.view.recyclerview.CRecyclerView
