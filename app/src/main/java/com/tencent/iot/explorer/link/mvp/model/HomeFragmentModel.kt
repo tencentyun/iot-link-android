@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.mvp.model
 
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ShareDeviceEntity

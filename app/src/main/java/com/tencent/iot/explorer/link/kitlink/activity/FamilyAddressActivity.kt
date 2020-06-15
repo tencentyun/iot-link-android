@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.util.HttpCallBack
 import com.tencent.iot.explorer.link.kitlink.util.HttpUtil
 import com.tencent.iot.explorer.link.kitlink.util.JsonManager

@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import com.tencent.iot.explorer.link.kitlink.holder.PopupFamilyListHolder
 import com.view.recyclerview.CRecyclerView

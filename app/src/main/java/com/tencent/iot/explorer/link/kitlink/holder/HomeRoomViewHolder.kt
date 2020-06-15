@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.text.TextUtils
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_home_room.view.*

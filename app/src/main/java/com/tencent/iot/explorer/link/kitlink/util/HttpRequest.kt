@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.retrofit.StringRequest

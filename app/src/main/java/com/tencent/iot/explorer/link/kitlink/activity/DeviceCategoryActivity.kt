@@ -17,8 +17,8 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.kitlink.holder.DeviceListViewHolder

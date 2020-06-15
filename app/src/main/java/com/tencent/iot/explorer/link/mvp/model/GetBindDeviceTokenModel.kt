@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.text.TextUtils
 import android.util.Log
 import com.alibaba.fastjson.JSON
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.BindDeviceTokenResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest

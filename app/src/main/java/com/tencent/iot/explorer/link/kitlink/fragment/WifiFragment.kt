@@ -7,7 +7,7 @@ import android.net.wifi.WifiManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.fragment_wifi.*
