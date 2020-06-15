@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.WeekRepeatEntity
 import com.tencent.iot.explorer.link.kitlink.holder.WeekRepeatHolder
 import com.view.recyclerview.CRecyclerView

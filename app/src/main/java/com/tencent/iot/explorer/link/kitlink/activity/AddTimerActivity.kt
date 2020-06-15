@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TimePicker
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity

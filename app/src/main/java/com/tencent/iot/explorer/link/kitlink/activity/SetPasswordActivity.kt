@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.SetPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.SetPasswordView

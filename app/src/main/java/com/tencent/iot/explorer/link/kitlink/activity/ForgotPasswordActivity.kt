@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
