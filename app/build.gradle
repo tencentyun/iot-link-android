@@ -7,16 +7,16 @@ apply plugin: 'kotlin-android-extensions'
 android {
     signingConfigs {
         debug {
-            storeFile file('../tenextll.jks')
-            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            storeFile file('../opensource_keystore.jks')
+            storePassword '111222'
             keyAlias = 'tenextll'
-            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyPassword '111222'
         }
         release {
-            storeFile file('../tenextll.jks')
-            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            storeFile file('../opensource_keystore.jks')
+            storePassword '111222'
             keyAlias = 'tenextll'
-            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyPassword '111222'
         }
     }
     compileSdkVersion 29
