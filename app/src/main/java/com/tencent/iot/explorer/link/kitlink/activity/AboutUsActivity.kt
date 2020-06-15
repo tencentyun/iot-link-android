@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.util.AppInfoUtils
 import kotlinx.android.synthetic.main.activity_about_us.*

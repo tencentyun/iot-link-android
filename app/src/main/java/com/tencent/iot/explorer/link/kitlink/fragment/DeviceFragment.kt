@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConnectActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
 import com.tencent.iot.explorer.link.kitlink.entity.CategoryDeviceEntity

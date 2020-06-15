@@ -1,8 +1,8 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.view.View
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.*
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse

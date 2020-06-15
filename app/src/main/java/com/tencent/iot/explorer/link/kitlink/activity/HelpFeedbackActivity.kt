@@ -13,7 +13,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
 import androidx.core.content.ContextCompat
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.util.JsBridge
 import com.tencent.iot.explorer.link.util.L
 import kotlinx.android.synthetic.main.activity_help_feedback.*

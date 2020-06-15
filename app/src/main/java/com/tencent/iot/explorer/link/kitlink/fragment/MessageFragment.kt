@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
 import com.tencent.iot.explorer.link.kitlink.holder.MsgDeviceViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.MsgFamilyViewHolder

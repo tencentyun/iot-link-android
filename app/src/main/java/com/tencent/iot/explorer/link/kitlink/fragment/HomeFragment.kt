@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.iot.explorer.link.kitlink.App
-import com.tencent.iot.explorer.link.kitlink.R
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.DeviceCategoryActivity
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity

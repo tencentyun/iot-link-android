@@ -9,7 +9,7 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
 import com.tencent.iot.explorer.link.kitlink.util.DataHolder

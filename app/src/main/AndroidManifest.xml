@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        package="com.tencent.iot.explorer.link.kitlink">
+        package="com.tencent.iot.explorer.link">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -41,34 +41,34 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:allowBackup">
-        <activity android:name=".activity.DeviceCategoryActivity"/>
-        <activity android:name=".activity.DeviceInfoActivity" />
-        <activity android:name=".activity.SelectRoomActivity" />
-        <activity android:name=".activity.ShareActivity" />
-        <activity android:name=".activity.WeekRepeatActivity" />
-        <activity android:name=".activity.MemberActivity" />
-        <activity android:name=".activity.RoomActivity" />
-        <activity android:name=".activity.InviteMemberActivity" />
-        <activity android:name=".activity.FamilyAddressActivity" />
-        <activity android:name=".activity.FamilyListActivity" />
-        <activity android:name=".activity.ShareUserListActivity" />
-        <activity android:name=".activity.AddTimerActivity" />
-        <activity android:name=".activity.FamilyActivity" />
-        <activity android:name=".activity.RoomListActivity" />
-        <activity android:name=".activity.AddRoomActivity" />
-        <activity android:name=".activity.AddFamilyActivity" />
-        <activity android:name=".activity.CloudTimingActivity" /> <!-- 信鸽Android P -->
+        <activity android:name=".kitlink.activity.DeviceCategoryActivity"/>
+        <activity android:name=".kitlink.activity.DeviceInfoActivity" />
+        <activity android:name=".kitlink.activity.SelectRoomActivity" />
+        <activity android:name=".kitlink.activity.ShareActivity" />
+        <activity android:name=".kitlink.activity.WeekRepeatActivity" />
+        <activity android:name=".kitlink.activity.MemberActivity" />
+        <activity android:name=".kitlink.activity.RoomActivity" />
+        <activity android:name=".kitlink.activity.InviteMemberActivity" />
+        <activity android:name=".kitlink.activity.FamilyAddressActivity" />
+        <activity android:name=".kitlink.activity.FamilyListActivity" />
+        <activity android:name=".kitlink.activity.ShareUserListActivity" />
+        <activity android:name=".kitlink.activity.AddTimerActivity" />
+        <activity android:name=".kitlink.activity.FamilyActivity" />
+        <activity android:name=".kitlink.activity.RoomListActivity" />
+        <activity android:name=".kitlink.activity.AddRoomActivity" />
+        <activity android:name=".kitlink.activity.AddFamilyActivity" />
+        <activity android:name=".kitlink.activity.CloudTimingActivity" /> <!-- 信鸽Android P -->
         <uses-library
                 android:name="org.apache.http.legacy"
                 android:required="false" />
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".kitlink.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
         <activity
-                android:name=".activity.LoginActivity"
+                android:name=".kitlink.activity.LoginActivity"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -76,28 +76,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.WebActivity" />
-        <activity android:name=".activity.DeviceDetailsActivity" />
-        <activity android:name=".activity.SmartConnectActivity" />
-        <activity android:name=".activity.ControlPanelActivity" />
-        <activity android:name=".activity.ResetPasswordActivity" />
-        <activity android:name=".activity.BindMobilePhoneActivity" />
-        <activity android:name=".activity.AboutUsActivity" />
-        <activity android:name=".activity.HelpCenterActivity" />
+        <activity android:name=".kitlink.activity.WebActivity" />
+        <activity android:name=".kitlink.activity.DeviceDetailsActivity" />
+        <activity android:name=".kitlink.activity.SmartConnectActivity" />
+        <activity android:name=".kitlink.activity.ControlPanelActivity" />
+        <activity android:name=".kitlink.activity.ResetPasswordActivity" />
+        <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
+        <activity android:name=".kitlink.activity.AboutUsActivity" />
+        <activity android:name=".kitlink.activity.HelpCenterActivity" />
         <activity
-                android:name=".activity.FeedbackActivity"
+                android:name=".kitlink.activity.FeedbackActivity"
                 android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activity.UserInfoActivity" />
-        <activity android:name=".activity.SetPasswordActivity" />
-        <activity android:name=".activity.GetCodeActivity" />
-        <activity android:name=".activity.ForgotPasswordActivity" />
-        <activity android:name=".activity.CountryCodeActivity" />
-        <activity android:name=".activity.SoftApActivity" />
-        <activity android:name=".activity.AddDeviceActivity" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.MessageActivity" /> <!-- 微信回调 -->
+        <activity android:name=".kitlink.activity.UserInfoActivity" />
+        <activity android:name=".kitlink.activity.SetPasswordActivity" />
+        <activity android:name=".kitlink.activity.GetCodeActivity" />
+        <activity android:name=".kitlink.activity.ForgotPasswordActivity" />
+        <activity android:name=".kitlink.activity.CountryCodeActivity" />
+        <activity android:name=".kitlink.activity.SoftApActivity" />
+        <activity android:name=".kitlink.activity.AddDeviceActivity" />
+        <activity android:name=".kitlink.activity.RegisterActivity" />
+        <activity android:name=".kitlink.activity.MessageActivity" /> <!-- 微信回调 -->
         <activity
-                android:name=".wxapi.WXEntryActivity"
+                android:name=".kitlink.wxapi.WXEntryActivity"
                 android:exported="true"
                 android:label="@string/app_name"
                 android:launchMode="singleTask"
