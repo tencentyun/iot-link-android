@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".activity.RegisterActivity">
+        tools:context=".kitlink.activity.RegisterActivity">
 
     <!--    返回键-->
     <include layout="@layout/menu_back_layout"

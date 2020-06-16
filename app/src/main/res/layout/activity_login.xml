@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/login_head_bg"
-        tools:context=".activity.LoginActivity">
+        tools:context=".kitlink.activity.LoginActivity">
 
     <RelativeLayout
             android:id="@+id/rl_login_container"
