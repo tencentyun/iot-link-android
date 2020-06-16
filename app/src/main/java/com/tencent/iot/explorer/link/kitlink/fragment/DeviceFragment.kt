@@ -221,7 +221,7 @@ class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnIte
                 viewHolder.text.text = entity.CategoryName
                 url = entity.IconUrl
             }
-            Picasso.with(context).load(url).placeholder(R.drawable.device_placeholder)
+            Picasso.get().load(url).placeholder(R.drawable.device_placeholder)
                 .resize(App.data.screenWith/5,App.data.screenWith/5).centerCrop().into(viewHolder.image)
             return retView
         }
