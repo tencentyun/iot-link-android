@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.RoomListActivity">
+        tools:context=".kitlink.activity.RoomListActivity">
 
     <include
             android:id="@+id/room_list_menu"

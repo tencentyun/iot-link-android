@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:id="@+id/soft_ap"
         android:background="@color/white"
-        tools:context=".activity.SoftApActivity">
+        tools:context=".kitlink.activity.SoftApActivity">
 
     <com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView
             android:id="@+id/sbhv_soft_ap"

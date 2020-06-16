@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:id="@+id/add_timer"
-        tools:context=".activity.AddTimerActivity">
+        tools:context=".kitlink.activity.AddTimerActivity">
 
     <include
             android:id="@+id/add_timer_menu"

@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".activity.AddFamilyActivity">
+        tools:context=".kitlink.activity.AddFamilyActivity">
 
     <include
             android:id="@+id/add_family_menu"
