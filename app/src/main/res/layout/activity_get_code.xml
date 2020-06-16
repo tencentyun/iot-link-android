@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:id="@+id/get_code"
         android:background="@color/white"
-        tools:context=".activity.GetCodeActivity">
+        tools:context=".kitlink.activity.GetCodeActivity">
 
     <include
             android:id="@+id/sbhv_get_code"
