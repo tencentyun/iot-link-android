@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".activity.DeviceCategoryActivity">
+    tools:context=".kitlink.activity.DeviceCategoryActivity">
 
     <include
         android:id="@+id/add_device_title"
