@@ -1,5 +1,4 @@
 *.iml
-view-release/
 local.properties
 .gradle/
 .idea/
