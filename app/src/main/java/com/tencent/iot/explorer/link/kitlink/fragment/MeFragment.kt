@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
-import com.yho.image.imp.ImageManager
+import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.fragment_me.*
 
 /**

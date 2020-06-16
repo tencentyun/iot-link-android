@@ -60,4 +60,43 @@
     <color name="dark_05306a">#05306A</color>
     <color name="dark_0052d9">#0052D9</color>
 
+
+    <!-- 基本色不用加前娺   有特别功能才要加前娺  不能加公司或产业前娺 -->
+    <!-- 基本色 -->
+    <color name="red">#ffff0000</color>
+    <color name="green">#83c22e</color>
+    <color name="gray">#b5555555</color>
+
+    <!-- 特别功能 -->
+    <!--<color name="color_theme">#ffff2100</color>-->
+    <!--<color name="color_background">#DEDEDD</color>-->
+    <!--<color name="color_transparent">#00000000</color>-->
+    <!--<color name="color_hint">#CCCCCC</color>-->
+    <!--<color name="color_divider">#DCDDDF</color>-->
+    <!-- -->
+    <!--&lt;!&ndash; 描述说明字体色 &ndash;&gt;-->
+    <!--<color name="color_describe">#787878</color>-->
+
+    <!--图片选择器和图片浏览 -->
+    <color name="imageselector_titlebar_bg">#21282C</color>
+    <color name="imageselector_bottom_category_bg">#e0323232</color>
+    <color name="imageselector_camera_gv_item_bg">#343535</color>
+    <color name="imageselector_pop_item_press_bg">#eee</color>
+    <color name="imageselector_sumbit_btn_unenabled_bg">#337523</color>
+    <color name="imageselector_sumbit_btn_enabled_bg">#44BF1A</color>
+    <color name="imageselector_sumbit_btn_press_bg">#0A7523</color>
+    <color name="imageselector_bg_agray">#49dddddd</color>
+    <color name="imageselector_alpha_white">#49ffffff</color>
+    <color name="imageselector_alpha_black">#49000000</color>
+
+
+    <color name="white_translucent">#AAFFFFFF</color>
+    <color name="black_translucent">#B0000000</color>
+
+    <color name="border">@color/white_translucent</color>
+    <color name="guideline">@color/white_translucent</color>
+    <!--<color name="corner">@android:color/white</color>-->
+    <color name="corner">@color/red</color>
+    <color name="surrounding_area">@color/black_translucent</color>
+
 </resources>
