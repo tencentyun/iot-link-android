@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.view.recyclerview.CRecyclerView
-import com.yho.image.imp.ImageManager
+import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.item_share_device.view.*
 
 class ShareDeviceViewHolder : CRecyclerView.CViewHolder<DeviceEntity> {

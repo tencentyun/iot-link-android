@@ -23,7 +23,7 @@ import com.tencent.cos.xml.exception.CosXmlClientException
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import com.view.recyclerview.CRecyclerView
-import com.yho.image.imp.ImageSelectorUtils
+import com.tencent.iot.explorer.link.util.picture.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_feedback.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.lang.StringBuilder

@@ -14,8 +14,8 @@ import com.tencent.iot.explorer.link.mvp.presenter.UserInfoPresenter
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
-import com.yho.image.imp.ImageManager
-import com.yho.image.imp.ImageSelectorUtils
+import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
+import com.tencent.iot.explorer.link.util.picture.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_user_info.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
