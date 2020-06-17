@@ -4,6 +4,12 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'com.google.firebase.crashlytics'
+
+apply plugin: 'com.google.firebase.firebase-perf'
+
 android {
     signingConfigs {
         debug {
@@ -22,7 +28,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.tencent.iot.explorer.link.kitlink"
+        applicationId "com.tencent.iot.explorer.link.opensource"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 24
@@ -116,4 +122,11 @@ dependencies {
     //垂直TabLayout
     implementation 'q.rorbin:VerticalTabLayout:1.2.9'
     implementation project(path: ':sdk')
+
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
+
+    // Add the Firebase Crashlytics SDK.
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
+
+    implementation 'com.google.firebase:firebase-perf:19.0.7'
 }
