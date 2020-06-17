@@ -4,14 +4,14 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
+import com.example.qrcode.Constant
+import com.example.qrcode.ScannerActivity
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.qrcode.Constant
-import com.qrcode.ScannerActivity
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
