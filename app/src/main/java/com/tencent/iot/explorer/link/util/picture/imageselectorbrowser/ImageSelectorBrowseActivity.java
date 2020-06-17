@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.squareup.picasso.Picasso;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.util.picture.utils.ImageShowUtils;
@@ -27,7 +29,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 
 //import com.android.volley.RequestQueue;
@@ -291,16 +292,10 @@ public class ImageSelectorBrowseActivity extends Activity implements OnClickList
                 photoViewAttacher.setMinimumScale(1f);
                 photoViewAttacher.update();
 
-                photoViewAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-
+                photoViewAttacher.setOnPhotoTapListener(new OnPhotoTapListener() {
                     @Override
-                    public void onPhotoTap(View view, float x, float y) {
+                    public void onPhotoTap(ImageView view, float x, float y) {
                         mContext.finish();
-                    }
-
-                    @Override
-                    public void onOutsidePhotoTap() {
-
                     }
                 });
                 views.remove(position);
