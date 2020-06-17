@@ -29,4 +29,6 @@ jobs:
       - name: Publish aar to Maven
         run: ./gradlew publish
       - name: Upload apk to PGY
-        run: curl -F 'file=@app/build/outputs/apk/debug/app-debug.apk' -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
+        run: |
+          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/iot-link-android.apk
+          curl -F 'file=@app/build/outputs/apk/debug/iot-link-android.apk' -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
