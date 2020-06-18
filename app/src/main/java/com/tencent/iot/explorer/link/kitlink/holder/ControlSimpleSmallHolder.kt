@@ -9,7 +9,7 @@ import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_simple_medium.view.*
 
 /**
- * 暗黑主题小按钮：
+ * 暗黑主题小按钮
  */
 class ControlSimpleSmallHolder : CRecyclerView.CViewHolder<DevicePropertyEntity> {
 

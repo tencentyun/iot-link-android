@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_message.*
 import java.util.*
 
 /**
- * 消息 列表 fragment
+ * 消息列表 fragment
  */
 class MessageFragment(category: Int) : BaseFragment(), CRecyclerView.RecyclerItemView, MyCallback {
 

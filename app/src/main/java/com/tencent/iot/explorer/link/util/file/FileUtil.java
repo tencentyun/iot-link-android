@@ -9,9 +9,6 @@ import java.util.Locale;
 
 import com.tencent.iot.explorer.link.util.string.StringUtil;
 
-/**
- *
- */
 public class FileUtil {
     private static final String TAG = "FileUtil";
 
