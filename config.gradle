@@ -1,0 +1,6 @@
+ext {
+    android = [
+            versionName: "1.0.24",
+            versionCode: 24
+    ]
+}
