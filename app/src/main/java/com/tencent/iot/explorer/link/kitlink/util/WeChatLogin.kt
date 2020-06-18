@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.app.Activity
+import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.wxapi.WXEntryActivity
 import com.tencent.mm.opensdk.modelmsg.SendAuth
@@ -16,7 +17,7 @@ class WeChatLogin {
     private constructor()
 
     companion object {
-        const val APP_ID = "wxfb36c49df3a370c7"
+        const val APP_ID = BuildConfig.WXAccessAppId
         private var login: WeChatLogin? = null
 
         fun getInstance(): WeChatLogin {

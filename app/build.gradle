@@ -10,15 +10,11 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 apply plugin: 'com.google.firebase.firebase-perf'
 
+apply from: "../parse_json.gradle"
+
 android {
     signingConfigs {
-        debug {
-            storeFile file('../opensource_keystore.jks')
-            storePassword '111222'
-            keyAlias = 'tenextll'
-            keyPassword '111222'
-        }
-        release {
+        config {
             storeFile file('../opensource_keystore.jks')
             storePassword '111222'
             keyAlias = 'tenextll'
@@ -31,8 +27,8 @@ android {
         applicationId "com.tencent.iot.explorer.link.opensource"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 24
-        versionName "1.0.24"
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -41,20 +37,23 @@ android {
             // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
         }
         manifestPlaceholders = [
-                XG_ACCESS_ID : "1500003265",
-                XG_ACCESS_KEY: "A8ASZV6FNN78"
+                XG_ACCESS_ID : getValueById('XgAccessId'),
+                XG_ACCESS_KEY: getValueById('XgAccessKey'),
+                MAP_SDK_VALUE: getValueById('TencentMapSDKValue')
         ]
+        buildConfigField 'String', 'WXAccessAppId', "\"${getValueById('WXAccessAppId')}\""
+        buildConfigField 'String', 'TencentIotLinkAppkey', "\"${getValueById('TencentIotLinkAppkey')}\""
+        buildConfigField 'String', 'TencentIotLinkAppSecrecy', "\"${getValueById('TencentIotLinkAppSecrecy')}\""
         multiDexEnabled true
-
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.config
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

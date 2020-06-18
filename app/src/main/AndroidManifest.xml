@@ -130,7 +130,7 @@
         </receiver> <!-- 腾讯地地图 meta-data -->
         <meta-data
                 android:name="TencentMapSDK"
-                android:value="DB4BZ-63LKW-NRLRG-RSKZF-XJ63E-IXFUG" />
+                android:value="${MAP_SDK_VALUE}" />
 
         <meta-data
             android:name="firebase_performance_logcat_enabled"
