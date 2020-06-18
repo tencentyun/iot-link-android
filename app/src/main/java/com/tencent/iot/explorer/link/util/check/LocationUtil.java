@@ -5,9 +5,7 @@ import android.location.LocationManager;
 
 /**
  * 位置相关的工具类
- * Created by archurtan on 2020/06/11.
  */
-
 public class LocationUtil {
     public static boolean isLocationServiceEnable(Context context) {
         if (context != null) {

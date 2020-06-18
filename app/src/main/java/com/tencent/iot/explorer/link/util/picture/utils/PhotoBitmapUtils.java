@@ -17,9 +17,7 @@ import java.util.Locale;
 
 /**
  * 集合一些图片工具
- * Created by THINK on 2017/6/20.
  */
-
 public class PhotoBitmapUtils {
     /**
      * 存放拍摄图片的文件夹

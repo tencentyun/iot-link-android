@@ -2,9 +2,6 @@ package com.tencent.iot.explorer.link.util.string;
 
 import android.content.Context;
 
-/**
- * Created by THINK on 2017/3/6.
- */
 public class DensityUtil {
 
     public DensityUtil() {
