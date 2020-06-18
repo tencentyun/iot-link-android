@@ -1,9 +1,5 @@
 package com.tencent.iot.explorer.link.util.keyboard;
 
-/**
- * Created by smg on 2017/3/31.
- */
-
 public interface OnSoftKeyBoardListener {
 
 

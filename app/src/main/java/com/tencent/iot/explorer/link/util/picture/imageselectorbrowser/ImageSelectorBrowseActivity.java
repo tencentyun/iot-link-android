@@ -29,19 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-//import com.android.volley.RequestQueue;
-//import com.android.volley.toolbox.ImageLoader;
-//import com.android.volley.toolbox.ImageLoader.ImageContainer;
-//import com.android.volley.toolbox.ImageLoader.ImageListener;
-//import com.android.volley.toolbox.Volley;
-
 /**
- * ClassName: ImageSelectorBrowseActivity Description: 图片浏览类
- *
- * @author wuqionghai
- * @version 1.0 2015-9-16
+ * 图片浏览类
  */
 public class ImageSelectorBrowseActivity extends Activity implements OnClickListener {
     public static final String LOG_TAG = ImageSelectorBrowseActivity.class.getName();

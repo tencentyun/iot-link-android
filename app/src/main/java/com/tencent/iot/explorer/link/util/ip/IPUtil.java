@@ -9,10 +9,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-/**
- * Created by lurs on 2017/6/20.
- */
-
 public class IPUtil {
 
     /**

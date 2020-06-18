@@ -9,9 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * 数据检查工具类
- * Created by lurs on 2017/3/27.
  */
-
 public class CheckCodeUtil {
 
     public static boolean checkBankCard(String bankCard) {

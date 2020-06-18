@@ -6,7 +6,7 @@ import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.foot_family_list.view.*
 
 /**
- * 家庭 管理底部
+ * 家庭管理 底部
  */
 class FamilyListFootHolder : CRecyclerView.FootViewHolder<Any> {
 

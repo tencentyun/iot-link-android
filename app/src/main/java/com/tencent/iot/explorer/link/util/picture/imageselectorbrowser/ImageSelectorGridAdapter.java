@@ -16,10 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**  
- * ClassName: ImageSelectorGridAdapter   
- * Description: 展示所有图片的Adapter    
- * @author wuqionghai  
- * @version 1.0  2015-9-17
+ * 展示所有图片的Adapter
  */
 public class ImageSelectorGridAdapter extends BaseAdapter {
 
