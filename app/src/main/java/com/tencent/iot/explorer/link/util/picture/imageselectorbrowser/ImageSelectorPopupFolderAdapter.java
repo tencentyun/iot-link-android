@@ -16,10 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**  
- * ClassName: ImageSelectorPopupFolderAdapter   
- * Description: ListPopupWindow展示文件夹目录的Adapter    
- * @author wuqionghai  
- * @version 1.0  2015-9-17
+ * ListPopupWindow展示文件夹目录的Adapter
  */
 public class ImageSelectorPopupFolderAdapter extends BaseAdapter {
 

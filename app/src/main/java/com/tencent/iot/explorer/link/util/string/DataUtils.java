@@ -6,9 +6,7 @@ import java.util.ArrayList;
 
 /**
  * 特殊数据处理工具
- * Created by THINK on 2017/5/2.
  */
-
 public class DataUtils {
 
     /**

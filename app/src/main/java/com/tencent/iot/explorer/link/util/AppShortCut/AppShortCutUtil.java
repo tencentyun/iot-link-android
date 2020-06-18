@@ -24,10 +24,8 @@ import java.util.List;
 
 /**
  * 创建app的角标数（应用的快捷方式工具类）
- * <p>
- * Created by THINK on 2017/7/29.
+ *
  */
-
 public class AppShortCutUtil {
     private static final String TAG = "AppShortCutUtil";
     //默认圆角半径

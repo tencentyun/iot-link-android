@@ -7,10 +7,7 @@ import android.view.MotionEvent;
 import androidx.viewpager.widget.ViewPager;
 
 /**  
- * ClassName: HackyViewPager   
- * Description: 该类解决图片缩放报错 java.lang.IllegalArgumentException: pointerIndex out of range
- * @author wuqionghai  
- * @version 1.0  2015-9-17
+ * 该类解决图片缩放报错 java.lang.IllegalArgumentException: pointerIndex out of range
  */
 public class HackyViewPager extends ViewPager {
 

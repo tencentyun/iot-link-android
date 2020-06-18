@@ -2,12 +2,8 @@ package com.tencent.iot.explorer.link.util.picture.imageselectorbrowser;
 
 import java.util.List;
 
-
 /**  
- * ClassName: ImageSelectorFolderBean   
- * Description: 单个目录的实体类    
- * @author wuqionghai  
- * @version 1.0  2015-9-17
+ * 单个目录的实体类
  */
 public class ImageSelectorFolderBean {
 

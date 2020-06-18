@@ -10,13 +10,6 @@ import android.widget.TextView;
 
 import com.tencent.iot.explorer.link.R;;
 
-/**
- * ClassName: ImageSimpleBrowseActivity
- * Description:
- *
- * @author root
- * @version 1.0 15-12-22
- */
 public class ImageSimpleBrowseActivity extends Activity {
 
     public static byte[] bis;

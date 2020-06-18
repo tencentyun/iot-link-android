@@ -7,10 +7,6 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 
-/**
- * Created by smg on 2017/6/16.
- */
-
 public class SoftKeyBoard {
 
     private Activity activity;

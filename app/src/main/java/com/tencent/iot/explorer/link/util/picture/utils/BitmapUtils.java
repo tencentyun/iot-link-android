@@ -21,11 +21,8 @@ import java.lang.ref.WeakReference;
 
 
 /**
- * 2  * 位图处理类
- * 3  * @author HalfmanG2
- * 4
+ * 位图处理类
  */
-
 public class BitmapUtils {
     public static final int UNCONSTRAINED = -1;
 

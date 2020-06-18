@@ -1,8 +1,5 @@
 package com.tencent.iot.explorer.link.mvp
 
-/**
- * Created by lurs on 2018/3/23 0023.
- */
 open class ParentModel<V : IView>(view: V?) : IModel {
 
     var view: V? = null

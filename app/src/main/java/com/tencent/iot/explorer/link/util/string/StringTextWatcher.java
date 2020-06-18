@@ -6,7 +6,6 @@ import android.widget.EditText;
 
 /**
  * EditText字符数限制
- * Created by hzxuwen on 2015/5/22.
  */
 public class StringTextWatcher implements TextWatcher{
     private int length;

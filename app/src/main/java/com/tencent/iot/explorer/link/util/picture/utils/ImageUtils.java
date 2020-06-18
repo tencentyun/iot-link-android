@@ -40,38 +40,10 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-/**
- * ImageUtils
- * <ul>
- * convert between Bitmap, byte array, Drawable
- * <li>{@link #bitmapToByte(Bitmap)}</li>
- * <li>{@link #bitmapToDrawable(Bitmap)}</li>
- * <li>{@link #byteToBitmap(byte[])}</li>
- * <li>{@link #byteToDrawable(byte[])}</li>
- * <li>{@link #drawableToBitmap(Drawable)}</li>
- * <li>{@link #drawableToByte(Drawable)}</li>
- * </ul>
- * 
- * 
- * <ul>
- * get image
- * <li>{@link #getInputStreamFromUrl(String, int)}</li>
- * <li>{@link #getBitmapFromUrl(String, int)}</li>
- * <li>{@link #getDrawableFromUrl(String, int)}</li>
- * </ul>
- * <ul>
- * scale image
- * <
- * <li>{@link #scaleImageTo(Bitmap, int, int)}</li>
- * <li>{@link #scaleImage(Bitmap, float, float)}</li>
- * </ul>
- * 
- * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2012-6-27
- */
 public class ImageUtils {
 	
 	/**SAVE_SDCARD_PATH : 保存图片的目录 */ 
-	private static final String SAVE_SDCARD_PATH = "/XinYuan/xinyuanimg";
+	private static final String SAVE_SDCARD_PATH = "/tencent/iotLink";
 
     private ImageUtils() {
         throw new AssertionError();

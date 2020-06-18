@@ -5,10 +5,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-/**
- * Created by lurs on 2018/2/27 0027.
- */
-
 public class KeyBoardUtils {
 
     /**

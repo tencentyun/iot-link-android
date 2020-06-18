@@ -4,9 +4,7 @@ import android.util.Log;
 
 /**
  * 我的日志
- * Created by THINK on 2017/12/27.
  */
-
 public class L {
 
     private static boolean isLog = false;

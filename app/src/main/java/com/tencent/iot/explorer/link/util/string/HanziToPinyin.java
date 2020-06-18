@@ -8,9 +8,7 @@ import java.util.Locale;
 
 /**
  * 将汉字转为拼音
- * Created by THINK on 2017/5/2.
  */
-
 public class HanziToPinyin {
     private static final String TAG = "HanziToPinyin";
     private static final boolean DEBUG = false;

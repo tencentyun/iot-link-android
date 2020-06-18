@@ -44,10 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**  
- * ClassName: ImageSelectorFragment   
- * Description: 图片选择Fragment    
- * @author wuqionghai  
- * @version 1.0  2015-9-17
+ * 图片选择Fragment
  */
 public class ImageSelectorFragment extends Fragment implements OnClickListener{
 

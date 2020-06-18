@@ -7,10 +7,7 @@ import com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.ImageSele
 import java.util.ArrayList;
 
 /**
- * ClassName: ImageBrowseUtils Description: 图片浏览器
- *
- * @author wuqionghai
- * @version 1.0 2015-10-28
+ * 图片浏览器
  */
 public class ImageBrowseUtils {
     private static final String TAG = ImageBrowseUtils.class.getName();

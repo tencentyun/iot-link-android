@@ -9,7 +9,7 @@ import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_dark_long_switch.view.*
 
 /**
- * 暗黑主题长按钮：布尔
+ * 暗黑主题长按钮：布尔类型
  */
 class ControlDarkSwitchLongHolder : CRecyclerView.CViewHolder<DevicePropertyEntity> {
 

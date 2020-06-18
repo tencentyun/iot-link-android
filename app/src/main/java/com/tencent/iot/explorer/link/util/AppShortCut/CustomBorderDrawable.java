@@ -9,9 +9,6 @@ import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.graphics.drawable.shapes.Shape;
 
-/**
- * Created by THINK on 2017/7/29.
- */
 
 public class CustomBorderDrawable extends ShapeDrawable {
     private  Paint fillpaint, strokepaint;

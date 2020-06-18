@@ -13,9 +13,7 @@ import androidx.core.content.ContextCompat;
 
 /**
  * 6.0动态权限检查
- * Created by THINK on 2017/12/27.
  */
-
 public class Permission {
     /**
      * 6.0动态权限：

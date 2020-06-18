@@ -11,7 +11,7 @@ import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_standard_big_switch.view.*
 
 /**
- * 标准主题大按钮：布尔 开关类型
+ * 标准主题大按钮：布尔类型
  */
 class ControlStandardSwitchBigHolder : CRecyclerView.CViewHolder<DevicePropertyEntity> {
 

@@ -20,11 +20,7 @@ import java.io.IOException;
 import java.util.Random;
 
 /**
- * ClassName: XinYuanCommonUtils
- * Description: 常用公共方法工具类
- * 
- * @author wuqionghai
- * @version 1.0 2015-9-6
+ * 常用公共方法工具类
  */
 public class ImageShowUtils {
 

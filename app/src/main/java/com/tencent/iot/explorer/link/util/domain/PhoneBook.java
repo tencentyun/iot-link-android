@@ -5,9 +5,7 @@ import java.util.List;
 
 /**
  * 手机通讯录
- * Created by THINK on 2017/6/17.
  */
-
 public class PhoneBook  implements Serializable {
 
     private List<Data> data;

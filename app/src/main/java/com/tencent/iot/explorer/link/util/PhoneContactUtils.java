@@ -20,9 +20,7 @@ import com.tencent.iot.explorer.link.util.domain.PhoneBook;
  * 2.可获取手机中的联系
  * 3.可获取sim卡中的联系人
  * 4.可获取所有联系人（手机 + sim卡）
- * Created by THINK on 2017/5/4.
  */
-
 public class PhoneContactUtils {
     private Context context;
 

@@ -13,10 +13,7 @@ import com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.ImageSele
 import java.util.ArrayList;
 
 /**
- * ClassName: ImageSelectorUtils Description: 图片选择器工具类
- *
- * @author wuqionghai
- * @version 1.0 2015-9-17
+ * 图片选择器工具类
  */
 public class ImageSelectorUtils {
     /**
