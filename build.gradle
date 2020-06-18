@@ -8,6 +8,8 @@ buildscript {
         maven{
             url "https://oss.sonatype.org/content/groups/public"
         }
+
+        maven { url 'https://mirrors.tencent.com/repository/maven/thirdparty-snapshots' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
@@ -32,6 +34,8 @@ allprojects {
         maven {
             url "https://jitpack.io"
         }
+
+        maven { url 'https://mirrors.tencent.com/repository/maven/thirdparty-snapshots' }
     }
 
 }
