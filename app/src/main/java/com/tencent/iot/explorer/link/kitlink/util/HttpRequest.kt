@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.retrofit.StringRequest
@@ -28,8 +29,8 @@ class HttpRequest private constructor() {
     companion object {
         val instance = HttpRequestHolder.request
 
-        const val APP_KEY = "mdPgKutfrCZAjWEFi"
-        const val APP_SECRECY = "cgUcNMLcDPdpEUnNcJPU"
+        const val APP_KEY = BuildConfig.TencentIotLinkAppkey
+        const val APP_SECRECY = BuildConfig.TencentIotLinkAppSecrecy
 
         const val HOST = "https://iot.cloud.tencent.com/api/"
         //        const val APP_API = "exploreropen/appapi"
