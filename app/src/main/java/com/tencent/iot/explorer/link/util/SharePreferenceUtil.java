@@ -8,9 +8,7 @@ import java.util.Map;
 
 /**
  * 本地数据存储与读取（共享参数）
- * Created by THINK on 2017/12/28.
  */
-
 public class SharePreferenceUtil {
 
     /**

@@ -29,11 +29,7 @@ import java.util.ArrayList;
 
 
 /**
- * ClassName: ImageSelectorActivity
- * Description: 多图选择的Activity
- *
- * @author wuqionghai
- * @version 1.0  2015-9-16
+ * 多图选择的Activity
  */
 public class ImageSelectorActivity extends FragmentActivity implements ImageSelectorFragment.Callback, OnClickListener {
 

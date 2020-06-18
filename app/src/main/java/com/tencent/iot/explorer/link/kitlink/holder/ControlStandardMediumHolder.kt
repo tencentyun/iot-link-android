@@ -9,7 +9,7 @@ import com.view.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_standard_medium.view.*
 
 /**
- * 暗黑主题中按钮：
+ * 暗黑主题中按钮
  */
 class ControlStandardMediumHolder : CRecyclerView.CViewHolder<DevicePropertyEntity> {
 

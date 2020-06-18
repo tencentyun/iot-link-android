@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *验证手机号码及邮箱是否正确
+ * 验证手机号码及邮箱是否正确
  */
 public class AMUtils {
 

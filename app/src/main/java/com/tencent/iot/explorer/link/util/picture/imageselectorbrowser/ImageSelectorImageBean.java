@@ -1,10 +1,7 @@
 package com.tencent.iot.explorer.link.util.picture.imageselectorbrowser;
 
 /**  
- * ClassName: ImageSelectorImageBean   
- * Description: 单张图片的实体类    
- * @author wuqionghai  
- * @version 1.0  2015-9-17
+ * 单张图片的实体类
  */
 public class ImageSelectorImageBean {
 	private String mImagePath;

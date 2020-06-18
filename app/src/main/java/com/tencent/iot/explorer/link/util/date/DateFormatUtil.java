@@ -7,9 +7,7 @@ import java.util.Date;
 
 /**
  * 日期格式处理
- * Created by lurs on 2017/4/27.
  */
-
 public class DateFormatUtil {
 
     /**
