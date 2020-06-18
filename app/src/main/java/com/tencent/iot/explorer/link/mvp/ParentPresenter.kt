@@ -1,8 +1,5 @@
 package com.tencent.iot.explorer.link.mvp
 
-/**
- * Created by lurs on 2018/3/23 0023.
- */
 abstract class ParentPresenter<M : IModel, V : IView> : IPresenter {
 
     var model: M? = null

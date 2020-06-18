@@ -15,7 +15,7 @@ import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.fragment_me.*
 
 /**
- *  我的_界面
+ *  我的界面
  */
 class MeFragment : BaseFragment(), View.OnClickListener, MyCallback {
 

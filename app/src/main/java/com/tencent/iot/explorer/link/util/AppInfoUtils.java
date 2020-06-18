@@ -22,9 +22,6 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
-/**
- * Created by kzl on 2016/2/25.
- */
 public class AppInfoUtils {
     /**
      * 获取包信息
