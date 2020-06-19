@@ -6,7 +6,7 @@ import android.text.TextUtils
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_home_room.view.*
 
 class HomeRoomViewHolder : CRecyclerView.CViewHolder<RoomEntity> {

@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.View
 import com.tencent.iot.explorer.link.kitlink.entity.CountryCodeEntity
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_country_code_value.view.*
 
 class CountryCodeViewHolder : CRecyclerView.CViewHolder<CountryCodeEntity> {

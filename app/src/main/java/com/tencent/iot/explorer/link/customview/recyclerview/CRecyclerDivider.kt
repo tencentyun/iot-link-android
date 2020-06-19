@@ -1,4 +1,4 @@
-package com.view.recyclerview
+package com.tencent.iot.explorer.link.customview.recyclerview
 
 import android.graphics.Rect
 import android.view.View

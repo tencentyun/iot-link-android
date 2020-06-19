@@ -11,13 +11,13 @@
             android:id="@+id/menu_share"
             layout="@layout/menu_back_layout" />
 
-    <com.view.CustomViewPager
+    <com.tencent.iot.explorer.link.customview.CustomViewPager
             android:id="@+id/vp_share"
             android:layout_width="match_parent"
             android:layout_height="185dp"
             app:layout_constraintTop_toBottomOf="@+id/menu_share" />
 
-    <com.view.check.ClickButton
+    <com.tencent.iot.explorer.link.customview.check.ClickButton
             android:id="@+id/btn_share"
             android:layout_width="match_parent"
             android:layout_height="48dp"

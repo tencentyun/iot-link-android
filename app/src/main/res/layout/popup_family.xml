@@ -6,7 +6,7 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-    <com.view.recyclerview.CRecyclerView
+    <com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
             android:id="@+id/crv_popup_family_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

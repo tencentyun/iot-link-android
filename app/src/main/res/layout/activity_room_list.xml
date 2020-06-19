@@ -10,7 +10,7 @@
             android:id="@+id/room_list_menu"
             layout="@layout/menu_back_layout" />
 
-    <com.view.recyclerview.CRecyclerView
+    <com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
             android:id="@+id/crv_room_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
