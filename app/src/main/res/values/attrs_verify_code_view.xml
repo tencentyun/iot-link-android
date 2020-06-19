@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="VerifyCodeView">
+        <attr name="length" format="integer" />
+        <attr name="selected_background" format="reference" />
+        <attr name="unselected_background" format="reference" />
+        <attr name="verify_width" format="dimension" />
+        <attr name="verify_height" format="dimension" />
+        <attr name="text_size" format="dimension" />
+        <attr name="text_color" format="color" />
+        <attr name="text_bold" format="boolean" />
+    </declare-styleable>
+</resources>
