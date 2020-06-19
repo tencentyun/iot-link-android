@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CView">
+        <attr name="c_text" format="string" />
+        <attr name="c_textSize" format="dimension" />
+        <attr name="c_textStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+        <attr name="c_gravity" format="enum">
+            <enum name="center" value="0" />
+            <enum name="top" value="1" />
+            <enum name="bottom" value="2" />
+            <enum name="left" value="3" />
+            <enum name="right" value="4" />
+        </attr>
+        <attr name="c_textColor" format="color" />
+        <attr name="c_textDrawable" format="reference" />
+    </declare-styleable>
+</resources>
