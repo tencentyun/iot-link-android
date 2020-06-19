@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SeekProgress">
+        <attr name="seek_progress_background" format="color|reference" />
+        <attr name="seek_first_color" format="color|reference" />
+        <attr name="seek_bar_color" format="color|reference" />
+        <attr name="seek_text_color" format="color" />
+        <attr name="seek_bar_shape_color" format="color|reference" />
+        <attr name="seek_bar_shape_width" format="dimension" />
+        <attr name="seek_text_size" format="dimension" />
+        <attr name="seek_text_padding" format="dimension" />
+        <attr name="seek_progress" format="integer" />
+        <attr name="seek_text_unit" format="string" />
+        <attr name="seek_height" format="dimension" />
+        <attr name="seek_bar_radius" format="dimension" />
+        <attr name="seek_progress_min" format="integer" />
+        <attr name="seek_progress_max" format="integer" />
+        <attr name="seek_progress_step" format="integer" />
+        <attr name="seek_show_text" format="boolean" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CircleProgressView">
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="unit_text_size" format="dimension" />
+        <attr name="inner_width" format="dimension" />
+        <attr name="inner_color" format="color" />
+        <attr name="center_width" format="dimension" />
+        <attr name="center_color" format="color" />
+        <attr name="outer_width" format="dimension" />
+        <attr name="outer_top_color" format="color" />
+        <attr name="outer_bottom_color" format="color" />
+<!--        <attr name="outer_dash_gap" format="dimension" />-->
+        <attr name="outer_dash_width" format="dimension" />
+        <attr name="outer_and_center_gap" format="dimension" />
+        <attr name="center_out_line_width" format="dimension" />
+        <attr name="center_out_line_color" format="color" />
+        <attr name="progress" format="integer" />
+    </declare-styleable>
+
+</resources>
