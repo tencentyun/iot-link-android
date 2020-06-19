@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IconTextView">
+        <attr name="icon_src" format="reference" />
+        <attr name="icon_gravity" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+        <attr name="icon_padding" format="dimension" />
+        <attr name="icon_width" format="dimension" />
+        <attr name="icon_height" format="dimension" />
+        <attr name="icon_type" format="enum">
+            <enum name="none" value="0" />
+            <enum name="triangle" value="1" />
+            <enum name="circle" value="2" />
+        </attr>
+        <attr name="icon_stroke_width" format="dimension" />
+        <attr name="icon_color" format="color" />
+        <attr name="icon_style" format="enum">
+            <enum name="stroke" value="0" />
+            <enum name="fill" value="1" />
+        </attr>
+        <attr name="icon_triangle_direction" format="enum">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+            <enum name="left" value="2" />
+            <enum name="right" value="3" />
+        </attr>
+    </declare-styleable>
+</resources>

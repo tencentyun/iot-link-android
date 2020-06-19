@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TabLine">
+        <attr name="tab_line_color" format="color" />
+        <attr name="tab_src" format="reference" />
+        <attr name="tab_line_height" format="dimension" />
+        <attr name="tab_width" format="dimension"/>
+        <attr name="tab_line_gravity" format="enum">
+            <enum name="center" value="0" />
+            <enum name="top" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
+        <attr name="tab_height" format="dimension" />
+        <attr name="tab_count" format="integer" />
+        <attr name="tab_padding_start" format="dimension" />
+        <attr name="tab_padding_end" format="dimension" />
+        <attr name="tab_round" format="boolean" />
+        <attr name="tab_smooth_scroll" format="boolean" />
+    </declare-styleable>
+</resources>

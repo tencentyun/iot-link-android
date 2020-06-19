@@ -278,7 +278,6 @@
 
     <!--picture start-->
     <string name="action_settings">Settings</string>
-
     <!-- 图片浏览器 -->
     <string name="imageselector_all_folder">所有图片</string>
     <string name="imageselector_preview">预览</string>
@@ -287,12 +286,21 @@
     <string name="imageselector_msg_amount_limit">已经达到最高选择数量</string>
     <string name="imageselector_camera_gv_item_tv">拍摄照片</string>
     <string name="imageselector_sheets">张</string>
-
-
     <string name="label_cancel">取消</string>
     <string name="label_ok">确定</string>
     <string name="permission_title_rationale">权限需求</string>
     <string name="permission_read_storage_rationale">选择图片时需要读取权限</string>
     <string name="permission_write_storage_rationale">拍照时需要存储权限</string>
     <!--picture end-->
+
+    <!--customview start-->
+    <string name="digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="mobile_phone_number_null">请输入手机号</string>
+    <string name="mobile_phone_number_invalid">手机号格式不正确</string>
+    <string name="email_null">请输入邮箱地址</string>
+    <string name="email_invalid">邮箱地址格式不正确</string>
+    <string name="password_style">密码支持8&#8211;20位，必须包含字母和数字</string>
+    <string name="toast_password_not_verify">两次输入的密码不一致</string>
+    <string name="toast_login">密码修改成功，请重新登录</string>
+    <!--customview end-->
 </resources>
