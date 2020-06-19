@@ -4,7 +4,7 @@ import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.FeedbackActivity
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.item_feekback.view.*
 

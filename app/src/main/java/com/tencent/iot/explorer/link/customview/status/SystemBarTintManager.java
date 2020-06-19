@@ -1,4 +1,4 @@
-package com.view.status;
+package com.tencent.iot.explorer.link.customview.status;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

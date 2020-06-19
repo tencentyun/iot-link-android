@@ -1,4 +1,4 @@
-package com.view.chart
+package com.tencent.iot.explorer.link.customview.chart
 
 import android.content.Context
 import android.graphics.*
@@ -9,7 +9,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import com.view.R
+import com.tencent.iot.explorer.link.R
 
 
 /**

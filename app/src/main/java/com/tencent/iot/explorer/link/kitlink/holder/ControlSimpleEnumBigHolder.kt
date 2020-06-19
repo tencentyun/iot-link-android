@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.PropertyEntity
-import com.view.recyclerview.CRecyclerDivider
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerDivider
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_simple_big_enum.view.*
 
 /**

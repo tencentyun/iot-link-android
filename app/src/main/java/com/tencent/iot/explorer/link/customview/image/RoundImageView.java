@@ -1,4 +1,4 @@
-package com.view.image;
+package com.tencent.iot.explorer.link.customview.image;
 
 import android.content.Context;
 import android.graphics.Bitmap;

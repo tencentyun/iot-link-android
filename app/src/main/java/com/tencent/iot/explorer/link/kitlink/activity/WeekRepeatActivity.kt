@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.WeekRepeatEntity
 import com.tencent.iot.explorer.link.kitlink.holder.WeekRepeatHolder
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_week_repeat.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

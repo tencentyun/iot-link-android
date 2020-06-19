@@ -15,7 +15,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <com.view.progress.WaveProgress
+    <com.tencent.iot.explorer.link.customview.progress.WaveProgress
             android:id="@+id/wp_connected"
             android:layout_width="180dp"
             android:layout_height="180dp"

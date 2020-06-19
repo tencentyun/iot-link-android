@@ -21,7 +21,7 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.util.L
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.activity.PActivity
 import com.tencent.iot.explorer.link.kitlink.popup.OfflinePopupWindow
 import kotlinx.android.synthetic.main.activity_control_panel.*

@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.popup.EnumPopupWindow
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_enum.view.*
 
 class EnumViewHolder : CRecyclerView.CViewHolder<String> {

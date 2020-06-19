@@ -1,4 +1,4 @@
-package com.view.check
+package com.tencent.iot.explorer.link.customview.check
 
 import android.content.Context
 import android.text.Editable
@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
-import com.view.R
+import com.tencent.iot.explorer.link.R
 
 class ClickButton : AppCompatTextView {
 

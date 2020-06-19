@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.theme
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 
 /**
  * 主题父类

@@ -11,7 +11,7 @@
             android:id="@+id/sbhv_help_center"
             layout="@layout/menu_back_layout" />
 
-    <com.view.recyclerview.CRecyclerView
+    <com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
             android:id="@+id/crv_help"
             android:layout_width="match_parent"
             android:paddingTop="10dp"

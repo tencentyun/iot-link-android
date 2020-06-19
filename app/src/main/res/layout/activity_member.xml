@@ -12,7 +12,7 @@
             android:id="@+id/menu_member"
             layout="@layout/menu_back_layout" />
 
-    <com.view.image.RoundImageView
+    <com.tencent.iot.explorer.link.customview.image.RoundImageView
             android:id="@+id/iv_member_portrait"
             android:layout_width="80dp"
             android:layout_height="80dp"

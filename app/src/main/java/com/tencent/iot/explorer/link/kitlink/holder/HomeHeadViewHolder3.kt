@@ -8,7 +8,7 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.kitlink.fragment.BaseFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.head_home3.view.*
 
 /**

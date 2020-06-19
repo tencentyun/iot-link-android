@@ -1,4 +1,4 @@
-package com.view;
+package com.tencent.iot.explorer.link.customview;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -15,7 +15,7 @@ import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.mvp.IModel
 import com.tencent.iot.explorer.link.mvp.model.FamilyModel
 import com.tencent.iot.explorer.link.mvp.view.FamilyView
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.activity.MActivity
 import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.foot_family.view.*

@@ -10,7 +10,7 @@
             android:id="@+id/sbhv_country_code"
             layout="@layout/menu_back_layout" />
 
-    <com.view.recyclerview.CRecyclerView
+    <com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
             android:id="@+id/crv_country_code"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -30,7 +30,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <com.view.MySideBarView
+    <com.tencent.iot.explorer.link.customview.MySideBarView
             android:id="@+id/my_side_bar"
             android:layout_width="30dp"
             android:layout_height="405dp"

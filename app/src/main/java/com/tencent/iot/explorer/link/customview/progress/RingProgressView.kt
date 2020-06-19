@@ -1,4 +1,4 @@
-package com.view.progress
+package com.tencent.iot.explorer.link.customview.progress
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -7,7 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import com.view.R
+import com.tencent.iot.explorer.link.R
 
 /**
  * 圆环进度条

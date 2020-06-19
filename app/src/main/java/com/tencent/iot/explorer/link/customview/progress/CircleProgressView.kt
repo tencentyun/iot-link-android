@@ -1,10 +1,10 @@
-package com.view.progress
+package com.tencent.iot.explorer.link.customview.progress
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import com.view.R
+import com.tencent.iot.explorer.link.R
 
 class CircleProgressView : View {
 

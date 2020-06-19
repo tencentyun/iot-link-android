@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.holder.EnumViewHolder
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.popup_enum.view.*
 
 /**

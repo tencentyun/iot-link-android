@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.ViewGroup
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 
 /**
  * 分享用户列表头部

@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="185dp">
 
-    <com.view.check.VerifyEdit
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
             android:id="@+id/et_register_email"
             android:layout_width="0dp"
             android:layout_height="48dp"

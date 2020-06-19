@@ -19,7 +19,7 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.tencent.iot.explorer.link.util.L
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.fragment_message.*
 import java.util.*
 

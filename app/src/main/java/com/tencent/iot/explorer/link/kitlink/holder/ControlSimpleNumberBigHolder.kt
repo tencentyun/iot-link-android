@@ -6,8 +6,8 @@ import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.util.DataHolder
 import com.tencent.iot.explorer.link.util.L
-import com.view.progress.SeekProgress
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.progress.SeekProgress
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_simple_big_int.view.*
 
 /**

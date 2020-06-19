@@ -29,7 +29,7 @@
             app:layout_constraintLeft_toRightOf="@+id/tv_forgot_to_country"
             app:layout_constraintTop_toTopOf="@id/tv_forgot_to_country" />
 
-    <com.view.check.VerifyEdit
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
             android:id="@+id/et_forgot_phone"
             android:layout_width="0dp"
             android:layout_height="48dp"

@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.util.L
-import com.view.progress.SeekProgress
+import com.tencent.iot.explorer.link.customview.progress.SeekProgress
 import kotlinx.android.synthetic.main.popup_number.view.*
 
 /**

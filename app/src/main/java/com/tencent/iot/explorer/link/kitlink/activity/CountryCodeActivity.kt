@@ -16,8 +16,8 @@ import com.tencent.iot.explorer.link.kitlink.entity.CountryCodeEntity
 import com.tencent.iot.explorer.link.kitlink.holder.CountryCodeKeyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.CountryCodeViewHolder
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.view.MySideBarView
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.MySideBarView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_country_code.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

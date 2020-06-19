@@ -7,8 +7,8 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.holder.*
-import com.view.progress.SeekProgress
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.progress.SeekProgress
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 
 /**
  * 简约主题

@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
-    <com.view.check.VerifyEdit
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
             android:id="@+id/et_login_phone"
             android:layout_width="0dp"
             android:layout_height="48dp"
@@ -60,7 +60,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/tv_login_to_country"
             app:layout_constraintTop_toBottomOf="@+id/tv_login_to_country" />
 
-    <com.view.check.VerifyEdit
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
             android:id="@+id/et_login_pwd"
             android:layout_width="0dp"
             android:layout_height="48dp"

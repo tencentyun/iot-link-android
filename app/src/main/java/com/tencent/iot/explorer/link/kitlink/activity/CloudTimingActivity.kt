@@ -13,7 +13,7 @@ import com.tencent.iot.explorer.link.kitlink.holder.TimerListViewHolder
 import com.tencent.iot.explorer.link.mvp.IModel
 import com.tencent.iot.explorer.link.mvp.model.TimerListModel
 import com.tencent.iot.explorer.link.mvp.view.TimerListView
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_cloud_timing.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
