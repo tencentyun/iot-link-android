@@ -1,4 +1,4 @@
-package com.view.recyclerview
+package com.tencent.iot.explorer.link.customview.recyclerview
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -13,7 +13,7 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
-import com.view.R
+import com.tencent.iot.explorer.link.R
 import java.lang.Exception
 import java.util.function.Predicate
 

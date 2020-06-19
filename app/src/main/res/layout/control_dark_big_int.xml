@@ -43,7 +43,7 @@
             app:layout_constraintRight_toRightOf="@+id/sp_dark_big_int"
             android:background="@drawable/control_big_int_line_white"/>
 
-    <com.view.progress.SeekProgress
+    <com.tencent.iot.explorer.link.customview.progress.SeekProgress
             android:id="@+id/sp_dark_big_int"
             android:layout_width="match_parent"
             android:layout_height="48dp"

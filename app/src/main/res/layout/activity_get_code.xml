@@ -12,7 +12,7 @@
             android:id="@+id/sbhv_get_code"
             layout="@layout/menu_back_layout" />
 
-    <com.view.check.VerifyCodeView
+    <com.tencent.iot.explorer.link.customview.check.VerifyCodeView
             android:id="@+id/vcv_get_code"
             android:layout_width="match_parent"
             android:layout_height="40dp"

@@ -1,7 +1,6 @@
-package com.view.bottom;
+package com.tencent.iot.explorer.link.customview.home;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -9,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 /**
  * Created by lurensheng on 2018/4/25 0025.

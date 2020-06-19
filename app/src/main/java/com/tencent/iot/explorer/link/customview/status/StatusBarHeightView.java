@@ -1,4 +1,4 @@
-package com.view.status;
+package com.tencent.iot.explorer.link.customview.status;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import com.view.R;
+import com.tencent.iot.explorer.link.R;
 
 public class StatusBarHeightView extends LinearLayout {
     private int statusBarHeight;

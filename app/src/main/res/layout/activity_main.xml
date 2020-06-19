@@ -19,7 +19,7 @@
             android:layout_above="@+id/home_bottom_view"
             android:background="@color/line" />
 
-    <com.view.home.HomeBottomView
+    <com.tencent.iot.explorer.link.customview.home.HomeBottomView
             android:id="@+id/home_bottom_view"
             android:layout_width="match_parent"
             android:layout_height="50dp"

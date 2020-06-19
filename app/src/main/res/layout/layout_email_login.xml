@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
-    <com.view.check.VerifyEdit
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
             android:id="@+id/et_login_email"
             android:layout_width="0dp"
             android:textColorHint="@color/gray_cccccc"
@@ -47,7 +47,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/et_login_email"
             app:layout_constraintTop_toBottomOf="@+id/et_login_email" />
 
-    <com.view.check.VerifyEdit
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
             android:id="@+id/et_login_email_pwd"
             android:layout_width="0dp"
             android:layout_height="48dp"

@@ -1,4 +1,4 @@
-package com.view
+package com.tencent.iot.explorer.link.customview
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -6,6 +6,7 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
+import com.tencent.iot.explorer.link.R
 
 abstract class CView : View {
 

@@ -1,4 +1,4 @@
-package com.view.check;
+package com.tencent.iot.explorer.link.customview.check;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -25,7 +25,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
-import com.view.R;
+import com.tencent.iot.explorer.link.R;
 
 import java.security.Key;
 
