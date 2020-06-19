@@ -41,7 +41,7 @@
             android:textSize="@dimen/ts_24"
             android:textStyle="bold" />
 
-    <com.view.progress.SeekProgress
+    <com.tencent.iot.explorer.link.customview.progress.SeekProgress
             android:id="@+id/sp_popup_seek_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

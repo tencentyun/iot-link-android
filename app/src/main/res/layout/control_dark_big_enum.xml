@@ -25,7 +25,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/ts_36" />
 
-    <com.view.recyclerview.CRecyclerView
+    <com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
             android:id="@+id/crv_dark_big_enum"
             android:layout_width="match_parent"
             android:layout_marginTop="44dp"

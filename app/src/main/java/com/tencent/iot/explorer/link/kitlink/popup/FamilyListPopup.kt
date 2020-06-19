@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import com.tencent.iot.explorer.link.kitlink.holder.PopupFamilyListHolder
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.popup_family.view.*
 
 /**

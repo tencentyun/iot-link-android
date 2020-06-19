@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
-import com.view.progress.WaveProgress
+import com.tencent.iot.explorer.link.customview.progress.WaveProgress
 import kotlinx.android.synthetic.main.connected.*
 import kotlinx.android.synthetic.main.connecting.*
 import kotlinx.android.synthetic.main.fragment_connect_progress.*

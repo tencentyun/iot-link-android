@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.TimePicker
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.head_add_timer.view.*
 
 /**

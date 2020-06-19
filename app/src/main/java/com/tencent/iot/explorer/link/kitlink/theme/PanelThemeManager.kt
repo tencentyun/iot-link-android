@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
-import com.view.recyclerview.CRecyclerDivider
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerDivider
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 
 /**
  *  控制面板父类

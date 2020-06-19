@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.view.View
 import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
 import com.tencent.iot.explorer.link.util.date.DateFormatUtil
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_message_notify.view.*
 
 class MsgNotifyViewHolder : CRecyclerView.CViewHolder<MessageEntity> {

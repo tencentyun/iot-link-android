@@ -99,12 +99,12 @@
                     android:layout_height="283dp"
                     android:background="@drawable/login_card_white_r20_bg">
 
-                <com.view.CustomViewPager
+                <com.tencent.iot.explorer.link.customview.CustomViewPager
                         android:id="@+id/vp_login"
                         android:layout_width="match_parent"
                         android:layout_height="200dp" />
 
-                <com.view.check.ClickButton
+                <com.tencent.iot.explorer.link.customview.check.ClickButton
                         android:id="@+id/btn_login_commit"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"

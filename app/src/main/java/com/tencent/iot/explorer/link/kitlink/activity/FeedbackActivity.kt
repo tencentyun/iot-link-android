@@ -22,7 +22,7 @@ import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.cos.xml.exception.CosXmlClientException
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.util.picture.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_feedback.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
