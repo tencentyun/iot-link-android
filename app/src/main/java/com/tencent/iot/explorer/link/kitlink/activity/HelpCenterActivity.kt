@@ -10,7 +10,7 @@ import com.dd.plist.PropertyListParser
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.holder.HelpViewHolder
 
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_help_center.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

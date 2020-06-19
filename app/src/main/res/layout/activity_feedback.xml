@@ -82,7 +82,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/et_feedback_problem" />
 
-            <com.view.recyclerview.CRecyclerView
+            <com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
                     android:id="@+id/crv_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="116dp"

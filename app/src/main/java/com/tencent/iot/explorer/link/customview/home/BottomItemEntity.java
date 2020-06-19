@@ -1,7 +1,7 @@
-package com.view.bottom;
+package com.tencent.iot.explorer.link.customview.home;
 
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 
 /**
  * 底部菜单实体类

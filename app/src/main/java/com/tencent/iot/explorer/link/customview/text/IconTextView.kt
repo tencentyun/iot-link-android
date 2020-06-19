@@ -1,4 +1,4 @@
-package com.view.text
+package com.tencent.iot.explorer.link.customview.text
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -7,8 +7,8 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
 import androidx.annotation.ColorInt
-import com.view.CView
-import com.view.R
+import com.tencent.iot.explorer.link.customview.CView
+import com.tencent.iot.explorer.link.R
 
 /**
  * 带图标的TextView

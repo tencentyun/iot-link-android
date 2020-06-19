@@ -32,7 +32,7 @@
             android:layout_below="@+id/tv_popup_enum_title"
             android:background="@color/gray_F2F2F2" />
 
-    <com.view.recyclerview.CRecyclerView
+    <com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
             android:id="@+id/crv_popup_enum"
             android:layout_width="match_parent"
             android:layout_height="180dp"

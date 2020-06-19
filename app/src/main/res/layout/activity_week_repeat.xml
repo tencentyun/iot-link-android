@@ -10,7 +10,7 @@
             android:id="@+id/menu_week_repeat"
             layout="@layout/menu_back_layout" />
 
-    <com.view.recyclerview.CRecyclerView
+    <com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
             android:id="@+id/crv_week_repeat"
             android:layout_width="match_parent"
             android:layout_height="0dp"
