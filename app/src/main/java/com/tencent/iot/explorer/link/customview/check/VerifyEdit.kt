@@ -1,4 +1,4 @@
-package com.view.check
+package com.tencent.iot.explorer.link.customview.check
 
 import android.content.Context
 import android.text.TextUtils

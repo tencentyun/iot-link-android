@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
 import com.tencent.iot.explorer.link.util.L
-import com.view.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_device_action.view.*
 
 /**
