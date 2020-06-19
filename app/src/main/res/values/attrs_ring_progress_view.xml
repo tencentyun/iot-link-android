@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RingProgressView">
+        <attr name="ring_background" format="reference" />
+        <attr name="ring_seek_background" format="reference" />
+        <attr name="ring_seek_width" format="dimension" />
+        <attr name="ring_progress" format="integer" />
+    </declare-styleable>
+</resources>
