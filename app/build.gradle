@@ -34,7 +34,7 @@ android {
         ndk {
             //根据需要 自行选择添加的对应cpu类型的.so库。
             abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'arm64-v8a'
-            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'gm
         }
         manifestPlaceholders = [
                 XG_ACCESS_ID : getValueById('XgAccessId'),
@@ -46,6 +46,19 @@ android {
         buildConfigField 'String', 'TencentIotLinkAppSecrecy', "\"${getValueById('TencentIotLinkAppSecrecy')}\""
         multiDexEnabled true
     }
+
+    flavorDimensions "version"
+    productFlavors {
+        opensource {
+            applicationId "com.tencent.iot.explorer.link.opensource"
+            resValue("string" , "app_name","腾讯连连开源体验版")
+        }
+        official {
+            applicationId "com.tencent.iot.explorer.link"
+            resValue("string" , "app_name","腾讯连连")
+        }
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.config
@@ -65,7 +78,13 @@ android {
     repositories {
         flatDir { dirs 'libs' }
     }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "iot-link-android.apk"
+        }
+    }
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'])

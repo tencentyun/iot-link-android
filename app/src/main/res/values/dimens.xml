@@ -25,4 +25,5 @@
     <dimen name="corner_length">20dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">64dp</dimen>
 </resources>
