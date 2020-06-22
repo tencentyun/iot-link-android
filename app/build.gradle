@@ -46,6 +46,19 @@ android {
         buildConfigField 'String', 'TencentIotLinkAppSecrecy', "\"${getValueById('TencentIotLinkAppSecrecy')}\""
         multiDexEnabled true
     }
+
+    flavorDimensions "version"
+    productFlavors {
+        opensource {
+            applicationId "com.tencent.iot.explorer.link.opensource"
+            resValue("string" , "app_name","连连开源体验")
+        }
+        //*official {
+        //*    applicationId "com.tencent.iot.explorer.link"
+        //*    resValue("string" , "app_name","腾讯连连")
+        //*}
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.config
@@ -64,6 +77,12 @@ android {
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
     repositories {
         flatDir { dirs 'libs' }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def date = new Date().format("yyyyMMddHHmmss" , TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "iot-link-android-${date}.apk"
+        }
     }
 }
 
@@ -99,8 +118,8 @@ dependencies {
     implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.2.3'
     //信鸽推送
     implementation 'com.tencent.jg:jg:1.1'
-//    implementation 'com.tencent.tpns:tpns:1.1.6.3-release'
-    implementation "com.tencent.tpns:tpns:1.2.0.1-SNAPSHOT"
+    implementation 'com.tencent.tpns:tpns:1.1.6.3-release'
+//    implementation "com.tencent.tpns:tpns:1.2.0.1-SNAPSHOT"
     implementation 'androidx.cardview:cardview:1.0.0'
     api 'com.android.support:recyclerview-v7:29.0.0'
     //kotlin协程
