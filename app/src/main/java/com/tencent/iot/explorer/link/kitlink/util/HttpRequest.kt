@@ -30,7 +30,7 @@ class HttpRequest private constructor() {
         val instance = HttpRequestHolder.request
 
         const val APP_KEY = BuildConfig.TencentIotLinkAppkey
-        const val APP_SECRECY = BuildConfig.TencentIotLinkAppSecrecy
+        const val APP_SECRECT = BuildConfig.TencentIotLinkAppSecrect
 
         const val HOST = "https://iot.cloud.tencent.com/api/"
         //        const val APP_API = "exploreropen/appapi"
@@ -80,7 +80,7 @@ class HttpRequest private constructor() {
 
     private fun sign(param: HashMap<String, Any>): HashMap<String, Any> {
         val sign = SignatureUtil.format(param)
-        val result = SignatureUtil.signature(sign, APP_SECRECY)
+        val result = SignatureUtil.signature(sign, APP_SECRECT)
         param["Signature"] = result
         return param
     }
