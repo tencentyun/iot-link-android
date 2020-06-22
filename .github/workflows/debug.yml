@@ -27,9 +27,9 @@ jobs:
       - name: Publish aar to Maven
         run: ./gradlew publish
       - name: Archive the apk
-          uses: actions/upload-artifact@v2
-          with:
-            path: apk/opensource/release/iot-link-android.apk
+        uses: actions/upload-artifact@v2
+        with:
+          path: apk/opensource/release/iot-link-android.apk
       - name: Upload apk to PGY
         run: |
           curl -F 'file=@app/build/outputs/apk/opensource/release/iot-link-android.apk' -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
