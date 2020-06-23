@@ -21,7 +21,7 @@ jobs:
           rm -rf opensource_keystore.jks app-config.json app/google-services.json
           gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/release_keystore.jks.asc > release_keystore.jks
           gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/app-config.json.asc > app-config.json
-          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/google-services.json.asc > app/google-services.json
+          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/app/google-services.json.asc > app/google-services.json
       - name: set up JDK 1.8
         uses: actions/setup-java@v1
         with:
