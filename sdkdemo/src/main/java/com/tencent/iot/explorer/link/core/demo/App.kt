@@ -12,7 +12,7 @@ class App : Application() {
         val data = AppData.instance
     }
 
-    private val APP_KEY = "aBCuYQcbDMGlzZTMU"
+    private val APP_KEY = BuildConfig.TencentIotLinkSDKDemoAppkey
 
     override fun onCreate() {
         super.onCreate()
