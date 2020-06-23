@@ -17,25 +17,34 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run:
-          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch release_keystore.jks.asc > release_keystore.jks
+      - run: |
+          rm -rf opensource_keystore.jks app-config.json app/google-services.json
+          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/tencent_official_keystore.jks.asc > tencent_official_keystore.jks
+          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/app-config.json.asc > app-config.json
+          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/app/google-services.json.asc > app/google-services.json
       - name: set up JDK 1.8
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
       - name: Adapt build.gradle from debug to release
         run: |
-          sed -i 's#opensource_keystore#release_keystore#g' app/build.gradle
+          sed -i 's#opensource_keystore#tencent_official_keystore#g' app/build.gradle
+          sed -i '/opensource {/, +3d' app/build.gradle
+          sed -i 's#//*##g' app/build.gradle
           sed -i "s#'111222'#System.getenv(\"RELEASE_KEYSTORE_PASSWORD\")#g" app/build.gradle
           sed -i 's#sdk-debug#sdk-release#g' sdk/build.gradle
           sed -i 's#-SNAPSHOT##g' sdk/build.gradle
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleTencentOfficial
       - name: Publish aar to Maven
         run: ./gradlew publish
+      - name: Archive the apk
+        uses: actions/upload-artifact@v2
+        with:
+          path: app/build/outputs/apk/tencentOfficial/release/*.apk
       - name: Upload apk to PGY
         run: |
-          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/iot-link-android.apk
-          curl -F 'file=@app/build/outputs/apk/release/iot-link-android.apk' -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
+          apk=$(ls app/build/outputs/apk/tencentOfficial/release/*.apk)
+          curl -F "file=@${apk}" -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload

@@ -46,6 +46,19 @@ android {
         buildConfigField 'String', 'TencentIotLinkAppSecrect', "\"${getValueById('TencentIotLinkAppSecrect')}\""
         multiDexEnabled true
     }
+
+    flavorDimensions "version"
+    productFlavors {
+        opensource {
+            applicationId "com.tencent.iot.explorer.link.opensource"
+            resValue("string" , "app_name","连连开源体验")
+        }
+        //*tencentOfficial {
+        //*    applicationId "com.tencent.iot.explorer.link"
+        //*    resValue("string" , "app_name","腾讯连连")
+        //*}
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.config
@@ -64,6 +77,12 @@ android {
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
     repositories {
         flatDir { dirs 'libs' }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def date = new Date().format("yyyyMMddHHmmss" , TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "iot-link-android-${date}.apk"
+        }
     }
 }
 
