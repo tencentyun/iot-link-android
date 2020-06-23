@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:369055548986:android:5a67a4fbd33a90a6441703",
         "android_client_info": {
-          "package_name": "com.tencent.iot.explorer.link.opensource"
+          "package_name": "com.tencent.iot.explorer.link"
         }
       },
       "oauth_client": [
