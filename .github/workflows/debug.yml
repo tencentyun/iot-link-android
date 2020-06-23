@@ -22,8 +22,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build with Gradle
-        run: ./gradlew build
+#      - name: Build with Gradle
+#        run: ./gradlew build
       - name: Package apk and aar with Gradle
         run: ./gradlew assembleOpensource
       - name: Publish aar to Maven
@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: app/build/outputs/apk/opensource/release/*.apk
-      - name: Upload apk to PGY
-        run: |
-          apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
-          curl -F "file=@${apk}" -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
+#      - name: Upload apk to PGY
+#        run: |
+#          apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
+#          curl -F "file=@${apk}" -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
