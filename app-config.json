@@ -1,8 +1,9 @@
 {
-  "WXAccessAppId": "wxfb36c49df3a370c7",
+  "WXAccessAppId": "wx3c5a586d7fbcbace",
   "TencentIotLinkAppkey": "请输入从物联网开发平台申请的Appkey, 正式发布前务必填写",
   "TencentIotLinkAppSecrect": "请输入从物联网开发平台申请的AppSecrect, 正式发布前务必填写",
-  "XgAccessId": "1500003265",
-  "XgAccessKey": "A8ASZV6FNN78",
-  "TencentMapSDKValue": "DB4BZ-63LKW-NRLRG-RSKZF-XJ63E-IXFUG"
+  "XgAccessId": "1500009624",
+  "XgAccessKey": "ARECXFWV3RLJ",
+  "TencentMapSDKValue": "ZV6BZ-3ATCP-5BZDE-VFIJI-I7NO6-TIBAG",
+  "TencentIotLinkSDKDemoAppkey": ""
 }
