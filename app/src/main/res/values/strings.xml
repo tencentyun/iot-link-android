@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">腾讯连连</string>
-
     <!--  主页面 -->
     <string name="main_tab_1">首页</string>
     <string name="main_tab_2">场景</string>

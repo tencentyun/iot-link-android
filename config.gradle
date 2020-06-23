@@ -1,6 +1,7 @@
+def gitCommitShortHash = 'git log -1 --pretty=%h'.execute([], project.rootDir).text.trim()
 ext {
     android = [
-            versionName: "1.0.24",
-            versionCode: 24
+            versionName: "1.0.0." + gitCommitShortHash,
+            versionCode: 1
     ]
 }
