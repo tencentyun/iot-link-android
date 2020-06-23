@@ -22,8 +22,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-#      - name: Build with Gradle
-#        run: ./gradlew build
+      - name: Build with Gradle
+        run: ./gradlew build
       - name: Package apk and aar with Gradle
         run: ./gradlew assembleOpensource
       - name: Publish aar to Maven
