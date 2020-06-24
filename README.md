@@ -14,17 +14,17 @@
 
 ## 快速开始
 
-用户需要根据实际情况调整 **config.json** 中的内容，config.json 位于项目的根目录，如截图所示位置。
+用户需要根据实际情况调整 **app-config.json** 中的内容，app-config.json 位于项目的根目录，如截图所示位置。
 
-<img src="IMG/image-20200619141407513.png" alt="image-20200619141407513" style="zoom: 67%;" />
+<img src="IMG/image-20200624213923030.png" alt="image-20200624213923030" style="zoom: 67%;" />
 
-config.json 需要配置的内容，如下图所示。
+app-config.json 需要配置的内容，如下图所示。
 
-<img src="IMG/image-20200622192726634.png" alt="image-20200619141716806" style="zoom:67%;" />
+<img src="IMG/image-20200624214201393.png" alt="image-20200624214201393" style="zoom: 67%;" />
 
   **1、物联网平台**
 
-* **TencentIotLinkAppkey** 和 **TencentIotLinkAppSecrecy** 请使用在[物联网开发平台](https://cloud.tencent.com/product/iotexplorer)创建应用时生成的 **APP Key** 和 **APP Secret**。<font color=red>AppKey 和 AppSecret 用于访问应用端 API 时生成签名串，参见[应用端 API 简介](https://cloud.tencent.com/document/product/1081/40773)。签名算法**务必在服务端实现**，腾讯连连 App 开源版的使用方式**仅为演示**，请勿将 AppKey 和 AppSecret 保存在客户端，**避免泄露**</font>。
+* **TencentIotLinkAppkey** 和 **TencentIotLinkAppSecrect** 请使用在[物联网开发平台](https://cloud.tencent.com/product/iotexplorer)创建应用时生成的 **APP Key** 和 **APP Secret**。<font color=red>AppKey 和 AppSecret 用于访问应用端 API 时生成签名串，参见[应用端 API 简介](https://cloud.tencent.com/document/product/1081/40773)。签名算法**务必在服务端实现**，腾讯连连 App 开源版的使用方式**仅为演示**，请勿将 AppKey 和 AppSecret 保存在客户端，**避免泄露**</font>。
 
 
   **2、信鸽（可选）**
@@ -75,7 +75,7 @@ config.json 需要配置的内容，如下图所示。
 
     - 将该数字签名和应用包名登记到微信开放平台，否则微信授权登录将不可用
 
-    最后将配置项 **WXAccessAppId** 设置为在微信开放平台申请并获得的 **AppID**；
+    最后将配置项 **WXAccessAppId** 设置为在微信开放平台申请并获得的 **AppID**；<font color=red>同时请**遵从官方建议**自建微信接入服务器，保证 AppSecret 不被泄露</font>。
 
   * 若确认使用默认的微信授权登录，无需修改 **WXAccessAppId** 配置先内容 。
   * 若不使用微信授权登录功能，**WXAccessAppId** 设置为**长度为0字符串**即可。
