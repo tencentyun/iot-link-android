@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="HistogramView">
-        <attr name="histogram_width" format="dimension" />
-        <attr name="histogram_background" format="reference" />
-        <attr name="histogram_gap" format="dimension" />
-        <attr name="histogram_can_scroll" format="boolean"/>
-    </declare-styleable>
-</resources>
