@@ -33,7 +33,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/me_sbhv" />
 
-        <com.tencent.iot.explorer.link.customview.image.RoundImageView
+        <com.view.image.RoundImageView
                 android:id="@+id/me_portrait"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -168,6 +168,7 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_me_help" />
 
         <ImageView
+
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginEnd="16dp"
@@ -177,6 +178,7 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_me_help" />
 
         <TextView
+            android:visibility="gone"
                 android:id="@+id/tv_me_feedback"
                 android:layout_width="0dp"
                 android:layout_height="75dp"
@@ -191,6 +193,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_me_help" />
 
         <ImageView
+            android:visibility="gone"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="24dp"
