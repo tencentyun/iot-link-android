@@ -76,7 +76,7 @@
         </activity>
         <activity
                 android:name=".kitlink.activity.LoginActivity"
-                android:launchMode="singleTask">
+               >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -91,6 +91,8 @@
         <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
         <activity android:name=".kitlink.activity.HelpCenterActivity" />
+        <activity android:name=".activity.HelpFeedbackActivity"/>
+        <activity android:name=".activity.TestBrowserActivity"/>
         <activity
                 android:name=".kitlink.activity.FeedbackActivity"
                 android:windowSoftInputMode="adjustPan" />

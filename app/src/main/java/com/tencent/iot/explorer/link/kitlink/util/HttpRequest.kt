@@ -38,6 +38,7 @@ class HttpRequest private constructor() {
         //        const val APP_API = "studioapp/appapi"
         const val TOKEN_API = "exploreropen/tokenapi"
         const val GET_BIND_DEV_TOKEN_API = "studioapp/tokenapi"
+        const val APP_DEV_TOKEN_API = "studioapp"
         const val APP_COS_AUTH = "studioapp/AppCosAuth"
 
     }
@@ -93,7 +94,9 @@ class HttpRequest private constructor() {
         param.remove("Action")
 //        val json = JsonManager.toJson(sign(param))
         val json = JsonManager.toJson(param)
-        val api = if (App.DEBUG_VERSION) "$APP_API/$action?uin=weichuantest" else "$APP_API/$action"
+//        val api = if (App.DEBUG_VERSION) "$GET_BIND_DEV_TOKEN_API/$action?uin=weichuantest" else "$GET_BIND_DEV_TOKEN_API/$action"
+        val api = if (App.DEBUG_VERSION) "$APP_DEV_TOKEN_API/$action?uin=weichuantest" else "$GET_BIND_DEV_TOKEN_API/$action"
+
         L.e("api=$api")
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
@@ -114,11 +117,39 @@ class HttpRequest private constructor() {
      */
     private fun tokenPost(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
         val json = JsonManager.toJson(param)
+
         if (TextUtils.isEmpty(App.data.getToken())) {//登录过期或未登录
             App.toLogin()
             return
         }
         val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+//        val api = if (App.DEBUG_VERSION) APP_DEV_TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        StringRequest.instance.postJson(api, json, object : Callback {
+            override fun fail(msg: String?, reqCode: Int) {
+                callback.fail(msg, reqCode)
+            }
+
+            override fun success(json: String?, reqCode: Int) {
+                L.e("响应${param["Action"]}", json ?: "")
+                JsonManager.parseJson(json, BaseResponse::class.java)?.run {
+                    callback.success(this, reqCode)
+                }
+            }
+        }, reqCode)
+    }
+
+    /**
+     * 登录后请求
+     */
+    private fun getH5tokenPost(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
+        val json = JsonManager.toJson(param)
+        if (TextUtils.isEmpty(App.data.getToken())) {//登录过期或未登录
+            App.toLogin()
+            return
+        }
+//        val api = if (App.DEBUG_VERSION) GET_BIND_DEV_TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
@@ -980,7 +1011,11 @@ class HttpRequest private constructor() {
      */
     fun getShareTicket(callback: MyCallback) {
         val param = tokenParams("AppGetTokenTicket")
-        tokenPost(param, callback, RequestCode.share_ticket)
+        //test
+        getH5tokenPost(param, callback, RequestCode.share_ticket)
+        //pro
+//        tokenPost(param, callback, RequestCode.share_ticket)
+
     }
 
     /**

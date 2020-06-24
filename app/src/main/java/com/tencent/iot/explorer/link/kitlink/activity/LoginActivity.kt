@@ -3,33 +3,36 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.Manifest
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.kitlink.App
+import com.tencent.iot.explorer.link.kitlink.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
+import com.tencent.iot.explorer.link.kitlink.util.AppData
 import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
 import com.tencent.iot.explorer.link.mvp.view.LoginView
-import com.tencent.iot.explorer.link.util.L
-import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
-import com.tencent.iot.explorer.link.util.keyboard.OnSoftKeyBoardListener
-import com.tencent.iot.explorer.link.util.keyboard.SoftKeyBoard
+import com.util.L
+import com.util.T
+import com.util.keyboard.KeyBoardUtils
+import com.util.keyboard.OnSoftKeyBoardListener
+import com.util.keyboard.SoftKeyBoard
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.layout_email_login.view.*
 import kotlinx.android.synthetic.main.layout_phone_login.view.*
+import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlin.math.absoluteValue
 
 /**
  * 手机号登录界面
  */
-class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.OnLoginListener {
+class LoginActivity : PActivity(), LoginView, View.OnClickListener,WeChatLogin.OnLoginListener {
 
     private lateinit var presenter: LoginPresenter
     private lateinit var phoneView: View
@@ -42,6 +45,10 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
     //true为手机号，false为邮箱
     private var loginType = true
     private var keyBoard: SoftKeyBoard? = null
+
+    private var from:String = ""
+
+    private val resultCode:Int=2000
 
     private val permissions = arrayOf(
         Manifest.permission.RECEIVE_SMS,
@@ -59,7 +66,10 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
 
     override fun onResume() {
         super.onResume()
-        logout(this)
+        if(TextUtils.isEmpty(from)){
+            logout(this)
+
+        }
     }
 
     override fun onPause() {
@@ -87,6 +97,10 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
     }
 
     override fun initView() {
+        intent.getStringExtra("from")?.let {
+            from = it
+        }
+
         if (!checkPermissions(permissions)) {
             requestPermission(permissions)
         } else {
@@ -98,11 +112,16 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
         initViewPager()
         //设置白色状态栏
         StatusBarUtil.setStatusBarDarkTheme(this, false)
-        if (!TextUtils.isEmpty(App.data.getToken())) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-            return
+        if(!TextUtils.isEmpty(from)){
+            rl_status_have_register.visibility= View.GONE
+        }else{
+            if (!TextUtils.isEmpty(App.data.getToken())) {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+                return
+            }
         }
+
         getIntentData()
         addLoginAnim()
         addRegisterAnim()
@@ -354,7 +373,16 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
     override fun loginSuccess(user: User) {
         saveUser(user)
         T.show(getString(R.string.login_success))
-        startActivity(Intent(this, MainActivity::class.java))
+        if(TextUtils.isEmpty(from)){
+
+            startActivity(Intent(this, MainActivity::class.java))
+
+        }else{
+
+            val data = Intent()
+            data.putExtra("data", AppData.instance.getToken())
+            setResult(10)
+        }
         finish()
     }
 
