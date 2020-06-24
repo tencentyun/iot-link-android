@@ -110,6 +110,10 @@
                 android:launchMode="singleTask"
                 android:taskAffinity="com.tencent.iot.explorer.link.kitlink"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity-alias
+            android:name="${applicationId}.wxapi.WXEntryActivity"
+            android:exported="true"
+            android:targetActivity=".kitlink.wxapi.WXEntryActivity" />
 
         <!--picture start-->
         <activity
