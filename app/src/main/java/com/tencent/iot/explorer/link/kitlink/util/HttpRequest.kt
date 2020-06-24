@@ -1,8 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
+import android.util.Log
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.retrofit.StringRequest
@@ -33,12 +35,13 @@ class HttpRequest private constructor() {
         const val APP_SECRECT = BuildConfig.TencentIotLinkAppSecrect
 
         const val HOST = "https://iot.cloud.tencent.com/api/"
-        //        const val APP_API = "exploreropen/appapi"
+        const val EXPLORER_API = "exploreropen/appapi"
         const val APP_API = "studioapp"
         //        const val APP_API = "studioapp/appapi"
         const val TOKEN_API = "exploreropen/tokenapi"
         const val GET_BIND_DEV_TOKEN_API = "studioapp/tokenapi"
         const val APP_COS_AUTH = "studioapp/AppCosAuth"
+//         "https://iot.cloud.tencent.com/api/exploreropen/appapi"
 
     }
 
@@ -85,15 +88,39 @@ class HttpRequest private constructor() {
         return param
     }
 
+    private fun chargeUrlAppType(): Boolean {
+        if (BuildConfig.TencentIotLinkAppkey.equals(CommonField.NULL_STR)
+            || TextUtils.isEmpty(BuildConfig.TencentIotLinkAppkey)) {
+            return false
+
+        } else if (BuildConfig.TencentIotLinkAppkey.equals(CommonField.IOT_APP_KEY)) {
+            return false
+        }
+
+        return true
+    }
+
     /**
      * 未登录请求
      */
     private fun postJson(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
         val action = param["Action"]
-        param.remove("Action")
+//        param.remove("Action")
 //        val json = JsonManager.toJson(sign(param))
-        val json = JsonManager.toJson(param)
-        val api = if (App.DEBUG_VERSION) "$APP_API/$action?uin=weichuantest" else "$APP_API/$action"
+        var json = ""
+        var api = ""
+
+        if (!chargeUrlAppType()) {
+            json = JsonManager.toJson(param)
+            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=weichuantest" else "$APP_API/$action"
+            param.remove("Action")
+
+        } else {
+            json = JsonManager.toJson(sign(param))
+            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=weichuantest" else "$EXPLORER_API/$action"
+
+        }
+
         L.e("api=$api")
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
