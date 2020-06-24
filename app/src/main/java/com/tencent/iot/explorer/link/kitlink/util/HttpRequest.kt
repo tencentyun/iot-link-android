@@ -11,6 +11,7 @@ import com.tencent.iot.explorer.link.retrofit.StringRequest
 import com.tencent.iot.explorer.link.util.L
 import java.util.*
 import com.tencent.iot.explorer.link.retrofit.Callback
+import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.ip.IPUtil
 import kotlin.collections.HashMap
 
@@ -42,7 +43,8 @@ class HttpRequest private constructor() {
         const val GET_BIND_DEV_TOKEN_API = "studioapp/tokenapi"
         const val APP_COS_AUTH = "studioapp/AppCosAuth"
 //         "https://iot.cloud.tencent.com/api/exploreropen/appapi"
-
+        const val BUSI_APP = "studioapp"
+        const val BUSI_OPENSOURCE = "studioappOpensource"
     }
 
     /**
@@ -81,6 +83,7 @@ class HttpRequest private constructor() {
         return param
     }
 
+    // 签字函数请务必在服务端实现，此处仅为演示，如有泄露概不负责
     private fun sign(param: HashMap<String, Any>): HashMap<String, Any> {
         val sign = SignatureUtil.format(param)
         val result = SignatureUtil.signature(sign, APP_SECRECT)
@@ -111,9 +114,9 @@ class HttpRequest private constructor() {
         var api = ""
 
         if (!chargeUrlAppType()) {
+            param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
             api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=weichuantest" else "$APP_API/$action"
-            param.remove("Action")
 
         } else {
             json = JsonManager.toJson(sign(param))
@@ -214,7 +217,12 @@ class HttpRequest private constructor() {
     fun wechatLogin(code: String, callback: MyCallback) {
         val param = commonParams("AppGetTokenByWeiXin")
         param["code"] = code
-        param["busi"] = "studio"
+        if (!chargeUrlAppType()) {
+            param["busi"] = BUSI_OPENSOURCE
+        } else {
+//            param["busi"] = BUSI_APP
+        }
+
         postJson(param, callback, RequestCode.wechat_login)
     }
 
