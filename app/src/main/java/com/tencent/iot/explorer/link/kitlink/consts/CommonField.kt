@@ -83,5 +83,5 @@ object CommonField {
 
     /***********请求类型标记参数************/
     const val NULL_STR = "null"
-    const val IOT_APP_KEY = "请输入从物联网开发平台申请的Appkey, 正式发布前务必填写"
+    const val IOT_APP_KEY = "请输入从物联网开发平台申请的 App key，正式发布前务必填写"
 }
