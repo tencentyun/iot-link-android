@@ -107,32 +107,8 @@ public class ImageSelectorBrowseActivity extends Activity implements OnClickList
             mIsNetImage = false;
         } else {// 加载网络图片
             mPaths = (List<String>) intent.getSerializableExtra(EXTRA_NET_IMAGE_TYPE);
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=cc4e2934edf81a4c2632ecc1e72b6029/563d720e0cf3d7cabbb6a436f41fbe096a63a9ca.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=836aa654ad18972ba33a00c2d6cc7b9d/b301d21b0ef41bd5fe1272b457da81cb38db3dc8.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=f73696e75fee3d6d22c687c373166d41/3ccc572c11dfa9ec2c18d35764d0f703918fc158.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=5e9288ac9a82d158bb8259b9b00b19d5/722e5c6034a85edf022af0614f540923dc5475e9.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=c55237873c87e9504217f3642039531b/ae46252dd42a283447c90e4f5db5c9ea15cebf22.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=9b1e5565bca1cd1105b672288913c8b0/eb0095cad1c8a786aad5fb5b6109c93d71cf5083.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=df634974748b4710ce2ffdc4f3cfc3b2/1fd7a786c9177f3e02cb4d5876cf3bc79e3d5683.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=2fd23d77cefcc3ceb4c0c93ba244d6b7/b1216709c93d70cf53051b58fedcd100bba12b83.jpg");
             mIsNetImage = true;
         }
-        //test
-//		if (intent.hasExtra(EXTRA_LOCAL_IMAGE_TYPE)) {// 加载本地图片
-//			mPaths = (List<String>) intent.getSerializableExtra(EXTRA_LOCAL_IMAGE_TYPE);
-//			mIsNetImage = false;
-//		} else {// 加载网络图片
-//			mPaths = new ArrayList<String>();
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=cc4e2934edf81a4c2632ecc1e72b6029/563d720e0cf3d7cabbb6a436f41fbe096a63a9ca.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=836aa654ad18972ba33a00c2d6cc7b9d/b301d21b0ef41bd5fe1272b457da81cb38db3dc8.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=f73696e75fee3d6d22c687c373166d41/3ccc572c11dfa9ec2c18d35764d0f703918fc158.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=5e9288ac9a82d158bb8259b9b00b19d5/722e5c6034a85edf022af0614f540923dc5475e9.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=c55237873c87e9504217f3642039531b/ae46252dd42a283447c90e4f5db5c9ea15cebf22.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=9b1e5565bca1cd1105b672288913c8b0/eb0095cad1c8a786aad5fb5b6109c93d71cf5083.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=df634974748b4710ce2ffdc4f3cfc3b2/1fd7a786c9177f3e02cb4d5876cf3bc79e3d5683.jpg");
-//			mPaths.add("http://imgsrc.baidu.com/forum/w%3D580/sign=2fd23d77cefcc3ceb4c0c93ba244d6b7/b1216709c93d70cf53051b58fedcd100bba12b83.jpg");
-//			mIsNetImage = true;
-//		}
 
         mViews = new ArrayList<ImageView>();
         mPosition = intent.getIntExtra(EXTRA_POSITION_TYPE, -1);
