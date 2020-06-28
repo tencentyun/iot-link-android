@@ -18,7 +18,7 @@ open class BaseService {
 
     companion object {
 
-        const val APP_SECRECY = "pwOBlVWbWdSJaSbtNpCb"
+        const val APP_SECRECY = ""
 
         const val HOST = "https://iot.cloud.tencent.com/api/"
         const val APP_API = "studioapp"
