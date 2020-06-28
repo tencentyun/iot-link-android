@@ -4,7 +4,9 @@
 
 项目工程中包含三大块，App 体验模块、SDK Demo、SDK 模块。 用户可通过 App 体验产品功能，通过现有 App 快速搭建起属于自己的 IoT 应用。 也可通过 SDK 接入到自己的工程来完成与腾讯云物联网开发平台对接功能。
 
+## 下载安装
 
+[腾讯连连下载]([https://github.com/tencentyun/iot-link-android/wiki/%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85](https://github.com/tencentyun/iot-link-android/wiki/下载安装))
 
 ## 接入的第三方组件
 
@@ -20,22 +22,18 @@
 
 app-config.json 需要配置的内容，如下图所示。
 
-<img src="https://main.qcloudimg.com/raw/8f473af72ad24b7d7fb9740745b0dcb5.png" alt="image-20200624214201393" style="zoom: 67%;" />
+<img src="https://main.qcloudimg.com/raw/9bc4a0d484193daf89e62928a15c5cd2.png" style="zoom:67%;" /> **1、物联网平台**
 
-  **1、物联网平台**
+* **TencentIotLinkAppkey** 和 **TencentIotLinkAppSecret** 请使用在[物联网开发平台](https://cloud.tencent.com/product/iotexplorer)创建应用时生成的 **APP Key** 和 **APP Secret**。<u>***App Key 和 App Secret 用于访问应用端 API 时生成签名串，参见[应用端 API 简介](https://cloud.tencent.com/document/product/1081/40773)。签名算法务必在服务端实现，腾讯连连 App 开源版的使用方式仅为演示，请勿将 App Key 和 App Secret 保存在客户端，避免泄露***</u>。
 
-* **TencentIotLinkAppkey** 和 **TencentIotLinkAppSecrect** 请使用在[物联网开发平台](https://cloud.tencent.com/product/iotexplorer)创建应用时生成的 **APP Key** 和 **APP Secret**。<font color=red>AppKey 和 AppSecret 用于访问应用端 API 时生成签名串，参见[应用端 API 简介](https://cloud.tencent.com/document/product/1081/40773)。签名算法**务必在服务端实现**，腾讯连连 App 开源版的使用方式**仅为演示**，请勿将 AppKey 和 AppSecret 保存在客户端，**避免泄露**</font>。
-
-
-  **2、信鸽（可选）**
+**2、信鸽（可选）**
 
   ​	腾讯连连开源体验版集成了**信鸽推送**，用于实现消息推送。
 
   * 若确认使用推送功能，需要前往[信鸽推送平台](https://cloud.tencent.com/product/tpns?fromSource=gwzcw.2454256.2454256.2454256&utm_medium=cpc&utm_id=gwzcw.2454256.2454256.2454256)申请获得的 **AccessID** 和 **AccessKey**，[申请步骤](https://cloud.tencent.com/product/tpns/getting-started)。
+  * 若不使用推送功能，**XgAccessId** 和 **XgAccessKey**  设置为**长度为0的字符串**即可。
 
-  * 若不使用推送功能，**XgAccessId** 和 **XgAccessKey**  设置为**长度为0字符串**即可。
-
-  **3、 Firebase （可选）**
+**3、 Firebase （可选）**
 
   ​	腾讯连连开源体验版集成了 **Firebase** 插件，用于记录应用的异常日志和性能状况。
 
@@ -51,15 +49,15 @@ app-config.json 需要配置的内容，如下图所示。
 
     <img src="https://main.qcloudimg.com/raw/be98955a98abc5562bf45a1aaac127f5.png" alt="image-20200628100531109" style="zoom:50%;" />
 
-  ​	**4、 腾讯地图 （可选）**
+**4、 腾讯地图 （可选）**
 
   ​	腾讯连连开源体验版集成了**腾讯地图**，用于实现定位。
 
   * 若确认使用自定义的定位功能，需要前往[腾讯地图开放平台](https://lbs.qq.com/)申请获得 **key**，[申请步骤](https://lbs.qq.com/mobile/androidLocationSDK/androidGeoGuide/androidGeoCreat)。
   * 若确认使用默认定位功能，无需修改 **TencentMapSDKValue** 配置项内容 。
-  * 若不使用定位功能，**TencentMapSDKValue** 设置为**长度为0字符串**即可。
+  * 若不使用定位功能，**TencentMapSDKValue** 设置为**长度为0的字符串**即可。
 
-  ​    **5、微信授权登录（可选）**
+**5、微信授权登录（可选）**
 
   ​    腾讯连连开源体验版集成了微信授权登录。
 
@@ -75,10 +73,10 @@ app-config.json 需要配置的内容，如下图所示。
 
     - 将该数字签名和应用包名登记到微信开放平台，否则微信授权登录将不可用
 
-    最后将配置项 **WXAccessAppId** 设置为在微信开放平台申请并获得的 **AppID**；<font color=red>同时请**遵从官方建议**自建微信接入服务器，保证 AppSecret 不被泄露</font>。
+    最后将配置项 **WXAccessAppId** 设置为在微信开放平台申请并获得的 **AppID**；***<u>同时请遵从官方建议自建微信接入服务器，保证 AppSecret 不被泄露</u>***。
 
   * 若确认使用默认的微信授权登录，无需修改 **WXAccessAppId** 配置先内容 。
-  * 若不使用微信授权登录功能，**WXAccessAppId** 设置为**长度为0字符串**即可。
+  * 若不使用微信授权登录功能，**WXAccessAppId** 设置为**长度为0的字符串**即可。
 
   
 
