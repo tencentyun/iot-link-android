@@ -16,11 +16,11 @@
 
 用户需要根据实际情况调整 **app-config.json** 中的内容，app-config.json 位于项目的根目录，如截图所示位置。
 
-<img src="IMG/image-20200624213923030.png" alt="image-20200624213923030" style="zoom: 67%;" />
+<img src="https://main.qcloudimg.com/raw/9d8f86a5e9bff3a3a2bd639a0c0f32bf.png" alt="image-20200624213923030" style="zoom: 67%;" />
 
 app-config.json 需要配置的内容，如下图所示。
 
-<img src="IMG/image-20200624214201393.png" alt="image-20200624214201393" style="zoom: 67%;" />
+<img src="https://main.qcloudimg.com/raw/8f473af72ad24b7d7fb9740745b0dcb5.png" alt="image-20200624214201393" style="zoom: 67%;" />
 
   **1、物联网平台**
 
@@ -41,15 +41,15 @@ app-config.json 需要配置的内容，如下图所示。
 
   * 若用户确认使用 Firebase 插件，需通过 [Firebase 官网](https://firebase.google.cn/?hl=zh-cn) 创建应用并获取 **google-services.json** 文件；将 google-services.json 文件放在 app 目录下，如图所示位置。
 
-    <img src="IMG/image-20200619150459211.png" alt="image-20200619150459211" style="zoom:67%;" />
+    <img src="https://main.qcloudimg.com/raw/561020db1f2d17c37399da6158d14b12.png" alt="image-20200619150459211" style="zoom:67%;" />
 
   * 若不依赖 Firebase 插件，请注释截图中标注的内容即可
 
-    <img src="IMG/image-20200619150752594.png" alt="image-20200619150752594" style="zoom: 50%;" />
+    <img src="https://main.qcloudimg.com/raw/d1e21091c93ad724d21e833263081919.png" alt="image-20200628100119804" style="zoom:50%;" />
 
-    <img src="IMG/image-20200619151433681.png" alt="image-20200619151433681" style="zoom: 50%;" />
+    <img src="https://main.qcloudimg.com/raw/e6ce262011f9309c516b7ff27283417f.png" alt="image-20200628100329841" style="zoom:50%;" />
 
-    <img src="IMG/image-20200619151507503.png" alt="image-20200619151507503" style="zoom: 50%;" />
+    <img src="https://main.qcloudimg.com/raw/be98955a98abc5562bf45a1aaac127f5.png" alt="image-20200628100531109" style="zoom:50%;" />
 
   ​	**4、 腾讯地图 （可选）**
 
@@ -71,7 +71,7 @@ app-config.json 需要配置的内容，如下图所示。
 
     - 前往[微信开放平台](https://developers.weixin.qq.com/doc/oplatform/Downloads/Android_Resource.html)下载签名生成工具，使用该工具生成应用的数字签名(需要将该工具和应用同时安装到手机上，打开签名生成工具输入应用包名即可生成数字签名，如下图所示)
 
-      <img src="IMG/image-20200619162858817.png" alt="image-20200619162858817" style="zoom: 33%;" />
+      <img src="https://main.qcloudimg.com/raw/e5734b5731d77e8b1e271cbd78bb5fcf.png" alt="image-20200619162858817" style="zoom: 33%;" />
 
     - 将该数字签名和应用包名登记到微信开放平台，否则微信授权登录将不可用
 
