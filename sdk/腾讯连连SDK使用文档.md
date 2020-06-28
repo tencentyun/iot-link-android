@@ -609,7 +609,7 @@ SDK内部会将接收到的下发数据解析到payload，payload中json为原�
 
 一次平台下发的数据json：
 
-{"action":"DeviceChange","params":{"Time":"2020-03-20T17:38:26+08:00","Type":"Template","SubType":"Push","Topic":"","Payload":"eyJ0eXBlIjoiZGVsdGEiLCAicGF5bG9hZCI6eyJzdGF0ZSI6eyJwb3dlcl9zd2l0Y2giOjB9LCJ2ZXJzaW9uIjowfX0=","Seq":1584697106,"DeviceId":"9URPO59MDN/big_light"},"push":true}
+{"action":"DeviceChange","params":{"Time":"2020-03-20T17:38:26+08:00","Type":"Template","SubType":"Push","Topic":"","Payload":"xxxxxxxxxxoiZGVsdGEiLCAicGF5bG9hZCI6eyJzdGF0ZSI6eyJwb3dlcl9zd2l0Y2giOjB9LCJ2ZXJzaW9uIjowfX0=","Seq":1584697106,"DeviceId":"xxxxxxxxxx/big_light"},"push":true}
 
 其中的Payload经过Base64解码后的数据：
 
