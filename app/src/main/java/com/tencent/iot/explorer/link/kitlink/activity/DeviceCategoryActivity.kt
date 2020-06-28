@@ -203,11 +203,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 it.getStringExtra(Constant.EXTRA_RESULT_CONTENT)?.run {
                     L.d("type=$type,content=$this")
                     when {
-                        //https://iot.cloud.tencent.com/iotexplorer/device?page=virtual&signature=bb6364e6fd2b48d881be106756903c60
                         contains("signature=") -> {//虚拟设备
                             bindDevice(this.substringAfterLast("signature="))
                         }
-                        //{"DeviceName":"big_light","ProductId":"9URPO59MDN","Signature":"9a3b3940581f4d03a2c633eb679719eb"}
                         contains("\"DeviceName\"") and contains("\"Signature\"") -> {//真实设备
                             val deviceInfo = DeviceInfo(this)
                             if (!TextUtils.isEmpty(deviceInfo.productId)) {
