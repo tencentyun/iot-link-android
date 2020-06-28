@@ -22,7 +22,7 @@
 
 用户需要根据实际情况调整 **app-config.json** 中的内容，app-config.json 位于项目的根目录，如截图所示位置。
 
-<img src="https://main.qcloudimg.com/raw/9d8f86a5e9bff3a3a2bd639a0c0f32bf.png" alt="image-20200624213923030" style="zoom: 50%;" />
+<img src="https://main.qcloudimg.com/raw/9d8f86a5e9bff3a3a2bd639a0c0f32bf.png" alt="image-20200624213923030" style="zoom: 30%;" />
 
 app-config.json 需要配置的内容，如下图所示。
 
@@ -43,7 +43,7 @@ app-config.json 需要配置的内容，如下图所示。
 
   * 若用户确认使用 Firebase 插件，需通过 [Firebase 官网](https://firebase.google.cn/?hl=zh-cn) 创建应用并获取 **google-services.json** 文件；将 google-services.json 文件放在 app 目录下，如图所示位置。
 
-    <img src="https://main.qcloudimg.com/raw/561020db1f2d17c37399da6158d14b12.png" alt="image-20200619150459211" style="zoom: 50%;" />
+    <img src="https://main.qcloudimg.com/raw/561020db1f2d17c37399da6158d14b12.png" alt="image-20200619150459211" style="zoom: 30%;" />
 
   * 若不依赖 Firebase 插件，请注释截图中标注的内容即可
 
@@ -73,7 +73,7 @@ app-config.json 需要配置的内容，如下图所示。
 
     - 前往[微信开放平台](https://developers.weixin.qq.com/doc/oplatform/Downloads/Android_Resource.html)下载签名生成工具，使用该工具生成应用的数字签名(需要将该工具和应用同时安装到手机上，打开签名生成工具输入应用包名即可生成数字签名，如下图所示)
 
-      <img src="https://main.qcloudimg.com/raw/e5734b5731d77e8b1e271cbd78bb5fcf.png" alt="image-20200619162858817" style="zoom: 25%;" />
+      <img src="https://main.qcloudimg.com/raw/e5734b5731d77e8b1e271cbd78bb5fcf.png" alt="image-20200619162858817" style="zoom: 10%;" />
 
     - 将该数字签名和应用包名登记到微信开放平台，否则微信授权登录将不可用
 
