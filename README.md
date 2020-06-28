@@ -37,7 +37,7 @@ app-config.json 需要配置的内容，如下图所示。
   * 若确认使用推送功能，需要前往[信鸽推送平台](https://cloud.tencent.com/product/tpns?fromSource=gwzcw.2454256.2454256.2454256&utm_medium=cpc&utm_id=gwzcw.2454256.2454256.2454256)申请获得的 **AccessID** 和 **AccessKey**，[申请步骤](https://cloud.tencent.com/product/tpns/getting-started)。
   * 若不使用推送功能，**XgAccessId** 和 **XgAccessKey**  设置为**长度为0的字符串**即可。
 
-**3、 Firebase （可选）**
+**3、Firebase（可选）**
 
   ​	腾讯连连开源体验版集成了 **Firebase** 插件，用于记录应用的异常日志和性能状况。
 
@@ -53,7 +53,7 @@ app-config.json 需要配置的内容，如下图所示。
 
     <img src="https://main.qcloudimg.com/raw/be98955a98abc5562bf45a1aaac127f5.png" alt="image-20200628100531109" style="zoom:50%;" />
 
-**4、 腾讯地图 （可选）**
+**4、腾讯地图（可选）**
 
   ​	腾讯连连开源体验版集成了**腾讯地图**，用于实现定位。
 
