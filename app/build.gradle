@@ -43,7 +43,7 @@ android {
         ]
         buildConfigField 'String', 'WXAccessAppId', "\"${getValueById('WXAccessAppId')}\""
         buildConfigField 'String', 'TencentIotLinkAppkey', "\"${getValueById('TencentIotLinkAppkey')}\""
-        buildConfigField 'String', 'TencentIotLinkAppSecrect', "\"${getValueById('TencentIotLinkAppSecrect')}\""
+        buildConfigField 'String', 'TencentIotLinkAppSecret', "\"${getValueById('TencentIotLinkAppSecret')}\""
         multiDexEnabled true
     }
 
