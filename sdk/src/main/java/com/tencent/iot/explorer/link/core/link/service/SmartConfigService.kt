@@ -93,10 +93,10 @@ class SmartConfigService(context: Context, task: DeviceTask) : DeviceService(con
      * 成功响应：
      * {
      * "cmdType":  2,
-     * "productId": "HH92MED4FI",
+     * "productId": "*********",
      * "deviceName":   "wifi",
      * "connId":   "happy",
-     * "signature":    "f3e3b550dd0a63c63e69661498693fbab989215c",
+     * "signature":    "****************************",
      * "timestamp":    1562127932,
      * "wifiState":    "connected"
      * }
