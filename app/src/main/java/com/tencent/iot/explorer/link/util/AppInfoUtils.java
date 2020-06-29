@@ -3,6 +3,8 @@ package com.tencent.iot.explorer.link.util;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -287,6 +289,14 @@ public class AppInfoUtils {
             return "";
         }
         return im;
+    }
+
+    //复制到粘贴板
+    public static void copy(Context context, String data) {
+        ClipboardManager clipboard = (ClipboardManager) context.
+                getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText(null, data);
+        clipboard.setPrimaryClip(clipData);
     }
 
 }
