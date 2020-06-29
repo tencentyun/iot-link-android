@@ -17,7 +17,7 @@ android {
         config {
             storeFile file('../opensource_keystore.jks')
             storePassword '111222'
-            keyAlias = 'tenextll'
+            keyAlias 'tenextll'
             keyPassword '111222'
         }
     }
