@@ -16,9 +16,9 @@ android {
     signingConfigs {
         config {
             storeFile file('../opensource_keystore.jks')
-            storePassword 'UPrb3iw+LGFbx?*D8h$X?iVe7#&xxk'
+            storePassword '111222'
             keyAlias 'tenextll'
-            keyPassword 'UPrb3iw+LGFbx?*D8h$X?iVe7#&xxk'
+            keyPassword '111222'
 
             print "==============" + getStorePassword()
         }
