@@ -2,8 +2,11 @@ package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
 import android.util.Log
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
+import com.tencent.iot.explorer.link.ErrorCode
+import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -157,10 +160,26 @@ class HttpRequest private constructor() {
             override fun success(json: String?, reqCode: Int) {
                 L.e("响应${param["Action"]}", json ?: "")
                 JsonManager.parseJson(json, BaseResponse::class.java)?.run {
-                    callback.success(this, reqCode)
+                    // 检查特殊情况 token 失效
+                    if (chargeTokenValid(this)) {
+                        callback.success(this, reqCode)
+                    }
                 }
             }
         }, reqCode)
+    }
+
+    // 处理当使用过期 token 请求时，返回的数据
+    private fun chargeTokenValid(resp: BaseResponse): Boolean {
+        if (resp.code == ErrorCode.REQ_ERROR_CODE && resp.data != null) {
+            var errMsg = ErrorMessage.parseErrorMessage(resp.data.toString())
+
+            if (errMsg != null && errMsg.Code.equals(ErrorCode.DATA_MSG.ACCESS_TOKEN_ERR)) {
+                App.toLogin()
+                return false
+            }
+        }
+        return true
     }
 
     /**
@@ -180,7 +199,9 @@ class HttpRequest private constructor() {
             override fun success(json: String?, reqCode: Int) {
                 L.e("响应${param["Action"]}", json ?: "")
                 JsonManager.parseJson(json, BaseResponse::class.java)?.run {
-                    callback.success(this, reqCode)
+                    if (chargeTokenValid(this)) {
+                        callback.success(this, reqCode)
+                    }
                 }
             }
         }, reqCode)

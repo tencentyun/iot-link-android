@@ -172,5 +172,6 @@ class AppData private constructor() {
         roomList.clear()
         deviceList.clear()
         shareDeviceList.clear()
+        user = User()
     }
 }
