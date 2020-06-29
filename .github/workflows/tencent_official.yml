@@ -34,6 +34,7 @@ jobs:
           sed -i "s#'111222'#System.getenv(\"RELEASE_KEYSTORE_PASSWORD\")#g" app/build.gradle
           sed -i 's#sdk-debug#sdk-release#g' sdk/build.gradle
           sed -i 's#-SNAPSHOT##g' sdk/build.gradle
+          cat app/build.gradle
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
