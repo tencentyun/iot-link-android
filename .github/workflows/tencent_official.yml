@@ -8,7 +8,7 @@ on:
 env:
   SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
   SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-  RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+  IOT_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.IOT_RELEASE_KEYSTORE_PASSWORD }}
 
 jobs:
   build:
@@ -30,8 +30,8 @@ jobs:
         run: |
           sed -i 's#opensource_keystore#tencent_official_keystore#g' app/build.gradle
           sed -i '/opensource {/, +3d' app/build.gradle
-          sed -i 's#//*##g' app/build.gradle
-          sed -i "s#'111222'#System.getenv(\"RELEASE_KEYSTORE_PASSWORD\")#g" app/build.gradle
+          sed -i 's#//-##g' app/build.gradle
+          sed -i "s#'111222'#System.getenv(\"IOT_RELEASE_KEYSTORE_PASSWORD\")#g" app/build.gradle
           sed -i 's#sdk-debug#sdk-release#g' sdk/build.gradle
           sed -i 's#-SNAPSHOT##g' sdk/build.gradle
       - name: Build with Gradle
