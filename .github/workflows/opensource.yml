@@ -3,8 +3,7 @@ name: Android CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+
 
 env:
   SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
