@@ -1,9 +1,13 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
 import android.view.View
+import android.widget.TextView
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
@@ -12,6 +16,7 @@ import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.UserInfoPresenter
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
+import com.tencent.iot.explorer.link.util.AppInfoUtils
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
@@ -22,7 +27,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 /**
  * 个人信息界面
  */
-class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener {
+class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.OnLongClickListener {
 
     private lateinit var presenter: UserInfoPresenter
     private var popupWindow: CameraPopupWindow? = null
@@ -61,6 +66,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener {
         tv_title_telephone_number.setOnClickListener(this)
         tv_title_modify_password.setOnClickListener(this)
         tv_user_info_logout.setOnClickListener(this)
+        tv_user_id.setOnLongClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -176,6 +182,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener {
     override fun showUserInfo() {
         tv_nick.text = App.data.userInfo.NickName
         tv_telephone_number.text = App.data.userInfo.PhoneNumber
+        tv_user_id.text = App.data.userInfo.UserID
         if (!TextUtils.isEmpty(App.data.userInfo.Avatar)) {
             showAvatar(App.data.userInfo.Avatar)
         }
@@ -214,6 +221,14 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener {
                 }
             }
         }
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+        if (v is TextView) {
+            AppInfoUtils.copy(this@UserInfoActivity, v.text.toString())
+            T.show(getString(R.string.copy))
+        }
+        return true
     }
 
 }
