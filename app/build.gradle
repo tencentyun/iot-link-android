@@ -19,6 +19,8 @@ android {
             storePassword '111222'
             keyAlias 'tenextll'
             keyPassword '111222'
+
+            print "==============" + getStorePassword()
         }
     }
     compileSdkVersion 29
