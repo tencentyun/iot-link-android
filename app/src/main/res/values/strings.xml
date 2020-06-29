@@ -27,7 +27,7 @@
     <string name="back">返回</string>
     <string name="back_home">返回首页</string>
     <string name="q_feedback">问题反馈</string>
-
+    <string name="copy">已复制</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -85,6 +85,7 @@
     <string name="select_local_album">从手机相册选取</string>
     <string name="nick">昵称</string>
     <string name="telephone_number">电话号码</string>
+    <string name="user_id">用户 ID</string>
     <string name="modify_password">修改密码</string>
     <string name="modify_nick">修改昵称</string>
     <string name="bind_phone">手机绑定</string>
