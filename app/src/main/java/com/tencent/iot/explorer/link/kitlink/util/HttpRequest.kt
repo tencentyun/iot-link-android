@@ -104,7 +104,8 @@ class HttpRequest private constructor() {
     }
 
     /**
-     * 未登录请求
+     * 未登录请求（包含登录接口），接入层接口，此处为示例
+     * 自建的接入服务器需要实现接入层接口
      */
     private fun postJson(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
         val action = param["Action"]
