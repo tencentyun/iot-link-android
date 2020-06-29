@@ -53,10 +53,10 @@ android {
             applicationId "com.tencent.iot.explorer.link.opensource"
             resValue("string" , "app_name","连连开源体验")
         }
-        //*tencentOfficial {
-        //*    applicationId "com.tencent.iot.explorer.link"
-        //*    resValue("string" , "app_name","腾讯连连")
-        //*}
+        //-tencentOfficial {
+        //-    applicationId "com.tencent.iot.explorer.link"
+        //-    resValue("string" , "app_name","腾讯连连")
+        //-}
     }
 
     buildTypes {
