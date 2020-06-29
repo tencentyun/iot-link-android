@@ -104,6 +104,7 @@
     <string name="toast_register_agreement">请阅读并同意用户协议和隐私政策</string>
     <string name="login_success">登录成功</string>
     <string name="bind_phone_success">手机号绑定成功</string>
+    <string name="get_userId_failed">获取用户 ID 失败</string>
 
     <!--设备-->
     <string name="my_devices">我的设备</string>
