@@ -11,6 +11,7 @@ import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 
@@ -39,7 +40,10 @@ class App : Application() {
         @Synchronized
         fun toLogin() {
             activity?.run {
-                App.data.clear()
+                data.clear()
+                SharePreferenceUtil.clearString(activity, CONFIG, CommonField.USER_ID)
+                SharePreferenceUtil.clearString(activity, CONFIG, CommonField.EXPIRE_AT)
+                SharePreferenceUtil.clearString(activity, CONFIG, CommonField.TOKEN)
                 startActivity(Intent(activity, LoginActivity::class.java))
             }
         }
