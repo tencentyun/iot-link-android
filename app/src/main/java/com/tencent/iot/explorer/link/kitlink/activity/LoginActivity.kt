@@ -7,16 +7,22 @@ import android.content.Intent
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
+import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
 import com.tencent.iot.explorer.link.mvp.view.LoginView
 import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import com.tencent.iot.explorer.link.util.keyboard.OnSoftKeyBoardListener
@@ -42,6 +48,7 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
     //true为手机号，false为邮箱
     private var loginType = true
     private var keyBoard: SoftKeyBoard? = null
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     private val permissions = arrayOf(
         Manifest.permission.RECEIVE_SMS,
@@ -93,12 +100,15 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
             permissionAllGranted()
         }
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@LoginActivity);
         presenter = LoginPresenter(this)
         keyBoard = SoftKeyBoard(this)
         initViewPager()
         //设置白色状态栏
         StatusBarUtil.setStatusBarDarkTheme(this, false)
         if (!TextUtils.isEmpty(App.data.getToken())) {
+            var userId = SharePreferenceUtil.getString(this@LoginActivity, App.CONFIG, CommonField.USER_ID)
+            mFirebaseAnalytics!!.setUserId(userId);
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
@@ -352,10 +362,7 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
     }
 
     override fun loginSuccess(user: User) {
-        saveUser(user)
-        T.show(getString(R.string.login_success))
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
+        getUserId(user)
     }
 
     override fun loginFail(msg: String) {
@@ -382,6 +389,35 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
     override fun onDestroy() {
         keyBoard?.destroy()
         super.onDestroy()
+    }
+
+    private fun getUserId(user: User) {
+        HttpRequest.instance.userInfo(object : MyCallback{
+            override fun fail(msg: String?, reqCode: Int) {
+                if (TextUtils.isEmpty(msg)) {
+                    this@LoginActivity.loginFail(getString(R.string.get_userId_failed))
+                    return
+                }
+                this@LoginActivity.loginFail(msg!!)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    response.parse(UserInfoResponse::class.java)?.Data?.run {
+                        App.data.userInfo = this
+                        SharePreferenceUtil.saveString(this@LoginActivity, App.CONFIG, CommonField.USER_ID, App.data.userInfo.UserID)
+                        mFirebaseAnalytics!!.setUserId(App.data.userInfo.UserID)
+                        saveUser(user)
+                        T.show(getString(R.string.login_success))
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        finish()
+                    }
+
+                } else {
+                    this@LoginActivity.loginFail(getString(R.string.get_userId_failed))
+                }
+            }
+        })
     }
 
 }
