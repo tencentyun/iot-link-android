@@ -58,6 +58,19 @@ public class SharePreferenceUtil {
     }
 
     /**
+     * 清理单个字段的设置
+     *
+     * @param context
+     * @param fileName
+     * @param key
+     */
+    public static boolean clearString(Context context, String fileName, String key) {
+        Map<String, String> map = new HashMap<>();
+        map.put(key, null);
+        return saveString(context, fileName, map);
+    }
+
+    /**
      * 保存多个字段的偏好设置文件
      *
      * @param context
