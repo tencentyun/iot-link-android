@@ -12,6 +12,7 @@ import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 
 /**
  * APP
@@ -24,8 +25,11 @@ class App : Application() {
 
         const val CONFIG = "config"
         var language: String? = ""
-        //打开测试版本
-        const val DEBUG_VERSION: Boolean = true
+
+        // 根据编译使用的 buildType 类型确定是否是 debug 版本
+        // 编译依赖的 buildType 包含 debug 字串即认为是 debug 版本
+        @JvmField
+        val DEBUG_VERSION: Boolean = BuildConfig.BUILD_TYPE.contains(CommonField.DEBUG_FLAG)
         const val PULL_OTHER: Boolean = false
         var activity by Weak<BaseActivity>()
 
