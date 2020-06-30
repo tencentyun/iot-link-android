@@ -172,6 +172,9 @@ class AppData private constructor() {
         roomList.clear()
         deviceList.clear()
         shareDeviceList.clear()
+        SharePreferenceUtil.clearString(App.activity, App.CONFIG, CommonField.USER_ID)
+        SharePreferenceUtil.clearString(App.activity, App.CONFIG, CommonField.EXPIRE_AT)
+        SharePreferenceUtil.clearString(App.activity, App.CONFIG, CommonField.TOKEN)
         user = User()
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <paths>
+        <cache-path
+            name="cache"
+            path="" />
+        <external-path
+            name="sdcard_files"
+            path="" />
+        <external-path
+            name="external"
+            path="" />
+        <external-files-path
+            name="external_files"
+            path="" />
+        <external-cache-path
+            name="external_cache"
+            path="" />
+        <root-path
+            name="ex_sdcard_files"
+            path="" />
+        <!--相机相册裁剪-->
+        <external-files-path
+            name="camera_has_sdcard"
+            path="file/" />
+        <files-path
+            name="camera_no_sdcard"
+            path="" />
+    </paths>
+</resources>
