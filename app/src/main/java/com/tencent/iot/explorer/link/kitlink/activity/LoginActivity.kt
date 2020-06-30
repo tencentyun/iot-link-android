@@ -14,10 +14,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
-import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
+import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
 import com.tencent.iot.explorer.link.mvp.view.LoginView
@@ -49,6 +46,7 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
     private var loginType = true
     private var keyBoard: SoftKeyBoard? = null
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
+    private var fromTag = ""
 
     private val permissions = arrayOf(
         Manifest.permission.RECEIVE_SMS,
@@ -66,6 +64,10 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
 
     override fun onResume() {
         super.onResume()
+
+        if (!TextUtils.isEmpty(fromTag) && fromTag.equals(CommonField.WAY_SOURCE)) {
+            return
+        }
         logout(this)
     }
 
@@ -100,6 +102,9 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
             permissionAllGranted()
         }
 
+        intent.getStringExtra("from")?.let {
+            fromTag = it
+        }
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@LoginActivity);
         presenter = LoginPresenter(this)
         keyBoard = SoftKeyBoard(this)
@@ -409,7 +414,16 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
                         mFirebaseAnalytics!!.setUserId(App.data.userInfo.UserID)
                         saveUser(user)
                         T.show(getString(R.string.login_success))
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+
+
+                        if (TextUtils.isEmpty(fromTag)) {
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+
+                        } else {
+                            val data = Intent()
+                            data.putExtra("data", AppData.instance.getToken())
+                            setResult(CommonField.H5_REQUEST_LOGIN_CODE)
+                        }
                         finish()
                     }
 
