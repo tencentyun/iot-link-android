@@ -3,19 +3,54 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:orientation="vertical">
+    <include
+        android:id="@+id/sbhv_help_center"
+        layout="@layout/menu_back_layout" />
     <ProgressBar
             android:id="@+id/progressBar_webView"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:progressDrawable="@drawable/webview_progress_style"
-            android:visibility="gone"
+
             />
+    <Button
+        android:visibility="gone"
+        android:layout_marginTop="35dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/btn0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn2"
+        android:layout_centerHorizontal="true"
+        android:text="返回上一页"/>
+    <Button
+        android:visibility="gone"
+        android:layout_marginTop="35dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/btn1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn2"
+        android:layout_centerHorizontal="true"
+        android:text="这是原生按钮，点击调用h5方法"/>
+
+    <Button
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="这是原生按钮，点击调用h5方法并回调"/>
 
     <WebView
         android:id="@+id/help_web"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         />
 
 </LinearLayout>

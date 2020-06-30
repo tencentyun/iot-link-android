@@ -12,7 +12,7 @@ import retrofit2.http.Url
  */
 interface JsonRequest {
 
-    @Headers("Content-type:application/json;charset=UTF-8")
+    @Headers("Content-type:application/json;charset=UTF-8","cookie:uin=help_center_h5_api")
     @POST
     fun postJson(@Url url: String, @Body param: String): Call<String>
 
