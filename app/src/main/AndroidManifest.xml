@@ -30,7 +30,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" /> <!-- 访问手机当前状态, 需要某些信息用于网络定位 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!--picture start-->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -47,7 +49,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
+            android:requestLegacyExternalStorage="true"
             tools:replace="android:allowBackup">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity android:name=".kitlink.activity.DeviceCategoryActivity"/>
         <activity android:name=".kitlink.activity.DeviceInfoActivity" />
         <activity android:name=".kitlink.activity.SelectRoomActivity" />
@@ -91,6 +104,8 @@
         <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
         <activity android:name=".kitlink.activity.HelpCenterActivity" />
+        <activity android:name=".kitlink.activity.HelpWebViewActivity"
+            android:launchMode="singleTop" />
         <activity
                 android:name=".kitlink.activity.FeedbackActivity"
                 android:windowSoftInputMode="adjustPan" />
