@@ -2,20 +2,24 @@ package com.tencent.iot.explorer.link;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.android.tpush.NotificationAction;
 import com.tencent.android.tpush.XGPushBaseReceiver;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.tencent.iot.explorer.link.kitlink.activity.HelpWebViewActivity;
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField;
 
 public class MessageReceiver extends XGPushBaseReceiver {
+	private static final String TAG = MessageReceiver.class.getSimpleName();
+
 	public static final String UPDATE_LISTVIEW_ACTION = "com.qq.xgdemo.activity.UPDATE_LISTVIEW";
 
 	private void show(Context context, String text) {
@@ -32,7 +36,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		Intent viewIntent = new Intent(UPDATE_LISTVIEW_ACTION);
 		context.sendBroadcast(viewIntent);
 		show(context, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString());
-		Log.d("lurs", "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString() + ", PushChannel:" + notifiShowedRlt.getPushChannel());
+		Log.d(TAG, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString() + ", PushChannel:" + notifiShowedRlt.getPushChannel());
 	}
 
 	@Override
@@ -46,7 +50,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		} else {
 			text = "反注册失败" + errorCode;
 		}
-		Log.d("lurs", text);
+		Log.d(TAG, text);
 		show(context, text);
 
 	}
@@ -62,7 +66,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		} else {
 			text = "\"" + tagName + "\"设置失败,错误码：" + errorCode;
 		}
-		Log.d("lurs", text);
+		Log.d(TAG, text);
 		show(context, text);
 
 	}
@@ -78,7 +82,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		} else {
 			text = "\"" + tagName + "\"删除失败,错误码：" + errorCode;
 		}
-		Log.d("lurs", text);
+		Log.d(TAG, text);
 		show(context, text);
 
 	}
@@ -95,8 +99,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
 	// 通知点击回调 actionType=1为该消息被清除，actionType=0为该消息被点击
 	@Override
-	public void onNotificationClickedResult(Context context,
-			XGPushClickedResult message) {
+	public void onNotificationClickedResult(Context context, XGPushClickedResult message) {
 		if (context == null || message == null) {
 			return;
 		}
@@ -111,31 +114,17 @@ public class MessageReceiver extends XGPushBaseReceiver {
 			// APP自己处理通知被清除后的相关动作
 			text = "通知被清除 :" + message;
 		}
-		Toast.makeText(context, "广播接收到通知被点击:" + message.toString(),
-				Toast.LENGTH_SHORT).show();
-		// 获取自定义key-value
-		String customContent = message.getCustomContent();
-		if (customContent != null && customContent.length() != 0) {
-			try {
-				JSONObject obj = new JSONObject(customContent);
-				// key1为前台配置的key
-				if (!obj.isNull("key")) {
-					String value = obj.getString("key");
-					Log.d("lurs", "get custom value:" + value);
-				}
-				// ...
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
+
 		// APP自主处理的过程。。。
-		Log.d("lurs", text);
+		Log.d(TAG, text);
 		show(context, text);
+
+		checkMsgWithAction(context, message.getCustomContent());
 	}
 
 	@Override
-	public void onRegisterResult(Context context, int errorCode,
-			XGPushRegisterResult message) {
+	public void onRegisterResult(Context context, int errorCode, XGPushRegisterResult message) {
+
 		if (context == null || message == null) {
 			return;
 		}
@@ -147,7 +136,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		} else {
 			text = message + "注册失败，错误码：" + errorCode;
 		}
-		Log.d("lurs", text);
+		Log.d(TAG, text);
 		show(context, text);
 	}
 
@@ -155,24 +144,25 @@ public class MessageReceiver extends XGPushBaseReceiver {
 	@Override
 	public void onTextMessage(Context context, XGPushTextMessage message) {
 		String text = "收到消息:" + message.toString();
-		// 获取自定义key-value
-		String customContent = message.getCustomContent();
-		if (customContent != null && customContent.length() != 0) {
-			try {
-				JSONObject obj = new JSONObject(customContent);
-				// key1为前台配置的key
-				if (!obj.isNull("key")) {
-					String value = obj.getString("key");
-					Log.d("lurs", "get custom value:" + value);
-				}
-				// ...
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
 		// APP自主处理消息的过程...
-		Log.d("lurs", text);
+		Log.d(TAG, text);
 		show(context, text);
+	}
+
+	private void checkMsgWithAction(Context context, String msg) {
+		if (TextUtils.isEmpty(msg)) {
+			return;
+		}
+
+		JSONObject msgJson = JSON.parseObject(msg);
+		if (msgJson.containsKey(CommonField.MSG_TYPE) &&
+				msgJson.getString(CommonField.MSG_TYPE).equals(
+						PushedMessageType.FEEDBACK.getValueStr())) {
+			Intent intent = new Intent(App.Companion.getActivity(), HelpWebViewActivity.class);
+			App.Companion.getActivity().startActivity(intent);
+
+		}
+
 	}
 
 }

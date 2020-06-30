@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link
 
 import android.app.Application
 import android.content.Intent
+import android.text.TextUtils
 import androidx.multidex.MultiDex
 import com.tencent.iot.explorer.link.auth.IoTAuth
 import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
@@ -40,11 +41,20 @@ class App : Application() {
         fun toLogin() {
             activity?.run {
                 data.clear()
-                SharePreferenceUtil.clearString(activity, CONFIG, CommonField.USER_ID)
-                SharePreferenceUtil.clearString(activity, CONFIG, CommonField.EXPIRE_AT)
-                SharePreferenceUtil.clearString(activity, CONFIG, CommonField.TOKEN)
                 startActivity(Intent(activity, LoginActivity::class.java))
             }
+        }
+
+        fun chargeUrlAppType(): Boolean {
+            if (BuildConfig.TencentIotLinkAppkey.equals(CommonField.NULL_STR)
+                || TextUtils.isEmpty(BuildConfig.TencentIotLinkAppkey)) {
+                return false
+
+            } else if (BuildConfig.TencentIotLinkAppkey.equals(CommonField.IOT_APP_KEY)) {
+                return false
+            }
+
+            return true
         }
     }
 

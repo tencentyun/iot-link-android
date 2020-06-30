@@ -30,6 +30,12 @@ object CommonField {
     const val MSG_ID = "MsgID"
     const val MSG_TIMESTAMP = "MsgTimestamp"
     const val LIMIT = "Limit"
+    const val FROM = "from"
+    const val WAY_SOURCE = "fromH5"
+    const val TOKEN_TICKET = "TokenTicket"
+    const val TICKET = "ticket"
+    const val HANDLER_NAME = "handlerName"
+    const val MSG_TYPE = "msgType"
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
@@ -87,4 +93,8 @@ object CommonField {
 
     /***********运行环境参数************/
     const val DEBUG_FLAG = "debug"
+
+    /***********窗口跳转码************/
+    const val LOGIN_REQUEST_CODE = 108
+    const val H5_REQUEST_LOGIN_CODE = 10
 }
