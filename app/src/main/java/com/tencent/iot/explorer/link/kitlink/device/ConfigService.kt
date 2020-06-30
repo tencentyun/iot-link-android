@@ -6,7 +6,6 @@ import org.json.JSONObject
 import java.net.DatagramSocket
 
 open class ConfigService {
-    //    private var host = "192.168.4.1"
     var host = ""
     val port = 8266
     var socket: DatagramSocket? = null

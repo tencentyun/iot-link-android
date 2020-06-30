@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 /**
- * Created by rongerwu on 2018/9/14.
  * Copyright (c) 2018 Tencent Cloud. All Rights Reserved.
  */
 public class DeviceInfo {
