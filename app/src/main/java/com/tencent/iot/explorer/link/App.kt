@@ -11,7 +11,6 @@ import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 
