@@ -187,6 +187,32 @@ class HttpRequest private constructor() {
         }, reqCode)
     }
 
+    /**
+     * 登录后请求
+     */
+    private fun getH5tokenPost(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
+        val json = JsonManager.toJson(param)
+        if (TextUtils.isEmpty(App.data.getToken())) {//登录过期或未登录
+            App.toLogin()
+            return
+        }
+//        val api = if (App.DEBUG_VERSION) GET_BIND_DEV_TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+
+        StringRequest.instance.postJson(api, json, object : Callback {
+            override fun fail(msg: String?, reqCode: Int) {
+                callback.fail(msg, reqCode)
+            }
+
+            override fun success(json: String?, reqCode: Int) {
+                L.e("响应${param["Action"]}", json ?: "")
+                JsonManager.parseJson(json, BaseResponse::class.java)?.run {
+                    callback.success(this, reqCode)
+                }
+            }
+        }, reqCode)
+    }
+
     /**************************************  用户接口开始  ************************************************/
 
     /**
@@ -1017,6 +1043,11 @@ class HttpRequest private constructor() {
     fun getShareTicket(callback: MyCallback) {
         val param = tokenParams("AppGetTokenTicket")
         tokenPost(param, callback, RequestCode.share_ticket)
+    }
+
+    fun getOneTimeTokenTicket(callback: MyCallback) {
+        val param = tokenParams("AppGetTokenTicket")
+        getH5tokenPost(param, callback, RequestCode.token_ticket)
     }
 
     /**
