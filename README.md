@@ -32,14 +32,14 @@ app-config.json 需要配置的内容，如下图所示。
 
 **2、信鸽（可选）**
 
-  	连连开源体验版集成了**信鸽推送**，用于实现消息推送。
+  连连开源体验版集成了**信鸽推送**，用于实现消息推送。
 
   * 若确认使用推送功能，需要前往[信鸽推送平台](https://cloud.tencent.com/product/tpns?fromSource=gwzcw.2454256.2454256.2454256&utm_medium=cpc&utm_id=gwzcw.2454256.2454256.2454256)申请获得的 **AccessID** 和 **AccessKey**，[申请步骤](https://cloud.tencent.com/product/tpns/getting-started)。
   * 若不使用推送功能，**XgAccessId** 和 **XgAccessKey**  设置为**长度为0的字符串**即可。
 
 **3、Firebase（可选）**
 
-  	连连开源体验版集成了 **Firebase** 插件，用于记录应用的异常日志和性能状况。
+  连连开源体验版集成了 **Firebase** 插件，用于记录应用的异常日志和性能状况。
 
   * 若用户确认使用 Firebase 插件，需通过 [Firebase 官网](https://firebase.google.cn/?hl=zh-cn) 创建应用并获取 **google-services.json** 文件；将 google-services.json 文件放在 app 目录下，如图所示位置。
 
@@ -55,7 +55,7 @@ app-config.json 需要配置的内容，如下图所示。
 
 **4、腾讯地图（可选）**
 
-  	连连开源体验版集成了**腾讯地图**，用于实现定位。
+  连连开源体验版集成了**腾讯地图**，用于实现定位。
 
   * 若确认使用自定义的定位功能，需要前往[腾讯地图开放平台](https://lbs.qq.com/)申请获得 **key**，[申请步骤](https://lbs.qq.com/mobile/androidLocationSDK/androidGeoGuide/androidGeoCreat)。
   * 若确认使用默认定位功能，无需修改 **TencentMapSDKValue** 配置项内容 。
@@ -63,7 +63,7 @@ app-config.json 需要配置的内容，如下图所示。
 
 **5、微信授权登录（可选）**
 
-  	连连开源体验版集成了微信授权登录。
+  连连开源体验版集成了微信授权登录。
 
   * 若确认使用自定义的微信授权登录，需要在[微信开放平台](https://open.weixin.qq.com/)注册开发者帐号，创建移动应用，审核通过后，即可获得相应的 AppID 和 AppSecret，[申请步骤](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html)；同时需要自行搭建微信授权登录的**接入服务器**，可参考接入服务器的[接口](https://cloud.tencent.com/document/product/1081/40781)。
 
