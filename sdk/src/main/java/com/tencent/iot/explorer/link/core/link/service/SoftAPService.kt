@@ -55,7 +55,7 @@ class SoftAPService(context: Context, task: DeviceTask) : DeviceService(context,
 
     /**
      *
-     * gateway=17082560 192.168.4.1
+     * xxxxxxxx 转成 xxx.xxx.xxx.xxx
      * int转化为ip地址
      */
     private fun intToIp(paramInt: Int): String {

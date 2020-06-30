@@ -45,8 +45,8 @@ class SoftAPService(context: Context) : ConfigService(){
     }
 
     /**
-     * gateway=17082560 192.168.4.1
-     * int 转化为 ip 地址
+     * xxxxxxxx 转成 xxx.xxx.xxx.xxx
+     * int转化为ip地址
      */
     private fun intToIp(paramInt: Int): String {
         return ((paramInt and 0xFF).toString() + "." + (0xFF and (paramInt shr 8)) + "." +

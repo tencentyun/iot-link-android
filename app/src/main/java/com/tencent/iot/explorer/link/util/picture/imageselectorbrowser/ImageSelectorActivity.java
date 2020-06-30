@@ -349,7 +349,6 @@ public class ImageSelectorActivity extends FragmentActivity implements ImageSele
      * ClassName: Mode
      * Description: 单选MODE_SINGLE 多选MODE_MULTI
      *
-     * @author xiaobin
      * @version 1.0  2015-9-18
      */
     public interface Mode {
