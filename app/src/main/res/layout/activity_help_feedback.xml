@@ -3,19 +3,23 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:orientation="vertical">
+    <include
+        android:id="@+id/sbhv_help_center"
+        layout="@layout/menu_back_layout" />
+
     <ProgressBar
             android:id="@+id/progressBar_webView"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:progressDrawable="@drawable/webview_progress_style"
-            android:visibility="gone"
+
             />
 
     <WebView
         android:id="@+id/help_web"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         />
 
 </LinearLayout>

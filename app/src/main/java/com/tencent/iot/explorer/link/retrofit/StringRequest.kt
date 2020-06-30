@@ -3,10 +3,7 @@ package com.tencent.iot.explorer.link.retrofit
 import android.util.Log
 import com.tencent.iot.explorer.link.retrofit.adapter.StringCallAdapterFactory
 import com.tencent.iot.explorer.link.retrofit.converter.StringConverterFactory
-import com.tencent.iot.explorer.link.retrofit.request.GetRequest
-import com.tencent.iot.explorer.link.retrofit.request.JsonRequest
-import com.tencent.iot.explorer.link.retrofit.request.PostRequest
-import com.tencent.iot.explorer.link.retrofit.request.UploadRequest
+import com.tencent.iot.explorer.link.retrofit.request.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
