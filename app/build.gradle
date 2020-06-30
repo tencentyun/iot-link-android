@@ -118,7 +118,7 @@ dependencies {
     implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.2.3'
     //信鸽推送
     implementation 'com.tencent.jg:jg:1.1'
-    implementation 'com.tencent.tpns:tpns:1.2.0.1-release'
+    implementation 'com.tencent.tpns:tpns:1.2.0.2-release'
     implementation 'androidx.cardview:cardview:1.0.0'
     api 'com.android.support:recyclerview-v7:29.0.0'
     //kotlin协程
