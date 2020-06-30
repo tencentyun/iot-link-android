@@ -93,6 +93,7 @@ object RequestCode {
     const val get_share_token = 6006
     const val get_share_device_info = 6007
     const val bind_share_device = 6008
+    const val token_ticket = 6005
 
     /*************设备分享接口结束**************/
 
