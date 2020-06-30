@@ -136,8 +136,12 @@ dependencies {
 
     //垂直TabLayout
     implementation 'q.rorbin:VerticalTabLayout:1.2.9'
-    implementation project(path: ':sdk')
 
+    if (findProject(':sdk') != null) {
+        implementation project(path: ':sdk')
+    } else {
+        implementation 'com.tencent.iot.explorer:iot-sdk-android:+'
+    }
 
     implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
 

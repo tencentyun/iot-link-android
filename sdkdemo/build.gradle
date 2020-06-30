@@ -56,6 +56,10 @@ dependencies {
     implementation('com.tencent.qcloud:cosxml-lite:5.4.29') {
         exclude group: 'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
     }
-    implementation project(path: ':sdk')
 
+    if (findProject(':sdk') != null) {
+        implementation project(path: ':sdk')
+    } else {
+        implementation 'com.tencent.iot.explorer:iot-sdk-android:+'
+    }
 }
