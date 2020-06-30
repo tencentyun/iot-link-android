@@ -187,7 +187,8 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 }
             }
             iv_question -> {
-                jumpActivity(HelpCenterActivity::class.java)
+//                jumpActivity(HelpCenterActivity::class.java)
+                jumpActivity(HelpWebViewActivity::class.java)
             }
             retry_to_scann01, retry_to_scann02 -> {
                 beginScanning()
