@@ -15,6 +15,4 @@ interface JsonRequest {
     @Headers("Content-type:application/json;charset=UTF-8")
     @POST
     fun postJson(@Url url: String, @Body param: String): Call<String>
-
-
 }
