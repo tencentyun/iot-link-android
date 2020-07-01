@@ -48,7 +48,7 @@ publishing {
     publications {
         aar(MavenPublication) {
             groupId 'com.tencent.iot.explorer'
-            artifactId 'iot-sdk-android'
+            artifactId 'explorer-link-android'
             version libVersion
             artifact file('build/outputs/aar/sdk-debug.aar')
         }
