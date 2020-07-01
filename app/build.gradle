@@ -140,7 +140,7 @@ dependencies {
     if (findProject(':sdk') != null) {
         implementation project(path: ':sdk')
     } else {
-        implementation 'com.tencent.iot.explorer:iot-sdk-android:+'
+        implementation 'com.tencent.iot.explorer:explorer-link-android:+'
     }
 
     implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
