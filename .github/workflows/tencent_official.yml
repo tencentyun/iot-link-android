@@ -16,12 +16,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - env:
+          GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
+          RELEASE_PGYER_API_KEY: ${{ secrets.RELEASE_PGYER_API_KEY }}
       - uses: actions/checkout@v2
       - run: |
           rm -rf opensource_keystore.jks app-config.json app/google-services.json
-          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/tencent_official_keystore.jks.asc > tencent_official_keystore.jks
-          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/app-config.json.asc > app-config.json
-          gpg -d --passphrase "${{ secrets.GPG_DECRYPT_PASSPHRASE }}" --batch .github/app/google-services.json.asc > app/google-services.json
+          gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/tencent_official_keystore.jks.asc > tencent_official_keystore.jks
+          gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/app-config.json.asc > app-config.json
+          gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/app/google-services.json.asc > app/google-services.json
       - name: set up JDK 1.8
         uses: actions/setup-java@v1
         with:
@@ -40,11 +43,13 @@ jobs:
         run: ./gradlew assembleTencentOfficial
       - name: Publish aar to Maven
         run: ./gradlew publish
-      - name: Archive the apk
+      - name: Encrypt Apk
+        run: gpg --batch --passphrase "$GPG_DECRYPT_PASSPHRASE" -c app/build/outputs/apk/tencentOfficial/release/*.apk
+      - name: Archive the encrypted apk
         uses: actions/upload-artifact@v2
         with:
-          path: app/build/outputs/apk/tencentOfficial/release/*.apk
+          path: app/build/outputs/apk/tencentOfficial/release/*.apk.gpg
       - name: Upload apk to PGY
         run: |
           apk=$(ls app/build/outputs/apk/tencentOfficial/release/*.apk)
-          curl -F "file=@${apk}" -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
+          curl -F "file=@${apk}" -F "_api_key=$RELEASE_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
