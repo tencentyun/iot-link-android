@@ -32,6 +32,8 @@ jobs:
         with:
           path: app/build/outputs/apk/opensource/release/*.apk
       - name: Upload apk to PGY
+        env:
+          RELEASE_PGYER_API_KEY: ${{ secrets.RELEASE_PGYER_API_KEY }}
         run: |
           apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
-          curl -F "file=@${apk}" -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
+          curl -F "file=@${apk}" -F "_api_key=$RELEASE_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
