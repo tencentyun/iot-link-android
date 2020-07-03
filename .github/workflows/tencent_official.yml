@@ -9,6 +9,8 @@ env:
   SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
   SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
   IOT_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.IOT_RELEASE_KEYSTORE_PASSWORD }}
+  GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
+  RELEASE_PGYER_API_KEY: ${{ secrets.RELEASE_PGYER_API_KEY }}
 
 jobs:
   build:
@@ -16,9 +18,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - env:
-          GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
-          RELEASE_PGYER_API_KEY: ${{ secrets.RELEASE_PGYER_API_KEY }}
       - uses: actions/checkout@v2
       - run: |
           rm -rf opensource_keystore.jks app-config.json app/google-services.json
