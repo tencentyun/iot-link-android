@@ -43,11 +43,13 @@ jobs:
       - name: Publish aar to Maven
         run: ./gradlew publish
       - name: Encrypt Apk
-        run: gpg --batch --passphrase "$GPG_DECRYPT_PASSPHRASE" -c app/build/outputs/apk/tencentOfficial/release/*.apk
+        run: |
+          gpg --batch --passphrase "$GPG_DECRYPT_PASSPHRASE" -c app/build/outputs/apk/tencentOfficial/debug/*.apk
+          gpg --batch --passphrase "$GPG_DECRYPT_PASSPHRASE" -c app/build/outputs/apk/tencentOfficial/release/*.apk
       - name: Archive the encrypted apk
         uses: actions/upload-artifact@v2
         with:
-          path: app/build/outputs/apk/tencentOfficial/release/*.apk.gpg
+          path: app/build/outputs/apk/tencentOfficial/*/*.apk.gpg
       - name: Upload apk to PGY
         run: |
           apk=$(ls app/build/outputs/apk/tencentOfficial/release/*.apk)
