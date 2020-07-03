@@ -81,7 +81,12 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all {
             def date = new Date().format("yyyyMMddHHmmss" , TimeZone.getTimeZone("GMT+08"))
-            outputFileName = "iot-link-android-${date}.apk"
+            if(variant.buildType.name == 'debug') {
+                outputFileName = "iot-link-android-debug-${date}.apk"
+            }
+            if(variant.buildType.name == 'release') {
+                outputFileName = "iot-link-android-release-${date}.apk"
+            }
         }
     }
 }
