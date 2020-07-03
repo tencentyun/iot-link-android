@@ -30,7 +30,7 @@ jobs:
       - name: Archive the apk
         uses: actions/upload-artifact@v2
         with:
-          path: app/build/outputs/apk/opensource/release/*.apk
+          path: app/build/outputs/apk/opensource/*/*.apk
       - name: Upload apk to PGY
         env:
           RELEASE_PGYER_API_KEY: ${{ secrets.RELEASE_PGYER_API_KEY }}
