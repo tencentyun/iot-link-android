@@ -44,6 +44,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_hotspot_hint" />
 
         <TextView
+                android:id="@+id/tv_soft_connect_hotspot_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -60,21 +61,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="142dp"
+                android:layout_marginTop="22dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/btn_rad4_color_0052d9"
                 android:gravity="center"
                 android:text="@string/soft_ap_connect_hotspot"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_20"
-                app:layout_constraintTop_toBottomOf="@+id/iv_soft_hotspot" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_soft_connect_hotspot_tip" />
 
         <TextView
                 android:id="@+id/tv_soft_reconnect_hotspot"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="123dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/btn_rad4_stoken_color_dddddd"
                 android:gravity="center"
@@ -82,14 +83,14 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts_20"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/iv_soft_hotspot" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_soft_connect_hotspot" />
 
         <TextView
                 android:id="@+id/tv_soft_connect_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/btn_rad4_color_0052d9"
@@ -106,8 +107,8 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_soft_hotspot"
-                android:layout_marginTop="300dp"/>
+                app:layout_constraintTop_toBottomOf="@+id/tv_soft_connect_confirm"
+                android:layout_marginTop="50dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
