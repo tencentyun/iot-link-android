@@ -233,18 +233,22 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
         override fun onShowFileChooser (webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams?): Boolean {
             uploadMessageAboveL = filePathCallback
             if (fileChooserParams == null)
-                return true
+                return false
 
             if (fileChooserParams.isCaptureEnabled) {
                 isCapture = true;
                 if (checkCameraPermission()) {
                     PhotoUtils.startCamera(this@HelpWebViewActivity)
+                } else {
+                    return false
                 }
 
             } else {
                 isCapture = false;
                 if (checkCameraPermission()) {
                     PhotoUtils.startAlbum(this@HelpWebViewActivity)
+                } else {
+                    return false
                 }
             }
             return true
