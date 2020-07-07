@@ -255,10 +255,10 @@ class HttpRequest private constructor() {
     fun wechatLogin(code: String, callback: MyCallback) {
         val param = commonParams("AppGetTokenByWeiXin")
         param["code"] = code
-        if (!App.chargeUrlAppType()) {
+        if (T.getContext().applicationInfo.packageName.equals(CommonField.OPEN_SOURCE_TAG)) {
             param["busi"] = BUSI_OPENSOURCE
-        } else {
-//            param["busi"] = BUSI_APP
+        } else if (T.getContext().applicationInfo.packageName.equals(CommonField.PUBLISH_TAG)) {
+            param["busi"] = BUSI_APP
         }
 
         postJson(param, callback, RequestCode.wechat_login)

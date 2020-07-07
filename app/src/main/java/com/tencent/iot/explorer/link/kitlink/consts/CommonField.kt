@@ -93,8 +93,11 @@ object CommonField {
 
     /***********运行环境参数************/
     const val DEBUG_FLAG = "debug"
+    const val OPEN_SOURCE_TAG = "com.tencent.iot.explorer.link.opensource"
+    const val PUBLISH_TAG = "com.tencent.iot.explorer.link"
 
     /***********窗口跳转码************/
     const val LOGIN_REQUEST_CODE = 108
     const val H5_REQUEST_LOGIN_CODE = 10
+
 }
