@@ -7,8 +7,8 @@ on:
     branches: [ master ]
 
 env:
-  SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-  SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+  IOT_SONATYPE_USERNAME: ${{ secrets.IOT_SONATYPE_USERNAME }}
+  IOT_SONATYPE_PASSWORD: ${{ secrets.IOT_SONATYPE_PASSWORD }}
 
 jobs:
   build:
@@ -33,7 +33,7 @@ jobs:
           path: app/build/outputs/apk/opensource/*/*.apk
       - name: Upload apk to PGY
         env:
-          RELEASE_PGYER_API_KEY: ${{ secrets.RELEASE_PGYER_API_KEY }}
+          IOT_PGYER_API_KEY: ${{ secrets.IOT_PGYER_API_KEY }}
         run: |
           apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
-          curl -F "file=@${apk}" -F "_api_key=$RELEASE_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
+          curl -F "file=@${apk}" -F "_api_key=$IOT_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
