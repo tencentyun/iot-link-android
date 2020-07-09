@@ -6,11 +6,11 @@ on:
       - '*'
 
 env:
-  SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-  SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+  IOT_SONATYPE_USERNAME: ${{ secrets.IOT_SONATYPE_USERNAME }}
+  IOT_SONATYPE_PASSWORD: ${{ secrets.IOT_SONATYPE_PASSWORD }}
   IOT_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.IOT_RELEASE_KEYSTORE_PASSWORD }}
   GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
-  RELEASE_PGYER_API_KEY: ${{ secrets.RELEASE_PGYER_API_KEY }}
+  IOT_PGYER_API_KEY: ${{ secrets.IOT_PGYER_API_KEY }}
 
 jobs:
   build:
@@ -53,4 +53,4 @@ jobs:
       - name: Upload apk to PGY
         run: |
           apk=$(ls app/build/outputs/apk/tencentOfficial/release/*.apk)
-          curl -F "file=@${apk}" -F "_api_key=$RELEASE_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
+          curl -F "file=@${apk}" -F "_api_key=$IOT_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
