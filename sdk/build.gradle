@@ -35,7 +35,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
-    api files('libs/fastjson-1.2.5.jar')
     //WebSocket
     implementation "org.java-websocket:Java-WebSocket:1.4.0"
     //kotlin协程

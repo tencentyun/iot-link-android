@@ -25,7 +25,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.core.log.L
 import kotlinx.android.synthetic.main.fragment_devices.*
 import kotlin.math.ceil
 

@@ -1,7 +1,16 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.Manifest
+import android.text.TextUtils
+import android.util.Log
+import com.alibaba.fastjson.JSON
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.BindDeviceTokenResponse
+import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.response.UserInfoResponse
 import kotlinx.android.synthetic.main.activity_add_device.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -69,10 +78,44 @@ class AddDeviceActivity : BaseActivity() {
                 jumpActivity(ScanBindActivity::class.java)
             }
             1, 2 -> {
-                put("type", type)
-                jumpActivity(ConnectDeviceActivity::class.java)
+                IoTAuth.userImpl.userInfo(object: MyCallback {
+                    override fun fail(msg: String?, reqCode: Int) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun success(response: BaseResponse, reqCode: Int) {
+                        if (response.isSuccess()) {
+                            response.parse(UserInfoResponse::class.java)?.Data.let {
+                                App.data.userInfo = it!!
+                                getBindDevToken(App.data.userInfo.UserID)
+                            }
+                        }
+
+                    }
+                })
             }
         }
+    }
+
+    private fun getBindDevToken(userId: String) {
+        IoTAuth.deviceImpl.getBindDevToken(userId, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    response.parse(BindDeviceTokenResponse::class.java)?.Token.let {
+                        if (!TextUtils.isEmpty(it)) {
+                            App.data.bindDeviceToken = it!!
+                            put("type", type)
+                            jumpActivity(ConnectDeviceActivity::class.java)
+                        }
+                    }
+                }
+            }
+
+        })
     }
 
 }
