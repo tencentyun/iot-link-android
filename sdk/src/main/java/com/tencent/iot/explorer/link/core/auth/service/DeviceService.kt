@@ -218,7 +218,7 @@ internal class DeviceService : BaseService(), DeviceImpl {
         param["DeviceName"] = deviceInfo.deviceName
         param["Signature"] = deviceInfo.signature
         param["DeviceTimestamp"] = deviceInfo.timestamp
-        param["ConnId"] = deviceInfo.connId
+//        param["ConnId"] = deviceInfo.connId
         tokenPost(param, callback, RequestCode.wifi_bind_device)
     }
 

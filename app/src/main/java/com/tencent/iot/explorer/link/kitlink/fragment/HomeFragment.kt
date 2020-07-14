@@ -18,7 +18,7 @@ import com.tencent.iot.explorer.link.mvp.presenter.HomeFragmentPresenter
 import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
-import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerDivider
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.fragment_home.*

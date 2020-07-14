@@ -2,9 +2,9 @@ package com.tencent.iot.explorer.link.core.log
 
 import android.util.Log
 
-internal object L {
+object L {
 
-    var isLog = false
+    var isLog:Boolean = false
 
     private const val DEFAULT_TAG = "TenextIoT"
 

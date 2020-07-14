@@ -9,11 +9,11 @@ import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
 import com.tencent.iot.explorer.link.kitlink.util.AppData
 import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.android.tpush.XGPushConfig
-import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.core.log.L
 
 /**
  * APP
@@ -65,7 +65,7 @@ class App : Application() {
         //初始化弹框
         T.setContext(this.applicationContext)
         //日志开关
-        L.isLog(DEBUG_VERSION)
+        L.isLog = DEBUG_VERSION
         //信鸽推送日志开关
         XGPushConfig.enableDebug(applicationContext, DEBUG_VERSION)
         XGPushConfig.enablePullUpOtherApp(applicationContext, PULL_OTHER)

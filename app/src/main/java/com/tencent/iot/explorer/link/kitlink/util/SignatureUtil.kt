@@ -1,11 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.util.Base64
-import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.core.log.L
 import java.nio.charset.Charset
-import java.util.*
 import javax.crypto.Mac
-import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
 object SignatureUtil {

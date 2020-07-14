@@ -12,7 +12,6 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.activity.MainActivity
 import com.tencent.iot.explorer.link.kitlink.util.DataHolder
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 
 abstract class BaseFragment : Fragment() {
