@@ -8,12 +8,10 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
-import android.widget.AbsoluteLayout
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
@@ -21,6 +19,7 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.FileUtils
@@ -30,11 +29,9 @@ import com.tencent.iot.explorer.link.kitlink.util.PhotoUtils
 import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
 import com.tencent.iot.explorer.link.kitlink.webview.WebCallBack
-import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_help_feedback.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import java.io.File
 
 class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
     val TAG = this.javaClass.simpleName

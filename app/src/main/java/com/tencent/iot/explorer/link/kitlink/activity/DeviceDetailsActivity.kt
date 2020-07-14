@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
@@ -13,7 +14,6 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.DeviceDetailPresenter
 import com.tencent.iot.explorer.link.mvp.view.DeviceDetailView
-import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_device_details.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

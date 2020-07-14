@@ -21,11 +21,13 @@ class AppData private constructor() {
     }
 
     //用户
-    val userInfo = UserInfo()
+    var userInfo = UserInfo()
     //当前家庭
     private var currentFamily = Family()
     //当前房间
     private var currentRoom = Room()
+
+    var bindDeviceToken = ""
 
     val activityList = LinkedList<BaseActivity>()
 

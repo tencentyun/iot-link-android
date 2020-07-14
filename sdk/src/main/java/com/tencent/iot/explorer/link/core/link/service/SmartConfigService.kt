@@ -1,197 +1,182 @@
-package com.tencent.iot.explorer.link.core.link.service
+package com.tencent.iot.explorer.link.core.link
 
 import android.content.Context
 import android.text.TextUtils
 import com.espressif.iot.esptouch.EsptouchTask
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
-import com.tencent.iot.explorer.link.core.link.entity.DeviceTask
+import com.tencent.iot.explorer.link.core.link.entity.LinkTask
+import com.tencent.iot.explorer.link.core.link.entity.SmartConfigStep
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
 import com.tencent.iot.explorer.link.core.log.L
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.json.JSONException
+import com.tencent.iot.explorer.link.core.utils.WifiUtil
 import org.json.JSONObject
 import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.net.Socket
+import java.io.ByteArrayInputStream
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.net.InetAddress
+import kotlin.concurrent.thread
 
-class SmartConfigService(context: Context, task: DeviceTask) : DeviceService(context, task) {
+class SmartConfigService(context: Context) : ConfigService() {
 
-    private val port = 8266
-    private var socket: Socket? = null
-    private val deviceReplyKey = "deviceReply"
+    private val TAG = this.javaClass.simpleName
+
+    private var context: Context? = null
     private var esptouchTask: EsptouchTask? = null
+    private var listener: SmartConfigListener? = null
+    private var task: LinkTask? = null
 
-    var listener: SmartConfigListener? = null
-
-    private lateinit var mainJob: Job
-
-
-    /**
-     * 停止配网
-     */
-    override fun stop() {
-        try {
-            esptouchTask?.let {
-                it.interrupt()
-                esptouchTask = null
-            }
-            socket?.close()
-            socket = null
-            mainJob.cancel()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+    init {
+        this.context = context.applicationContext
     }
 
-    /**
-     * 开始配网
-     */
-    override fun start() {
-        val ssid = mTask.mSsid.replace("\"", "")
-        if (TextUtils.isEmpty(ssid)) {
-            L.d("SmartConfigService", "task.mSsid不能为空")
+    fun stopConnect() {
+        esptouchTask?.let {
+            it.interrupt()
+            esptouchTask = null
+        }
+        closeSocket()
+    }
+
+    fun startConnect(task: LinkTask, listener: SmartConfigListener) {
+        this.listener = listener
+
+        // 如果不是 2.4GHz 的 wifi 快速失败
+        if (!WifiUtil.is24GHz(context)) {
+            this.listener?.onFail(
+                TCLinkException("CONNECT_TO_DEVICE_FAILURE", "wifi 的频率不是 2.4GHz")
+            )
             return
         }
-        mainJob = CoroutineScope(Dispatchers.IO).launch {
-            esptouchTask = EsptouchTask(
-                ssid,
-                mTask.mBssid,
-                mTask.mPassword,
-                context!!
-            )
-            L.d("SmartConfigService", "正在连接到$ssid,${mTask.mBssid},${mTask.mPassword}")
-            esptouchTask?.let {
-                it.setEsptouchListener { result ->
-                    CoroutineScope(Dispatchers.Main).launch {
-                        listener?.connectedToWifi(
-                            result.isSuc, result.bssid, result.isCancelled, result.inetAddress
-                        )
+
+        this.task = task
+        thread(start = true) {
+            try {
+                this.listener?.onStep(SmartConfigStep.STEP_LINK_START)
+
+                esptouchTask = EsptouchTask(this.task?.mSsid, this.task?.mBssid,
+                    this.task?.mPassword, context!!.applicationContext)
+                esptouchTask?.let {
+                    this.listener?.onStep(SmartConfigStep.STEP_DEVICE_CONNECTING)
+
+                    val result = it.executeForResult()
+                    if (!result.isSuc) {
+                        L.e(TAG, "设备未联网:" + result.inetAddress)
+                        this.listener?.deviceConnectToWifiFail()
+
+                    } else {
+                        L.d(TAG, "连接成功:" + result.inetAddress)
+                        this.listener?.deviceConnectToWifi(result)
+                        this.listener?.onStep(SmartConfigStep.STEP_DEVICE_CONNECTED_TO_WIFI)
+                        requestDeviceInfo(result)
                     }
-                    requestDeviceInfo(result)
                 }
-                val result = it.executeForResult()
-                if (!result.isSuc) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        listener?.connectFailed()
+
+            } catch (e: Exception) {
+                L.e(e.message!!)
+
+                this.listener?.onFail(
+                    TCLinkException("CONNECT_TO_DEVICE_FAILURE", "连接设备失败", e)
+                )
+                stopConnect()
+            }
+        }
+    }
+
+    private fun requestDeviceInfo(result: IEsptouchResult) {
+        try {
+            L.d("start create socket,host=${result.inetAddress.hostAddress},port=$port")
+            socket = DatagramSocket(port)
+            sendUdpPacketWithWifiInfo(result.inetAddress.hostAddress, this.task!!.mSsid, this.task!!.mPassword)
+
+        } catch (e: Exception) {
+            L.e(e.message!!)
+
+            this.listener?.onFail(
+                TCLinkException("GET_DEVICE_INFO_FAILURE", "获取设备信息失败", e))
+            closeSocket()
+        }
+    }
+
+    private fun sendUdpPacketWithWifiInfo(host: String, ssid: String, pwd: String) {
+        val wifiMsg = genLinkString(ssid, pwd, task!!.mAccessToken).toByteArray()
+        val datagramPacket = DatagramPacket(wifiMsg, wifiMsg.size, InetAddress.getByName(host), port)
+        recvWifiMsgFeedback()
+        try {
+            var times = 0
+            while (!sendWifiInfoSuccess && times < maxTimes2Try) {
+                L.d("正在发送 wifi 信息")
+                socket?.send(datagramPacket)
+                times++
+                Thread.sleep(1000)
+            }
+            if (!sendWifiInfoSuccess && times >= maxTimes2Try) {
+                this.listener?.onFail(TCLinkException("CONNECT_TO_DEVICE_FAILURE",
+                    "发送 wifi 信息失败"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            this.listener?.onFail(TCLinkException("CONNECT_TO_DEVICE_FAILURE",
+                "发送 wifi 信息失败"))
+        }
+    }
+
+    private fun recvWifiMsgFeedback() {
+        thread(start = true) {
+
+            val receiver = ByteArray(1024)
+            try {
+                while (!sendWifiInfoSuccess) {
+                    L.e("开始监听 wifi 信息发送回复")
+                    socket!!.receive(DatagramPacket(receiver, receiver.size))
+                    ByteArrayInputStream(receiver).use {
+                        BufferedReader(it.reader()).use {
+                            var resp = ""
+                            var line = it.readLine()
+                            while (line != null) {
+                                resp += line
+                                line = it.readLine()
+                            }
+                            checkWifiUDPResp(resp)
+                        }
                     }
-                    stop()
                 }
+
+                closeSocket()
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                this.listener?.onFail(TCLinkException("CONNECT_TO_DEVICE_FAILURE",
+                    "监听设备联网失败"))
+                closeSocket()
             }
         }
     }
 
     /**
-     * requestDeviceInfo
-     * <p>
-     * 成功响应：
-     * {
-     * "cmdType":  2,
-     * "productId": "*********",
-     * "deviceName":   "wifi",
-     * "connId":   "happy",
-     * "signature":    "****************************",
-     * "timestamp":    1562127932,
-     * "wifiState":    "connected"
-     * }
-     * <p>
-     * 若wifi已连接，且连接出错，立刻响应错误：
-     * {
-     * "cmdType":  2,
-     * "deviceReply":  "Current_Error",
-     * "log":  "MQTT connect error! (1, -28928)"
-     * }
-     * <p>
-     * 新连接上，且上次有错误日志，则先响应若干条：
-     * {
-     * "cmdType":  2,
-     * "deviceReply":  "Previous_Error",
-     * "log":  "TCP socket bind error!(16, 112)"
-     * }
+     * 检查设备对应 udp 报文的相应内容
      */
-    private fun requestDeviceInfo(result: IEsptouchResult) {
-        try {
-            socket = Socket(result.inetAddress.hostAddress, port)
-            val bufferedReader =
-                BufferedReader(InputStreamReader(socket!!.getInputStream(), "utf-8"))
-            sendMessage(genRequestDeviceInfoString())
-            var jsonStr = ""
-            var errorStr = ""
-            try {
-                val nowStr = bufferedReader.readLine()
-                if (!TextUtils.isEmpty(nowStr)) {
-                    jsonStr += nowStr
-                }
-            } catch (e: Exception) {
-            }
-            val msgArray = processReceivedJSONString(jsonStr)
-            var hasCurrentError = false
-            var deviceInfoObj = JSONObject()
-            val connectionErrorArray = JSONArray()
-            for (msgInfo in msgArray) {
-                if (msgInfo.has(deviceReplyKey)) {
-                    val deviceReplyType = msgInfo.getString(deviceReplyKey)
-                    if (deviceReplyType == "Current_Error") {
-                        hasCurrentError = true
-                        errorStr = errorStr + msgInfo.getString("log") + ';'.toString()
-                        connectionErrorArray.put(msgInfo)
-                    } else if (deviceReplyType == "Previous_Error") {
-                        errorStr = errorStr + msgInfo.getString("log") + ';'.toString()
-                        connectionErrorArray.put(msgInfo)
-                    }
-                } else if (msgInfo.has("wifiState")) {
-                    deviceInfoObj = msgInfo
-                }
-            }
-            deviceInfoObj.put("errorLogs", connectionErrorArray)
-            if (hasCurrentError) {
-                throw TCLinkException("CONNECT_DEVICE_FAILURE", errorStr)
-            }
-            CoroutineScope(Dispatchers.Main).launch {
-                listener?.onSuccess(DeviceInfo(deviceInfoObj))
-            }
-        } catch (e: Exception) {
-            CoroutineScope(Dispatchers.Main).launch {
-                listener?.onFail("GET_DEVICE_INFO_FAILURE", "获取设备签名失败")
+    private fun checkWifiUDPResp(resp: String) {
+        // 成功返回：{"cmdType":2,"productId":"0BCDALFUO8","deviceName":"dev4","protoVersion":"2.0"}
+        if (TextUtils.isEmpty(resp)) {
+            sendWifiInfoSuccess = false
+            L.e("设备没有对 udp 报文做响应")
+
+        } else {
+            var resJson = JSONObject(resp)
+            if (resJson == null)  return
+            L.d("接收到回复：${resJson}")
+
+            sendWifiInfoSuccess = resJson.has("productId") && resJson.has("deviceName")
+
+            if (sendWifiInfoSuccess) {
+                listener?.onStep(SmartConfigStep.STEP_GOT_DEVICE_INFO)
+                val deviceInfo = DeviceInfo(resJson)
+                listener?.onSuccess(deviceInfo)
             }
         }
-        //停止配网
-        stop()
-    }
-
-    @Throws(IOException::class)
-    private fun sendMessage(message: String) {
-        socket?.let {
-            val outputStream = it.getOutputStream()
-            outputStream.write(message.toByteArray(charset("utf-8")))
-            outputStream.flush()
-        }
-    }
-
-    @Throws(JSONException::class)
-    private fun genRequestDeviceInfoString(): String {
-        val jsonObject = JSONObject()
-        jsonObject.put("cmdType", 0)
-        jsonObject.put("timestamp", System.currentTimeMillis() / 1000)
-        return jsonObject.toString()
-    }
-
-    @Throws(JSONException::class)
-    private fun processReceivedJSONString(jsonString: String): List<JSONObject> {
-        val json = jsonString.replace("}{", "}&Split&{")
-        val jsonArr = json.split("&Split&")
-        val jsonObjectArray = ArrayList<JSONObject>()
-
-        jsonArr.forEach {
-            jsonObjectArray.add(JSONObject(it))
-        }
-        return jsonObjectArray
     }
 
 }

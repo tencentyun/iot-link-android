@@ -123,4 +123,16 @@ interface DeviceImpl {
      */
     fun deviceProducts(productIds: ArrayList<String>, callback: MyCallback)
 
+    /**
+     * 获取绑定设备的 token
+     */
+    fun getBindDevToken(userId: String, callback: MyCallback)
+
+    /**
+     * 检查设备绑定 token 的状态
+     */
+    fun checkDeviceBindTokenState(userId: String, bindDeviceToken: String, callback: MyCallback)
+
+    fun wifiBindDevice(userId: String, bindDeviceToken: String, familyId: String, deviceInfo: DeviceInfo, callback: MyCallback)
+
 }
