@@ -4,22 +4,21 @@ import android.content.Context
 import android.location.Location
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.kitlink.device.*
-import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigListener
-import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigService
-import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigStep
-import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigTask
-import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPListener
-import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPService
-import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPStep
-import com.tencent.iot.explorer.link.kitlink.device.softap.SoftApTask
+import com.tencent.iot.explorer.link.core.auth.http.ConnectionListener
+import com.tencent.iot.explorer.link.core.auth.http.Reconnect
+import com.tencent.iot.explorer.link.core.auth.response.DeviceBindTokenStateResponse
+import com.tencent.iot.explorer.link.core.link.SmartConfigService
+import com.tencent.iot.explorer.link.core.link.SoftAPService
+import com.tencent.iot.explorer.link.core.link.entity.*
+import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
+import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
+import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
-import com.tencent.iot.explorer.link.kitlink.response.DeviceBindTokenStateResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
-import com.tencent.iot.explorer.link.util.L
 
 /**
  * 配网进度、绑定设备
@@ -85,18 +84,17 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             val location = Location("temp")
             location.longitude = 0.0
             location.latitude = 0.0
-            val task = SmartConfigTask()
+            val task = LinkTask()
             task.mSsid = ssid
             task.mBssid = bssid
             task.mPassword = password
-            task.mAccessToken = "none"
+            task.mAccessToken = App.data.bindDeviceToken
             task.mLocation = location
             L.e("ssid:$ssid")
             it.startConnect(task, smartConfigListener)
         }
         deviceInfo = null
     }
-
 
     private val connectionListener = object : ConnectionListener {
         override fun onConnected() {
@@ -138,11 +136,11 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             val location = Location("temp")
             location.longitude = 0.0
             location.latitude = 0.0
-            val task = SoftApTask()
+            val task = LinkTask()
             task.mSsid = ssid
             task.mBssid = bssid
             task.mPassword = password
-            task.mAccessToken = "none"
+            task.mAccessToken = App.data.bindDeviceToken
             task.mLocation = location
             L.e("ssid:$ssid,password:$password")
             it.startConnect(task, softAPListener)
@@ -168,7 +166,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
         if (currentNo >= maxTimes || currentNo < 0) {
             Reconnect.instance.stop(connectionListener)
             checkDeviceBindTokenStateStarted = false
-            softAPListener.onFail(unKnowError.toString(), "获取设备与 oken 的绑定状态失败")
+            softAPListener.onFail(unKnowError.toString(), "获取设备与 token 的绑定状态失败")
             return
         }
 

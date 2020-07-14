@@ -31,7 +31,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation fileTree(dir: '../sdk/libs', include: ['*.jar', '*.aar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:+'
@@ -56,6 +57,7 @@ dependencies {
     implementation('com.tencent.qcloud:cosxml-lite:5.4.29') {
         exclude group: 'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
     }
+    implementation project(path: ':sdk')
 
     if (findProject(':sdk') != null) {
         implementation project(path: ':sdk')

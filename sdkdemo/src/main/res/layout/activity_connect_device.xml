@@ -64,7 +64,6 @@
         android:background="@color/translucent"
         android:hint="请输入手机连接Wi-Fi密码"
         android:imeOptions="actionNone"
-        android:inputType="textPassword"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@color/black"

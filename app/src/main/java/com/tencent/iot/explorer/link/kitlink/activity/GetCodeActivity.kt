@@ -6,11 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.GetCodePresenter
 import com.tencent.iot.explorer.link.mvp.view.GetCodeView
-import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_get_code.*

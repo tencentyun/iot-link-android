@@ -18,10 +18,10 @@ import com.tencent.cos.xml.model.CosXmlResult
 import com.tencent.cos.xml.transfer.COSXMLUploadTask
 import com.tencent.cos.xml.transfer.TransferConfig
 import com.tencent.cos.xml.transfer.TransferManager
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider
 import com.tencent.qcloud.core.auth.QCloudCredentials
 import com.tencent.qcloud.core.auth.SessionQCloudCredentials
-import com.tencent.iot.explorer.link.util.L
 
 /**
  * 上传文件

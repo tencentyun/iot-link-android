@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.kitlink.response
+package com.tencent.iot.explorer.link.core.auth.response
 
 class BindDeviceTokenResponse {
     var Token: String? = null

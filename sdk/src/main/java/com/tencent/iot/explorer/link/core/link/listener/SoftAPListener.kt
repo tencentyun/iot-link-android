@@ -1,11 +1,18 @@
 package com.tencent.iot.explorer.link.core.link.listener
 
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.SoftAPStep
 
-interface SoftAPListener : IotLinkListener {
+interface SoftAPListener {
 
-    fun connectedToWifi(deviceInfo: DeviceInfo)
+    fun onSuccess(deviceInfo: DeviceInfo)
 
-    fun connectFailed(deviceInfo: DeviceInfo, ssid: String)
+    fun reconnectedSuccess(deviceInfo: DeviceInfo)
+
+    fun reconnectedFail(deviceInfo: DeviceInfo, ssid: String)
+
+    fun onStep(step: SoftAPStep)
+
+    fun onFail(code: String, msg: String)
 
 }

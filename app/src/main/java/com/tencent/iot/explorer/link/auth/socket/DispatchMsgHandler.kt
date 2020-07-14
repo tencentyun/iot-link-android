@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.auth.message.resp.RespSuccessMessage
 import com.tencent.iot.explorer.link.auth.message.resp.ResponseMessage
 import com.tencent.iot.explorer.link.auth.socket.callback.DispatchCallback
 import com.tencent.iot.explorer.link.auth.socket.callback.HeartCallback
-import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.core.log.L
 import java.lang.Exception
 
 open class DispatchMsgHandler {

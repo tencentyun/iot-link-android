@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.os.Handler
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.SetPasswordActivity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
@@ -10,7 +11,6 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.GetCodeView
-import com.tencent.iot.explorer.link.util.L
 
 class GetCodeModel(view: GetCodeView) : ParentModel<GetCodeView>(view), MyCallback {
 

@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.holder.FamilyListFootHolder
 import com.tencent.iot.explorer.link.kitlink.holder.FamilyListViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -11,7 +12,6 @@ import com.tencent.iot.explorer.link.kitlink.response.FamilyListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_family_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
