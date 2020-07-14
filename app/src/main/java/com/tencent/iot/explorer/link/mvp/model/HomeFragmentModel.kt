@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ShareDeviceEntity
@@ -13,7 +14,6 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
-import com.tencent.iot.explorer.link.util.L
 
 class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(view), MyCallback {
 
