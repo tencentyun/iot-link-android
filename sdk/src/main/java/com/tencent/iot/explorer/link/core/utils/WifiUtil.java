@@ -1,10 +1,14 @@
-package com.tencent.iot.explorer.link.kitlink.util;
+package com.tencent.iot.explorer.link.core.utils;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 public class WifiUtil {
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private static int getFrequency(Context context) {
         WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return wifi.getConnectionInfo().getFrequency();
