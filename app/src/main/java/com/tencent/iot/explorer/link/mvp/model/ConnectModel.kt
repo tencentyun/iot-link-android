@@ -4,22 +4,19 @@ import android.content.Context
 import android.location.Location
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.kitlink.device.*
-import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigListener
-import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigService
-import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigStep
-import com.tencent.iot.explorer.link.kitlink.device.smartconfig.SmartConfigTask
-import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPListener
-import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPService
-import com.tencent.iot.explorer.link.kitlink.device.softap.SoftAPStep
-import com.tencent.iot.explorer.link.kitlink.device.softap.SoftApTask
+import com.tencent.iot.explorer.link.core.link.SmartConfigService
+import com.tencent.iot.explorer.link.core.link.SoftAPService
+import com.tencent.iot.explorer.link.core.link.entity.*
+import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
+import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
+import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.DeviceBindTokenStateResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
-import com.tencent.iot.explorer.link.util.L
 
 /**
  * 配网进度、绑定设备
@@ -89,7 +86,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             task.mSsid = ssid
             task.mBssid = bssid
             task.mPassword = password
-            task.mAccessToken = "none"
+            task.mAccessToken = App.data.bindDeviceToken
             task.mLocation = location
             L.e("ssid:$ssid")
             it.startConnect(task, smartConfigListener)
@@ -142,7 +139,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             task.mSsid = ssid
             task.mBssid = bssid
             task.mPassword = password
-            task.mAccessToken = "none"
+            task.mAccessToken = App.data.bindDeviceToken
             task.mLocation = location
             L.e("ssid:$ssid,password:$password")
             it.startConnect(task, softAPListener)

@@ -18,8 +18,6 @@ import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.DeviceTask
 import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
 import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
-import com.tencent.iot.explorer.link.core.link.service.SmartConfigService
-import com.tencent.iot.explorer.link.core.link.service.SoftAPService
 import kotlinx.android.synthetic.main.activity_connect_device.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.net.InetAddress

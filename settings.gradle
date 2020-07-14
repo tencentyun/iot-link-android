@@ -1,2 +1,2 @@
 include ':app', ':sdk'
-include ':sdkdemo'
+//include ':sdkdemo'
