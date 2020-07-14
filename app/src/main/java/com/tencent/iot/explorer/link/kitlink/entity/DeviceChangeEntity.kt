@@ -3,7 +3,6 @@ package com.tencent.iot.explorer.link.kitlink.entity
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.alibaba.fastjson.util.Base64
-import com.tencent.iot.explorer.link.util.L
 
 class DeviceChangeEntity {
 
