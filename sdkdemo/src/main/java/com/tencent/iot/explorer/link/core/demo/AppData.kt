@@ -27,6 +27,8 @@ class AppData private constructor() {
     //当前房间
     private var currentRoom = Room()
 
+    var bindDeviceToken = ""
+
     val activityList = LinkedList<BaseActivity>()
 
 

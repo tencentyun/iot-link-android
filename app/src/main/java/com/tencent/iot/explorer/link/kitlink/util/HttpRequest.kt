@@ -1,21 +1,19 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
-import android.util.Log
-import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.ErrorCode
 import com.tencent.iot.explorer.link.ErrorMessage
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.IPUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.device.DeviceInfo
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.retrofit.StringRequest
-import com.tencent.iot.explorer.link.util.L
 import java.util.*
 import com.tencent.iot.explorer.link.retrofit.Callback
 import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.ip.IPUtil
 import kotlin.collections.HashMap
 
 /**

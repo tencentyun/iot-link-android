@@ -61,6 +61,17 @@ class Reconnect private constructor() {
     }
 
     /**
+     * 幂等方式停止监听网络是否可达
+     */
+    fun stop(listener: ConnectionListener) {
+        if (connectionListener == listener) {
+            connectionListener = null
+            hasListener = false
+            job?.cancel()
+        }
+    }
+
+    /**
      * ping外网
      */
     private fun ping(): Boolean {

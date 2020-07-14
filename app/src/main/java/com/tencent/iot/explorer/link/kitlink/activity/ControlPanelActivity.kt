@@ -1,13 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.app.Activity
-import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.auth.IoTAuth
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.NavBar
@@ -15,14 +11,11 @@ import com.tencent.iot.explorer.link.kitlink.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.kitlink.theme.PanelTheme
 import com.tencent.iot.explorer.link.kitlink.theme.PanelThemeManager
-import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
-import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.kitlink.activity.PActivity
 import com.tencent.iot.explorer.link.kitlink.popup.OfflinePopupWindow
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*

@@ -20,7 +20,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.model.UploadModel
 import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.cos.xml.exception.CosXmlClientException
-import com.tencent.iot.explorer.link.util.L
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.util.picture.imp.ImageSelectorUtils

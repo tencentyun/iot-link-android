@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ShareUserEntity
 import com.tencent.iot.explorer.link.kitlink.holder.ShareUserFootHolder
@@ -13,7 +14,6 @@ import com.tencent.iot.explorer.link.kitlink.response.ShareUserResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
-import com.tencent.iot.explorer.link.util.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_share_user_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

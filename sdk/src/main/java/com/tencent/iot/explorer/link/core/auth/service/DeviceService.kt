@@ -9,6 +9,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.*
 import com.tencent.iot.explorer.link.core.auth.impl.DeviceImpl
 import com.tencent.iot.explorer.link.core.auth.response.*
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.utils.IPUtil
 import kotlin.collections.ArrayList
 
 internal class DeviceService : BaseService(), DeviceImpl {
@@ -218,7 +219,7 @@ internal class DeviceService : BaseService(), DeviceImpl {
         param["DeviceName"] = deviceInfo.deviceName
         param["Signature"] = deviceInfo.signature
         param["DeviceTimestamp"] = deviceInfo.timestamp
-        param["ConnId"] = deviceInfo.connId
+//        param["ConnId"] = deviceInfo.connId
         tokenPost(param, callback, RequestCode.wifi_bind_device)
     }
 
@@ -332,6 +333,46 @@ internal class DeviceService : BaseService(), DeviceImpl {
                 }
             }
         })
+    }
+
+    /**
+     * 获取绑定设备的 token
+     */
+    override fun getBindDevToken(userId: String, callback: MyCallback) {
+        val param = tokenParams("AppCreateDeviceBindToken")
+        param["ClientIp"] = IPUtil.getHostIP()
+        param["IotAppID"] = IoTAuth.APP_KEY
+        param["UserID"] = userId
+
+        tokenPost(param, callback, RequestCode.get_bind_device_token)
+    }
+
+    /**
+     * 检查设备绑定 token 的状态
+     */
+    override fun checkDeviceBindTokenState(userId: String, bindDeviceToken: String, callback: MyCallback) {
+        val param = tokenParams("AppGetDeviceBindTokenState")
+        param["ClientIp"] = IPUtil.getHostIP()
+        param["IotAppID"] = IoTAuth.APP_KEY
+        param["UserID"] = userId
+        param["Token"] = bindDeviceToken
+
+        tokenPost(param, callback, RequestCode.check_device_bind_token_state)
+    }
+
+    override fun wifiBindDevice(userId: String, bindDeviceToken: String, familyId: String,
+                                deviceInfo: DeviceInfo, callback: MyCallback) {
+        val param = tokenParams("AppTokenBindDeviceFamily")
+        param["ClientIp"] = IPUtil.getHostIP()
+        param["Action"] = "AppTokenBindDeviceFamily"
+        param["IotAppID"] = IoTAuth.APP_KEY
+        param["UserID"] = userId
+        param["Token"] = bindDeviceToken
+        param["FamilyId"] = familyId
+        param["ProductId"] = deviceInfo.productId
+        param["DeviceName"] = deviceInfo.deviceName
+
+        tokenPost(param, callback, RequestCode.wifi_bind_device)
     }
 
     /**
