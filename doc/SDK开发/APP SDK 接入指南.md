@@ -2,17 +2,17 @@
 
 **1、SDK 模块说明**
 
-[详情可见]()
+[详情可见](https://github.com/tencentyun/iot-link-ios/blob/master/doc/%E5%B9%B3%E5%8F%B0%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/SDK%20%E6%8E%A5%E5%85%A5%E8%AF%B4%E6%98%8E.md)
 
 **2、API 接口说明**
 
-[详情可见]()
+[详情可见](https://github.com/tencentyun/iot-link-ios/blob/master/doc/%E5%B9%B3%E5%8F%B0%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/SDK%20%E6%8E%A5%E5%85%A5%E8%AF%B4%E6%98%8E.md)
 
 **3、SDK 接入详情**
 
 1. 设备配网
 
-   智能配网（SmartConfig）
+   智能配网（SmartConfigService）
 
    ```kotlin
    val task = LinkTask()
@@ -30,7 +30,7 @@
    smartConfigService.startConnect(task, smartConfigListener)
    ```
 
-   自主配网（SoftAP）
+   自助配网（SoftAPService）
 
    ```kotlin
    val task = LinkTask()

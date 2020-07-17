@@ -78,4 +78,4 @@
 
    
 
-4. 详细功能请参考 [SDK 接入指南](https://github.com/tencentyun/iot-link-ios/blob/master/doc/SDK开发/SDK接入指南.md)
+4. 详细功能请参考 [APP SDK 接入指南](https://github.com/tencentyun/iot-link-android/blob/master/doc/SDK%E5%BC%80%E5%8F%91/APP%20SDK%20%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md)
