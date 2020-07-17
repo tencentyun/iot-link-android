@@ -12,7 +12,7 @@
 
 1. 设备配网
 
-   智能配网（SmartConfig）
+   智能配网（SmartConfigService）
 
    ```kotlin
    val task = LinkTask()
@@ -30,7 +30,7 @@
    smartConfigService.startConnect(task, smartConfigListener)
    ```
 
-   自主配网（SoftAP）
+   自助配网（SoftAPService）
 
    ```kotlin
    val task = LinkTask()
