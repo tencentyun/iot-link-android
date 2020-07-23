@@ -42,6 +42,8 @@ jobs:
         run: |
           ./gradlew :sdkdemo:assembleRelease
       - name: Upload demo to PGY
+        env:
+          IOT_PGYER_API_KEY: ${{ secrets.IOT_PGYER_API_KEY }}
         run: |
           demoApk=$(ls sdkdemo/build/outputs/apk/release/sdkdemo-release.apk)
           curl -F "file=@${demoApk}" -F "_api_key=$IOT_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
