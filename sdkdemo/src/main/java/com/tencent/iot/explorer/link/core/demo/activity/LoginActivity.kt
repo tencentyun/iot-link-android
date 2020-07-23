@@ -1,11 +1,18 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
+import com.alibaba.fastjson.JSON
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.LoginCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.response.UserInfoResponse
 import kotlinx.android.synthetic.main.activity_login.*
 
 /**
@@ -16,6 +23,7 @@ class LoginActivity : BaseActivity(), LoginCallback {
     private var account = ""
     private var pwd = ""
     private val countryCode = "86"
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_login
@@ -55,7 +63,21 @@ class LoginActivity : BaseActivity(), LoginCallback {
 
     override fun success(user: User) {
         //成功跳转
-        jumpActivity(MainActivity::class.java, true)
+        IoTAuth.userImpl.userInfo(object: MyCallback{
+            override fun fail(msg: String?, reqCode: Int) {
+
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                response.parse(UserInfoResponse::class.java)?.Data?.run {
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@LoginActivity);
+                    App.data.userInfo = this
+                    mFirebaseAnalytics!!.setUserId(App.data.userInfo.UserID)
+                    jumpActivity(MainActivity::class.java, true)
+                }
+            }
+
+        })
     }
 
     override fun fail(msg: String) {

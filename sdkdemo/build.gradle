@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'com.google.firebase.crashlytics'
+
 apply from: "../parse_json.gradle"
 
 android {
@@ -20,7 +24,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.tencent.iot.explorer.link.core.demo"
+        applicationId "com.tencent.iot.explorer.link.sdkdemo"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 3
@@ -81,4 +85,11 @@ dependencies {
     } else {
         implementation 'com.tencent.iot.explorer:explorer-link-android:+'
     }
+
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
+
+    // Add the Firebase Crashlytics SDK.
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
+
+//    implementation 'com.google.firebase:firebase-perf:19.0.7'
 }
