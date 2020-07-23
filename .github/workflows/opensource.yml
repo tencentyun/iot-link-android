@@ -37,3 +37,11 @@ jobs:
         run: |
           apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
           curl -F "file=@${apk}" -F "_api_key=$IOT_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
+
+      - name: Build demo apk
+        run: |
+          ./gradlew :sdkdemo:assembleRelease
+      - name: Upload demo to PGY
+        run: |
+          demoApk=$(ls sdkdemo/build/outputs/apk/release/sdkdemo-release.apk)
+          curl -F "file=@${demoApk}" -F "_api_key=$IOT_PGYER_API_KEY" https://www.pgyer.com/apiv2/app/upload
