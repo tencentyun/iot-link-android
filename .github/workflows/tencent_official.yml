@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          rm -rf opensource_keystore.jks app-config.json app/google-services.json
+          rm -rf app-config.json app/google-services.json
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/tencent_official_keystore.jks.asc > tencent_official_keystore.jks
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/app-config.json.asc > app-config.json
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/app/google-services.json.asc > app/google-services.json
