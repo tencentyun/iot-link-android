@@ -8,7 +8,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.fragment_wifi.*
 import kotlinx.android.synthetic.main.smart_config_second.*
@@ -47,6 +49,9 @@ class WifiFragment(type: Int) : BaseFragment() {
                 tv_wifi_commit.isEnabled = false
             } else {
                 tv_select_wifi.setText(wifiManager.connectionInfo.ssid.replace("\"", ""))
+                if (tv_select_wifi.text.contains(CommonField.SSID_UNKNOWN)) {
+                    T.show(getString(R.string.open_location_tip))
+                }
             }
             tv_select_wifi.isEnabled = type == soft_ap
         }
