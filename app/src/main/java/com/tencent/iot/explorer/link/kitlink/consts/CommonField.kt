@@ -97,6 +97,7 @@ object CommonField {
     const val PUBLISH_TAG = "com.tencent.iot.explorer.link"
 
     /***********窗口跳转码************/
+    const val QR_CODE_REQUEST_CODE = 103
     const val LOGIN_REQUEST_CODE = 108
     const val H5_REQUEST_LOGIN_CODE = 10
 
