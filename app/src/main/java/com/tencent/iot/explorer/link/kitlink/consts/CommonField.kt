@@ -100,4 +100,5 @@ object CommonField {
     const val LOGIN_REQUEST_CODE = 108
     const val H5_REQUEST_LOGIN_CODE = 10
 
+    const val SSID_UNKNOWN = "unknown ssid"
 }
