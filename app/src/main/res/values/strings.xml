@@ -261,6 +261,7 @@
     <string name="device">\t\t设备\t\t</string>
     <string name="family">\t\t家庭\t\t</string>
     <string name="notify">\t\t通知\t\t</string>
+    <string name="open_location_tip">请打开手机位置以便获取WIFI名称</string>
 
     <!--设备分类-->
     <string name="scanned_devices">已发现如下设备</string>
