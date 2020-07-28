@@ -19,6 +19,7 @@ public class WifiUtil {
      * @param context 上下文
      * @return true：wifi 是 2.4GHz， false：wifi 不是 2.4GHz
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static boolean is24GHz(Context context) {
         int freq = getFrequency(context);
         return freq > 2400 && freq < 2500;
@@ -29,6 +30,7 @@ public class WifiUtil {
      * @param context 上下文
      * @return true：wifi 是 5GHz， false：wifi 不是 5GHz
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static boolean is5GHz(Context context) {
         int freq = getFrequency(context);
         return freq > 4900 && freq < 5900;
