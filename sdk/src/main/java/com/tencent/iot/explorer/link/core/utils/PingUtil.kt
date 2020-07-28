@@ -2,14 +2,21 @@ package com.tencent.iot.explorer.link.core.utils
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.net.MacAddress
+import android.net.*
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
+import android.net.wifi.WifiNetworkSpecifier
 import android.net.wifi.WifiNetworkSuggestion
 import android.os.Build
+import android.os.PatternMatcher
+import android.util.Log
+import androidx.annotation.RequiresApi
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.log.L
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.io.ObjectInput
+import java.util.concurrent.CountDownLatch
 
 
 object PingUtil {
@@ -70,18 +77,58 @@ object PingUtil {
         (context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).run {
             //判断wifi曾经是不是连接过
             val tempConfig = isExists(this, ssid)
-            return if (tempConfig != null) {
+            if (tempConfig != null) {
                 disconnect()
                 L.e("连接1")
                 enableNetwork(tempConfig.networkId, true)
-            } else {
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 val wifiConfiguration = getWifiConfiguration(WPA_WAP2, password)
                 wifiConfiguration.SSID = "\"$ssid\""
                 wifiConfiguration.BSSID = bssid
-                L.e("连接2")
                 enableNetwork(addNetwork(wifiConfiguration), true)
+            } else {
+                return connetcWifiOverQ(context, ssid, password)
             }
+            return true
         }
+    }
+
+    private fun connetcWifiOverQ(context: Context, ssid: String, password: String): Boolean{
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val specifier = WifiNetworkSpecifier.Builder()
+                .setSsidPattern(PatternMatcher(ssid, PatternMatcher.PATTERN_PREFIX))
+                .setWpa2Passphrase(password)
+                .build()
+            val request = NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .setNetworkSpecifier(specifier)
+                .build()
+
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val lock = OneOffLock(1)
+            val networkCallback = object : ConnectivityManager.NetworkCallback() {
+                    override fun onAvailable(network: Network?) {
+                        L.d("networkCallback onAvailable")
+                        lock.checkRet = true
+                        lock.countDown()
+                    }
+
+                    override fun onUnavailable() {
+                        L.e("networkCallback onUnavailable")
+                        lock.checkRet = false
+                        lock.countDown()
+                    }
+                }
+
+            connectivityManager.requestNetwork(request, networkCallback)
+            lock.await()
+            return lock.checkRet
+        }
+
+        return false
     }
 
     private fun getWifiConfiguration(type: Int, password: String): WifiConfiguration {
