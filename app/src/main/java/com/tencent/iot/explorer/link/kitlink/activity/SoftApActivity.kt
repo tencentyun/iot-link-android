@@ -165,6 +165,7 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
 
     override fun onFail(msg: String) {
         L.e("getToken onFail msg:" + msg)
+        T.show(msg)
     }
 
 }
