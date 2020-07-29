@@ -99,4 +99,7 @@
     <color name="corner">@color/red</color>
     <color name="surrounding_area">@color/black_translucent</color>
 
+    <color name="uncomplete_progress">#FFBBBBBB</color>
+    <color name="dialog_background">#AA555555</color>
+    <color name="complete_progress">#FF006EFF</color>
 </resources>
