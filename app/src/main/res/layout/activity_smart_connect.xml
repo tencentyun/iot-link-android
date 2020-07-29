@@ -46,12 +46,21 @@
 
     </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
 
+    <com.tencent.iot.explorer.link.customview.progress.HorizontalStepView
+        android:id="@+id/smart_config_step_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/sbhv_smart_connect"
+        tools:layout_editor_absoluteX="0dp"
+        />
+
     <FrameLayout
             android:id="@+id/container_smart_connect"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sbhv_smart_connect"
+            app:layout_constraintTop_toBottomOf="@+id/smart_config_step_progress"
             app:layout_constraintVertical_bias="0.0"
             tools:layout_editor_absoluteX="0dp" />
 

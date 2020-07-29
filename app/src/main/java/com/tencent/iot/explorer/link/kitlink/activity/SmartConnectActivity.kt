@@ -1,15 +1,21 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.text.TextUtils
+import androidx.core.content.ContextCompat
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.fragment.*
+import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
+import com.tencent.iot.explorer.link.kitlink.fragment.BaseFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.ConnectProgressFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.SCStepFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
-import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.mvp.presenter.GetBindDeviceTokenPresenter
 import com.tencent.iot.explorer.link.mvp.view.GetBindDeviceTokenView
+import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.check.LocationUtil
 import kotlinx.android.synthetic.main.activity_smart_connect.*
+import java.util.*
 
 /**
  * 智能配网
@@ -28,7 +34,22 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
         return R.layout.activity_smart_connect
     }
 
+    private fun showProgress() {
+        val stepsBeanList = ArrayList<StepBean>()
+        val stepBean0 = StepBean("配置硬件")
+        val stepBean1 = StepBean("选择目标WIFI")
+        val stepBean2 = StepBean("开始配网")
+        stepsBeanList.add(stepBean0)
+        stepsBeanList.add(stepBean1)
+        stepsBeanList.add(stepBean2)
+
+        smart_config_step_progress.setStepViewTexts(stepsBeanList)
+        smart_config_step_progress.setTextSize(12) //set textSize
+}
+
     override fun initView() {
+        showProgress()
+
         presenter = GetBindDeviceTokenPresenter(this)
         scStepFragment = SCStepFragment()
         scStepFragment.onNextListener = object : SCStepFragment.OnNextListener {
