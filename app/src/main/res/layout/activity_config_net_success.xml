@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+    <com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView
+            android:id="@+id/sbhv_config_net_sucess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:use_type="use_padding_top">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp">
+
+            <ImageView
+                android:id="@+id/tv_config_net_sucess_back"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="5dp"
+                android:layout_marginStart="12dp"
+                android:gravity="center"
+                android:src="@mipmap/icon_arrow"
+                />
+
+            <TextView
+                    android:id="@+id/tv_config_net_sucess_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/add_device"
+                    android:textStyle="bold"
+                    android:textColor="@color/black_333333"
+                    android:textSize="@dimen/ts_20" />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/gray_e6e6e6" />
+        </RelativeLayout>
+
+    </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
+
+    <ImageView
+        android:id="@+id/iv_config_net_sucess"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@mipmap/right"
+        android:layout_marginTop="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sbhv_config_net_sucess"
+        />
+
+    <TextView
+        android:id="@+id/tv_config_net_sucess_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_config_net_sucess"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        android:text="@string/add_device_success"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:id="@+id/tv_config_net_sucess_reason_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_config_net_sucess_tip"
+        android:text="@string/device_name"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/tv_add_other"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:textColor="@color/complete_progress"
+        android:textSize="@dimen/ts_18"
+        android:layout_marginBottom="20dp"
+        android:text="@string/add_other_device"
+        app:layout_constraintBottom_toTopOf="@id/tv_finish"
+        />
+
+    <TextView
+        android:id="@+id/tv_finish"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_rad4_color_0052d9"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_18"
+        android:layout_marginBottom="20dp"
+        android:text="@string/finish"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
