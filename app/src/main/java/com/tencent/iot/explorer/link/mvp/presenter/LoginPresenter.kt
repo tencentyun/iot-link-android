@@ -19,6 +19,14 @@ class LoginPresenter : ParentPresenter<LoginModel, LoginView> {
         model?.setCountryCode(countryCode)
     }
 
+    fun setPhone(phone: String) {
+        model?.phone = phone
+    }
+
+    fun setEmail(email: String) {
+        model?.email = email
+    }
+
     fun setPhoneData(phone: String, pwd: String) {
         model?.phone = phone
         model?.pwd = pwd
@@ -27,6 +35,10 @@ class LoginPresenter : ParentPresenter<LoginModel, LoginView> {
     fun setEmailData(email: String, pwd: String) {
         model?.email = email
         model?.pwd = pwd
+    }
+
+    fun setVerifyCode(verifyCode: String) {
+        model?.verifyCode = verifyCode
     }
 
     fun phoneCommit() {
@@ -41,4 +53,19 @@ class LoginPresenter : ParentPresenter<LoginModel, LoginView> {
         model?.wechatLogin(reqCode)
     }
 
+    fun requestPhoneCode() {
+        model?.requestPhoneCode()
+    }
+
+    fun requestEmailCode() {
+        model?.requestEmailCode()
+    }
+
+    fun phoneVerifyCodeCommit() {
+        model?.phoneVerifyCodeCommit()
+    }
+
+    fun emailVerifyCodeCommit() {
+        model?.emailVerifyCodeCommit()
+    }
 }

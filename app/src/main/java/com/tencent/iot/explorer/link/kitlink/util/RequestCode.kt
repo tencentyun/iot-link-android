@@ -28,6 +28,8 @@ object RequestCode {
     const val modify_nick = 1022
     const val find_phone_user = 1023
     const val find_email_user = 1024
+    const val phone_verifycode_login = 1025
+    const val email_verifycode_login = 1026
 
     /*************用户接口结束**************/
 
