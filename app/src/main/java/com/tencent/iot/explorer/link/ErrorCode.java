@@ -6,5 +6,6 @@ public class ErrorCode {
 
     public static class DATA_MSG {
         public final static String ACCESS_TOKEN_ERR = "InvalidParameterValue.InvalidAccessToken";
+        public final static String ErrorUserNotExists = "InvalidParameterValue.ErrorUserNotExists";
     }
 }

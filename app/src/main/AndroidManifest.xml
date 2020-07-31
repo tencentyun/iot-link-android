@@ -88,14 +88,15 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".kitlink.activity.LoginActivity"
-                android:launchMode="singleTask">
+                android:name=".kitlink.activity.GuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".kitlink.activity.LoginActivity2" />
+        <activity android:name=".kitlink.activity.LoginActivity" />
         <activity android:name=".kitlink.activity.WebActivity" />
         <activity android:name=".kitlink.activity.DeviceDetailsActivity" />
         <activity android:name=".kitlink.activity.SmartConnectActivity" />

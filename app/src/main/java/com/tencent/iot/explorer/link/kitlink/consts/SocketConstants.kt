@@ -9,6 +9,7 @@ object SocketConstants {
     //获取手机验证码的类型
     const val register = "register"
     const val reset_pwd = "resetpass"
+    const val login = "login"
 
     const val ok = "OK"
 

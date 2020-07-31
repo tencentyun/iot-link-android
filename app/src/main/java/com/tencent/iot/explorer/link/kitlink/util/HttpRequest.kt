@@ -248,6 +248,29 @@ class HttpRequest private constructor() {
     }
 
     /**
+     * 手机号验证码登录
+     */
+    fun phoneVerifyCodeLogin(countryCode: String, phone: String, verifyCode: String, callback: MyCallback) {
+        val param = commonParams("AppGetToken")
+        param["Type"] = "phone"
+        param["CountryCode"] = countryCode
+        param["PhoneNumber"] = phone
+        param["VerificationCode"] = verifyCode
+        postJson(param, callback, RequestCode.phone_verifycode_login)
+    }
+
+    /**
+     * 邮箱验证码登录
+     */
+    fun emailVerifyCodeLogin(email: String, verifyCode: String, callback: MyCallback) {
+        val param = commonParams("AppGetToken")
+        param["Type"] = "email"
+        param["Email"] = email
+        param["VerificationCode"] = verifyCode
+        postJson(param, callback, RequestCode.email_verifycode_login)
+    }
+
+    /**
      * 微信登录
      */
     fun wechatLogin(code: String, callback: MyCallback) {
