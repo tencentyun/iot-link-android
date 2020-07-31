@@ -19,6 +19,14 @@ class LoginPresenter : ParentPresenter<LoginModel, LoginView> {
         model?.setCountryCode(countryCode)
     }
 
+    fun setPhone(phone: String) {
+        model?.phone = phone
+    }
+
+    fun setEmail(email: String) {
+        model?.email = email
+    }
+
     fun setPhoneData(phone: String, pwd: String) {
         model?.phone = phone
         model?.pwd = pwd
@@ -39,6 +47,14 @@ class LoginPresenter : ParentPresenter<LoginModel, LoginView> {
 
     fun wechatLogin(reqCode: String) {
         model?.wechatLogin(reqCode)
+    }
+
+    fun requestPhoneCode() {
+        model?.requestPhoneCode()
+    }
+
+    fun requestEmailCode() {
+        model?.requestEmailCode()
     }
 
 }
