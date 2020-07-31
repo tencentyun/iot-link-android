@@ -304,4 +304,13 @@
     <string name="toast_password_not_verify">两次输入的密码不一致</string>
     <string name="toast_login">密码修改成功，请重新登录</string>
     <!--customview end-->
+
+    <string name="welcome_to_use_tencent_ll">欢迎使用腾讯连连</string>
+    <string name="create_new_account">创建新账号</string>
+    <string name="use_existed_account_to_login">使用已有账号登录</string>
+    <string name="account_passwd_login">账号密码登录</string>
+    <string name="verify_code_login">验证码登录</string>
+    <string name="mobile_or_email">手机号码/邮箱地址</string>
+    <string name="other_login_way">其他登录方式</string>
+    <string name="wechat">微信</string>
 </resources>

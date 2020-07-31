@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.model
 
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.entity.ParentRespEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.LoginResponse
@@ -14,6 +15,8 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
     var phone: String = ""
     var email: String = ""
     var pwd: String = ""
+    var verifyCode: String = ""
+
     private var countryName = "中国大陆"
     private var countryCode = "86"
     private var isCommit = false
@@ -49,6 +52,26 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
         isCommit = true
     }
 
+    fun requestPhoneCode() {
+        HttpRequest.instance.sendMobileCode(SocketConstants.login, countryCode, phone, this)
+    }
+
+    fun requestEmailCode() {
+        HttpRequest.instance.sendEmailCode(SocketConstants.login, email, this)
+    }
+
+    fun phoneVerifyCodeCommit() {
+        if (isCommit) return
+        HttpRequest.instance.phoneVerifyCodeLogin(countryCode, phone, verifyCode, this)
+        isCommit = true
+    }
+
+    fun emailVerifyCodeCommit() {
+        if (isCommit) return
+        HttpRequest.instance.emailVerifyCodeLogin(email, verifyCode, this)
+        isCommit = true
+    }
+
     override fun fail(msg: String?, reqCode: Int) {
         isCommit = false
     }
@@ -63,7 +86,7 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
                 return
             }
         }
-        view?.loginFail(response.msg)
+        view?.loginFail(response)
     }
 
 }

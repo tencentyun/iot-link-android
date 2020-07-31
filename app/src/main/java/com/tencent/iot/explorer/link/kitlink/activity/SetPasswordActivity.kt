@@ -88,7 +88,7 @@ class SetPasswordActivity : PActivity(), SetPasswordView {
 
     override fun phoneRegisterSuccess(phoneNumber: String) {
         T.show(getString(R.string.set_password_success))
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, LoginActivity2::class.java)
         intent.putExtra(GetCodeActivity.PHONE, phoneNumber)
         intent.putExtra("account", phoneNumber)
         intent.putExtra("password", pwd)
@@ -98,7 +98,7 @@ class SetPasswordActivity : PActivity(), SetPasswordView {
 
     override fun emailRegisterSuccess(email: String) {
         T.show(getString(R.string.set_password_success))
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, LoginActivity2::class.java)
         intent.putExtra(GetCodeActivity.EMAIL, email)
         intent.putExtra("account", email)
         intent.putExtra("password", pwd)
