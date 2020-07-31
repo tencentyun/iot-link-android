@@ -106,11 +106,13 @@ class HttpRequest private constructor() {
         if (!App.chargeUrlAppType()) {
             param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
-            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=weichuantest" else "$APP_API/$action"
+//            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=weichuantest" else "$APP_API/$action"
+            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=archurtest" else "$APP_API/$action"
 
         } else {
             json = JsonManager.toJson(sign(param))
-            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=weichuantest" else "$EXPLORER_API/$action"
+//            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=weichuantest" else "$EXPLORER_API/$action"
+            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=archurtest" else "$EXPLORER_API/$action"
 
         }
 
@@ -138,7 +140,7 @@ class HttpRequest private constructor() {
             App.toLogin()
             return
         }
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
@@ -204,7 +206,7 @@ class HttpRequest private constructor() {
             return
         }
 
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API
 
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
@@ -245,6 +247,29 @@ class HttpRequest private constructor() {
         param["Email"] = email
         param["Password"] = pwd
         postJson(param, callback, RequestCode.email_login)
+    }
+
+    /**
+     * 手机号验证码登录
+     */
+    fun phoneVerifyCodeLogin(countryCode: String, phone: String, verifyCode: String, callback: MyCallback) {
+        val param = commonParams("AppGetToken")
+        param["Type"] = "phone"
+        param["CountryCode"] = countryCode
+        param["PhoneNumber"] = phone
+        param["VerificationCode"] = verifyCode
+        postJson(param, callback, RequestCode.phone_verifycode_login)
+    }
+
+    /**
+     * 邮箱验证码登录
+     */
+    fun emailVerifyCodeLogin(email: String, verifyCode: String, callback: MyCallback) {
+        val param = commonParams("AppGetToken")
+        param["Type"] = "email"
+        param["Email"] = email
+        param["VerificationCode"] = verifyCode
+        postJson(param, callback, RequestCode.email_verifycode_login)
     }
 
     /**
