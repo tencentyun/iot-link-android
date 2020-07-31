@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import com.tencent.iot.explorer.link.R
@@ -24,6 +25,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
 
     companion object {
         const val ACCOUNT_TYPE = "account_type"
+        const val ACCOUNT_NUMBER = "account_number"
     }
 
     private lateinit var presenter: RegisterPresenter
@@ -51,6 +53,15 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             when (registerType) {
                 true -> showPhoneRegister()
                 false -> showEmailRegister()
+            }
+        }
+        intent?.let {
+            val account = intent?.getStringExtra(ACCOUNT_NUMBER)?:""
+            if (!TextUtils.isEmpty(account)) {
+                if (account.contains("@"))
+                    emailView.et_register_email.setText(account)
+                else
+                    phoneView.et_register_phone.setText(account)
             }
         }
     }
