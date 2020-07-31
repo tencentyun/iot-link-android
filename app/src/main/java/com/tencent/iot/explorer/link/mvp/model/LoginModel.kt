@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.model
 
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.entity.ParentRespEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.LoginResponse
@@ -47,6 +48,14 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
         if (isCommit) return
         HttpRequest.instance.wechatLogin(reqCode, this)
         isCommit = true
+    }
+
+    fun requestPhoneCode() {
+        HttpRequest.instance.sendMobileCode(SocketConstants.login, countryCode, phone, this)
+    }
+
+    fun requestEmailCode() {
+        HttpRequest.instance.sendEmailCode(SocketConstants.login, email, this)
     }
 
     override fun fail(msg: String?, reqCode: Int) {

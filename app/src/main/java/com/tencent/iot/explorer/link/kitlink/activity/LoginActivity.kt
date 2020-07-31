@@ -68,7 +68,7 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
         if (!TextUtils.isEmpty(fromTag) && fromTag.equals(CommonField.WAY_SOURCE)) {
             return
         }
-        logout(this)
+//        logout(this)
     }
 
     override fun onPause() {

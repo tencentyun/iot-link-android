@@ -106,11 +106,13 @@ class HttpRequest private constructor() {
         if (!App.chargeUrlAppType()) {
             param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
-            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=weichuantest" else "$APP_API/$action"
+//            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=weichuantest" else "$APP_API/$action"
+            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=archurtest" else "$APP_API/$action"
 
         } else {
             json = JsonManager.toJson(sign(param))
-            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=weichuantest" else "$EXPLORER_API/$action"
+//            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=weichuantest" else "$EXPLORER_API/$action"
+            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=archurtest" else "$EXPLORER_API/$action"
 
         }
 
