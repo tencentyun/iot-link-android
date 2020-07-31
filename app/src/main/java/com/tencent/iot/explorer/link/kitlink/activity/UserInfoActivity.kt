@@ -156,7 +156,13 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     override fun logout() {
         saveUser(null)
         App.data.clear()
-        jumpActivity(LoginActivity::class.java)
+        jumpActivity(GuideActivity::class.java)
+        App.data.activityList.forEach {
+            if (it !is GuideActivity) {
+                it.finish()
+            }
+        }
+        App.data.activityList.clear()
     }
 
     override fun showAvatar(imageUrl: String) {
