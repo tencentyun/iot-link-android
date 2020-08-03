@@ -106,11 +106,11 @@ class HttpRequest private constructor() {
         if (!App.chargeUrlAppType()) {
             param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
-            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=weichuantest" else "$APP_API/$action"
+            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=archurtest" else "$APP_API/$action"
 
         } else {
             json = JsonManager.toJson(sign(param))
-            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=weichuantest" else "$EXPLORER_API/$action"
+            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=archurtest" else "$EXPLORER_API/$action"
 
         }
 
@@ -138,7 +138,7 @@ class HttpRequest private constructor() {
             App.toLogin()
             return
         }
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
@@ -204,7 +204,7 @@ class HttpRequest private constructor() {
             return
         }
 
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API
 
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
@@ -297,7 +297,7 @@ class HttpRequest private constructor() {
     }
 
     /**
-     * 获取手机验证码
+     * 获取邮箱验证码
      */
     fun sendEmailCode(type: String, email: String, callback: MyCallback) {
         val param = commonParams("AppSendEmailVerificationCode")
@@ -423,6 +423,79 @@ class HttpRequest private constructor() {
         val param = tokenParams("AppUnBindXgToken")
         param["Token"] = xgToken
         tokenPost(param, callback, RequestCode.unbind_xg)
+    }
+
+    /**
+     * 绑定用户邮箱号
+     */
+    fun bindEmail(email: String, code: String, passwd: String, callback: MyCallback) {
+        val param = tokenParams("AppUpdateUser")
+        param["Email"] = email
+        param["VerificationCode"] = code
+        param["Password"] = passwd
+        updateUserInfo(param, callback, RequestCode.update_user_info)
+    }
+
+    /**
+     * 绑定用户手机号
+     */
+    fun bindPhone(countryCode: String, phone: String, code: String, passwd: String, callback: MyCallback) {
+        val param = tokenParams("AppUpdateUser")
+        param["CountryCode"] = countryCode
+        param["PhoneNumber"] = phone
+        param["VerificationCode"] = code
+        param["Password"] = passwd
+        updateUserInfo(param, callback, RequestCode.update_user_info)
+    }
+
+    /**
+     * 绑定微信
+     */
+    fun bindWX(code: String, callback: MyCallback) {
+        val param = tokenParams("AppUpdateUserByWeiXin")
+        param["code"] = code
+        if (T.getContext().applicationInfo.packageName.equals(CommonField.OPEN_SOURCE_TAG)) {
+            param["busi"] = BUSI_OPENSOURCE
+        } else if (T.getContext().applicationInfo.packageName.equals(CommonField.PUBLISH_TAG)) {
+            param["busi"] = BUSI_APP
+        }
+        postJson(param, callback, RequestCode.bind_wx)
+//        tokenPost(param, callback, RequestCode.bind_wx)
+    }
+
+    /**
+     * 绑定微信时获取OpenID
+     */
+    fun getWXOpenID(code: String, callback: MyCallback) {
+        val param = commonParams("AppUpdateUserByWeixin")
+        param["code"] = code
+        if (T.getContext().applicationInfo.packageName.equals(CommonField.OPEN_SOURCE_TAG)) {
+            param["busi"] = BUSI_OPENSOURCE
+        } else if (T.getContext().applicationInfo.packageName.equals(CommonField.PUBLISH_TAG)) {
+            param["busi"] = BUSI_APP
+        }
+        postJson(param, callback, RequestCode.wechat_login)
+    }
+
+    /**
+     * 修改用户邮箱号
+     */
+    fun modifyEmail(email: String, code: String, callback: MyCallback) {
+        val param = tokenParams("AppUpdateUser")
+        param["Email"] = email
+        param["VerificationCode"] = code
+        updateUserInfo(param, callback, RequestCode.update_user_info)
+    }
+
+    /**
+     * 修改用户手机号
+     */
+    fun modifyPhone(countryCode: String, phone: String, code: String, callback: MyCallback) {
+        val param = tokenParams("AppUpdateUser")
+        param["CountryCode"] = countryCode
+        param["PhoneNumber"] = phone
+        param["VerificationCode"] = code
+        updateUserInfo(param, callback, RequestCode.update_user_info)
     }
 
     /**
@@ -1166,7 +1239,7 @@ class HttpRequest private constructor() {
         val param = tokenParams("DescribeProductConfig")
         param["ProductId"] = productId
         param["Type"] = type
-        param["Uin"] = "weichuantest"
+        param["Uin"] = "archurtest"
         param["AppId"] = APP_KEY
         tokenPost(param, callback, RequestCode.describe_product_config)
     }

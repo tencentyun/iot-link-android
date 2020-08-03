@@ -64,6 +64,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         tv_title_modify_password.setOnClickListener(this)
         tv_user_info_logout.setOnClickListener(this)
         tv_user_id.setOnLongClickListener(this)
+        tv_account_and_safety.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -88,6 +89,10 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
             }
             tv_user_info_logout -> {
                 presenter.logout()
+            }
+            tv_account_and_safety -> {
+                T.show("账户与安全")
+                jumpActivity(AccountAndSafetyActivity::class.java)
             }
         }
     }
