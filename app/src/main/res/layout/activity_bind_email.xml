@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!--返回键-->
+    <include
+        android:id="@+id/menu_bind_email"
+        layout="@layout/menu_back_layout" />
+
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
+        android:id="@+id/et_bind_email"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:background="@color/white"
+        android:hint="@string/please_input_email"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/gray_cccccc"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintBottom_toBottomOf="@+id/line_bind_email"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/iv_clear_bind_email" />
+
+    <ImageView
+        android:id="@+id/iv_clear_bind_email"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="24dp"
+        android:padding="3dp"
+        android:src="@mipmap/icon_clear"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_bind_email"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_bind_email" />
+
+    <View
+        android:id="@+id/line_bind_email"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/gray_dddddd"
+        app:layout_constraintTop_toBottomOf="@+id/menu_bind_email" />
+
+    <TextView
+        android:id="@+id/tv_bind_email_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red_eb3d3d"
+        android:textSize="@dimen/ts_10"
+        app:layout_constraintLeft_toLeftOf="@+id/line_bind_email"
+        app:layout_constraintTop_toBottomOf="@+id/line_bind_email" />
+
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
+        android:id="@+id/et_bind_email_verifycode"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="24dp"
+        android:background="@color/white"
+        android:hint="@string/please_input_verifycode"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:inputType="text"
+        android:textColorHint="@color/gray_cccccc"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintTop_toBottomOf="@+id/line_bind_email"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code" />
+
+    <TextView
+        android:id="@+id/tv_get_verify_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:padding="3dp"
+        android:text="@string/register_get_code"
+        android:textColor="@color/blue_0052d9"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintBottom_toBottomOf="@+id/et_bind_email_verifycode"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_bind_email_verifycode" />
+
+    <View
+        android:id="@+id/line_input_verifycode"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/gray_dddddd"
+        app:layout_constraintTop_toBottomOf="@+id/et_bind_email_verifycode" />
+
+    <!--设置密码-->
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
+        android:id="@+id/et_set_password"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="60dp"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:background="@color/white"
+        android:hint="@string/please_set_passwd"
+        android:inputType="textPassword"
+        android:maxLength="@integer/password_max_length"
+        android:maxLines="1"
+        android:paddingEnd="40dp"
+        android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textSize="@dimen/ts_14"
+        app:layout_constraintBottom_toTopOf="@+id/line_set_pwd"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <View
+        android:id="@+id/line_set_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/gray_dddddd"
+        app:layout_constraintTop_toBottomOf="@+id/line_input_verifycode" />
+
+    <ImageView
+        android:id="@+id/iv_clear_password"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="24dp"
+        android:padding="12dp"
+        android:src="@mipmap/icon_clear"
+        app:layout_constraintBottom_toBottomOf="@+id/et_set_password"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/et_set_password" />
+
+    <TextView
+        android:id="@+id/tv_set_password_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red_eb3d3d"
+        android:textSize="@dimen/ts_10"
+        app:layout_constraintLeft_toLeftOf="@+id/line_set_pwd"
+        app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
+
+    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
+        android:id="@+id/et_verify_set_password"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:background="@color/white"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:hint="@string/please_confirm_passwd"
+        android:inputType="textPassword"
+        android:maxLength="@integer/password_max_length"
+        android:maxLines="1"
+        android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textSize="@dimen/ts_14"
+        app:layout_constraintBottom_toTopOf="@+id/line2_set_pwd"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/iv_clear_verify_password" />
+
+    <View
+        android:id="@+id/line2_set_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/gray_dddddd"
+        app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
+
+    <ImageView
+        android:id="@+id/iv_clear_verify_password"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="24dp"
+        android:padding="12dp"
+        android:src="@mipmap/icon_clear"
+        app:layout_constraintBottom_toBottomOf="@+id/et_verify_set_password"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/et_verify_set_password" />
+
+    <TextView
+        android:id="@+id/tv_set_verify_password_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red_eb3d3d"
+        android:textSize="@dimen/ts_10"
+        app:layout_constraintLeft_toLeftOf="@+id/line2_set_pwd"
+        app:layout_constraintTop_toBottomOf="@+id/line2_set_pwd" />
+
+    <Button
+        android:id="@+id/btn_bind_get_code"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
+        android:background="@drawable/btn_bg"
+        android:text="@string/confirm_to_bind"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintTop_toBottomOf="@+id/line2_set_pwd" />
+</androidx.constraintlayout.widget.ConstraintLayout>
