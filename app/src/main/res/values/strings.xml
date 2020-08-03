@@ -349,4 +349,22 @@
     <string name="mobile_or_email">手机号码/邮箱地址</string>
     <string name="other_login_way">其他登录方式</string>
     <string name="wechat">微信</string>
+    <string name="account_and_safety">账户与安全</string>
+    <string name="phone_number">手机号</string>
+    <string name="unbind">未绑定</string>
+    <string name="email">邮箱</string>
+    <string name="account_logout">账号注销</string>
+    <string name="please_input_phonenumber">请输入手机号</string>
+    <string name="please_input_email">请输入邮箱号</string>
+    <string name="please_input_verifycode">请输入验证码</string>
+    <string name="please_set_passwd">请设置您的密码</string>
+    <string name="please_confirm_passwd">请再次确认您的密码</string>
+    <string name="confirm_to_bind">确认绑定</string>
+    <string name="bind_phone_number">绑定手机号</string>
+    <string name="bind_email_number">绑定邮箱号</string>
+    <string name="confirm_to_modify">确认修改</string>
+    <string name="modify_phone">修改手机号</string>
+    <string name="modify_email">修改邮箱号</string>
+    <string name="email_verify_code_modify">邮箱验证码修改</string>
+    <string name="phone_verify_code_modify">手机验证码修改</string>
 </resources>

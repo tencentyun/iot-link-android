@@ -97,6 +97,12 @@
         </activity>
         <activity android:name=".kitlink.activity.LoginActivity2" />
         <activity android:name=".kitlink.activity.LoginActivity" />
+        <activity android:name=".kitlink.activity.AccountAndSafetyActivity" />
+        <activity android:name=".kitlink.activity.BindPhoneActivity" />
+        <activity android:name=".kitlink.activity.BindEmailActivity" />
+        <activity android:name=".kitlink.activity.ModifyPhoneActivity" />
+        <activity android:name=".kitlink.activity.ModifyEmailActivity" />
+        <activity android:name=".kitlink.activity.ModifyPasswordActivity" />
         <activity android:name=".kitlink.activity.WebActivity" />
         <activity android:name=".kitlink.activity.DeviceDetailsActivity" />
         <activity android:name=".kitlink.activity.SmartConnectActivity"/>
