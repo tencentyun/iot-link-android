@@ -50,6 +50,23 @@ class WeChatLogin {
         }
     }
 
+    fun bind(activity: Activity, listener: OnLoginListener) {
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        val api = WXAPIFactory.createWXAPI(activity, APP_ID, true)
+        if (api.isWXAppInstalled) {
+            // 将应用的appId注册到微信
+            if (api.registerApp(APP_ID)) {
+                WXEntryActivity.onLoginListener = listener
+                val req = SendAuth.Req()
+                req.scope = "snsapi_userinfo"
+                req.state = "tenext"
+                api?.sendReq(req)
+            }
+        } else {
+            T.show(activity.resources.getString(R.string.not_wechat_client))
+        }
+    }
+
     interface OnLoginListener {
         fun onSuccess(reqCode: String)
         fun cancel()
