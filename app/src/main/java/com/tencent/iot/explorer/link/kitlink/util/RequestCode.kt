@@ -30,6 +30,7 @@ object RequestCode {
     const val find_email_user = 1024
     const val phone_verifycode_login = 1025
     const val email_verifycode_login = 1026
+    const val bind_wx = 1027
 
     /*************用户接口结束**************/
 
