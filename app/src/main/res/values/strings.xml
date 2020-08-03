@@ -313,4 +313,9 @@
     <string name="mobile_or_email">手机号码/邮箱地址</string>
     <string name="other_login_way">其他登录方式</string>
     <string name="wechat">微信</string>
+    <string name="account_and_safety">账户与安全</string>
+    <string name="phone_number">手机号</string>
+    <string name="unbind">未绑定</string>
+    <string name="email">邮箱</string>
+    <string name="account_logout">账号注销</string>
 </resources>
