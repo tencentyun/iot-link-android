@@ -97,6 +97,7 @@
         </activity>
         <activity android:name=".kitlink.activity.LoginActivity2" />
         <activity android:name=".kitlink.activity.LoginActivity" />
+        <activity android:name=".kitlink.activity.AccountAndSafetyActivity" />
         <activity android:name=".kitlink.activity.WebActivity" />
         <activity android:name=".kitlink.activity.DeviceDetailsActivity" />
         <activity android:name=".kitlink.activity.SmartConnectActivity" />
