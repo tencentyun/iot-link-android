@@ -12,7 +12,7 @@ class RegisterModel(view: RegisterView) : ParentModel<RegisterView>(view), MyCal
 
     var phone = ""
     var email = ""
-    private var isAgree = true
+    private var isAgree = false
     private var countryCode = "86"
     private var countryName = "中国大陆"
     private val type = SocketConstants.register
