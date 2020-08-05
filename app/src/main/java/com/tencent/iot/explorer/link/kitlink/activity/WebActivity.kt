@@ -1,16 +1,17 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.net.http.SslError
+import android.os.Build
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
+import androidx.fragment.app.FragmentActivity
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import kotlinx.android.synthetic.main.activity_web.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
+
 
 class WebActivity : BaseActivity() {
 
@@ -19,10 +20,10 @@ class WebActivity : BaseActivity() {
     }
 
     override fun initView() {
-        intent.getStringExtra("title")?.let {
+        intent.getStringExtra(CommonField.EXTRA_TITLE)?.let {
             tv_title.text = it
         }
-        intent.getStringExtra("text")?.let {
+        intent.getStringExtra(CommonField.EXTRA_TEXT)?.let {
             when {
                 it.endsWith(".html") || it.endsWith(".htm") -> {
                     /*wv_web.settings.javaScriptEnabled = false
@@ -34,6 +35,7 @@ class WebActivity : BaseActivity() {
                     showUrl("file:///android_asset/$it")
                 }
                 it.startsWith("https://") -> {
+                    Log.e("XXX", "url=" + it)
                     showUrl(it)
                 }
                 else -> {
