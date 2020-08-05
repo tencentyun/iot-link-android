@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -129,18 +130,20 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             }
             tv_register_user_agreement -> {//用户协议
                 val intent = Intent(this, WebActivity::class.java)
-                intent.putExtra("title", getString(R.string.register_agree_2))
-//                intent.putExtra("text", "user_agreementV1.0.htm")
-                intent.putExtra(
-                    "text",
-                    "https://docs.qq.com/doc/DY3ducUxmYkRUd2x2?pub=1&dver=2.1.0"
-                )
+                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
+                var url = CommonField.POLICY_PREFIX
+                if (App.DEBUG_VERSION) url += "?uin=testReleaseID"
+                url += CommonField.SERVICE_POLICY_SUFFIX
+                intent.putExtra(CommonField.EXTRA_TEXT, url)
                 startActivity(intent)
             }
             tv_register_privacy_policy -> {//隐私政策
                 val intent = Intent(this, WebActivity::class.java)
-                intent.putExtra("title", getString(R.string.register_agree_4))
-                intent.putExtra("text", "https://privacy.qq.com")
+                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
+                var url = CommonField.POLICY_PREFIX
+                if (App.DEBUG_VERSION) url += "?uin=testReleaseID"
+                url += CommonField.PRIVACY_POLICY_SUFFIX
+                intent.putExtra(CommonField.EXTRA_TEXT, url)
                 startActivity(intent)
             }
             phoneView.tv_register_to_country, phoneView.iv_register_to_country -> {
