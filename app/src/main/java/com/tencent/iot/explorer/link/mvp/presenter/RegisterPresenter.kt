@@ -55,4 +55,11 @@ class RegisterPresenter(view: RegisterView) : ParentPresenter<RegisterModel, Reg
         model?.agreement()
     }
 
+    /**
+     * 是否同意协议
+     */
+    fun isAgreement(): Boolean {
+        return model!!.isAgreement()
+    }
+
 }
