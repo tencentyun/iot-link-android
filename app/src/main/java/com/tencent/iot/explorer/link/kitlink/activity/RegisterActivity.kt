@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import com.tencent.iot.explorer.link.R
@@ -63,6 +64,11 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                 else
                     phoneView.et_register_phone.setText(account)
             }
+        }
+        if (presenter.isAgreement()) {
+            iv_register_agreement.setImageResource(R.mipmap.icon_selected)
+        } else {
+            iv_register_agreement.setImageResource(R.mipmap.icon_unselected)
         }
     }
 
