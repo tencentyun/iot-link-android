@@ -10,5 +10,6 @@ class UserInfo {
     var NickName = ""
     var Avatar = ""
     var HasPassword = ""
+    var HasWxOpenID = ""
 
 }

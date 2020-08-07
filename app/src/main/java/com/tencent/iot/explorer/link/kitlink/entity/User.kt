@@ -9,4 +9,5 @@ class User {
 
     var Token = ""
 
+    var CancelAccountTime = 0L
 }

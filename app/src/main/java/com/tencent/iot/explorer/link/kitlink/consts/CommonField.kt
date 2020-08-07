@@ -18,6 +18,8 @@ object CommonField {
     const val TOKEN = "Token"
     //用户登录过期时间
     const val EXPIRE_AT = "ExpireAt"
+    //用户申请注销的时间
+    const val CANCEL_ACCOUNT_TIME = "CancelAccountTime"
     //时间戳
     const val TIMESTAMP = "Timestamp"
     //随机整数
@@ -108,5 +110,6 @@ object CommonField {
     const val POLICY_PREFIX = "https://iot.cloud.tencent.com/explorer-h5/about-policy/"
     const val PRIVACY_POLICY_SUFFIX = "#?type=privacy"
     const val SERVICE_POLICY_SUFFIX = "#?type=service"
+    const val CANCEL_POLICY_SUFFIX = "#?type=cancel"
 
 }
