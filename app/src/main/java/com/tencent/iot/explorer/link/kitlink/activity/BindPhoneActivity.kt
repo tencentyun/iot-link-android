@@ -2,17 +2,16 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.view.View
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.BindPhonePresenter
 import com.tencent.iot.explorer.link.mvp.view.BindPhoneView
 import com.tencent.iot.explorer.link.util.T
-import kotlinx.android.synthetic.main.activity_bind_email.*
 import kotlinx.android.synthetic.main.activity_bind_phone.*
 import kotlinx.android.synthetic.main.activity_bind_phone.et_verify_set_password
 import kotlinx.android.synthetic.main.activity_bind_phone.tv_get_verify_code
-import kotlinx.android.synthetic.main.activity_modify_phone.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
@@ -32,6 +31,9 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
         tv_title.text = getString(R.string.bind_phone_number)
         et_bind_phone.addClearImage(iv_clear_bind_phone)
         presenter = BindPhonePresenter(this)
+        if (App.data.userInfo.HasPassword != "0") {//有密码则不显示设置密码的输入框
+            hidePasswordInput()
+        }
     }
 
     override fun setListener() {
@@ -81,5 +83,14 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
 
     override fun showCountryCode(code: String, name: String) {
         tv_bind_to_country.text = name
+    }
+
+    private fun hidePasswordInput() {
+        et_set_password.visibility = View.GONE
+        iv_clear_password.visibility = View.GONE
+        line_set_pwd.visibility = View.GONE
+        et_verify_set_password.visibility = View.GONE
+        iv_clear_verify_password.visibility = View.GONE
+        line2_set_pwd.visibility = View.GONE
     }
 }

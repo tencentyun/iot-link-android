@@ -352,6 +352,7 @@
     <string name="account_and_safety">账户与安全</string>
     <string name="phone_number">手机号</string>
     <string name="unbind">未绑定</string>
+    <string name="have_bind">已绑定</string>
     <string name="email">邮箱</string>
     <string name="account_logout">账号注销</string>
     <string name="please_input_phonenumber">请输入手机号</string>
@@ -367,4 +368,27 @@
     <string name="modify_email">修改邮箱号</string>
     <string name="email_verify_code_modify">邮箱验证码修改</string>
     <string name="phone_verify_code_modify">手机验证码修改</string>
+    <!--cancel start-->
+    <string name="logout_text">注销</string>
+    <string name="logout_account">注销账号</string>
+    <string name="logout_must_know">注销须知</string>
+    <string name="logout_text_for_attention1">请您确保账号处于安全状态下且是本人申请注销。注销账号是不可恢复的操作，账号被注销后，您账号下的所有信息、数据将被永久删除，无法找回。为避免您的损失，请谨慎进行账号注销操作。</string>
+    <string name="logout_text_will_logout_at">如果您确定“注销账号”，账号将注销于</string>
+    <string name="logout_text_logout_time">2020年8月3日 00:00:00</string>
+    <string name="logout_text_for_attention2">若您在注销日期前登录腾讯连连，则自动撤销“注销账号”申请。</string>
+    <string name="logout_text_for_attention3">注：如腾讯连连账号是通过第三方软件（微信） 进行登录的，您所注销的账号仅影响腾讯连连内的账号与数据，并不会影响您在微信的账号信息。</string>
+    <string name="tencentll_account_logout_agreement">《腾讯连连账号注销协议》</string>
+    <string name="tencentll_account_logout_agreement2">腾讯连连账号注销协议</string>
+    <string name="tencentll_account_logout_agreement3">请阅读并同意腾讯连连账号注销协议</string>
+    <string name="already_known">我已了解</string>
+    <string name="confirm_to_cancel_account_title">确定注销账号吗</string>
+    <string name="confirm_to_cancel_account_content">注销后，此账户下的所有用户数据也将被永久删除</string>
+    <string name="cancel_account_request_success_title">账号已申请注销</string>
+    <string name="cancel_account_request_success_content">如需撤销，请在7日内登录腾讯连连</string>
+    <string name="have_known">知道了</string>
+    <string name="cancel_account_stopped_title">账号注销已终止</string>
+    <string name="cancel_account_stopped_content">由于你在申请“账号注销”后的7天内重新登录，该账号在date提交的“账号注销”申请已被撤销</string>
+    <!--cancel end-->
+
+    <string name="modify_passwd_success">密码修改成功，请重新登录</string>
 </resources>
