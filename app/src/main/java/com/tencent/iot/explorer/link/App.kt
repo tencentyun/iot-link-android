@@ -14,6 +14,7 @@ import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
 
 /**
  * APP
@@ -41,7 +42,7 @@ class App : Application() {
         fun toLogin() {
             activity?.run {
                 data.clear()
-                startActivity(Intent(activity, LoginActivity2::class.java))
+                startActivity(Intent(activity, GuideActivity::class.java))
             }
         }
 

@@ -460,7 +460,6 @@ class HttpRequest private constructor() {
             param["busi"] = BUSI_APP
         }
         postJson(param, callback, RequestCode.bind_wx)
-//        tokenPost(param, callback, RequestCode.bind_wx)
     }
 
     /**
@@ -496,6 +495,15 @@ class HttpRequest private constructor() {
         param["PhoneNumber"] = phone
         param["VerificationCode"] = code
         updateUserInfo(param, callback, RequestCode.update_user_info)
+    }
+
+
+    /**
+     * 账号注销
+     */
+    fun cancelAccount(callback: MyCallback) {
+        val param = tokenParams("AppUserCancelAccount")
+        tokenPost(param, callback, RequestCode.cancel_account)
     }
 
     /**
