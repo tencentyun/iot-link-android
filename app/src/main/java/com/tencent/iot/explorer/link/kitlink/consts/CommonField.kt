@@ -108,5 +108,6 @@ object CommonField {
     const val POLICY_PREFIX = "https://iot.cloud.tencent.com/explorer-h5/about-policy/"
     const val PRIVACY_POLICY_SUFFIX = "#?type=privacy"
     const val SERVICE_POLICY_SUFFIX = "#?type=service"
+    const val CANCEL_POLICY_SUFFIX = "#?type=cancel"
 
 }
