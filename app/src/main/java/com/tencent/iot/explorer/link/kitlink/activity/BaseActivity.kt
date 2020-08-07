@@ -121,12 +121,15 @@ abstract class BaseActivity : AppCompatActivity() {
     fun saveUser(user: User?) {
         var expireAt = 0L
         var token = ""
+        var cancelAccountTime = 0L
         user?.let {
             expireAt = it.ExpireAt
             token = it.Token
+            cancelAccountTime = it.CancelAccountTime
         }
         SharePreferenceUtil.saveLong(this, App.CONFIG, CommonField.EXPIRE_AT, expireAt)
         SharePreferenceUtil.saveString(this, App.CONFIG, CommonField.TOKEN, token)
+        SharePreferenceUtil.saveLong(this, App.CONFIG, CommonField.CANCEL_ACCOUNT_TIME, cancelAccountTime)
     }
 
     fun getMyColor(colorRes: Int): Int {

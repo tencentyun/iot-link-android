@@ -8,6 +8,7 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.AccountAndSafetyPresenter
@@ -70,8 +71,11 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
                 }
             }
             tv_wechat -> {// 微信
-                T.show("微信")
-                WeChatLogin.getInstance().login(this, this)
+                if (App.data.userInfo.HasWxOpenID == "0") {
+                    WeChatLogin.getInstance().login(this, this)
+                } else {
+                    T.show("微信已经绑定过了, 请勿重复绑定")
+                }
             }
             tv_modify_passwd -> {// 修改密码
                 T.show("修改密码")
@@ -79,6 +83,7 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
             }
             tv_account_logout -> {// 注销账号
                 T.show("注销账号")
+                jumpActivity(LogoutActivity::class.java)
             }
         }
     }
@@ -97,14 +102,14 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
         } else {
             tv_email_state.text = getString(R.string.unbind)
         }
-        if (!TextUtils.isEmpty(App.data.userInfo.WxOpenID)) {
-            tv_wechat_state.text = App.data.userInfo.NickName
-        } else {
+        if (App.data.userInfo.HasWxOpenID == "0") {
             tv_wechat_state.text = getString(R.string.unbind)
+        } else {
+            tv_wechat_state.text = getString(R.string.have_bind)
         }
     }
 
-    fun hideModifyPasswd() {
+    private fun hideModifyPasswd() {
         line_modify_passwd.visibility = View.GONE
         iv_modify_passwd_arrow.visibility = View.GONE
         tv_modify_passwd.visibility = View.GONE
@@ -126,12 +131,18 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
     // Wechat end
 
     override fun fail(msg: String?, reqCode: Int) {
-
+        T.show(msg)
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
-        if (response.isSuccess()) {
-
+        when (reqCode) {
+            RequestCode.bind_wx -> {
+                if (response.isSuccess()) {
+                    tv_wechat_state.text = getString(R.string.have_bind)
+                } else {
+                    T.show(response.msg)
+                }
+            }
         }
     }
 }

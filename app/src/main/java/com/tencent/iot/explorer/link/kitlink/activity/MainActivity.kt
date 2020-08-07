@@ -1,5 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -19,7 +21,11 @@ import com.tencent.android.tpush.XGPushManager
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.customview.home.BottomItemEntity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.util.DateUtils
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import kotlin.system.exitProcess
 
 /**
@@ -42,6 +48,10 @@ class MainActivity : PActivity(), MyCallback {
     override fun onResume() {
         super.onResume()
         login(this)
+        val cancelAccountTime = SharePreferenceUtil.getLong(this, App.CONFIG, CommonField.CANCEL_ACCOUNT_TIME)
+        if (cancelAccountTime > 0) {
+            showCancelAccountStoppedDialog(cancelAccountTime)
+        }
         /* val sign =
              "Action=AppCreateCellphoneUser&AppKey=ahPxdKWywfNTGrejd&CountryCode=86&Nonce=71087795&Password=My!P@ssword&PhoneNumber=13900000000&RequestId=8b8d499bbba1ac28b6da21b4&Timestamp=1546315200&VerificationCode=123456"
          val key = "NcbHqkdiUyITTCGbKnQH"
@@ -197,4 +207,19 @@ class MainActivity : PActivity(), MyCallback {
 //        super.onBackPressed()
     }
 
+    private fun showCancelAccountStoppedDialog(time: Long){
+        var content = getString(R.string.cancel_account_stopped_content)
+        val cancelAccountTime = DateUtils.getFormatDate(Date(time*1000))
+        content = content.replace("date", cancelAccountTime)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.cancel_account_stopped_title)
+            .setMessage(content)
+            .setCancelable(false)
+            .setPositiveButton(R.string.have_known,
+                DialogInterface.OnClickListener { dialog, id ->
+                    SharePreferenceUtil.saveLong(this, App.CONFIG, CommonField.CANCEL_ACCOUNT_TIME, 0)
+                })
+        builder.create()
+        builder.show()
+    }
 }
