@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.BindEmailPresenter
@@ -29,6 +30,9 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
         et_bind_email.addClearImage(iv_clear_bind_email)
         et_set_password.addClearImage(iv_clear_password)
         et_verify_set_password.addClearImage(iv_clear_verify_password)
+        if (App.data.userInfo.HasPassword != "0") {//有密码则不显示设置密码的输入框
+            hidePasswordInput()
+        }
     }
 
     override fun setListener() {
@@ -64,5 +68,14 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
 
     override fun bindFail(msg: String) {
         TODO("Not yet implemented")
+    }
+
+    private fun hidePasswordInput() {
+        et_set_password.visibility = View.GONE
+        iv_clear_password.visibility = View.GONE
+        line_set_pwd.visibility = View.GONE
+        et_verify_set_password.visibility = View.GONE
+        iv_clear_verify_password.visibility = View.GONE
+        line2_set_pwd.visibility = View.GONE
     }
 }

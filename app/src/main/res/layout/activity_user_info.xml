@@ -160,6 +160,7 @@
                 android:background="@color/line_F2F4F5" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_title_telephone_number"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -174,6 +175,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_account_and_safety" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_telephone_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,6 +188,7 @@
 
 
             <View
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginStart="20dp"
@@ -194,6 +197,7 @@
                 android:background="@color/line_F2F4F5" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_title_modify_password"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -208,6 +212,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_telephone_number" />
 
             <ImageView
+                android:visibility="gone"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginEnd="20dp"
@@ -218,6 +223,7 @@
 
 
             <View
+                android:visibility="gone"
                 android:id="@+id/line_modify_password"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
