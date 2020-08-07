@@ -4,6 +4,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ModifyPasswordView
 
@@ -51,8 +52,12 @@ class ModifyPasswordModel(view: ModifyPasswordView) : ParentModel<ModifyPassword
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
-        if (response.isSuccess()) {
-
+        when (reqCode) {
+            RequestCode.phone_reset_pwd, RequestCode.email_reset_pwd -> {
+                if (response.isSuccess()) {
+                    view?.modifyPasswdSuccess()
+                }
+            }
         }
     }
 }
