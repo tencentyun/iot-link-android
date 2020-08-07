@@ -79,6 +79,7 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
             }
             tv_account_logout -> {// 注销账号
                 T.show("注销账号")
+                jumpActivity(LogoutActivity::class.java)
             }
         }
     }

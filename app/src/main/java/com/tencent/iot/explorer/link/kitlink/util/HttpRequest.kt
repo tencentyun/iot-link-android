@@ -106,11 +106,11 @@ class HttpRequest private constructor() {
         if (!App.chargeUrlAppType()) {
             param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
-            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=weichuantest" else "$APP_API/$action"
+            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=archurtest" else "$APP_API/$action"
 
         } else {
             json = JsonManager.toJson(sign(param))
-            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=weichuantest" else "$EXPLORER_API/$action"
+            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=archurtest" else "$EXPLORER_API/$action"
 
         }
 
@@ -138,7 +138,7 @@ class HttpRequest private constructor() {
             App.toLogin()
             return
         }
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
@@ -204,7 +204,7 @@ class HttpRequest private constructor() {
             return
         }
 
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=weichuantest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API
 
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
@@ -460,7 +460,6 @@ class HttpRequest private constructor() {
             param["busi"] = BUSI_APP
         }
         postJson(param, callback, RequestCode.bind_wx)
-//        tokenPost(param, callback, RequestCode.bind_wx)
     }
 
     /**
@@ -496,6 +495,15 @@ class HttpRequest private constructor() {
         param["PhoneNumber"] = phone
         param["VerificationCode"] = code
         updateUserInfo(param, callback, RequestCode.update_user_info)
+    }
+
+
+    /**
+     * 账号注销
+     */
+    fun cancelAccount(callback: MyCallback) {
+        val param = tokenParams("AppUserCancelAccount")
+        tokenPost(param, callback, RequestCode.cancel_account)
     }
 
     /**
@@ -1239,7 +1247,7 @@ class HttpRequest private constructor() {
         val param = tokenParams("DescribeProductConfig")
         param["ProductId"] = productId
         param["Type"] = type
-        param["Uin"] = "weichuantest"
+        param["Uin"] = "archurtest"
         param["AppId"] = APP_KEY
         tokenPost(param, callback, RequestCode.describe_product_config)
     }
