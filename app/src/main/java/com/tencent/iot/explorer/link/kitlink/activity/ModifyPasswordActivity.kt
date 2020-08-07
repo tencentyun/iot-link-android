@@ -1,13 +1,18 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ModifyPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.ModifyPasswordView
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_modify_password.*
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.*
@@ -20,6 +25,7 @@ import kotlinx.android.synthetic.main.layout_modify_passwd_use_phone.view.iv_cle
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_phone.view.iv_clear_verify_password
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.popup_common.view.*
+import java.util.*
 
 class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickListener {
 
@@ -76,7 +82,6 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
             }
             btn_confirm_to_modify -> {
                 if (vp_modify_passwd.currentItem == 0) {// 手机验证码修改密码界面
-                    T.show("手机验证码修改密码界面")
                     val account = modifyPasswdUsePhoneView.et_modify_passwd_byphone.text.trim().toString()
                     val verifyCode = modifyPasswdUsePhoneView.et_phone_verifycode.text.trim().toString()
                     val passwd = modifyPasswdUsePhoneView.et_verify_set_password.text.trim().toString()
@@ -85,7 +90,6 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
                     presenter.setPassword(passwd)
                     presenter.modifyPasswordByPhone()
                 } else {// 邮箱验证码修改密码界面
-                    T.show("邮箱验证码修改密码界面")
                     val account = modifyPasswdUseEmailView.et_modify_passwd_byemail.text.trim().toString()
                     val verifyCode = modifyPasswdUseEmailView.et_email_verifycode.text.trim().toString()
                     val passwd = modifyPasswdUseEmailView.et_verify_set_password.text.trim().toString()
@@ -139,5 +143,27 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
 
     override fun showCountryCode(code: String, name: String) {
         modifyPasswdUsePhoneView.tv_country.text = name
+    }
+
+    override fun modifyPasswdSuccess() {
+        showModifySuccessDialog()
+    }
+
+    private fun showModifySuccessDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(R.string.modify_passwd_success)
+            .setCancelable(false)
+            .setPositiveButton(R.string.have_known,
+                DialogInterface.OnClickListener { dialog, id ->
+                    App.toLogin()
+                    App.data.activityList.forEach {
+                        if (it !is GuideActivity) {
+                            it.finish()
+                        }
+                    }
+                    App.data.activityList.clear()
+                })
+        builder.create()
+        builder.show()
     }
 }

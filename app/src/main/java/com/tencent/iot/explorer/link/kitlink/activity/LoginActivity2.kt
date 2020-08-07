@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -25,9 +27,12 @@ import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
 import com.tencent.iot.explorer.link.mvp.view.LoginView
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.util.keyboard.SoftKeyBoard
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login2.*
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.activity_set_password.*
 import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*
 import kotlinx.android.synthetic.main.layout_email_login.view.*
 import kotlinx.android.synthetic.main.layout_phone_forgot_pwd.view.*
@@ -159,6 +164,7 @@ class LoginActivity2  : PActivity(), LoginView, View.OnClickListener, WeChatLogi
                     presenter.setEmailData(account, passwd)
                     presenter.emailCommit()
                 }
+                KeyBoardUtils.hideKeyBoard(this, accoutPasswdLoginView.et_login_phone_or_email_passwd)
             }
             verifyCodeLoginView.btn_account_verifycode_login -> {// 验证码登录
                 val account = verifyCodeLoginView.et_login_phone_or_email_byverifycode.text.trim().toString()
