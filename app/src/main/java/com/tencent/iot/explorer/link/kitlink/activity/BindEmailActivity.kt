@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.BindEmailPresenter
@@ -44,13 +45,11 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
     override fun onClick(v: View?) {
         when (v) {
             tv_get_verify_code -> {// 获取验证码
-                T.show("获取验证码")
                 val account = et_bind_email.text.trim().toString()
                 presenter.setEmail(account)
                 presenter.requestEmailVerifyCode()
             }
             btn_bind_get_code -> {// 确认绑定
-                T.show("确认绑定")
                 val account = et_bind_email.text.trim().toString()
                 val verifyCode = et_bind_email_verifycode.text.trim().toString()
                 val password = et_verify_set_password.text.trim().toString()
@@ -62,14 +61,6 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
         }
     }
 
-    override fun bindSuccess(msg: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun bindFail(msg: String) {
-        TODO("Not yet implemented")
-    }
-
     private fun hidePasswordInput() {
         et_set_password.visibility = View.GONE
         iv_clear_password.visibility = View.GONE
@@ -77,5 +68,22 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
         et_verify_set_password.visibility = View.GONE
         iv_clear_verify_password.visibility = View.GONE
         line2_set_pwd.visibility = View.GONE
+    }
+
+    override fun bindSuccess() {
+        T.show(getString(R.string.bind_success))
+        finish()
+    }
+
+    override fun bindFail(msg: ErrorMessage) {
+        T.show(msg.Message)
+    }
+
+    override fun sendVerifyCodeSuccess() {
+        T.show(getString(R.string.send_verifycode_success))
+    }
+
+    override fun sendVerifyCodeFail(msg: ErrorMessage) {
+        T.show(msg.Message)
     }
 }

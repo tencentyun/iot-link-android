@@ -81,7 +81,7 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
     override fun success(response: BaseResponse, reqCode: Int) {
         isCommit = false
         when (reqCode) {
-            RequestCode.phone_login, RequestCode.email_login,
+            RequestCode.phone_login, RequestCode.email_login, RequestCode.wechat_login,
             RequestCode.phone_verifycode_login, RequestCode.email_verifycode_login -> {// 账号或验证码登录
                 if (response.isSuccess()) {
                     response.parse(LoginResponse::class.java)?.Data?.let {

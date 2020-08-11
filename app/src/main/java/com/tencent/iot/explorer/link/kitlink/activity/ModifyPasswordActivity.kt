@@ -138,7 +138,6 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
             }
 
             modifyPasswdUsePhoneView.iv_country -> {
-                T.show("选择国家")
                 startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
             }
         }
