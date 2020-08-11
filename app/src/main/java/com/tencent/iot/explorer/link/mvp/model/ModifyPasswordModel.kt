@@ -58,6 +58,11 @@ class ModifyPasswordModel(view: ModifyPasswordView) : ParentModel<ModifyPassword
                     view?.modifyPasswdSuccess()
                 }
             }
+            RequestCode.send_mobile_code, RequestCode.send_email_code -> {
+                if (response.isSuccess()) {
+
+                }
+            }
         }
     }
 }
