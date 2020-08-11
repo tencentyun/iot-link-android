@@ -1,7 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
+import android.text.TextUtils
 import android.view.View
+import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -10,6 +12,8 @@ import com.tencent.iot.explorer.link.mvp.view.ModifyPhoneView
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_modify_phone.*
 import kotlinx.android.synthetic.main.activity_modify_phone.tv_get_verify_code
+import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.layout_phone_register.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  {
@@ -29,6 +33,11 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
         tv_title.text = getString(R.string.modify_phone)
         et_modify_phone.addClearImage(iv_modify_phone_clear)
         presenter = ModifyPhonePresenter(this)
+        btn_confirm_to_modify.addEditText(
+            et_modify_phone,
+            tv_modify_phone_hint,
+            presenter.getCountryCode()
+        )
     }
 
     override fun setListener() {
@@ -44,18 +53,24 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
                 startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
             }
             tv_get_verify_code -> {// 获取验证码
-                T.show("获取验证码")
                 val account = et_modify_phone.text.trim().toString()
-                presenter.setPhone(account)
-                presenter.requestPhoneCode()
+                if (!TextUtils.isEmpty(account)) {
+                    presenter.setPhone(account)
+                    presenter.requestPhoneCode()
+                } else {
+                    T.show(getString(R.string.phone_empty))
+                }
             }
             btn_confirm_to_modify -> {// 确认修改
-                T.show("确认修改")
                 val account = et_modify_phone.text.trim().toString()
                 val verifyCode = et_modify_phone_verifycode.text.trim().toString()
                 presenter.setPhone(account)
                 presenter.setVerifyCode(verifyCode)
-                presenter.modifyPhone()
+                if (!TextUtils.isEmpty(verifyCode)) {
+                    presenter.modifyPhone()
+                } else {
+                    T.show(getString(R.string.phone_verifycode_empty))
+                }
             }
         }
     }
@@ -73,5 +88,21 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
 
     override fun showCountryCode(code: String, name: String) {
         tv_login_to_country.text = name
+    }
+
+    override fun sendVerifyCodeFail(msg: ErrorMessage) {
+        T.show(msg.Message)
+    }
+
+    override fun sendVerifyCodeSuccess() {
+        T.show(getString(R.string.send_verifycode_success))
+    }
+
+    override fun updatePhoneFail(msg: ErrorMessage) {
+        T.show(msg.Message)
+    }
+
+    override fun updatePhoneSuccess() {
+        T.show(getString(R.string.update_phone_success))
     }
 }
