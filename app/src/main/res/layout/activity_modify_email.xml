@@ -25,6 +25,14 @@
         app:layout_constraintBottom_toTopOf="@+id/line_modify_email"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/iv_modify_email_clear" />
+    <TextView
+        android:id="@+id/tv_modify_email_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red_eb3d3d"
+        android:textSize="@dimen/ts_10"
+        app:layout_constraintLeft_toLeftOf="@+id/et_modify_email"
+        app:layout_constraintTop_toBottomOf="@+id/et_modify_email" />
 
     <ImageView
         android:id="@+id/iv_modify_email_clear"
@@ -56,7 +64,7 @@
         android:background="@color/white"
         android:hint="@string/please_input_verifycode"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
-        android:inputType="text"
+        android:inputType="number"
         android:textColorHint="@color/gray_cccccc"
         android:textColor="@color/black_333333"
         android:textSize="@dimen/ts_16"
@@ -88,7 +96,7 @@
         android:background="@color/gray_dddddd"
         app:layout_constraintTop_toTopOf="@+id/line_modify_email" />
 
-    <Button
+    <com.tencent.iot.explorer.link.customview.check.ClickButton
         android:id="@+id/btn_confirm_to_modify"
         android:layout_width="0dp"
         android:layout_height="48dp"
