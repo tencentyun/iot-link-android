@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -380,6 +381,12 @@ class LoginActivity : PActivity(), LoginView, View.OnClickListener, WeChatLogin.
     override fun showCountryCode(countryName: String, countryCode: String) {
         phoneView.tv_login_to_country.text = "+$countryCode"
         btn_login_commit.changeType(phoneView.et_login_phone, countryCode)
+    }
+
+    override fun sendVerifyCodeSuccess() {
+    }
+
+    override fun sendVerifyCodeFail(msg: ErrorMessage) {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.mvp.model
 
+import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
@@ -56,11 +57,17 @@ class ModifyPasswordModel(view: ModifyPasswordView) : ParentModel<ModifyPassword
             RequestCode.phone_reset_pwd, RequestCode.email_reset_pwd -> {
                 if (response.isSuccess()) {
                     view?.modifyPasswdSuccess()
+                } else {
+                    val errMsg = ErrorMessage.parseErrorMessage(response.data.toString())
+                    view?.modifyPasswdFail(errMsg)
                 }
             }
             RequestCode.send_mobile_code, RequestCode.send_email_code -> {
                 if (response.isSuccess()) {
-
+                    view?.sendVerifyCodeSuccess()
+                } else {
+                    val errMsg = ErrorMessage.parseErrorMessage(response.data.toString())
+                    view?.sendVerifyCodeFail(errMsg)
                 }
             }
         }

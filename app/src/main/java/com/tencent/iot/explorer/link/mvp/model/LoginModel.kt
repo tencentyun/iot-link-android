@@ -1,12 +1,14 @@
 package com.tencent.iot.explorer.link.mvp.model
 
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.entity.ParentRespEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.LoginResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.LoginView
 
@@ -78,15 +80,29 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
 
     override fun success(response: BaseResponse, reqCode: Int) {
         isCommit = false
-        if (response.isSuccess()) {
-            response.parse(LoginResponse::class.java)?.Data?.let {
-                //登录成功
-                App.data.setAppUser(it)
-                view?.loginSuccess(it)
-                return
+        when (reqCode) {
+            RequestCode.phone_login, RequestCode.email_login,
+            RequestCode.phone_verifycode_login, RequestCode.email_verifycode_login -> {// 账号或验证码登录
+                if (response.isSuccess()) {
+                    response.parse(LoginResponse::class.java)?.Data?.let {
+                        //登录成功
+                        App.data.setAppUser(it)
+                        view?.loginSuccess(it)
+                        return
+                    }
+                }
+                view?.loginFail(response)
+            }
+
+            RequestCode.send_mobile_code, RequestCode.send_email_code -> {// 发送验证码
+                if (response.isSuccess()) {
+                    view?.sendVerifyCodeSuccess()
+                } else {
+                    val errMsg = ErrorMessage.parseErrorMessage(response.data.toString())
+                    view?.sendVerifyCodeFail(errMsg)
+                }
             }
         }
-        view?.loginFail(response)
     }
 
 }

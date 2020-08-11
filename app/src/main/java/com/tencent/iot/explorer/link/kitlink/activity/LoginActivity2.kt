@@ -170,15 +170,21 @@ class LoginActivity2  : PActivity(), LoginView, View.OnClickListener, WeChatLogi
                 val account = verifyCodeLoginView.et_login_phone_or_email_byverifycode.text.trim().toString()
                 val verifycode = verifyCodeLoginView.et_login_phone_or_email_verifycode.text.trim().toString()
                 if (!account.contains("@")) {// 手机登录
-                    T.show(account)
                     presenter.setPhone(account)
-                    presenter.setVerifyCode(verifycode)
-                    presenter.phoneVerifyCodeCommit()
+                    if (!TextUtils.isEmpty(verifycode)) {
+                        presenter.setVerifyCode(verifycode)
+                        presenter.phoneVerifyCodeCommit()
+                    } else {
+                        T.show(getString(R.string.phone_verifycode_empty))
+                    }
                 } else {// 邮箱登录
-                    T.show(account)
                     presenter.setEmail(account)
-                    presenter.setVerifyCode(verifycode)
-                    presenter.emailVerifyCodeCommit()
+                    if (!TextUtils.isEmpty(verifycode)) {
+                        presenter.setVerifyCode(verifycode)
+                        presenter.emailVerifyCodeCommit()
+                    } else {
+                        T.show(getString(R.string.email_verifycode_empty))
+                    }
                 }
             }
             accoutPasswdLoginView.tv_account_passwd_forget_passwd -> {// 忘记密码
@@ -294,6 +300,14 @@ class LoginActivity2  : PActivity(), LoginView, View.OnClickListener, WeChatLogi
     override fun showCountryCode(countryName: String, countryCode: String) {
         accoutPasswdLoginView.tv_login_to_country_bypsswd.text = countryName
         verifyCodeLoginView.tv_login_to_country_byverifycode.text = countryName
+    }
+
+    override fun sendVerifyCodeSuccess() {
+        T.show(getString(R.string.send_verifycode_success))
+    }
+
+    override fun sendVerifyCodeFail(msg: ErrorMessage) {
+        T.show(msg.Message)
     }
     // LoginView callback method end
 

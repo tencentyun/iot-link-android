@@ -75,7 +75,7 @@
         android:background="@color/white"
         android:hint="@string/verification_code"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
-        android:inputType="phone"
+        android:inputType="number"
         android:textColorHint="@color/gray_cccccc"
         android:textColor="@color/black_333333"
         android:textSize="@dimen/ts_16"

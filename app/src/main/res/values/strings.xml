@@ -391,11 +391,12 @@
     <!--cancel end-->
 
     <string name="modify_passwd_success">密码修改成功，请重新登录</string>
-    <string name="send_verifycode_success">短信验证码发送成功</string>
+    <string name="send_verifycode_success">验证码发送成功</string>
     <string name="update_phone_success">更新手机号成功</string>
     <string name="update_email_success">更新邮箱号成功</string>
     <string name="phone_verifycode_empty">短信验证码为空</string>
     <string name="email_verifycode_empty">邮箱验证码为空</string>
     <string name="phone_empty">手机号为空</string>
     <string name="email_empty">邮箱号为空</string>
+    <string name="two_password_not_same">两次输入的密码不一致</string>
 </resources>
