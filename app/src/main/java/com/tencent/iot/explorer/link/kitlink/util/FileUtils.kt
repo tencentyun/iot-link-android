@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.util
 
 import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
@@ -11,13 +12,32 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.RequiresApi
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+
 
 object FileUtils {
 
     // 默认的暂存文件夹路径
     var folderName = "h5pic"
+    var tempFolderName = "kitlink/apk/"
     var tempFileName = "/temp.png"
+
+    fun getSdCardTempDirectory(context: Context): String {
+        var sdDir: File?
+        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+            sdDir = Environment.getExternalStorageDirectory()
+        } else {
+            sdDir = context.cacheDir
+        }
+        val cacheDir = File(sdDir, tempFolderName)
+
+        if (!cacheDir.exists()) {
+            cacheDir.mkdirs()
+        }
+        return cacheDir.path
+    }
 
     fun getSdCardDirectory(context: Context): String {
         var sdDir: File?
@@ -159,5 +179,17 @@ object FileUtils {
             e.printStackTrace()
         }
         return null
+    }
+
+    fun installApk(context: Context, path: String) {
+        try {
+            val i = Intent(Intent.ACTION_VIEW)
+            Log.e("XXX", "path")
+            i.setDataAndType(Uri.parse("file://$path"), "application/vnd.android.package-archive")
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(i)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 }
