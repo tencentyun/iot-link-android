@@ -55,7 +55,6 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
     override fun onClick(v: View?) {
         when (v) {
             tv_phone_number -> {// 手机号
-                T.show("手机号")
                 if (!TextUtils.isEmpty(App.data.userInfo.PhoneNumber)) {// 若已绑定则跳到修改手机号
                     jumpActivity(ModifyPhoneActivity::class.java)
                 } else {// 若未绑定则跳到绑定
@@ -63,7 +62,6 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
                 }
             }
             tv_email -> {// 邮箱
-                T.show("邮箱")
                 if (!TextUtils.isEmpty(App.data.userInfo.Email)) {// 若已绑定则跳到修改邮箱号
                     jumpActivity(ModifyEmailActivity::class.java)
                 } else {// 若未绑定则跳到绑定
@@ -78,11 +76,9 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
                 }
             }
             tv_modify_passwd -> {// 修改密码
-                T.show("修改密码")
                 jumpActivity(ModifyPasswordActivity::class.java)
             }
             tv_account_logout -> {// 注销账号
-                T.show("注销账号")
                 jumpActivity(LogoutActivity::class.java)
             }
         }
@@ -117,7 +113,6 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
 
     // Wechat begin
     override fun onSuccess(reqCode: String) {
-        T.show(reqCode)
         HttpRequest.instance.bindWX(reqCode, this)
     }
 
