@@ -2,12 +2,19 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
 import android.content.Intent
+import android.text.TextUtils
 import android.view.View
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import kotlinx.android.synthetic.main.activity_guide.*
 
 class GuideActivity  : PActivity(), View.OnClickListener{
+
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     private val permissions = arrayOf(
         Manifest.permission.RECEIVE_SMS,
@@ -28,6 +35,14 @@ class GuideActivity  : PActivity(), View.OnClickListener{
             requestPermission(permissions)
         } else {
             permissionAllGranted()
+        }
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@GuideActivity)
+        if (!TextUtils.isEmpty(App.data.getToken())) {
+            val userId = SharePreferenceUtil.getString(this@GuideActivity, App.CONFIG, CommonField.USER_ID)
+            mFirebaseAnalytics!!.setUserId(userId)
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
         }
     }
 

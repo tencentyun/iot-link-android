@@ -34,7 +34,8 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
     override fun initView() {
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.logout_account)
-        tv_logout_time.text = DateUtils.getFormatDate(Date())
+        tv_logout_time.text =
+            DateUtils.getFormatDateWithoutTime(DateUtils.getDateAfter(Date(), 7+1)) + " 00:00:00" // 7天后的24点
         presenter = LogoutPresenter(this)
     }
 

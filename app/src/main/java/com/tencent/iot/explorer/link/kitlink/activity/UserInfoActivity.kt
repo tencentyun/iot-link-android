@@ -91,7 +91,6 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
                 presenter.logout()
             }
             tv_account_and_safety -> {
-                T.show("账户与安全")
                 jumpActivity(AccountAndSafetyActivity::class.java)
             }
         }
