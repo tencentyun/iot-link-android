@@ -1,11 +1,15 @@
 package com.tencent.iot.explorer.link.mvp.model
 
+import com.tencent.iot.explorer.link.ErrorCode
+import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ModifyPhoneView
+import com.tencent.iot.explorer.link.util.T
 
 class ModifyPhoneModel(view: ModifyPhoneView) : ParentModel<ModifyPhoneView>(view), MyCallback {
 
@@ -37,11 +41,27 @@ class ModifyPhoneModel(view: ModifyPhoneView) : ParentModel<ModifyPhoneView>(vie
     }
 
     override fun fail(msg: String?, reqCode: Int) {
+        T.show(msg)
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
-        if (response.isSuccess()) {
-
+        when (reqCode) {
+            RequestCode.send_mobile_code -> {// 发送验证码
+                if (!response.isSuccess()) {
+                    val errMsg = ErrorMessage.parseErrorMessage(response.data.toString())
+                    view?.sendVerifyCodeFail(errMsg)
+                } else {
+                    view?.sendVerifyCodeSuccess()
+                }
+            }
+            RequestCode.update_user_info -> {// 更新手机号
+                if (!response.isSuccess()) {
+                    val errMsg = ErrorMessage.parseErrorMessage(response.data.toString())
+                    view?.updatePhoneFail(errMsg)
+                } else {
+                    view?.updatePhoneSuccess()
+                }
+            }
         }
     }
 }
