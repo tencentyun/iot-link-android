@@ -399,4 +399,5 @@
     <string name="phone_empty">手机号为空</string>
     <string name="email_empty">邮箱号为空</string>
     <string name="two_password_not_same">两次输入的密码不一致</string>
+    <string name="bind_success">绑定成功</string>
 </resources>

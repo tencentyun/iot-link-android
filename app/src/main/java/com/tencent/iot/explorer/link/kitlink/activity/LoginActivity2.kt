@@ -86,7 +86,7 @@ class LoginActivity2  : PActivity(), LoginView, View.OnClickListener, WeChatLogi
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@LoginActivity2)
         presenter = LoginPresenter(this)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        tv_title.text = getString(R.string.account_passwd_login)
+        tv_title.text = getString(R.string.verify_code_login)
         initViewPager()
 
         if (!TextUtils.isEmpty(App.data.getToken())) {
