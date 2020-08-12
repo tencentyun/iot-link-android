@@ -133,6 +133,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginEnd="20dp"
             android:text="V1.0.0"
+        android:gravity="center_horizontal"
             android:textSize="@dimen/ts_16"
             android:textColor="@color/black_999999"
             app:layout_constraintTop_toTopOf="@+id/tv_title_version"
