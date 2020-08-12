@@ -32,6 +32,7 @@ object RequestCode {
     const val email_verifycode_login = 1026
     const val bind_wx = 1027
     const val cancel_account = 1028
+    const val get_last_version = 1029
 
     /*************用户接口结束**************/
 
