@@ -104,5 +104,6 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
 
     override fun updatePhoneSuccess() {
         T.show(getString(R.string.update_phone_success))
+        finish()
     }
 }
