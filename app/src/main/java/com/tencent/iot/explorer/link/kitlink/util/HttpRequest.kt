@@ -432,7 +432,7 @@ class HttpRequest private constructor() {
         val param = tokenParams("AppUpdateUser")
         param["Email"] = email
         param["VerificationCode"] = code
-        param["Password"] = passwd
+        if (!TextUtils.isEmpty(passwd)) param["NewPassword"] = passwd
         updateUserInfo(param, callback, RequestCode.update_user_info)
     }
 
@@ -444,7 +444,7 @@ class HttpRequest private constructor() {
         param["CountryCode"] = countryCode
         param["PhoneNumber"] = phone
         param["VerificationCode"] = code
-        param["Password"] = passwd
+        if (!TextUtils.isEmpty(passwd)) param["NewPassword"] = passwd
         updateUserInfo(param, callback, RequestCode.update_user_info)
     }
 

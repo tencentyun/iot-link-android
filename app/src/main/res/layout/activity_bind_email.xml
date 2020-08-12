@@ -196,7 +196,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/line2_set_pwd"
         app:layout_constraintTop_toBottomOf="@+id/line2_set_pwd" />
 
-    <Button
+    <com.tencent.iot.explorer.link.customview.check.ClickButton
         android:id="@+id/btn_bind_get_code"
         android:layout_width="match_parent"
         android:layout_height="48dp"
