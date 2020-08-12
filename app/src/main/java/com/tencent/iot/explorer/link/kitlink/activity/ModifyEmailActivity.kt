@@ -85,5 +85,6 @@ class ModifyEmailActivity : PActivity(), ModifyEmailView, View.OnClickListener  
 
     override fun updateEmailSuccess() {
         T.show(getString(R.string.update_email_success))
+        finish()
     }
 }
