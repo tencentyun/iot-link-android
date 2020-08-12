@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorMessage
@@ -31,8 +32,14 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
         et_bind_email.addClearImage(iv_clear_bind_email)
         et_set_password.addClearImage(iv_clear_password)
         et_verify_set_password.addClearImage(iv_clear_verify_password)
+        btn_bind_get_code.addEditText(et_bind_email, tv_bind_email_hint, "email")
         if (App.data.userInfo.HasPassword != "0") {//有密码则不显示设置密码的输入框
             hidePasswordInput()
+            btn_bind_get_code.removeEditText(et_set_password)
+            btn_bind_get_code.removeEditText(et_verify_set_password)
+        } else {
+            btn_bind_get_code.addEditText(et_set_password, tv_set_password_hint)
+            btn_bind_get_code.addEditText(et_verify_set_password, tv_set_verify_password_hint)
         }
     }
 
@@ -46,17 +53,30 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
         when (v) {
             tv_get_verify_code -> {// 获取验证码
                 val account = et_bind_email.text.trim().toString()
-                presenter.setEmail(account)
-                presenter.requestEmailVerifyCode()
+                if (!TextUtils.isEmpty(account)) {
+                    presenter.setEmail(account)
+                    presenter.requestEmailVerifyCode()
+                } else {
+                    T.show(getString(R.string.email_empty))
+                }
             }
             btn_bind_get_code -> {// 确认绑定
                 val account = et_bind_email.text.trim().toString()
                 val verifyCode = et_bind_email_verifycode.text.trim().toString()
-                val password = et_verify_set_password.text.trim().toString()
-                presenter.setEmail(account)
-                presenter.setVerifyCode(verifyCode)
-                presenter.setPassword(password)
-                presenter.bindEmail()
+                val passwd1 = et_set_password.text.trim().toString()
+                val passwd2 = et_verify_set_password.text.trim().toString()
+                if (!TextUtils.isEmpty(verifyCode)) {
+                    if (passwd1 == passwd2) {
+                        presenter.setEmail(account)
+                        presenter.setVerifyCode(verifyCode)
+                        presenter.setPassword(passwd2)
+                        presenter.bindEmail()
+                    } else {
+                        T.show(getString(R.string.two_password_not_same))
+                    }
+                } else {
+                    T.show(getString(R.string.email_verifycode_empty))
+                }
             }
         }
     }
