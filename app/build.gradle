@@ -163,7 +163,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.0.2'
 
     implementation 'com.yangy:YZxing-lib:2.2'
-    implementation project(path: ':sdk')
 
+    implementation "com.github.skydoves:progressview:1.0.9"
+
+    implementation project(path: ':sdk')
 
 }
