@@ -93,7 +93,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'])
-    implementation fileTree(dir: '../sdk/libs', include: ['*.jar', '*.aar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
@@ -163,6 +162,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.0.2'
 
     implementation 'com.yangy:YZxing-lib:2.2'
+    implementation 'com.alibaba:fastjson:1.2.73'
+    implementation "com.tencent.iot.thirdparty.android:esptouch:0.3.7.2"
     implementation project(path: ':sdk')
 
 
