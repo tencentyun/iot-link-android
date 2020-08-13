@@ -33,10 +33,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'com.alibaba:fastjson:1.2.73'
+    implementation "com.tencent.iot.thirdparty.android:esptouch:0.3.7.2"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     //WebSocket
     implementation "org.java-websocket:Java-WebSocket:1.4.0"
     //kotlin协程
