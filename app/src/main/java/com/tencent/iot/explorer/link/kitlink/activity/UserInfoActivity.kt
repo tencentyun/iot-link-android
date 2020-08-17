@@ -1,9 +1,13 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Intent
 import android.text.TextUtils
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
@@ -19,7 +23,9 @@ import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
 import com.tencent.iot.explorer.link.util.picture.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_user_info.*
+import kotlinx.android.synthetic.main.dialog_temperature.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
+
 
 /**
  * 个人信息界面
@@ -30,6 +36,8 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     private var popupWindow: CameraPopupWindow? = null
     private var commonPopupWindow: CommonPopupWindow? = null
     private var editPopupWindow: EditPopupWindow? = null
+    private lateinit var temperatureDialogView: View
+    private lateinit var bottomDialog: Dialog
 
     private var permissions = arrayOf(
         Manifest.permission.CAMERA,
@@ -49,6 +57,8 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         presenter = UserInfoPresenter(this)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.personal_info)
+        temperatureDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_temperature, null)
+        bottomDialog = Dialog(this, R.style.BottomDialog)
     }
 
     override fun onResume() {
@@ -58,18 +68,33 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
-        user_info_portrait.setOnClickListener(this)
         tv_title_nick.setOnClickListener(this)
         tv_title_telephone_number.setOnClickListener(this)
         tv_title_modify_password.setOnClickListener(this)
         tv_user_info_logout.setOnClickListener(this)
         tv_user_id.setOnLongClickListener(this)
         tv_account_and_safety.setOnClickListener(this)
+
+        iv_avatar.setOnClickListener(this)
+        iv_avatar_arrow.setOnClickListener(this)
+        tv_title_avatar.setOnClickListener(this)
+
+        tv_temperature_unit_title.setOnClickListener(this)
+        tv_temperature_unit.setOnClickListener(this)
+        iv_temperature_unit_arrow.setOnClickListener(this)
+
+        iv_time_zone_arrow.setOnClickListener(this)
+        tv_time_zone_title.setOnClickListener(this)
+        tv_time_zone.setOnClickListener(this)
+
+        temperatureDialogView.tv_fahrenheit.setOnClickListener(this)
+        temperatureDialogView.tv_celsius.setOnClickListener(this)
+        temperatureDialogView.tv_cancel.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            user_info_portrait -> {
+            tv_title_avatar, iv_avatar, iv_avatar_arrow -> {
                 if (checkPermissions(permissions))
                     showCameraPopup()
                 else requestPermission(permissions)
@@ -92,6 +117,23 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
             }
             tv_account_and_safety -> {
                 jumpActivity(AccountAndSafetyActivity::class.java)
+            }
+            tv_temperature_unit_title, tv_temperature_unit, iv_temperature_unit_arrow -> {
+                showTemperatureDialog()
+            }
+            tv_time_zone_title, tv_time_zone, iv_time_zone_arrow -> {
+                T.show("时区")
+            }
+            temperatureDialogView.tv_fahrenheit -> {
+                tv_temperature_unit.text = getString(R.string.fahrenheit_unit)
+                bottomDialog.dismiss()
+            }
+            temperatureDialogView.tv_celsius -> {
+                tv_temperature_unit.text = getString(R.string.celsius_unit)
+                bottomDialog.dismiss()
+            }
+            temperatureDialogView.tv_cancel -> {
+                bottomDialog.dismiss()
             }
         }
     }
@@ -172,7 +214,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     override fun showAvatar(imageUrl: String) {
         ImageManager.setImagePath(
             this,
-            user_info_portrait,
+            iv_avatar,
             imageUrl,
             R.mipmap.image_default_portrait
         )
@@ -236,6 +278,18 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
             T.show(getString(R.string.copy))
         }
         return true
+    }
+
+    private fun showTemperatureDialog() {
+        bottomDialog.setContentView(temperatureDialogView)
+        val params = temperatureDialogView.layoutParams as MarginLayoutParams
+        params.width = resources.displayMetrics.widthPixels - dp2px(8)
+        params.bottomMargin = dp2px(5)
+        temperatureDialogView.layoutParams = params
+        bottomDialog.setCanceledOnTouchOutside(true)
+        bottomDialog.window?.setGravity(Gravity.BOTTOM)
+        bottomDialog.window?.setWindowAnimations(R.style.BottomDialog_Animation)
+        bottomDialog.show()
     }
 
 }
