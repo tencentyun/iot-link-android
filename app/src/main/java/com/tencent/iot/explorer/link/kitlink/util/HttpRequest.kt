@@ -633,6 +633,15 @@ class HttpRequest private constructor() {
         tokenPost(param, callback, reqCode)
     }
 
+    /**
+     * 设置温度单位
+     */
+    fun setTemperatureUnit(unit: String, callback: MyCallback) {
+        val param = tokenParams("AppUpdateUserSetting")
+        param["TemperatureUnit"] = unit
+        updateUserInfo(param, callback, RequestCode.set_unit_of_temperature)
+    }
+
     /*************************************  用户接口结束   **********************************************/
 
 

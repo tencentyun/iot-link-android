@@ -410,6 +410,8 @@
     <string name="unset">未设置</string>
     <string name="celsius_unit">℃</string>
     <string name="fahrenheit_unit">℉</string>
+    <string name="celsius">C</string>
+    <string name="fahrenheit">F</string>
     <string name="cancel_account">注销账号</string>
     <string name="country_china">中国</string>
     <!--international end  -->
