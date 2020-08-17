@@ -58,18 +58,19 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
-        user_info_portrait.setOnClickListener(this)
         tv_title_nick.setOnClickListener(this)
         tv_title_telephone_number.setOnClickListener(this)
         tv_title_modify_password.setOnClickListener(this)
         tv_user_info_logout.setOnClickListener(this)
         tv_user_id.setOnLongClickListener(this)
         tv_account_and_safety.setOnClickListener(this)
+        iv_avatar.setOnClickListener(this)
+        tv_title_avatar.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            user_info_portrait -> {
+            tv_title_avatar, iv_avatar -> {
                 if (checkPermissions(permissions))
                     showCameraPopup()
                 else requestPermission(permissions)
@@ -172,7 +173,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     override fun showAvatar(imageUrl: String) {
         ImageManager.setImagePath(
             this,
-            user_info_portrait,
+            iv_avatar,
             imageUrl,
             R.mipmap.image_default_portrait
         )
