@@ -28,4 +28,12 @@ class UserInfoPresenter(view: UserInfoView) : ParentPresenter<UserInfoModel, Use
     fun modifyNick(nick: String) {
         model?.modifyNick(nick)
     }
+
+    fun setTemperatureUnit(unit: String) {
+        model?.setTemperatureUnit(unit)
+    }
+
+    fun getUserSetting() {
+        model?.getUserSetting()
+    }
 }
