@@ -14,4 +14,8 @@ interface UserInfoView : ParentView {
 
     fun showUserInfo()
 
+    fun showTemperatureUnit(unit: String)
+
+    fun showUserSetting()
+
 }
