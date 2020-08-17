@@ -25,6 +25,10 @@ object PingUtil {
     const val WPA_WAP2 = 1
     const val WEP = 2
 
+    fun ping(): Boolean {
+        return ping("www.baidu.com")
+    }
+
     fun ping(host: String): Boolean {
         var isSuccess: Boolean
         var process: Process? = null
@@ -82,6 +86,7 @@ object PingUtil {
                 L.e("连接1")
                 return enableNetwork(tempConfig.networkId, true)
             } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                disconnect()
                 val wifiConfiguration = getWifiConfiguration(WPA_WAP2, password)
                 wifiConfiguration.SSID = "\"$ssid\""
                 wifiConfiguration.BSSID = bssid
