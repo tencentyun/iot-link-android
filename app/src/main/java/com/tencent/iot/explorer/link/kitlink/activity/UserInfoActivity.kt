@@ -15,6 +15,8 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.UserInfoPresenter
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
@@ -118,18 +120,17 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
             tv_account_and_safety -> {
                 jumpActivity(AccountAndSafetyActivity::class.java)
             }
-            tv_temperature_unit_title, tv_temperature_unit, iv_temperature_unit_arrow -> {
+            tv_temperature_unit_title, tv_temperature_unit, iv_temperature_unit_arrow -> {// 温度单位
                 showTemperatureDialog()
             }
-            tv_time_zone_title, tv_time_zone, iv_time_zone_arrow -> {
-                T.show("时区")
+            tv_time_zone_title, tv_time_zone, iv_time_zone_arrow -> {// 时区
             }
             temperatureDialogView.tv_fahrenheit -> {
-                tv_temperature_unit.text = getString(R.string.fahrenheit_unit)
+                presenter.setTemperatureUnit(getString(R.string.fahrenheit))
                 bottomDialog.dismiss()
             }
             temperatureDialogView.tv_celsius -> {
-                tv_temperature_unit.text = getString(R.string.celsius_unit)
+                presenter.setTemperatureUnit(getString(R.string.celsius))
                 bottomDialog.dismiss()
             }
             temperatureDialogView.tv_cancel -> {
@@ -235,6 +236,18 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         if (!TextUtils.isEmpty(App.data.userInfo.Avatar)) {
             showAvatar(App.data.userInfo.Avatar)
         }
+        presenter.getUserSetting()
+    }
+
+    override fun showTemperatureUnit(unit: String) {
+        if (unit == getString(R.string.celsius))
+            tv_temperature_unit.text = getString(R.string.celsius_unit)
+        else if (unit == getString(R.string.fahrenheit))
+            tv_temperature_unit.text = getString(R.string.fahrenheit_unit)
+    }
+
+    override fun showUserSetting() {
+        showTemperatureUnit(App.data.userSetting.TemperatureUnit)
     }
 
     override fun onBackPressed() {
