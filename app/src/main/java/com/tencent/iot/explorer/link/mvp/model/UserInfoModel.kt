@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.mvp.model
 
+import android.app.DownloadManager
 import android.content.Context
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
@@ -13,6 +14,8 @@ import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 import com.tencent.cos.xml.exception.CosXmlClientException
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.response.UserSettingResponse
+import com.tencent.iot.explorer.link.util.T
 
 
 /**
@@ -22,6 +25,7 @@ class UserInfoModel(view: UserInfoView) : ParentModel<UserInfoView>(view), Uploa
 
     private var avatar = ""
     private var nick = ""
+    private var temperatureUnit = ""
     private var uploadModel: UploadModel? = null
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -48,6 +52,15 @@ class UserInfoModel(view: UserInfoView) : ParentModel<UserInfoView>(view), Uploa
                 RequestCode.modify_nick -> {
                     App.data.userInfo.NickName = nick
                     view?.showNick(nick)
+                }
+                RequestCode.set_unit_of_temperature -> {
+                    view?.showTemperatureUnit(temperatureUnit)
+                }
+                RequestCode.user_setting -> {
+                    response.parse(UserSettingResponse::class.java)?.UserSetting?.run {
+                        App.data.userSetting = this
+                        view?.showUserSetting()
+                    }
                 }
             }
         }
@@ -97,6 +110,18 @@ class UserInfoModel(view: UserInfoView) : ParentModel<UserInfoView>(view), Uploa
         uploadModel?.uploadSingleFile(context, srcPath)
     }
 
+    /**
+     * 设置温度单位
+     */
+    fun setTemperatureUnit(unit: String) {
+        temperatureUnit = unit
+        HttpRequest.instance.setTemperatureUnit(unit, this)
+    }
+
+    fun getUserSetting() {
+        HttpRequest.instance.getUserSetting(this)
+    }
+
     override fun successAll() {
     }
 
@@ -117,6 +142,5 @@ class UserInfoModel(view: UserInfoView) : ParentModel<UserInfoView>(view), Uploa
             view?.uploadFail(it.errorMessage)
         }
     }
-
 
 }
