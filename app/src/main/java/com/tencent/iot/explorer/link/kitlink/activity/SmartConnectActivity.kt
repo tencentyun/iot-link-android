@@ -54,9 +54,6 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
                 smart_config_step_progress.currentStep = 2
                 smart_config_step_progress.refreshStepViewState()
                 showFragment(wifiFragment, scStepFragment)
-                if (!LocationUtil.isLocationServiceEnable(this@SmartConnectActivity)) {
-                    T.showLonger("请您打开手机位置以便获取WIFI名称")
-                }
             }
         }
         wifiFragment = WifiFragment(WifiFragment.smart_config)

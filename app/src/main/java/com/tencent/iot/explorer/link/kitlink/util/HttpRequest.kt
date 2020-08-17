@@ -106,11 +106,11 @@ class HttpRequest private constructor() {
         if (!App.chargeUrlAppType()) {
             param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
-            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=archurtest" else "$APP_API/$action"
+            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=seventest" else "$APP_API/$action"
 
         } else {
             json = JsonManager.toJson(sign(param))
-            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=archurtest" else "$EXPLORER_API/$action"
+            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=seventest" else "$EXPLORER_API/$action"
 
         }
 
@@ -138,7 +138,7 @@ class HttpRequest private constructor() {
             App.toLogin()
             return
         }
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=seventest" else TOKEN_API
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
@@ -204,7 +204,7 @@ class HttpRequest private constructor() {
             return
         }
 
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API
+        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=seventest" else TOKEN_API
 
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
@@ -1256,7 +1256,7 @@ class HttpRequest private constructor() {
         val param = tokenParams("DescribeProductConfig")
         param["ProductId"] = productId
         param["Type"] = type
-        param["Uin"] = "archurtest"
+        param["Uin"] = "seventest"
         param["AppId"] = APP_KEY
         tokenPost(param, callback, RequestCode.describe_product_config)
     }

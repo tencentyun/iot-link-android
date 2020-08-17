@@ -30,7 +30,7 @@ class WifiFragment(type: Int) : BaseFragment() {
     private var type = 0
     private var wifiInfo: WifiInfo? = null
     private var bssid = ""
-    var showTipTag = false
+    var showTipTag = false  // 是否是连接设备热点标志
 
     constructor(type: Int, showTag: Boolean) : this(type) {
         showTipTag = showTag
@@ -60,10 +60,12 @@ class WifiFragment(type: Int) : BaseFragment() {
                 tv_select_wifi.hint = getString(R.string.not_network)
 
             } else {
-                tv_select_wifi.setText(wifiManager.connectionInfo.ssid.replace("\"", ""))
-                if (tv_select_wifi.text.contains(CommonField.SSID_UNKNOWN)) {
-                    T.show(getString(R.string.open_location_tip))
+                var ssid2Set = wifiManager.connectionInfo.ssid.replace("\"", "")
+                if (ssid2Set.equals(CommonField.SSID_UNKNOWN) &&
+                    !LocationUtil.isLocationServiceEnable(context)) {
+                    ssid2Set = getString(R.string.open_location_tip)
                 }
+                tv_select_wifi.setText(ssid2Set)
                 bssid = wifiInfo!!.bssid
             }
             tv_select_wifi.isEnabled = type == soft_ap
@@ -72,10 +74,12 @@ class WifiFragment(type: Int) : BaseFragment() {
                 tv_method.visibility = View.VISIBLE
                 tv_method_tip.visibility = View.VISIBLE
                 tv_tip_wifi.setText(R.string.connect_dev_wifi)
+                et_select_wifi_pwd.setHint(R.string.smart_config_second_hint_not_nessery)
             } else {
                 tv_method.visibility = View.GONE
                 tv_method_tip.visibility = View.GONE
                 tv_tip_wifi.setText(R.string.input_wifi_pwd)
+                et_select_wifi_pwd.setHint(R.string.smart_config_second_hint)
             }
         }
     }
@@ -120,10 +124,30 @@ class WifiFragment(type: Int) : BaseFragment() {
 
             Thread{
                 kotlin.run {
-                    Thread.sleep(1000) // 可用于优化连接 wifi 时间
                     var flag = PingUtil.connect(context!!, tv_select_wifi.text.toString().trim(),
                         bssid, et_select_wifi_pwd.text.toString().trim())
-                    if (flag) {
+
+                    if (showTipTag) {   // 如果是切换设备热点，网络切换成功，即认为联网成功（使用设备的热点，无法 ping 同外网）
+                        if (flag) {
+                            dialog.setStatus(ConnectWifiDialog.CONNECT_WIFI_SUCCESS)
+                        } else {
+                            dialog.setStatus(ConnectWifiDialog.CONNECT_WIFI_FAILED)
+                        }
+                        dialog.refreshState()
+                        return@run
+                    }
+
+                    // 热点配网和一键配网，切换网络需要验证网络是否可以 ping 通外网
+                    var pingRet = false
+                    if (flag) {     // 切换热点成功以后，尝试使用新热点的 ping 网络
+                        for (i in 0..30) {  // 最多尝试 30 次的 ping 网测试
+                            pingRet = PingUtil.ping()
+                            if (pingRet) break  // 网络可用，跳出尝试
+                            Thread.sleep(1000)
+                        }
+                    }
+
+                    if (pingRet) {
                         dialog.setStatus(ConnectWifiDialog.CONNECT_WIFI_SUCCESS)
                     } else {
                         dialog.setStatus(ConnectWifiDialog.CONNECT_WIFI_FAILED)
