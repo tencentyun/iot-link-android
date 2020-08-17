@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/account_and_safety"
-    android:background="@color/white">
+    android:background="@color/gray_F5F5F5">
 
     <include layout="@layout/menu_back_layout"
         android:id="@+id/account_and_safety_menu"/>
@@ -14,7 +14,7 @@
         android:id="@+id/tv_phone_number"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="20dp"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:paddingStart="20dp"
@@ -144,6 +144,41 @@
         android:background="@color/line_F2F4F5" />
 
     <TextView
+        android:id="@+id/tv_location_of_account"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/location_of_account"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_18"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/line_wechat"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:id="@+id/iv_location_of_account_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/gray_cccccc"
+        android:textSize="@dimen/ts_16"
+        android:text="@string/country_china"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_location_of_account"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_location_of_account" />
+    <View
+        android:id="@+id/line_location_of_account"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_location_of_account"
+        android:background="@color/line_F2F4F5" />
+
+    <TextView
         android:id="@+id/tv_modify_passwd"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -151,10 +186,11 @@
         android:gravity="center_vertical"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/modify_password"
+        android:text="@string/modify_login_passwd"
         android:textColor="@color/black_333333"
         android:textSize="@dimen/ts_18"
-        app:layout_constraintTop_toBottomOf="@+id/line_wechat"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/line_location_of_account"
         tools:layout_editor_absoluteX="0dp" />
 
     <ImageView
@@ -183,9 +219,10 @@
         android:gravity="center_vertical"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/account_logout"
+        android:text="@string/cancel_account"
         android:textColor="@color/black_333333"
         android:textSize="@dimen/ts_18"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@+id/line_modify_passwd"
         tools:layout_editor_absoluteX="0dp" />
 
