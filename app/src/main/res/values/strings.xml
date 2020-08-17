@@ -142,6 +142,7 @@
     <string name="smart_config_second_title">连接WI-FI</string>
     <string name="smart_config_second">输入WI-FI密码</string>
     <string name="smart_config_second_hint">请输入密码</string>
+    <string name="smart_config_second_hint_not_nessery">请输入密码（非必填）</string>
     <string name="smart_config_third_connect_progress">配网进度</string>
     <string name="smart_config_config_network">一键配网</string>
     <string name="softap_config_network">热点配网</string>
@@ -297,7 +298,7 @@
     <string name="device">\t\t设备\t\t</string>
     <string name="family">\t\t家庭\t\t</string>
     <string name="notify">\t\t通知\t\t</string>
-    <string name="open_location_tip">请打开手机位置以便获取WIFI名称</string>
+    <string name="open_location_tip">开启定位获取WiFi信息</string>
 
     <!--设备分类-->
     <string name="scanned_devices">已发现如下设备</string>
