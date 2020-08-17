@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -38,9 +39,11 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
 
     private var progressbar: ProgressBar? = null
     @Volatile
-    private var webStatus = 0 //0：是webview 初始化  1：webview页面交互跳转
+    private var webStatus = 0 //0：webview 初始化  1：webview页面交互跳转
     @Volatile
     private var isCapture = false
+    private var indexHelpChildPageTag = 0 // 0 保持原有帮助反馈的正常逻辑 1 由其他窗口直接跳转到指定的页面
+    private var indexHelpChildPageUrl = "" // 当 indexHelpChildPageTag 不为 0，可使用
 
     private var uploadMessage: ValueCallback<Uri>? = null
     private var uploadMessageAboveL: ValueCallback<Array<Uri>>? = null
@@ -53,6 +56,13 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
 
     override fun initView() {
         webStatus = 0
+        indexHelpChildPageTag = intent.getIntExtra(CommonField.PAGE_INDEX_TYPE, indexHelpChildPageTag)
+        if (intent.hasExtra(CommonField.PAGE_INDEX_URL)) {
+            indexHelpChildPageUrl = intent.getStringExtra(CommonField.PAGE_INDEX_URL)
+            if (TextUtils.isEmpty(indexHelpChildPageUrl)) {
+                indexHelpChildPageUrl = ""
+            }
+        }
         initWebView()
         iv_back.setColorFilter(R.color.black_333333)
         getAppGetTokenTicket()
@@ -122,6 +132,10 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
     override fun fail(msg: String?, reqCode: Int) {
     }
 
+    private fun showMoreHelp() {
+        help_web.loadUrl(indexHelpChildPageUrl)
+    }
+
     override fun success(response: BaseResponse, reqCode: Int) {
         if (webStatus == 0) {
             JSBridgeKt.register("help_center_bridge", BridgeImpl::class.java)
@@ -129,7 +143,7 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
             help_web.webViewClient = webViewClient
             help_web.webChromeClient = webChromeClient
 
-            if (response.code == 0) {
+            if (response.code == 0 && indexHelpChildPageTag == 0) {
                 var js = JSON.parse(response.data.toString()) as JSONObject
                 var url ="https://iot.cloud.tencent.com/explorer-h5/help-center/?" +
                         "&ticket=" + js[CommonField.TOKEN_TICKET]
@@ -141,6 +155,8 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
                 }
 
                 help_web.loadUrl(url)
+            } else if (response.code == 0 && indexHelpChildPageTag == 1) {
+                showMoreHelp()
             }
 
         } else {

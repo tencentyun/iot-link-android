@@ -189,6 +189,7 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
 
     // 根据回调，处理界面的进度步骤
     override fun connectStep(step: Int) {
+        Log.e("XXX", "ConnectProgressFragment connectStep type " + type + ", step " + step);
         if (type == WifiFragment.smart_config) {
             when (step) {
                 SmartConfigStep.STEP_DEVICE_CONNECTED_TO_WIFI.ordinal -> {
@@ -232,14 +233,17 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
     }
 
     override fun deviceConnectToWifiFail() {
+        Log.e("XXX", "ConnectProgressFragment deviceConnectToWifiFail");
         showfailedReason()
     }
 
     override fun softApConnectToWifiFail(ssid: String) {
+        Log.e("XXX", "ConnectProgressFragment softApConnectToWifiFail");
         showfailedReason()
     }
 
     override fun connectFail(code: String, message: String) {
+        Log.e("XXX", "ConnectProgressFragment connectFail");
         showfailedReason()
     }
 
