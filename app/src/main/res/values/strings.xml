@@ -350,7 +350,7 @@
     <string name="other_login_way">其他登录方式</string>
     <string name="wechat">微信</string>
     <string name="account_and_safety">账号与安全</string>
-    <string name="phone_number">手机号</string>
+    <string name="phone_number">手机号码</string>
     <string name="unbind">未绑定</string>
     <string name="have_bind">已绑定</string>
     <string name="email">邮箱</string>
@@ -400,4 +400,17 @@
     <string name="email_empty">邮箱号为空</string>
     <string name="two_password_not_same">两次输入的密码不一致</string>
     <string name="bind_success">绑定成功</string>
+
+    <!--international start-->
+    <string name="avatar">头像</string>
+    <string name="modify_login_passwd">修改登录密码</string>
+    <string name="location_of_account">账户所在地</string>
+    <string name="the_unit_of_temperature">温度单位</string>
+    <string name="time_zone">时区</string>
+    <string name="unset">未设置</string>
+    <string name="celsius_unit">℃</string>
+    <string name="fahrenheit_unit">℉</string>
+    <string name="cancel_account">注销账号</string>
+    <string name="country_china">中国</string>
+    <!--international end  -->
 </resources>
