@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.mvp.model
 
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.http.ConnectionListener
@@ -72,6 +73,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
         }
 
         override fun onFail(exception: TCLinkException) {
+            Log.e("XXX", "smartConfigListener onFail exception " + exception.errorMessage)
             view.connectFail(exception.errorCode, exception.errorMessage)
         }
     }
@@ -123,6 +125,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
         }
 
         override fun onFail(code: String, msg: String) {
+            Log.e("XXX", "softAPListener onFail msg " + msg)
             view.connectFail(code, msg)
         }
     }
@@ -149,6 +152,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     }
 
     private fun checkDeviceBindTokenState() {
+        Log.e("XXX", "start checkDeviceBindTokenState")
         if (checkDeviceBindTokenStateStarted) return
 
         var maxTimes2Try = maxTime / interval
@@ -164,17 +168,20 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     private fun checkDeviceBindTokenState(currentNo: Int, maxTimes: Int, interval: Int) {
         // 结束递归的条件，避免失败后的无限递归
         if (currentNo >= maxTimes || currentNo < 0) {
+            Log.e("XXX", "break bt over times checkDeviceBindTokenState currentNo " + currentNo)
             Reconnect.instance.stop(connectionListener)
             checkDeviceBindTokenStateStarted = false
             softAPListener.onFail(unKnowError.toString(), "获取设备与 token 的绑定状态失败")
+            smartConfigListener.onFail(TCLinkException(unKnowError.toString()))
             return
         }
 
         val nextNo = currentNo + 1
+        Log.e("XXX", "next loop nextNo " + nextNo)
         HttpRequest.instance.checkDeviceBindTokenState(object: MyCallback{
             override fun fail(msg: String?, reqCode: Int) {
                 // 失败进行到下一次的递归
-                Thread.sleep(interval.toLong() * 1000)
+                Thread.sleep(interval * 1000L)
                 checkDeviceBindTokenState(nextNo, maxTimes, interval)
             }
 
@@ -183,6 +190,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 response.parse(DeviceBindTokenStateResponse::class.java)?.State.let {
                     when(it) {
                         2 -> {
+                            Log.e("XXX", "loop over by nextNo " + nextNo)
                             Reconnect.instance.stop(connectionListener)
                             checkDeviceBindTokenStateStarted = false
                             Thread(Runnable {
@@ -191,7 +199,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                         } else -> {
                             // 主线程回调，子线程开启新的网络请求，避免阻塞主线程
                             Thread(Runnable{
-                                Thread.sleep(interval.toLong() * 1000)
+                                Thread.sleep(interval * 1000L)
                                 checkDeviceBindTokenState(nextNo, maxTimes, interval)
                             }).start()
                         }
@@ -209,8 +217,12 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        L.e(msg ?: "")
-        softAPListener.onFail(unKnowError.toString(), "获取家庭与设备绑定关系失败")
+        L.e(msg?: "")
+        Log.e("XXX", "wifiBindDevice failed " + msg)
+        when(type) {
+            WifiFragment.smart_config -> smartConfigListener.onFail(TCLinkException(unKnowError.toString()))
+            WifiFragment.soft_ap -> softAPListener.onFail(unKnowError.toString(), "获取家庭与设备绑定关系失败")
+        }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
@@ -221,6 +233,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             }
             view?.connectSuccess()
         } else {
+            Log.e("XXX", "wifiBindDevice bind_fail " + response.msg)
             view?.connectFail("bind_fail", response.msg)
         }
         //绑定操作响应后，不论结果如何，一律停止监听。
