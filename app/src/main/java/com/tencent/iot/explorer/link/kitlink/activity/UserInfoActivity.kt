@@ -79,8 +79,6 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         tv_title_nick.setOnClickListener(this)
-        tv_title_telephone_number.setOnClickListener(this)
-        tv_title_modify_password.setOnClickListener(this)
         tv_user_info_logout.setOnClickListener(this)
         tv_user_id.setOnLongClickListener(this)
         tv_account_and_safety.setOnClickListener(this)
@@ -111,16 +109,6 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
             }
             tv_title_nick -> {
                 showEditPopup()
-            }
-            tv_title_telephone_number -> {
-
-            }
-            tv_title_modify_password -> {
-                if (TextUtils.isEmpty(App.data.userInfo.PhoneNumber)) {
-                    showCommonPopup()
-                } else {
-                    jumpActivity(ResetPasswordActivity::class.java)
-                }
             }
             tv_user_info_logout -> {
                 presenter.logout()
@@ -245,7 +233,6 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun showUserInfo() {
         tv_nick.text = App.data.userInfo.NickName
-        tv_telephone_number.text = App.data.userInfo.PhoneNumber
         tv_user_id.text = App.data.userInfo.UserID
         if (!TextUtils.isEmpty(App.data.userInfo.Avatar)) {
             showAvatar(App.data.userInfo.Avatar)
