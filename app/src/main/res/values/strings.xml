@@ -28,6 +28,7 @@
     <string name="back_home">返回首页</string>
     <string name="q_feedback">问题反馈</string>
     <string name="copy">已复制</string>
+    <string name="open_WIFI">请打开 WIFI</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
