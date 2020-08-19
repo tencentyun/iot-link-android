@@ -642,6 +642,15 @@ class HttpRequest private constructor() {
         updateUserInfo(param, callback, RequestCode.set_unit_of_temperature)
     }
 
+    /**
+     * 拉取全局配置
+     */
+    fun getGlobalConfig(key: String, callback: MyCallback) {
+        val param = commonParams("AppGetGlobalConfig")
+        param["Keys"] = key
+        postJson(param, callback, RequestCode.get_global_config)
+    }
+
     /*************************************  用户接口结束   **********************************************/
 
 
