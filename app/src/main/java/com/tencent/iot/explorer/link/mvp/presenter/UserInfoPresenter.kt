@@ -36,4 +36,8 @@ class UserInfoPresenter(view: UserInfoView) : ParentPresenter<UserInfoModel, Use
     fun getUserSetting() {
         model?.getUserSetting()
     }
+
+    fun getGlobalConfig(key: String) {
+        model?.getGlobalConfig(key)
+    }
 }
