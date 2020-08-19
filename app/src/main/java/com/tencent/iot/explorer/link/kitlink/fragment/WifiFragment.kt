@@ -4,9 +4,11 @@ import android.content.Context
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.utils.PingUtil
@@ -63,12 +65,13 @@ class WifiFragment(type: Int) : BaseFragment() {
                 var ssid2Set = wifiManager.connectionInfo.ssid.replace("\"", "")
                 if (ssid2Set.equals(CommonField.SSID_UNKNOWN) &&
                     !LocationUtil.isLocationServiceEnable(context)) {
-                    ssid2Set = getString(R.string.open_location_tip)
+                    ssid2Set = ""
+                    tv_select_wifi.setHint(R.string.open_location_tip)
                 }
                 tv_select_wifi.setText(ssid2Set)
                 bssid = wifiInfo!!.bssid
             }
-            tv_select_wifi.isEnabled = type == soft_ap
+            isNextClickable()
 
             if (showTipTag) {
                 tv_method.visibility = View.VISIBLE
@@ -167,11 +170,24 @@ class WifiFragment(type: Int) : BaseFragment() {
                 override fun OnWifiClicked(item: com.tencent.iot.explorer.link.customview.dialog.WifiInfo?) {
                     tv_select_wifi.setText(item!!.ssid)
                     bssid = item!!.bssid
+                    isNextClickable()
                 }
             })
             dialog.show()
             dialog.setCanceledOnTouchOutside(true)
         }
+    }
+
+    private fun isNextClickable() {
+        if (tv_select_wifi.text != null && (TextUtils.isEmpty(tv_select_wifi.text.toString())) ||
+            tv_select_wifi.text.toString().equals(CommonField.SSID_UNKNOWN)) {
+            tv_wifi_commit.isClickable = false
+            tv_wifi_commit.background = getDrawable(context!!, R.drawable.bg_edit)
+            return
+        }
+
+        tv_wifi_commit.isClickable = true
+        tv_wifi_commit.background = getDrawable(context!!, R.drawable.btn_bg)
     }
 
     interface OnCommitWifiListener {
