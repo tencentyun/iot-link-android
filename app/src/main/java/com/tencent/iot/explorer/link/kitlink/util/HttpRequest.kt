@@ -642,6 +642,24 @@ class HttpRequest private constructor() {
         updateUserInfo(param, callback, RequestCode.set_unit_of_temperature)
     }
 
+    /**
+     * 设置时区
+     */
+    fun setRegion(region: String, callback: MyCallback) {
+        val param = tokenParams("AppUpdateUserSetting")
+        param["Region"] = region
+        updateUserInfo(param, callback, RequestCode.set_region)
+    }
+
+    /**
+     * 拉取全局配置
+     */
+    fun getGlobalConfig(key: String, callback: MyCallback) {
+        val param = commonParams("AppGetGlobalConfig")
+        param["Keys"] = key
+        postJson(param, callback, RequestCode.get_global_config)
+    }
+
     /*************************************  用户接口结束   **********************************************/
 
 
