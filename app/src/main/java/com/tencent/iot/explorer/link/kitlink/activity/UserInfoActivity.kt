@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
@@ -21,12 +22,15 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.UserInfoPresenter
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 import com.tencent.iot.explorer.link.util.AppInfoUtils
+import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.ImageSelectorConstant.REQUEST_IMAGE
 import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
 import com.tencent.iot.explorer.link.util.picture.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_user_info.*
 import kotlinx.android.synthetic.main.dialog_temperature.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
+import java.util.*
 
 
 /**
@@ -40,6 +44,10 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     private var editPopupWindow: EditPopupWindow? = null
     private lateinit var temperatureDialogView: View
     private lateinit var bottomDialog: Dialog
+
+    companion object {
+        const val TIMEZONE_REQUESTCODE = 100
+    }
 
     private var permissions = arrayOf(
         Manifest.permission.CAMERA,
@@ -124,6 +132,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
                 showTemperatureDialog()
             }
             tv_time_zone_title, tv_time_zone, iv_time_zone_arrow -> {// 时区
+                startActivityForResult(Intent(this, TimeZoneActivity::class.java), TIMEZONE_REQUESTCODE)
             }
             temperatureDialogView.tv_fahrenheit -> {
                 presenter.setTemperatureUnit(getString(R.string.fahrenheit))
@@ -192,6 +201,11 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         editPopupWindow?.show(user_info)
     }
 
+    private fun showRegion(region: String) {
+        if (!TextUtils.isEmpty(region))
+            tv_time_zone.text = region
+    }
+
     override fun permissionAllGranted() {
         showCameraPopup()
     }
@@ -248,6 +262,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun showUserSetting() {
         showTemperatureUnit(App.data.userSetting.TemperatureUnit)
+        showRegion(App.data.userSetting.Region)
     }
 
     override fun onBackPressed() {
@@ -274,13 +289,20 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (data != null) {
-            val list = ImageSelectorUtils.getImageSelectorList(requestCode, resultCode, data)
-            if (list != null && list.size > 0) {
-                list.forEach {
-                    L.e("配图:$it")
-                    presenter.upload(this, it)
+        when (requestCode) {
+            REQUEST_IMAGE -> {// 头像上传
+                if (data != null) {
+                    val list = ImageSelectorUtils.getImageSelectorList(requestCode, resultCode, data)
+                    if (list != null && list.size > 0) {
+                        list.forEach {
+                            L.e("配图:$it")
+                            presenter.upload(this, it)
+                        }
+                    }
                 }
+            }
+            TIMEZONE_REQUESTCODE -> {// 选择时区
+
             }
         }
     }
