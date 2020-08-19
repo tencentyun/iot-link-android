@@ -95,7 +95,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".kitlink.activity.LoginActivity2" />
         <activity android:name=".kitlink.activity.LoginActivity" />
         <activity android:name=".kitlink.activity.AccountAndSafetyActivity" />
         <activity android:name=".kitlink.activity.BindPhoneActivity" />
@@ -109,7 +108,6 @@
         <activity android:name=".kitlink.activity.DeviceDetailsActivity" />
         <activity android:name=".kitlink.activity.SmartConnectActivity"/>
         <activity android:name=".kitlink.activity.ControlPanelActivity" />
-        <activity android:name=".kitlink.activity.ResetPasswordActivity" />
         <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
         <activity android:name=".kitlink.activity.HelpCenterActivity" />

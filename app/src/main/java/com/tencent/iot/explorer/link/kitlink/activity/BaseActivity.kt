@@ -81,9 +81,9 @@ abstract class BaseActivity : AppCompatActivity() {
         App.data.activityList.add(activity)
     }
 
-    fun logout(activity: LoginActivity2) {
+    fun logout(activity: LoginActivity) {
         App.data.activityList.forEach {
-            if (it !is LoginActivity2) {
+            if (it !is LoginActivity) {
                 it.finish()
             }
         }

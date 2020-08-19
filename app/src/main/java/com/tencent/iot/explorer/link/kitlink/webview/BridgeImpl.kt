@@ -6,9 +6,8 @@ import android.webkit.WebView
 import android.widget.Toast
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
 import com.tencent.iot.explorer.link.kitlink.activity.HelpWebViewActivity
-import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity2
+import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.AppData
 import com.tencent.iot.explorer.link.util.T
@@ -97,7 +96,7 @@ object BridgeImpl {
             "fromH5AndBack" -> {
                 Toast.makeText(activity, type, Toast.LENGTH_LONG).show()
                 if (!AppData.instance.getToken().equals("")) {
-                    activity.jumpActivity(LoginActivity2::class.java)
+                    activity.jumpActivity(LoginActivity::class.java)
 
                 } else if (null != callback) {
                     data.put("formNative", "登录状态" + AppData.instance.getToken())
@@ -120,7 +119,7 @@ object BridgeImpl {
             CommonField.WAY_SOURCE -> {
                 if (!AppData.instance.getToken().isEmpty()) {
                     App.data.clear()
-                    val intent = Intent(activity, LoginActivity2::class.java)
+                    val intent = Intent(activity, LoginActivity::class.java)
                     intent.putExtra(CommonField.FROM, CommonField.WAY_SOURCE)
                     activity.startActivityForResult(intent, CommonField.LOGIN_REQUEST_CODE)
 

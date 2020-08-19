@@ -5,7 +5,7 @@ import android.content.Intent
 import android.text.TextUtils
 import androidx.multidex.MultiDex
 import com.tencent.iot.explorer.link.auth.IoTAuth
-import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity2
+import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
 import com.tencent.iot.explorer.link.kitlink.util.AppData
 import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.android.tpush.XGPushConfig
