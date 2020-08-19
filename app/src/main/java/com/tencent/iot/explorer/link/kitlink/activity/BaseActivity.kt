@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -157,6 +158,7 @@ abstract class BaseActivity : AppCompatActivity() {
         checkLanguage()
         super.onCreate(savedInstanceState)
         super.setContentView(getContentView())
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         App.data.activityList.addLast(this)
         //在setContentView()后调用
         checkStyle()
