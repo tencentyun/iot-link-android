@@ -10,8 +10,8 @@ class RegisterPresenter(view: RegisterView) : ParentPresenter<RegisterModel, Reg
         return RegisterModel(view)
     }
 
-    fun setCountryCode(countryCode: String) {
-        model?.setCountryCode(countryCode)
+    fun setCountry(country: String) {
+        model?.setCountry(country)
     }
 
     fun getCountryCode(): String {

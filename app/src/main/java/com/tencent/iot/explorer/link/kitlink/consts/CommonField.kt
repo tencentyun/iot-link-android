@@ -51,6 +51,7 @@ object CommonField {
     /*************** 注册 ****************/
     const val TYPE = "Type"
     const val COUNTRY_CODE = "CountryCode"
+    const val REGION_ID = "RegionID"
     const val PHONE_NUMBER = "PhoneNumber"
     const val VERIFY_CODE = "VerificationCode"
     const val PWD = "Password"
@@ -58,6 +59,8 @@ object CommonField {
     const val EMAIL = "Email"
     const val PHONE = "phone"
     const val WX_OPENID = "WxOpenID"
+    const val REGION_CHINA = "ap-guangzhou"
+    const val REGION_USA = "na-ashburn"
 
     /************返回结果通用字段*************/
     const val RESPONSE = "Response"
