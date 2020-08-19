@@ -122,6 +122,10 @@ class UserInfoModel(view: UserInfoView) : ParentModel<UserInfoView>(view), Uploa
         HttpRequest.instance.getUserSetting(this)
     }
 
+    fun getGlobalConfig(key: String) {
+        HttpRequest.instance.getGlobalConfig(key, this)
+    }
+
     override fun successAll() {
     }
 
