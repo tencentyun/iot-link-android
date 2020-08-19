@@ -28,8 +28,6 @@ import com.tencent.iot.explorer.link.mvp.view.LoginView
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
-import com.tencent.iot.explorer.link.util.keyboard.SoftKeyBoard
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login2.*
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_set_password.*
@@ -41,7 +39,7 @@ import kotlinx.android.synthetic.main.layout_phone_register.view.*
 import kotlinx.android.synthetic.main.layout_verify_code_login.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
-class LoginActivity2  : PActivity(), LoginView, View.OnClickListener, WeChatLogin.OnLoginListener  {
+class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin.OnLoginListener  {
 
     private lateinit var presenter: LoginPresenter
 
@@ -83,14 +81,14 @@ class LoginActivity2  : PActivity(), LoginView, View.OnClickListener, WeChatLogi
         intent.getStringExtra("from")?.let {
             fromTag = it
         }
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@LoginActivity2)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@LoginActivity)
         presenter = LoginPresenter(this)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.verify_code_login)
         initViewPager()
 
         if (!TextUtils.isEmpty(App.data.getToken())) {
-            var userId = SharePreferenceUtil.getString(this@LoginActivity2, App.CONFIG, CommonField.USER_ID)
+            var userId = SharePreferenceUtil.getString(this@LoginActivity, App.CONFIG, CommonField.USER_ID)
             mFirebaseAnalytics!!.setUserId(userId);
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -233,21 +231,21 @@ class LoginActivity2  : PActivity(), LoginView, View.OnClickListener, WeChatLogi
         HttpRequest.instance.userInfo(object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (TextUtils.isEmpty(msg)) {
-                    this@LoginActivity2.loginFail(getString(R.string.get_userId_failed))
+                    this@LoginActivity.loginFail(getString(R.string.get_userId_failed))
                     return
                 }
-                this@LoginActivity2.loginFail(msg!!)
+                this@LoginActivity.loginFail(msg!!)
             }
             override fun success(response: BaseResponse, reqCode: Int) {
                 if (response.isSuccess()) {
                     response.parse(UserInfoResponse::class.java)?.Data?.run {
                         App.data.userInfo = this
-                        SharePreferenceUtil.saveString(this@LoginActivity2, App.CONFIG, CommonField.USER_ID, App.data.userInfo.UserID)
+                        SharePreferenceUtil.saveString(this@LoginActivity, App.CONFIG, CommonField.USER_ID, App.data.userInfo.UserID)
                         mFirebaseAnalytics!!.setUserId(App.data.userInfo.UserID)
                         saveUser(user)
                         T.show(getString(R.string.login_success))
                         if (TextUtils.isEmpty(fromTag)) {
-                            startActivity(Intent(this@LoginActivity2, MainActivity::class.java))
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         } else {
                             val data = Intent()
                             data.putExtra("data", AppData.instance.getToken())
@@ -256,7 +254,7 @@ class LoginActivity2  : PActivity(), LoginView, View.OnClickListener, WeChatLogi
                         finish()
                     }
                 } else {
-                    this@LoginActivity2.loginFail(getString(R.string.get_userId_failed))
+                    this@LoginActivity.loginFail(getString(R.string.get_userId_failed))
                 }
             }
         })

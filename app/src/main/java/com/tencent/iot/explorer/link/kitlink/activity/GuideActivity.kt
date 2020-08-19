@@ -59,7 +59,7 @@ class GuideActivity  : PActivity(), View.OnClickListener{
                 }
             }
             tv_use_existed_account_to_login -> {
-                Intent(this, LoginActivity2::class.java).run {
+                Intent(this, LoginActivity::class.java).run {
                     startActivity(this)
                 }
             }
