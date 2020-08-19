@@ -28,6 +28,7 @@
             android:maxLines="1"
             android:textColor="@color/black_333333"
             android:textSize="18sp"
+        android:enabled="false"
             app:layout_constraintBottom_toBottomOf="@+id/smart_second_line"
             app:layout_constraintLeft_toRightOf="@+id/tv_wifi_tip"
             app:layout_constraintRight_toLeftOf="@+id/iv_select_wifi" />

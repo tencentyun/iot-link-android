@@ -112,7 +112,8 @@
         <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
         <activity android:name=".kitlink.activity.HelpCenterActivity" />
-        <activity android:name=".kitlink.activity.ConfigNetFailedActivity"/>
+        <activity android:name=".kitlink.activity.ConfigNetFailedActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".kitlink.activity.ConfigNetSuccessActivity"/>
         <activity android:name=".kitlink.activity.HelpWebViewActivity"
             android:launchMode="singleTop" />
