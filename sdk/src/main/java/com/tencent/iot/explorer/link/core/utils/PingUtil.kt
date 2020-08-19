@@ -198,6 +198,8 @@ object PingUtil {
     }
 
     private fun isExists(wifiManager: WifiManager, ssid: String): WifiConfiguration? {
+        if (wifiManager.getConfiguredNetworks() == null) return null
+
         for (existingConfig in wifiManager.getConfiguredNetworks()) {
             if (existingConfig.SSID == "\"$ssid\"") {
                 return existingConfig
