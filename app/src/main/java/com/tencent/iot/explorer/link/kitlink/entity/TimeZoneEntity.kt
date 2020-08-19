@@ -1,10 +1,5 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
-import android.service.quicksettings.Tile
-import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.util.SharePreferenceUtil
-import java.util.*
 
 class TimeZoneEntity: Comparable<TimeZoneEntity> {
     var TZ = ""
