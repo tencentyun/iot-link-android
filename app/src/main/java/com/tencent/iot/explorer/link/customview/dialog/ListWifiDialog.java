@@ -149,7 +149,7 @@ public class ListWifiDialog extends Dialog implements View.OnClickListener {
             adapter.setAllWifi(refreshAllWifi());
             adapter.notifyDataSetChanged();
             refreshWifi.setOnClickListener(this);
-
+            refreshWifi.setVisibility(View.VISIBLE);
         } else {
             refreshWifi.setVisibility(View.GONE);
             tiplayout.setVisibility(View.VISIBLE);
