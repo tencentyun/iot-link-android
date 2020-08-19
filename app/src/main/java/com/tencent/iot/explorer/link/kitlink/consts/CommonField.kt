@@ -70,6 +70,11 @@ object CommonField {
     const val NICK_NAME = "NickName"
     //头像
     const val AVATAR = "Avatar"
+    const val REGION_LIST_CN = "RegionListCN"
+    const val REGION_LIST_EN = "RegionListEN"
+    const val REGISTER_REGION_LIST_CN = "RegisterRegionListCN"
+    const val REGISTER_REGION_LIST_EN = "RegisterRegionListEN"
+    const val TIME_ZONE = "Timezone"
 
 
     /***********设备**********/

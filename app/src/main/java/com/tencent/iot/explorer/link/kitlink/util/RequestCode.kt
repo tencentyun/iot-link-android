@@ -33,6 +33,7 @@ object RequestCode {
     const val bind_wx = 1027
     const val cancel_account = 1028
     const val set_unit_of_temperature = 1029
+    const val get_global_config = 1030
 
     /*************用户接口结束**************/
 
