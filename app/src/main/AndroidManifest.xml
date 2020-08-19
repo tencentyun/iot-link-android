@@ -104,6 +104,7 @@
         <activity android:name=".kitlink.activity.ModifyEmailActivity" />
         <activity android:name=".kitlink.activity.ModifyPasswordActivity" />
         <activity android:name=".kitlink.activity.LogoutActivity" />
+        <activity android:name=".kitlink.activity.TimeZoneActivity" />
         <activity android:name=".kitlink.activity.WebActivity" />
         <activity android:name=".kitlink.activity.DeviceDetailsActivity" />
         <activity android:name=".kitlink.activity.SmartConnectActivity"/>
