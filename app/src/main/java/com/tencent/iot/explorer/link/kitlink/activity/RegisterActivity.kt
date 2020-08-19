@@ -147,7 +147,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                 startActivity(intent)
             }
             phoneView.tv_register_to_country, phoneView.iv_register_to_country -> {
-                startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
+                startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
         }
     }
@@ -221,9 +221,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
             data?.let {
-                it.getStringExtra(CommonField.COUNTRY_CODE)?.run {
-                    L.e("lurs=$this")
-                    presenter.setCountryCode(this)
+                it.getStringExtra(CommonField.REGION_ID)?.run {
+                    presenter.setCountry(this)
                 }
             }
         }

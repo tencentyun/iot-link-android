@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.mvp.model
 
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
@@ -15,13 +16,15 @@ class RegisterModel(view: RegisterView) : ParentModel<RegisterView>(view), MyCal
     private var isAgree = false
     private var countryCode = "86"
     private var countryName = "中国大陆"
+    private var regionId = "1"
     private val type = SocketConstants.register
 
-    fun setCountryCode(countryCode: String) {
-        if (!countryCode.contains("+")) return
-        countryCode.split("+").let {
+    fun setCountry(country: String) {
+        country.split("+").let {
             this.countryName = it[0]
-            this.countryCode = it[1]
+            this.regionId = it[1]
+            if (it[2] == CommonField.REGION_CHINA) this.countryCode = "86"
+            if (it[2] == CommonField.REGION_USA) this.countryCode = "1"
             view?.showCountryCode(this.countryCode, this.countryName)
         }
     }
