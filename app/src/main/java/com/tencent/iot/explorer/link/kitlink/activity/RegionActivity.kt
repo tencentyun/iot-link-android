@@ -17,10 +17,7 @@ import com.tencent.iot.explorer.link.kitlink.holder.RegionViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneKeyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.JsonManager
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_region.*
@@ -68,7 +65,7 @@ class RegionActivity: PActivity(),
         run outSide@{
             regionList.forEachIndexed { index, entity ->
                 if (entity.Region.startsWith(key.toString().toLowerCase(Locale.ROOT))) {
-                    crv_time_zone.scrollPosition(index)
+                    crv_region.scrollPosition(index)
                     return@outSide
                 }
             }
@@ -84,15 +81,15 @@ class RegionActivity: PActivity(),
     }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*> {
-        when (viewType) {
+        return when (viewType) {
             0 -> {
-                return RegionViewHolder(
+                RegionViewHolder(
                     LayoutInflater.from(this)
                         .inflate(R.layout.item_time_zone, parent, false)
                 )
             }
             else -> {
-                return RegionKeyViewHolder(
+                RegionKeyViewHolder(
                     LayoutInflater.from(this)
                         .inflate(R.layout.item_time_zone_key, parent, false)
                 )
@@ -147,10 +144,18 @@ class RegionActivity: PActivity(),
         tempList.addAll(list)
         tempList.sort()
         tempList.forEach {
-            val index = it.Region[0] - 'a'
+            val index: Int
+            val firstLetter: String
+            if (it.Title.matches(Regex(".*[a-zA-Z]+.*"))) {// 英文
+                index = it.Title[0] - 'A'
+                firstLetter = it.Title[0].toString()
+            } else {// 中文
+                firstLetter = PinyinUtil.getFirstLetter(it.Title[0])?.toUpperCase(Locale.ROOT)!!
+                index = firstLetter[0] - 'A'
+            }
             if (flags[index] == 0) {
                 val entity = RegionEntity()
-                entity.Title = it.Region[0].toString().toUpperCase(Locale.ROOT)
+                entity.Title = firstLetter
                 regionList.add(entity)
                 flags[index] = 1
             }
