@@ -81,7 +81,7 @@ object CommonField {
     const val REGISTER_REGION_LIST_EN = "RegisterRegionListEN"
     const val TIME_ZONE = "Timezone"
     const val CHINESE = "zh"
-    const val ENGLISH = "eng"
+    const val ENGLISH = "en"
 
 
     /***********设备**********/

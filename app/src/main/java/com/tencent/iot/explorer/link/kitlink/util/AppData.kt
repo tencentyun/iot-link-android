@@ -31,6 +31,7 @@ class AppData private constructor() {
     private var user: User? = null
     var userInfo = UserInfo()
     var userSetting = UserSetting()
+    var regionId = "22"
 
     //activity列表
     val activityList = LinkedList<BaseActivity>()

@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.mvp.model
 
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -23,6 +24,7 @@ class RegisterModel(view: RegisterView) : ParentModel<RegisterView>(view), MyCal
         country.split("+").let {
             this.countryName = it[0]
             this.regionId = it[1]
+            App.data.regionId = regionId
             if (it[2] == CommonField.REGION_CHINA) this.countryCode = "86"
             if (it[2] == CommonField.REGION_USA) this.countryCode = "1"
             view?.showCountryCode(this.countryCode, this.countryName)
