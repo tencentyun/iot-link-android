@@ -61,6 +61,8 @@ object CommonField {
     const val WX_OPENID = "WxOpenID"
     const val REGION_CHINA = "ap-guangzhou"
     const val REGION_USA = "na-ashburn"
+    const val REGION_LIST_URL = "https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/37/config1.js"
+
 
     /************返回结果通用字段*************/
     const val RESPONSE = "Response"
@@ -81,7 +83,7 @@ object CommonField {
     const val REGISTER_REGION_LIST_EN = "RegisterRegionListEN"
     const val TIME_ZONE = "Timezone"
     const val CHINESE = "zh"
-    const val ENGLISH = "eng"
+    const val ENGLISH = "en"
 
 
     /***********设备**********/

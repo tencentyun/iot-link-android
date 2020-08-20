@@ -164,9 +164,8 @@ dependencies {
     implementation 'com.yangy:YZxing-lib:2.2'
     implementation 'com.alibaba:fastjson:1.2.73'
     implementation "com.tencent.iot.thirdparty.android:esptouch:0.3.7.2"
-
     implementation "com.github.skydoves:progressview:1.0.9"
-
     implementation project(path: ':sdk')
+    implementation 'com.belerweb:pinyin4j:2.5.0'
 
 }
