@@ -165,6 +165,6 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.73'
     implementation "com.tencent.iot.thirdparty.android:esptouch:0.3.7.2"
     implementation project(path: ':sdk')
-
+    implementation 'com.belerweb:pinyin4j:2.5.0'
 
 }

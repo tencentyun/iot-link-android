@@ -66,6 +66,7 @@ class HttpRequest private constructor() {
         param["AppKey"] = APP_KEY
         param["Timestamp"] = System.currentTimeMillis() / 1000
         param["Nonce"] = Random().nextInt(10)
+        param["RegionId"] = "1"
         return param
     }
 
