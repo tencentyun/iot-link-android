@@ -66,6 +66,7 @@ class HttpRequest private constructor() {
         param["AppKey"] = APP_KEY
         param["Timestamp"] = System.currentTimeMillis() / 1000
         param["Nonce"] = Random().nextInt(10)
+        param["RegionId"] = App.data.regionId
         return param
     }
 
@@ -81,6 +82,7 @@ class HttpRequest private constructor() {
         param["Timestamp"] = System.currentTimeMillis() / 1000
         param["Nonce"] = Random().nextInt(10)
         param["AccessToken"] = App.data.getToken()
+        param["RegionId"] = App.data.regionId
         return param
     }
 
@@ -899,7 +901,7 @@ class HttpRequest private constructor() {
         param["FamilyId"] = familyId
         param["ProductId"] = deviceInfo.productId
         param["DeviceName"] = deviceInfo.deviceName
-
+        param["RegionId"] = App.data.regionId
         tokenPost(param, callback, RequestCode.wifi_bind_device)
     }
 
@@ -992,6 +994,7 @@ class HttpRequest private constructor() {
         param["AccessToken"] = App.data.getToken()
         param["IotAppID"] = APP_KEY
         param["UserID"] = App.data.userInfo.UserID
+        param["RegionId"] = App.data.regionId
 
         tokenPost(param, callback, RequestCode.get_bind_device_token)
     }
@@ -1008,6 +1011,7 @@ class HttpRequest private constructor() {
         param["IotAppID"] = APP_KEY
         param["UserID"] = App.data.userInfo.UserID
         param["Token"] = App.data.bindDeviceToken
+        param["RegionId"] = App.data.regionId
 
         tokenPost(param, callback, RequestCode.check_device_bind_token_state)
     }

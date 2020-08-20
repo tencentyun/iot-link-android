@@ -5,6 +5,9 @@ class RegionEntity : Comparable<RegionEntity>{
     var RegionID = ""
     var Region = ""
     override fun compareTo(other: RegionEntity): Int {
-        return Region.compareTo(other.Region)
+        return if (Title.matches(Regex(".*[a-zA-Z]+.*")))
+            Title.compareTo(other.Title)
+        else
+            -Title.compareTo(other.Title)
     }
 }
