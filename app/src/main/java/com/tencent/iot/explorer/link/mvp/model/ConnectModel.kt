@@ -92,6 +92,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             task.mPassword = password
             task.mAccessToken = App.data.bindDeviceToken
             task.mLocation = location
+            task.mRegion = App.data.region
             L.e("ssid:$ssid")
             it.startConnect(task, smartConfigListener)
         }
@@ -145,6 +146,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             task.mPassword = password
             task.mAccessToken = App.data.bindDeviceToken
             task.mLocation = location
+            task.mRegion = App.data.region
             L.d("ssid:$ssid, password:$password")
             it.startConnect(task, softAPListener)
         }

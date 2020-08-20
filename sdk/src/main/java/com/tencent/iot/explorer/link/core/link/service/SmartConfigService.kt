@@ -101,7 +101,7 @@ class SmartConfigService(context: Context) : ConfigService() {
     }
 
     private fun sendUdpPacketWithWifiInfo(host: String, ssid: String, pwd: String) {
-        val wifiMsg = genLinkString(ssid, pwd, task!!.mAccessToken).toByteArray()
+        val wifiMsg = genLinkString(ssid, pwd, task!!.mAccessToken, task!!.mRegion).toByteArray()
         val datagramPacket = DatagramPacket(wifiMsg, wifiMsg.size, InetAddress.getByName(host), port)
         recvWifiMsgFeedback()
         try {

@@ -9,4 +9,5 @@ open class LinkTask {
     var mAccessToken: String = ""
     var mLocation: Location? = null
     var mTimeoutSecond: Int = 10
+    var mRegion: String = ""
 }

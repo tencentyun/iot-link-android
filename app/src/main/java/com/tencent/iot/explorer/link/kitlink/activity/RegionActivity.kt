@@ -17,10 +17,7 @@ import com.tencent.iot.explorer.link.kitlink.holder.RegionViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneKeyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.JsonManager
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_region.*
@@ -33,7 +30,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class RegionActivity: PActivity(),
-    MySideBarView.OnTouchingLetterChangedListener, CRecyclerView.RecyclerItemView, MyCallback {
+    MySideBarView.OnTouchingLetterChangedListener, CRecyclerView.RecyclerItemView, MyCustomCallBack {
 
     private var regionList = ArrayList<RegionEntity>()
     private var flags = IntArray(26)
@@ -68,7 +65,7 @@ class RegionActivity: PActivity(),
         run outSide@{
             regionList.forEachIndexed { index, entity ->
                 if (entity.Region.startsWith(key.toString().toLowerCase(Locale.ROOT))) {
-                    crv_time_zone.scrollPosition(index)
+                    crv_region.scrollPosition(index)
                     return@outSide
                 }
             }
@@ -84,15 +81,15 @@ class RegionActivity: PActivity(),
     }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*> {
-        when (viewType) {
+        return when (viewType) {
             0 -> {
-                return RegionViewHolder(
+                RegionViewHolder(
                     LayoutInflater.from(this)
                         .inflate(R.layout.item_time_zone, parent, false)
                 )
             }
             else -> {
-                return RegionKeyViewHolder(
+                RegionKeyViewHolder(
                     LayoutInflater.from(this)
                         .inflate(R.layout.item_time_zone_key, parent, false)
                 )
@@ -107,7 +104,7 @@ class RegionActivity: PActivity(),
     ) {
         val entity = regionList[position]
         val intent = Intent()
-        intent.putExtra(CommonField.REGION_ID, "${entity.Title}+${entity.RegionID}+${entity.Region}")
+        intent.putExtra(CommonField.REGION_ID, "${entity.Title}+${entity.RegionID}+${entity.CountryCode}+${entity.Region}")
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
@@ -116,41 +113,41 @@ class RegionActivity: PActivity(),
         T.show(msg)
     }
 
-    override fun success(response: BaseResponse, reqCode: Int) {
+    override fun success(str: String, reqCode: Int) {
         when (reqCode) {
-            RequestCode.get_global_config -> {// 拉取时区列表
-                if (response.isSuccess()) {
-                    parseJson(response.data.toString())
-                    crv_region.notifyDataChanged()
-                }
+            RequestCode.get_region_list -> {// 拉取时区列表
+                parseJson(str)
+                crv_region.notifyDataChanged()
             }
         }
     }
 
     private fun getRegionList() {
-        if (this.resources.configuration.locale == Locale.SIMPLIFIED_CHINESE) {// 中文
-            HttpRequest.instance.getGlobalConfig(CommonField.REGISTER_REGION_LIST_CN, this)
-            saveLanguage(CommonField.CHINESE)
-        } else {// 外文
-            HttpRequest.instance.getGlobalConfig(CommonField.REGISTER_REGION_LIST_EN, this)
-            saveLanguage(CommonField.ENGLISH)
-        }
+        HttpRequest.instance.getRegionList(CommonField.REGION_LIST_URL, this, RequestCode.get_region_list)
     }
 
-    private fun parseJson(jsonStr: String) {
-        var json = JSONObject(jsonStr)
-        val configs = json.getJSONArray("Configs")
-        json = JSONObject(configs[0].toString())
-        val regionArray = json.getString("Value")
+    private fun parseJson(str: String) {
+        val start = str.indexOf('[')
+        val end = str.indexOf(']')
+        val regionArray = str.substring(start, end + 1)
         val list = JsonManager.parseJsonArray(regionArray, RegionEntity::class.java)
         val tempList = ArrayList<RegionEntity>()
         tempList.addAll(list)
         tempList.sort()
         tempList.forEach {
-            val index = it.Region[0] - 'a'
+            val index: Int
+            val firstLetter: String
+            if (!CommonUtils.isChineseSystem()) {// 英文
+                index = it.TitleEN[0] - 'A'
+                firstLetter = it.TitleEN[0].toString()
+                it.Title = it.TitleEN
+            } else {// 中文
+                firstLetter = PinyinUtil.getFirstLetter(it.Title[0])?.toUpperCase(Locale.ROOT)!!
+                index = firstLetter[0] - 'A'
+            }
             if (flags[index] == 0) {
                 val entity = RegionEntity()
-                entity.Title = it.Region[0].toString().toUpperCase(Locale.ROOT)
+                entity.Title = firstLetter
                 regionList.add(entity)
                 flags[index] = 1
             }
