@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.content.Intent
 import android.util.Log
 import android.view.View
+import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
@@ -76,14 +77,15 @@ class AboutUsActivity : BaseActivity() {
     private fun startUpdateApp() {
 
         HttpRequest.instance.getLastVersion(object: MyCallback{
-            override fun fail(msg: String?, reqCode: Int) {}
+            override fun fail(msg: String?, reqCode: Int) {
+                T.show(msg)
+            }
 
             override fun success(response: BaseResponse, reqCode: Int) {
                 if (response != null && response.isSuccess() && response.data != null) {
                     var json = response.data as JSONObject
                     var info = UpgradeInfo.convertJson2UpgradeInfo(json)
                     if (App.needUpgrade(info!!.version)) {
-//                        info?.url = "https://ucan.25pp.com/Wandoujia_web_seo_baidu_homepage.apk"
                         var dialog = UpgradeDialog(this@AboutUsActivity, info)
                         dialog.setOnDismisListener(upgradeDialogListener)
                         dialog.show()
@@ -105,7 +107,6 @@ class AboutUsActivity : BaseActivity() {
 
     private var downloadListener = object: ProgressDialog.OnDismisListener {
         override fun onDownloadSuccess(path: String) {
-            Log.e("XXX", "onDownloadSuccess path " + path)
             FileUtils.installApk(this@AboutUsActivity, path)
         }
 
