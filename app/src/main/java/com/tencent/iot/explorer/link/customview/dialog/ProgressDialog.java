@@ -22,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.skydoves.progressview.ProgressView;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.retrofit.DownloadRequest;
+import com.tencent.iot.explorer.link.util.T;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,12 +41,16 @@ public class ProgressDialog extends Dialog implements View.OnClickListener {
     private ProgressView progressBar;
     private volatile int count = 0;    // 进度值
     private String dir2StoreApk;    // 下载文件时本地的存储路径
+    private String testUrl = "";
 
     public ProgressDialog(Context context, String url) {
         super(context, R.style.iOSDialog);
         mContext = context;
         displayMetrics = context.getResources().getDisplayMetrics();
         this.url = url;
+        if (TextUtils.isEmpty(this.url)) {
+            this.url = testUrl;
+        }
         if (TextUtils.isEmpty(dir2StoreApk)) {
             dir2StoreApk = mContext.getCacheDir().getAbsolutePath() + "/temp.apk";
         }
@@ -117,6 +122,11 @@ public class ProgressDialog extends Dialog implements View.OnClickListener {
             e.printStackTrace();
         }
 
+        if (TextUtils.isEmpty(url)) {
+            T.show(getContext().getResources().getString(R.string.url_empty));
+            handler.sendEmptyMessage(MSG_DOWNLOAD_FAILED);
+            return;
+        }
         DownloadRequest.get().download(url, dir2StoreApk, downloadlistener);
     }
 
