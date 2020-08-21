@@ -4,17 +4,18 @@ import android.app.Application
 import android.content.Intent
 import android.text.TextUtils
 import androidx.multidex.MultiDex
+import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.auth.IoTAuth
-import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
+import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.AppData
 import com.tencent.iot.explorer.link.kitlink.util.Weak
-import com.tencent.android.tpush.XGPushConfig
-import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
+import com.tencent.iot.explorer.link.kitlink.util.Utils
+import com.tencent.iot.explorer.link.util.T
+
 
 /**
  * APP
@@ -56,6 +57,22 @@ class App : Application() {
             }
 
             return true
+        }
+
+        fun needUpgrade(newVersion: String): Boolean {
+            if (TextUtils.isEmpty(newVersion)) return false
+
+            var currentVersion = BuildConfig.VERSION_NAME
+            var newVerArr = newVersion.split(".")
+            var curVerArr = currentVersion.split(".")
+            for (i in 0..2) {
+                if (i < newVerArr.size && i < curVerArr.size &&
+                    Utils.getFirstSeriesNumFromStr(newVerArr.get(i)) >
+                    Utils.getFirstSeriesNumFromStr(curVerArr.get(i))) {
+                    return true
+                }
+            }
+            return false
         }
     }
 
