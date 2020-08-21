@@ -209,10 +209,10 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 }
             }
             accoutPasswdLoginView.iv_login_to_country_bypsswd -> {// 账号密码登录时选则国家
-                startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
+                startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
             verifyCodeLoginView.iv_login_to_country_byverifycode -> {// 验证码登录时选则国家
-                startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
+                startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
         }
     }
@@ -313,8 +313,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
             data?.let {
-                it.getStringExtra(CommonField.COUNTRY_CODE)?.run {
-                    presenter.setCountryCode(this)
+                it.getStringExtra(CommonField.REGION_ID)?.run {
+                    presenter.setCountry(this)
                 }
             }
         }
