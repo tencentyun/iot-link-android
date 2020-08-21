@@ -27,6 +27,7 @@ class App : Application() {
         val data = AppData.instance
 
         const val CONFIG = "config"
+        const val MUST_UPGRADE_TAG = "master"
         var language: String? = ""
 
         // 根据编译使用的 buildType 类型确定是否是 debug 版本
@@ -61,8 +62,10 @@ class App : Application() {
 
         fun needUpgrade(newVersion: String): Boolean {
             if (TextUtils.isEmpty(newVersion)) return false
-
             var currentVersion = BuildConfig.VERSION_NAME
+            // 如果是主干版本，强制升级
+            if (currentVersion.startsWith(MUST_UPGRADE_TAG)) return true
+
             var newVerArr = newVersion.split(".")
             var curVerArr = currentVersion.split(".")
             for (i in 0..2) {
