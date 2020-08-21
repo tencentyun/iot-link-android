@@ -35,6 +35,7 @@ object RequestCode {
     const val set_unit_of_temperature = 1029
     const val get_global_config = 1030
     const val set_region = 1031
+    const val get_last_version = 1032
 
     /*************用户接口结束**************/
 
