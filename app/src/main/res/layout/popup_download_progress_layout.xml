@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/download_progress_dialog_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_failed_cell"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginStart="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/tv_upgrade_tip"
+            android:text="@string/upgrading"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_upgrade_tip"
+            android:background="@drawable/background_download_progress"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="20dp"
+            >
+
+        <com.skydoves.progressview.ProgressView
+            android:id="@+id/progress_download"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            app:progressView_colorBackground="@color/gray_d0d0d0"
+            app:progressView_colorProgress="@color/complete_progress"
+            app:progressView_min="0"
+            app:progressView_max="100"
+            app:progressView_radius="4dp"
+            app:progressView_labelColorInner="@color/white"
+            app:progressView_labelColorOuter="@color/complete_progress"
+            app:progressView_progressFromPrevious="true"
+            app:progressView_labelSize="16sp"
+        />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

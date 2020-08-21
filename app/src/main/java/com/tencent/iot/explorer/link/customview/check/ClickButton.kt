@@ -15,16 +15,16 @@ class ClickButton : AppCompatTextView {
 
     private val list = arrayListOf<EditTextHolder>()
 
-    constructor(context: Context?) : super(context) {
+    constructor(context: Context?) : super(context!!) {
         this.isEnabled = false
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {
         this.isEnabled = false
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
+        context!!,
         attrs,
         defStyleAttr
     ) {
