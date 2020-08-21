@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
+import android.util.Log
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.ErrorCode
@@ -223,6 +224,19 @@ class HttpRequest private constructor() {
     }
 
     /**************************************  用户接口开始  ************************************************/
+
+    /**
+     * 获取最新 app 版本号
+     *
+     * http://tapd.oa.com/NEW_IOT/markdown_wikis/show/#1220393192001643313
+     */
+    fun getLastVersion(callback: MyCallback) {
+        val param = commonParams("AppGetLatestVersion")
+        param["ClientVersion"] = "0.0.0"
+        param["AppPlatform"] = "android"
+        param["Channel"] = 0
+        postJson(param, callback, RequestCode.get_last_version)
+    }
 
     /**
      * 手机号登录

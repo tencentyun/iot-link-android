@@ -29,6 +29,8 @@
     <string name="q_feedback">问题反馈</string>
     <string name="copy">已复制</string>
     <string name="open_WIFI">请打开 WIFI</string>
+    <string name="download_success">下载成功</string>
+    <string name="download_failed">下载失败</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -79,6 +81,7 @@
     <string name="help_center">帮助中心</string>
     <string name="feedback">意见反馈</string>
     <string name="about_me">关于我们</string>
+    <string name="current_version">当前版本 </string>
 
     <string name="personal_info">个人信息</string>
     <string name="set_avatar">设置头像</string>
@@ -106,6 +109,7 @@
     <string name="login_success">登录成功</string>
     <string name="bind_phone_success">手机号绑定成功</string>
     <string name="get_userId_failed">获取用户 ID 失败</string>
+    <string name="no_need_upgrade">您的应用为最新版本</string>
 
     <!--设备-->
     <string name="my_devices">我的设备</string>
@@ -300,6 +304,14 @@
     <string name="family">\t\t家庭\t\t</string>
     <string name="notify">\t\t通知\t\t</string>
     <string name="open_location_tip">开启定位获取WiFi信息</string>
+    <string name="upgrade_tip">版本升级V2.0</string>
+    <string name="repair_bug">1、修复了一些已知 bug</string>
+    <string name="version_code">版本号</string>
+    <string name="package_size">安装包大小</string>
+    <string name="publish_time">发布时间</string>
+    <string name="next_time">下次再说</string>
+    <string name="upgrade_now">立即升级</string>
+    <string name="upgrading">正在更新，请稍后...</string>
 
     <!--设备分类-->
     <string name="scanned_devices">已发现如下设备</string>
