@@ -94,6 +94,8 @@ class PropertyEntity {
         fun getNumUnit(): String {
             return if (unit == "oC") {
                 "℃"
+            } else if (unit == "oF") {
+                "℉"
             } else {
                 unit
             }
