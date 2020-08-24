@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.App
@@ -49,6 +50,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         super.onResume()
         tv_title.text = deviceEntity?.getAlias()
         presenter.requestDeviceData()
+        presenter.getUserSetting()
     }
 
     override fun initView() {
