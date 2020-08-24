@@ -42,4 +42,8 @@ class ControlPanelPresenter(view: ControlPanelView) : ParentPresenter<ControlPan
     fun controlDevice(id: String, value: String) {
         model?.controlDevice(id, value)
     }
+
+    fun getUserSetting() {
+        model?.getUserSetting()
+    }
 }
