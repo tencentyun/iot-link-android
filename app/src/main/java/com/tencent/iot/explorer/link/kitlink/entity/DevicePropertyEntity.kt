@@ -1,5 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
+import com.tencent.iot.explorer.link.kitlink.util.TemperatureUtils
+import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.date.DateFormatUtil
 import java.lang.Exception
 
@@ -44,7 +46,30 @@ class DevicePropertyEntity {
         return when {
             isEnumType() ->
                 enumEntity!!.getValueText(getValue())
-            isNumberType() -> "${getValue()}${numberEntity!!.getNumUnit()}"
+            isNumberType() -> {
+                T.show("${getValue()}${numberEntity!!.getNumUnit()}")
+                if (id == "Temperature") {
+                    val unitOfTemperature = numberEntity!!.getNumUnit().trim()
+                    if (unitOfTemperature.contains("摄氏") ||
+                        unitOfTemperature.contains("℃") ||
+                        unitOfTemperature.contains("oC")) {
+                        if (true) { // TODO 判断当前设置的温度单位
+                            // 摄氏度转成华氏度
+                            return TemperatureUtils.celsiusToFahrenheit("${getValue()}${numberEntity!!.getNumUnit()}") + "℉"
+                        }
+                    }
+
+                    if (unitOfTemperature.contains("华氏") ||
+                        unitOfTemperature.contains("℉") ||
+                        unitOfTemperature.contains("oF")) {
+                        if (true) { // TODO 判断当前设置的温度单位
+                            // 华氏度转成华氏度摄氏度
+                            return TemperatureUtils.fahrenheitToCelsius("${getValue()}${numberEntity!!.getNumUnit()}") + "℃"
+                        }
+                    }
+                }
+                "${getValue()}${numberEntity!!.getNumUnit()}"
+            }
             isTimestampType() -> getTimestampText(getValue())
             else -> getValue()
         }
