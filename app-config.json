@@ -4,6 +4,8 @@
   "TencentIotLinkAppSecret": "请输入从物联网开发平台申请的 App Secret，App Secret 请保存在服务端，此处仅为演示，如有泄露概不负责",
   "XgAccessId": "1500012366",
   "XgAccessKey": "AH2AXYBFGGTZ",
+  "XgUSAAccessId": "1530001537",
+  "XgUSAAccessKey": "A1S4XT4V7XSM",
   "TencentMapSDKValue": "ZV6BZ-3ATCP-5BZDE-VFIJI-I7NO6-TIBAG",
   "TencentIotLinkSDKDemoAppkey": " "
 }
