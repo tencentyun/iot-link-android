@@ -23,6 +23,13 @@ jobs:
           java-version: 1.8
       - name: install fir
         run: gem install fir-cli
+      - name: Fix App Version
+        run: |
+          rb=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          rc=$(git rev-parse --short HEAD)
+
+          sed -i "" "s/def versionAppName.*/def versionAppName = \"$rb+git.$rc\"/g" config.gradle
+          
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
