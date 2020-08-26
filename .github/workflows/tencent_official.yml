@@ -11,6 +11,7 @@ env:
   IOT_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.IOT_RELEASE_KEYSTORE_PASSWORD }}
   GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
   IOT_PGYER_API_KEY: ${{ secrets.IOT_PGYER_API_KEY }}
+  IOT_VERSION_APPNAME: ${{ VERSION_APPNAME }}
 
 jobs:
   build:
@@ -35,7 +36,7 @@ jobs:
           rtt=$(git describe --tags `git rev-list --tags --max-count=1`)
           rt=${rtt#*v}
           rc=$(git rev-parse --short HEAD)
-          export IOT_VERSION_APPNAME="$rt+git.$rc"
+          export VERSION_APPNAME="$rt+git.$rc"
       - name: Adapt build.gradle from debug to release
         run: |
           sed -i 's#opensource_keystore#tencent_official_keystore#g' app/build.gradle
