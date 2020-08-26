@@ -22,7 +22,7 @@ jobs:
         with:
           java-version: 1.8
       - name: install fir
-        run: gem install fir-cli
+        run: sudo gem install fir-cli
       - name: Fix App Version
         run: |
           rb=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
