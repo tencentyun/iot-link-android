@@ -36,7 +36,7 @@ jobs:
           rt=${rtt#*v}
           rc=$(git rev-parse --short HEAD)
 
-          sed -i "" "s/def versionAppName.*/def versionAppName = \"$rt+git.$rc\"/g" config.gradle
+          sed -i 's#def versionAppName.*#def versionAppName = \"$rt+git.$rc\"#g' config.gradle
         
       - name: Adapt build.gradle from debug to release
         run: |
