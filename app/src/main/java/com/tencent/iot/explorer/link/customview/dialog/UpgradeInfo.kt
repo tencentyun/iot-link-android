@@ -67,6 +67,7 @@ class UpgradeInfo(title: String, log: String, version: String) {
 
             if (json.containsKey(KEY_RELEASE_TIME)) {
                 var time = json.getLong(KEY_RELEASE_TIME)
+                time = time * 1000L
                 val date = Date(time)
                 val format = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
                 ret.publishTime = format.format(date)
