@@ -9,6 +9,7 @@ on:
 env:
   IOT_SONATYPE_USERNAME: ${{ secrets.IOT_SONATYPE_USERNAME }}
   IOT_SONATYPE_PASSWORD: ${{ secrets.IOT_SONATYPE_PASSWORD }}
+  IOT_VERSION_APPNAME: ${{ VERSION_APPNAME }}
 
 jobs:
   build:
@@ -27,7 +28,7 @@ jobs:
         run: |
           rb=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           rc=$(git rev-parse --short HEAD)
-          export IOT_VERSION_APPNAME="$rb+git.$rc"
+          export VERSION_APPNAME="$rb+git.$rc"
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
