@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,9 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.fragment_devices.*
+import org.w3c.dom.Text
 import kotlin.math.ceil
 
 
@@ -221,8 +224,15 @@ class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnIte
                 viewHolder.text.text = entity.CategoryName
                 url = entity.IconUrl
             }
-            Picasso.get().load(url).placeholder(R.drawable.device_placeholder)
-                .resize(App.data.screenWith/5,App.data.screenWith/5).centerCrop().into(viewHolder.image)
+            if (TextUtils.isEmpty(url)) {
+                Picasso.get().load(R.drawable.device_placeholder).placeholder(R.drawable.device_placeholder)
+                    .resize(App.data.screenWith / 5, App.data.screenWith / 5).centerCrop()
+                    .into(viewHolder.image)
+            } else {
+                Picasso.get().load(url).placeholder(R.drawable.device_placeholder)
+                    .resize(App.data.screenWith / 5, App.data.screenWith / 5).centerCrop()
+                    .into(viewHolder.image)
+            }
             return retView
         }
 
