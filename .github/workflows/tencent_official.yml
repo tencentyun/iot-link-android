@@ -35,7 +35,9 @@ jobs:
           rtt=$(git describe --tags `git rev-list --tags --max-count=1`)
           rt=${rtt#*v}
           rc=$(git rev-parse --short HEAD)
-          export IOT_VERSION_APPNAME="$rt+git.$rc"
+
+          sed -i 's#def versionAppName.*#def versionAppName = \"'$rt'+git.'$rc'\"#g' config.gradle
+        
       - name: Adapt build.gradle from debug to release
         run: |
           sed -i 's#opensource_keystore#tencent_official_keystore#g' app/build.gradle
