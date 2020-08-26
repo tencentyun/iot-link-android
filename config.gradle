@@ -1,6 +1,6 @@
 def gitCommitShortHash = 'git log -1 --pretty=%h'.execute([], project.rootDir).text.trim()
 def versionNamePrefix = "1.0.0"
-def versionAppName = "1.0.0"
+def versionAppName = System.getenv("IOT_VERSION_APPNAME")
 
 ext {
     android = [
