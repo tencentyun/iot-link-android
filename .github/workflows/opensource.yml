@@ -28,6 +28,7 @@ jobs:
           rb=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           rc=$(git rev-parse --short HEAD)
           export IOT_VERSION_APPNAME="$rb+git.$rc"
+          echo ====== $IOT_VERSION_APPNAME ======
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
