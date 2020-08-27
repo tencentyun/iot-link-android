@@ -6,6 +6,6 @@ import java.util.*
 
 object CommonUtils {
     fun isChineseSystem(): Boolean {
-        return T.getContext().resources.configuration.locale == Locale.SIMPLIFIED_CHINESE
+        return T.getContext().resources.configuration.locale.language == "zh"
     }
 }
