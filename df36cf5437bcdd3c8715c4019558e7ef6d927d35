@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56a8246e_47f17461",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/util/HttpRequest.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1000001
+      },
+      "writtenOn": "2020-08-27T07:59:57Z",
+      "side": 1,
+      "message": "建议debug 和 release版本的uin配置",
+      "revId": "df36cf5437bcdd3c8715c4019558e7ef6d927d35",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
+    }
+  ]
+}
