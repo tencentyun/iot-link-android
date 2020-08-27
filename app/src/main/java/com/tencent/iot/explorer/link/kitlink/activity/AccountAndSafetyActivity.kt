@@ -1,26 +1,22 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.opengl.Visibility
 import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.RegionEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.RequestCode
-import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
+import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.AccountAndSafetyPresenter
-import com.tencent.iot.explorer.link.mvp.presenter.BindEmailPresenter
 import com.tencent.iot.explorer.link.mvp.view.AccountAndSafetyView
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_account_and_safety.*
-import kotlinx.android.synthetic.main.activity_user_info.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClickListener,
-    WeChatLogin.OnLoginListener, MyCallback {
+    WeChatLogin.OnLoginListener, MyCallback, MyCustomCallBack{
 
     private lateinit var presenter: AccountAndSafetyPresenter
 
@@ -41,6 +37,7 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
     override fun onResume() {
         super.onResume()
         presenter.getUserInfo()
+        getRegionList()
     }
 
     override fun setListener() {
@@ -129,6 +126,14 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
         T.show(msg)
     }
 
+    override fun success(str: String, reqCode: Int) {
+        when (reqCode) {
+            RequestCode.get_region_list -> {
+                tv_country_of_account.text = getCountryOfAccount(str)
+            }
+        }
+    }
+
     override fun success(response: BaseResponse, reqCode: Int) {
         when (reqCode) {
             RequestCode.bind_wx -> {
@@ -139,5 +144,23 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
                 }
             }
         }
+    }
+
+    private fun getRegionList() {
+        HttpRequest.instance.getRegionList(CommonField.REGION_LIST_URL, this, RequestCode.get_region_list)
+    }
+
+    private fun getCountryOfAccount(str: String) : String {
+        val start = str.indexOf('[')
+        val end = str.indexOf(']')
+        val regionArray = str.substring(start, end + 1)
+        val list = JsonManager.parseJsonArray(regionArray, RegionEntity::class.java)
+        for (item: RegionEntity in list) {
+            if (item.Region == App.data.region) {
+                return if (CommonUtils.isChineseSystem()) item.Title
+                else item.TitleEN
+            }
+        }
+        return getString(R.string.country_china)
     }
 }
