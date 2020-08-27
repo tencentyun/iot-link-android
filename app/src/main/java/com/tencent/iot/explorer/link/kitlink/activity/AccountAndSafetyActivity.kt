@@ -66,10 +66,10 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
                 }
             }
             tv_wechat -> {// 微信
-                if (App.data.userInfo.HasWxOpenID == "0") {
-                    WeChatLogin.getInstance().login(this, this)
-                } else {
+                if (App.data.userInfo.HasWxOpenID == "1") {
                     T.show("微信已经绑定过了, 请勿重复绑定")
+                } else {
+                    WeChatLogin.getInstance().login(this, this)
                 }
             }
             tv_modify_passwd -> {// 修改密码
@@ -95,10 +95,10 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
         } else {
             tv_email_state.text = getString(R.string.unbind)
         }
-        if (App.data.userInfo.HasWxOpenID == "0") {
-            tv_wechat_state.text = getString(R.string.unbind)
-        } else {
+        if (App.data.userInfo.HasWxOpenID == "1") {
             tv_wechat_state.text = getString(R.string.have_bind)
+        } else {
+            tv_wechat_state.text = getString(R.string.unbind)
         }
     }
 
