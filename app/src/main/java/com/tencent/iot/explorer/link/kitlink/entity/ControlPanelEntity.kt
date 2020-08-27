@@ -35,20 +35,6 @@ class ControlPanelEntity {
     }
 
     /**
-     * 获取主题风格
-     */
-    fun getTheme(): String {
-        return configEntity.Panel.standard.theme
-    }
-
-    /**
-     * 获得主题背景
-     */
-    fun getThemeImage(): String {
-        return configEntity.Panel.standard.bgImgId
-    }
-
-    /**
      * 获得面板列表
      */
     fun getUIList(): ArrayList<Property> {
@@ -78,8 +64,6 @@ class PanelEntity {
  * 面板主题
  */
 class Standard {
-    var theme = "standard"
-    var bgImgId = ""
     var navBar = NavBar()
     var properties = arrayListOf<Property>()
     var timingProject = false
