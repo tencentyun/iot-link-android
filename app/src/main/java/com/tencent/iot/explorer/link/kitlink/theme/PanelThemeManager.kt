@@ -68,20 +68,10 @@ class PanelThemeManager private constructor() {
      * 显示主题
      */
     @Synchronized
-    fun showTheme(activity: ControlPanelActivity, themeTag: String, timingProject: Boolean) {
+    fun showTheme(activity: ControlPanelActivity, timingProject: Boolean) {
         if (crv == null) return
-        if (theme == null || themeTag != theme!!.getTag()) {
-            theme = when (themeTag) {
-                PanelTheme.SIMPLE -> {
-                    SimplePanelTheme(activity)
-                }
-                PanelTheme.STANDARD -> {
-                    StandardPanelTheme(activity)
-                }
-                else -> {
-                    DarkPanelTheme(activity)
-                }
-            }
+        if (theme == null) {
+            theme = SimplePanelTheme(activity)
             if (timingProject) {
                 crv!!.addFooter(theme!!.getTimingProject(crv!!))
             }
