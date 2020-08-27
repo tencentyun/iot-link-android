@@ -18,10 +18,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
-import com.tencent.iot.explorer.link.kitlink.util.AppData
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
+import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
 import com.tencent.iot.explorer.link.mvp.view.LoginView
@@ -73,6 +70,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     }
 
     override fun initView() {
+        App.data.regionId = "1"
+        App.data.region = "ap-guangzhou"
         if (!checkPermissions(permissions)) {
             requestPermission(permissions)
         } else {
@@ -95,6 +94,10 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
             return
         }
         onNewIntentIn()
+        if (!CommonUtils.isChineseSystem()) {
+            accoutPasswdLoginView.tv_login_to_country_bypsswd.text = getString(R.string.country_china_en)
+            verifyCodeLoginView.tv_login_to_country_byverifycode.text = getString(R.string.country_china_en)
+        }
     }
 
     private fun initViewPager() {

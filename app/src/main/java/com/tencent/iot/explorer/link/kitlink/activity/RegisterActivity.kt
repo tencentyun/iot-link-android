@@ -10,14 +10,17 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
+import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.RegisterPresenter
 import com.tencent.iot.explorer.link.mvp.view.RegisterView
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*
 import kotlinx.android.synthetic.main.layout_email_register.view.*
 import kotlinx.android.synthetic.main.layout_phone_register.view.*
+import kotlinx.android.synthetic.main.layout_verify_code_login.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 /**
@@ -46,6 +49,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     }
 
     override fun initView() {
+        App.data.regionId = "1"
+        App.data.region = "ap-guangzhou"
         presenter = RegisterPresenter(this)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.mobile_phone_register)
@@ -70,6 +75,9 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             iv_register_agreement.setImageResource(R.mipmap.icon_selected)
         } else {
             iv_register_agreement.setImageResource(R.mipmap.icon_unselected)
+        }
+        if (!CommonUtils.isChineseSystem()) {
+            phoneView.tv_register_to_country.text = getString(R.string.country_china_en)
         }
     }
 
