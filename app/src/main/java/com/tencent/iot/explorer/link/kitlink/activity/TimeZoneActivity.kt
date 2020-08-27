@@ -18,10 +18,7 @@ import com.tencent.iot.explorer.link.kitlink.holder.CountryCodeViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneKeyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.JsonManager
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_country_code.*
@@ -46,7 +43,7 @@ class TimeZoneActivity: PActivity(),
     private var flags = IntArray(26)
 
     private fun getTimeZoneList() {
-        if (this.resources.configuration.locale == Locale.SIMPLIFIED_CHINESE) {// 中文
+        if (CommonUtils.isChineseSystem()) {// 中文
             HttpRequest.instance.getGlobalConfig(CommonField.REGION_LIST_CN, this)
             saveLanguage(CommonField.CHINESE)
         } else {// 外文

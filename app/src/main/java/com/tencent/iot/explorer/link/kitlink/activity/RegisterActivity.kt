@@ -71,6 +71,9 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         } else {
             iv_register_agreement.setImageResource(R.mipmap.icon_unselected)
         }
+
+        App.data.regionId = "1"
+        App.data.region = "ap-guangzhou"
     }
 
     private fun initViewPager() {
