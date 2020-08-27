@@ -48,15 +48,13 @@ class App : Application() {
             }
         }
 
-        fun chargeUrlAppType(): Boolean {
+        fun isOEMApp(): Boolean {
             if (BuildConfig.TencentIotLinkAppkey.equals(CommonField.NULL_STR)
                 || TextUtils.isEmpty(BuildConfig.TencentIotLinkAppkey)) {
                 return false
-
             } else if (BuildConfig.TencentIotLinkAppkey.equals(CommonField.IOT_APP_KEY)) {
                 return false
             }
-
             return true
         }
 
