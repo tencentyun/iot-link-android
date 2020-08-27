@@ -16,6 +16,24 @@
       "revId": "df36cf5437bcdd3c8715c4019558e7ef6d927d35",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd7c0404_19edecda",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/util/HttpRequest.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-08-27T08:40:03Z",
+      "side": 1,
+      "message": "目前uin工具还没开发，wuguotest是专门给产品体验用的",
+      "parentUuid": "56a8246e_47f17461",
+      "revId": "df36cf5437bcdd3c8715c4019558e7ef6d927d35",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
     }
   ]
 }
