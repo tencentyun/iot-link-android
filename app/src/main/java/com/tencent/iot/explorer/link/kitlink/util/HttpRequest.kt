@@ -38,13 +38,16 @@ class HttpRequest private constructor() {
         const val APP_SECRET = BuildConfig.TencentIotLinkAppSecret
 
         const val HOST = "https://iot.cloud.tencent.com/api/"
-        const val EXPLORER_API = "exploreropen/appapi"
-        const val APP_API = "studioapp"
-        //        const val APP_API = "studioapp/appapi"
-        const val TOKEN_API = "exploreropen/tokenapi"
-        const val GET_BIND_DEV_TOKEN_API = "studioapp/tokenapi"
+
+        // 公版&开源体验版使用
+        const val OPENSOURCE_APP_API = "studioapp"
+        const val OPENSOURCE_TOKEN_API = "studioapp/tokenapi"
+
+        // OEM App 使用
+        const val OEM_APP_API = "exploreropen/appapi"
+        const val OEM_TOKEN_API = "exploreropen/tokenapi"
+
         const val APP_COS_AUTH = "studioapp/AppCosAuth"
-//         "https://iot.cloud.tencent.com/api/exploreropen/appapi"
         const val BUSI_APP = "studioapp"
         const val BUSI_OPENSOURCE = "studioappOpensource"
     }
@@ -101,19 +104,16 @@ class HttpRequest private constructor() {
      */
     private fun postJson(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
         val action = param["Action"]
-//        param.remove("Action")
-//        val json = JsonManager.toJson(sign(param))
         var json = ""
         var api = ""
 
-        if (!App.chargeUrlAppType()) {
+        if (!App.isOEMApp()) {// 公版&开源版
             param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
-            api = if (App.DEBUG_VERSION) "$APP_API/$action" + "?uin=archurtest" else "$APP_API/$action" + "?uin=wuguotest"
-
-        } else {
+            api = if (App.DEBUG_VERSION) "$OPENSOURCE_APP_API/$action" + "?uin=archurtest" else "$OPENSOURCE_APP_API/$action" + "?uin=wuguotest"
+        } else {// OEM版
             json = JsonManager.toJson(sign(param))
-            api = if (App.DEBUG_VERSION) "$EXPLORER_API/$action" + "?uin=archurtest" else "$EXPLORER_API/$action" + "?uin=wuguotest"
+            api = "$OEM_APP_API/$action"
         }
 
         L.e("api=$api")
@@ -151,7 +151,12 @@ class HttpRequest private constructor() {
             App.toLogin()
             return
         }
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API + "?uin=wuguotest"
+        val api:String
+        if (!App.isOEMApp()) {// 公版&开源版
+            api = if (App.DEBUG_VERSION) OPENSOURCE_TOKEN_API + "?uin=archurtest" else OPENSOURCE_TOKEN_API + "?uin=wuguotest"
+        } else {// OEM版
+            api = OEM_TOKEN_API
+        }
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
@@ -217,7 +222,12 @@ class HttpRequest private constructor() {
             return
         }
 
-        val api = if (App.DEBUG_VERSION) TOKEN_API + "?uin=archurtest" else TOKEN_API + "?uin=wuguotest"
+        val api: String
+        if (!App.isOEMApp()) {// 公版&开源版
+            api = if (App.DEBUG_VERSION) OPENSOURCE_TOKEN_API + "?uin=archurtest" else OPENSOURCE_TOKEN_API + "?uin=wuguotest"
+        } else {// OEM版
+            api = if (App.DEBUG_VERSION) OEM_TOKEN_API + "?uin=archurtest" else OEM_TOKEN_API + "?uin=wuguotest"
+        }
 
         StringRequest.instance.postJson(api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
@@ -486,20 +496,6 @@ class HttpRequest private constructor() {
             param["busi"] = BUSI_APP
         }
         postJson(param, callback, RequestCode.bind_wx)
-    }
-
-    /**
-     * 绑定微信时获取OpenID
-     */
-    fun getWXOpenID(code: String, callback: MyCallback) {
-        val param = commonParams("AppUpdateUserByWeixin")
-        param["code"] = code
-        if (T.getContext().applicationInfo.packageName.equals(CommonField.OPEN_SOURCE_TAG)) {
-            param["busi"] = BUSI_OPENSOURCE
-        } else if (T.getContext().applicationInfo.packageName.equals(CommonField.PUBLISH_TAG)) {
-            param["busi"] = BUSI_APP
-        }
-        postJson(param, callback, RequestCode.wechat_login)
     }
 
     /**
@@ -1296,15 +1292,6 @@ class HttpRequest private constructor() {
         val param = tokenParams("AppGetProductsConfig")
         param["ProductIds"] = productIds
         tokenPost(param, callback, RequestCode.get_products_config)
-    }
-
-    fun describeProductConfig(productId: String, type: String, callback: MyCallback) {
-        val param = tokenParams("DescribeProductConfig")
-        param["ProductId"] = productId
-        param["Type"] = type
-        param["Uin"] = "archurtest"
-        param["AppId"] = APP_KEY
-        tokenPost(param, callback, RequestCode.describe_product_config)
     }
     /****************************************   设备推荐接口结束   *******************************************************/
 

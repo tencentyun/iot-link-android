@@ -136,7 +136,7 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
                 if (App.DEBUG_VERSION) {
                     url += "&uin=help_center_h5&api_uin=help_center_h5_api"
                 }
-                if (!App.chargeUrlAppType()) {
+                if (!App.isOEMApp()) {
                     url += "&appID=" + T.getContext().applicationInfo.packageName
                 }
 
