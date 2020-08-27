@@ -95,6 +95,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
             return
         }
         onNewIntentIn()
+        App.data.regionId = "1"
+        App.data.region = "ap-guangzhou"
     }
 
     private fun initViewPager() {
