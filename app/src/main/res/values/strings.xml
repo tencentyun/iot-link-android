@@ -428,7 +428,9 @@
     <string name="celsius">C</string>
     <string name="fahrenheit">F</string>
     <string name="cancel_account">注销账号</string>
-    <string name="country_china">中国</string>
+    <string name="country_china">中国大陆</string>
+    <string name="country_china_en">Chinese Mainland</string>
+    <string name="country_usa">美国</string>
     <string name="select_timezone">选择时区</string>
     <!--international end  -->
 </resources>

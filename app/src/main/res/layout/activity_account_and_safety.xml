@@ -159,7 +159,7 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
-        android:id="@+id/iv_location_of_account_arrow"
+        android:id="@+id/tv_country_of_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
