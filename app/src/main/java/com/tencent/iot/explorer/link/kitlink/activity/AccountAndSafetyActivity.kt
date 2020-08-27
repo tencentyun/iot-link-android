@@ -95,10 +95,10 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
         } else {
             tv_email_state.text = getString(R.string.unbind)
         }
-        if (App.data.userInfo.HasWxOpenID == "0") {
-            tv_wechat_state.text = getString(R.string.unbind)
-        } else {
+        if (App.data.userInfo.HasWxOpenID == "1") {
             tv_wechat_state.text = getString(R.string.have_bind)
+        } else {
+            tv_wechat_state.text = getString(R.string.unbind)
         }
     }
 
