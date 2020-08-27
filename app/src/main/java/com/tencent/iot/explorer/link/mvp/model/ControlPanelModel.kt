@@ -49,9 +49,6 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     //设备产品信息及面板数据
     val devicePropertyList = LinkedList<DevicePropertyEntity>()
 
-    //主题风格
-    var themeTag = ""
-
     //是否显示导航栏
     private var navBar: NavBar? = null
 
@@ -75,7 +72,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 devicePropertyList.forEach {
                     if (id == it.id) {
                         it.setValue(payload.getValue(id))
-                        view?.showControlPanel(themeTag, navBar, hasTimerCloud)
+                        view?.showControlPanel(navBar, hasTimerCloud)
                         return@set
                     }
                 }
@@ -213,7 +210,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     }
                 }
             }
-            view?.showControlPanel(themeTag, navBar, hasTimerCloud)
+            view?.showControlPanel(navBar, hasTimerCloud)
         }
     }
 
@@ -232,8 +229,6 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                         hasPanel = true
                         //请求数据
                         requestDeviceData()
-                        //主题
-                        themeTag = getTheme()
                         //合并
                         mergeData()
                     }
@@ -283,7 +278,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 }
         }
         L.e("devicePropertyList", JsonManager.toJson(devicePropertyList) ?: "")
-        view?.showControlPanel(themeTag, navBar, hasTimerCloud)
+        view?.showControlPanel(navBar, hasTimerCloud)
     }
 
     private fun completeProperty(entity: DevicePropertyEntity) {
