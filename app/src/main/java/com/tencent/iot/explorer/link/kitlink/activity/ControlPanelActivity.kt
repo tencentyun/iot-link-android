@@ -152,18 +152,18 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     /**
      * 显示面板
      */
-    override fun showControlPanel(themeTag: String, navBar: NavBar?, timingProject: Boolean) {
+    override fun showControlPanel(navBar: NavBar?, timingProject: Boolean) {
         runOnUiThread {
-            tabTheme(themeTag)
-            PanelThemeManager.instance.showTheme(this, themeTag, timingProject)
-            showNavBar(themeTag, navBar)
+            initTheme()
+            PanelThemeManager.instance.showTheme(this, timingProject)
+            showNavBar(navBar)
         }
     }
 
     /**
      *  显示NavBar
      */
-    private fun showNavBar(themeTag: String, navBar: NavBar?) {
+    private fun showNavBar(navBar: NavBar?) {
         navBar?.run {
             if (isShowNavBar()) {
                 card_nav_bar.visibility = View.VISIBLE
@@ -188,30 +188,11 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
                 } else {
                     View.GONE
                 }
-                when (themeTag) {
-                    PanelTheme.DARK -> {
-                        card_nav_bar.background = getDrawable(R.drawable.control_dark_nav_bar_bg)
-                        tv_template_name.setTextColor(getMyColor(R.color.white))
-                        tv_timing_project.setTextColor(getMyColor(R.color.white))
-                        iv_template.setImageResource(R.mipmap.icon_nav_bar_dark_switch)
-                        iv_timing_project.setImageResource(R.mipmap.icon_nav_bar_dark_timer)
-                    }
-                    PanelTheme.SIMPLE -> {
-                        card_nav_bar.background = getDrawable(R.drawable.control_simple_nav_bar_bg)
-                        tv_template_name.setTextColor(getMyColor(R.color.black_333333))
-                        tv_timing_project.setTextColor(getMyColor(R.color.black_333333))
-                        iv_template.setImageResource(R.mipmap.icon_nav_bar_simple_switch)
-                        iv_timing_project.setImageResource(R.mipmap.icon_nav_bar_simple_timer)
-                    }
-                    else -> {
-                        card_nav_bar.background =
-                                getDrawable(R.drawable.control_standard_nav_bar_bg)
-                        tv_template_name.setTextColor(getMyColor(R.color.white))
-                        tv_timing_project.setTextColor(getMyColor(R.color.white))
-                        iv_template.setImageResource(R.mipmap.icon_nav_bar_standard_switch)
-                        iv_timing_project.setImageResource(R.mipmap.icon_nav_bar_standard_timer)
-                    }
-                }
+                card_nav_bar.background = getDrawable(R.drawable.control_simple_nav_bar_bg)
+                tv_template_name.setTextColor(getMyColor(R.color.black_333333))
+                tv_timing_project.setTextColor(getMyColor(R.color.black_333333))
+                iv_template.setImageResource(R.mipmap.icon_nav_bar_simple_switch)
+                iv_timing_project.setImageResource(R.mipmap.icon_nav_bar_simple_timer)
             } else {
                 card_nav_bar.visibility = View.GONE
             }
@@ -229,30 +210,12 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     /**
      * 切换主题背景
      */
-    private fun tabTheme(themeTag: String) {
-        when (themeTag) {
-            PanelTheme.DARK -> {
-                StatusBarUtil.setStatusBarDarkTheme(this, false)
-                iv_back.setColorFilter(resources.getColor(R.color.white))
-                tv_title.setTextColor(resources.getColor(R.color.white))
-                iv_right.setImageResource(R.mipmap.icon_white_more)
-                control_panel.background = resources.getDrawable(R.mipmap.bg_control_dark)
-            }
-            PanelTheme.SIMPLE -> {
-                StatusBarUtil.setStatusBarDarkTheme(this, true)
-                iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-                tv_title.setTextColor(resources.getColor(R.color.black_333333))
-                iv_right.setImageResource(R.mipmap.icon_black_more)
-                control_panel.setBackgroundColor(resources.getColor(R.color.white))
-            }
-            else -> {
-                StatusBarUtil.setStatusBarDarkTheme(this, false)
-                iv_back.setColorFilter(resources.getColor(R.color.white))
-                tv_title.setTextColor(resources.getColor(R.color.white))
-                iv_right.setImageResource(R.mipmap.icon_white_more)
-                control_panel.setBackgroundResource(R.mipmap.image_control_standard)
-            }
-        }
+    private fun initTheme() {
+        StatusBarUtil.setStatusBarDarkTheme(this, true)
+        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        tv_title.setTextColor(resources.getColor(R.color.black_333333))
+        iv_right.setImageResource(R.mipmap.icon_black_more)
+        control_panel.setBackgroundColor(resources.getColor(R.color.white))
     }
 
     /**

@@ -5,6 +5,6 @@ import com.tencent.iot.explorer.link.kitlink.entity.NavBar
 
 interface ControlPanelView : ParentView {
 
-    fun showControlPanel(themeTag: String, navBar: NavBar?, timingProject: Boolean)
+    fun showControlPanel(navBar: NavBar?, timingProject: Boolean)
 
 }
