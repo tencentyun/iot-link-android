@@ -54,9 +54,10 @@ class WifiFragment(type: Int) : BaseFragment() {
                     !LocationUtil.isLocationServiceEnable(context)) {
                     ssid2Set = getString(R.string.open_location_tip)
                 }
+                tv_select_wifi.setText(ssid2Set)
 
             }
-            tv_select_wifi.isEnabled = type == soft_ap
+            tv_select_wifi.isEnabled = false
         }
     }
 
