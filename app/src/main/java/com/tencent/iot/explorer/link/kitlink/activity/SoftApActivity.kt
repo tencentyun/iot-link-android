@@ -75,6 +75,9 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
                 softap_step_progress.currentStep = 2
                 softap_step_progress.refreshStepViewState()
                 showFragment(wifiFragment, softAppStepFragment)
+                if (!LocationUtil.isLocationServiceEnable(this@SoftApActivity)) {
+                    T.showLonger(resources.getString(R.string.open_location_tip))
+                }
             }
         }
 
