@@ -74,13 +74,11 @@ object PingUtil {
                 disconnect()
                 L.e("连接1")
                 return enableNetwork(tempConfig.networkId, true)
-            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            } else {
                 val wifiConfiguration = getWifiConfiguration(WPA_WAP2, password)
                 wifiConfiguration.SSID = "\"$ssid\""
                 wifiConfiguration.BSSID = bssid
                 enableNetwork(addNetwork(wifiConfiguration), true)
-            } else {
-                return connetcWifiOverQ(context, ssid, password)
             }
             return true
         }
