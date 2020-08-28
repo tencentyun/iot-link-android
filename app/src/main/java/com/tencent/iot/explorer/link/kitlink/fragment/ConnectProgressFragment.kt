@@ -123,8 +123,8 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
     override fun connectStep(step: Int) {
         activity?.run {
             runOnUiThread {
-                L.e("progress=${step * 100 / 5}")
-                wp_connected.setProgress(step * 100 / 5, true)
+                L.e("progress=${step * 100 / 6}")
+                wp_connected.setProgress(step * 100 / 6, true)
                 progress_bg.setBackgroundResource(R.drawable.bg_progress)
             }
         }
