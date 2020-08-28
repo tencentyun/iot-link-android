@@ -38,6 +38,7 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
     private TextView publishTime;
     private TextView btnNextTime;
     private TextView btnUpgrade;
+    private View centreView;
     private ConstraintLayout outLayout;
     private UpgradeInfo info;
 
@@ -86,6 +87,7 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         publishTime = view.findViewById(R.id.tv_publish_time);
         btnNextTime = view.findViewById(R.id.tv_next);
         btnUpgrade = view.findViewById(R.id.tv_upgrade_now);
+        centreView = view.findViewById(R.id.divid_line);
 
         title.setText(info.getTitle());
         log.setText(info.getLog());
@@ -96,6 +98,10 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         publishTime.setText(mContext.getResources().getString(R.string.publish_time) +
                 mContext.getResources().getString(R.string.splite_from_name) + info.getPublishTime());
         outLayout.setBackgroundColor(mContext.getResources().getColor(R.color.dialog_background));
+        if (info.getUpgradeType() == 1) {
+            btnNextTime.setVisibility(View.GONE);
+            centreView.setVisibility(View.GONE);
+        }
     }
 
     @Override
