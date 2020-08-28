@@ -20,15 +20,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp">
 
-            <ImageView
-                    android:id="@+id/tv_smart_config_back"
-                    android:layout_width="44dp"
+            <TextView
+                    android:id="@+id/tv_smart_connect_cancel"
+                    android:layout_width="wrap_content"
                     android:layout_height="44dp"
-                android:padding="5dp"
-                android:layout_marginStart="12dp"
                     android:gravity="center"
-                    android:src="@mipmap/icon_arrow"
-                />
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/cancel"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/ts_16" />
 
             <TextView
                     android:id="@+id/tv_smart_connect_title"
@@ -36,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:text="@string/smart_config_config_network"
+                    android:text="@string/smart_config"
                     android:textStyle="bold"
                     android:textColor="@color/black_333333"
                     android:textSize="@dimen/ts_20" />
@@ -45,21 +46,12 @@
 
     </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
 
-    <com.tencent.iot.explorer.link.customview.progress.HorizontalStepView
-        android:id="@+id/smart_config_step_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@+id/sbhv_smart_connect"
-        tools:layout_editor_absoluteX="0dp"
-        />
-
     <FrameLayout
             android:id="@+id/container_smart_connect"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/smart_config_step_progress"
+            app:layout_constraintTop_toBottomOf="@+id/sbhv_smart_connect"
             app:layout_constraintVertical_bias="0.0"
             tools:layout_editor_absoluteX="0dp" />
 
