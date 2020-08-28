@@ -11,6 +11,7 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.util.check.LocationUtil
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.fragment_wifi.*
 import kotlinx.android.synthetic.main.smart_config_second.*
@@ -22,12 +23,7 @@ class WifiFragment(type: Int) : BaseFragment() {
 
     private var type = 0
     private var wifiInfo: WifiInfo? = null
-    private var bssid = ""
-    var showTipTag = false
-
-    constructor(type: Int, showTag: Boolean) : this(type) {
-        showTipTag = showTag
-    }
+    private var showPwd = false
 
     var onCommitWifiListener: OnCommitWifiListener? = null
 
@@ -53,22 +49,12 @@ class WifiFragment(type: Int) : BaseFragment() {
                 tv_select_wifi.hint = getString(R.string.not_network)
                 tv_wifi_commit.isEnabled = false
             } else {
-                tv_select_wifi.setText(wifiManager.connectionInfo.ssid.replace("\"", ""))
-                if (tv_select_wifi.text.contains(CommonField.SSID_UNKNOWN)) {
-                    T.show(getString(R.string.open_location_tip))
+                var ssid2Set = wifiManager.connectionInfo.ssid.replace("\"", "")
+                if (ssid2Set.equals(CommonField.SSID_UNKNOWN) &&
+                    !LocationUtil.isLocationServiceEnable(context)) {
+                    ssid2Set = getString(R.string.open_location_tip)
                 }
-                bssid = wifiInfo!!.bssid
-            }
-            tv_select_wifi.isEnabled = type == soft_ap
 
-            if (showTipTag) {
-                tv_method.visibility = View.VISIBLE
-                tv_method_tip.visibility = View.VISIBLE
-                tv_tip_wifi.setText(R.string.connect_dev_wifi)
-            } else {
-                tv_method.visibility = View.GONE
-                tv_method_tip.visibility = View.GONE
-                tv_tip_wifi.setText(R.string.input_wifi_pwd)
             }
             tv_select_wifi.isEnabled = type == soft_ap
         }
@@ -110,29 +96,17 @@ class WifiFragment(type: Int) : BaseFragment() {
             }
         })
         tv_wifi_commit.setOnClickListener {
-            KeyBoardUtils.hideKeyBoard(context, et_select_wifi_pwd)
-            val dialog = ConnectWifiDialog(context)
-            dialog.setOnDismisListener(object : ConnectWifiDialog.OnDismisListener {
-                override fun OnDismisedBySuccess() {
-                    onCommitWifiListener?.commitWifi(tv_select_wifi.text.toString().trim(),
-                        bssid, et_select_wifi_pwd.text.trim().toString())
-                }
-            })
-            dialog.show()
-
-            Thread{
-                kotlin.run {
-                    Thread.sleep(1000) // 可用于优化连接 wifi 时间
-                    var flag = PingUtil.connect(context!!, tv_select_wifi.text.toString().trim(),
-                        bssid, et_select_wifi_pwd.text.toString().trim())
-                    if (flag) {
-                        dialog.setStatus(ConnectWifiDialog.CONNECT_WIFI_SUCCESS)
-                    } else {
-                        dialog.setStatus(ConnectWifiDialog.CONNECT_WIFI_FAILED)
-                    }
-                    dialog.refreshState()
-                }
-            }.start()
+            wifiInfo?.let {
+                onCommitWifiListener?.commitWifi(
+                    it.ssid.replace("\"", ""),
+                    it.bssid,
+                    et_select_wifi_pwd.text.trim().toString()
+                )
+            }
+            KeyBoardUtils.hideKeyBoard(
+                context,
+                et_select_wifi_pwd
+            )
         }
         /*iv_wifi_eye.setOnClickListener {
             showPwd = !showPwd
