@@ -46,6 +46,7 @@ class SoftAPService(context: Context) : ConfigService(){
             socket = DatagramSocket(port)
             L.e("gateway=${it.dhcpInfo.gateway}")
             host = intToIp(it.dhcpInfo.gateway)
+            Log.e("XXX", "host=" + host)
         }
     }
 
@@ -71,7 +72,7 @@ class SoftAPService(context: Context) : ConfigService(){
      * 开始 soft ap 配网
      */
     fun startConnect(task: LinkTask, listener: SoftAPListener) {
-        L.d("开始 soft ap 配网")
+        L.e("开始 soft ap 配网")
         hasRun = true
         this.task = task
         this.listener = listener
@@ -172,10 +173,10 @@ class SoftAPService(context: Context) : ConfigService(){
      * 手机重连wifi
      */
     private fun reconnectedWifi(deviceInfo: DeviceInfo) {
-        L.d("手机重连wifi")
+        L.e("手机重连wifi")
         if (PingUtil.connect(context!!, task.mSsid, task.mBssid, task.mPassword)) {
             listener?.reconnectedSuccess(deviceInfo)
-            L.d("连接成功")
+            L.e("连接成功")
         } else {
             listener?.reconnectedFail(deviceInfo, task.mSsid)
             L.e("连接失败")
