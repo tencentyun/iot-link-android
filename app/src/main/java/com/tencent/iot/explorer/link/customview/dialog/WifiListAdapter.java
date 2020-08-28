@@ -22,10 +22,6 @@ public class WifiListAdapter extends BaseAdapter {
         this.allWifi = allWifi;
     }
 
-    public void setAllWifi(List<WifiInfo> allWifi) {
-        this.allWifi = allWifi;
-    }
-
     @Override
     public int getCount() {
         if (allWifi == null) {
