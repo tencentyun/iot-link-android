@@ -52,7 +52,8 @@ class WifiFragment(type: Int) : BaseFragment() {
                 var ssid2Set = wifiManager.connectionInfo.ssid.replace("\"", "")
                 if (ssid2Set.equals(CommonField.SSID_UNKNOWN) &&
                     !LocationUtil.isLocationServiceEnable(context)) {
-                    ssid2Set = getString(R.string.open_location_tip)
+                    tv_select_wifi.hint = getString(R.string.open_location_tip)
+                    ssid2Set = ""
                 }
                 tv_select_wifi.setText(ssid2Set)
 
