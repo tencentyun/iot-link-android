@@ -111,28 +111,11 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
         }
     }
 
-    override fun connectSuccess() {}
-
-    // 根据回调，处理界面的进度步骤
-    override fun connectStep(step: Int) {
-        if (type == WifiFragment.smart_config) {
-            when (step) {
-                SmartConfigStep.STEP_DEVICE_CONNECTED_TO_WIFI.ordinal -> {
-                    state = 1
-                    refreshView()
-                }
-                SmartConfigStep.STEP_GOT_DEVICE_INFO.ordinal -> {
-                    state = 2
-                    refreshView()
-                }
-                SmartConfigStep.STEP_DEVICE_BOUND.ordinal -> {
-                    state = 3
-                    refreshView()
-                }
-                SmartConfigStep.STEP_LINK_SUCCESS.ordinal -> {
-                    state = 4
-                    refreshView()
-                }
+    override fun connectSuccess() {
+        activity?.run {
+            runOnUiThread {
+                wp_connected.setProgress(100, true)
+                App.data.setRefreshLevel(2)
             }
         }
     }
@@ -148,16 +131,30 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
     }
 
     override fun deviceConnectToWifiFail() {
-
-        showfailedReason()
+        activity?.run {
+            runOnUiThread {
+                wp_connected?.setProgress(0)
+                T.show("网络连接失败，请检查密码是否正确")
+                showConnectFail()
+            }
+        }
     }
 
     override fun softApConnectToWifiFail(ssid: String) {
-        showfailedReason()
+        activity?.runOnUiThread {
+            T.show("连接到网络：$ssid 失败，请手动连接")
+        }
     }
 
     override fun connectFail(code: String, message: String) {
-        showfailedReason()
+        activity?.run {
+            runOnUiThread {
+                showConnectFail()
+                if (!TextUtils.isEmpty(message))
+                    T.show(message)
+                L.e("connectFail:$message")
+            }
+        }
     }
 
 
