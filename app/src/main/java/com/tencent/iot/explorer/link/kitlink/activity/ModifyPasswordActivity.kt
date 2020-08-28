@@ -40,11 +40,8 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
         return R.layout.activity_modify_password
     }
 
-    override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        tv_title.text = getString(R.string.modify_password)
-        initViewPager()
-        presenter = ModifyPasswordPresenter(this)
+    override fun onResume() {
+        super.onResume()
         btn_confirm_to_modify.addEditText(
             modifyPasswdUsePhoneView.et_modify_passwd_byphone,
             modifyPasswdUsePhoneView.tv_phone_hint,
@@ -58,6 +55,13 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
             modifyPasswdUsePhoneView.et_verify_set_password,
             modifyPasswdUsePhoneView.tv_set_verify_password_hint
         )
+    }
+
+    override fun initView() {
+        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        tv_title.text = getString(R.string.modify_password)
+        initViewPager()
+        presenter = ModifyPasswordPresenter(this)
     }
 
     override fun setListener() {
