@@ -78,7 +78,7 @@ class MainActivity : PActivity(), MyCallback {
                 if (response.isSuccess()) {
                     val json = response.data as JSONObject
                     val info = UpgradeInfo.convertJson2UpgradeInfo(json)
-                    if (App.needUpgrade(info!!.version)) {
+                    if (App.needUpgrade(info!!.version) && info.upgradeType != 2) {
                         val dialog = UpgradeDialog(this@MainActivity, info)
                         dialog.setOnDismisListener(upgradeDialogListener)
                         dialog.show()

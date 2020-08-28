@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.customview.dialog
 
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.util.picture.utils.FileUtils
@@ -14,6 +15,7 @@ class UpgradeInfo(title: String, log: String, version: String) {
     var packageSzie = ""
     var publishTime = ""
     var url = ""
+    var upgradeType = 2  // 2:静默更新不提示 1:强制升级 0:用户确认
 
     init {
         this.title = title
@@ -32,6 +34,7 @@ class UpgradeInfo(title: String, log: String, version: String) {
         private val KEY_LOG = "Content"
         private val KEY_RELEASE_TIME = "ReleaseTime"
         private val KEY_CHANNEL = "Channel"
+        private val KEY_UPGRADE_TYPE = "UpgradeType"
 
         fun convertJson2UpgradeInfo(jsonSrc: JSONObject): UpgradeInfo?{
             var ret = UpgradeInfo()
@@ -71,6 +74,10 @@ class UpgradeInfo(title: String, log: String, version: String) {
                 val date = Date(time)
                 val format = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
                 ret.publishTime = format.format(date)
+            }
+
+            if (json.containsKey(KEY_UPGRADE_TYPE)) {
+                ret.upgradeType = json.getIntValue(KEY_UPGRADE_TYPE)
             }
 
             return ret
