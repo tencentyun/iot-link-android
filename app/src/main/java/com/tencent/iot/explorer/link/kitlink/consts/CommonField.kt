@@ -123,4 +123,8 @@ object CommonField {
     const val SERVICE_POLICY_SUFFIX = "#?type=service"
     const val CANCEL_POLICY_SUFFIX = "#?type=cancel"
 
+    /***********信鸽接入点************/
+    const val XG_ACCESS_POINT_CHINA = "tpns.tencent.com"
+    const val XG_ACCESS_POINT_USA = "tpns.hk.tencent.com"
+
 }
