@@ -34,10 +34,6 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
         scStepFragment.onNextListener = object : SCStepFragment.OnNextListener {
             override fun onNext() {
                 showFragment(wifiFragment, scStepFragment)
-                showTitle(
-                    getString(R.string.smart_config_second_title),
-                    getString(R.string.cancel)
-                )
                 if (!LocationUtil.isLocationServiceEnable(this@SmartConnectActivity)) {
                     T.showLonger("请您打开手机位置以便获取WIFI名称")
                 }

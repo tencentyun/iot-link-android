@@ -58,7 +58,7 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
                 )
                 showFragment(wifiFragment, softAppStepFragment)
                 if (!LocationUtil.isLocationServiceEnable(this@SoftApActivity)) {
-                    T.showLonger("请您打开手机位置以便获取WIFI名称")
+                    T.showLonger(resources.getString(R.string.open_location_tip))
                 }
             }
         }

@@ -145,7 +145,7 @@
     <string name="smart_config_first_title">提示灯在快闪</string>
     <string name="smart_config_second_title">连接WI-FI</string>
     <string name="smart_config_second">输入WI-FI密码</string>
-    <string name="smart_config_second_hint">请输入手机连接Wi-Fi密码</string>
+    <string name="smart_config_second_hint">请输入密码</string>
     <string name="smart_config_third_connect_progress">配网进度</string>
 
     <string name="soft_ap_first_title">将设备设置为自助配网模式</string>
@@ -266,15 +266,7 @@
     <string name="device">\t\t设备\t\t</string>
     <string name="family">\t\t家庭\t\t</string>
     <string name="notify">\t\t通知\t\t</string>
-    <string name="open_location_tip">开启定位获取WiFi信息</string>
-    <string name="upgrade_tip">版本升级V2.0</string>
-    <string name="repair_bug">1、修复了一些已知 bug</string>
-    <string name="version_code">版本号</string>
-    <string name="package_size">安装包大小</string>
-    <string name="publish_time">发布时间</string>
-    <string name="next_time">下次再说</string>
-    <string name="upgrade_now">立即升级</string>
-    <string name="upgrading">正在更新，请稍后...</string>
+    <string name="open_location_tip">请打开手机位置以便获取WIFI名称</string>
 
     <!--设备分类-->
     <string name="scanned_devices">已发现如下设备</string>
