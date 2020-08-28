@@ -1,6 +1,5 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.content.Intent
 import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -37,7 +36,6 @@ class ConfigNetFailedActivity : BaseActivity() {
         tv_soft_first_commit.setOnClickListener(listener)
         tv_retry.setOnClickListener(listener)
         tv_config_net_failed_back.setOnClickListener(listener)
-        tv_more_reason.setOnClickListener(listener)
     }
 
     var listener = object: View.OnClickListener {
@@ -45,32 +43,23 @@ class ConfigNetFailedActivity : BaseActivity() {
             when(v) {
                 tv_soft_first_commit -> {
                     if (type == WifiFragment.soft_ap) {
-                        jumpActivity(SmartConnectActivity::class.java, true)
+                        jumpActivity(SmartConnectActivity::class.java)
                     } else {
-                        jumpActivity(SoftApActivity::class.java, true)
+                        jumpActivity(SoftApActivity::class.java)
                     }
                 }
 
                 tv_retry -> {
                     if (type == WifiFragment.soft_ap) {
-                        jumpActivity(SoftApActivity::class.java, true)
+                        jumpActivity(SoftApActivity::class.java)
                     } else {
-                        jumpActivity(SmartConnectActivity::class.java, true)
+                        jumpActivity(SmartConnectActivity::class.java)
                     }
                 }
 
-                tv_more_reason -> {
-                    var intent = Intent(this@ConfigNetFailedActivity, HelpWebViewActivity::class.java)
-                    intent.putExtra(CommonField.PAGE_INDEX_TYPE, 1)
-                    intent.putExtra(CommonField.PAGE_INDEX_URL,
-                        "https://iot.cloud.tencent.com/explorer-h5/help-center/#/pages/Functional/HelpCenter/QnAList/QnAList?genCateID=config7")
-                    startActivity(intent)
-                }
-
-                tv_config_net_failed_back -> {
-                    finish()
-                }
             }
+            finish()
         }
+
     }
 }
