@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -46,20 +45,18 @@ class ConfigNetFailedActivity : BaseActivity() {
             when(v) {
                 tv_soft_first_commit -> {
                     if (type == WifiFragment.soft_ap) {
-                        jumpActivity(SmartConnectActivity::class.java)
+                        jumpActivity(SmartConnectActivity::class.java, true)
                     } else {
-                        jumpActivity(SoftApActivity::class.java)
+                        jumpActivity(SoftApActivity::class.java, true)
                     }
-                    this@ConfigNetFailedActivity.finish()
                 }
 
                 tv_retry -> {
                     if (type == WifiFragment.soft_ap) {
-                        jumpActivity(SoftApActivity::class.java)
+                        jumpActivity(SoftApActivity::class.java, true)
                     } else {
-                        jumpActivity(SmartConnectActivity::class.java)
+                        jumpActivity(SmartConnectActivity::class.java, true)
                     }
-                    this@ConfigNetFailedActivity.finish()
                 }
 
                 tv_more_reason -> {
@@ -71,13 +68,9 @@ class ConfigNetFailedActivity : BaseActivity() {
                 }
 
                 tv_config_net_failed_back -> {
-                    this@ConfigNetFailedActivity.finish()
+                    finish()
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

@@ -31,7 +31,6 @@
     <string name="open_WIFI">请打开 WIFI</string>
     <string name="download_success">下载成功</string>
     <string name="download_failed">下载失败</string>
-
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
     <string name="email_login">邮箱登录</string>
