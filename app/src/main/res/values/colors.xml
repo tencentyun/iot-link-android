@@ -102,11 +102,4 @@
     <color name="corner">@color/red</color>
     <color name="surrounding_area">@color/black_translucent</color>
 
-    <color name="uncomplete_progress">#FFBBBBBB</color>
-    <color name="dialog_background">#AA333333</color>
-    <color name="complete_progress">#FF006EFF</color>
-    <color name="btn_pressed">#55444444</color>
-    <color name="btn_normal">#00ffffff</color>
-    <color name="upgrade_color">#FFFF8C00</color>
-    <color name="line_grey_color">#FFE5E5E5</color>
 </resources>

@@ -35,24 +35,5 @@
         <item name="colorControlActivated">@android:color/white</item>
     </style>
     <!--picture end-->
-
-    <style name="iOSDialog" parent="@android:style/Theme.Translucent">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowNoTitle">true</item>//无标题
-        <item name="android:windowBackground">@color/btn_normal</item>//背景
-        <item name="android:windowIsFloating">true</item>//悬浮
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:backgroundDimEnabled">false</item>
-    </style>
-
-    <style name="BottomDialog" parent="@style/Base.V7.Theme.AppCompat.Light.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-
-    <style name="BottomDialog.Animation" parent="Animation.AppCompat.Dialog">
-        <item name="android:windowEnterAnimation">@anim/translate_dialog_in</item>
-        <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
-    </style>
-
+    
 </resources>
