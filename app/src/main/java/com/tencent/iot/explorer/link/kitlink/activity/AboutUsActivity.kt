@@ -1,9 +1,11 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.app.Activity
 import android.content.Intent
-import android.util.Log
+import android.os.Build
+import android.provider.Settings
 import android.view.View
-import com.alibaba.fastjson.JSON
+import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
@@ -11,13 +13,11 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
-import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.FileUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.util.AppInfoUtils
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_about_us.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -26,6 +26,8 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  * 关于我们
  */
 class AboutUsActivity : BaseActivity() {
+
+    val INSTALL_PERMISS_CODE = 1
 
     override fun getContentView(): Int {
         return R.layout.activity_about_us
@@ -45,6 +47,7 @@ class AboutUsActivity : BaseActivity() {
     }
 
     private var listener = object : View.OnClickListener {
+        @RequiresApi(Build.VERSION_CODES.O)
         override fun onClick(v: View?) {
             when (v) {
                 tv_title_user_agreement -> {
@@ -68,7 +71,19 @@ class AboutUsActivity : BaseActivity() {
                 }
 
                 tv_about_app_version -> {
-                    startUpdateApp()
+
+                    // 高于 8.0 版本的，尝试获取权限
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        var haveInstallPermission = packageManager.canRequestPackageInstalls()
+                        if (!haveInstallPermission) {
+                            val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+                            startActivityForResult(intent, INSTALL_PERMISS_CODE)
+                        } else {
+                            startUpdateApp()
+                        }
+                    } else {  // 低于 8.0 的版本直接下载安装
+                        startUpdateApp()
+                    }
                 }
             }
         }
@@ -102,6 +117,14 @@ class AboutUsActivity : BaseActivity() {
             var dialog = ProgressDialog(this@AboutUsActivity, url)
             dialog.setOnDismisListener(downloadListener)
             dialog.show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // 获取安装未知源 app 的权限，调用下载接口
+        if (requestCode == INSTALL_PERMISS_CODE && resultCode == Activity.RESULT_OK) {
+            startUpdateApp()
         }
     }
 
