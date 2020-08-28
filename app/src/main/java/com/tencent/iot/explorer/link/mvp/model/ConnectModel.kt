@@ -38,7 +38,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     var password = ""
     @Volatile
     var checkDeviceBindTokenStateStarted = false
-    var deviceInfo: DeviceInfo? = null
+    private var deviceInfo: DeviceInfo? = null
 
     var type = WifiFragment.smart_config
 
