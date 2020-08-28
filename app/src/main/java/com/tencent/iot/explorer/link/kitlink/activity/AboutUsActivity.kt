@@ -71,19 +71,7 @@ class AboutUsActivity : BaseActivity() {
                 }
 
                 tv_about_app_version -> {
-
-                    // 高于 8.0 版本的，尝试获取权限
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        var haveInstallPermission = packageManager.canRequestPackageInstalls()
-                        if (!haveInstallPermission) {
-                            val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
-                            startActivityForResult(intent, INSTALL_PERMISS_CODE)
-                        } else {
-                            startUpdateApp()
-                        }
-                    } else {  // 低于 8.0 的版本直接下载安装
-                        startUpdateApp()
-                    }
+                    startUpdateApp()
                 }
             }
         }
