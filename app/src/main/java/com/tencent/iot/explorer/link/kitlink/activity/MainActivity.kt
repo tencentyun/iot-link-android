@@ -4,8 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
-import android.provider.Settings
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -19,7 +17,9 @@ import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.android.tpush.XGIOperateCallback
+import com.tencent.android.tpush.XGPushConfig
 import com.tencent.android.tpush.XGPushManager
+import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
@@ -145,6 +145,14 @@ class MainActivity : PActivity(), MyCallback {
     }
 
     private fun openXGPush() {
+        XGPushConfig.init(applicationContext)
+        if (App.data.regionId == "1") {// 中国大陆
+            XGPushConfig.setAccessId(applicationContext, BuildConfig.XgAccessId.toLong())
+            XGPushConfig.setAccessKey(applicationContext, BuildConfig.XgAccessKey)
+        } else if (App.data.regionId == "22") {// 美国
+            XGPushConfig.setAccessId(applicationContext, BuildConfig.XgUSAAccessId.toLong())
+            XGPushConfig.setAccessKey(applicationContext, BuildConfig.XgUSAAccessKey)
+        }
         XGPushManager.registerPush(applicationContext, object : XGIOperateCallback {
             override fun onSuccess(data: Any?, p1: Int) {
                 L.e("注册成功，设备token为：$data")
