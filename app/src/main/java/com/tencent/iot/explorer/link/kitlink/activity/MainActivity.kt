@@ -1,10 +1,15 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
@@ -12,17 +17,17 @@ import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.MeFragment
 import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.android.tpush.XGIOperateCallback
 import com.tencent.android.tpush.XGPushManager
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
+import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
+import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.customview.home.BottomItemEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.util.DateUtils
+import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -36,6 +41,8 @@ class MainActivity : PActivity(), MyCallback {
     private val fragments = arrayListOf<Fragment>()
 
     private var familyPopup: FamilyListPopup? = null
+
+    private val INSTALL_PERMISS_CODE = 1
 
     override fun getContentView(): Int {
         return R.layout.activity_main
@@ -52,10 +59,64 @@ class MainActivity : PActivity(), MyCallback {
         if (cancelAccountTime > 0) {
             showCancelAccountStoppedDialog(cancelAccountTime)
         }
-        /* val sign =
-             "Action=AppCreateCellphoneUser&AppKey=ahPxdKWywfNTGrejd&CountryCode=86&Nonce=71087795&Password=My!P@ssword&PhoneNumber=13900000000&RequestId=8b8d499bbba1ac28b6da21b4&Timestamp=1546315200&VerificationCode=123456"
-         val key = "NcbHqkdiUyITTCGbKnQH"
-         L.e(SignatureUtil.signature(sign, key))*/
+        // 高于8.0的版本 尝试获取权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val haveInstallPermission = packageManager.canRequestPackageInstalls()
+            if (!haveInstallPermission) {
+                val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+                startActivityForResult(intent, INSTALL_PERMISS_CODE)
+            } else {
+                startUpdateApp()
+            }
+        } else {// 低于8.0的版本直接下载安装
+            startUpdateApp()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // 获取安装未知源 app 的权限，调用下载接口
+        if (requestCode == INSTALL_PERMISS_CODE && resultCode == Activity.RESULT_OK) {
+            startUpdateApp()
+        }
+    }
+
+    private fun startUpdateApp() {
+        HttpRequest.instance.getLastVersion(object: MyCallback{
+            override fun fail(msg: String?, reqCode: Int) {
+                T.show(msg)
+            }
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    val json = response.data as JSONObject
+                    val info = UpgradeInfo.convertJson2UpgradeInfo(json)
+                    if (App.needUpgrade(info!!.version)) {
+                        val dialog = UpgradeDialog(this@MainActivity, info)
+                        dialog.setOnDismisListener(upgradeDialogListener)
+                        dialog.show()
+                    } else {
+                        T.show(resources.getString(R.string.no_need_upgrade))
+                    }
+                }
+            }
+        })
+    }
+
+    private var upgradeDialogListener =
+        UpgradeDialog.OnDismisListener { url ->
+            val dialog = ProgressDialog(this@MainActivity, url)
+            dialog.setOnDismisListener(downloadListener)
+            dialog.show()
+        }
+
+    private var downloadListener = object: ProgressDialog.OnDismisListener {
+        override fun onDownloadSuccess(path: String) {
+            FileUtils.installApk(this@MainActivity, path)
+        }
+        override fun onDownloadFailed() {
+            T.show(resources.getString(R.string.download_failed))
+        }
+        override fun onDownloadProgress(currentProgress: Int, size: Int) { }
     }
 
     override fun initView() {
