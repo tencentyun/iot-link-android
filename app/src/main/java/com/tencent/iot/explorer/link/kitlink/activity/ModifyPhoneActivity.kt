@@ -28,16 +28,20 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
         return R.layout.activity_modify_phone
     }
 
-    override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        tv_title.text = getString(R.string.modify_phone)
-        et_modify_phone.addClearImage(iv_modify_phone_clear)
-        presenter = ModifyPhonePresenter(this)
+    override fun onResume() {
+        super.onResume()
         btn_confirm_to_modify.addEditText(
             et_modify_phone,
             tv_modify_phone_hint,
             presenter.getCountryCode()
         )
+    }
+
+    override fun initView() {
+        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        tv_title.text = getString(R.string.modify_phone)
+        et_modify_phone.addClearImage(iv_modify_phone_clear)
+        presenter = ModifyPhonePresenter(this)
     }
 
     override fun setListener() {

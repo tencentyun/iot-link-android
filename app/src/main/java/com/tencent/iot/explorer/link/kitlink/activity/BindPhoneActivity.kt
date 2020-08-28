@@ -33,13 +33,8 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
         return R.layout.activity_bind_phone
     }
 
-    override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        tv_title.text = getString(R.string.bind_phone_number)
-        et_bind_phone.addClearImage(iv_clear_bind_phone)
-        et_set_password.addClearImage(iv_clear_password)
-        et_verify_set_password.addClearImage(iv_clear_verify_password)
-        presenter = BindPhonePresenter(this)
+    override fun onResume() {
+        super.onResume()
         btn_confirm_to_bind.addEditText(et_bind_phone, tv_bind_phone_hint, presenter.getCountryCode())
         if (App.data.userInfo.HasPassword != "0") {//有密码则不显示设置密码的输入框
             hidePasswordInput()
@@ -49,6 +44,15 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
             btn_confirm_to_bind.addEditText(et_set_password, tv_set_password_hint)
             btn_confirm_to_bind.addEditText(et_verify_set_password, tv_set_verify_password_hint)
         }
+    }
+
+    override fun initView() {
+        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        tv_title.text = getString(R.string.bind_phone_number)
+        et_bind_phone.addClearImage(iv_clear_bind_phone)
+        et_set_password.addClearImage(iv_clear_password)
+        et_verify_set_password.addClearImage(iv_clear_verify_password)
+        presenter = BindPhonePresenter(this)
     }
 
     override fun setListener() {
