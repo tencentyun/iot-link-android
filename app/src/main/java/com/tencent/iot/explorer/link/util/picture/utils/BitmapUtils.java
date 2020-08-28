@@ -3,10 +3,6 @@ package com.tencent.iot.explorer.link.util.picture.utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -228,37 +224,5 @@ public class BitmapUtils {
                 : height, width * height);
         opts.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(resources, resID, opts);
-    }
-
-
-    public static Bitmap convertToBitmap(Drawable drawable, int widthPixels) {
-        Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, widthPixels, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(mutableBitmap);
-        drawable.setBounds(0, 0, widthPixels, widthPixels);
-        drawable.draw(canvas);
-        return mutableBitmap;
-    }
-
-    public static Bitmap createWaterMark(Bitmap target, String mark, int width, int textSize) {
-        Bitmap bmp = Bitmap.createBitmap(width, width, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bmp);
-
-        Paint p = new Paint();
-        p.setColor(Color.WHITE);    // 水印的颜色
-        p.setTextSize(textSize);  // 水印的字体大小
-        p.setAntiAlias(true);   // 去锯齿
-        canvas.drawBitmap(target, 0, 0, p);
-        float len = p.measureText(mark);
-        float hei = Math.abs(p.ascent() + p.descent());
-        // 在左边的中间位置开始添加水印
-        canvas.drawText(mark, width / 2 - len / 2, width / 2 + hei / 2, p);
-        canvas.save();
-        canvas.restore();
-        return bmp;
-    }
-
-    public static Bitmap createWaterMark(Drawable drawable, String mark, int width, int textSize) {
-        Bitmap target = convertToBitmap(drawable, width);
-        return createWaterMark(target, mark, width, textSize);
     }
 }
