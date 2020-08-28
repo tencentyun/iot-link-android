@@ -37,13 +37,17 @@ android {
             // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
         }
         manifestPlaceholders = [
-                XG_ACCESS_ID : getValueById('XgAccessId'),
-                XG_ACCESS_KEY: getValueById('XgAccessKey'),
+                XG_ACCESS_ID : '',
+                XG_ACCESS_KEY: '',
                 MAP_SDK_VALUE: getValueById('TencentMapSDKValue')
         ]
         buildConfigField 'String', 'WXAccessAppId', "\"${getValueById('WXAccessAppId')}\""
         buildConfigField 'String', 'TencentIotLinkAppkey', "\"${getValueById('TencentIotLinkAppkey')}\""
         buildConfigField 'String', 'TencentIotLinkAppSecret', "\"${getValueById('TencentIotLinkAppSecret')}\""
+        buildConfigField 'String', 'XgAccessId', "\"${getValueById('XgAccessId')}\""
+        buildConfigField 'String', 'XgAccessKey', "\"${getValueById('XgAccessKey')}\""
+        buildConfigField 'String', 'XgUSAAccessId', "\"${getValueById('XgUSAAccessId')}\""
+        buildConfigField 'String', 'XgUSAAccessKey', "\"${getValueById('XgUSAAccessKey')}\""
         multiDexEnabled true
     }
 
