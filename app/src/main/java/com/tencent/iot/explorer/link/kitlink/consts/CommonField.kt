@@ -102,7 +102,6 @@ object CommonField {
     const val PRODUCTS = "Products"
     const val DATA_TEMPLATE = "DataTemplate"
     const val PROPERTIES = "properties"
-    const val CONFIG_NET_TYPE = "configNetType"
 
     /***********请求类型标记参数************/
     const val NULL_STR = "null"
