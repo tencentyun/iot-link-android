@@ -115,7 +115,7 @@ object CommonField {
     const val LOGIN_REQUEST_CODE = 108
     const val H5_REQUEST_LOGIN_CODE = 10
 
-    const val SSID_UNKNOWN = "unknown ssid"
+    const val SSID_UNKNOWN = "<unknown ssid>"
     const val EXTRA_TITLE = "title"
     const val EXTRA_TEXT = "text"
     const val POLICY_PREFIX = "https://iot.cloud.tencent.com/explorer-h5/about-policy/"
