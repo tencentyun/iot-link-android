@@ -1,11 +1,14 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
-import android.content.Context
+import android.provider.Settings
 import com.tencent.iot.explorer.link.util.T
-import java.util.*
 
 object CommonUtils {
     fun isChineseSystem(): Boolean {
         return T.getContext().resources.configuration.locale.language == "zh"
+    }
+
+    fun getAndroidID(): String {
+        return Settings.System.getString(T.getContext().contentResolver, Settings.System.ANDROID_ID)
     }
 }
