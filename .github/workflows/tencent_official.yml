@@ -59,7 +59,7 @@ jobs:
       - name: Archive the encrypted apk
         uses: actions/upload-artifact@v2
         with:
-          path: app/build/outputs/apk/tencentOfficial/*/*.apk.gpg
+          path: app/build/outputs/apk/tencentOfficial/release/*.apk.gpg
           
       - name: Deploy App to fir
         run: |
