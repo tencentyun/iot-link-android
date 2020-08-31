@@ -275,6 +275,8 @@
                 android:textSize="@dimen/ts_20"
                 app:layout_constraintTop_toBottomOf="@+id/tv_time_zone_title" />
 
+
+
             <View
                 android:id="@+id/user_info_popup_bg"
                 android:layout_width="match_parent"
@@ -286,7 +288,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-
-
+    <TextView
+        android:id="@+id/tv_empty_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_use_existed_account_to_login" />
 </LinearLayout>

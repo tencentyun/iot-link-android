@@ -40,6 +40,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     private lateinit var phoneView: View
     private lateinit var emailView: View
 
+    private val ANDROID_ID = CommonUtils.getAndroidID()
+
     override fun getPresenter(): IPresenter? {
         return presenter
     }
@@ -140,7 +142,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                 val intent = Intent(this, WebActivity::class.java)
                 intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
                 var url = CommonField.POLICY_PREFIX
-                if (App.DEBUG_VERSION) url += "?uin=testReleaseID"
+                url += "?uin=$ANDROID_ID"
                 url += CommonField.SERVICE_POLICY_SUFFIX
                 intent.putExtra(CommonField.EXTRA_TEXT, url)
                 startActivity(intent)
@@ -149,7 +151,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                 val intent = Intent(this, WebActivity::class.java)
                 intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
                 var url = CommonField.POLICY_PREFIX
-                if (App.DEBUG_VERSION) url += "?uin=testReleaseID"
+                url += "?uin=$ANDROID_ID"
                 url += CommonField.PRIVACY_POLICY_SUFFIX
                 intent.putExtra(CommonField.EXTRA_TEXT, url)
                 startActivity(intent)

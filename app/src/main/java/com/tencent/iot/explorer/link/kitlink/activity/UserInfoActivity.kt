@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.Manifest
 import android.app.Dialog
 import android.content.Intent
+import android.os.SystemClock
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
+import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -44,6 +46,10 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     private var editPopupWindow: EditPopupWindow? = null
     private lateinit var temperatureDialogView: View
     private lateinit var bottomDialog: Dialog
+
+    private val counts = 5 //点击次数
+    private val duration = 3 * 1000.toLong() //规定有效时间
+    private val hits = LongArray(counts)
 
     companion object {
         const val TIMEZONE_REQUESTCODE = 100
@@ -94,6 +100,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         iv_time_zone_arrow.setOnClickListener(this)
         tv_time_zone_title.setOnClickListener(this)
         tv_time_zone.setOnClickListener(this)
+        tv_empty_area.setOnClickListener(this)
 
         temperatureDialogView.tv_fahrenheit.setOnClickListener(this)
         temperatureDialogView.tv_celsius.setOnClickListener(this)
@@ -121,6 +128,17 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
             }
             tv_time_zone_title, tv_time_zone, iv_time_zone_arrow -> {// 时区
                 startActivityForResult(Intent(this, TimeZoneActivity::class.java), TIMEZONE_REQUESTCODE)
+            }
+            tv_empty_area -> {// 连续点击五次复制AndroidID
+                System.arraycopy(hits, 1, hits, 0, hits.size - 1)
+                //实现左移，然后最后一个位置更新距离开机的时间，如果最后一个时间和最开始时间小于duration，即连续5次点击
+                hits[hits.size - 1] = SystemClock.uptimeMillis()
+                if (hits[0] >= SystemClock.uptimeMillis() - duration) {
+                    if (hits.size == 5) {
+                        // 获取AndroidID，并保存至剪切板
+                        AppInfoUtils.copy(this, CommonUtils.getAndroidID())
+                    }
+                }
             }
             temperatureDialogView.tv_fahrenheit -> {
                 presenter.setTemperatureUnit(getString(R.string.fahrenheit))
