@@ -54,7 +54,7 @@ class AboutUsActivity : BaseActivity() {
                     val intent = Intent(this@AboutUsActivity, WebActivity::class.java)
                     intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
                     var url = CommonField.POLICY_PREFIX
-                    if (App.DEBUG_VERSION) url += "?uin=testReleaseID"
+                    url += "?uin=${App.data.deviceId}"
                     url += CommonField.SERVICE_POLICY_SUFFIX
                     intent.putExtra(CommonField.EXTRA_TEXT, url)
                     startActivity(intent)
@@ -64,7 +64,7 @@ class AboutUsActivity : BaseActivity() {
                     val intent = Intent(this@AboutUsActivity, WebActivity::class.java)
                     intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
                     var url = CommonField.POLICY_PREFIX
-                    if (App.DEBUG_VERSION) url += "?uin=testReleaseID"
+                    url += "?uin=${App.data.deviceId}"
                     url += CommonField.PRIVACY_POLICY_SUFFIX
                     intent.putExtra(CommonField.EXTRA_TEXT, url)
                     startActivity(intent)
