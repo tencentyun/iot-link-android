@@ -39,7 +39,7 @@ jobs:
       - name: Archive the apk
         uses: actions/upload-artifact@v2
         with:
-          path: app/build/outputs/apk/opensource/*/*.apk
+          path: app/build/outputs/apk/opensource/release/*.apk
 
       - name: Build demo apk
         run: |
