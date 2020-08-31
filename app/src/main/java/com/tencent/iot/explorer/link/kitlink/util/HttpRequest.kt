@@ -50,6 +50,8 @@ class HttpRequest private constructor() {
         const val APP_COS_AUTH = "studioapp/AppCosAuth"
         const val BUSI_APP = "studioapp"
         const val BUSI_OPENSOURCE = "studioappOpensource"
+
+        val ANDROID_ID = CommonUtils.getAndroidID()
     }
 
     /**
@@ -110,7 +112,7 @@ class HttpRequest private constructor() {
         if (!App.isOEMApp()) {// 公版&开源版
             param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
-            api = if (App.DEBUG_VERSION) "$OPENSOURCE_APP_API/$action" + "?uin=archurtest" else "$OPENSOURCE_APP_API/$action" + "?uin=wuguotest"
+            api = "$OPENSOURCE_APP_API/$action" + "?uin=$ANDROID_ID"
         } else {// OEM版
             json = JsonManager.toJson(sign(param))
             api = "$OEM_APP_API/$action"
@@ -153,7 +155,7 @@ class HttpRequest private constructor() {
         }
         val api:String
         if (!App.isOEMApp()) {// 公版&开源版
-            api = if (App.DEBUG_VERSION) OPENSOURCE_TOKEN_API + "?uin=archurtest" else OPENSOURCE_TOKEN_API + "?uin=wuguotest"
+            api = OPENSOURCE_TOKEN_API + "?uin=$ANDROID_ID"
         } else {// OEM版
             api = OEM_TOKEN_API
         }
@@ -224,9 +226,9 @@ class HttpRequest private constructor() {
 
         val api: String
         if (!App.isOEMApp()) {// 公版&开源版
-            api = if (App.DEBUG_VERSION) OPENSOURCE_TOKEN_API + "?uin=archurtest" else OPENSOURCE_TOKEN_API + "?uin=wuguotest"
+            api = OPENSOURCE_TOKEN_API + "?uin=$ANDROID_ID"
         } else {// OEM版
-            api = if (App.DEBUG_VERSION) OEM_TOKEN_API + "?uin=archurtest" else OEM_TOKEN_API + "?uin=wuguotest"
+            api = OEM_TOKEN_API
         }
 
         StringRequest.instance.postJson(api, json, object : Callback {

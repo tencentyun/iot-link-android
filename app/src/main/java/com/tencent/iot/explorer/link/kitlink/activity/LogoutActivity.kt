@@ -7,6 +7,7 @@ import android.view.View
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.AccountAndSafetyPresenter
@@ -22,6 +23,8 @@ import java.util.*
 class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
 
     private lateinit var presenter: LogoutPresenter
+
+    private val ANDROID_ID = CommonUtils.getAndroidID()
 
     override fun getPresenter(): IPresenter? {
         return presenter
@@ -57,7 +60,7 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
                 val intent = Intent(this, WebActivity::class.java)
                 intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.tencentll_account_logout_agreement2))
                 var url = CommonField.POLICY_PREFIX
-                if (App.DEBUG_VERSION) url += "?uin=archurtest"
+                url += "?uin=$ANDROID_ID"
                 url += CommonField.CANCEL_POLICY_SUFFIX
                 intent.putExtra(CommonField.EXTRA_TEXT, url)
                 startActivity(intent)

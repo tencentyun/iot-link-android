@@ -15,6 +15,7 @@ import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
 import com.tencent.iot.explorer.link.kitlink.util.FileUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
@@ -28,6 +29,8 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class AboutUsActivity : BaseActivity() {
 
     val INSTALL_PERMISS_CODE = 1
+
+    private val ANDROID_ID = CommonUtils.getAndroidID()
 
     override fun getContentView(): Int {
         return R.layout.activity_about_us
@@ -54,7 +57,7 @@ class AboutUsActivity : BaseActivity() {
                     val intent = Intent(this@AboutUsActivity, WebActivity::class.java)
                     intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
                     var url = CommonField.POLICY_PREFIX
-                    if (App.DEBUG_VERSION) url += "?uin=testReleaseID"
+                    url += "?uin=$ANDROID_ID"
                     url += CommonField.SERVICE_POLICY_SUFFIX
                     intent.putExtra(CommonField.EXTRA_TEXT, url)
                     startActivity(intent)
@@ -64,7 +67,7 @@ class AboutUsActivity : BaseActivity() {
                     val intent = Intent(this@AboutUsActivity, WebActivity::class.java)
                     intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
                     var url = CommonField.POLICY_PREFIX
-                    if (App.DEBUG_VERSION) url += "?uin=testReleaseID"
+                    url += "?uin=$ANDROID_ID"
                     url += CommonField.PRIVACY_POLICY_SUFFIX
                     intent.putExtra(CommonField.EXTRA_TEXT, url)
                     startActivity(intent)
