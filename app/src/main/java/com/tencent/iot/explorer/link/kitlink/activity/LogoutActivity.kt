@@ -57,7 +57,7 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
                 val intent = Intent(this, WebActivity::class.java)
                 intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.tencentll_account_logout_agreement2))
                 var url = CommonField.POLICY_PREFIX
-                if (App.DEBUG_VERSION) url += "?uin=archurtest"
+                url += if (App.DEBUG_VERSION) "?uin=archurtest" else "?uin=${App.data.deviceId}"
                 url += CommonField.CANCEL_POLICY_SUFFIX
                 intent.putExtra(CommonField.EXTRA_TEXT, url)
                 startActivity(intent)
