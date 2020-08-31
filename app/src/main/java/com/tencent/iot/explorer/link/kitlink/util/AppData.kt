@@ -34,6 +34,9 @@ class AppData private constructor() {
     var regionId = "1"
     var region = "ap-guangzhou"
 
+    //设备
+    var deviceId = ""
+
     //activity列表
     val activityList = LinkedList<BaseActivity>()
     //当前家庭
