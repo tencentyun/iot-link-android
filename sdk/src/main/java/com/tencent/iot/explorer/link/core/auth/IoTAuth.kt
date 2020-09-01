@@ -1,5 +1,7 @@
 package com.tencent.iot.explorer.link.core.auth
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.core.auth.entity.Device
 import com.tencent.iot.explorer.link.core.auth.entity.Family
@@ -147,6 +149,18 @@ object IoTAuth {
         }
         this.APP_KEY = APP_KEY
         WSClientManager.instance.init()
+    }
+
+    /**
+     * 接入共享式bugly
+     */
+    fun registerSharedBugly(c: Context) {
+        val context = c.applicationContext
+        val settings = context.getSharedPreferences("BuglySdkInfos", Context.MODE_PRIVATE)
+        val editor = settings.edit()
+        // TODO: 版本号配置成动态获取
+        editor.putString("c1302acd44", "1.3") //SDK_APP_ID, SDK_VERSION
+        editor.apply()
     }
 
     /**
