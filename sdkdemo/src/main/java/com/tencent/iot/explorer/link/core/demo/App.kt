@@ -27,6 +27,7 @@ class App : Application() {
                 L.d("用户登录过期")
             }
         })
+        IoTAuth.registerSharedBugly(this) //接入共享式bugly
         MultiDex.install(this)
     }
 
