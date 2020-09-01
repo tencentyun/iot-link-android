@@ -253,6 +253,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_time_zone_title" />
             <View
+                android:id="@+id/line_timezone"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginStart="20dp"
@@ -260,12 +261,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_time_zone_title"
                 android:background="@color/line_F2F4F5" />
 
+            <TextView
+                android:id="@+id/tv_empty_area0"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/line_timezone" />
 
             <TextView
                 android:id="@+id/tv_user_info_logout"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="66dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/btn_rad4_color_e54545"
@@ -273,9 +280,7 @@
                 android:text="@string/logout"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_20"
-                app:layout_constraintTop_toBottomOf="@+id/tv_time_zone_title" />
-
-
+                app:layout_constraintTop_toBottomOf="@+id/tv_empty_area0" />
 
             <View
                 android:id="@+id/user_info_popup_bg"
