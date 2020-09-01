@@ -60,3 +60,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: app/build/outputs/apk/tencentOfficial/release/*.apk.gpg
+
+      - name: Upload Release apk to Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: $(ls app/build/outputs/apk/tencentOfficial/release/*.apk.gpg)
+          asset_name: $(basename $(ls app/build/outputs/apk/tencentOfficial/release/*.apk.gpg))
+          asset_content_type: application/zip
