@@ -100,6 +100,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         iv_time_zone_arrow.setOnClickListener(this)
         tv_time_zone_title.setOnClickListener(this)
         tv_time_zone.setOnClickListener(this)
+        tv_empty_area0.setOnClickListener(this)
         tv_empty_area.setOnClickListener(this)
 
         temperatureDialogView.tv_fahrenheit.setOnClickListener(this)
@@ -129,7 +130,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
             tv_time_zone_title, tv_time_zone, iv_time_zone_arrow -> {// 时区
                 startActivityForResult(Intent(this, TimeZoneActivity::class.java), TIMEZONE_REQUESTCODE)
             }
-            tv_empty_area -> {// 连续点击五次复制AndroidID
+            tv_empty_area0, tv_empty_area -> {// 连续点击五次复制AndroidID
                 System.arraycopy(hits, 1, hits, 0, hits.size - 1)
                 //实现左移，然后最后一个位置更新距离开机的时间，如果最后一个时间和最开始时间小于duration，即连续5次点击
                 hits[hits.size - 1] = SystemClock.uptimeMillis()
