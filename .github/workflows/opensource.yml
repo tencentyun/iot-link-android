@@ -49,8 +49,10 @@ jobs:
         run: |
           apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
           demoApk=$(ls sdkdemo/build/outputs/apk/release/sdkdemo-release.apk)
-          
-          fir publish $apk -T $IOT_FIRIM_API_TOKEN --oversea_turbo --force_pin_history
-          fir publish $demoApk -T $IOT_FIRIM_API_TOKEN --oversea_turbo --force_pin_history
+
+          rc=$(git rev-parse --short HEAD)
+          rl=$(git log --pretty=format:"%s" $rc -1)
+          fir publish $apk -T $IOT_FIRIM_API_TOKEN -c "$rl" --oversea_turbo --force_pin_history -V
+          fir publish $demoApk -T $IOT_FIRIM_API_TOKEN --oversea_turbo --force_pin_history -V
         env:
           IOT_FIRIM_API_TOKEN: ${{ secrets.IOT_FIRIM_API_TOKEN }}
