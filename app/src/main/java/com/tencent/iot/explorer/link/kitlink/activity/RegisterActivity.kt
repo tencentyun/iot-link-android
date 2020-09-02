@@ -2,12 +2,10 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
@@ -17,10 +15,8 @@ import com.tencent.iot.explorer.link.mvp.view.RegisterView
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*
 import kotlinx.android.synthetic.main.layout_email_register.view.*
 import kotlinx.android.synthetic.main.layout_phone_register.view.*
-import kotlinx.android.synthetic.main.layout_verify_code_login.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 /**
@@ -80,6 +76,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         }
         if (!CommonUtils.isChineseSystem()) {
             phoneView.tv_register_to_country.text = getString(R.string.country_china_en)
+            emailView.tv_register_to_country_email.text = getString(R.string.country_china_en)
         }
     }
 
@@ -106,6 +103,9 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
 
         phoneView.tv_register_to_country.setOnClickListener(this)
         phoneView.iv_register_to_country.setOnClickListener(this)
+
+        emailView.tv_register_to_country_email.setOnClickListener(this)
+        emailView.iv_register_to_country_email.setOnClickListener(this)
 
         iv_register_agreement.setOnClickListener(this)
         tv_register_user_agreement.setOnClickListener(this)
@@ -157,6 +157,10 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                 startActivity(intent)
             }
             phoneView.tv_register_to_country, phoneView.iv_register_to_country -> {
+                startActivityForResult(Intent(this, RegionActivity::class.java), 100)
+            }
+
+            emailView.tv_register_to_country_email, emailView.iv_register_to_country_email -> {
                 startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
         }
@@ -224,6 +228,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
 
     override fun showCountryCode(countryCode: String, countryName: String) {
         phoneView.tv_register_to_country.text = countryName
+        emailView.tv_register_to_country_email.text = countryName
         btn_register_get_code.changeType(phoneView.et_register_phone, presenter.getCountryCode())
     }
 
