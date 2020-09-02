@@ -60,10 +60,3 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: app/build/outputs/apk/tencentOfficial/release/*.apk.gpg
-          
-      - name: Deploy App to fir
-        run: |
-          apk=$(ls app/build/outputs/apk/tencentOfficial/release/*.apk)
-          fir publish $apk -T $IOT_FIRIM_API_TOKEN --oversea_turbo --force_pin_history
-        env:
-          IOT_FIRIM_API_TOKEN: ${{ secrets.IOT_FIRIM_API_TOKEN }}
