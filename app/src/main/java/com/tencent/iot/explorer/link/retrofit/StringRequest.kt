@@ -54,7 +54,7 @@ class StringRequest private constructor() {
      * 连接
      */
     private fun connect(host: String) {
-        val builder = Retrofit.Builder().baseUrl(host)
+        val builder = Retrofit.Builder().baseUrl(host+"/")
         if (okHttpClient != null) {
             builder.client(okHttpClient)
         }
