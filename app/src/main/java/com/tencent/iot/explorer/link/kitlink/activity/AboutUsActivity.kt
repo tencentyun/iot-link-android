@@ -88,7 +88,10 @@ class AboutUsActivity : BaseActivity() {
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
-                if (response != null && response.isSuccess() && response.data != null) {
+                if (response == null) {     // 无响应数据
+                    T.show(resources.getString(R.string.unknown_error))
+
+                } else if (response != null && response.isSuccess() && response.data != null) { // 返回响应数据实体
                     var json = response.data as JSONObject
                     var info = UpgradeInfo.convertJson2UpgradeInfo(json)
                     if (App.needUpgrade(info!!.version)) {
@@ -98,6 +101,12 @@ class AboutUsActivity : BaseActivity() {
                     } else {
                         T.show(resources.getString(R.string.no_need_upgrade))
                     }
+
+                } else if (response.isSuccess() && response.data == null) { // 返回的数据实体无实际内容，不需要更新
+                    T.show(resources.getString(R.string.no_need_upgrade))
+
+                } else if (!response.isSuccess()) {  // 请求失败，提示失败原因
+                    T.show(response.msg)
                 }
             }
         })

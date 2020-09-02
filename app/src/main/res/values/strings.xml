@@ -110,6 +110,7 @@
     <string name="get_userId_failed">获取用户 ID 失败</string>
     <string name="no_need_upgrade">您的应用为最新版本</string>
     <string name="url_empty">没有可下载路径</string>
+    <string name="unknown_error">未知错误</string>
 
     <!--设备-->
     <string name="my_devices">我的设备</string>
