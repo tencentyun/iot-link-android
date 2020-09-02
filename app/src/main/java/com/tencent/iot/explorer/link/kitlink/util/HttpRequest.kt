@@ -25,7 +25,7 @@ class HttpRequest private constructor() {
 
     init {
         //初始化请求
-        StringRequest.instance.init(UNLOGINED_HOST)
+        StringRequest.instance.init(OEM_APP_API)
     }
 
     companion object {
@@ -34,18 +34,15 @@ class HttpRequest private constructor() {
         const val APP_KEY = BuildConfig.TencentIotLinkAppkey
         const val APP_SECRET = BuildConfig.TencentIotLinkAppSecret
 
-        const val LOGINED_HOST = "https://iot.cloud.tencent.com/api/"
-        const val UNLOGINED_HOST = "https://iot.cloud.tencent.com/api/"
-
-        // 公版&开源体验版使用
-        const val OPENSOURCE_APP_API = "studioapp"
-        const val OPENSOURCE_TOKEN_API = "studioapp/tokenapi"
+        // 公版&开源体验版使用  当在 app-config.json 中配置 TencentIotLinkAppkey TencentIotLinkAppSecret 后，将自动切换为 OEM 版本。
+        const val STUDIO_BASE_URL = "https://iot.cloud.tencent.com/api/studioapp"
+        const val STUDIO_BASE_URL_FOR_LOGINED = "https://iot.cloud.tencent.com/api/studioapp/tokenapi"
 
         // OEM App 使用
-        const val OEM_APP_API = "exploreropen/appapi"
-        const val OEM_TOKEN_API = "exploreropen/tokenapi"
+        const val OEM_APP_API = "https://iot.cloud.tencent.com/api/exploreropen/appapi" // 需要替换为自建后台服务地址
+        const val OEM_TOKEN_API = "https://iot.cloud.tencent.com/api/exploreropen/tokenapi"  // 可安全在设备端调用。
 
-        const val APP_COS_AUTH = "studioapp/AppCosAuth"
+        const val APP_COS_AUTH = "https://iot.cloud.tencent.com/api/studioapp/AppCosAuth"
         const val BUSI_APP = "studioapp"
         const val BUSI_OPENSOURCE = "studioappOpensource"
 
@@ -107,19 +104,22 @@ class HttpRequest private constructor() {
         var json = ""
         var api = ""
         var isOEM = false
+        var host = ""
 
         if (!App.isOEMApp()) {// 公版&开源版
             param["AppID"] = T.getContext().applicationInfo.packageName
             json = JsonManager.toJson(param)
-            api = "$OPENSOURCE_APP_API/$action" + "?uin=$ANDROID_ID"
+            host = STUDIO_BASE_URL
+            api = "$action" + "?uin=$ANDROID_ID"
         } else {// OEM版
+            host = OEM_APP_API
             json = JsonManager.toJson(sign(param))
-            api = "$OEM_APP_API/$action"
             isOEM = true
+            api = "$action"
         }
 
         L.e("api=$api")
-        StringRequest.instance.postJson(UNLOGINED_HOST, api, json, object : Callback {
+        StringRequest.instance.postJson(host, api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
@@ -138,7 +138,7 @@ class HttpRequest private constructor() {
     }
 
     fun getRegionList(uri: String, callback: MyCustomCallBack, reqCode: Int) {
-        StringRequest.instance.postJson(UNLOGINED_HOST, uri, "", object : Callback {
+        StringRequest.instance.postJson(STUDIO_BASE_URL, uri, "", object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
@@ -158,12 +158,15 @@ class HttpRequest private constructor() {
             return
         }
         val api:String
+        val host:String
         if (!App.isOEMApp()) {// 公版&开源版
-            api = OPENSOURCE_TOKEN_API + "?uin=$ANDROID_ID"
+            host = STUDIO_BASE_URL_FOR_LOGINED
+            api = "?uin=$ANDROID_ID"
         } else {// OEM版
-            api = OEM_TOKEN_API
+            host = OEM_TOKEN_API
+            api = ""
         }
-        StringRequest.instance.postJson(LOGINED_HOST, api, json, object : Callback {
+        StringRequest.instance.postJson(host, api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
@@ -202,7 +205,7 @@ class HttpRequest private constructor() {
             App.toLogin()
             return
         }
-        StringRequest.instance.postJson(LOGINED_HOST, APP_COS_AUTH, json, object : Callback {
+        StringRequest.instance.postJson(APP_COS_AUTH, "", json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
@@ -229,13 +232,16 @@ class HttpRequest private constructor() {
         }
 
         val api: String
+        val host: String
         if (!App.isOEMApp()) {// 公版&开源版
-            api = OPENSOURCE_TOKEN_API + "?uin=$ANDROID_ID"
+            host = STUDIO_BASE_URL_FOR_LOGINED
+            api = "?uin=$ANDROID_ID"
         } else {// OEM版
-            api = OEM_TOKEN_API
+            host = OEM_TOKEN_API
+            api = ""
         }
 
-        StringRequest.instance.postJson(LOGINED_HOST, api, json, object : Callback {
+        StringRequest.instance.postJson(host, api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
