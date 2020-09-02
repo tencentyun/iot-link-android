@@ -28,7 +28,7 @@ class HttpRequest private constructor() {
 
     init {
         //初始化请求
-        StringRequest.instance.init(HOST)
+        StringRequest.instance.init(UNLOGINED_HOST)
     }
 
     companion object {
@@ -37,7 +37,8 @@ class HttpRequest private constructor() {
         const val APP_KEY = BuildConfig.TencentIotLinkAppkey
         const val APP_SECRET = BuildConfig.TencentIotLinkAppSecret
 
-        const val HOST = "https://iot.cloud.tencent.com/api/"
+        const val LOGINED_HOST = "https://iot.cloud.tencent.com/api/"
+        const val UNLOGINED_HOST = "https://iot.cloud.tencent.com/api/"
 
         // 公版&开源体验版使用
         const val OPENSOURCE_APP_API = "studioapp"
@@ -119,7 +120,7 @@ class HttpRequest private constructor() {
         }
 
         L.e("api=$api")
-        StringRequest.instance.postJson(api, json, object : Callback {
+        StringRequest.instance.postJson(UNLOGINED_HOST, api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
@@ -134,7 +135,7 @@ class HttpRequest private constructor() {
     }
 
     fun getRegionList(uri: String, callback: MyCustomCallBack, reqCode: Int) {
-        StringRequest.instance.postJson(uri, "", object : Callback {
+        StringRequest.instance.postJson(UNLOGINED_HOST, uri, "", object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
@@ -159,7 +160,7 @@ class HttpRequest private constructor() {
         } else {// OEM版
             api = OEM_TOKEN_API
         }
-        StringRequest.instance.postJson(api, json, object : Callback {
+        StringRequest.instance.postJson(LOGINED_HOST, api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
@@ -198,7 +199,7 @@ class HttpRequest private constructor() {
             App.toLogin()
             return
         }
-        StringRequest.instance.postJson(APP_COS_AUTH, json, object : Callback {
+        StringRequest.instance.postJson(LOGINED_HOST, APP_COS_AUTH, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
@@ -231,7 +232,7 @@ class HttpRequest private constructor() {
             api = OEM_TOKEN_API
         }
 
-        StringRequest.instance.postJson(api, json, object : Callback {
+        StringRequest.instance.postJson(LOGINED_HOST, api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
             }
