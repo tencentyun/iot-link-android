@@ -37,7 +37,7 @@ class StringRequest private constructor() {
     fun init(host: String) {
         if (this.host != host) {
             this.host = host
-            connect()
+            connect(host)
         }
     }
 
@@ -46,14 +46,14 @@ class StringRequest private constructor() {
      */
     fun reconnect() {
         if (ping("www.baidu.com")) {
-            connect()
+            connect(this.host)
         }
     }
 
     /**
      * 连接
      */
-    private fun connect() {
+    private fun connect(host: String) {
         val builder = Retrofit.Builder().baseUrl(host)
         if (okHttpClient != null) {
             builder.client(okHttpClient)
@@ -65,7 +65,8 @@ class StringRequest private constructor() {
     /**
      * get请求
      */
-    fun get(path: String, callback: com.tencent.iot.explorer.link.retrofit.Callback, reqCode: Int) {
+    fun get(host: String, path: String, callback: com.tencent.iot.explorer.link.retrofit.Callback, reqCode: Int) {
+        connect(host)
         retrofit.create(GetRequest::class.java).get(path).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                 call?.cancel()
@@ -89,11 +90,13 @@ class StringRequest private constructor() {
      * get请求
      */
     fun get(
+        host: String,
         path: String,
         params: HashMap<String, Any>,
         callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
+        connect(host)
         retrofit.create(GetRequest::class.java).get(path, params)
             .enqueue(object : Callback<String> {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
@@ -119,11 +122,13 @@ class StringRequest private constructor() {
      * post请求
      */
     fun post(
+        host: String,
         path: String,
         params: HashMap<String, Any>,
         callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
+        connect(host)
         retrofit.create(PostRequest::class.java).post(path, params)
             .enqueue(object : Callback<String> {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
@@ -149,11 +154,13 @@ class StringRequest private constructor() {
      * post请求
      */
     fun postJson(
+        host: String,
         path: String,
         json: String,
         callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
+        connect(host)
         retrofit.create(JsonRequest::class.java).postJson(path, json)
             .enqueue(object : Callback<String> {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
