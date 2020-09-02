@@ -2,10 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
 import android.util.Log
-import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.BuildConfig
-import com.tencent.iot.explorer.link.ErrorCode
-import com.tencent.iot.explorer.link.ErrorMessage
+import com.tencent.iot.explorer.link.*
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.IPUtil
@@ -109,6 +106,7 @@ class HttpRequest private constructor() {
         val action = param["Action"]
         var json = ""
         var api = ""
+        var isOEM = false
 
         if (!App.isOEMApp()) {// 公版&开源版
             param["AppID"] = T.getContext().applicationInfo.packageName
@@ -117,6 +115,7 @@ class HttpRequest private constructor() {
         } else {// OEM版
             json = JsonManager.toJson(sign(param))
             api = "$OEM_APP_API/$action"
+            isOEM = true
         }
 
         L.e("api=$api")
@@ -128,6 +127,10 @@ class HttpRequest private constructor() {
             override fun success(json: String?, reqCode: Int) {
                 L.e("响应${param["Action"]}", json ?: "")
                 JsonManager.parseJson(json, BaseResponse::class.java)?.run {
+                    if (reqCode == RequestCode.wechat_login && isOEM
+                        && this.code == ErrorCode.REQ_ERROR_CODE) {// OEM用户使用微信授权登录
+                        this.msg = "请确保已按官网文档接入微信登录"
+                    }
                     callback.success(this, reqCode)
                 }
             }
