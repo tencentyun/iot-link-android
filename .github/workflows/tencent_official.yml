@@ -61,12 +61,20 @@ jobs:
         with:
           path: app/build/outputs/apk/tencentOfficial/release/*.apk.gpg
 
+      - name: Get Name of Release APK
+        id: get-path-and-name
+        run: |
+          APK_PATH=$(ls app/build/outputs/apk/tencentOfficial/release/*.apk.gpg)
+          APK_NAME=$(basename $APK_PATH)
+          echo ::set-output name=APK_PATH::${APK_PATH}
+          echo ::set-output name=APK_NAME::${APK_NAME}
+
       - name: Upload Release apk to Asset
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: $(ls app/build/outputs/apk/tencentOfficial/release/*.apk.gpg)
-          asset_name: $(basename $(ls app/build/outputs/apk/tencentOfficial/release/*.apk.gpg))
+          asset_path: ${{ steps.get-path-and-name.outputs.APK_PATH }}
+          asset_name: ${{ steps.get-path-and-name.outputs.APK_NAME }}
           asset_content_type: application/zip
