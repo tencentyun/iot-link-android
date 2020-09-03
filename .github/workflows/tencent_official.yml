@@ -9,7 +9,8 @@ env:
   IOT_SONATYPE_PASSWORD: ${{ secrets.IOT_SONATYPE_PASSWORD }}
   IOT_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.IOT_RELEASE_KEYSTORE_PASSWORD }}
   GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
-  IOT_PGYER_API_KEY: ${{ secrets.IOT_PGYER_API_KEY }}
+  IOT_GPG_KEYNAME: ${{ secrets.IOT_GPG_KEYNAME }}
+  IOT_GPG_PASSPHRASE: ${{ secrets.IOT_GPG_PASSPHRASE }}
 
 jobs:
   build:
@@ -23,6 +24,7 @@ jobs:
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/tencent_official_keystore.jks.asc > tencent_official_keystore.jks
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/app-config.json.asc > app-config.json
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/app/google-services.json.asc > app/google-services.json
+          gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdk/secring.gpg.asc > secring.gpg
       - name: set up JDK 1.8
         uses: actions/setup-java@v1
         with:
@@ -36,7 +38,11 @@ jobs:
           rc=$(git rev-parse --short HEAD)
 
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rt'+git.'$rc'\"#g' config.gradle
-        
+      - name: Update Values of Signing
+        run: |
+          export KEY_ID_OF_SIGN=$IOT_GPG_KEYNAME
+          export PASSWORD_OF_SIGN=$IOT_GPG_PASSPHRASE
+          sh .github/scripts/updateValuesForSign.sh
       - name: Adapt build.gradle from debug to release
         run: |
           sed -i 's#opensource_keystore#tencent_official_keystore#g' app/build.gradle
