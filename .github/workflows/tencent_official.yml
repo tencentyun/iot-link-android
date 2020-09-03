@@ -65,19 +65,16 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: app/build/outputs/apk/tencentOfficial/release/*.apk.gpg
-      - name: Get Name of Release APK
-        id: get-path-and-name
+      - name: Rename Release APK
         run: |
           APK_PATH=$(ls app/build/outputs/apk/tencentOfficial/release/*.apk.gpg)
-          APK_NAME=$(basename $APK_PATH)
-          echo ::set-output name=APK_PATH::${APK_PATH}
-          echo ::set-output name=APK_NAME::${APK_NAME}
+          cp $APK_PATH iot-link-android.apk.gpg
       - name: Upload Release apk to Asset
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.get-path-and-name.outputs.APK_PATH }}
-          asset_name: ${{ steps.get-path-and-name.outputs.APK_NAME }}
+          asset_path: iot-link-android.apk.gpg
+          asset_name: iot-link-android.apk.gpg
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
