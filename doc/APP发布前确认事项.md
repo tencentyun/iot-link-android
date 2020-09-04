@@ -22,7 +22,8 @@
  - 若用户确认使用 Firebase 功能，需通过 Firebase 官网创建应用并获取 **google-services.json**，替换项目中的 [google-services.json](https://github.com/tencentyun/iot-link-android/blob/master/app/google-services.json) 文件。   
  - 若不使用 Firebase 功能，需要在以下文件中注释掉对应依赖。
   
-     在项目级 [build.gradle](https://github.com/tencentyun/iot-link-android/blob/master/build.gradle)中注释掉以下三个依赖项
+     在项目级 [build.gradle](https://github.com/tencentyun/iot-link-android/blob/master/build.gradle)中注释掉以下三个依赖项    
+     
    ```
    dependencies {
    //        classpath 'com.google.gms:google-services:4.3.3'
@@ -30,8 +31,8 @@
    //        classpath 'com.google.firebase:perf-plugin:1.3.1'
    }
    ```
-在应用级 [build.gradle](https://github.com/tencentyun/iot-link-android/blob/master/app/build.gradle)中注释掉以下三个应用插件和三个依赖项
-         
+在应用级 [build.gradle](https://github.com/tencentyun/iot-link-android/blob/master/app/build.gradle)中注释掉以下三个应用插件和三个依赖项     
+   
        ```
        //apply plugin: 'com.google.gms.google-services'
        //apply plugin: 'com.google.firebase.crashlytics'
