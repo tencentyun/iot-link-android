@@ -32,6 +32,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'TencentIotLinkSDKDemoAppkey', "\"${getValueById('TencentIotLinkSDKDemoAppkey')}\""
+        buildConfigField 'String', 'TencentIotLinkSDKDemoAppSecret', "\"${getValueById('TencentIotLinkSDKDemoAppSecret')}\""
         multiDexEnabled true
     }
     lintOptions {
