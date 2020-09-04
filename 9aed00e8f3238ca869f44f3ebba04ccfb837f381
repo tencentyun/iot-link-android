@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d83f011_9b2a6a0a",
+        "filename": "sdk/src/main/java/com/tencent/iot/explorer/link/core/auth/service/BaseService.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-09-04T10:26:41Z",
+      "side": 1,
+      "message": "少了个$符",
+      "range": {
+        "startLine": 118,
+        "startChar": 27,
+        "endLine": 118,
+        "endChar": 39
+      },
+      "revId": "9aed00e8f3238ca869f44f3ebba04ccfb837f381",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
