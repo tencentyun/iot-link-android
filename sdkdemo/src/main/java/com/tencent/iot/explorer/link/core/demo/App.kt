@@ -14,6 +14,7 @@ class App : Application() {
     }
 
     private val APP_KEY = BuildConfig.TencentIotLinkSDKDemoAppkey
+    private val APP_SECRET = BuildConfig.TencentIotLinkSDKDemoAppSecret
 
     override fun onCreate() {
         super.onCreate()
@@ -21,7 +22,7 @@ class App : Application() {
         //需要打印日志时要在IoTAuth.init(APP_KEY)之前调用
         // 否则看不到"The SDK initialized successfully"的日志
         IoTAuth.openLog(true)
-        IoTAuth.init(APP_KEY)
+        IoTAuth.init(APP_KEY, APP_SECRET)
         IoTAuth.addLoginExpiredListener(object : LoginExpiredListener {
             override fun expired(user: User) {
                 L.d("用户登录过期")

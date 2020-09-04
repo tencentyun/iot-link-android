@@ -18,12 +18,10 @@ open class BaseService {
 
     companion object {
 
-        const val APP_SECRECY = ""
+        const val OEM_APP_API = "https://iot.cloud.tencent.com/api/exploreropen/appapi" // 需要替换为自建后台服务地址
+        const val OEM_TOKEN_API = "https://iot.cloud.tencent.com/api/exploreropen/tokenapi"  // 可安全在设备端调用。
 
-        const val HOST = "https://iot.cloud.tencent.com/api/"
-        const val APP_API = "studioapp"
-        const val TOKEN_API = "exploreropen/tokenapi"
-        const val APP_COS_AUTH = "studioapp/AppCosAuth"
+        const val APP_COS_AUTH = "https://iot.cloud.tencent.com/api/studioapp/AppCosAuth"
 
     }
 
@@ -58,7 +56,7 @@ open class BaseService {
 
     private fun sign(param: HashMap<String, Any>): HashMap<String, Any> {
         val sign = SignatureUtil.format(param)
-        val result = SignatureUtil.signature(sign, APP_SECRECY)
+        val result = SignatureUtil.signature(sign, IoTAuth.APP_SECRET)
         param["Signature"] = result
         return param
     }
@@ -68,10 +66,9 @@ open class BaseService {
      */
     fun postJson(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
         val action = param["Action"]
-        val json = JsonManager.toJson(param)
-//        val json = JsonManager.toJson(sign(param))
+        val json = JsonManager.toJson(sign(param))
 //        HttpUtil.postJson("$HOST$APP_API", json, object : HttpCallBack {
-        HttpUtil.postJson("$HOST$APP_API/$action", json, object : HttpCallBack {
+        HttpUtil.postJson("$OEM_APP_API/$action", json, object : HttpCallBack {
             override fun onSuccess(response: String) {
                 L.d("响应$action", response)
                 JsonManager.parseJson(response, BaseResponse::class.java)?.run {
@@ -95,7 +92,7 @@ open class BaseService {
             IoTAuth.loginExpiredListener?.expired(IoTAuth.user)
             return
         }
-        HttpUtil.postJson("$HOST$TOKEN_API", json, object : HttpCallBack {
+        HttpUtil.postJson("$OEM_TOKEN_API", json, object : HttpCallBack {
             override fun onSuccess(response: String) {
                 L.d("响应${param["Action"]}", response)
                 JsonManager.parseJson(response, BaseResponse::class.java)?.run {
@@ -118,7 +115,7 @@ open class BaseService {
             IoTAuth.loginExpiredListener?.expired(IoTAuth.user)
             return
         }
-        HttpUtil.postJson("$HOST$APP_COS_AUTH", json, object : HttpCallBack {
+        HttpUtil.postJson("$APP_COS_AUTH", json, object : HttpCallBack {
             override fun onSuccess(response: String) {
                 L.d("响应${param["Action"]}", response)
                 JsonManager.parseJson(response, BaseResponse::class.java)?.run {
