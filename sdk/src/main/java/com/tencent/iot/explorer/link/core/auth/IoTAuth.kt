@@ -23,6 +23,7 @@ import com.tencent.iot.explorer.link.core.log.L
 object IoTAuth {
 
     var APP_KEY = ""
+    var APP_SECRET = ""
 
     //登录过期监听器
     internal var loginExpiredListener: LoginExpiredListener? = null
@@ -143,11 +144,15 @@ object IoTAuth {
     /**
      * 初始化WebSocket
      */
-    fun init(APP_KEY: String) {
+    fun init(APP_KEY: String, APP_SECRET: String) {
         if (TextUtils.isEmpty(APP_KEY)) {
             throw Exception("APP_KEY can not be empty")
         }
+        if (TextUtils.isEmpty(APP_SECRET)) {
+            throw Exception("APP_SECRET can not be empty")
+        }
         this.APP_KEY = APP_KEY
+        this.APP_SECRET = APP_SECRET
         WSClientManager.instance.init()
     }
 
@@ -239,6 +244,7 @@ object IoTAuth {
     fun destroy() {
         logout()
         APP_KEY = ""
+        APP_SECRET = ""
         WSClientManager.instance.destroy()
     }
 
