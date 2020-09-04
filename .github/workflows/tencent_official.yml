@@ -37,7 +37,7 @@ jobs:
           rt=${rtt#*v}
           rc=$(git rev-parse --short HEAD)
 
-          sed -i 's#def versionAppName.*#def versionAppName = \"'$rt'+git.'$rc'\"#g' config.gradle
+          sed -i 's#def versionAppName.*#def versionAppName = \"'$rt'\"#g' config.gradle
       - name: Update Values of Signing
         run: |
           export KEY_ID_OF_SIGN=$IOT_GPG_KEYNAME
