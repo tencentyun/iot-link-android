@@ -149,15 +149,15 @@ dependencies {
     if (findProject(':sdk') != null) {
         implementation project(path: ':sdk')
     } else {
-        implementation 'com.tencent.iot.explorer:explorer-link-android:+'
+        implementation 'com.tencent.iot.explorer:explorer-link-android:1.0.0'
     }
 
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
 
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
 
-    implementation 'com.google.firebase:firebase-perf:19.0.7'
+    implementation 'com.google.firebase:firebase-perf:19.0.8'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 
