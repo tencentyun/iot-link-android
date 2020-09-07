@@ -87,9 +87,8 @@ app-config.json 需要配置的内容，如下：
   使用微信授权登录还需：
   
   - 将 *opensource_keystore.jks* 文件替换成自己的签名文件并给应用签字
-  - 前往[微信开放平台](https://developers.weixin.qq.com/doc/oplatform/Downloads/Android_Resource.html)下载签名生成工具，使用该工具生成应用的数字签名(需要将该工具和应用同时安装到手机上，打开签名生成工具输入应用包名即可生成数字签名，如下图所示)
+  - 前往[微信开放平台](https://developers.weixin.qq.com/doc/oplatform/Downloads/Android_Resource.html)下载签名生成工具，使用该工具生成应用的数字签名(需要将该工具和应用同时安装到手机上，打开签名生成工具输入应用包名即可生成数字签名)
     
-    <img src="https://main.qcloudimg.com/raw/e5734b5731d77e8b1e271cbd78bb5fcf.png" alt="image-20200619162858817" width = "35%" height = "50%" />
   - 将该数字签名和应用包名登记到微信开放平台，否则微信授权登录将不可用
   
   最后将配置项 **WXAccessAppId** 设置为在微信开放平台申请并获得的 **AppID**；***<u>同时请遵从官方建议自建微信接入服务器，保证 AppSecret 不被泄露</u>***。
