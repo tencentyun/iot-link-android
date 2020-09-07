@@ -22,6 +22,30 @@
       "revId": "9aed00e8f3238ca869f44f3ebba04ccfb837f381",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e441350_1f0f1c4b",
+        "filename": "sdk/src/main/java/com/tencent/iot/explorer/link/core/auth/service/BaseService.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-09-07T01:25:55Z",
+      "side": 1,
+      "message": "好的，已修改。",
+      "parentUuid": "1d83f011_9b2a6a0a",
+      "range": {
+        "startLine": 118,
+        "startChar": 27,
+        "endLine": 118,
+        "endChar": 39
+      },
+      "revId": "9aed00e8f3238ca869f44f3ebba04ccfb837f381",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
     }
   ]
 }
