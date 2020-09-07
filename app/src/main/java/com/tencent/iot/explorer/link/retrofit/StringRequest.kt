@@ -63,10 +63,21 @@ class StringRequest private constructor() {
     }
 
     /**
+     * 当host发生改变的时候connect，避免重复connect
+     */
+    private fun connectOnHostChanged(host: String) {
+        var currentHost = retrofit.baseUrl().url().toString()
+        currentHost = currentHost.substring(0, currentHost.length-1)
+        if (currentHost != host) {
+            connect(host)
+        }
+    }
+
+    /**
      * get请求
      */
     fun get(host: String, path: String, callback: com.tencent.iot.explorer.link.retrofit.Callback, reqCode: Int) {
-        connect(host)
+        connectOnHostChanged(host) // 避免重复connect
         retrofit.create(GetRequest::class.java).get(path).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                 call?.cancel()
@@ -96,7 +107,7 @@ class StringRequest private constructor() {
         callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
-        connect(host)
+        connectOnHostChanged(host) // 避免重复connect
         retrofit.create(GetRequest::class.java).get(path, params)
             .enqueue(object : Callback<String> {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
@@ -128,7 +139,7 @@ class StringRequest private constructor() {
         callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
-        connect(host)
+        connectOnHostChanged(host) // 避免重复connect
         retrofit.create(PostRequest::class.java).post(path, params)
             .enqueue(object : Callback<String> {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
@@ -160,7 +171,7 @@ class StringRequest private constructor() {
         callback: com.tencent.iot.explorer.link.retrofit.Callback,
         reqCode: Int
     ) {
-        connect(host)
+        connectOnHostChanged(host) // 避免重复connect
         retrofit.create(JsonRequest::class.java).postJson(path, json)
             .enqueue(object : Callback<String> {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
