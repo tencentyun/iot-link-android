@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="104dp">
+        android:layout_height="54dp">
 
     <TextView
             android:id="@+id/tv_home_name"
@@ -60,20 +60,19 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="18dp"
             android:maxLines="1"
-            android:text="28℃"
             android:textColor="@color/black_333333"
             android:textSize="@dimen/ts_12"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_home_name" />
 
-    <View
-            android:layout_width="1dp"
-            android:layout_height="10dp"
-            android:layout_marginStart="8dp"
-            android:background="@color/black_333333"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_weather_number"
-            app:layout_constraintLeft_toRightOf="@+id/tv_weather_number"
-            app:layout_constraintTop_toTopOf="@+id/tv_weather_number" />
+<!--    <View-->
+<!--            android:layout_width="1dp"-->
+<!--            android:layout_height="10dp"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:background="@color/black_333333"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tv_weather_number"-->
+<!--            app:layout_constraintLeft_toRightOf="@+id/tv_weather_number"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tv_weather_number" />-->
 
     <TextView
             android:id="@+id/tv_weather"
@@ -81,7 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
             android:maxLines="1"
-            android:text="多云转晴"
             android:textColor="@color/black_333333"
             android:textSize="@dimen/ts_12"
             app:layout_constraintBottom_toBottomOf="@+id/tv_weather_number"

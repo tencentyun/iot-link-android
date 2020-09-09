@@ -18,8 +18,8 @@ class HomeHeadViewHolder2 : CRecyclerView.HeadViewHolder<FamilyEntity> {
 
     override fun show() {
         weatherEntity?.let {
-            itemView.tv_weather_number.text = it.number
-            itemView.tv_weather.text = it.weather
+//            itemView.tv_weather_number.text = it.number
+//            itemView.tv_weather.text = it.weather
         }
         App.data.getCurrentFamily().let {
             itemView.tv_home_name.text = it.FamilyName
