@@ -87,8 +87,9 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         initViewPager()
 
         if (!TextUtils.isEmpty(App.data.getToken())) {
-            var userId = SharePreferenceUtil.getString(this@LoginActivity, App.CONFIG, CommonField.USER_ID)
-            mFirebaseAnalytics!!.setUserId(userId);
+            val userId = SharePreferenceUtil.getString(this@LoginActivity, App.CONFIG, CommonField.USER_ID)
+            mFirebaseAnalytics!!.setUserId(userId)
+            mFirebaseAnalytics!!.setUserProperty(CommonField.FIREBASE_USER_ID, userId)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
@@ -245,6 +246,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                         App.data.userInfo = this
                         SharePreferenceUtil.saveString(this@LoginActivity, App.CONFIG, CommonField.USER_ID, App.data.userInfo.UserID)
                         mFirebaseAnalytics!!.setUserId(App.data.userInfo.UserID)
+                        mFirebaseAnalytics!!.setUserProperty(CommonField.FIREBASE_USER_ID, App.data.userInfo.UserID)
                         saveUser(user)
                         T.show(getString(R.string.login_success))
                         if (TextUtils.isEmpty(fromTag)) {
