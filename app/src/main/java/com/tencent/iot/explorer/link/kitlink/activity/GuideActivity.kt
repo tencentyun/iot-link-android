@@ -51,6 +51,7 @@ class GuideActivity  : PActivity(), View.OnClickListener{
         if (!TextUtils.isEmpty(App.data.getToken())) {
             val userId = SharePreferenceUtil.getString(this@GuideActivity, App.CONFIG, CommonField.USER_ID)
             mFirebaseAnalytics!!.setUserId(userId)
+            mFirebaseAnalytics!!.setUserProperty(CommonField.FIREBASE_USER_ID, userId)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
