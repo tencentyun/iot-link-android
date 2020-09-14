@@ -38,6 +38,7 @@ object CommonField {
     const val TICKET = "ticket"
     const val HANDLER_NAME = "handlerName"
     const val MSG_TYPE = "msgType"
+    const val FIREBASE_USER_ID = "UserID"
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
