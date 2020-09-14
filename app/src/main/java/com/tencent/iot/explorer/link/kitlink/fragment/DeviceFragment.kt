@@ -33,16 +33,14 @@ import org.w3c.dom.Text
 import kotlin.math.ceil
 
 
-class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnItemClickListener{
+class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListener{
 
-    private var mContext : Context = c
     private var devicesGridView : GridView? = null
     private var recommendDevicesGridView : GridView? = null
     private var categoryList = arrayListOf<CategoryDeviceEntity>()
     private var productList = arrayListOf<RecommDeviceEntity>()
     private var isRecommDeviceClicked = false
     private var recommDeviceIndex = 0
-
 
     private var permissions = arrayOf(
         Manifest.permission.ACCESS_WIFI_STATE,
@@ -89,7 +87,7 @@ class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnIte
                     response.parse(RecommDeviceListResponse::class.java)?.run {
                         if (ProductList.size > 0) {
                             productList = ProductList
-                            recommendDevicesGridView!!.adapter = GridAdapter(mContext, ProductList, true)
+                            recommendDevicesGridView!!.adapter = GridAdapter(activity!!, ProductList, true)
                             setGridViewHeightByChildren(recommendDevicesGridView!!)
                         } else {
                             tv_recommend.visibility = View.GONE
@@ -97,7 +95,7 @@ class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnIte
                             gv_recommend_devices.visibility = View.GONE
                         }
                         categoryList = CategoryList
-                        devicesGridView!!.adapter = GridAdapter(mContext, CategoryList, false)
+                        devicesGridView!!.adapter = GridAdapter(activity!!, CategoryList, false)
                         setGridViewHeightByChildren(devicesGridView!!)
                     }
                 }
@@ -126,7 +124,7 @@ class DeviceFragment(c: Context) : BaseFragment(), MyCallback, AdapterView.OnIte
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (view != null && parent != null) {
 
-            if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
+            if(ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED){
                 when (parent.id) {
                     R.id.gv_recommend_devices->{
