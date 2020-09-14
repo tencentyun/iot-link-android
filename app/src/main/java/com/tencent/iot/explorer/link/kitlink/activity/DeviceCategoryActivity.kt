@@ -66,6 +66,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     override fun initView() {
         tv_title.text = getString(R.string.add_device)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        beginScanning()
     }
 
 
@@ -73,11 +74,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         iv_loading_cirecle.clearAnimation()
         scanning.visibility = View.GONE
         not_found_dev.visibility = View.VISIBLE
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        beginScanning()
     }
 
     override fun onResume() {
@@ -243,7 +239,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     private fun generateFragments() : List<Fragment>{
         val fragmentList = arrayListOf<Fragment>()
         for (item in App.data.recommendDeviceCategoryList) {
-            val fragment = DeviceFragment(this)
+            val fragment = DeviceFragment()
             val bundle = Bundle()
             bundle.putString("CategoryKey", item.CategoryKey)
             fragment.arguments = bundle
