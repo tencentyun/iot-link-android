@@ -1,7 +1,16 @@
 name: Android CI
 
-on: [push, pull_request]
-
+on:
+  push:
+    paths-ignore: # 有時候不想要改個文档也触发 github actions
+      - 'doc/**'
+      - 'README.md'
+      - 'LICENSE'
+    tags-ignore:  # 屏蔽掉发release打tag事件
+      - '*'
+    branches:
+      - '*'
+    
 env:
   IOT_SONATYPE_USERNAME: ${{ secrets.IOT_SONATYPE_USERNAME }}
   IOT_SONATYPE_PASSWORD: ${{ secrets.IOT_SONATYPE_PASSWORD }}
