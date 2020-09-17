@@ -58,22 +58,11 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
     }
 
     override fun startHere(view: View) {
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
         val categoryKey = arguments!!.getString("CategoryKey", "CategoryKey")
-        val view = inflater.inflate(getContentView(), container, false)
-        if (getContentView() != 0) {
-            devicesGridView = view.findViewById(R.id.gv_devices)
-            recommendDevicesGridView = view.findViewById(R.id.gv_recommend_devices)
-            setListener()
-            HttpRequest.instance.getRecommList(categoryKey, this)
-        }
-        return view
+        devicesGridView = view.findViewById(R.id.gv_devices)
+        recommendDevicesGridView = view.findViewById(R.id.gv_recommend_devices)
+        setListener()
+        HttpRequest.instance.getRecommList(categoryKey, this)
     }
 
     override fun fail(msg: String?, reqCode: Int) {
