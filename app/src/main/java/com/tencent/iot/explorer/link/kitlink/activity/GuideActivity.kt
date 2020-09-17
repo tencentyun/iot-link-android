@@ -6,7 +6,6 @@ import android.os.SystemClock
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
@@ -20,8 +19,6 @@ import kotlinx.android.synthetic.main.activity_guide.*
 
 
 class GuideActivity  : PActivity(), View.OnClickListener{
-
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     private val permissions = arrayOf(
         Manifest.permission.RECEIVE_SMS,
@@ -47,11 +44,7 @@ class GuideActivity  : PActivity(), View.OnClickListener{
         } else {
             permissionAllGranted()
         }
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@GuideActivity)
         if (!TextUtils.isEmpty(App.data.getToken())) {
-            val userId = SharePreferenceUtil.getString(this@GuideActivity, App.CONFIG, CommonField.USER_ID)
-            mFirebaseAnalytics!!.setUserId(userId)
-            mFirebaseAnalytics!!.setUserProperty(CommonField.FIREBASE_USER_ID, userId)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
