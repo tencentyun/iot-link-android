@@ -90,9 +90,9 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                             recommendDevicesGridView!!.adapter = GridAdapter(activity!!, ProductList, true)
                             setGridViewHeightByChildren(recommendDevicesGridView!!)
                         } else {
-                            tv_recommend.visibility = View.GONE
-                            split_line.visibility = View.GONE
-                            gv_recommend_devices.visibility = View.GONE
+                            if (tv_recommend != null) tv_recommend.visibility = View.GONE
+                            if (split_line != null) split_line.visibility = View.GONE
+                            if (gv_recommend_devices != null) gv_recommend_devices.visibility = View.GONE
                         }
                         categoryList = CategoryList
                         devicesGridView!!.adapter = GridAdapter(activity!!, CategoryList, false)
