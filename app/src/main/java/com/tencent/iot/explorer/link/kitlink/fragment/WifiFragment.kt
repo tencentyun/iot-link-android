@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.customview.dialog.WifiHelperDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.util.T
@@ -26,6 +27,8 @@ class WifiFragment(type: Int) : BaseFragment() {
     private var showPwd = false
 
     var onCommitWifiListener: OnCommitWifiListener? = null
+    var openWifiDialog: WifiHelperDialog? = null
+    var openLocationServiceDialog: WifiHelperDialog? = null
 
     companion object {
         const val smart_config = 0
@@ -48,12 +51,14 @@ class WifiFragment(type: Int) : BaseFragment() {
             if (wifiInfo == null || wifiInfo!!.bssid == null) {
                 tv_select_wifi.hint = getString(R.string.not_network)
                 tv_wifi_commit.isEnabled = false
+                tv_select_wifi.setText("")
+                openWifiDialog?.show()
             } else {
                 var ssid2Set = wifiManager.connectionInfo.ssid.replace("\"", "")
-                if (ssid2Set.equals(CommonField.SSID_UNKNOWN) &&
-                    !LocationUtil.isLocationServiceEnable(context)) {
+                if (!LocationUtil.isLocationServiceEnable(context)) {
                     tv_select_wifi.hint = getString(R.string.open_location_tip)
                     ssid2Set = ""
+                    openLocationServiceDialog?.show()
                 }
                 tv_select_wifi.setText(ssid2Set)
 
@@ -76,6 +81,22 @@ class WifiFragment(type: Int) : BaseFragment() {
     }
 
     override fun startHere(view: View) {
+        openWifiDialog = WifiHelperDialog(context, getString(R.string.please_open_wifi))
+        openWifiDialog?.setOnDismisListener(object: WifiHelperDialog.OnDismisListener{
+            override fun onOkClicked() {
+                startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+            }
+
+            override fun onCancelClicked() {}
+        })
+        openLocationServiceDialog = WifiHelperDialog(context, getString(R.string.please_open_location_service))
+        openLocationServiceDialog?.setOnDismisListener(object: WifiHelperDialog.OnDismisListener{
+            override fun onOkClicked() {
+                startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            }
+
+            override fun onCancelClicked() {}
+        })
         showWifiInfo()
         et_select_wifi_pwd.addClearImage(iv_wifi_eye_clear)
         et_select_wifi_pwd.addShowImage(

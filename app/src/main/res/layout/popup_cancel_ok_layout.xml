@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/outside_dialog_layout"
+    android:background="@color/dialog_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_failed_cell"
+        android:layout_marginEnd="45dp"
+        android:layout_marginStart="45dp"
+        android:paddingTop="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_dialog_tip"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/dialog_tip"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/tv_tip_content"
+            android:layout_marginTop="20dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_dialog_tip"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:textColor="@color/black"
+            />
+
+        <View
+            android:id="@+id/v_line_h"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_tip_content"
+            android:background="@color/line_grey_color"
+            android:layout_marginTop="20dp"
+            />
+
+        <View
+            android:id="@+id/v_line_v"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/line_grey_color"
+            app:layout_constraintTop_toBottomOf="@id/v_line_h"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_to_set"
+            />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/v_line_v"
+            app:layout_constraintTop_toBottomOf="@id/v_line_h"
+            app:layout_constraintBottom_toBottomOf="@id/tv_to_set"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="@dimen/ts_18"
+            android:paddingTop="17dp"
+            android:paddingBottom="17dp"
+            android:textColor="@color/black_888888"
+            android:gravity="center"
+            android:text="@string/cancel"/>
+
+        <TextView
+            android:id="@+id/tv_to_set"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="@dimen/ts_18"
+            android:gravity="center"
+            android:textColor="@color/complete_progress"
+            android:paddingTop="17dp"
+            android:paddingBottom="17dp"
+            android:text="@string/to_set"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/v_line_v"
+            app:layout_constraintTop_toBottomOf="@+id/v_line_h"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

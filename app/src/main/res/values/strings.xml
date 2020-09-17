@@ -167,6 +167,10 @@
     <string name="power_off">电源开关：关闭</string>
     <string name="on">开启</string>
     <string name="off">关闭</string>
+    <string name="dialog_tip">提示</string>
+    <string name="to_set">去开启</string>
+    <string name="please_open_wifi">手机WIFI未开启，请开启并连接WIFI</string>
+    <string name="please_open_location_service">请开启手机定位服务，以便获取附近WIFI信号</string>
 
     <string name="device_details">设备详情</string>
     <string name="remark_name">备注名称</string>
