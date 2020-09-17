@@ -1,14 +1,11 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorCode
 import com.tencent.iot.explorer.link.ErrorMessage
@@ -42,7 +39,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
 
     private lateinit var accoutPasswdLoginView: View
     private lateinit var verifyCodeLoginView: View
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
     private var fromTag = ""
     private var accountType = false //true为手机号，false为邮箱
     private var accountForAutoFill = ""
@@ -80,7 +76,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         intent.getStringExtra("from")?.let {
             fromTag = it
         }
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@LoginActivity)
         presenter = LoginPresenter(this)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.verify_code_login)
@@ -88,8 +83,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
 
         if (!TextUtils.isEmpty(App.data.getToken())) {
             val userId = SharePreferenceUtil.getString(this@LoginActivity, App.CONFIG, CommonField.USER_ID)
-            mFirebaseAnalytics!!.setUserId(userId)
-            mFirebaseAnalytics!!.setUserProperty(CommonField.FIREBASE_USER_ID, userId)
+            FirebaseCrashlytics.getInstance().setUserId(userId)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
@@ -245,8 +239,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                     response.parse(UserInfoResponse::class.java)?.Data?.run {
                         App.data.userInfo = this
                         SharePreferenceUtil.saveString(this@LoginActivity, App.CONFIG, CommonField.USER_ID, App.data.userInfo.UserID)
-                        mFirebaseAnalytics!!.setUserId(App.data.userInfo.UserID)
-                        mFirebaseAnalytics!!.setUserProperty(CommonField.FIREBASE_USER_ID, App.data.userInfo.UserID)
+                        FirebaseCrashlytics.getInstance().setUserId(App.data.userInfo.UserID)
                         saveUser(user)
                         T.show(getString(R.string.login_success))
                         if (TextUtils.isEmpty(fromTag)) {
