@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSONObject
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
@@ -110,6 +111,7 @@ class MainActivity : PActivity(), MyCallback {
     override fun initView() {
         val userId = SharePreferenceUtil.getString(this@MainActivity, App.CONFIG, CommonField.USER_ID)
         FirebaseCrashlytics.getInstance().setUserId(userId)
+        FirebaseAnalytics.getInstance(this).setUserId(userId)
         openXGPush()
         home_bottom_view.addMenu(
             BottomItemEntity(
