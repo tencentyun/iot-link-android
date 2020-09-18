@@ -186,12 +186,12 @@ class MessageFragment(category: Int) : BaseFragment(), CRecyclerView.RecyclerIte
     }
 
     private fun refreshFinish(success: Boolean) {
-        srl_message_list.finishRefresh(0, success, isEnd)
+        srl_message_list?.finishRefresh(0, success, isEnd)
         showList()
     }
 
     private fun loadFinish(success: Boolean) {
-        srl_message_list.finishLoadMore(0, success, isEnd)
+        srl_message_list?.finishLoadMore(0, success, isEnd)
         showList()
     }
 
