@@ -28,7 +28,12 @@ class ControlSimpleNumberBigHolder : CRecyclerView.CViewHolder<DevicePropertyEnt
                 numberEntity?.min?.toDouble()?.toInt() ?: 0,
                 numberEntity?.max?.toDouble()?.toInt() ?: 100
             )
-            itemView.sp_simple_big_int.setStepValue(numberEntity?.step?.toInt() ?: 1)
+            val step = try {
+                numberEntity?.step?.toInt() ?: 1
+            } catch (e: NumberFormatException) {
+                numberEntity?.step?.toDouble()?.toInt() ?: 1
+            }
+            itemView.sp_simple_big_int.setStepValue(step)
 
             if (DataHolder.instance.get<DeviceEntity>("device")?.online ?: 0 == 1) {
                 itemView.sp_simple_big_int.onProgressListener =
