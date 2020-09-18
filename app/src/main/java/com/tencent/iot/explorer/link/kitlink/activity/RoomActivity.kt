@@ -112,7 +112,7 @@ class RoomActivity : BaseActivity(), MyCallback {
             modifyRoomPopup = EditPopupWindow(this)
             modifyRoomPopup?.setShowData(
                 getString(R.string.room_name),
-                roomEntity!!.RoomName
+                roomEntity?.RoomName ?: ""
             )
         }
         modifyRoomPopup?.setBg(room_bg)
