@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.text.TextUtils
 import android.widget.Toast
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.LoginCallback
@@ -69,6 +70,7 @@ class LoginActivity : BaseActivity(), LoginCallback {
                 response.parse(UserInfoResponse::class.java)?.Data?.run {
                     App.data.userInfo = this
                     FirebaseCrashlytics.getInstance().setUserId(App.data.userInfo.UserID)
+                    FirebaseAnalytics.getInstance(this@LoginActivity).setUserId(App.data.userInfo.UserID)
                     jumpActivity(MainActivity::class.java, true)
                 }
             }
