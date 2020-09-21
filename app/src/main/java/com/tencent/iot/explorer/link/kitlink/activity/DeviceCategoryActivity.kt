@@ -141,7 +141,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             }
             RequestCode.scan_bind_device-> {
                 if (response.isSuccess()) {
-                    T.show("添加成功")
+                    T.show(getString(R.string.add_sucess)) //添加成功
                     App.data.setRefreshLevel(2)
                     finish()
                 } else {

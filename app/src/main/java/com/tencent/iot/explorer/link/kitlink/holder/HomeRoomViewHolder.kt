@@ -15,7 +15,7 @@ class HomeRoomViewHolder : CRecyclerView.CViewHolder<RoomEntity> {
 
     override fun show(position: Int) {
         itemView.tv_home_room_name.text =
-            if (TextUtils.isEmpty(entity?.RoomName)) "全部设备" else entity!!.RoomName
+            if (TextUtils.isEmpty(entity?.RoomName)) getString(R.string.all_devices) else entity!!.RoomName //"全部设备"
         itemView.tv_home_room_name.setTextColor(
             if (isSelected(position)) {
                 itemView.tv_home_room_name.typeface = Typeface.DEFAULT_BOLD
