@@ -26,7 +26,7 @@ class InviteMemberActivity : BaseActivity(), View.OnClickListener, MyCallback {
     private var inviteType = true
 
     private var countryCode = "86"
-    private var countryName = "中国大陆"
+    private var countryName = getString(R.string.china_main_land)//"中国大陆"
     private var account = ""
 
     private lateinit var phoneView: View

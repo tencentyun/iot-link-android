@@ -67,7 +67,7 @@
             android:paddingRight="16dp"
             android:textColor="@color/imageselector_folder_text_selector"
             android:textSize="@dimen/common_normal_font_size"
-            tools:text="预览(1)" />
+            tools:text="@string/preview_tip" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -56,7 +56,7 @@ class AddRoomActivity : BaseActivity(), MyCallback {
                 if (response.isSuccess()) {
                     response.parse(CreateRoomResponse::class.java)?.Data?.run {
                         App.data.setRefreshLevel(1)
-                        T.show("添加成功")
+                        T.show(getString(R.string.add_sucess)) //添加成功
                         finish()
                     }
                 }
