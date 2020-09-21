@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.model
 
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -9,6 +10,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.RegisterView
+import com.tencent.iot.explorer.link.util.T
 
 class RegisterModel(view: RegisterView) : ParentModel<RegisterView>(view), MyCallback {
 
@@ -16,7 +18,7 @@ class RegisterModel(view: RegisterView) : ParentModel<RegisterView>(view), MyCal
     var email = ""
     private var isAgree = false
     private var countryCode = "86"
-    private var countryName = "中国大陆"
+    private var countryName = T.getContext().getString(R.string.china_main_land) //"中国大陆"
     private var regionId = "1"
     private val type = SocketConstants.register
 
