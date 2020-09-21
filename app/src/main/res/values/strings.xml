@@ -1,5 +1,6 @@
 <resources>
     <!--  主页面 -->
+    <string name="app_name">@string/app_name_zh</string>
     <string name="main_tab_1">首页</string>
     <string name="main_tab_2">场景</string>
     <string name="main_tab_3">我的</string>
@@ -396,5 +397,48 @@
     <string name="country_china_en">Chinese Mainland</string>
     <string name="country_usa">美国</string>
     <string name="select_timezone">选择时区</string>
+
+    <string name="success_set">设置成功</string>
+    <string name="failed_set_with_error_code">设置失败，错误码：</string>
+    <string name="success_delete">删除成功</string>
+    <string name="failed_delete_with_error_code">删除失败，错误码：</string>
+    <string name="unregister_success">反注册成功</string>
+    <string name="unregister_failed">反注册失败</string>
+    <string name="recv_msg">收到消息:</string>
+    <string name="register_success">注册成功1. token：</string>
+    <string name="register_failed">注册失败，错误码：</string>
+    <string name="notification_opened">通知被打开 :</string>
+    <string name="notification_removed">通知被清除 :</string>
+    <string name="new_msg_be_showed">您有1条新消息，通知被展示，</string>
+    <string name="push_channel">，推送频道：</string>
+    <string name="date_format">yyyy年MM月dd日 HH:mm:ss</string>
+    <string name="date_without_time_format">yyyy年MM月dd日</string>
+    <string name="unit_s">秒</string>
+    <string name="unit_m">分钟</string>
+    <string name="unit_h">小时</string>
+    <string name="load_image_failed_please_reload">图片加载错误，请重新选择图片</string>
+    <string name="clip_image_failed_please_reclip">图片裁剪异常，请重新选择图片</string>
+    <string name="sdcard_not_detected">未检测到SD卡</string>
+    <string name="image_saved">图片已保存至目录下</string>
+    <string name="image_exist">该图片已存在目录下</string>
+    <string name="city_beijing">北京</string>
+    <string name="city_tianjin">天津</string>
+    <string name="city_shanghai">上海</string>
+    <string name="city_chongqing">重庆</string>
+    <string name="paser_data_error_resp_null">解析响应数据时，Response为空</string>
+    <string name="paser_data_error_with_respfailmessage">使用RespFailMessage类解析数据失败</string>
+    <string name="paser_data_error">解析响应数据时发生错误</string>
+    <string name="wechat_bind_already">微信已经绑定过了, 请勿重复绑定</string>
+    <string name="add_sucess">添加成功</string>
+    <string name="add_timer_name">请填写定时名称</string>
+    <string name="my_timer">我的定时</string>
+    <string name="china_main_land">中国大陆</string>
+    <string name="add_question">请填写问题描述</string>
+    <string name="question_desc_less_20_char">请填写不少于10个字的问题描述</string>
+    <string name="commit_success">提交成功</string>
+    <string name="tap_more_exit">再按一下退出应用</string>
+    <string name="open_location_service_for_wifi">请您打开手机位置以便获取WIFI名称</string>
+    <string name="input_nick_name">请输入昵称</string>
+
     <!--international end  -->
 </resources>

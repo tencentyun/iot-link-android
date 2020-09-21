@@ -27,7 +27,7 @@ class WeekRepeatActivity : BaseActivity(), CRecyclerView.RecyclerItemView {
 
     override fun initView() {
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        tv_title.text = "重复"
+        tv_title.text = getString(R.string.repeat)//"重复"
         for (i in days.indices) {
             val entity = WeekRepeatEntity()
             when (i) {
