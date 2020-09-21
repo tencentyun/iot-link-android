@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
+import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.util.T
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
@@ -36,7 +38,7 @@ object HttpUtil {
                         }
                         listener.onSuccess(response.toString())
                     } else {
-                        listener.onError("服务器出错")
+                        listener.onError(T.getContext().getString(R.string.server_error)) //"服务器出错"
                     }
                 } catch (e: MalformedURLException) {
                     listener.onError(e.message ?: "")
@@ -77,7 +79,7 @@ object HttpUtil {
                         }
                         listener.onSuccess(response.toString())
                     } else {
-                        listener.onError("服务器出错")
+                        listener.onError(T.getContext().getString(R.string.server_error)) //"服务器出错"
                     }
                 }
             } catch (e: MalformedURLException) {
@@ -122,7 +124,7 @@ object HttpUtil {
                         }
                         listener.onSuccess(response.toString())
                     } else {
-                        listener.onError("服务器出错")
+                        listener.onError(T.getContext().getString(R.string.server_error)) //"服务器出错"
                     }
                 }
             } catch (e: MalformedURLException) {

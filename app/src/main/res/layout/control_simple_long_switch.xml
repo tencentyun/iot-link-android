@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="电源开关"
+                android:text="@string/power_switch"
                 android:textColor="@color/black_333333"
                 android:textSize="@dimen/ts_16"
                 app:layout_constraintLeft_toRightOf="@+id/iv_simple_long_switch"

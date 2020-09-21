@@ -56,11 +56,19 @@ class HttpRequest private constructor() {
         StringRequest.instance.reconnect()
     }
 
+    private fun baseParams(): HashMap<String, Any> {
+        val param = HashMap<String, Any>()
+        param["lang"] = Utils.getLang()
+        param["Platform"] = "android"
+        param["AppID"] = T.getContext().applicationInfo.packageName
+        return param
+    }
+
     /**
      * 未登录接口公共参数
      */
     private fun commonParams(action: String): HashMap<String, Any> {
-        val param = HashMap<String, Any>()
+        val param = baseParams()
         param["RequestId"] = UUID.randomUUID().toString()
         param["Action"] = action
         param["Platform"] = "android"
@@ -75,7 +83,7 @@ class HttpRequest private constructor() {
      * 登录后接口公共参数
      */
     private fun tokenParams(action: String): HashMap<String, Any> {
-        val param = HashMap<String, Any>()
+        val param = baseParams()
         param["RequestId"] = UUID.randomUUID().toString()
         param["Action"] = action
         param["Platform"] = "android"
@@ -129,7 +137,7 @@ class HttpRequest private constructor() {
                 JsonManager.parseJson(json, BaseResponse::class.java)?.run {
                     if (reqCode == RequestCode.wechat_login && isOEM
                         && this.code == ErrorCode.REQ_ERROR_CODE) {// OEM用户使用微信授权登录
-                        this.msg = "请确保已按官网文档接入微信登录"
+                        this.msg = T.getContext().getString(R.string.ensure_import_wechat_login_with_offical_doc)//"请确保已按官网文档接入微信登录"
                     }
                     callback.success(this, reqCode)
                 }
@@ -921,7 +929,7 @@ class HttpRequest private constructor() {
      * WIFI配网绑定设备
      */
     fun wifiBindDevice(familyId: String, deviceInfo: DeviceInfo, callback: MyCallback) {
-        val param = HashMap<String, Any>()
+        val param = baseParams()
 
         param["RequestId"] = UUID.randomUUID().toString()
         param["ClientIp"] = IPUtil.getHostIP()
@@ -1019,7 +1027,7 @@ class HttpRequest private constructor() {
      * 获取绑定设备的 token
      */
     fun getBindDevToken(callback: MyCallback) {
-        val param = HashMap<String, Any>()
+        val param = baseParams()
         param["RequestId"] = UUID.randomUUID().toString()
         param["ClientIp"] = IPUtil.getHostIP()
         param["Action"] = "AppCreateDeviceBindToken"
@@ -1035,7 +1043,7 @@ class HttpRequest private constructor() {
      * 检查设备绑定 token 的状态
      */
     fun checkDeviceBindTokenState(callback: MyCallback) {
-        val param = HashMap<String, Any>()
+        val param = baseParams()
         param["RequestId"] = UUID.randomUUID().toString()
         param["ClientIp"] = IPUtil.getHostIP()
         param["Action"] = "AppGetDeviceBindTokenState"
