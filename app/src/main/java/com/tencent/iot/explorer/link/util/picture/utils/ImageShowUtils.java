@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.tencent.iot.explorer.link.App;
+import com.tencent.iot.explorer.link.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -282,7 +285,10 @@ public class ImageShowUtils {
 	//直辖市
 	public static boolean isMunicipalities(String address) {
 		if(address == null) return false;
-		if(address.equals("北京")||address.equals("天津")||address.equals("上海")||address.equals("重庆")){
+		if(address.equals(App.Companion.getActivity().getString(R.string.city_beijing))||
+				address.equals(App.Companion.getActivity().getString(R.string.city_tianjin))||
+				address.equals(App.Companion.getActivity().getString(R.string.city_shanghai))||
+				address.equals(App.Companion.getActivity().getString(R.string.city_chongqing))){
 			return true;
 		}
 		return false;

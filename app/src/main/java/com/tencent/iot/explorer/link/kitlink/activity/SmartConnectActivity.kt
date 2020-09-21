@@ -35,7 +35,7 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
             override fun onNext() {
                 showFragment(wifiFragment, scStepFragment)
                 if (!LocationUtil.isLocationServiceEnable(this@SmartConnectActivity)) {
-                    T.showLonger("请您打开手机位置以便获取WIFI名称")
+                    T.showLonger(getString(R.string.open_location_service_for_wifi)) //请您打开手机位置以便获取WIFI名称
                 }
             }
         }
