@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
-            android:text="弹框标题"
+            android:text="@string/dialog_title_name"
             android:textColor="@color/black_333333"
             android:textSize="@dimen/ts_20"
             android:textStyle="bold"

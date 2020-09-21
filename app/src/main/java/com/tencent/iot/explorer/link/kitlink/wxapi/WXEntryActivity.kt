@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.wxapi
 
 import android.app.Activity
 import android.os.Bundle
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.mm.opensdk.modelbase.BaseReq
@@ -78,13 +79,13 @@ class WXEntryActivity : Activity(), IWXAPIEventHandler {
 
                 BaseResp.ErrCode.ERR_AUTH_DENIED -> {
                     L.e("授权失败")
-                    onLoginListener?.onFail("授权失败")
+                    onLoginListener?.onFail(getString(R.string.auth_failed)) //授权失败
                     //发送被拒绝
                     finish()
                 }
                 else -> {
                     L.e("onResp default errCode " + resp.errCode)
-                    onLoginListener?.onFail("授权失败")
+                    onLoginListener?.onFail(getString(R.string.auth_failed)) //授权失败
                     //发送返回
                     finish()
                 }

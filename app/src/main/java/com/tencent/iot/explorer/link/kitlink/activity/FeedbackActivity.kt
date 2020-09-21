@@ -132,11 +132,11 @@ class FeedbackActivity : BaseActivity(), UploadView, CRecyclerView.RecyclerItemV
         if (TextUtils.isEmpty(phone))
             phone = "13800138000"
         if (TextUtils.isEmpty(problem)) {
-            T.show("请填写问题描述")
+            T.show(getString(R.string.add_question)) //请填写问题描述
             return
         }
         if (problem.trim().length < 10) {
-            T.show("请填写不少于10个字的问题描述")
+            T.show(getString(R.string.question_desc_less_20_char)) //请填写不少于10个字的问题描述
             return
         }
 
@@ -151,7 +151,7 @@ class FeedbackActivity : BaseActivity(), UploadView, CRecyclerView.RecyclerItemV
     override fun success(response: BaseResponse, reqCode: Int) {
         isCommit = false
         if (response.isSuccess()) {
-            T.show("提交成功")
+            T.show(getString(R.string.commit_success)) //提交成功
             et_feedback_problem.setText("")
             et_feedback_phone.setText("")
             successList.clear()
