@@ -33,7 +33,7 @@ class SelectRoomActivity : BaseActivity(), CRecyclerView.RecyclerItemView {
     }
 
     override fun initView() {
-        tv_title.text = "选择房间"
+        tv_title.text = T.getContext().getString(R.string.select_room)//"选择房间"
         deviceEntity = get("device")
 
         selectedRoom = get<RoomEntity>("select_room")!!

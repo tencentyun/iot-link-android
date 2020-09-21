@@ -35,8 +35,8 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		}
 		Intent viewIntent = new Intent(UPDATE_LISTVIEW_ACTION);
 		context.sendBroadcast(viewIntent);
-		show(context, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString());
-		Log.d(TAG, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString() + ", PushChannel:" + notifiShowedRlt.getPushChannel());
+		show(context, context.getString(R.string.new_msg_be_showed) + notifiShowedRlt.toString());
+		Log.d(TAG, context.getString(R.string.new_msg_be_showed) + notifiShowedRlt.toString() + context.getString(R.string.push_channel) + notifiShowedRlt.getPushChannel());
 	}
 
 	@Override
@@ -46,9 +46,9 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		}
 		String text = "";
 		if (errorCode == XGPushBaseReceiver.SUCCESS) {
-			text = "反注册成功";
+			text = context.getString(R.string.unregister_success);//"反注册成功";
 		} else {
-			text = "反注册失败" + errorCode;
+			text = context.getString(R.string.unregister_failed) + errorCode; //"反注册失败"
 		}
 		Log.d(TAG, text);
 		show(context, text);
@@ -62,9 +62,9 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		}
 		String text = "";
 		if (errorCode == XGPushBaseReceiver.SUCCESS) {
-			text = "\"" + tagName + "\"设置成功";
+			text = "\"" + tagName + "\"" + context.getResources().getString(R.string.success_set);
 		} else {
-			text = "\"" + tagName + "\"设置失败,错误码：" + errorCode;
+			text = "\"" + tagName + "\"" + context.getResources().getString(R.string.failed_set_with_error_code) + errorCode;
 		}
 		Log.d(TAG, text);
 		show(context, text);
@@ -78,9 +78,9 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		}
 		String text = "";
 		if (errorCode == XGPushBaseReceiver.SUCCESS) {
-			text = "\"" + tagName + "\"删除成功";
+			text = "\"" + tagName + "\"" + context.getResources().getString(R.string.success_delete);
 		} else {
-			text = "\"" + tagName + "\"删除失败,错误码：" + errorCode;
+			text = "\"" + tagName + "\"" + context.getResources().getString(R.string.failed_delete_with_error_code) + errorCode;
 		}
 		Log.d(TAG, text);
 		show(context, text);
@@ -108,11 +108,11 @@ public class MessageReceiver extends XGPushBaseReceiver {
 			// 通知在通知栏被点击啦。。。。。
 			// APP自己处理点击的相关动作
 			// 这个动作可以在activity的onResume也能监听，请看第3点相关内容
-			text = "通知被打开 :" + message;
+			text = context.getString(R.string.notification_opened) + message; // "通知被打开 :"
 		} else if (message.getActionType() == NotificationAction.delete.getType()) {
 			// 通知被清除啦。。。。
 			// APP自己处理通知被清除后的相关动作
-			text = "通知被清除 :" + message;
+			text = context.getString(R.string.notification_removed) + message; // "通知被清除 :"
 		}
 
 		// APP自主处理的过程。。。
@@ -132,9 +132,9 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		if (errorCode == XGPushBaseReceiver.SUCCESS) {
 			// 在这里拿token
 			String token = message.getToken();
-			text = "注册成功1. token：" + token;
+			text = context.getString(R.string.register_success) + token; // "注册成功1. token："
 		} else {
-			text = message + "注册失败，错误码：" + errorCode;
+			text = message + context.getString(R.string.register_failed) + errorCode; // "注册失败，错误码："
 		}
 		Log.d(TAG, text);
 		show(context, text);
@@ -143,7 +143,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 	// 消息透传
 	@Override
 	public void onTextMessage(Context context, XGPushTextMessage message) {
-		String text = "收到消息:" + message.toString();
+		String text = context.getString(R.string.recv_msg) + message.toString();//"收到消息:"
 		// APP自主处理消息的过程...
 		Log.d(TAG, text);
 		show(context, text);
