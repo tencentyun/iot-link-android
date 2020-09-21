@@ -3,8 +3,11 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.item_room_list.view.*
 
 /**
@@ -17,7 +20,7 @@ class RoomListViewHolder : CRecyclerView.CViewHolder<RoomEntity> {
     override fun show(position: Int) {
         entity?.run {
             itemView.tv_room_name.text = RoomName
-            itemView.tv_room_device_count.text = "${DeviceNum}个设备"
+            itemView.tv_room_device_count.text = T.getContext().getString(R.string.num_devices, "" + DeviceNum)//"${DeviceNum}个设备"
             itemView.room_list_top_space.visibility = if (position == 0) View.VISIBLE else View.GONE
         }
 

@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.mvp.model
 
 import com.tencent.iot.explorer.link.ErrorCode
 import com.tencent.iot.explorer.link.ErrorMessage
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
@@ -15,7 +16,7 @@ class ModifyPhoneModel(view: ModifyPhoneView) : ParentModel<ModifyPhoneView>(vie
 
     var phone = ""
     private var countryCode = "86"
-    private var countryName = "中国大陆"
+    private var countryName = T.getContext().getString(R.string.china_main_land) //"中国大陆"
     var verifyCode = ""
 
 

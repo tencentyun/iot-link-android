@@ -129,7 +129,7 @@ class HttpRequest private constructor() {
                 JsonManager.parseJson(json, BaseResponse::class.java)?.run {
                     if (reqCode == RequestCode.wechat_login && isOEM
                         && this.code == ErrorCode.REQ_ERROR_CODE) {// OEM用户使用微信授权登录
-                        this.msg = "请确保已按官网文档接入微信登录"
+                        this.msg = T.getContext().getString(R.string.ensure_import_wechat_login_with_offical_doc)//"请确保已按官网文档接入微信登录"
                     }
                     callback.success(this, reqCode)
                 }

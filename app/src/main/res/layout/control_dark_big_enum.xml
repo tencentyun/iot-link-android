@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="80dp"
-            android:text="颜色"
+            android:text="@string/color_tip"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_20" />
 
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:text="红色"
+            android:text="@string/color_red"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_36" />
 
