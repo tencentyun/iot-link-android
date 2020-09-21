@@ -1,5 +1,6 @@
 <resources>
     <!--  主页面 -->
+    <string name="app_name">@string/app_name_zh</string>
     <string name="main_tab_1">首页</string>
     <string name="main_tab_2">场景</string>
     <string name="main_tab_3">我的</string>
@@ -252,7 +253,7 @@
 
     <!--popup toast-->
     <string name="toast_delete_family_title">您确定要删除该家庭吗？</string>
-    <string name="toast_delete_family_content">删除家庭后，系统将清除所有的成员与家庭数据，该家庭下的设备也将被删除</string>
+    <string name="toast_delete_family_content">删除家庭后，系统将清除所有成员与家庭数据，该家庭下的设备也将被删除</string>
     <string name="toast_exit_family_title">您确定要退出该家庭吗？</string>
     <string name="toast_exit_family_content">退出家庭后，可重新接受邀请</string>
     <string name="toast_delete_room_title">您确定要删除该房间吗？</string>
@@ -400,5 +401,95 @@
     <string name="country_china_en">Chinese Mainland</string>
     <string name="country_usa">美国</string>
     <string name="select_timezone">选择时区</string>
+    <string name="success_set">设置成功</string>
+    <string name="failed_set_with_error_code">设置失败，错误码：</string>
+    <string name="success_delete">删除成功</string>
+    <string name="failed_delete_with_error_code">删除失败，错误码：</string>
+    <string name="unregister_success">反注册成功</string>
+    <string name="unregister_failed">反注册失败</string>
+    <string name="recv_msg">收到消息:</string>
+    <string name="register_success">注册成功1. token：</string>
+    <string name="register_failed">注册失败，错误码：</string>
+    <string name="notification_opened">通知被打开 :</string>
+    <string name="notification_removed">通知被清除 :</string>
+    <string name="new_msg_be_showed">您有1条新消息，通知被展示，</string>
+    <string name="push_channel">，推送频道：</string>
+    <string name="date_format">yyyy年MM月dd日 HH:mm:ss</string>
+    <string name="date_without_time_format">yyyy年MM月dd日</string>
+    <string name="unit_s">秒</string>
+    <string name="unit_m">分钟</string>
+    <string name="unit_h">小时</string>
+    <string name="load_image_failed_please_reload">图片加载错误，请重新选择图片</string>
+    <string name="clip_image_failed_please_reclip">图片裁剪异常，请重新选择图片</string>
+    <string name="sdcard_not_detected">未检测到SD卡</string>
+    <string name="image_saved">图片已保存至目录下</string>
+    <string name="image_exist">该图片已存在目录下</string>
+    <string name="city_beijing">北京</string>
+    <string name="city_tianjin">天津</string>
+    <string name="city_shanghai">上海</string>
+    <string name="city_chongqing">重庆</string>
+    <string name="city_shenzhen">深圳</string>
+    <string name="paser_data_error_resp_null">解析响应数据时，Response为空</string>
+    <string name="paser_data_error_with_respfailmessage">使用RespFailMessage类解析数据失败</string>
+    <string name="paser_data_error">解析响应数据时发生错误</string>
+    <string name="wechat_bind_already">微信已经绑定过了, 请勿重复绑定</string>
+    <string name="add_sucess">添加成功</string>
+    <string name="add_timer_name">请填写定时名称</string>
+    <string name="my_timer">我的定时</string>
+    <string name="china_main_land">中国大陆</string>
+    <string name="add_question">请填写问题描述</string>
+    <string name="question_desc_less_20_char">请填写不少于10个字的问题描述</string>
+    <string name="commit_success">提交成功</string>
+    <string name="tap_more_exit">再按一下退出应用</string>
+    <string name="open_location_service_for_wifi">请您打开手机位置以便获取WIFI名称</string>
+    <string name="input_nick_name">请输入昵称</string>
+    <string name="only_one_time">仅一次</string>
+    <string name="everyday">每天</string>
+    <string name="sunday">周日</string>
+    <string name="monday">周一</string>
+    <string name="tuesday">周二</string>
+    <string name="wednesday">周三</string>
+    <string name="thursday">周四</string>
+    <string name="friday">周五</string>
+    <string name="saturday">周六</string>
+    <string name="default_weather">多云转晴</string>
+    <string name="connect_failed_check_password">网络连接失败，请检查密码是否正确</string>
+    <string name="connect_ssid_failed_handle">连接到网络：%s 失败，请手动连接</string>
+    <string name="all_devices">全部设备</string>
+    <string name="num_devices">%s个设备</string>
+    <string name="ensure_import_wechat_login_with_offical_doc">请确保已按官网文档接入微信登录</string>
+    <string name="server_error">服务器出错</string>
+    <string name="auth_failed">授权失败</string>
+    <string name="get_bind_state_failed">获取设备与 token 的绑定状态失败</string>
+    <string name="get_family_bind_state_failed">获取家庭与设备绑定关系失败</string>
+    <string name="select_room">选择房间</string>
+    <string name="somebody_family">%s 的家</string>
+    <string name="fill_family_name">填写家庭名称</string>
+    <string name="fill_room_name">填写房间名称</string>
+    <string name="room_name_tip">房间名称</string>
+    <string name="title_name">标题</string>
+    <string name="cloud_timer">云端定时</string>
+    <string name="phone_or_email">手机号码/邮箱</string>
+    <string name="default_member_name">天天</string>
+    <string name="hall_tip">大厅</string>
+    <string name="color_tip">颜色</string>
+    <string name="color_red">红色</string>
+    <string name="light_degree">亮度</string>
+    <string name="power_switch_closed">电源开关：关闭</string>
+    <string name="power_switch">电源开关</string>
+    <string name="developing">正在开发中</string>
+    <string name="my_family">我的家</string>
+    <string name="three_rooms">3个房间</string>
+    <string name="default_family">123的家</string>
+    <string name="picture_tip">图片</string>
+    <string name="member_dad">爸爸</string>
+    <string name="one_pcs">1张</string>
+    <string name="preview_tip">预览(1)</string>
+    <string name="warn_tip">警告</string>
+    <string name="device_offline_already">设备已经离线</string>
+    <string name="zero_device">0个设备</string>
+    <string name="dialog_title_name">弹框标题</string>
+
+
     <!--international end  -->
 </resources>

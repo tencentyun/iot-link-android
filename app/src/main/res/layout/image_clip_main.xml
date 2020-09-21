@@ -31,7 +31,7 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="退出"
+            android:text="@string/exit"
             android:textColor="@color/imageselector_folder_text_selector"
             android:textSize="17sp"/>
 
@@ -50,7 +50,7 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="确定"
+            android:text="@string/label_ok"
             android:textColor="@color/imageselector_folder_text_selector"
             android:textSize="17sp"/>
     </LinearLayout>
