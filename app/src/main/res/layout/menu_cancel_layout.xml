@@ -28,7 +28,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="标题"
+            android:text="@string/title_name"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_20"
             android:textStyle="bold" />

@@ -157,7 +157,7 @@ public class ClipPictureActivity extends Activity implements OnTouchListener {
 //		clipview.setClipHeight(300);
 //		clipview.setClipWidth(300);
         if (bitmap == null) {
-            Toast.makeText(this, "图片加载错误,请重新选择图片", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, this.getString(R.string.load_image_failed_please_reload), Toast.LENGTH_SHORT).show();//"图片加载错误,请重新选择图片"
             finish();
             return;
         }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.location.Location
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.http.ConnectionListener
 import com.tencent.iot.explorer.link.core.auth.http.Reconnect
 import com.tencent.iot.explorer.link.core.auth.response.DeviceBindTokenStateResponse
@@ -19,6 +20,7 @@ import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
+import com.tencent.iot.explorer.link.util.T
 
 /**
  * 配网进度、绑定设备
@@ -167,7 +169,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
         if (currentNo >= maxTimes || currentNo < 0) {
             Reconnect.instance.stop(connectionListener)
             checkDeviceBindTokenStateStarted = false
-            softAPListener.onFail(unKnowError.toString(), "获取设备与 token 的绑定状态失败")
+            softAPListener.onFail(unKnowError.toString(), T.getContext().getString(R.string.get_bind_state_failed)) //"获取设备与 token 的绑定状态失败"
             return
         }
 
@@ -211,7 +213,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
 
     override fun fail(msg: String?, reqCode: Int) {
         L.e(msg ?: "")
-        softAPListener.onFail(unKnowError.toString(), "获取家庭与设备绑定关系失败")
+        softAPListener.onFail(unKnowError.toString(), T.getContext().getString(R.string.get_family_bind_state_failed)) //"获取家庭与设备绑定关系失败"
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {

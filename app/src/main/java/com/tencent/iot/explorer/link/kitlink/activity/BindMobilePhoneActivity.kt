@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class BindMobilePhoneActivity : PActivity(), MyCallback {
 
-    private var countryName = "中国大陆"
+    private var countryName = getString(R.string.china_main_land)//"中国大陆"
     private var countryCode = "86"
     private var phone = ""
     private var isSend = false

@@ -118,7 +118,7 @@
                     android:textCursorDrawable="@drawable/edit_blue_cursor"
                     android:layout_marginEnd="20dp"
                     android:background="@color/gray_F5F5F5"
-                    android:hint="手机号码/邮箱"
+                    android:hint="@string/phone_or_email"
                     android:inputType="phone|textEmailAddress"
                     android:maxLength="200"
                     android:maxLines="1"

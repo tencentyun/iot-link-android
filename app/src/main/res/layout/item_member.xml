@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="爸爸"
+            android:text="@string/member_dad"
             android:layout_marginStart="20dp"
             android:gravity="center_horizontal"
             android:layout_marginEnd="20dp"
