@@ -44,7 +44,7 @@
             android:singleLine="true"
             android:textColor="#AFAFAF"
             android:textSize="@dimen/imageselector_default_bottom_text_size"
-            tools:text="1张" />
+            tools:text="@string/one_pcs" />
     </LinearLayout>
 
     <ImageView
