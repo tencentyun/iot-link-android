@@ -197,7 +197,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
             override fun onVerify(text: String) {
                 if (TextUtils.isEmpty(text)) {
-                    T.show("请输入昵称")
+                    T.show(getString(R.string.input_nick_name)) //请输入昵称
                     return
                 }
                 presenter.modifyNick(text)
