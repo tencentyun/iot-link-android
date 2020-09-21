@@ -2,6 +2,8 @@ package com.tencent.iot.explorer.link.auth.socket
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.util.Base64
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.auth.message.resp.HeartMessage
 import com.tencent.iot.explorer.link.auth.message.MessageConst
 import com.tencent.iot.explorer.link.auth.message.payload.Payload
@@ -12,6 +14,7 @@ import com.tencent.iot.explorer.link.auth.message.resp.ResponseMessage
 import com.tencent.iot.explorer.link.auth.socket.callback.DispatchCallback
 import com.tencent.iot.explorer.link.auth.socket.callback.HeartCallback
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.util.T
 import java.lang.Exception
 
 open class DispatchMsgHandler {
@@ -71,7 +74,7 @@ open class DispatchMsgHandler {
             JSON.parseObject(message, ResponseMessage::class.java)?.run {
                 data?.let {
                     if (it.Response == null) {
-                        failMessage.setErrorMessage("解析响应数据时，Response为空")
+                        failMessage.setErrorMessage(T.getContext().getString(R.string.paser_data_error_resp_null)) //"解析响应数据时，Response为空"
                         dispatchCallback?.yunMessageFail(reqId, message, failMessage)
                         return
                     }
@@ -90,7 +93,7 @@ open class DispatchMsgHandler {
                             )
                         } catch (e: Exception) {
                             e.printStackTrace()
-                            failMessage.setErrorMessage("使用RespFailMessage类解析数据失败")
+                            failMessage.setErrorMessage(T.getContext().getString(R.string.paser_data_error_with_respfailmessage))
                         }
                         dispatchCallback?.yunMessageFail(reqId, message, failMessage)
                     }
@@ -98,7 +101,7 @@ open class DispatchMsgHandler {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            failMessage.setErrorMessage("解析响应数据时发生错误")
+            failMessage.setErrorMessage(T.getContext().getString(R.string.paser_data_error)) //解析响应数据时发生错误
             dispatchCallback?.yunMessageFail(reqId, message, failMessage)
         }
     }

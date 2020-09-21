@@ -40,6 +40,8 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
+import com.tencent.iot.explorer.link.R;
+
 public class ImageUtils {
 	
 	/**SAVE_SDCARD_PATH : 保存图片的目录 */ 
@@ -270,7 +272,7 @@ public class ImageUtils {
 	public static File saveFile(Context context, Bitmap bm, String uri) throws IOException {
 		String storageState = Environment.getExternalStorageState();
 		if(!storageState.equals(Environment.MEDIA_MOUNTED)) {
-			Toast.makeText(context, "未检测到SD卡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, context.getString(R.string.sdcard_not_detected), Toast.LENGTH_SHORT).show(); //未检测到SD卡
 			return null;
 		}
 		
@@ -285,9 +287,9 @@ public class ImageUtils {
 			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
 			bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 			
-			Toast.makeText(context, "图片已保存至目录下", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, context.getString(R.string.image_saved), Toast.LENGTH_SHORT).show(); //图片已保存至目录下
 		}else{
-			Toast.makeText(context, "该图片已存在目录下", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, context.getString(R.string.image_exist), Toast.LENGTH_SHORT).show(); //该图片已存在目录下
 		}
 		return myCaptureFile;
 	}

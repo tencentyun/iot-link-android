@@ -140,7 +140,7 @@ public class ImageSelectorActivity extends FragmentActivity implements ImageSele
         }
         // 当为选择图片时候的状态
         if (resultList.size() == 0) {
-            mSubmitButton.setText("完成");
+            mSubmitButton.setText(R.string.finish);
             mSubmitButton.setEnabled(false);
         }
     }
@@ -269,7 +269,7 @@ public class ImageSelectorActivity extends FragmentActivity implements ImageSele
                     setResult(RESULT_OK, intent);
                     finish();
                 } catch (Exception e) {
-                    Toast.makeText(ImageSelectorActivity.this, "图片裁剪异常，请重新选择图片", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ImageSelectorActivity.this, this.getString(R.string.clip_image_failed_please_reclip), Toast.LENGTH_SHORT).show();//"图片裁剪异常，请重新选择图片"
                 }
             }
         }

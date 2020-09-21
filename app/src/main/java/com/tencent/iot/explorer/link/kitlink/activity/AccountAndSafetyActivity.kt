@@ -67,7 +67,7 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
             }
             tv_wechat -> {// 微信
                 if (App.data.userInfo.HasWxOpenID == "1") {
-                    T.show("微信已经绑定过了, 请勿重复绑定")
+                    T.show(getString(R.string.wechat_bind_already)) //微信已经绑定过了, 请勿重复绑定
                 } else {
                     WeChatLogin.getInstance().login(this, this)
                 }
@@ -114,7 +114,7 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
     }
 
     override fun cancel() {
-        T.show("取消")
+        T.show(getString(R.string.cancel))
     }
 
     override fun onFail(msg: String) {

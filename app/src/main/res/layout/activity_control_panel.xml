@@ -50,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="4dp"
-                        android:text="标题"
+                        android:text="@string/title_name"
                         android:textColor="@color/black_333333"
                         android:textSize="@dimen/ts_10" />
 
@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="4dp"
-                        android:text="云端定时"
+                        android:text="@string/cloud_timer"
                         android:textColor="@color/black_333333"
                         android:textSize="@dimen/ts_10" />
 
