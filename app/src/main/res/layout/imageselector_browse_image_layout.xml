@@ -44,10 +44,10 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="退出"
+            android:text="@string/exit"
             android:textColor="@color/imageselector_folder_text_selector"
             android:textSize="17sp"
-            tools:text="退出" />
+            tools:text="@string/exit" />
 
         <TextView
             android:id="@+id/tv_image_browse_save"
@@ -60,10 +60,10 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="保存"
+            android:text="@string/save"
             android:textColor="@color/imageselector_folder_text_selector"
             android:textSize="17sp"
-            tools:text="退出" />
+            tools:text="@string/exit" />
     </RelativeLayout>
 
 </RelativeLayout>

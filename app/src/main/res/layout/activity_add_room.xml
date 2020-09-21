@@ -17,7 +17,7 @@
             android:layout_height="48dp"
             android:background="@color/white"
             android:textCursorDrawable="@drawable/edit_blue_cursor"
-            android:hint="填写房间名称"
+            android:hint="@string/fill_room_name"
             android:maxLength="20"
             android:maxLines="1"
             android:paddingStart="20dp"

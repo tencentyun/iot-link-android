@@ -134,7 +134,7 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
         activity?.run {
             runOnUiThread {
                 wp_connected?.setProgress(0)
-                T.show("网络连接失败，请检查密码是否正确")
+                T.show(getString(R.string.connect_failed_check_password))
                 showConnectFail()
             }
         }
@@ -142,7 +142,7 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
 
     override fun softApConnectToWifiFail(ssid: String) {
         activity?.runOnUiThread {
-            T.show("连接到网络：$ssid 失败，请手动连接")
+            T.show(getString(R.string.connect_ssid_failed_handle, ssid)) //"连接到网络：$ssid 失败，请手动连接"
         }
     }
 

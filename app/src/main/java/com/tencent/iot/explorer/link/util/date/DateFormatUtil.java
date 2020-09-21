@@ -1,5 +1,9 @@
 package com.tencent.iot.explorer.link.util.date;
 
+import com.tencent.iot.explorer.link.App;
+import com.tencent.iot.explorer.link.R;
+import com.tencent.iot.explorer.link.util.T;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,16 +69,16 @@ public class DateFormatUtil {
      */
     public static String toHMS(long currentTimeMillis) {
         long ls = currentTimeMillis / 1000;
-        String s = (ls % 60) + "秒";
+        String s = (ls % 60) + T.getContext().getString(R.string.unit_s);
         int im = (int) (ls / 60);
         String m = "";
         if (im > 0) {
-            m = (im % 60) + "分钟";
+            m = (im % 60) + T.getContext().getString(R.string.unit_m);//"分钟";
         }
         String h = "";
         int ih = im / 60;
         if (ih > 0) {
-            h = ih + "小时";
+            h = ih + T.getContext().getString(R.string.unit_h);//"小时";
         }
         return h + m + s;
     }
