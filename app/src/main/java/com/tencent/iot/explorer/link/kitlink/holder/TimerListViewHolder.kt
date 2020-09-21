@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.fastjson.JSON
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
 import com.tencent.iot.explorer.link.kitlink.util.DataHolder
@@ -112,7 +113,7 @@ class TimerListViewHolder : CRecyclerView.CViewHolder<TimerListEntity> {
                 if (i < list.size - 1 && sb.isNotEmpty()) sb.append("/")
             }
         }
-        if (sb.isEmpty()) sb.append("未设置")
+        if (sb.isEmpty()) sb.append(getString(R.string.unset)) //"未设置"
         return sb.toString()
     }
 }

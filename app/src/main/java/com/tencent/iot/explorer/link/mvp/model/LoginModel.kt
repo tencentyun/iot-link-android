@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.mvp.model
 
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorMessage
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.entity.ParentRespEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -11,6 +12,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.LoginView
+import com.tencent.iot.explorer.link.util.T
 
 class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
 
@@ -19,7 +21,7 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
     var pwd: String = ""
     var verifyCode: String = ""
 
-    private var countryName = "中国大陆"
+    private var countryName = T.getContext().getString(R.string.china_main_land)//"中国大陆"
     private var countryCode = "86"
     private var isCommit = false
 
