@@ -17,7 +17,7 @@
             android:gravity="center_vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:text="我的家"
+            android:text="@string/my_family"
             android:textColor="@color/black_333333"
             android:textSize="@dimen/ts_18"
             app:layout_constraintLeft_toLeftOf="parent"

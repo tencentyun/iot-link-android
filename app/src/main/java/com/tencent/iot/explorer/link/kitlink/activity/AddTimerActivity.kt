@@ -126,7 +126,7 @@ class AddTimerActivity : BaseActivity(), CRecyclerView.RecyclerItemView, MyCallb
     private fun createNewTimerListEntity(): TimerListEntity {
         TimerListEntity().run {
             this.Data = "{}"
-            this.TimerName = "我的定时"
+            this.TimerName = getString(R.string.my_timer)
             this.TimePoint = "12:00"
             return this
         }
@@ -176,7 +176,7 @@ class AddTimerActivity : BaseActivity(), CRecyclerView.RecyclerItemView, MyCallb
             else "1111111"
 
             if (TextUtils.isEmpty(timerName)) {
-                T.show("请填写定时名称")
+                T.show(getString(R.string.add_timer_name)) //"请填写定时名称"
                 return
             }
             HttpRequest.instance.createTimer(
