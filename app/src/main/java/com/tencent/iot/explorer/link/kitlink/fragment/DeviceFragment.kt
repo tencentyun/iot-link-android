@@ -84,8 +84,10 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                             if (gv_recommend_devices != null) gv_recommend_devices.visibility = View.GONE
                         }
                         categoryList = CategoryList
-                        devicesGridView!!.adapter = GridAdapter(activity!!, CategoryList, false)
-                        setGridViewHeightByChildren(devicesGridView!!)
+                        if (devicesGridView != null && activity != null) {
+                            devicesGridView!!.adapter = GridAdapter(activity!!, CategoryList, false)
+                            setGridViewHeightByChildren(devicesGridView!!)
+                        }
                     }
                 }
             }
