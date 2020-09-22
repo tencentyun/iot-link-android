@@ -67,6 +67,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     override fun initView() {
         tv_title.text = getString(R.string.add_device)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        App.data.tabPosition = 0  // Reset the position of vertical tab
+        App.data.screenWith = getScreenWidth()
+        HttpRequest.instance.getParentCategoryList(this)
         beginScanning()
     }
 
@@ -79,9 +82,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     override fun onResume() {
         super.onResume()
-        App.data.screenWith = getScreenWidth()
-        HttpRequest.instance.getParentCategoryList(this)
-        Thread.sleep(150)
         vtab_device_category.setTabSelected(App.data.tabPosition)
     }
 
