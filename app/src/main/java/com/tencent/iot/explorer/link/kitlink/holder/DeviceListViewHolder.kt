@@ -1,13 +1,12 @@
 package com.tencent.iot.explorer.link.kitlink.holder
 
-import android.content.Context
-import android.view.ViewGroup
+import android.view.View
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceScannedEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_scanned_device.view.*
 
 class DeviceListViewHolder : CRecyclerView.CViewHolder<DeviceScannedEntity> {
-    constructor(context: Context, parent: ViewGroup, resId: Int) : super(context, parent, resId)
+    constructor(itemView: View) : super(itemView)
 
     override fun show(position: Int) {
         entity?.run {
