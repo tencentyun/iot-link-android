@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -154,12 +155,11 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         viewHolder: CRecyclerView.CViewHolder<*>,
         clickView: View,
         position: Int
-    ) {
-        Toast.makeText(this,  "position $position is clicked", Toast.LENGTH_LONG).show()
-    }
+    ) {}
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*> {
-        return DeviceListViewHolder(this, parent, R.layout.item_scanned_device)
+        return DeviceListViewHolder(LayoutInflater.from(this)
+                .inflate(R.layout.item_scanned_device, parent, false))
     }
 
     override fun getViewType(position: Int): Int {
