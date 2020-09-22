@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="password_max_length">20</integer>
+    <integer name="password_max_length">16</integer>
 
     <dimen name="ts_10">10sp</dimen>
     <dimen name="ts_12">12sp</dimen>

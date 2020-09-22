@@ -319,7 +319,7 @@
     <string name="mobile_phone_number_invalid">手机号格式不正确</string>
     <string name="email_null">请输入邮箱地址</string>
     <string name="email_invalid">邮箱地址格式不正确</string>
-    <string name="password_style">密码支持8&#8211;20位，必须包含字母和数字</string>
+    <string name="password_style">密码支持8&#8211;16位，必须包含字母和数字</string>
     <string name="toast_password_not_verify">两次输入的密码不一致</string>
     <string name="toast_login">密码修改成功，请重新登录</string>
     <!--customview end-->
