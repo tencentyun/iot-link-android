@@ -12,8 +12,10 @@ public class LocationUtil {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             if (locationManager != null) {
                 boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-                return gps || network;
+                // 通过网络定位的方式
+//                boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//                return gps || network;
+                return gps;
             }
         }
         return false;
