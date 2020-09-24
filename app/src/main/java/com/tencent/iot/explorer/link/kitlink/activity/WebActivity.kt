@@ -35,7 +35,7 @@ class WebActivity : BaseActivity() {
                     showUrl("file:///android_asset/$it")
                 }
                 it.startsWith("https://") -> {
-                    Log.e("XXX", "url=" + it)
+//                    Log.e("XXX", "url=" + it)
                     showUrl(it)
                 }
                 else -> {
