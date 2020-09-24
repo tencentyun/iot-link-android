@@ -3,6 +3,8 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.fragment.*
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.util.T
@@ -21,6 +23,8 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
     private lateinit var scStepFragment: SCStepFragment
     private lateinit var wifiFragment: WifiFragment
     private lateinit var connectProgressFragment: ConnectProgressFragment
+    private var loadViewTextType = LoadViewTxtType.LoadLocalViewTxt.ordinal // 0 加载本地文案  1 尝试加载远端配置文案
+    private var productId = ""
 
     private var closePopup: CommonPopupWindow? = null
 
@@ -29,8 +33,13 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
     }
 
     override fun initView() {
+        loadViewTextType = intent.getIntExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadLocalViewTxt.ordinal)
+        if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+        }
+
         presenter = GetBindDeviceTokenPresenter(this)
-        scStepFragment = SCStepFragment()
+        scStepFragment = SCStepFragment(loadViewTextType, productId)
         scStepFragment.onNextListener = object : SCStepFragment.OnNextListener {
             override fun onNext() {
                 showFragment(wifiFragment, scStepFragment)
@@ -51,7 +60,7 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
                 presenter.getBindDeviceToken()
             }
         }
-        connectProgressFragment = ConnectProgressFragment(WifiFragment.smart_config)
+        connectProgressFragment = ConnectProgressFragment(WifiFragment.smart_config, loadViewTextType, productId)
         connectProgressFragment.onRestartListener =
             object : ConnectProgressFragment.OnRestartListener {
                 override fun restart() {
