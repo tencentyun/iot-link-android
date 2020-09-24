@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="60dp"
+        >
 
     <TextView
-            android:layout_width="wrap_content"
+        android:id="@+id/tv_soft_ap_tip"
+        app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
             android:text="@string/soft_ap_first_title"
             android:textColor="@color/black_333333"
             android:textSize="@dimen/ts_18"
@@ -16,11 +31,13 @@
     <ImageView
             android:id="@+id/iv_soft_ap"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="93dp"
+            android:layout_marginTop="33dp"
             android:layout_marginEnd="20dp"
-            android:src="@mipmap/image_soft_ap" />
+        app:layout_constraintTop_toBottomOf="@id/tv_soft_ap_tip"
+        app:layout_constraintDimensionRatio="h,16:10"
+        />
 
     <TextView
             android:id="@+id/tv_soft_banner_title"
@@ -31,9 +48,12 @@
             android:lineSpacingExtra="10dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/soft_ap_first_toast"
+        app:layout_constraintTop_toBottomOf="@id/iv_soft_ap"
             android:textColor="@color/black_333333"
             android:textSize="@dimen/ts_14" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
     <TextView
             android:id="@+id/tv_soft_first_commit"
@@ -45,7 +65,6 @@
             android:layout_marginEnd="20dp"
             android:background="@drawable/btn_rad4_color_0052d9"
             android:gravity="center"
-            android:text="@string/soft_ap_first_button"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_20" />
 
