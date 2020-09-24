@@ -1,19 +1,25 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
+import com.alibaba.fastjson.JSON
+import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConnectActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.CategoryDeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.RecommDeviceEntity
@@ -25,11 +31,8 @@ import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.fragment_devices.*
-import org.w3c.dom.Text
 import kotlin.math.ceil
 
 
@@ -40,6 +43,7 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
     private var categoryList = arrayListOf<CategoryDeviceEntity>()
     private var productList = arrayListOf<RecommDeviceEntity>()
     private var isRecommDeviceClicked = false
+    @Volatile
     private var recommDeviceIndex = 0
 
     private var permissions = arrayOf(
@@ -67,6 +71,7 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
 
     override fun fail(msg: String?, reqCode: Int) {
         L.e(msg ?: "")
+        T.show(msg)
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
@@ -96,20 +101,41 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                     response.parse(ProductsConfigResponse::class.java)?.run {
                         val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
                         val wifiConfigTypeList = config.WifiConfTypeList
+                        var productId = ""
+                        if (TextUtils.isEmpty(config.profile)) {
+                            return
+                        } else {
+                            var jsonProFile = JSON.parseObject(config.profile)
+                            if (jsonProFile == null || !jsonProFile.containsKey("ProductId") ||
+                                TextUtils.isEmpty(jsonProFile.getString("ProductId"))) {
+                                return
+                            } else {
+                                productId = jsonProFile.getString("ProductId")
+                            }
+                        }
+
                         if (wifiConfigTypeList == "{}") {
-                            jumpActivity(SmartConnectActivity::class.java)
+                            startActivityWithExtra(SmartConnectActivity::class.java, productId)
+
                         } else if (wifiConfigTypeList.contains("[")) {
                             val typeList = JsonManager.parseArray(wifiConfigTypeList)
                             if (typeList.size > 0 && typeList[0] == "softap") {
-                                jumpActivity(SoftApActivity::class.java)
+                                startActivityWithExtra(SoftApActivity::class.java, productId)
                             } else {
-                                jumpActivity(SmartConnectActivity::class.java)
+                                startActivityWithExtra(SmartConnectActivity::class.java, productId)
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
+        var intent = Intent(context, cls)
+        intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
+        intent.putExtra(CommonField.PRODUCT_ID, productId)
+        startActivity(intent)
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
