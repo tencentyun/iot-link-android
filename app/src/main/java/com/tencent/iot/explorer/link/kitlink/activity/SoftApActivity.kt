@@ -2,6 +2,8 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.fragment.*
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -22,6 +24,9 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
     private lateinit var wifiFragment: WifiFragment
     private lateinit var softHotspotFragment: SoftHotspotFragment
     private lateinit var connectProgressFragment: ConnectProgressFragment
+    private var loadViewTextType = LoadViewTxtType.LoadLocalViewTxt.ordinal // 0 加载本地文案  1 尝试加载远端配置文案
+    private var productId = ""
+
 
     private var closePopup: CommonPopupWindow? = null
 
@@ -30,11 +35,16 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
     }
 
     override fun initView() {
+        loadViewTextType = intent.getIntExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadLocalViewTxt.ordinal)
+        if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+        }
+
         presenter = GetBindDeviceTokenPresenter(this)
-        softAppStepFragment = SoftAppStepFragment()
+        softAppStepFragment = SoftAppStepFragment(loadViewTextType, productId)
         wifiFragment = WifiFragment(WifiFragment.soft_ap)
-        softHotspotFragment = SoftHotspotFragment()
-        connectProgressFragment = ConnectProgressFragment(WifiFragment.soft_ap)
+        softHotspotFragment = SoftHotspotFragment(loadViewTextType, productId)
+        connectProgressFragment = ConnectProgressFragment(WifiFragment.soft_ap, loadViewTextType, productId)
 
         this.supportFragmentManager.beginTransaction()
             .add(R.id.container_soft_ap, softAppStepFragment)
