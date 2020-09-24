@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
+import android.content.Intent
 import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.App
@@ -12,6 +13,9 @@ import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.customview.progress.WaveProgress
+import com.tencent.iot.explorer.link.kitlink.activity.SmartConnectActivity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import kotlinx.android.synthetic.main.connected.*
 import kotlinx.android.synthetic.main.connecting.*
 import kotlinx.android.synthetic.main.fragment_connect_progress.*
@@ -20,18 +24,22 @@ import kotlinx.android.synthetic.main.unconnected.*
 /**
  * 配网进度、绑定设备
  */
-class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnClickListener {
+class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : BaseFragment(), ConnectView, View.OnClickListener {
 
     private lateinit var presenter: ConnectPresenter
     private var type = WifiFragment.smart_config
     private var ssid = ""
     private var bssid = ""
     private var wifiPassword = ""
+    private var loadType: Int
+    private var productId: String
 
     var onRestartListener: OnRestartListener? = null
 
     init {
         this.type = type
+        this.loadType = loadType
+        this.productId = productId
     }
 
     fun setWifiInfo(ssid: String, bssid: String, wifiPassword: String) {
@@ -98,9 +106,27 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
                 showConnecting()
                 onRestartListener?.restart()
             }
-            tv_tab_connect_way, tv_add_new_device -> {
+            // 切换连接方式
+            tv_tab_connect_way -> {
                 activity?.finish()
-                jumpActivity(SoftApActivity::class.java)
+                if (type == WifiFragment.smart_config) {
+//                    jumpActivity(SoftApActivity::class.java)
+                    startActivityWithExtra(SoftApActivity::class.java, loadType, productId)
+                } else {
+//                    jumpActivity(SmartConnectActivity::class.java)
+                    startActivityWithExtra(SmartConnectActivity::class.java, loadType, productId)
+                }
+            }
+            // 继续添加设备
+            tv_add_new_device -> {
+                activity?.finish()
+                if (type == WifiFragment.soft_ap) {
+//                    jumpActivity(SoftApActivity::class.java)
+                    startActivityWithExtra(SoftApActivity::class.java, loadType, productId)
+                } else {
+//                    jumpActivity(SmartConnectActivity::class.java)
+                    startActivityWithExtra(SmartConnectActivity::class.java, loadType, productId)
+                }
             }
             tv_back_to_home_page -> {
                 backToMain()
@@ -109,6 +135,13 @@ class ConnectProgressFragment(type: Int) : BaseFragment(), ConnectView, View.OnC
                 jumpActivity(HelpCenterActivity::class.java)
             }
         }
+    }
+
+    private fun startActivityWithExtra(cls: Class<*>?, loadType: Int, productId: String) {
+        var intent = Intent(context, cls)
+        intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, loadType)
+        intent.putExtra(CommonField.PRODUCT_ID, productId)
+        startActivity(intent)
     }
 
     override fun connectSuccess() {
