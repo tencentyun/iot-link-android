@@ -140,10 +140,10 @@ dependencies {
     api 'com.scwang.smart:refresh-header-classics:2.0.0-alpha-1'
     api 'com.scwang.smart:refresh-footer-classics:2.0.0-alpha-1'
 
-    //腾讯地图定位
-    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.4'
-    //2D地图 这里始终使用最新的稳定版本，用户也可以指定 4.0.3.2 之后的地图 sdk 版本号
-    implementation files('libs/TencentMapSDK_Raster_v_1.3.4.1.jar')
+//    //腾讯地图定位
+//    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.4'
+//    //2D地图 这里始终使用最新的稳定版本，用户也可以指定 4.0.3.2 之后的地图 sdk 版本号
+//    implementation files('libs/TencentMapSDK_Raster_v_1.3.4.1.jar')
 
     //垂直TabLayout
     implementation 'q.rorbin:VerticalTabLayout:1.2.9'
