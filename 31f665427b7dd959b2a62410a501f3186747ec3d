@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bca43695_64e9fc28",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/util/OnWeatherListener.kt",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-10-09T11:05:33Z",
+      "side": 1,
+      "message": "这块显示有点问题，统一用空格缩进可能会好点",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 22
+      },
+      "revId": "31f665427b7dd959b2a62410a501f3186747ec3d",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
