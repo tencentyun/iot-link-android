@@ -48,6 +48,7 @@ android {
         buildConfigField 'String', 'XgAccessKey', "\"${getValueById('XgAccessKey')}\""
         buildConfigField 'String', 'XgUSAAccessId', "\"${getValueById('XgUSAAccessId')}\""
         buildConfigField 'String', 'XgUSAAccessKey', "\"${getValueById('XgUSAAccessKey')}\""
+        buildConfigField 'String', 'WeatherKey', "\"${getValueById('WeatherKey')}\""
         multiDexEnabled true
     }
 
@@ -173,5 +174,7 @@ dependencies {
     implementation "com.github.skydoves:progressview:1.0.9"
     implementation project(path: ':sdk')
     implementation 'com.belerweb:pinyin4j:2.5.0'
+    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.6'
+
 
 }
