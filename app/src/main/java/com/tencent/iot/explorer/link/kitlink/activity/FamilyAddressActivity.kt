@@ -80,7 +80,7 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
         L.e("开始定位")
         val request = TencentLocationRequest.create()
         request.requestLevel = TencentLocationRequest.REQUEST_LEVEL_POI
-        request.isAllowCache = true
+//        request.isAllowCache = false//.isAllowCache = true
         when (locationManager.requestLocationUpdates(request, this)) {
             TencentLocation.ERROR_OK -> {
                 L.e("定位成功")
