@@ -66,6 +66,9 @@ android {
         //-}
     }
 
+    kotlinOptions { jvmTarget = 1.8}
+
+
     buildTypes {
         debug {
             signingConfig signingConfigs.config
