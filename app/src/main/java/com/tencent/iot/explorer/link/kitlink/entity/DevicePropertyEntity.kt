@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.util.TemperatureUtils
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.date.DateFormatUtil
@@ -91,7 +92,7 @@ class DevicePropertyEntity {
         } catch (e: Exception) {
             e.toString()
         }
-        return "未设置"
+        return T.getContext().getString(R.string.unset)//"未设置"
     }
 
     /**

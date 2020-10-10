@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.model
 
 import com.alibaba.fastjson.JSON
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
@@ -108,7 +109,7 @@ class TimerListModel(view: TimerListView) : ParentModel<TimerListView>(view), My
                     if (deletePosition >= 0)
                         timerList.removeAt(deletePosition)
                     deletePosition = -1
-                    T.show("删除成功")
+                    T.show(T.getContext().getString(R.string.delete_success)) //"删除成功"
                     view?.showTimerList(timerList.size)
                 }
             }

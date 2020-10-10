@@ -45,7 +45,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical|right"
             android:maxLines="1"
-            android:text="天天"
+            android:text="@string/default_member_name"
             android:textColor="@color/gray_cccccc"
             android:textSize="@dimen/ts_16"
             app:layout_constraintBottom_toBottomOf="@+id/tv_member_name_title"

@@ -48,6 +48,7 @@ android {
         buildConfigField 'String', 'XgAccessKey', "\"${getValueById('XgAccessKey')}\""
         buildConfigField 'String', 'XgUSAAccessId', "\"${getValueById('XgUSAAccessId')}\""
         buildConfigField 'String', 'XgUSAAccessKey', "\"${getValueById('XgUSAAccessKey')}\""
+        buildConfigField 'String', 'WeatherKey', "\"${getValueById('WeatherKey')}\""
         multiDexEnabled true
     }
 
@@ -55,7 +56,9 @@ android {
     productFlavors {
         opensource {
             applicationId "com.tencent.iot.explorer.link.opensource"
-            resValue("string" , "app_name","连连开源体验")
+            resValue("string" , "app_name_zh", "连连开源体验")
+            resValue("string" , "app_name_en", "(英)连连开源体验")
+
         }
         //-tencentOfficial {
         //-    applicationId "com.tencent.iot.explorer.link"
@@ -171,5 +174,7 @@ dependencies {
     implementation "com.github.skydoves:progressview:1.0.9"
     implementation project(path: ':sdk')
     implementation 'com.belerweb:pinyin4j:2.5.0'
+    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.6'
+
 
 }
