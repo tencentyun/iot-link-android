@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.customview.FullGridView
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConnectActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -38,8 +39,8 @@ import kotlin.math.ceil
 
 class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListener{
 
-    private var devicesGridView : GridView? = null
-    private var recommendDevicesGridView : GridView? = null
+    private var devicesGridView : FullGridView? = null
+    private var recommendDevicesGridView : FullGridView? = null
     private var categoryList = arrayListOf<CategoryDeviceEntity>()
     private var productList = arrayListOf<RecommDeviceEntity>()
     private var isRecommDeviceClicked = false
@@ -82,7 +83,7 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                         if (ProductList.size > 0) {
                             productList = ProductList
                             recommendDevicesGridView!!.adapter = GridAdapter(activity!!, ProductList, true)
-                            setGridViewHeightByChildren(recommendDevicesGridView!!)
+//                            setGridViewHeightByChildren(recommendDevicesGridView!!)
                         } else {
                             if (tv_recommend != null) tv_recommend.visibility = View.GONE
                             if (split_line != null) split_line.visibility = View.GONE
@@ -91,7 +92,7 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                         categoryList = CategoryList
                         if (devicesGridView != null && activity != null) {
                             devicesGridView!!.adapter = GridAdapter(activity!!, CategoryList, false)
-                            setGridViewHeightByChildren(devicesGridView!!)
+//                            setGridViewHeightByChildren(devicesGridView!!)
                         }
                     }
                 }
@@ -190,18 +191,18 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
         recommendDevicesGridView?.onItemClickListener = this
     }
 
-    private fun setGridViewHeightByChildren(gridView : GridView) {
-        val adaper: ListAdapter? = gridView.adapter ?: return
-        var totalHeight = 0
-        val lineNum = ceil((adaper?.count?.toDouble() ?: 0.0) / 3.0)
-        val item: View? = adaper?.getView(0,null, gridView)
-        if (item != null) {
-            totalHeight = ((App.data.screenWith/5 + if (lineNum > 1) 120 else 50) * lineNum).toInt()
-        }
-        val params = gridView.layoutParams
-        params.height = totalHeight
-        gridView.layoutParams = params
-    }
+//    private fun setGridViewHeightByChildren(gridView : GridView) {
+//        val adaper: ListAdapter? = gridView.adapter ?: return
+//        var totalHeight = 0
+//        val lineNum = ceil((adaper?.count?.toDouble() ?: 0.0) / 3.0)
+//        val item: View? = adaper?.getView(0,null, gridView)
+//        if (item != null) {
+//            totalHeight = ((App.data.screenWith/5 + if (lineNum > 1) 120 else 50) * lineNum).toInt()
+//        }
+//        val params = gridView.layoutParams
+//        params.height = totalHeight
+//        gridView.layoutParams = params
+//    }
 
     class GridAdapter : BaseAdapter {
         var deviceList : List<Any>? = null
