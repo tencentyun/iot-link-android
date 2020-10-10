@@ -6,6 +6,6 @@ ext {
     android = [
             versionNameStr: versionNamePrefix,
             versionName: versionAppName,
-            versionCode: 1
+            versionCode: 2
     ]
 }

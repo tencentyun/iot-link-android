@@ -40,7 +40,7 @@ public class ImageSimpleBrowseActivity extends Activity {
                 finish();
             }
         });
-        ((TextView) findViewById(R.id.image_clip_main_exit_iv)).setText("返回");
+        ((TextView) findViewById(R.id.image_clip_main_exit_iv)).setText(R.string.back);
         findViewById(R.id.image_clip_main_exit_iv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -107,7 +107,7 @@ class AddDeviceActivity : PActivity(), MyCallback {
     override fun success(response: BaseResponse, reqCode: Int) {
         runOnUiThread {
             if (response.isSuccess()) {
-                T.show("添加成功")
+                T.show(getString(R.string.add_sucess)) //添加成功
                 App.data.setRefreshLevel(2)
                 finish()
             } else {

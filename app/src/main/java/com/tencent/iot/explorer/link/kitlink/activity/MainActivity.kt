@@ -259,7 +259,7 @@ class MainActivity : PActivity(), MyCallback {
             exitProcess(0)
         } else {
             timestamp = t
-            T.show("再按一下退出应用")
+            T.show(getString(R.string.tap_more_exit)) //再按一下退出应用
         }
 //        super.onBackPressed()
     }

@@ -39,6 +39,10 @@ object CommonField {
     const val HANDLER_NAME = "handlerName"
     const val MSG_TYPE = "msgType"
     const val FIREBASE_USER_ID = "UserID"
+    const val LOAD_VIEW_TXT_TYPE = "loadViewTxtType"
+    const val HARD_WARE_GUIDE = "hardwareGuide"
+    const val CONNECT_AP_GUIDE = "connectApGuide"
+
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
