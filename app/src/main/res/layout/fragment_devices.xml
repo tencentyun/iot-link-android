@@ -5,23 +5,26 @@
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:ignore="UselessParent">
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+            >
         <TextView
                 android:id="@+id/tv_recommend"
                 android:text="@string/recommend"
                 android:textColor="@color/gray"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="13dp"
+            android:paddingLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <GridView
+        <com.tencent.iot.explorer.link.customview.FullGridView
                 android:id="@+id/gv_recommend_devices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,7 +40,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:background="@color/gray_F5F5F5" />
-        <GridView
+        <com.tencent.iot.explorer.link.customview.FullGridView
                 android:id="@+id/gv_devices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,5 +49,5 @@
                 android:listSelector="@color/translucent"
                 tools:ignore="NestedScrolling" />
         </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 </LinearLayout>
