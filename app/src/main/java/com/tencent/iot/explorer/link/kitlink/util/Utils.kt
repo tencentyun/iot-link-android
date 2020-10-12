@@ -4,7 +4,6 @@ import android.text.TextUtils
 import com.tencent.iot.explorer.link.core.log.L
 import java.util.*
 
-
 object Utils {
 
     fun isEmpty(src: String): Boolean {
@@ -74,8 +73,21 @@ object Utils {
         return ret
     }
 
+    // 获取 url 字符串参数对应的 value
+    fun getUrlParamValue(url: String, name: String?): String? {
+        val paramsStr = url.substring(url.indexOf("?") + 1, url.length)
+        val split: MutableMap<String, String> = hashMapOf()
+        var params = paramsStr.split("&")
+        for (paramKV in params) {
+            var kv = paramKV.split("=")
+            if (kv.size == 2) {
+                split[kv.get(0)] = kv.get(1)
+            }
+        }
+        return split.get(name)
+    }
+
 //    @JvmStatic
 //    fun main(args: Array<String>) {
-//        System.out.println(getFirstSeriesNumFromStr("XX0000XX"))
 //    }
 }

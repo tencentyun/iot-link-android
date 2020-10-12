@@ -5,10 +5,12 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.alibaba.fastjson.JSON
 import com.example.qrcode.Constant
 import com.example.qrcode.ScannerActivity
 import com.tencent.iot.explorer.link.App
@@ -28,14 +31,15 @@ import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.kitlink.holder.DeviceListViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryListResponse
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.kitlink.customview.MyScrollView
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
+import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
+import com.tencent.iot.explorer.link.kitlink.util.*
 import kotlinx.android.synthetic.main.activity_device_category.*
 import kotlinx.android.synthetic.main.bluetooth_adapter_invalid.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -46,6 +50,7 @@ import q.rorbin.verticaltablayout.VerticalTabLayout
 import q.rorbin.verticaltablayout.adapter.TabAdapter
 import q.rorbin.verticaltablayout.widget.ITabView
 import q.rorbin.verticaltablayout.widget.TabView
+import java.net.URI
 
 
 class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerItemView, View.OnClickListener, VerticalTabLayout.OnTabSelectedListener{
@@ -204,6 +209,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 val type = it.getStringExtra(Constant.EXTRA_RESULT_CODE_TYPE)
                 it.getStringExtra(Constant.EXTRA_RESULT_CONTENT)?.run {
                     L.d("type=$type,content=$this")
+
                     when {
                         contains("signature=") -> {//虚拟设备
                             bindDevice(this.substringAfterLast("signature="))
@@ -220,6 +226,12 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                         contains("page=smartconfig") -> {
                             jumpActivity(SmartConnectActivity::class.java)
                         }
+                        contains("page=adddevice") && contains("productId") -> {
+                            var productid = Utils.getUrlParamValue(this, "productId")
+                            val productsList  = arrayListOf<String>()
+                            productsList.add(productid!!)
+                            HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
+                        }
                         else -> {//之前旧版本虚拟设备二维码只有签名
                             bindDevice(this)
                         }
@@ -227,6 +239,50 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 }
             }
         }
+    }
+
+    private var patchProductListener =  object :MyCallback{
+        override fun fail(msg: String?, reqCode: Int) {
+            T.show(msg)
+        }
+
+        override fun success(response: BaseResponse, reqCode: Int) {
+            if (response.isSuccess() && reqCode == RequestCode.get_products_config) {
+                response.parse(ProductsConfigResponse::class.java)?.run {
+                    val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
+                    val wifiConfigTypeList = config.WifiConfTypeList
+                    var productId = ""
+                    if (!TextUtils.isEmpty(config.profile)) {
+                        var jsonProFile = JSON.parseObject(config.profile)
+                        if (jsonProFile != null && jsonProFile.containsKey("ProductId") &&
+                            !TextUtils.isEmpty(jsonProFile.getString("ProductId"))) {
+                            productId = jsonProFile.getString("ProductId")
+                        }
+                    }
+
+                    if (wifiConfigTypeList.equals("{}") || TextUtils.isEmpty(wifiConfigTypeList)) {
+                        startActivityWithExtra(SmartConnectActivity::class.java, productId)
+
+                    } else if (wifiConfigTypeList.contains("[")) {
+                        val typeList = JsonManager.parseArray(wifiConfigTypeList)
+                        if (typeList.size > 0 && typeList[0] == "softap") {
+                            startActivityWithExtra(SoftApActivity::class.java, productId)
+                        } else {
+                            startActivityWithExtra(SmartConnectActivity::class.java, productId)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
+        var intent = Intent(this, cls)
+        if (!TextUtils.isEmpty(productId)) {
+            intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
+            intent.putExtra(CommonField.PRODUCT_ID, productId)
+        }
+        startActivity(intent)
     }
 
     /**
