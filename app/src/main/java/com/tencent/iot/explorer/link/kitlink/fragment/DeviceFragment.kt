@@ -103,19 +103,15 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                         val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
                         val wifiConfigTypeList = config.WifiConfTypeList
                         var productId = ""
-                        if (TextUtils.isEmpty(config.profile)) {
-                            return
-                        } else {
+                        if (!TextUtils.isEmpty(config.profile)) {
                             var jsonProFile = JSON.parseObject(config.profile)
-                            if (jsonProFile == null || !jsonProFile.containsKey("ProductId") ||
-                                TextUtils.isEmpty(jsonProFile.getString("ProductId"))) {
-                                return
-                            } else {
+                            if (jsonProFile != null && jsonProFile.containsKey("ProductId") &&
+                                !TextUtils.isEmpty(jsonProFile.getString("ProductId"))) {
                                 productId = jsonProFile.getString("ProductId")
                             }
                         }
 
-                        if (wifiConfigTypeList == "{}") {
+                        if (wifiConfigTypeList.equals("{}") || TextUtils.isEmpty(wifiConfigTypeList)) {
                             startActivityWithExtra(SmartConnectActivity::class.java, productId)
 
                         } else if (wifiConfigTypeList.contains("[")) {
@@ -134,8 +130,10 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
 
     private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
         var intent = Intent(context, cls)
-        intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
-        intent.putExtra(CommonField.PRODUCT_ID, productId)
+        if (!TextUtils.isEmpty(productId)) {
+            intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
+            intent.putExtra(CommonField.PRODUCT_ID, productId)
+        }
         startActivity(intent)
     }
 
