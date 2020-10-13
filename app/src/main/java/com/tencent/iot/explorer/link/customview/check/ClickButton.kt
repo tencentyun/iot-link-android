@@ -9,11 +9,17 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.text.isDigitsOnly
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.mvp.presenter.ForgotPasswordPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.RegisterPresenter
 
 class ClickButton : AppCompatTextView {
 
     private val list = arrayListOf<EditTextHolder>()
+
+    private var registerPresenter: RegisterPresenter? = null
+    private var forgotPasswordPresenter: ForgotPasswordPresenter? = null
 
     constructor(context: Context?) : super(context!!) {
         this.isEnabled = false
@@ -29,6 +35,14 @@ class ClickButton : AppCompatTextView {
         defStyleAttr
     ) {
         this.isEnabled = false
+    }
+
+    fun setRegisterPresenter(registerPresenter: RegisterPresenter) {
+        this.registerPresenter = registerPresenter
+    }
+
+    fun setForgotPasswordPresenter(forgotPasswordPresenter: ForgotPasswordPresenter) {
+        this.forgotPasswordPresenter = forgotPasswordPresenter
     }
 
     fun addEditText(editText: EditText, type: String) {
@@ -76,11 +90,25 @@ class ClickButton : AppCompatTextView {
         checkStatus()
     }
 
-    private fun checkStatus() {
+    fun checkStatus() {
         var able = true
         list.forEach {
             if (able) {
-                able = it.check()
+                if (registerPresenter != null) {
+                    if (registerPresenter!!.model == null) {
+                        able = false
+                    } else {
+                        able = it.check() && registerPresenter!!.model!!.getAgreementStatus()
+                    }
+                } else if (forgotPasswordPresenter != null) {
+                    if (forgotPasswordPresenter!!.model == null) {
+                        able = false
+                    } else {
+                        able = it.check() && forgotPasswordPresenter!!.model!!.getAgreementStatus()
+                    }
+                } else {
+                    able = it.check()
+                }
             }
         }
         this.isEnabled = able
@@ -128,7 +156,8 @@ class ClickButton : AppCompatTextView {
                     }
                     "86" -> {
 //                        editText.filters = arrayOf(InputFilter.LengthFilter(11))
-                        return if (it.length == 11) {
+                        // 长度为 11 位且仅包含数字的字符串认为是电话号码
+                        return if (it.length == 11 && it.isDigitsOnly()) {
                             textView?.visibility = View.INVISIBLE
                             textView?.text = ""
                             true
