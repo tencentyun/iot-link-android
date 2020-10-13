@@ -295,7 +295,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     private fun generateFragments() : List<Fragment>{
         val fragmentList = arrayListOf<Fragment>()
         for (item in App.data.recommendDeviceCategoryList) {
-            val fragment = DeviceFragment()
+            val fragment = DeviceFragment(this)
             val bundle = Bundle()
             bundle.putString("CategoryKey", item.CategoryKey)
             fragment.arguments = bundle
