@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.text.isDigitsOnly
 import com.tencent.iot.explorer.link.R
 
 class ClickButton : AppCompatTextView {
@@ -128,7 +129,8 @@ class ClickButton : AppCompatTextView {
                     }
                     "86" -> {
 //                        editText.filters = arrayOf(InputFilter.LengthFilter(11))
-                        return if (it.length == 11) {
+                        // 长度为 11 位且仅包含数字的字符串认为是电话号码
+                        return if (it.length == 11 && it.isDigitsOnly()) {
                             textView?.visibility = View.INVISIBLE
                             textView?.text = ""
                             true
