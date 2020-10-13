@@ -5,8 +5,11 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
+import android.util.Log
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.util.Utils
 import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.GetCodePresenter
@@ -153,6 +156,8 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
         intent.putExtra(EMAIL, email)
         intent.putExtra(SetPasswordActivity.VERIFICATION_CODE, verificationCode)
         startActivity(intent)
+        T.show(getString(R.string.registe_success))
+        Utils.clearXmlStringValue(T.getContext(), CommonField.REG_COUNTRY_INFO, CommonField.REG_COUNTRY_INFO)
         finish()
     }
 
@@ -163,6 +168,8 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
         intent.putExtra(PHONE, phoneNumber)
         intent.putExtra(SetPasswordActivity.VERIFICATION_CODE, verificationCode)
         startActivity(intent)
+        T.show(getString(R.string.registe_success))
+        Utils.clearXmlStringValue(T.getContext(), CommonField.REG_COUNTRY_INFO, CommonField.REG_COUNTRY_INFO)
         finish()
     }
 
