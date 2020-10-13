@@ -40,6 +40,7 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
 
     override fun initView() {
         presenter = ForgotPasswordPresenter(this)
+        btn_forgot_get_code.setForgotPasswordPresenter(presenter)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.find_bank_the_password)
 
@@ -151,6 +152,7 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
                 R.mipmap.icon_unselected
             }
         )
+        btn_forgot_get_code.checkStatus()
     }
 
     override fun unselectedAgreement() {

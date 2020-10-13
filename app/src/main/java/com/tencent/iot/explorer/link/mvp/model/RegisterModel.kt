@@ -49,6 +49,10 @@ class RegisterModel(view: RegisterView) : ParentModel<RegisterView>(view), MyCal
         return isAgree
     }
 
+    fun getAgreementStatus(): Boolean {
+        return isAgree
+    }
+
     /**
      * 获取手机验证码
      */
