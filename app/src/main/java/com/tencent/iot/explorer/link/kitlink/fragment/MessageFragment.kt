@@ -200,13 +200,17 @@ class MessageFragment(category: Int) : BaseFragment(), CRecyclerView.RecyclerIte
      */
     private fun showList() {
         if (messageList.isEmpty()) {
-            iv_empty_message.visibility = View.VISIBLE
-            tv_empty_message.visibility = View.VISIBLE
-            crv_message_list.visibility = View.GONE
+            view?.let {
+                iv_empty_message.visibility = View.VISIBLE
+                tv_empty_message.visibility = View.VISIBLE
+                crv_message_list.visibility = View.GONE
+            }
         } else {
-            iv_empty_message.visibility = View.GONE
-            tv_empty_message.visibility = View.GONE
-            crv_message_list.visibility = View.VISIBLE
+            view?.let {
+                iv_empty_message.visibility = View.GONE
+                tv_empty_message.visibility = View.GONE
+                crv_message_list.visibility = View.VISIBLE
+            }
         }
         crv_message_list.notifyDataChanged()
     }
