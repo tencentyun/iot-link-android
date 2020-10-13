@@ -37,8 +37,9 @@ import kotlinx.android.synthetic.main.fragment_devices.*
 import kotlin.math.ceil
 
 
-class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListener{
+class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickListener{
 
+    private var mContext : Context? = null
     private var devicesGridView : FullGridView? = null
     private var recommendDevicesGridView : FullGridView? = null
     private var categoryList = arrayListOf<CategoryDeviceEntity>()
@@ -53,6 +54,10 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
         Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
+
+    constructor(c: Context):this() {
+        mContext = c
+    }
 
     override fun getPresenter(): IPresenter? {
         return null
@@ -82,17 +87,15 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                     response.parse(RecommDeviceListResponse::class.java)?.run {
                         if (ProductList.size > 0) {
                             productList = ProductList
-                            recommendDevicesGridView!!.adapter = GridAdapter(activity!!, ProductList, true)
-//                            setGridViewHeightByChildren(recommendDevicesGridView!!)
+                            recommendDevicesGridView?.adapter = GridAdapter(mContext!!, ProductList, true)
                         } else {
                             if (tv_recommend != null) tv_recommend.visibility = View.GONE
                             if (split_line != null) split_line.visibility = View.GONE
                             if (gv_recommend_devices != null) gv_recommend_devices.visibility = View.GONE
                         }
                         categoryList = CategoryList
-                        if (devicesGridView != null && activity != null) {
-                            devicesGridView!!.adapter = GridAdapter(activity!!, CategoryList, false)
-//                            setGridViewHeightByChildren(devicesGridView!!)
+                        if (devicesGridView != null && mContext != null) {
+                            devicesGridView!!.adapter = GridAdapter(mContext!!, CategoryList, false)
                         }
                     }
                 }
@@ -140,7 +143,7 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (view != null && parent != null) {
 
-            if(ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION)
+            if(ContextCompat.checkSelfPermission(mContext!!, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED){
                 when (parent.id) {
                     R.id.gv_recommend_devices->{
@@ -188,19 +191,6 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
         devicesGridView?.onItemClickListener = this
         recommendDevicesGridView?.onItemClickListener = this
     }
-
-//    private fun setGridViewHeightByChildren(gridView : GridView) {
-//        val adaper: ListAdapter? = gridView.adapter ?: return
-//        var totalHeight = 0
-//        val lineNum = ceil((adaper?.count?.toDouble() ?: 0.0) / 3.0)
-//        val item: View? = adaper?.getView(0,null, gridView)
-//        if (item != null) {
-//            totalHeight = ((App.data.screenWith/5 + if (lineNum > 1) 120 else 50) * lineNum).toInt()
-//        }
-//        val params = gridView.layoutParams
-//        params.height = totalHeight
-//        gridView.layoutParams = params
-//    }
 
     class GridAdapter : BaseAdapter {
         var deviceList : List<Any>? = null
