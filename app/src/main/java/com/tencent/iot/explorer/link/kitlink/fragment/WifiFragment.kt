@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.smart_config_second.*
 /**
  * 输入wifi密码
  */
-class WifiFragment(type: Int) : BaseFragment() {
+class WifiFragment(): BaseFragment() {
 
     private var type = 0
     private var wifiInfo: WifiInfo? = null
@@ -30,13 +30,16 @@ class WifiFragment(type: Int) : BaseFragment() {
     var openWifiDialog: WifiHelperDialog? = null
     var openLocationServiceDialog: WifiHelperDialog? = null
 
+    constructor(type: Int):this(){
+       this.type = type
+    }
+
     companion object {
         const val smart_config = 0
         const val soft_ap = 1
     }
 
     init {
-        this.type = type
         showWifiInfo()
     }
 
