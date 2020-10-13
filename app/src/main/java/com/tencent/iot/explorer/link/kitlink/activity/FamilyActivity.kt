@@ -163,8 +163,10 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
         clickView: View,
         position: Int
     ) {
-        put("member",model.memberList[position])
-        jumpActivity(MemberActivity::class.java)
+        if (model.memberList.size > position) {
+            put("member", model.memberList[position])
+            jumpActivity(MemberActivity::class.java)
+        }
     }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*> {
