@@ -37,6 +37,10 @@ class ForgotPasswordModel(view: ForgotPasswordView) : ParentModel<ForgotPassword
         return agree
     }
 
+    fun getAgreementStatus(): Boolean {
+        return agree
+    }
+
     fun setCountryCode(countryCode: String) {
         if (!countryCode.contains("+")) return
         countryCode.split("+").let {
