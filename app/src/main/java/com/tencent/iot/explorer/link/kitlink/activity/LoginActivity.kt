@@ -2,9 +2,17 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
 import android.content.Intent
+import android.os.Handler
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
+import androidx.core.text.isDigitsOnly
+import androidx.core.widget.doOnTextChanged
+import com.alibaba.fastjson.JSON
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.App
@@ -12,6 +20,7 @@ import com.tencent.iot.explorer.link.ErrorCode
 import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.customview.check.VerifyEdit
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -44,6 +53,9 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     private var fromTag = ""
     private var accountType = false //true为手机号，false为邮箱
     private var accountForAutoFill = ""
+    @Volatile
+    private var canGetCode = true
+    private var handler: Handler = Handler()
 
     private val permissions = arrayOf(
         Manifest.permission.RECEIVE_SMS,
@@ -97,6 +109,15 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
             accoutPasswdLoginView.tv_login_to_country_bypsswd.text = getString(R.string.country_china_en)
             verifyCodeLoginView.tv_login_to_country_byverifycode.text = getString(R.string.country_china_en)
         }
+
+        loadLastCountryInfo()
+    }
+
+    private fun loadLastCountryInfo() {
+        var countryInfo = Utils.getStringValueFromXml(T.getContext(), CommonField.COUNTRY_INFO, CommonField.COUNTRY_INFO)
+        if (TextUtils.isEmpty(countryInfo)) return
+
+        presenter.setCountry(countryInfo!!)
     }
 
     private fun initViewPager() {
@@ -134,13 +155,96 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         accoutPasswdLoginView.btn_account_passwd_login.setOnClickListener(this)
         accoutPasswdLoginView.tv_account_passwd_forget_passwd.setOnClickListener(this)
         accoutPasswdLoginView.iv_login_to_country_bypsswd.setOnClickListener(this)
+        accoutPasswdLoginView.et_login_phone_or_email.addTextChangedListener(accountPwdTextWatcher)
+        accoutPasswdLoginView.et_login_phone_or_email_passwd.addTextChangedListener(accountPwdTextWatcher)
+        accoutPasswdLoginView.et_login_phone_or_email.setText("")
+        accoutPasswdLoginView.et_login_phone_or_email_passwd.setText("")
 
         verifyCodeLoginView.tv_use_passwd_to_login.setOnClickListener(this)
         verifyCodeLoginView.btn_account_verifycode_login.setOnClickListener(this)
         verifyCodeLoginView.tv_get_verify_code.setOnClickListener(this)
         verifyCodeLoginView.iv_login_to_country_byverifycode.setOnClickListener(this)
-
+        verifyCodeLoginView.et_login_phone_or_email_byverifycode.addTextChangedListener(accountCodeTextWatcher)
+        verifyCodeLoginView.et_login_phone_or_email_verifycode.addTextChangedListener(accountCodeTextWatcher)
+        verifyCodeLoginView.et_login_phone_or_email_byverifycode.setText("")
+        verifyCodeLoginView.et_login_phone_or_email_verifycode.setText("")
         iv_wechat_login.setOnClickListener(this)
+    }
+
+    private var accountPwdTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            accoutPasswdLoginView.btn_account_passwd_login.isEnabled =
+                isAccountOk(accoutPasswdLoginView.et_login_phone_or_email) &&
+                        isPwdOk(accoutPasswdLoginView.et_login_phone_or_email_passwd)
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    private var accountCodeTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            verifyCodeLoginView.btn_account_verifycode_login.isEnabled =
+                isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode) &&
+                        isVerifyCodeOk(verifyCodeLoginView.et_login_phone_or_email_verifycode)
+
+            //verifyCodeLoginView.tv_get_verify_code.isEnabled = isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode)
+            enableTextView(verifyCodeLoginView.tv_get_verify_code,
+                isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode))
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    private fun enableTextView(textView: TextView, enable: Boolean) {
+        if (textView == null) return
+        if (!canGetCode) { // 当前处于无法获取验证码的状态时，不能设置状态
+            textView.setTextColor(resources.getColor(R.color.gray_bbbbbb))
+            textView.isEnabled = false
+            return
+        }
+
+        if (enable) {
+            textView.setTextColor(resources.getColor(R.color.blue_0052d9))
+        } else {
+            textView.setTextColor(resources.getColor(R.color.gray_bbbbbb))
+        }
+        textView.isEnabled = enable
+    }
+
+    // 匹配手机号码的规则 11 位且只有数字
+    // 匹配邮箱的规则包含 @ 和 .
+    private fun isAccountOk(accountVerifyEdit : VerifyEdit): Boolean {
+        if (accountVerifyEdit == null) return false
+
+        var accountTxt = accountVerifyEdit.text.toString()
+        if ((accountTxt.length == 11 && accountTxt.isDigitsOnly()) ||
+                    accountTxt.matches(Regex("^\\w+@(\\w+\\.)+\\w+$"))) {
+            return true
+        }
+        return false
+    }
+
+    // 只包含数字且只有6位
+    private fun isVerifyCodeOk(verifyCodeVerifyEdit : VerifyEdit): Boolean {
+        if (verifyCodeVerifyEdit == null) return false
+
+        var accountTxt = verifyCodeVerifyEdit.text.toString()
+        if ((accountTxt.length == 6 && accountTxt.isDigitsOnly())) {
+            return true
+        }
+        return false
+    }
+
+    private fun isPwdOk(pwdVerifyEdit : VerifyEdit): Boolean {
+        if (pwdVerifyEdit == null) return false
+
+        var pwdTxt = pwdVerifyEdit.text.toString()
+        if (pwdTxt.matches(Regex("^(?![0-9]+\$)(?![a-z]+\$)(?![A-Z]+\$).{8,}\$"))) {
+            return true
+        }
+        return false
     }
 
     override fun onClick(v: View?) {
@@ -198,6 +302,14 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 }
             }
             verifyCodeLoginView.tv_get_verify_code -> {// 获取验证码
+                if (!canGetCode) {
+                    return
+                }
+                Utils.startCountBySeconds(60, secondsCountDownCallback)
+                canGetCode = false
+                enableTextView(verifyCodeLoginView.tv_get_verify_code,
+                    isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode))
+
                 val account = verifyCodeLoginView.et_login_phone_or_email_byverifycode.text.trim().toString()
                 accountForAutoFill = account
                 if (!account.contains("@")) {
@@ -217,6 +329,24 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
         }
+    }
+
+    var secondsCountDownCallback = object: Utils.SecondsCountDownCallback {
+        override fun currentSeconds(seconds: Int) {
+            handler.post(Runnable {
+                verifyCodeLoginView.tv_get_verify_code.setText(getString(R.string.resend) + "(${seconds}s)")
+            })
+        }
+
+        override fun countDownFinished() {
+            canGetCode = true
+            handler.post(Runnable {
+                verifyCodeLoginView.tv_get_verify_code.setText(getString(R.string.resend))
+                enableTextView(verifyCodeLoginView.tv_get_verify_code, // 根据实际情况设置获取验证码按钮的状态
+                    isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode))
+            })
+        }
+
     }
 
     private fun showVerifyCodeLogin() {
@@ -318,6 +448,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
             data?.let {
                 it.getStringExtra(CommonField.REGION_ID)?.run {
                     presenter.setCountry(this)
+                    Utils.setXmlStringValue(T.getContext(), CommonField.COUNTRY_INFO, CommonField.COUNTRY_INFO, this)
                 }
             }
         }
