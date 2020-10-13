@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
+import android.util.Log
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.util.Weak
@@ -121,10 +122,12 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
     }
 
     override fun checkVerificationCodeFail(message: String) {
+        Log.e("XXX", "------------ 1")
         T.show(message)
     }
 
     override fun getCodeFail(message: String) {
+        Log.e("XXX", "------------- 2")
         T.show(message)
     }
 
