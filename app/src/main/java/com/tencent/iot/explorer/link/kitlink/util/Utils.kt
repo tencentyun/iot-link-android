@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
+import android.content.Context
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.core.log.L
 import java.util.*
@@ -87,6 +88,56 @@ object Utils {
         return split.get(name)
     }
 
+    interface SecondsCountDownCallback {
+        fun currentSeconds(seconds: Int)
+        fun countDownFinished()
+    }
+
+    fun startCountBySeconds(max: Int, secondsCountDownCallback: SecondsCountDownCallback) {
+        startCountBySeconds(max, 1, secondsCountDownCallback)
+    }
+
+    // 非单例线程，允许多处使用倒计时功能
+    fun startCountBySeconds(max: Int, step: Int, secondsCountDownCallback: SecondsCountDownCallback) {
+        if (max <= 0) return  // 上线为负数或者 0 的时候不进行倒计时的功能
+
+        var countDown = 0;
+        Thread {        // 倒计时线程
+            if (secondsCountDownCallback != null) {
+                secondsCountDownCallback.currentSeconds(max - countDown)
+            }
+            while(countDown < max) {
+                countDown += step
+                Thread.sleep(step.toLong() * 1000)
+                if (secondsCountDownCallback != null) {
+                    secondsCountDownCallback.currentSeconds(max - countDown)
+                }
+            }
+            if (secondsCountDownCallback != null) {
+                secondsCountDownCallback.countDownFinished()
+            }
+        }.start()
+    }
+
+    fun getStringValueFromXml(context: Context, xmlName: String, keyName: String): String? {
+        val dataSp = context.getSharedPreferences(xmlName, Context.MODE_PRIVATE)
+        return dataSp.getString(keyName, null)
+    }
+
+    fun setXmlStringValue(context: Context, xmlName: String, keyName: String, value: String) {
+        val dataSp = context.getSharedPreferences(xmlName, Context.MODE_PRIVATE)
+        val editor = dataSp.edit()
+        if (!TextUtils.isEmpty(value)) {
+            editor.putString(keyName, value)
+        } else {
+            editor.remove(keyName)
+        }
+        editor.commit()
+    }
+
+    fun clearXmlStringValue(context: Context, xmlName: String, keyName: String) {
+        setXmlStringValue(context, xmlName, keyName, "")
+    }
 //    @JvmStatic
 //    fun main(args: Array<String>) {
 //    }
