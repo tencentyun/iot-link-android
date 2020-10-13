@@ -82,8 +82,7 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                     response.parse(RecommDeviceListResponse::class.java)?.run {
                         if (ProductList.size > 0) {
                             productList = ProductList
-                            recommendDevicesGridView!!.adapter = GridAdapter(activity!!, ProductList, true)
-//                            setGridViewHeightByChildren(recommendDevicesGridView!!)
+                            recommendDevicesGridView?.adapter = GridAdapter(activity!!, ProductList, true)
                         } else {
                             if (tv_recommend != null) tv_recommend.visibility = View.GONE
                             if (split_line != null) split_line.visibility = View.GONE
@@ -92,7 +91,6 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
                         categoryList = CategoryList
                         if (devicesGridView != null && activity != null) {
                             devicesGridView!!.adapter = GridAdapter(activity!!, CategoryList, false)
-//                            setGridViewHeightByChildren(devicesGridView!!)
                         }
                     }
                 }
@@ -188,19 +186,6 @@ class DeviceFragment : BaseFragment(), MyCallback, AdapterView.OnItemClickListen
         devicesGridView?.onItemClickListener = this
         recommendDevicesGridView?.onItemClickListener = this
     }
-
-//    private fun setGridViewHeightByChildren(gridView : GridView) {
-//        val adaper: ListAdapter? = gridView.adapter ?: return
-//        var totalHeight = 0
-//        val lineNum = ceil((adaper?.count?.toDouble() ?: 0.0) / 3.0)
-//        val item: View? = adaper?.getView(0,null, gridView)
-//        if (item != null) {
-//            totalHeight = ((App.data.screenWith/5 + if (lineNum > 1) 120 else 50) * lineNum).toInt()
-//        }
-//        val params = gridView.layoutParams
-//        params.height = totalHeight
-//        gridView.layoutParams = params
-//    }
 
     class GridAdapter : BaseAdapter {
         var deviceList : List<Any>? = null
