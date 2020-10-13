@@ -9,6 +9,7 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
+import com.tencent.iot.explorer.link.kitlink.util.Utils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.RegisterPresenter
 import com.tencent.iot.explorer.link.mvp.view.RegisterView
@@ -50,6 +51,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         App.data.regionId = "1"
         App.data.region = "ap-guangzhou"
         presenter = RegisterPresenter(this)
+        btn_register_get_code.setRegisterPresenter(presenter)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.mobile_phone_register)
         initViewPager()
@@ -78,6 +80,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             phoneView.tv_register_to_country.text = getString(R.string.country_china_en)
             emailView.tv_register_to_country_email.text = getString(R.string.country_china_en)
         }
+
+        loadLastCountryInfo()
     }
 
     private fun initViewPager() {
@@ -220,6 +224,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                 R.mipmap.icon_unselected
             }
         )
+        btn_register_get_code.checkStatus()
     }
 
     override fun unselectedAgreement() {
@@ -238,9 +243,17 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             data?.let {
                 it.getStringExtra(CommonField.REGION_ID)?.run {
                     presenter.setCountry(this)
+                    Utils.setXmlStringValue(T.getContext(), CommonField.REG_COUNTRY_INFO, CommonField.REG_COUNTRY_INFO, this)
                 }
             }
         }
+    }
+
+    private fun loadLastCountryInfo() {
+        var countryInfo = Utils.getStringValueFromXml(T.getContext(), CommonField.REG_COUNTRY_INFO, CommonField.REG_COUNTRY_INFO)
+        if (TextUtils.isEmpty(countryInfo)) return
+
+        presenter.setCountry(countryInfo!!)
     }
 
 }

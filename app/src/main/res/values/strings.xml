@@ -409,6 +409,7 @@
     <string name="unregister_failed">反注册失败</string>
     <string name="recv_msg">收到消息:</string>
     <string name="register_success">注册成功1. token：</string>
+    <string name="registe_success">注册成功</string>
     <string name="register_failed">注册失败，错误码：</string>
     <string name="notification_opened">通知被打开 :</string>
     <string name="notification_removed">通知被清除 :</string>
