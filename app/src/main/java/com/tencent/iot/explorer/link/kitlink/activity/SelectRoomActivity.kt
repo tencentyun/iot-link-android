@@ -24,8 +24,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class SelectRoomActivity : BaseActivity(), CRecyclerView.RecyclerItemView {
 
     private var deviceEntity: DeviceEntity? = null
-
-    private lateinit var selectedRoom: RoomEntity
+    private var selectedRoom: RoomEntity? = null
     private val roomList = arrayListOf<RoomEntity>()
 
     override fun getContentView(): Int {
@@ -36,9 +35,9 @@ class SelectRoomActivity : BaseActivity(), CRecyclerView.RecyclerItemView {
         tv_title.text = T.getContext().getString(R.string.select_room)//"选择房间"
         deviceEntity = get("device")
 
-        selectedRoom = get<RoomEntity>("select_room")!!
+        selectedRoom = get<RoomEntity>("select_room")
         roomList.addAll(App.data.roomList.subList(1, App.data.roomList.size))
-        if (TextUtils.isEmpty(selectedRoom.RoomId) && !TextUtils.isEmpty(deviceEntity!!.RoomId)) {
+        if (TextUtils.isEmpty(selectedRoom?.RoomId) && !TextUtils.isEmpty(deviceEntity!!.RoomId)) {
             roomList.forEach {
                 if (it.RoomId == deviceEntity!!.RoomId){
                     selectedRoom = it
@@ -85,7 +84,7 @@ class SelectRoomActivity : BaseActivity(), CRecyclerView.RecyclerItemView {
     private fun save() {
         if (deviceEntity == null) return
         App.data.getCurrentFamily().run {
-            selectedRoom.let {
+            selectedRoom?.let {
                 HttpRequest.instance.changeRoom(FamilyId, it.RoomId, deviceEntity!!.ProductId,
                     deviceEntity!!.DeviceName, object : MyCallback {
                         override fun fail(msg: String?, reqCode: Int) {
@@ -115,7 +114,7 @@ class SelectRoomActivity : BaseActivity(), CRecyclerView.RecyclerItemView {
                 entity?.run {
                     itemView.tv_week_repeat_title.text = this.RoomName
                     itemView.iv_week_repeat_selected.setImageResource(
-                        if (selectedRoom.RoomId == this.RoomId) R.mipmap.icon_checked
+                        if (selectedRoom?.RoomId == this.RoomId) R.mipmap.icon_checked
                         else R.mipmap.icon_unchecked
                     )
                     itemView.tv_week_repeat_commit.visibility =
