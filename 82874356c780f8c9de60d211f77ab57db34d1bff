@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a36436b7_27151351",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/FragmentViewPager.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-10-15T03:00:36Z",
+      "side": 1,
+      "message": "tab",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 1
+      },
+      "revId": "82874356c780f8c9de60d211f77ab57db34d1bff",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b379754_7fed15c5",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/PageAdapter.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-10-15T03:00:36Z",
+      "side": 1,
+      "message": "tab",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 1
+      },
+      "revId": "82874356c780f8c9de60d211f77ab57db34d1bff",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "023749cc_74627abc",
+        "filename": "app/src/main/res/layout/activity_message.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-10-15T03:00:36Z",
+      "side": 1,
+      "message": "缩紧",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 8
+      },
+      "revId": "82874356c780f8c9de60d211f77ab57db34d1bff",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
