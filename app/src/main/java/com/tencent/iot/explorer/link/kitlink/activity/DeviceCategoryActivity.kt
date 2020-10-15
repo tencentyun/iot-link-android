@@ -58,7 +58,11 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     private val handler = Handler()
 
     private var permissions = arrayOf(
-        Manifest.permission.CAMERA
+        Manifest.permission.CAMERA,
+        Manifest.permission.ACCESS_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
+        Manifest.permission.ACCESS_FINE_LOCATION
     )
 
     override fun getPresenter(): IPresenter? {
