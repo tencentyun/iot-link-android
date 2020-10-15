@@ -60,7 +60,7 @@ class HttpRequest private constructor() {
         val param = HashMap<String, Any>()
         param["lang"] = Utils.getLang()
         param["Platform"] = "android"
-        param["AppID"] = T.getContext().applicationInfo.packageName
+//        param["AppID"] = T.getContext().applicationInfo.packageName
         return param
     }
 
@@ -160,7 +160,6 @@ class HttpRequest private constructor() {
      * 登录后请求
      */
     private fun tokenPost(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
-        val json = JsonManager.toJson(param)
         if (TextUtils.isEmpty(App.data.getToken())) {//登录过期或未登录
             App.toLogin()
             return
@@ -168,12 +167,15 @@ class HttpRequest private constructor() {
         val api:String
         val host:String
         if (!App.isOEMApp()) {// 公版&开源版
+            param["AppID"] = T.getContext().applicationInfo.packageName
             host = STUDIO_BASE_URL_FOR_LOGINED
             api = "?uin=$ANDROID_ID"
         } else {// OEM版
             host = OEM_TOKEN_API
             api = ""
         }
+        val json = JsonManager.toJson(param)
+
         StringRequest.instance.postJson(host, api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
                 callback.fail(msg, reqCode)
@@ -208,6 +210,9 @@ class HttpRequest private constructor() {
      * 登录后请求
      */
     private fun tokenAppCosAuth(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
+        if (!App.isOEMApp()) {// 公版&开源版
+            param["AppID"] = T.getContext().applicationInfo.packageName
+        }
         val json = JsonManager.toJson(param)
         if (TextUtils.isEmpty(App.data.getToken())) {//登录过期或未登录
             App.toLogin()
@@ -233,7 +238,6 @@ class HttpRequest private constructor() {
      * 登录后请求
      */
     private fun getH5tokenPost(param: HashMap<String, Any>, callback: MyCallback, reqCode: Int) {
-        val json = JsonManager.toJson(param)
         if (TextUtils.isEmpty(App.data.getToken())) {//登录过期或未登录
             App.toLogin()
             return
@@ -242,12 +246,14 @@ class HttpRequest private constructor() {
         val api: String
         val host: String
         if (!App.isOEMApp()) {// 公版&开源版
+            param["AppID"] = T.getContext().applicationInfo.packageName
             host = STUDIO_BASE_URL_FOR_LOGINED
             api = "?uin=$ANDROID_ID"
         } else {// OEM版
             host = OEM_TOKEN_API
             api = ""
         }
+        val json = JsonManager.toJson(param)
 
         StringRequest.instance.postJson(host, api, json, object : Callback {
             override fun fail(msg: String?, reqCode: Int) {
