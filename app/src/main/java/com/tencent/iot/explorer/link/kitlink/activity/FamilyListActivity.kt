@@ -96,6 +96,7 @@ class FamilyListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerIte
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
+        
         if (response.isSuccess()) {
             response.parse(FamilyListResponse::class.java)?.run {
                 total = Total
