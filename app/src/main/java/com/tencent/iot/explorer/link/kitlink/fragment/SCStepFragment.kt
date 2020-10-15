@@ -83,17 +83,36 @@ class SCStepFragment(type: Int, productId: String) : BaseFragment() {
                     val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
 
                     if (TextUtils.isEmpty(config.WifiSmartConfig)) {
+                        loadViewStandradInfo()
                         return
                     }
 
                     var json = JSONObject.parseObject(config.WifiSmartConfig)
                     if (json.containsKey(CommonField.HARD_WARE_GUIDE)) {
                         var hardwareGuide = JSONObject.parseObject(json.getString(CommonField.HARD_WARE_GUIDE), HardwareGuide::class.java)
-                        nextBtn?.setText(hardwareGuide.btnText)
-                        tipContent?.setText(hardwareGuide.message)
-                        Picasso.get().load(hardwareGuide.bgImg).placeholder(R.drawable.imageselector_default_error)
-                            .resize(App.data.screenWith / 5, App.data.screenWith / 5).centerCrop()
-                            .into(pic)
+                        if (!TextUtils.isEmpty(hardwareGuide.btnText)) {
+                            nextBtn?.setText(hardwareGuide.btnText)
+                        } else {
+                            nextBtn?.setText(R.string.smart_config_first_title)
+                        }
+
+                        if (!TextUtils.isEmpty(hardwareGuide.message)) {
+                            tipContent?.setText(hardwareGuide.message)
+                        } else {
+                            tipContent?.setText(R.string.smart_config_first_hint2)
+                        }
+
+                        if (TextUtils.isEmpty(hardwareGuide.bgImg)) {
+                            pic?.setImageResource(R.mipmap.image_smart_config)
+                        } else {
+                            Picasso.get().load(hardwareGuide.bgImg)
+                                .placeholder(R.drawable.imageselector_default_error)
+                                .resize(App.data.screenWith / 5, App.data.screenWith / 5)
+                                .centerCrop()
+                                .into(pic)
+                        }
+                    } else {
+                        loadViewStandradInfo()
                     }
                 }
 
