@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -79,17 +80,36 @@ class SoftAppStepFragment(type: Int, productId: String) : BaseFragment() {
                     val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
 
                     if (TextUtils.isEmpty(config.WifiSoftAP)) {
+                        loadViewStandradInfo()
                         return
                     }
-
                     var json = JSONObject.parseObject(config.WifiSoftAP)
                     if (json.containsKey(CommonField.HARD_WARE_GUIDE)) {
+
                         var hardwareGuide = JSONObject.parseObject(json.getString(CommonField.HARD_WARE_GUIDE), HardwareGuide::class.java)
-                        nextBtn?.setText(hardwareGuide.btnText)
-                        tipContent?.setText(hardwareGuide.message)
-                        Picasso.get().load(hardwareGuide.bgImg).placeholder(R.drawable.imageselector_default_error)
-                            .resize(App.data.screenWith / 5, App.data.screenWith / 5).centerCrop()
-                            .into(pic)
+                        if (TextUtils.isEmpty(hardwareGuide.btnText)) {
+                            nextBtn?.setText(R.string.soft_ap_first_button)
+                        } else {
+                            nextBtn?.setText(hardwareGuide.btnText)
+                        }
+
+                        if (TextUtils.isEmpty(hardwareGuide.message)) {
+                            tipContent?.setText(R.string.soft_ap_first_toast)
+                        } else {
+                            tipContent?.setText(hardwareGuide.message)
+                        }
+
+                        if (TextUtils.isEmpty(hardwareGuide.bgImg)) {
+                            pic?.setImageResource(R.mipmap.image_soft_ap)
+                        } else {
+                            Picasso.get().load(hardwareGuide.bgImg)
+                                .placeholder(R.drawable.imageselector_default_error)
+                                .resize(App.data.screenWith / 5, App.data.screenWith / 5)
+                                .centerCrop()
+                                .into(pic)
+                        }
+                    } else {
+                        loadViewStandradInfo()
                     }
                 }
             }
