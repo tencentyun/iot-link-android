@@ -34,10 +34,22 @@ app-config.json 需要配置的内容，如下：
 
 **2、信鸽（可选）**
 
-连连开源体验版集成了**信鸽推送**，用于实现消息推送。
+&emsp;&emsp;腾讯连连开源体验版集成了**信鸽推送**，用于实现消息推送。
 
-* 若确认使用推送功能，需要前往[信鸽推送平台](https://cloud.tencent.com/product/tpns?fromSource=gwzcw.2454256.2454256.2454256&utm_medium=cpc&utm_id=gwzcw.2454256.2454256.2454256)申请获得的 **AccessID** 和 **AccessKey**，[申请步骤](https://cloud.tencent.com/product/tpns/getting-started)。
 * 若不使用推送功能，**XgAccessId** 和 **XgAccessKey**  设置为**长度为0的字符串**即可。
+* 若确认使用推送功能，需要前往[信鸽推送平台](https://cloud.tencent.com/product/tpns?fromSource=gwzcw.2454256.2454256.2454256&utm_medium=cpc&utm_id=gwzcw.2454256.2454256.2454256)申请获得的 **AccessID** 和 **AccessKey**，[申请步骤](https://cloud.tencent.com/product/tpns/getting-started)。
+*  将申请获得的 **AccessID** 和 **AccessKey**，填写到[物联网开发平台中](https://console.cloud.tencent.com/iotexplorer/project/prj-hwcjnzaa/app/list)
+*  将申请获得的 **AccessID** 和 **AccessKey**，写入在app-config.json文件中对应位置。
+
+```json
+{
+  "WXAccessAppId": "",
+  "TencentIotLinkAppkey": "请输入从物联网开发平台申请的Appkey, 正式发布前务必填写",
+  "TencentIotLinkAppSecret": "请输入从物联网开发平台申请的AppSecrect, AppSecrect请保存在服务端，此处仅为演示，如有泄露概不负责",
+  "XgAccessId": "请输入从信鸽推送平台申请的AccessID",
+  "XgAccessKey": "请输入从信鸽推送平台申请的AccessKey"
+}
+```
 
 **3、Firebase（可选）**
 
