@@ -8,6 +8,8 @@ apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'com.google.firebase.crashlytics'
 
+rootProject.ext.configPath = "../sdkdemo-config.json"
+
 apply from: "../parse_json.gradle"
 
 android {
