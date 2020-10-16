@@ -10,6 +10,8 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 apply plugin: 'com.google.firebase.firebase-perf'
 
+rootProject.ext.configPath = "../app-config.json"
+
 apply from: "../parse_json.gradle"
 
 android {
@@ -48,7 +50,7 @@ android {
         buildConfigField 'String', 'XgAccessKey', "\"${getValueById('XgAccessKey')}\""
         buildConfigField 'String', 'XgUSAAccessId', "\"${getValueById('XgUSAAccessId')}\""
         buildConfigField 'String', 'XgUSAAccessKey', "\"${getValueById('XgUSAAccessKey')}\""
-        buildConfigField 'String', 'WeatherKey', "\"${getValueById('WeatherKey')}\""
+        buildConfigField 'String', 'WeatherKey', "\"${getValueById('HEweatherKey')}\""
         multiDexEnabled true
     }
 
