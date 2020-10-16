@@ -8,4 +8,6 @@ ext {
             versionName: versionAppName,
             versionCode: 2
     ]
+
+    configPath = ""
 }
