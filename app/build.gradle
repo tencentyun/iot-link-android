@@ -10,6 +10,8 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 apply plugin: 'com.google.firebase.firebase-perf'
 
+rootProject.ext.configPath = "../app-config.json"
+
 apply from: "../parse_json.gradle"
 
 android {
