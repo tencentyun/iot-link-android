@@ -78,6 +78,7 @@
         <activity android:name=".kitlink.activity.RoomListActivity" />
         <activity android:name=".kitlink.activity.AddRoomActivity" />
         <activity android:name=".kitlink.activity.AddFamilyActivity" />
+        <activity android:name=".kitlink.activity.CommentDetailsActivity" />
         <activity android:name=".kitlink.activity.CloudTimingActivity" /> <!-- 信鸽Android P -->
         <uses-library
                 android:name="org.apache.http.legacy"

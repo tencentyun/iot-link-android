@@ -4,6 +4,7 @@
     <string name="main_tab_1">首页</string>
     <string name="main_tab_2">场景</string>
     <string name="main_tab_3">我的</string>
+    <string name="main_tab_4">评测</string>
 
     <!--常用-->
     <string name="success">成功</string>

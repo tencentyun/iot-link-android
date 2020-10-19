@@ -10,8 +10,9 @@ object CommonUtils {
     }
 
     fun getAndroidID(): String {
-        val id = Settings.System.getString(T.getContext().contentResolver, Settings.System.ANDROID_ID)
-        return if (TextUtils.isEmpty(id)) ""
-        else id
+        return "evaluation_default"
+//        val id = Settings.System.getString(T.getContext().contentResolver, Settings.System.ANDROID_ID)
+//        return if (TextUtils.isEmpty(id)) ""
+//        else id
     }
 }
