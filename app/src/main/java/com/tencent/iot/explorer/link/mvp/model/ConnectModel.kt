@@ -8,8 +8,8 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.http.ConnectionListener
 import com.tencent.iot.explorer.link.core.auth.http.Reconnect
 import com.tencent.iot.explorer.link.core.auth.response.DeviceBindTokenStateResponse
-import com.tencent.iot.explorer.link.core.link.SmartConfigService
-import com.tencent.iot.explorer.link.core.link.SoftAPService
+import com.tencent.iot.explorer.link.core.link.service.SmartConfigService
+import com.tencent.iot.explorer.link.core.link.service.SoftAPService
 import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener

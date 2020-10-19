@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
 import android.provider.Settings
-import android.text.TextUtils
-import android.util.Log
 import android.view.View
-import com.alibaba.fastjson.JSON
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
@@ -15,14 +12,12 @@ import com.tencent.iot.explorer.link.core.auth.http.ConnectionListener
 import com.tencent.iot.explorer.link.core.auth.http.Reconnect
 import com.tencent.iot.explorer.link.core.auth.http.RetryJob
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
-import com.tencent.iot.explorer.link.core.auth.response.BindDeviceTokenResponse
 import com.tencent.iot.explorer.link.core.auth.response.DeviceBindTokenStateResponse
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
-import com.tencent.iot.explorer.link.core.demo.response.UserInfoResponse
-import com.tencent.iot.explorer.link.core.link.SmartConfigService
-import com.tencent.iot.explorer.link.core.link.SoftAPService
+import com.tencent.iot.explorer.link.core.link.service.SmartConfigService
+import com.tencent.iot.explorer.link.core.link.service.SoftAPService
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.LinkTask
 import com.tencent.iot.explorer.link.core.link.entity.SmartConfigStep
@@ -41,8 +36,8 @@ class ConnectDeviceActivity : BaseActivity() {
     private val task = LinkTask()
 
 
-    private var smartConfigService:SmartConfigService? = null
-    private var softAPService:SoftAPService? = null
+    private var smartConfigService: SmartConfigService? = null
+    private var softAPService: SoftAPService? = null
     private var retryJob: RetryJob? = null
     @Volatile
     var checkDeviceBindTokenStateStarted = false
