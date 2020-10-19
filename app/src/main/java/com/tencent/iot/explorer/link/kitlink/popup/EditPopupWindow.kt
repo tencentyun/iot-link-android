@@ -1,13 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.popup
 
 import android.content.Context
-import android.text.InputFilter
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.util.rangeTo
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import kotlinx.android.synthetic.main.popup_edit.view.*
 
 /**

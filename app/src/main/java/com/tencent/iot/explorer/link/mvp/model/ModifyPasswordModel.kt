@@ -9,7 +9,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ModifyPasswordView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 
 class ModifyPasswordModel(view: ModifyPasswordView) : ParentModel<ModifyPasswordView>(view), MyCallback {
 

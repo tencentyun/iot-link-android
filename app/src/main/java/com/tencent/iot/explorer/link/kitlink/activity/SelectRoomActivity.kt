@@ -12,7 +12,7 @@ import com.tencent.iot.explorer.link.kitlink.holder.WeekRepeatHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_select_room.*
 import kotlinx.android.synthetic.main.item_week_repeat.view.*

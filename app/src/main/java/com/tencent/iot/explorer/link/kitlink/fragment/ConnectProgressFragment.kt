@@ -11,11 +11,10 @@ import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.customview.progress.WaveProgress
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConnectActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import kotlinx.android.synthetic.main.connected.*
 import kotlinx.android.synthetic.main.connecting.*
 import kotlinx.android.synthetic.main.fragment_connect_progress.*

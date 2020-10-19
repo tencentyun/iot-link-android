@@ -6,15 +6,13 @@ import android.text.TextUtils
 import androidx.multidex.MultiDex
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.util.AppData
-import com.tencent.iot.explorer.link.kitlink.util.Weak
-import com.tencent.iot.explorer.link.util.SharePreferenceUtil
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
-import com.tencent.iot.explorer.link.kitlink.util.Utils
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.core.utils.Utils
 
 
 /**
@@ -99,6 +97,7 @@ class App : Application() {
         super.onTerminate()
         //关闭WebSocket
         IoTAuth.destroy()
+        T.setContext(null)
     }
 
 }

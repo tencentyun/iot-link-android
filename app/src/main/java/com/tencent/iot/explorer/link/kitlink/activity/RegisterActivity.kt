@@ -8,13 +8,12 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
-import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
-import com.tencent.iot.explorer.link.kitlink.util.Utils
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.RegisterPresenter
 import com.tencent.iot.explorer.link.mvp.view.RegisterView
-import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.layout_email_register.view.*
 import kotlinx.android.synthetic.main.layout_phone_register.view.*
@@ -37,7 +36,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     private lateinit var phoneView: View
     private lateinit var emailView: View
 
-    private val ANDROID_ID = CommonUtils.getAndroidID()
+    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
 
     override fun getPresenter(): IPresenter? {
         return presenter
@@ -76,7 +75,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         } else {
             iv_register_agreement.setImageResource(R.mipmap.icon_unselected)
         }
-        if (!CommonUtils.isChineseSystem()) {
+        if (!Utils.isChineseSystem(this)) {
             phoneView.tv_register_to_country.text = getString(R.string.country_china_en)
             emailView.tv_register_to_country_email.text = getString(R.string.country_china_en)
         }

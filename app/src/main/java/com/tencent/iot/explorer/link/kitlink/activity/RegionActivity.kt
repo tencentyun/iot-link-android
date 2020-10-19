@@ -7,25 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.customview.MySideBarView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.RegionEntity
-import com.tencent.iot.explorer.link.kitlink.entity.TimeZoneEntity
 import com.tencent.iot.explorer.link.kitlink.holder.RegionKeyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.RegionViewHolder
-import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneKeyViewHolder
-import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneViewHolder
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.Utils
 import kotlinx.android.synthetic.main.activity_region.*
-import kotlinx.android.synthetic.main.activity_time_zone.*
 import kotlinx.android.synthetic.main.activity_time_zone.my_side_bar
 import kotlinx.android.synthetic.main.activity_time_zone.tv_show_key
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -137,7 +133,7 @@ class RegionActivity: PActivity(),
         tempList.forEach {
             val index: Int
             val firstLetter: String
-            if (!CommonUtils.isChineseSystem()) {// 英文
+            if (!Utils.isChineseSystem(this)) {// 英文
                 index = it.TitleEN[0] - 'A'
                 firstLetter = it.TitleEN[0].toString()
                 it.Title = it.TitleEN

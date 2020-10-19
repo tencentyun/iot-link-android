@@ -5,8 +5,8 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.ImageSelectorActivity
-import com.tencent.iot.explorer.link.util.picture.imp.ImageSelectorUtils
+import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.ImageSelectorActivity
+import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.popup_select_camera.view.*
 
 /**

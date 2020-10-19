@@ -13,9 +13,9 @@ import androidx.core.app.ActivityCompat
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
-import com.tencent.iot.explorer.link.kitlink.util.DataHolder
-import com.tencent.iot.explorer.link.util.SharePreferenceUtil
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.DataHolder
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.customview.status.StatusBarUtil
 import java.util.*
 

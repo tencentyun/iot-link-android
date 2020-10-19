@@ -7,21 +7,18 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.view.View
 import com.alibaba.fastjson.JSONObject
-import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.ConnectApGuide
-import com.tencent.iot.explorer.link.kitlink.entity.HardwareGuide
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import kotlinx.android.synthetic.main.fragment_soft_hotspot.*
 
 class SoftHotspotFragment(type: Int, productId: String) : BaseFragment() {

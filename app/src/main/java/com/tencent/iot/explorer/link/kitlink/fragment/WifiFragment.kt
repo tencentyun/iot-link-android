@@ -9,11 +9,9 @@ import android.text.TextWatcher
 import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.customview.dialog.WifiHelperDialog
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.check.LocationUtil
-import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.core.utils.LocationUtil
+import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import kotlinx.android.synthetic.main.fragment_wifi.*
 import kotlinx.android.synthetic.main.smart_config_second.*
 

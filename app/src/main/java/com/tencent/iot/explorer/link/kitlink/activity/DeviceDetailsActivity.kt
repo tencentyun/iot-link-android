@@ -14,7 +14,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.DeviceDetailPresenter
 import com.tencent.iot.explorer.link.mvp.view.DeviceDetailView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import kotlinx.android.synthetic.main.activity_device_details.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

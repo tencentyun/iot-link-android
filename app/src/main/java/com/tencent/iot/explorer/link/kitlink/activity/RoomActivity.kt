@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import kotlinx.android.synthetic.main.activity_room.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

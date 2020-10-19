@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.response
 
-import com.tencent.iot.explorer.link.kitlink.util.JsonManager
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 
 /**
  * 基础响应实体

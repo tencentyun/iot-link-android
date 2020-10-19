@@ -12,7 +12,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.TimerListView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 
 /**
  * 云端定时列表业务
@@ -109,7 +109,8 @@ class TimerListModel(view: TimerListView) : ParentModel<TimerListView>(view), My
                     if (deletePosition >= 0)
                         timerList.removeAt(deletePosition)
                     deletePosition = -1
-                    T.show(T.getContext().getString(R.string.delete_success)) //"删除成功"
+                    T.show(
+                        T.getContext().getString(R.string.delete_success)) //"删除成功"
                     view?.showTimerList(timerList.size)
                 }
             }

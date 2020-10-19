@@ -5,7 +5,7 @@ import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
-import com.tencent.iot.explorer.link.kitlink.util.DataHolder
+import com.tencent.iot.explorer.link.DataHolder
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_dark_big_switch.view.*
 

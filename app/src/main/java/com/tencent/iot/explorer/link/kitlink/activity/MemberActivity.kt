@@ -10,7 +10,7 @@ import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
-import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
+import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.activity_member.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

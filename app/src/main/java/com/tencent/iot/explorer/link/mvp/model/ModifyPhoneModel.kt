@@ -1,6 +1,5 @@
 package com.tencent.iot.explorer.link.mvp.model
 
-import com.tencent.iot.explorer.link.ErrorCode
 import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
@@ -10,7 +9,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ModifyPhoneView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 
 class ModifyPhoneModel(view: ModifyPhoneView) : ParentModel<ModifyPhoneView>(view), MyCallback {
 

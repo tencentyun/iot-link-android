@@ -3,11 +3,10 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import kotlinx.android.synthetic.main.item_room_list.view.*
 
 /**

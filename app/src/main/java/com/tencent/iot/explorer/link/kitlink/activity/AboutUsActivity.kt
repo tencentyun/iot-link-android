@@ -3,7 +3,6 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
-import android.provider.Settings
 import android.view.View
 import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSONObject
@@ -15,11 +14,11 @@ import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
-import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
-import com.tencent.iot.explorer.link.kitlink.util.FileUtils
+import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.Utils
 import kotlinx.android.synthetic.main.activity_about_us.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -30,7 +29,7 @@ class AboutUsActivity : BaseActivity() {
 
     val INSTALL_PERMISS_CODE = 1
 
-    private val ANDROID_ID = CommonUtils.getAndroidID()
+    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
 
     override fun getContentView(): Int {
         return R.layout.activity_about_us

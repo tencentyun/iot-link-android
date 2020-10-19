@@ -10,7 +10,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.BindPhonePresenter
 import com.tencent.iot.explorer.link.mvp.view.BindPhoneView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import kotlinx.android.synthetic.main.activity_bind_phone.*
 import kotlinx.android.synthetic.main.activity_bind_phone.et_set_password
 import kotlinx.android.synthetic.main.activity_bind_phone.et_verify_set_password

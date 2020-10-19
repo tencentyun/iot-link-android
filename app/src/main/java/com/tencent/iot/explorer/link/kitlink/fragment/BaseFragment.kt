@@ -10,9 +10,9 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.activity.MainActivity
-import com.tencent.iot.explorer.link.kitlink.util.DataHolder
+import com.tencent.iot.explorer.link.DataHolder
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 
 abstract class BaseFragment : Fragment() {
 

@@ -1,6 +1,5 @@
 package com.tencent.iot.explorer.link.mvp.model
 
-import android.app.DownloadManager
 import android.content.Context
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
@@ -15,7 +14,6 @@ import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 import com.tencent.cos.xml.exception.CosXmlClientException
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.response.UserSettingResponse
-import com.tencent.iot.explorer.link.util.T
 
 
 /**
