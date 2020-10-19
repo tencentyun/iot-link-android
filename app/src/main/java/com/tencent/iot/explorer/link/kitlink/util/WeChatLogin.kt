@@ -3,10 +3,10 @@ package com.tencent.iot.explorer.link.kitlink.util
 import android.app.Activity
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.wxapi.WXEntryActivity
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
-import com.tencent.iot.explorer.link.util.T
 
 
 /**

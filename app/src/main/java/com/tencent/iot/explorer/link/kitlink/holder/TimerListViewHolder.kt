@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
-import com.tencent.iot.explorer.link.kitlink.util.DataHolder
+import com.tencent.iot.explorer.link.DataHolder
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_timer_list.view.*
 import java.lang.StringBuilder

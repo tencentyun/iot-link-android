@@ -1,27 +1,23 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.app.Activity
-import android.content.Intent
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.customview.MySideBarView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.entity.CountryCodeEntity
 import com.tencent.iot.explorer.link.kitlink.entity.TimeZoneEntity
-import com.tencent.iot.explorer.link.kitlink.holder.CountryCodeKeyViewHolder
-import com.tencent.iot.explorer.link.kitlink.holder.CountryCodeViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneKeyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.util.T
-import kotlinx.android.synthetic.main.activity_country_code.*
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.Utils
 import kotlinx.android.synthetic.main.activity_time_zone.*
 import kotlinx.android.synthetic.main.activity_time_zone.my_side_bar
 import kotlinx.android.synthetic.main.activity_time_zone.tv_show_key
@@ -43,7 +39,7 @@ class TimeZoneActivity: PActivity(),
     private var flags = IntArray(26)
 
     private fun getTimeZoneList() {
-        if (CommonUtils.isChineseSystem()) {// 中文
+        if (Utils.isChineseSystem(this)) {// 中文
             HttpRequest.instance.getGlobalConfig(CommonField.REGION_LIST_CN, this)
             saveLanguage(CommonField.CHINESE)
         } else {// 外文

@@ -1,9 +1,8 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
 import com.alibaba.fastjson.JSON
-import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import java.lang.StringBuilder
 
 /**

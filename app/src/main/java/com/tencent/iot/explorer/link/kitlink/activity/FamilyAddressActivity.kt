@@ -6,10 +6,10 @@ import android.content.pm.PackageManager
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.http.HttpCallBack
+import com.tencent.iot.explorer.link.core.auth.http.HttpUtil
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.util.HttpCallBack
-import com.tencent.iot.explorer.link.kitlink.util.HttpUtil
-import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 import com.tencent.map.geolocation.TencentLocation
 import com.tencent.map.geolocation.TencentLocationListener
 import com.tencent.map.geolocation.TencentLocationManager

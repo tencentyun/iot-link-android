@@ -1,9 +1,8 @@
 package com.tencent.iot.explorer.link.customview.dialog
 
-import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import com.tencent.iot.explorer.link.util.picture.utils.FileUtils
+import com.tencent.iot.explorer.link.kitlink.util.picture.utils.FileUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
