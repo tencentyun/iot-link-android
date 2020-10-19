@@ -39,7 +39,7 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
         deviceEntity = get("device")
         tv_title.text = getString(R.string.device_details)
         deviceEntity?.run {
-            tv_device_alias_name.text = AliasName
+            tv_device_alias_name.text = getAlias()
         }
     }
 
@@ -103,7 +103,7 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
             editPopupWindow = EditPopupWindow(this)
         }
         deviceEntity?.run {
-            editPopupWindow?.setShowData(getString(R.string.device_name), AliasName)
+            editPopupWindow?.setShowData(getString(R.string.device_name), getAlias())
         }
         editPopupWindow?.setBg(device_detail_bg)
         editPopupWindow?.show(device_detail)
@@ -129,7 +129,7 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
                     override fun success(response: BaseResponse, reqCode: Int) {
                         if (response.isSuccess()) {
                             deviceEntity?.AliasName = aliasName
-                            tv_device_alias_name.text = aliasName
+                            tv_device_alias_name.text = deviceEntity?.getAlias()
                         } else {
                             if (!TextUtils.isEmpty(response.msg))
                                 T.show(response.msg)
