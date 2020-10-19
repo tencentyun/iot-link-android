@@ -141,13 +141,13 @@
 
         <!--picture start-->
         <activity
-            android:name="com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.ImageSelectorBrowseActivity"
+            android:name=".kitlink.util.picture.imageselectorbrowser.ImageSelectorBrowseActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name="com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.ImageSelectorActivity"
+            android:name=".kitlink.util.picture.imageselectorbrowser.ImageSelectorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name="com.tencent.iot.explorer.link.util.picture.clipimage.ClipPictureActivity" />
-        <activity android:name="com.tencent.iot.explorer.link.util.picture.clipimage.ImageSimpleBrowseActivity" />
+        <activity android:name=".kitlink.util.picture.clipimage.ClipPictureActivity" />
+        <activity android:name=".kitlink.util.picture.clipimage.ImageSimpleBrowseActivity" />
         <!--picture end-->
 
         <receiver android:name=".MessageReceiver">

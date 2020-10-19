@@ -9,8 +9,8 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.activity.HelpWebViewActivity
 import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.util.AppData
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.AppData
+import com.tencent.iot.explorer.link.T
 
 
 object BridgeImpl {

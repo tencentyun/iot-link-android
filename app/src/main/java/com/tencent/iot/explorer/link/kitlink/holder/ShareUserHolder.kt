@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.ShareUserEntity
-import com.tencent.iot.explorer.link.util.date.DateFormatUtil
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
+import com.tencent.iot.explorer.link.kitlink.util.DateUtils
+import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.item_share_user.view.*
 
 /**
@@ -27,7 +27,7 @@ class ShareUserHolder : CRecyclerView.CViewHolder<ShareUserEntity> {
             )
             //2020-01-08  14：02
             itemView.tv_item_user_date.text =
-                DateFormatUtil.forString(BindTime * 1000, "yyyy-MM-dd HH:mm")
+                DateUtils.forString(BindTime * 1000, "yyyy-MM-dd HH:mm")
         }
         itemView.rl_delete_share_user.setOnClickListener {
             recyclerItemView?.doAction(

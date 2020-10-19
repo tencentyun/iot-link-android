@@ -5,16 +5,11 @@ import android.content.Intent
 import android.os.SystemClock
 import android.text.TextUtils
 import android.view.View
-import android.widget.Toast
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.util.AppInfoUtils
-import com.tencent.iot.explorer.link.util.SharePreferenceUtil
-import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_guide.*
 
 
@@ -76,7 +71,7 @@ class GuideActivity  : PActivity(), View.OnClickListener{
                 if (hits[0] >= SystemClock.uptimeMillis() - duration) {
                     if (hits.size == 5) {
                         // 获取AndroidID，并保存至剪切板
-                        AppInfoUtils.copy(this, CommonUtils.getAndroidID())
+                        Utils.copy(this, Utils.getAndroidID(T.getContext()))
                     }
                 }
             }

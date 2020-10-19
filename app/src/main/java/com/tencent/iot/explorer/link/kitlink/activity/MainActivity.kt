@@ -26,11 +26,12 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.customview.home.BottomItemEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.*
-import com.tencent.iot.explorer.link.util.SharePreferenceUtil
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.tpns.baseapi.XGApiConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
