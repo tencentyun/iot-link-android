@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.auth.consts
+package com.tencent.iot.explorer.link.core.auth.consts
 
 object SocketField {
 
