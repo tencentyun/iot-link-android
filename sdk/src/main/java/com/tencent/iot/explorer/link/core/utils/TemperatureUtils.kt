@@ -1,6 +1,5 @@
-package com.tencent.iot.explorer.link.kitlink.util
+package com.tencent.iot.explorer.link.core.utils
 
-import com.tencent.iot.explorer.link.core.log.L
 import java.text.DecimalFormat
 
 object TemperatureUtils {

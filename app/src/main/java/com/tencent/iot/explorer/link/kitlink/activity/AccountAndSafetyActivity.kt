@@ -4,6 +4,7 @@ import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.RegionEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse

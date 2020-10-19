@@ -6,20 +6,17 @@ import android.os.Handler
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.core.text.isDigitsOnly
-import androidx.core.widget.doOnTextChanged
-import com.alibaba.fastjson.JSON
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorCode
 import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.check.VerifyEdit
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
@@ -33,13 +30,7 @@ import com.tencent.iot.explorer.link.util.SharePreferenceUtil
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_login2.*
-import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.activity_set_password.*
 import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*
-import kotlinx.android.synthetic.main.layout_email_login.view.*
-import kotlinx.android.synthetic.main.layout_phone_forgot_pwd.view.*
-import kotlinx.android.synthetic.main.layout_phone_login.view.*
-import kotlinx.android.synthetic.main.layout_phone_register.view.*
 import kotlinx.android.synthetic.main.layout_verify_code_login.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
