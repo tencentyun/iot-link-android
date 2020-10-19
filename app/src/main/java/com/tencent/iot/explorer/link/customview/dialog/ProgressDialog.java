@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.skydoves.progressview.ProgressView;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.retrofit.DownloadRequest;
-import com.tencent.iot.explorer.link.util.T;
+import com.tencent.iot.explorer.link.T;
 
 import java.io.File;
 import java.io.IOException;

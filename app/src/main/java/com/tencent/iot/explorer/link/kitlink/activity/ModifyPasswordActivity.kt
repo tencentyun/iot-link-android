@@ -13,7 +13,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ModifyPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.ModifyPasswordView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import kotlinx.android.synthetic.main.activity_modify_password.*
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.*
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.tv_get_verify_code

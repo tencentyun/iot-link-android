@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
-import com.tencent.iot.explorer.link.kitlink.util.DataHolder
+import com.tencent.iot.explorer.link.DataHolder
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_simple_long_switch.view.*
 

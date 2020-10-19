@@ -10,8 +10,8 @@ import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
-import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.fragment_me.*
 
 /**
