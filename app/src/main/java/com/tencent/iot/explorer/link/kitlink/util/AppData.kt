@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.util
 import android.content.Context
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -163,6 +164,8 @@ class AppData private constructor() {
             user = User()
             user?.Token = token
             user?.ExpireAt = expireAt
+            IoTAuth.user.Token = token
+            IoTAuth.user.ExpireAt = expireAt
         }
     }
 

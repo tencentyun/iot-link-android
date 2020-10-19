@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.auth.socket
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.util.Base64
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.resp.HeartMessage
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.payload.PayloadMessage
@@ -45,7 +46,7 @@ open class DispatchMsgHandler {
 
     private fun parseYunMessage(reqId: Int, message: String) {
         when (reqId) {
-            -1 -> {
+            MessageConst.HEART_ID -> {
                 try {
                     heartCallback?.response(
                         reqId, JSON.parseObject(message, HeartMessage::class.java)
