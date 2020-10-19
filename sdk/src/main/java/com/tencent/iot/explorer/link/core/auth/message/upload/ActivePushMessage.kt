@@ -7,4 +7,8 @@ class ActivePushMessage(deviceIds: ArrayString) : UploadMessage() {
         commonParams["DeviceIds"] = deviceIds
     }
 
+    override fun toString(): String {
+        reqId = 1
+        return super.toString()
+    }
 }
