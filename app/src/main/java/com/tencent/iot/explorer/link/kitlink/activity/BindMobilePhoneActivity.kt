@@ -10,6 +10,7 @@ import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_bind_mobile_phone.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class BindMobilePhoneActivity : PActivity(), MyCallback {
 
-    private var countryName = getString(R.string.china_main_land)//"中国大陆"
+    private var countryName = T.getContext().getString(R.string.china_main_land)//"中国大陆"
     private var countryCode = "86"
     private var phone = ""
     private var isSend = false

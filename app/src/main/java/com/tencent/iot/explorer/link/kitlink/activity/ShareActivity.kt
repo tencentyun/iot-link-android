@@ -12,6 +12,7 @@ import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
+import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_share.*
 import kotlinx.android.synthetic.main.layout_email_register.view.*
 import kotlinx.android.synthetic.main.layout_phone_register.view.*
@@ -26,7 +27,7 @@ class ShareActivity : BaseActivity(), MyCallback, View.OnClickListener {
     private var shareType = true
 
     private var countryCode = "86"
-    private var countryName = getString(R.string.china_main_land)//"中国大陆"
+    private var countryName = T.getContext().getString(R.string.china_main_land)//"中国大陆"
     private var account = ""
 
     private lateinit var phoneView: View
