@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.mvp.model
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.kitlink.entity.ParentRespEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -91,6 +92,8 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
                     response.parse(LoginResponse::class.java)?.Data?.let {
                         //登录成功
                         App.data.setAppUser(it)
+                        IoTAuth.user.Token = it.Token
+                        IoTAuth.user.ExpireAt = it.ExpireAt
                         view?.loginSuccess(it)
                         return
                     }

@@ -1,15 +1,15 @@
 package com.tencent.iot.explorer.link.core.auth.message.payload
 
-internal class PayloadMessage {
+class PayloadMessage {
 
     var action = ""
     var params: Param? = null
     var push = false
 
-    inner class Param {
+    class Param {
         var Time = ""
-        var Type = "Template"
-        var SubType = "Report"
+        var Type = ""
+        var SubType = ""
         var Topic = ""
         var Payload = ""
         var Seq = 0L
