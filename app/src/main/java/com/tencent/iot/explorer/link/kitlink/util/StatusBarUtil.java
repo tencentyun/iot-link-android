@@ -13,6 +13,8 @@ import android.view.WindowManager;
 
 import androidx.annotation.IntDef;
 
+import com.tencent.iot.explorer.link.core.utils.OSUtils;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;

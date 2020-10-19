@@ -8,10 +8,6 @@ import com.alibaba.fastjson.TypeReference;
 import java.util.List;
 import java.util.Map;
 
-/**
- * json数据管理
- * Created by THINK on 2017/4/25.
- */
 
 public class JsonManager {
     /**

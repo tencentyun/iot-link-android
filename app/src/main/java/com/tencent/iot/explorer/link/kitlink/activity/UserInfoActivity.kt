@@ -13,26 +13,20 @@ import android.widget.TextView
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
-import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.UserInfoPresenter
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
-import com.tencent.iot.explorer.link.util.AppInfoUtils
-import com.tencent.iot.explorer.link.util.SharePreferenceUtil
-import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.ImageSelectorConstant.REQUEST_IMAGE
-import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
-import com.tencent.iot.explorer.link.util.picture.imp.ImageSelectorUtils
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.ImageSelectorConstant.REQUEST_IMAGE
+import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
+import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_user_info.*
 import kotlinx.android.synthetic.main.dialog_temperature.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import java.util.*
 
 
 /**
@@ -137,7 +131,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
                 if (hits[0] >= SystemClock.uptimeMillis() - duration) {
                     if (hits.size == 5) {
                         // 获取AndroidID，并保存至剪切板
-                        AppInfoUtils.copy(this, CommonUtils.getAndroidID())
+                        Utils.copy(this, Utils.getAndroidID(T.getContext()))
                     }
                 }
             }
@@ -315,7 +309,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun onLongClick(v: View?): Boolean {
         if (v is TextView) {
-            AppInfoUtils.copy(this@UserInfoActivity, v.text.toString())
+            Utils.copy(this@UserInfoActivity, v.text.toString())
             T.show(getString(R.string.copy))
         }
         return true

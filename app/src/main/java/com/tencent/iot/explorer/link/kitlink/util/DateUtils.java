@@ -1,9 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.util;
 
-import com.tencent.iot.explorer.link.App;
 import com.tencent.iot.explorer.link.R;
-import com.tencent.iot.explorer.link.util.T;
+import com.tencent.iot.explorer.link.T;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,5 +24,31 @@ public class DateUtils {
         now.setTime(date);
         now.set(Calendar.DATE, now.get(Calendar.DATE) + day);
         return now.getTime();
+    }
+
+    /**
+     * 把毫秒值转化为yyyy-MM-dd
+     *
+     * @param currentTimeMillis
+     * @return
+     */
+    public static String forString(long currentTimeMillis) {
+        return forString(currentTimeMillis, null);
+    }
+
+    /**
+     * 把毫秒值转化为format格式的日期
+     *
+     * @param currentTimeMillis
+     * @return
+     */
+    public static String forString(long currentTimeMillis, String format) {
+        Date d = new Date(currentTimeMillis);
+        if ((format == null) || format.equals("")) {
+            format = "yyyy-MM-dd";
+        }
+        DateFormat df = new SimpleDateFormat(format);
+        String str = df.format(d);
+        return str;
     }
 }
