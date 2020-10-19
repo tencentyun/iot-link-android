@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.core.link
+package com.tencent.iot.explorer.link.core.link.service
 
 import android.content.Context
 import android.text.TextUtils

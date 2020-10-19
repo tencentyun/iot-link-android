@@ -5,12 +5,11 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
-import android.util.Log
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.Utils
-import com.tencent.iot.explorer.link.kitlink.util.Weak
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.GetCodePresenter
 import com.tencent.iot.explorer.link.mvp.view.GetCodeView

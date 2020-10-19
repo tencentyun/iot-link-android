@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.util
 import android.text.TextUtils
 import android.util.Log
 import com.tencent.iot.explorer.link.*
+import com.tencent.iot.explorer.link.core.auth.util.SignatureUtil
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.IPUtil
