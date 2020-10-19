@@ -5,7 +5,7 @@ import android.content.Intent
 import android.text.TextUtils
 import androidx.multidex.MultiDex
 import com.tencent.android.tpush.XGPushConfig
-import com.tencent.iot.explorer.link.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -80,7 +80,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         MultiDex.install(this)
-        IoTAuth.init()
+        IoTAuth.init(BuildConfig.TencentIotLinkAppkey, BuildConfig.TencentIotLinkAppSecret)
         //初始化弹框
         T.setContext(this.applicationContext)
         //日志开关

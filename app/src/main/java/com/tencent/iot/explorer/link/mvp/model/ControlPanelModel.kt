@@ -3,10 +3,10 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.os.Handler
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.auth.IoTAuth
-import com.tencent.iot.explorer.link.auth.message.payload.Payload
-import com.tencent.iot.explorer.link.auth.message.upload.ArrayString
-import com.tencent.iot.explorer.link.auth.socket.callback.ActivePushCallback
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
+import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
+import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.response.*
@@ -16,7 +16,6 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
-import com.tencent.iot.explorer.link.util.T
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -24,7 +23,7 @@ import kotlin.collections.ArrayList
  * 控制面板业务
  */
 class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(view), MyCallback,
-        ActivePushCallback {
+    ActivePushCallback {
 
     init {
         IoTAuth.addActivePushCallback(this)

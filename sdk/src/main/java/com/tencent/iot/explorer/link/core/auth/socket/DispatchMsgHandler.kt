@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.auth.socket
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.util.Base64
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.resp.HeartMessage
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.payload.PayloadMessage
@@ -45,7 +46,7 @@ open class DispatchMsgHandler {
 
     private fun parseYunMessage(reqId: Int, message: String) {
         when (reqId) {
-            -1 -> {
+            MessageConst.HEART_ID -> {
                 try {
                     heartCallback?.response(
                         reqId, JSON.parseObject(message, HeartMessage::class.java)
@@ -123,9 +124,9 @@ open class DispatchMsgHandler {
         }
     }
 
-    //    {"type":"delta", "payload":{"state":{"power_switch":0},"version":0}}
-//    {"type":"update","state":{"reported":{"brightness":23}},"version":0,"clientToken":"API-ControlDeviceData-1571981804"}
-    //{ "method": "report", "params": { "brightness": 14, "color": 0, "power_switch": 0, "name": "test-light-position-3556"}, "timestamp": 1581585022, "clientToken": "22"}
+    // {"type":"delta", "payload":{"state":{"power_switch":0},"version":0}}
+    // {"type":"update","state":{"reported":{"brightness":23}},"version":0,"clientToken":"API-ControlDeviceData-1571981804"}
+    // { "method": "report", "params": { "brightness": 14, "color": 0, "power_switch": 0, "name": "test-light-position-3556"}, "timestamp": 1581585022, "clientToken": "22"}
     private fun getPayload(p: String): String {
         L.e("Payload转码", "$p")
         JSON.parseObject(p)?.run {

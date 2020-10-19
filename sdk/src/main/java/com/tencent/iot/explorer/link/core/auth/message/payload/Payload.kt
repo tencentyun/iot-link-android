@@ -1,5 +1,7 @@
 package com.tencent.iot.explorer.link.core.auth.message.payload
 
+import com.alibaba.fastjson.JSON
+
 class Payload {
 
     //设备监听到下发的数据字符串
@@ -16,6 +18,31 @@ class Payload {
     //json中返回的“DeviceId”字段
     var deviceId = ""
 
+    fun keySet(): Set<String>? {
+        try {
+            return JSON.parseObject(data)?.keys
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun getValue(id: String): String {
+        try {
+            JSON.parseObject(data)?.run {
+                return when (getString(id)) {
+                    "true" -> "1"
+                    "false" -> "0"
+                    else -> getString(id)
+
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return "0"
+    }
+
     override fun toString(): String {
         val sb = StringBuilder()
         sb.append("收到下发原数据：").append(json).append("\n")
@@ -23,5 +50,4 @@ class Payload {
             .append("payload中有效数据：").append(data)
         return sb.toString()
     }
-
 }
