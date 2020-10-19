@@ -23,6 +23,7 @@ import com.tencent.android.tpush.XGPushConfig
 import com.tencent.android.tpush.XGPushManager
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.DateUtils
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo

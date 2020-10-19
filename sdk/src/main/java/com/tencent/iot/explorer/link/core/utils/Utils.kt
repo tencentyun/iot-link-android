@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.kitlink.util
+package com.tencent.iot.explorer.link.core.utils
 
 import android.content.Context
 import android.text.TextUtils
@@ -7,16 +7,8 @@ import java.util.*
 
 object Utils {
 
-    fun isEmpty(src: String): Boolean {
-        if (src == null || src.equals("")) {
-            return true
-        }
-
-        return false
-    }
-
-    fun isDigitsOnly(src: String): Boolean {
-        var flag = src.toIntOrNull()
+    private fun isDigitsOnly(src: String): Boolean {
+        val flag = src.toIntOrNull()
         if (flag != null) {
             return true
         }
@@ -24,12 +16,11 @@ object Utils {
     }
 
 
-    // 从字符传中获取第一段连续的数字
+    // 从字符串中获取第一段连续的数字
     fun getFirstSeriesNumFromStr(src: String): Int {
-        if (isEmpty(src)) {
-            return 0;
+        if (TextUtils.isEmpty(src)) {
+            return 0
         }
-
         var start = -1
         var end = -1
         for ((i, item) in src.withIndex()) {
@@ -41,7 +32,7 @@ object Utils {
             }
         }
 
-        var retStr = ""
+        val retStr: String
         if (start < 0 && end < 0) {
             return 0
         } else if (start >= 0 && end < 0) {
@@ -58,18 +49,17 @@ object Utils {
     }
 
     fun getLang(): String {
-        var local = Locale.getDefault().toString()
+        val local = Locale.getDefault().toString()
         if (TextUtils.isEmpty(local)) {
             L.d("getLang return default lang(zh-CN)")
             return "zh-CN" // 默认时返回中文类型
         }
         var tmp = local
-        var eleArray = tmp.split("_")
+        val eleArray = tmp.split("_")
         if (eleArray.size >= 3) {
-            tmp = eleArray.get(0) + "_" + eleArray.get(1)
+            tmp = eleArray[0] + "_" + eleArray[1]
         }
-        var ret = tmp.replace("_", "-")
-
+        val ret = tmp.replace("_", "-")
         L.d("getLang return $ret")
         return ret
     }
@@ -78,14 +68,14 @@ object Utils {
     fun getUrlParamValue(url: String, name: String?): String? {
         val paramsStr = url.substring(url.indexOf("?") + 1, url.length)
         val split: MutableMap<String, String> = hashMapOf()
-        var params = paramsStr.split("&")
+        val params = paramsStr.split("&")
         for (paramKV in params) {
-            var kv = paramKV.split("=")
+            val kv = paramKV.split("=")
             if (kv.size == 2) {
-                split[kv.get(0)] = kv.get(1)
+                split[kv[0]] = kv[1]
             }
         }
-        return split.get(name)
+        return split[name]
     }
 
     interface SecondsCountDownCallback {
@@ -98,7 +88,7 @@ object Utils {
     }
 
     // 非单例线程，允许多处使用倒计时功能
-    fun startCountBySeconds(max: Int, step: Int, secondsCountDownCallback: SecondsCountDownCallback) {
+    private fun startCountBySeconds(max: Int, step: Int, secondsCountDownCallback: SecondsCountDownCallback) {
         if (max <= 0) return  // 上线为负数或者 0 的时候不进行倒计时的功能
 
         var countDown = 0;

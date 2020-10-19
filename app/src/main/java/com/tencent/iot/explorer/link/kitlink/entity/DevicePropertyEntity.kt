@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.entity
 
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.util.TemperatureUtils
+import com.tencent.iot.explorer.link.core.utils.TemperatureUtils
 import com.tencent.iot.explorer.link.util.T
 import com.tencent.iot.explorer.link.util.date.DateFormatUtil
 import java.lang.Exception

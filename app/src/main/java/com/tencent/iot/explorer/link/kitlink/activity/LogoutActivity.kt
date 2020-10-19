@@ -8,16 +8,13 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.CommonUtils
-import com.tencent.iot.explorer.link.kitlink.util.DateUtils
+import com.tencent.iot.explorer.link.core.utils.DateUtils
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.mvp.presenter.AccountAndSafetyPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.LogoutPresenter
 import com.tencent.iot.explorer.link.mvp.view.LogoutView
 import com.tencent.iot.explorer.link.util.T
 import kotlinx.android.synthetic.main.activity_logout.*
-import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
@@ -38,7 +35,8 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.logout_account)
         tv_logout_time.text =
-            DateUtils.getFormatDateWithoutTime(DateUtils.getDateAfter(Date(), 7+1)) + " 00:00:00" // 7天后的24点
+            DateUtils.getFormatDateWithoutTime(
+                DateUtils.getDateAfter(Date(), 7+1)) + " 00:00:00" // 7天后的24点
         presenter = LogoutPresenter(this)
     }
 
