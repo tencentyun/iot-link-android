@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include
+        android:id="@+id/sbhv_help_center"
+        layout="@layout/menu_back_layout" />
+
+    <ProgressBar
+            app:layout_constraintTop_toBottomOf="@id/sbhv_help_center"
+            android:id="@+id/progressBar_webView"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:progressDrawable="@drawable/webview_progress_style"
+
+            />
+
+    <WebView
+        app:layout_constraintTop_toBottomOf="@id/progressBar_webView"
+        android:id="@+id/comment_detail_web"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
