@@ -140,7 +140,6 @@ object IoTAuth {
         VerifyService()
     }
 
-
     /**
      * 初始化WebSocket
      */
