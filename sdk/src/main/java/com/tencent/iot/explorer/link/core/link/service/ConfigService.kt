@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.core.link
+package com.tencent.iot.explorer.link.core.link.service
 
 import org.json.JSONException
 import org.json.JSONObject
