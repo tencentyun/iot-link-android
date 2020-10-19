@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.Manifest
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,6 +14,7 @@ import com.alibaba.fastjson.JSON
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.FullGridView
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConnectActivity
@@ -28,13 +28,11 @@ import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.response.RecommDeviceListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import kotlinx.android.synthetic.main.fragment_devices.*
-import kotlin.math.ceil
 
 
 class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickListener{

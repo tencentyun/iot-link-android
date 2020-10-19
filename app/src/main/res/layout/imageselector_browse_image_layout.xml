@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     android:background="@android:color/black" >
 
-    <com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.HackyViewPager
+    <com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.HackyViewPager
         android:id="@+id/vp_image_browse"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-    </com.tencent.iot.explorer.link.util.picture.imageselectorbrowser.HackyViewPager>
+    </com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.HackyViewPager>
 
     <TextView
         android:id="@+id/tv_image_count"

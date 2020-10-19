@@ -2,9 +2,9 @@ package com.tencent.iot.explorer.link.kitlink.entity
 
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.util.TemperatureUtils
-import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.date.DateFormatUtil
+import com.tencent.iot.explorer.link.core.utils.TemperatureUtils
+import com.tencent.iot.explorer.link.kitlink.util.DateUtils
+import com.tencent.iot.explorer.link.T
 import java.lang.Exception
 
 /**
@@ -88,7 +88,7 @@ class DevicePropertyEntity {
 
     private fun getTimestampText(value: String): String {
         try {
-            return DateFormatUtil.forString(value.toLong())
+            return DateUtils.forString(value.toLong())
         } catch (e: Exception) {
             e.toString()
         }

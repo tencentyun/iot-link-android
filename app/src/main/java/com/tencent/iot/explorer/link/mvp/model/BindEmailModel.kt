@@ -8,7 +8,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.BindEmailView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 
 class BindEmailModel(view: BindEmailView) : ParentModel<BindEmailView>(view), MyCallback {
 

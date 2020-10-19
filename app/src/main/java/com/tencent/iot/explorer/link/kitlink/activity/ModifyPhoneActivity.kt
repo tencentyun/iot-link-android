@@ -9,11 +9,9 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ModifyPhonePresenter
 import com.tencent.iot.explorer.link.mvp.view.ModifyPhoneView
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 import kotlinx.android.synthetic.main.activity_modify_phone.*
 import kotlinx.android.synthetic.main.activity_modify_phone.tv_get_verify_code
-import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.layout_phone_register.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  {

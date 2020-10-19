@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.util.T
+import com.tencent.iot.explorer.link.T
 
 class WeatherEntity {
 

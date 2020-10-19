@@ -1,10 +1,9 @@
-package com.tencent.iot.explorer.link.core.link
+package com.tencent.iot.explorer.link.core.link.service
 
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.text.TextUtils
 import android.util.Log
-import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.LinkTask

@@ -5,8 +5,8 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.SetPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.SetPasswordView
-import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.keyboard.KeyBoardUtils
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_set_password.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
