@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.entity.MemberEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.util.picture.imp.ImageManager
+import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.item_member.view.*
 
 /**

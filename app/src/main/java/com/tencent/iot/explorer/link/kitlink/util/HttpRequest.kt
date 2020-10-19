@@ -1,17 +1,19 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
-import android.util.Log
 import com.tencent.iot.explorer.link.*
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.auth.util.SignatureUtil
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.IPUtil
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.retrofit.StringRequest
 import java.util.*
 import com.tencent.iot.explorer.link.retrofit.Callback
-import com.tencent.iot.explorer.link.util.T
 import kotlin.collections.HashMap
 
 /**
@@ -46,7 +48,7 @@ class HttpRequest private constructor() {
         const val BUSI_APP = "studioapp"
         const val BUSI_OPENSOURCE = "studioappOpensource"
 
-        val ANDROID_ID = CommonUtils.getAndroidID()
+        val ANDROID_ID = Utils.getAndroidID(T.getContext())
     }
 
     /**
