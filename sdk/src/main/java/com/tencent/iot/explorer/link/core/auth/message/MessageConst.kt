@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.auth.message
+package com.tencent.iot.explorer.link.core.auth.message
 
 object MessageConst {
 
