@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.core.auth.socket
 
 import android.text.TextUtils
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.resp.RespFailMessage
 import com.tencent.iot.explorer.link.core.auth.message.resp.RespSuccessMessage
@@ -50,7 +51,7 @@ internal class WSClientManager private constructor() {
     //保活相关参数
     private var isKeep = false
     private val delayMills = 10 * 1000L
-    private var param = "{\"action\":\"Hello\",\"reqId\":0}"
+    private var param = "{\"action\":\"Hello\",\"reqId\":${MessageConst.HEART_ID}}"
 
 
     /**
