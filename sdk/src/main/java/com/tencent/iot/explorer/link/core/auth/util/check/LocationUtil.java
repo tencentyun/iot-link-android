@@ -1,11 +1,8 @@
-package com.tencent.iot.explorer.link.util.check;
+package com.tencent.iot.explorer.link.core.auth.util.check;
 
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.Looper;
-import android.util.Log;
-
-import com.alibaba.fastjson.JSON;
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
@@ -18,11 +15,7 @@ public class LocationUtil {
         if (context != null) {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             if (locationManager != null) {
-                boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                // 通过网络定位的方式
-//                boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-//                return gps || network;
-                return gps;
+                return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             }
         }
         return false;

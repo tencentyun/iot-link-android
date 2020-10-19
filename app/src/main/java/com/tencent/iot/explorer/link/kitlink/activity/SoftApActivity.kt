@@ -10,7 +10,7 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.GetBindDeviceTokenPresenter
 import com.tencent.iot.explorer.link.mvp.view.GetBindDeviceTokenView
 import com.tencent.iot.explorer.link.util.T
-import com.tencent.iot.explorer.link.util.check.LocationUtil
+import com.tencent.iot.explorer.link.core.auth.util.check.LocationUtil
 import kotlinx.android.synthetic.main.activity_soft_ap.*
 
 class SoftApActivity : PActivity(), GetBindDeviceTokenView {
