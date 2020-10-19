@@ -4,7 +4,7 @@ import android.content.Context
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
-import com.tencent.iot.explorer.link.util.check.LocationUtil
+import com.tencent.iot.explorer.link.core.utils.LocationUtil
 import com.tencent.map.geolocation.TencentLocation
 import com.tencent.map.geolocation.TencentLocationListener
 import okhttp3.*
