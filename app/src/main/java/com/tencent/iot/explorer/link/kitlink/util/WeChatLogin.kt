@@ -1,12 +1,18 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.app.Activity
+import android.content.Context
+import android.graphics.BitmapFactory
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.wxapi.WXEntryActivity
-import com.tencent.mm.opensdk.modelmsg.SendAuth
-import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tencent.iot.explorer.link.util.T
+import com.tencent.mm.opensdk.modelmsg.SendAuth
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject
+import com.tencent.mm.opensdk.openapi.IWXAPI
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 
 /**
@@ -71,6 +77,29 @@ class WeChatLogin {
         fun onSuccess(reqCode: String)
         fun cancel()
         fun onFail(msg:String)
+    }
+
+    fun shareText(context: Context, shareContent: String?) {
+        var wxApi = WXAPIFactory.createWXAPI(context, APP_ID)
+        if (wxApi.isWXAppInstalled) {
+            wxApi.registerApp(APP_ID)
+            val webpage = WXWebpageObject()
+            webpage.webpageUrl = shareContent
+            val msg = WXMediaMessage(webpage)
+//            msg.title = context.getString(R.string.app_name)
+        msg.description = " "
+            //这里替换一张自己工程里的图片资源
+//            val thumb =
+//                BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher)
+//            msg.setThumbImage(thumb)
+            val req = SendMessageToWX.Req()
+            req.transaction = System.currentTimeMillis().toString()
+            req.message = msg
+            req.scene = SendMessageToWX.Req.WXSceneSession
+            wxApi.sendReq(req)
+        } else {
+            T.show(context.resources.getString(R.string.not_wechat_client))
+        }
     }
 
 
