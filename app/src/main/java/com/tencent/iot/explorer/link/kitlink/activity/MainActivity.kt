@@ -12,7 +12,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.MeFragment
 import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
@@ -27,6 +26,7 @@ import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.customview.home.BottomItemEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField

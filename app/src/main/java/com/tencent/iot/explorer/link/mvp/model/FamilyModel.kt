@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.mvp.model
 
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.FamilyInfoEntity
 import com.tencent.iot.explorer.link.kitlink.entity.MemberEntity
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -13,6 +12,7 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.FamilyView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 
 /**
  * 家庭详情业务
