@@ -30,6 +30,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.customview.home.BottomItemEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.fragment.CommentFragment
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.tpns.baseapi.XGApiConfig
@@ -41,6 +42,7 @@ import kotlin.system.exitProcess
  * main页面
  */
 class MainActivity : PActivity(), MyCallback {
+    private var previousPosition = 0
 
     private val fragments = arrayListOf<Fragment>()
 
@@ -117,20 +119,28 @@ class MainActivity : PActivity(), MyCallback {
         home_bottom_view.addMenu(
             BottomItemEntity(
                 getString(R.string.main_tab_1),
-                R.color.main_tab_normal, R.color.main_tab_hover,
+                resources.getColor(R.color.main_tab_normal), resources.getColor(R.color.main_tab_hover),
                 R.mipmap.main_tab_1_normal, R.mipmap.main_tab_1_hover
             )
         )
-        .addMenu(
-            BottomItemEntity(
-                getString(R.string.main_tab_3),
-                R.color.main_tab_normal, R.color.main_tab_hover,
-                R.mipmap.main_tab_3_normal, R.mipmap.main_tab_3_hover
+            .addMenu(
+                BottomItemEntity(
+                    getString(R.string.main_tab_4),
+                    resources.getColor(R.color.main_tab_normal), resources.getColor(R.color.main_tab_hover),
+                    R.mipmap.commet_unpressed, R.mipmap.commet_pressed
+                )
             )
-        ).showMenu()
+            .addMenu(
+                BottomItemEntity(
+                    getString(R.string.main_tab_3),
+                    resources.getColor(R.color.main_tab_normal), resources.getColor(R.color.main_tab_hover),
+                    R.mipmap.main_tab_3_normal, R.mipmap.main_tab_3_hover
+                )
+            ).showMenu()
 
         fragments.clear()
         fragments.add(HomeFragment())
+        fragments.add(CommentFragment())
         fragments.add(MeFragment())
         this.supportFragmentManager.beginTransaction()
             .add(R.id.main_container, fragments[0])
@@ -141,7 +151,7 @@ class MainActivity : PActivity(), MyCallback {
 
     override fun setListener() {
         home_bottom_view.setOnItemClickListener { _, position, previewPosition ->
-            showFragment(position, previewPosition)
+            showFragment(position)
         }
         (fragments[0] as? HomeFragment)?.run {
             popupListener = object : HomeFragment.PopupListener {
@@ -201,23 +211,35 @@ class MainActivity : PActivity(), MyCallback {
     override fun success(response: BaseResponse, reqCode: Int) {
     }
 
-    private fun showFragment(position: Int, previewPosition: Int) {
-        StatusBarUtil.setStatusBarDarkTheme(this, true)
-        /*if (position == 2) {
-            //设置白色状态栏
-            StatusBarUtil.setStatusBarDarkTheme(this, false)
-        } else {
-            //设置黑色状态栏
-            StatusBarUtil.setStatusBarDarkTheme(this, true)
-        }*/
+//    private fun showFragment(position: Int, previewPosition: Int) {
+//        StatusBarUtil.setStatusBarDarkTheme(this, true)
+//        /*if (position == 2) {
+//            //设置白色状态栏
+//            StatusBarUtil.setStatusBarDarkTheme(this, false)
+//        } else {
+//            //设置黑色状态栏
+//            StatusBarUtil.setStatusBarDarkTheme(this, true)
+//        }*/
+//        val transaction = this.supportFragmentManager.beginTransaction()
+//        if (fragments[position].isAdded) {
+//            transaction.show(fragments[position]).hide(fragments[previewPosition]).commit()
+//        } else {
+//            transaction.add(R.id.main_container, fragments[position])
+//                .show(fragments[position]).hide(fragments[previewPosition])
+//                .commit()
+//        }
+//    }
+
+    private fun showFragment(position: Int) {
         val transaction = this.supportFragmentManager.beginTransaction()
         if (fragments[position].isAdded) {
-            transaction.show(fragments[position]).hide(fragments[previewPosition]).commit()
+            transaction.show(fragments[position]).hide(fragments[previousPosition]).commit()
         } else {
             transaction.add(R.id.main_container, fragments[position])
-                .show(fragments[position]).hide(fragments[previewPosition])
+                .show(fragments[position]).hide(fragments[previousPosition])
                 .commit()
         }
+        previousPosition = position
     }
 
     private fun showFamilyPopup(familyList: List<FamilyEntity>) {
