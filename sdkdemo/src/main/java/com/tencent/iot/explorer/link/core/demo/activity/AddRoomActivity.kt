@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.core.demo.activity
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
@@ -30,7 +30,7 @@ class AddRoomActivity : BaseActivity(), MyCallback {
             show(getString(R.string.empty_room))
             return
         }
-        get<Family>("family")?.run {
+        get<FamilyEntity>("family")?.run {
             if (TextUtils.isEmpty(FamilyId)) return
             IoTAuth.roomImpl.create(FamilyId, familyName, this@AddRoomActivity)
         }

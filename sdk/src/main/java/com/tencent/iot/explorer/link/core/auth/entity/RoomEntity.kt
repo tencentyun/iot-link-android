@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.core.auth.entity
 /**
  * 房间实体
  */
-class Room {
+class RoomEntity {
 
     var RoomId = ""
     var RoomName = ""

@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.View
 import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.WeatherEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.head_home1.view.*

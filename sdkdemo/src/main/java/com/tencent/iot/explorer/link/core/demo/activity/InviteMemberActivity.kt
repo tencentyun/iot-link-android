@@ -3,8 +3,8 @@ package com.tencent.iot.explorer.link.core.demo.activity
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
-import com.tencent.iot.explorer.link.core.auth.entity.Device
-import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
@@ -59,7 +59,7 @@ class InviteMemberActivity : BaseActivity(), MyCallback {
      * 发送邀请进入家庭的邀请
      */
     private fun sendFamilyInvite(userId: String) {
-        get<Family>("family")?.run {
+        get<FamilyEntity>("family")?.run {
             IoTAuth.memberImpl.sendFamilyInvite(FamilyId, userId, this@InviteMemberActivity)
         }
     }
