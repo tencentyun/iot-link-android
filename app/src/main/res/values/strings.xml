@@ -4,6 +4,7 @@
     <string name="main_tab_1">首页</string>
     <string name="main_tab_2">场景</string>
     <string name="main_tab_3">我的</string>
+    <string name="main_tab_4">评测</string>
 
     <!--常用-->
     <string name="success">成功</string>
@@ -32,6 +33,8 @@
     <string name="open_WIFI">请打开 WIFI</string>
     <string name="download_success">下载成功</string>
     <string name="download_failed">下载失败</string>
+    <string name="wechat_share">微信好友</string>
+    <string name="copy_link">复制链接</string>
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
     <string name="email_login">邮箱登录</string>
