@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
@@ -26,7 +26,7 @@ class TimingProjectActivity : BaseActivity() {
 
     private val timingList = arrayListOf<TimingProject>()
     private lateinit var adapter: TimingProjectAdapter
-    private var device: Device? = null
+    private var device: DeviceEntity? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_timing_project
@@ -34,7 +34,7 @@ class TimingProjectActivity : BaseActivity() {
 
     override fun initView() {
         tv_title.text = "云端定时"
-        device = get<Device>("device")
+        device = get<DeviceEntity>("device")
         rv_timing_project.layoutManager = LinearLayoutManager(this)
         adapter = TimingProjectAdapter(this, timingList)
         rv_timing_project.adapter = adapter

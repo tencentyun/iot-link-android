@@ -4,8 +4,9 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.kitlink.holder.RoomListFootHolder
 import com.tencent.iot.explorer.link.kitlink.holder.RoomListViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
@@ -13,7 +14,6 @@ import com.tencent.iot.explorer.link.kitlink.response.RoomListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
 import kotlinx.android.synthetic.main.activity_room_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
