@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import kotlinx.android.synthetic.main.item_room_list.view.*
 
 /**

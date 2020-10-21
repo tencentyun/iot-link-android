@@ -6,8 +6,8 @@ import com.tencent.iot.explorer.link.core.demo.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
-import com.tencent.iot.explorer.link.core.auth.entity.Family
-import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class RoomActivity : BaseActivity(), MyCallback {
 
-    private var room: Room? = null
+    private var room: RoomEntity? = null
     private var familyId = ""
 
     private var deleteRoomPopup: CommonPopupWindow? = null
@@ -32,8 +32,8 @@ class RoomActivity : BaseActivity(), MyCallback {
 
     override fun initView() {
         tv_title.text = getString(R.string.room_setting)
-        room = get<Room>("room")
-        get<Family>("family")?.FamilyId?.let {
+        room = get<RoomEntity>("room")
+        get<FamilyEntity>("family")?.FamilyId?.let {
             familyId = it
         }
         tv_room_setting_name.text = room?.RoomName ?: ""

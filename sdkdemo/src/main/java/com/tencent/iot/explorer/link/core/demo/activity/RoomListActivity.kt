@@ -4,8 +4,8 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.Family
-import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
 import com.tencent.iot.explorer.link.core.demo.R
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class RoomListActivity : BaseActivity(), MyCallback {
 
     private lateinit var adapter: RoomListAdapter
-    private val roomList = arrayListOf<Room>()
+    private val roomList = arrayListOf<RoomEntity>()
 
     override fun onResume() {
         refreshRoomList()
@@ -57,7 +57,7 @@ class RoomListActivity : BaseActivity(), MyCallback {
      *  获取家庭内房间列表
      */
     private fun refreshRoomList() {
-        get<Family>("family")?.run {
+        get<FamilyEntity>("family")?.run {
             IoTAuth.familyImpl.roomList(FamilyId, 0, this@RoomListActivity)
         }
     }
