@@ -5,8 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
-import com.tencent.iot.explorer.link.kitlink.fragment.BaseFragment
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.head_home3.view.*

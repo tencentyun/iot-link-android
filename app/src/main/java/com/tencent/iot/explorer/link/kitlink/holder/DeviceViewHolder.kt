@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.item_device.view.*
