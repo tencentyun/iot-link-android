@@ -3,10 +3,17 @@ package com.tencent.iot.explorer.link.core.utils
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.core.log.L
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.util.*
+
 
 object Utils {
 
@@ -150,4 +157,57 @@ object Utils {
         return if (TextUtils.isEmpty(id)) ""
         else id
     }
+
+    fun bmpToByteArray(bitmap: Bitmap?): ByteArray? {
+
+        // 要返回的字符串
+        var reslut: ByteArray? = null
+        var baos: ByteArrayOutputStream? = null
+        try {
+            if (bitmap != null) {
+                baos = ByteArrayOutputStream()
+                /**
+                 * 压缩只对保存有效果bitmap还是原来的大小
+                 */
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                baos.flush()
+                baos.close()
+                // 转换为字节数组
+                reslut = baos.toByteArray()
+            } else {
+                return null
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                if (baos != null) {
+                    baos.close()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return reslut
+    }
+
+    fun getBitmap(context: Context, vectorDrawableId: Int): Bitmap? {
+        var bitmap: Bitmap? = null
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            val vectorDrawable = context.getDrawable(vectorDrawableId)
+            bitmap = Bitmap.createBitmap(
+                vectorDrawable!!.intrinsicWidth,
+                vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+            vectorDrawable.draw(canvas)
+        } else {
+            bitmap = BitmapFactory.decodeResource(context.resources, vectorDrawableId)
+        }
+        return bitmap
+    }
+//    @JvmStatic
+//    fun main(args: Array<String>) {
+//    }
 }
