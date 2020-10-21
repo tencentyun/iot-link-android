@@ -180,7 +180,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     }
 
     override fun permissionDenied(permission: String) {
-        requestPermission(arrayOf(permission))
+//        requestPermission(arrayOf(permission))
     }
 
     override fun onClick(v: View?) {
