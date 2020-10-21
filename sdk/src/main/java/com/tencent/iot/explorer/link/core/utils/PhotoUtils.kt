@@ -36,13 +36,10 @@ object PhotoUtils {
             // 通过FileProvider创建一个content类型的Uri
             val uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", temp)
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-
         } else {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(temp))
         }
-        context.startActivityForResult(intent,
-            RESULT_CODE_CAMERA
-        )
+        context.startActivityForResult(intent, RESULT_CODE_CAMERA)
     }
 
     /**
@@ -53,9 +50,7 @@ object PhotoUtils {
         val albumIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         albumIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         albumIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-        context.startActivityForResult(albumIntent,
-            RESULT_CODE_PHOTO
-        )
+        context.startActivityForResult(albumIntent, RESULT_CODE_PHOTO)
     }
 }
 

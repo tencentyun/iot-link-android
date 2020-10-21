@@ -109,8 +109,7 @@ class TimerListModel(view: TimerListView) : ParentModel<TimerListView>(view), My
                     if (deletePosition >= 0)
                         timerList.removeAt(deletePosition)
                     deletePosition = -1
-                    T.show(
-                        T.getContext().getString(R.string.delete_success)) //"删除成功"
+                    T.show(T.getContext().getString(R.string.delete_success)) //"删除成功"
                     view?.showTimerList(timerList.size)
                 }
             }
