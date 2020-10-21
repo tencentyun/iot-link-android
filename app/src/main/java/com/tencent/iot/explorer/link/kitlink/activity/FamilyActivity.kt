@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.kitlink.holder.FamilyFootHolder
 import com.tencent.iot.explorer.link.kitlink.holder.FamilyInfoHeaderHolder
 import com.tencent.iot.explorer.link.kitlink.holder.MemberListViewHolder
@@ -16,7 +16,6 @@ import com.tencent.iot.explorer.link.mvp.IModel
 import com.tencent.iot.explorer.link.mvp.model.FamilyModel
 import com.tencent.iot.explorer.link.mvp.view.FamilyView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.kitlink.activity.MActivity
 import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.foot_family.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

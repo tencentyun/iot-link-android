@@ -6,7 +6,7 @@ import com.tencent.iot.explorer.link.core.demo.popup.CommonPopupWindow
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
@@ -32,7 +32,7 @@ class MemberActivity : BaseActivity(), MyCallback {
     override fun initView() {
         tv_title.text = getString(R.string.member_setting)
         member = get("member")
-        role = get<Family>("family")?.Role ?: 0
+        role = get<FamilyEntity>("family")?.Role ?: 0
         showMemberInfo()
     }
 
@@ -91,7 +91,7 @@ class MemberActivity : BaseActivity(), MyCallback {
      */
     private fun deleteMember() {
         member?.run {
-            get<Family>("family")?.let {
+            get<FamilyEntity>("family")?.let {
                 IoTAuth.memberImpl.deleteFamilyMember(it.FamilyId, UserID, this@MemberActivity)
             }
         }

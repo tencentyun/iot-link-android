@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.item_family_list.view.*
 

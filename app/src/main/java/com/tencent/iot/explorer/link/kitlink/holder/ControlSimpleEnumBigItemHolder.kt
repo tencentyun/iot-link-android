@@ -3,9 +3,9 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.PropertyEntity
 import com.tencent.iot.explorer.link.DataHolder
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_simple_big_enum_item.view.*
 

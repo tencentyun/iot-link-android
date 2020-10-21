@@ -3,11 +3,11 @@ package com.tencent.iot.explorer.link.core.demo.holder
 import android.content.Context
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.demo.R
 import kotlinx.android.synthetic.main.item_device.view.*
 
-class DeviceHolder : BaseHolder<Device> {
+class DeviceHolder : BaseHolder<DeviceEntity> {
 
     constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
 

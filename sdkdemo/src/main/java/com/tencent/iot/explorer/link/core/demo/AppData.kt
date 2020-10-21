@@ -1,8 +1,8 @@
 package com.tencent.iot.explorer.link.core.demo
 
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
-import com.tencent.iot.explorer.link.core.auth.entity.Family
-import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.entity.UserInfo
 import java.util.*
@@ -23,9 +23,9 @@ class AppData private constructor() {
     //用户
     var userInfo = UserInfo()
     //当前家庭
-    private var currentFamily = Family()
+    private var currentFamily = FamilyEntity()
     //当前房间
-    private var currentRoom = Room()
+    private var currentRoom = RoomEntity()
 
     var bindDeviceToken = ""
 
@@ -43,7 +43,7 @@ class AppData private constructor() {
     /**
      * 获取当前家庭
      */
-    fun getCurrentFamily(): Family {
+    fun getCurrentFamily(): FamilyEntity {
         //判断当前family是否还存在列表中：去除删除操作的bug
         IoTAuth.familyList.forEachIndexed { _, entity ->
             if (entity.FamilyId == currentFamily.FamilyId) {
@@ -53,7 +53,7 @@ class AppData private constructor() {
         currentFamily = if (IoTAuth.familyList.isNotEmpty()) {
             IoTAuth.familyList[0]
         } else {
-            Family()
+            FamilyEntity()
         }
         return currentFamily
     }
@@ -69,7 +69,7 @@ class AppData private constructor() {
     /**
      * 获取当前房间
      */
-    fun getCurrentRoom(): Room {
+    fun getCurrentRoom(): RoomEntity {
         //判断当前room是否还存在列表中：去除删除操作的bug
         IoTAuth.roomList.forEachIndexed { _, entity ->
             if (entity.RoomId == currentRoom.RoomId) {
@@ -79,7 +79,7 @@ class AppData private constructor() {
         currentRoom = if (IoTAuth.roomList.isNotEmpty()) {
             IoTAuth.roomList[0]
         } else {
-            Room()
+            RoomEntity()
         }
         return currentRoom
     }
@@ -88,7 +88,7 @@ class AppData private constructor() {
      * 退出登录时调用
      */
     fun clear() {
-        currentFamily = Family()
+        currentFamily = FamilyEntity()
         IoTAuth.familyList.clear()
         IoTAuth.roomList.clear()
         IoTAuth.deviceList.clear()
