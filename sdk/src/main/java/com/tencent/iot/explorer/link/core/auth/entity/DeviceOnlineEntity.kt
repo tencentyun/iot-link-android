@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.core.auth.entity
 
-class DeviceOnline {
+class DeviceOnlineEntity {
 
     var DeviceName = ""
     var DeviceId = ""
