@@ -7,8 +7,8 @@ import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.DeviceCallback
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
-import com.tencent.iot.explorer.link.core.auth.entity.Device
-import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
 import com.tencent.iot.explorer.link.core.demo.App
@@ -107,7 +107,7 @@ class DeviceFragment : BaseFragment(), MyCallback {
         //有家庭获取房间列表,第一个房间为所有设备，也是默认房间
         IoTAuth.roomList.clear()
         //先添加一个默认房间
-        val room = Room()
+        val room = RoomEntity()
         room.RoomName = "所有设备"
         IoTAuth.roomList.add(room)
         IoTAuth.familyImpl.roomList(App.data.getCurrentFamily().FamilyId, 0, this)
@@ -122,7 +122,7 @@ class DeviceFragment : BaseFragment(), MyCallback {
                 0,
                 object : DeviceCallback {
                     //获取到设备列表时回调（新增设备无在线状态）
-                    override fun success(deviceList: List<Device>) {
+                    override fun success(deviceList: List<DeviceEntity>) {
                         showDevice()
                     }
 

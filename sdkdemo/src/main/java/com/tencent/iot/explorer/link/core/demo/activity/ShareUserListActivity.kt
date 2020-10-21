@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class ShareUserListActivity : BaseActivity(), MyCallback {
 
     private lateinit var adapter: ShareUserAdapter
-    private var device: Device? = null
+    private var device: DeviceEntity? = null
 
     private val userList = arrayListOf<ShareUser>()
 
