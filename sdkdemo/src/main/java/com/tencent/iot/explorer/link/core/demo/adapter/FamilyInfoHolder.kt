@@ -3,11 +3,11 @@ package com.tencent.iot.explorer.link.core.demo.adapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
 import kotlinx.android.synthetic.main.item_family_info.view.*
 
-class FamilyInfoHolder : BaseHolder<Family> {
+class FamilyInfoHolder : BaseHolder<FamilyEntity> {
 
     constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
 
