@@ -108,9 +108,7 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
         if (response.code == 0) {
             var js = JSON.parse(response.data.toString()) as JSONObject
             var url = CommonField.H5_BASE_URL + "?ticket=" + js[CommonField.TOKEN_TICKET]
-            if (App.DEBUG_VERSION) {
-                url += ("&uin=" + Utils.getAndroidID(context!!))
-            }
+            url += ("&uin=" + Utils.getAndroidID(context!!))
             if (!App.isOEMApp()) {
                 url += "&appID=" + T.getContext().applicationInfo.packageName
             }
