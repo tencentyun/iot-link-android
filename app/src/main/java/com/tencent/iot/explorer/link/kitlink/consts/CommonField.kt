@@ -42,6 +42,10 @@ object CommonField {
     const val LOAD_VIEW_TXT_TYPE = "loadViewTxtType"
     const val HARD_WARE_GUIDE = "hardwareGuide"
     const val CONNECT_AP_GUIDE = "connectApGuide"
+    const val EXTRA_INFO = "extraInfo"
+    const val KEY_URL = "url"
+    const val H5_BASE_URL = "https://iot.cloud.tencent.com/explorer-h5/evaluation/"
+    const val WECHAT_MINI_PROGRAM_PATH = "pages/Index/TabPages/Evaluation/EvaluationDetail/EvaluationDetail?item="
 
 
     /*******上传文件********/
