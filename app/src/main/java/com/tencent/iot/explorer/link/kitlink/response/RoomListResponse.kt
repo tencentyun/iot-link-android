@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.response
 
-import com.tencent.iot.explorer.link.kitlink.entity.RoomEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 
 /**
  * 房间列表响应实体

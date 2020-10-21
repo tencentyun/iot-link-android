@@ -3,6 +3,9 @@ package com.tencent.iot.explorer.link
 import android.content.Context
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField

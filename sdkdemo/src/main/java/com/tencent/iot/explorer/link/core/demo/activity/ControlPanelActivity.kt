@@ -8,8 +8,8 @@ import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.ControlPanelCallback
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
-import com.tencent.iot.explorer.link.core.auth.entity.Device
-import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCallback {
 
-    private var device: Device? = null
+    private var device: DeviceEntity? = null
 
     //是否是共享设备
     private var hasShare = false
@@ -87,7 +87,7 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
                             else show("共享设备无法修改")
                         }
                         id == "room" -> {
-                            if (get<Room>("select_room") == null)
+                            if (get<RoomEntity>("select_room") == null)
                                 put("select_room", App.data.getCurrentRoom())
                             jumpActivity(SelectRoomActivity::class.java)
                         }

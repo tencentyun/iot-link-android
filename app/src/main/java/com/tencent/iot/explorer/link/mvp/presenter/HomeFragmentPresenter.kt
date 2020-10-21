@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.mvp.presenter
 
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.mvp.ParentPresenter
 import com.tencent.iot.explorer.link.mvp.model.HomeFragmentModel
 import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView

@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.response
 
-import com.tencent.iot.explorer.link.kitlink.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 
 /**
  *  家庭响应实体

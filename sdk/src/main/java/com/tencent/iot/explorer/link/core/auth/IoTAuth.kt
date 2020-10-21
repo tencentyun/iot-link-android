@@ -1,12 +1,8 @@
 package com.tencent.iot.explorer.link.core.auth
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.TextUtils
-import com.tencent.iot.explorer.link.core.auth.entity.Device
-import com.tencent.iot.explorer.link.core.auth.entity.Family
-import com.tencent.iot.explorer.link.core.auth.entity.Room
-import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.entity.*
 import com.tencent.iot.explorer.link.core.auth.impl.*
 import com.tencent.iot.explorer.link.core.auth.listener.LoginExpiredListener
 import com.tencent.iot.explorer.link.core.auth.message.upload.ActivePushMessage
@@ -32,21 +28,21 @@ object IoTAuth {
      * 家庭列表
      */
     val familyList by lazy {
-        arrayListOf<Family>()
+        arrayListOf<FamilyEntity>()
     }
 
     /**
      * 设备列表
      */
     val roomList by lazy {
-        arrayListOf<Room>()
+        arrayListOf<RoomEntity>()
     }
 
     /**
      * 设备列表
      */
     val deviceList by lazy {
-        arrayListOf<Device>()
+        arrayListOf<DeviceEntity>()
     }
 
     /**

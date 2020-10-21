@@ -8,7 +8,7 @@ import com.tencent.iot.explorer.link.core.demo.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
-import com.tencent.iot.explorer.link.core.auth.entity.Family
+import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.adapter.MemberAdapter
@@ -28,7 +28,7 @@ class FamilyActivity : BaseActivity(), MyCallback {
 
     private lateinit var adapter: MemberAdapter
 
-    private var family: Family? = null
+    private var family: FamilyEntity? = null
 
     private val memberList = arrayListOf<Any>()
     private val familyInfo = FamilyInfo()
@@ -58,7 +58,7 @@ class FamilyActivity : BaseActivity(), MyCallback {
         rv_member_list.layoutManager = layoutManager
         rv_member_list.adapter = adapter
 
-        family = get<Family>("family")
+        family = get<FamilyEntity>("family")
         family?.run {
             if (Role == 1) {
                 if (IoTAuth.familyList.size <= 1)
