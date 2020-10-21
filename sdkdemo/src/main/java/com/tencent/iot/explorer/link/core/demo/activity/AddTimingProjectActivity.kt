@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.adapter.AddTimingProjectAdapter
@@ -109,7 +109,7 @@ class AddTimingProjectActivity : BaseActivity(), MyCallback {
             this.Days = getToday()
             this.TimerName = "我的定时"
             this.TimePoint = "12:00"
-            get<Device>("device")?.let {
+            get<DeviceEntity>("device")?.let {
                 this.ProductId = it.ProductId
                 this.DeviceName = it.DeviceName
             }

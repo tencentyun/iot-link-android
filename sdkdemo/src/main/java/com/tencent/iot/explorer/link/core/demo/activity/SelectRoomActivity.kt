@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.Room
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class SelectRoomActivity : BaseActivity(),MyCallback {
 
     private lateinit var selectedRoom: Room
-    private lateinit var device: Device
+    private lateinit var device: DeviceEntity
     private val roomList = arrayListOf<Room>()
 
     private val adapter = object : BaseAdapter(this, roomList) {
@@ -66,7 +66,7 @@ class SelectRoomActivity : BaseActivity(),MyCallback {
     override fun initView() {
         tv_title.text = "选择房间"
         selectedRoom = get<Room>("select_room")!!
-        device = get<Device>("device")!!
+        device = get<DeviceEntity>("device")!!
         rv_select_room.layoutManager = LinearLayoutManager(this)
         rv_select_room.adapter = adapter
         refreshRoomList()

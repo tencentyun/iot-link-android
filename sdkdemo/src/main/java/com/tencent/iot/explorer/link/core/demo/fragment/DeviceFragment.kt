@@ -7,7 +7,7 @@ import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.DeviceCallback
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.Room
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
@@ -122,7 +122,7 @@ class DeviceFragment : BaseFragment(), MyCallback {
                 0,
                 object : DeviceCallback {
                     //获取到设备列表时回调（新增设备无在线状态）
-                    override fun success(deviceList: List<Device>) {
+                    override fun success(deviceList: List<DeviceEntity>) {
                         showDevice()
                     }
 
