@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Switch
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
 import com.tencent.iot.explorer.link.kitlink.holder.FootAddTimingProjectHolder

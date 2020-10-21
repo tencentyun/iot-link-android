@@ -3,10 +3,10 @@ package com.tencent.iot.explorer.link.core.demo.holder
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import kotlinx.android.synthetic.main.item_room_list.view.*
 
-class RoomListHolder : BaseHolder<Room> {
+class RoomListHolder : BaseHolder<RoomEntity> {
 
     constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
 

@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.Device
-import com.tencent.iot.explorer.link.core.auth.entity.Room
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
 import com.tencent.iot.explorer.link.core.demo.App
@@ -23,14 +23,14 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class SelectRoomActivity : BaseActivity(),MyCallback {
 
-    private lateinit var selectedRoom: Room
-    private lateinit var device: Device
-    private val roomList = arrayListOf<Room>()
+    private lateinit var selectedRoom: RoomEntity
+    private lateinit var device: DeviceEntity
+    private val roomList = arrayListOf<RoomEntity>()
 
     private val adapter = object : BaseAdapter(this, roomList) {
         override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
             return object :
-                BaseHolder<Room>(this@SelectRoomActivity, parent, R.layout.item_week_repeat) {
+                BaseHolder<RoomEntity>(this@SelectRoomActivity, parent, R.layout.item_week_repeat) {
                 override fun show(holder: BaseHolder<*>, position: Int) {
                     data.run {
                         itemView.tv_week_repeat_title.text = RoomName
@@ -65,8 +65,8 @@ class SelectRoomActivity : BaseActivity(),MyCallback {
 
     override fun initView() {
         tv_title.text = "选择房间"
-        selectedRoom = get<Room>("select_room")!!
-        device = get<Device>("device")!!
+        selectedRoom = get<RoomEntity>("select_room")!!
+        device = get<DeviceEntity>("device")!!
         rv_select_room.layoutManager = LinearLayoutManager(this)
         rv_select_room.adapter = adapter
         refreshRoomList()
