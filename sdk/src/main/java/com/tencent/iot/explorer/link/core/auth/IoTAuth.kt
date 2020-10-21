@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.core.auth
 import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.Family
 import com.tencent.iot.explorer.link.core.auth.entity.Room
 import com.tencent.iot.explorer.link.core.auth.entity.User
@@ -46,7 +46,7 @@ object IoTAuth {
      * 设备列表
      */
     val deviceList by lazy {
-        arrayListOf<Device>()
+        arrayListOf<DeviceEntity>()
     }
 
     /**

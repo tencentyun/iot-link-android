@@ -8,7 +8,7 @@ import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.ControlPanelCallback
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.Room
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCallback {
 
-    private var device: Device? = null
+    private var device: DeviceEntity? = null
 
     //是否是共享设备
     private var hasShare = false

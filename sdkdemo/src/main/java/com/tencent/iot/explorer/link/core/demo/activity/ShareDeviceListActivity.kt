@@ -4,7 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.DeviceListResponse
 import com.tencent.iot.explorer.link.core.demo.R
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class ShareDeviceListActivity : BaseActivity() {
 
-    private val shareDeviceList = arrayListOf<Device>()
+    private val shareDeviceList = arrayListOf<DeviceEntity>()
     private lateinit var adapter: DeviceAdapter
 
     override fun getContentView(): Int {

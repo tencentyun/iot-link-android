@@ -1,16 +1,14 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.NavBar
 import com.tencent.iot.explorer.link.kitlink.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.NumberPopupWindow
-import com.tencent.iot.explorer.link.kitlink.theme.PanelTheme
 import com.tencent.iot.explorer.link.kitlink.theme.PanelThemeManager
 import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.mvp.IPresenter

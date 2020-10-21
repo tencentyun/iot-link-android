@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.core.demo.activity
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
-import com.tencent.iot.explorer.link.core.auth.entity.Device
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
@@ -58,7 +58,7 @@ class ShareDeviceActivity : BaseActivity(), MyCallback {
      * 发送设备分享的邀请
      */
     private fun sendShareDevice(userId: String) {
-        get<Device>("device")?.run {
+        get<DeviceEntity>("device")?.run {
             IoTAuth.shareImpl.sendShareDevice(
                 ProductId,
                 DeviceName,
