@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
+import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
 import com.tencent.iot.explorer.link.kitlink.holder.MsgDeviceViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.MsgFamilyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.MsgNotifyViewHolder
-import com.tencent.iot.explorer.link.kitlink.response.MessageListResponse
+import com.tencent.iot.explorer.link.core.auth.response.MessageListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode

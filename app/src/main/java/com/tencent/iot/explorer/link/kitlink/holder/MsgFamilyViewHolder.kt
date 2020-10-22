@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.view.View
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
+import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import kotlinx.android.synthetic.main.item_message_family.view.*

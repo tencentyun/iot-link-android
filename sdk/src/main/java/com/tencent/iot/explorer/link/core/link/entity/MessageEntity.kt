@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.kitlink.entity
+package com.tencent.iot.explorer.link.core.link.entity
 
 /**
  *  消息实体
