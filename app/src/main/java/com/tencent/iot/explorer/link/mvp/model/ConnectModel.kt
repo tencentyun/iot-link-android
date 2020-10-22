@@ -16,7 +16,6 @@ import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
 import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView

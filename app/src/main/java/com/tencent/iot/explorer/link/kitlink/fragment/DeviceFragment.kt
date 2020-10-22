@@ -24,7 +24,6 @@ import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.CategoryDeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.RecommDeviceEntity
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.response.RecommDeviceListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest

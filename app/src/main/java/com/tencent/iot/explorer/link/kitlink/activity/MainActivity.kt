@@ -15,7 +15,6 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.MeFragment
 import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.android.tpush.XGIOperateCallback
 import com.tencent.android.tpush.XGPushConfig
