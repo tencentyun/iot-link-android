@@ -113,7 +113,7 @@ class WeChatLogin {
             }).start()
 
         } else {
-            T.show(context.resources.getString(R.string.not_wechat_client))
+            T.show(context.resources.getString(R.string.not_install_wechat_client))
         }
     }
 
