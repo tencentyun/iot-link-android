@@ -13,10 +13,10 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.TimeZoneEntity
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneKeyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.TimeZoneViewHolder
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils
 import kotlinx.android.synthetic.main.activity_time_zone.*
 import kotlinx.android.synthetic.main.activity_time_zone.my_side_bar

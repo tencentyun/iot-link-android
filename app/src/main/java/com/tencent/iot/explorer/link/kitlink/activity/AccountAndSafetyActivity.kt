@@ -7,12 +7,12 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.RegionEntity
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.AccountAndSafetyPresenter
 import com.tencent.iot.explorer.link.mvp.view.AccountAndSafetyView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils
 import kotlinx.android.synthetic.main.activity_account_and_safety.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

@@ -1,18 +1,13 @@
 package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.shapes.Shape
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.entity.ProductProperty
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
-import com.tencent.iot.explorer.link.kitlink.entity.PropertyEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerDivider
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_dark_big_enum.view.*
@@ -26,7 +21,7 @@ class ControlDarkEnumBigHolder : CRecyclerView.CViewHolder<DevicePropertyEntity>
 
     constructor(context: Context, parent: ViewGroup, resId: Int) : super(context, parent, resId)
 
-    private var list: List<PropertyEntity.MappingEntity>? = null
+    private var list: List<ProductProperty.MappingEntity>? = null
     var selectPosition = 0
 
     override fun show(position: Int) {

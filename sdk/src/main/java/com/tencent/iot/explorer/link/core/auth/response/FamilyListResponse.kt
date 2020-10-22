@@ -2,6 +2,10 @@ package com.tencent.iot.explorer.link.core.auth.response
 
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 
+
+/**
+ *  家庭响应实体
+ */
 class FamilyListResponse {
 
     var RequestId = ""

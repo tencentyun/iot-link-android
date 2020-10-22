@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 
 /**
  *  响应回调
