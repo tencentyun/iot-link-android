@@ -39,7 +39,7 @@ public class MenuItemView extends RelativeLayout {
         tvTitle = new TextView(getContext());
         tvTitle.setId(View.generateViewId());
         tvTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         LayoutParams lptv = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         lptv.bottomMargin = (int) getContext().getResources().getDisplayMetrics().density * 3;
         lptv.topMargin = (int) getContext().getResources().getDisplayMetrics().density * 5;
@@ -47,10 +47,11 @@ public class MenuItemView extends RelativeLayout {
         lptv.addRule(CENTER_HORIZONTAL);
         addView(tvTitle, lptv);
         ivIcon = new ImageView(getContext());
-        LayoutParams lpiv = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams lpiv = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         lpiv.topMargin = (int) getContext().getResources().getDisplayMetrics().density * 4;
         lpiv.addRule(ABOVE, tvTitle.getId());
         lpiv.addRule(CENTER_HORIZONTAL);
+        ivIcon.setAdjustViewBounds(true);
         addView(ivIcon, lpiv);
     }
 }
