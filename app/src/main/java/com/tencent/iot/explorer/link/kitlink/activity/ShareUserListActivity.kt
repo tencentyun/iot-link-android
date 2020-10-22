@@ -4,12 +4,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.ShareUserEntity
 import com.tencent.iot.explorer.link.kitlink.holder.ShareUserFootHolder
 import com.tencent.iot.explorer.link.kitlink.holder.ShareUserHeadHolder
 import com.tencent.iot.explorer.link.kitlink.holder.ShareUserHolder
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.ShareUserResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
