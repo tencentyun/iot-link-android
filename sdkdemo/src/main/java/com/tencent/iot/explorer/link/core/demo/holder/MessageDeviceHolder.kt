@@ -3,14 +3,14 @@ package com.tencent.iot.explorer.link.core.demo.holder
 import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.core.demo.R
-import com.tencent.iot.explorer.link.core.demo.entity.IotMessage
 import com.tencent.iot.explorer.link.core.demo.util.DateFormatUtil
+import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
 import kotlinx.android.synthetic.main.item_message_device.view.*
 
 /**
  * 设备类型消息
  */
-class MessageDeviceHolder : BaseHolder<IotMessage> {
+class MessageDeviceHolder : BaseHolder<MessageEntity> {
 
     constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
 

@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.mvp.presenter
 
-import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
+import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
 import com.tencent.iot.explorer.link.mvp.ParentPresenter
 import com.tencent.iot.explorer.link.mvp.model.MessageModel
 import com.tencent.iot.explorer.link.mvp.view.MessageView

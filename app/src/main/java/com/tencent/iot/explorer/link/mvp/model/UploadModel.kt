@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.content.Context
 import android.text.TextUtils
 import com.alibaba.fastjson.JSONObject
-import com.tencent.iot.explorer.link.kitlink.response.AppCosAuthResponse
+import com.tencent.iot.explorer.link.core.auth.response.AppCosAuthResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.view.UploadView
