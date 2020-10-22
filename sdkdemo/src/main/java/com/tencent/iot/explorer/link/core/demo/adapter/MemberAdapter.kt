@@ -3,16 +3,16 @@ package com.tencent.iot.explorer.link.core.demo.adapter
 import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.core.demo.R
-import com.tencent.iot.explorer.link.core.demo.entity.Member
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
 import com.tencent.iot.explorer.link.core.demo.holder.MemberHolder
+import com.tencent.iot.explorer.link.core.link.entity.MemberEntity
 
 class MemberAdapter : BaseAdapter {
 
     constructor(context: Context, list: List<Any>) : super(context, list)
 
     override fun getItemViewType(position: Int): Int {
-        return if (data(position) is Member) {
+        return if (data(position) is MemberEntity) {
             1
         } else {
             0
