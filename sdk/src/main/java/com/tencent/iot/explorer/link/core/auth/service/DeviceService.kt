@@ -24,13 +24,13 @@ internal class DeviceService : BaseService(), DeviceImpl {
     /**
      * 面板初始对象
      */
-    private var panelConfig: PanelConfig? = null
+    private var panelConfig: ConfigEntity? = null
     private var hasPanel = false
 
     /**
      * 设备产品数据
      */
-    private var product: Product? = null
+    private var product: ProductEntity? = null
     private var hasProduct = false
 
     private var deviceName = ""
@@ -39,11 +39,11 @@ internal class DeviceService : BaseService(), DeviceImpl {
         return panelList
     }
 
-    override fun panelConfig(): PanelConfig? {
+    override fun panelConfig(): ConfigEntity? {
         return panelConfig
     }
 
-    override fun product(): Product? {
+    override fun product(): ProductEntity? {
         return product
     }
 
@@ -126,11 +126,11 @@ internal class DeviceService : BaseService(), DeviceImpl {
             override fun success(response: BaseResponse, reqCode: Int) {
                 if (response.isSuccess()) {
                     response.parse(DeviceOnlineResponse::class.java)?.run {
-                        if (!deviceStatuses.isNullOrEmpty()) {
+                        if (!DeviceStatuses.isNullOrEmpty()) {
                             for (i in index until size) {
                                 IoTAuth.deviceList[i].run {
                                     run check@{
-                                        deviceStatuses!!.forEach {
+                                        DeviceStatuses!!.forEach {
                                             if (DeviceId == it.DeviceId) {
                                                 online = it.Online
                                                 return@check
@@ -306,7 +306,7 @@ internal class DeviceService : BaseService(), DeviceImpl {
                 response.parse(ControlPanelResponse::class.java)?.Data?.let {
                     if (it.isNotEmpty()) {
                         it[0].parse().run {
-                            panelConfig = this
+                            panelConfig = this.configEntity
                             hasPanel = true
                             //合并数据
                             mergeData(callback)

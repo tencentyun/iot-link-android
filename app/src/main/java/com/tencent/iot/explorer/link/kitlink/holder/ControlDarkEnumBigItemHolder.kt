@@ -3,16 +3,16 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.PropertyEntity
 import com.tencent.iot.explorer.link.DataHolder
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.ProductProperty
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_dark_big_enum_item.view.*
 
 /**
  * 暗黑主题：枚举类型大按钮item
  */
-class ControlDarkEnumBigItemHolder : CRecyclerView.CViewHolder<PropertyEntity.MappingEntity> {
+class ControlDarkEnumBigItemHolder : CRecyclerView.CViewHolder<ProductProperty.MappingEntity> {
 
     constructor(
         context: Context,

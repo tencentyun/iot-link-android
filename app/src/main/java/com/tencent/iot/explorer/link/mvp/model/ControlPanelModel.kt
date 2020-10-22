@@ -4,8 +4,16 @@ import android.os.Handler
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceDataEntity
+import com.tencent.iot.explorer.link.core.auth.entity.NavBar
+import com.tencent.iot.explorer.link.core.auth.entity.ProductProperty
+import com.tencent.iot.explorer.link.core.auth.entity.Property
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.ControlPanelResponse
+import com.tencent.iot.explorer.link.core.auth.response.DeviceDataResponse
+import com.tencent.iot.explorer.link.core.auth.response.DeviceProductResponse
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
@@ -40,7 +48,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     private val uiList = ArrayList<Property>()
 
     //产品信息
-    private val propertyList = ArrayList<PropertyEntity>()
+    private val propertyList = ArrayList<ProductProperty>()
 
     //设备当前信息
     private val deviceDataList = arrayListOf<DeviceDataEntity>()
@@ -203,7 +211,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     devicePropertyList.forEachIndexed { _, devicePropertyEntity ->
                         if (it.id == devicePropertyEntity.id) {
                             devicePropertyEntity.setValue(it.value)
-                            devicePropertyEntity.LastUpdate = it.LastUpdate
+                            devicePropertyEntity.LastUpdate = it.lastUpdate
                             return@checked
                         }
                     }

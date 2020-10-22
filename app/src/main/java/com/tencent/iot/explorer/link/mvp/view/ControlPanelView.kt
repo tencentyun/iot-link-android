@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.view
 
 import com.tencent.iot.explorer.link.mvp.ParentView
-import com.tencent.iot.explorer.link.kitlink.entity.NavBar
+import com.tencent.iot.explorer.link.core.auth.entity.NavBar
 
 interface ControlPanelView : ParentView {
 

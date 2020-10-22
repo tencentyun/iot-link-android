@@ -17,12 +17,12 @@ interface DeviceImpl {
     /**
      * 面板数据模板
      */
-    fun panelConfig(): PanelConfig?
+    fun panelConfig(): ConfigEntity?
 
     /**
      * 设备产品信息
      */
-    fun product(): Product?
+    fun product(): ProductEntity?
 
     /**
      * 清空数据
