@@ -22,7 +22,7 @@ interface DeviceImpl {
     /**
      * 设备产品信息
      */
-    fun product(): Product?
+    fun product(): ProductEntity?
 
     /**
      * 清空数据
