@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.holder.FeedbackViewHolder
 import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.model.UploadModel
@@ -22,6 +21,7 @@ import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.cos.xml.exception.CosXmlClientException
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageSelectorUtils
 import kotlinx.android.synthetic.main.activity_feedback.*

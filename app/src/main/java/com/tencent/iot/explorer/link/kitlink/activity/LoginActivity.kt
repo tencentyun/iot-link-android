@@ -17,7 +17,6 @@ import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.check.VerifyEdit
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.User
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -25,6 +24,7 @@ import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
 import com.tencent.iot.explorer.link.mvp.view.LoginView
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_login2.*
 import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*

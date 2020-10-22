@@ -2,8 +2,8 @@ package com.tencent.iot.explorer.link.mvp.model
 
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.BindDeviceTokenResponse
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.ParentModel
