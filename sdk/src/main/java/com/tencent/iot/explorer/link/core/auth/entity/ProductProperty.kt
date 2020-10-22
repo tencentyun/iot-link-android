@@ -1,7 +1,9 @@
 package com.tencent.iot.explorer.link.core.auth.entity
 
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.log.L
 
 /**
  * 产品属性
@@ -81,6 +83,26 @@ class ProductProperty {
         }
     }
 
+    fun getNumberEntity(): NumberEntity? {
+        L.d("json=$define")
+        return JsonManager.parseJson(define, NumberEntity::class.java)
+    }
+
+    fun getStringEntity(): StringEntity {
+        L.d("json=$define")
+        return JsonManager.parseJson(define, StringEntity::class.java)
+    }
+
+    fun getEnumEntity(): EnumEntity {
+        L.d("json=$define")
+        return JsonManager.parseJson(define, EnumEntity::class.java)
+    }
+
+    fun getBoolEntity(): BoolEntity {
+        L.d("json=$define")
+        return JsonManager.parseJson(define, BoolEntity::class.java)
+    }
+
     /**
      * 获取type
      */
@@ -91,4 +113,59 @@ class ProductProperty {
         return JSON.parseObject(define)?.getString("type") ?: "timestamp"
     }
 
+    class NumberEntity {
+        var type = ""
+        var min = "0"
+        var max = "100"
+        var start = ""
+        var step = ""
+        var unit = ""
+
+        fun getNumUnit(): String {
+            return if (unit == "oC") {
+                "℃"
+            } else if (unit == "oF") {
+                "℉"
+            } else {
+                unit
+            }
+        }
+    }
+
+    class StringEntity {
+        var type = ""
+        var min = "0"
+        var max = "0"
+    }
+
+    class EnumEntity {
+        var type = ""
+        var mapping: JSONObject? = null
+
+        fun getValueText(value: String): String {
+            return mapping?.getString(value) ?: ""
+        }
+
+        fun parseList(): ArrayList<MappingEntity> {
+            val list = arrayListOf<MappingEntity>()
+            mapping?.keys?.forEachIndexed { _, k ->
+                list.add(MappingEntity(mapping!!.getString(k), k))
+            }
+            return list
+        }
+    }
+
+    class BoolEntity {
+        var type = ""
+        var mapping: JSONObject? = null
+
+        fun getValueText(value: String): String {
+            return mapping!!.getString(value)
+        }
+    }
+
+    class MappingEntity(k: String, v: String) {
+        var key = k
+        var value = v
+    }
 }
