@@ -1,6 +1,6 @@
-package com.tencent.iot.explorer.link.kitlink.response
+package com.tencent.iot.explorer.link.core.auth.response
 
-import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
+import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
 
 /**
  * 消息列表响应实体
