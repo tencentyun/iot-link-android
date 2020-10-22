@@ -340,11 +340,15 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     private fun showVerifyCodeLogin() {
         tv_title.text = getString(R.string.verify_code_login)
         vp_login2.setCurrentItem(0, true)
+        verifyCodeLoginView.et_login_phone_or_email_byverifycode.setText(accoutPasswdLoginView.et_login_phone_or_email.text)
+        verifyCodeLoginView.et_login_phone_or_email_byverifycode.setSelection(verifyCodeLoginView.et_login_phone_or_email_byverifycode.text.toString().length)
     }
 
     private fun showPasswdLogin() {
         tv_title.text = getString(R.string.account_passwd_login)
         vp_login2.setCurrentItem(1, true)
+        accoutPasswdLoginView.et_login_phone_or_email.setText(verifyCodeLoginView.et_login_phone_or_email_byverifycode.text)
+        accoutPasswdLoginView.et_login_phone_or_email.setSelection(accoutPasswdLoginView.et_login_phone_or_email.text.toString().length)
     }
 
     private fun getUserId(user: User) {
