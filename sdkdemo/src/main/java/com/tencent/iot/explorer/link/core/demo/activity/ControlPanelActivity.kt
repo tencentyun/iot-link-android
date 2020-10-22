@@ -300,7 +300,11 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
             }
         }
         numberPopup!!.showTitle(entity.name)
-        numberPopup!!.setProgress(entity.value.toDouble().toInt())
+        if (entity.value.isNotEmpty()) {
+            numberPopup!!.setProgress(entity.value.toDouble().toInt())
+        } else {
+            numberPopup!!.setProgress(0)
+        }
         numberPopup?.setBg(control_panel_bg)
         numberPopup?.show(control_panel)
     }
