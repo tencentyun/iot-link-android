@@ -4,11 +4,11 @@ import android.content.Context
 import android.text.TextUtils
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.core.demo.entity.ShareUser
 import com.tencent.iot.explorer.link.core.demo.util.DateFormatUtil
+import com.tencent.iot.explorer.link.core.link.entity.ShareUserEntity
 import kotlinx.android.synthetic.main.item_share_user.view.*
 
-class ShareUserHolder : BaseHolder<ShareUser> {
+class ShareUserHolder : BaseHolder<ShareUserEntity> {
     constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
 
     override fun show(holder: BaseHolder<*>, position: Int) {

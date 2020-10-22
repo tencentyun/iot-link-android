@@ -40,7 +40,6 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
     private var mContext : Context? = null
     private var devicesGridView : FullGridView? = null
     private var recommendDevicesGridView : FullGridView? = null
-    private var categoryList = arrayListOf<CategoryDeviceEntity>()
     private var productList = arrayListOf<RecommDeviceEntity>()
     private var isRecommDeviceClicked = false
     @Volatile
@@ -91,7 +90,6 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                             if (split_line != null) split_line.visibility = View.GONE
                             if (gv_recommend_devices != null) gv_recommend_devices.visibility = View.GONE
                         }
-                        categoryList = CategoryList
                         if (devicesGridView != null && mContext != null) {
                             devicesGridView!!.adapter = GridAdapter(mContext!!, CategoryList, false)
                         }
@@ -105,16 +103,15 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                         val wifiConfigTypeList = config.WifiConfTypeList
                         var productId = ""
                         if (!TextUtils.isEmpty(config.profile)) {
-                            var jsonProFile = JSON.parseObject(config.profile)
+                            val jsonProFile = JSON.parseObject(config.profile)
                             if (jsonProFile != null && jsonProFile.containsKey("ProductId") &&
                                 !TextUtils.isEmpty(jsonProFile.getString("ProductId"))) {
                                 productId = jsonProFile.getString("ProductId")
                             }
                         }
 
-                        if (wifiConfigTypeList.equals("{}") || TextUtils.isEmpty(wifiConfigTypeList)) {
+                        if (wifiConfigTypeList == "{}" || TextUtils.isEmpty(wifiConfigTypeList)) {
                             startActivityWithExtra(SmartConnectActivity::class.java, productId)
-
                         } else if (wifiConfigTypeList.contains("[")) {
                             val typeList = JsonManager.parseArray(wifiConfigTypeList)
                             if (typeList.size > 0 && typeList[0] == "softap") {
@@ -130,7 +127,7 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
     }
 
     private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
-        var intent = Intent(context, cls)
+        val intent = Intent(context, cls)
         if (!TextUtils.isEmpty(productId)) {
             intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
             intent.putExtra(CommonField.PRODUCT_ID, productId)
@@ -140,7 +137,6 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (view != null && parent != null) {
-
             if(ContextCompat.checkSelfPermission(mContext!!, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED){
                 when (parent.id) {
@@ -155,7 +151,7 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                 requestPermissions(permissions,1)
             } else {
                 when (parent.id) {
-                    R.id.gv_recommend_devices->{
+                    R.id.gv_recommend_devices->{ // 根据推荐设备的配网方式，跳转到SmartConfig或者SoftAp配网界面
                         val productsList  = arrayListOf<String>()
                         productsList.add(productList[position].ProductId)
                         HttpRequest.instance.getProductsConfig(productsList, this)
