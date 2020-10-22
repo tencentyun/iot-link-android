@@ -1,7 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.net.Uri
+import android.os.Build
 import android.text.TextUtils
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +25,7 @@ import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
 import kotlinx.android.synthetic.main.activity_comment_detail.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
+
 class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     val TAG = this.javaClass.simpleName
 
@@ -40,6 +43,7 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     override fun initView() {
         initWebView()
         iv_back.setColorFilter(R.color.black_333333)
+        tv_title.setText("")
     }
 
     //构建 webView 的数据内容
@@ -61,6 +65,13 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
         comment_detail_web.settings.builtInZoomControls = true
         comment_detail_web.settings.displayZoomControls = false
         comment_detail_web.settings.cacheMode = WebSettings.LOAD_NO_CACHE     // 不缓存
+        comment_detail_web.settings.allowContentAccess = true
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            comment_detail_web.settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        }
+
+        comment_detail_web.settings.setBlockNetworkImage(false);
 
         dialog = ShareOptionDialog(this@CommentDetailsActivity)
         dialog?.setOnDismisListener(onDismisListener)
@@ -82,7 +93,7 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
 
         override fun onCopyLinkClicked() {
             Utils.copy(this@CommentDetailsActivity, this@CommentDetailsActivity.url2Load)
-            T.show(getString(R.string.copy))
+            T.show(getString(R.string.copyed))
         }
 
     }
@@ -183,8 +194,10 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             if (url.contains("onArticleShare?")) {
                 dialog?.show()
+                return false
+            } else {
+                return false
             }
-            return true
         }
     }
 }
