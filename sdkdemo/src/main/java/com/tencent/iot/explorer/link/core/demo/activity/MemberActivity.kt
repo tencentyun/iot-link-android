@@ -10,8 +10,8 @@ import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
-import com.tencent.iot.explorer.link.core.demo.entity.Member
 import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.link.entity.MemberEntity
 import kotlinx.android.synthetic.main.activity_member.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -22,7 +22,7 @@ class MemberActivity : BaseActivity(), MyCallback {
 
     private var deleteMemberPopup: CommonPopupWindow? = null
 
-    private var member: Member? = null
+    private var member: MemberEntity? = null
     private var role = 0
 
     override fun getContentView(): Int {
