@@ -6,6 +6,7 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
