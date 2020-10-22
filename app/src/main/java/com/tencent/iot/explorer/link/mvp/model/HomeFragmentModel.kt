@@ -16,6 +16,7 @@ import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
+import com.tencent.iot.explorer.link.core.auth.response.*
 
 class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(view), MyCallback {
 

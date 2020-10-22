@@ -11,6 +11,8 @@ class User {
 
     var Token = ""
 
+    var CancelAccountTime = 0L
+
     /**
      *  登录是否过期
      */

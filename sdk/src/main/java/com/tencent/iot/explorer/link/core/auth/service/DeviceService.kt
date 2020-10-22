@@ -30,7 +30,7 @@ internal class DeviceService : BaseService(), DeviceImpl {
     /**
      * 设备产品数据
      */
-    private var product: Product? = null
+    private var product: ProductEntity? = null
     private var hasProduct = false
 
     private var deviceName = ""
@@ -43,7 +43,7 @@ internal class DeviceService : BaseService(), DeviceImpl {
         return panelConfig
     }
 
-    override fun product(): Product? {
+    override fun product(): ProductEntity? {
         return product
     }
 
@@ -126,11 +126,11 @@ internal class DeviceService : BaseService(), DeviceImpl {
             override fun success(response: BaseResponse, reqCode: Int) {
                 if (response.isSuccess()) {
                     response.parse(DeviceOnlineResponse::class.java)?.run {
-                        if (!deviceStatuses.isNullOrEmpty()) {
+                        if (!DeviceStatuses.isNullOrEmpty()) {
                             for (i in index until size) {
                                 IoTAuth.deviceList[i].run {
                                     run check@{
-                                        deviceStatuses!!.forEach {
+                                        DeviceStatuses!!.forEach {
                                             if (DeviceId == it.DeviceId) {
                                                 online = it.Online
                                                 return@check

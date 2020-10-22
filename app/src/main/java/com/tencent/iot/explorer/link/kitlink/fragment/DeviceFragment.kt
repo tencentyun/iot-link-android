@@ -24,7 +24,6 @@ import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.CategoryDeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.RecommDeviceEntity
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.response.RecommDeviceListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
@@ -32,6 +31,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import kotlinx.android.synthetic.main.fragment_devices.*
 
 
