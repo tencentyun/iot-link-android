@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.os.Handler
 import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.App
@@ -9,12 +10,17 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.BindEmailPresenter
 import com.tencent.iot.explorer.link.mvp.view.BindEmailView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
 import kotlinx.android.synthetic.main.activity_bind_email.*
+import kotlinx.android.synthetic.main.activity_bind_email.tv_get_verify_code
+import kotlinx.android.synthetic.main.activity_modify_email.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
 
     private lateinit var presenter: BindEmailPresenter
+    private var hanlder = Handler()
+
 
     override fun getPresenter(): IPresenter? {
         return presenter
@@ -55,6 +61,8 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
                 if (!TextUtils.isEmpty(account)) {
                     presenter.setEmail(account)
                     presenter.requestEmailVerifyCode()
+                    AutomicUtils.automicChangeStatus(this, hanlder, tv_get_verify_code, 60)
+
                 } else {
                     T.show(getString(R.string.email_empty))
                 }
