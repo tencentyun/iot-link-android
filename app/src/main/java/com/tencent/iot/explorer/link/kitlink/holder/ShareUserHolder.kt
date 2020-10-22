@@ -3,7 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 import android.content.Context
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.entity.ShareUserEntity
+import com.tencent.iot.explorer.link.core.link.entity.ShareUserEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager

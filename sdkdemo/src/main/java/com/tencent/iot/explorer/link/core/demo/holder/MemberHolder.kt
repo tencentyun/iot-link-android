@@ -5,10 +5,10 @@ import android.text.TextUtils
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.core.demo.R
-import com.tencent.iot.explorer.link.core.demo.entity.Member
+import com.tencent.iot.explorer.link.core.link.entity.MemberEntity
 import kotlinx.android.synthetic.main.item_member.view.*
 
-class MemberHolder : BaseHolder<Member> {
+class MemberHolder : BaseHolder<MemberEntity> {
 
     constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
 

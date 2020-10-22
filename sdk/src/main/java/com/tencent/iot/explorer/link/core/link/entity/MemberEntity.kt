@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.kitlink.entity
+package com.tencent.iot.explorer.link.core.link.entity
 
 /**
  * 家庭成员实体
