@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
+import android.os.Handler
 import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.ErrorMessage
@@ -10,13 +11,16 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ModifyPhonePresenter
 import com.tencent.iot.explorer.link.mvp.view.ModifyPhoneView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
 import kotlinx.android.synthetic.main.activity_modify_phone.*
 import kotlinx.android.synthetic.main.activity_modify_phone.tv_get_verify_code
+import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  {
 
     private lateinit var presenter: ModifyPhonePresenter
+    private var hanlder = Handler()
 
     override fun getPresenter(): IPresenter? {
         return presenter
@@ -59,6 +63,7 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
                 if (!TextUtils.isEmpty(account)) {
                     presenter.setPhone(account)
                     presenter.requestPhoneCode()
+                    AutomicUtils.automicChangeStatus(this, hanlder, tv_get_verify_code, 60)
                 } else {
                     T.show(getString(R.string.phone_empty))
                 }

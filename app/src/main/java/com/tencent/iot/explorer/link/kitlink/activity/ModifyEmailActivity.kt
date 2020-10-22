@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.os.Handler
 import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.ErrorMessage
@@ -8,14 +9,17 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ModifyEmailPresenter
 import com.tencent.iot.explorer.link.mvp.view.ModifyEmailView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
 import kotlinx.android.synthetic.main.activity_modify_email.*
 import kotlinx.android.synthetic.main.activity_modify_email.btn_confirm_to_modify
 import kotlinx.android.synthetic.main.activity_modify_email.tv_get_verify_code
+import kotlinx.android.synthetic.main.activity_modify_phone.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class ModifyEmailActivity : PActivity(), ModifyEmailView, View.OnClickListener  {
 
     private lateinit var presenter: ModifyEmailPresenter
+    private var hanlder = Handler()
 
     override fun getPresenter(): IPresenter? {
         return presenter
@@ -50,6 +54,8 @@ class ModifyEmailActivity : PActivity(), ModifyEmailView, View.OnClickListener  
                 if (!TextUtils.isEmpty(account)) {
                     presenter.setEmail(account)
                     presenter.requestEmailVerifyCode()
+                    AutomicUtils.automicChangeStatus(this, hanlder, tv_get_verify_code, 60)
+
                 } else {
                     T.show(getString(R.string.email_empty))
                 }

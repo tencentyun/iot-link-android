@@ -157,29 +157,6 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         popupWindow?.show(user_info)
     }
 
-    private fun showCommonPopup() {
-        if (commonPopupWindow == null) {
-            commonPopupWindow = CommonPopupWindow(this)
-        }
-        commonPopupWindow?.setBg(user_info_popup_bg)
-        commonPopupWindow?.setCommonParams(
-            getString(R.string.please_bind_title),
-            getString(R.string.please_bind_content)
-        )
-        commonPopupWindow?.setMenuText("", getString(R.string.bind))
-        commonPopupWindow?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
-            override fun cancel(popupWindow: CommonPopupWindow) {
-                popupWindow.dismiss()
-            }
-
-            override fun confirm(popupWindow: CommonPopupWindow) {
-                jumpActivity(BindMobilePhoneActivity::class.java)
-                popupWindow.dismiss()
-            }
-        }
-        commonPopupWindow?.show(user_info)
-    }
-
     private fun showEditPopup() {
         if (editPopupWindow == null) {
             editPopupWindow = EditPopupWindow(this)
