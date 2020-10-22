@@ -10,14 +10,14 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.FamilyInfoResponse
+import com.tencent.iot.explorer.link.core.auth.response.MemberListResponse
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.adapter.MemberAdapter
 import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
-import com.tencent.iot.explorer.link.core.demo.entity.FamilyInfo
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
 import com.tencent.iot.explorer.link.core.demo.log.L
-import com.tencent.iot.explorer.link.core.demo.response.FamilyInfoResponse
-import com.tencent.iot.explorer.link.core.demo.response.MemberListResponse
+import com.tencent.iot.explorer.link.core.link.entity.FamilyInfoEntity
 import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -31,7 +31,7 @@ class FamilyActivity : BaseActivity(), MyCallback {
     private var family: FamilyEntity? = null
 
     private val memberList = arrayListOf<Any>()
-    private val familyInfo = FamilyInfo()
+    private val familyInfo = FamilyInfoEntity()
 
     private var editPopupWindow: EditPopupWindow? = null
     private var deleteFamilyPopup: CommonPopupWindow? = null
