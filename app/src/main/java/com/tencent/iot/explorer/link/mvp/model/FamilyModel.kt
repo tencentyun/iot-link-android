@@ -3,7 +3,6 @@ package com.tencent.iot.explorer.link.mvp.model
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.FamilyInfoEntity
 import com.tencent.iot.explorer.link.kitlink.entity.MemberEntity
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.FamilyInfoResponse
 import com.tencent.iot.explorer.link.kitlink.response.MemberListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest

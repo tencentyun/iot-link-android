@@ -10,7 +10,6 @@ import com.tencent.iot.explorer.link.core.utils.IPUtil
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.retrofit.StringRequest
 import java.util.*
 import com.tencent.iot.explorer.link.retrofit.Callback

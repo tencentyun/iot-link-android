@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.holder.FeedbackViewHolder
 import com.tencent.iot.explorer.link.kitlink.popup.CameraPopupWindow
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.model.UploadModel
