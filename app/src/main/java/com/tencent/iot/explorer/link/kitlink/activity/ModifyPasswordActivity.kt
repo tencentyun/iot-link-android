@@ -3,9 +3,11 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
@@ -14,6 +16,7 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ModifyPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.ModifyPasswordView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.Utils
 import kotlinx.android.synthetic.main.activity_modify_password.*
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.*
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.tv_get_verify_code
@@ -24,6 +27,7 @@ import kotlinx.android.synthetic.main.layout_modify_passwd_use_phone.view.iv_cle
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_phone.view.iv_clear_verify_password
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_phone.view.tv_set_password_hint
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_phone.view.tv_set_verify_password_hint
+import kotlinx.android.synthetic.main.layout_verify_code_login.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickListener {
@@ -31,6 +35,7 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
     private lateinit var presenter: ModifyPasswordPresenter
     private lateinit var modifyPasswdUsePhoneView: View
     private lateinit var modifyPasswdUseEmailView: View
+    private var handler: Handler = Handler()
 
     override fun getPresenter(): IPresenter? {
         return presenter
@@ -76,6 +81,47 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
         btn_confirm_to_modify.setOnClickListener(this)
     }
 
+    var phoneSecondsCountDownCallback = object: Utils.SecondsCountDownCallback {
+        override fun currentSeconds(seconds: Int) {
+            handler.post(Runnable {
+                modifyPasswdUsePhoneView.tv_get_verify_code.setText(getString(R.string.resend) + "(${seconds}s)")
+            })
+        }
+
+        override fun countDownFinished() {
+            handler.post(Runnable {
+                modifyPasswdUsePhoneView.tv_get_verify_code.setText(getString(R.string.resend))
+                enableTextView(modifyPasswdUsePhoneView.tv_get_verify_code, true)
+            })
+        }
+    }
+
+    var emailSecondsCountDownCallback = object: Utils.SecondsCountDownCallback {
+        override fun currentSeconds(seconds: Int) {
+            handler.post(Runnable {
+                modifyPasswdUseEmailView.tv_get_verify_code.setText(getString(R.string.resend) + "(${seconds}s)")
+            })
+        }
+
+        override fun countDownFinished() {
+            handler.post(Runnable {
+                modifyPasswdUseEmailView.tv_get_verify_code.setText(getString(R.string.resend))
+                enableTextView(modifyPasswdUseEmailView.tv_get_verify_code, true)
+            })
+        }
+    }
+
+    private fun enableTextView(textView: TextView, enable: Boolean) {
+        if (textView == null) return
+
+        if (enable) {
+            textView.setTextColor(resources.getColor(R.color.blue_0052d9))
+        } else {
+            textView.setTextColor(resources.getColor(R.color.gray_bbbbbb))
+        }
+        textView.isEnabled = enable
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             modifyPasswdUsePhoneView.tv_use_email_verify_code_to_modify -> {
@@ -89,6 +135,8 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
                 if (!TextUtils.isEmpty(account)) {
                     presenter.setPhone(account)
                     presenter.requestPhoneCode()
+                    Utils.startCountBySeconds(60, phoneSecondsCountDownCallback)
+                    enableTextView(modifyPasswdUsePhoneView.tv_get_verify_code, false)
                 } else {
                     T.show(getString(R.string.phone_empty))
                 }
@@ -98,6 +146,8 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
                 if (!TextUtils.isEmpty(account)) {
                     presenter.setEmail(account)
                     presenter.requestEmailCode()
+                    Utils.startCountBySeconds(60, emailSecondsCountDownCallback)
+                    enableTextView(modifyPasswdUseEmailView.tv_get_verify_code, false)
                 } else {
                     T.show(getString(R.string.email_empty))
                 }
