@@ -2,6 +2,8 @@ package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
@@ -21,7 +23,9 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
 import com.tencent.iot.explorer.link.mvp.IPresenter
+import kotlinx.android.synthetic.main.activity_comment_detail.*
 import kotlinx.android.synthetic.main.fragment_comment.*
+import kotlinx.android.synthetic.main.menu_back_layout.*
 
 /**
  *  评测界面
@@ -44,12 +48,8 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
         getAppGetTokenTicket()
     }
 
-    // 每次刷新显示，重新获取一次
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        if (!hidden) {
-            getAppGetTokenTicket()
-        }
     }
 
     override fun startHere(view: View) {
@@ -61,6 +61,8 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
     }
 
     private fun initView() {
+        tv_title.setText(R.string.main_tab_4)
+        iv_back.visibility = View.INVISIBLE
         val drawable = resources.getDrawable(R.drawable.progress_bar_states, null)
         progressbar = ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal)
         var params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5)
@@ -78,6 +80,12 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
         web_comment.settings.builtInZoomControls = true
         web_comment.settings.displayZoomControls = false
         web_comment.settings.cacheMode = WebSettings.LOAD_NO_CACHE     // 不缓存
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            web_comment.settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        }
+
+        web_comment.settings.setBlockNetworkImage(false);
     }
 
     override fun onClick(v: View?) {
@@ -140,7 +148,7 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
                 intent.putExtra(CommonField.EXTRA_INFO, url)
                 startActivity(intent)
             }
-            return true
+            return false
         }
 
     }
