@@ -1,7 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.net.Uri
+import android.os.Build
 import android.text.TextUtils
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +24,7 @@ import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
 import kotlinx.android.synthetic.main.activity_comment_detail.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
+
 
 class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     val TAG = this.javaClass.simpleName
@@ -61,6 +64,13 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
         comment_detail_web.settings.builtInZoomControls = true
         comment_detail_web.settings.displayZoomControls = false
         comment_detail_web.settings.cacheMode = WebSettings.LOAD_NO_CACHE     // 不缓存
+        comment_detail_web.settings.allowContentAccess = true
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            comment_detail_web.settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        }
+
+        comment_detail_web.settings.setBlockNetworkImage(false);
 
         dialog = ShareOptionDialog(this@CommentDetailsActivity)
         dialog?.setOnDismisListener(onDismisListener)
@@ -82,7 +92,7 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
 
         override fun onCopyLinkClicked() {
             Utils.copy(this@CommentDetailsActivity, this@CommentDetailsActivity.url2Load)
-            T.show(getString(R.string.copy))
+            T.show(getString(R.string.copyed))
         }
 
     }
@@ -162,6 +172,8 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     val webChromeClient = object: WebChromeClient() {
 
         override fun onShowFileChooser (webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams?): Boolean {
+
+            Log.e("XXX", "----------- 0")
             return true
         }
 
@@ -171,9 +183,11 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
         }
 
         override fun onReceivedTouchIconUrl(view: WebView?, url: String?, precomposed: Boolean) {
+            Log.e("XXX", "----------- 1")
         }
 
         override fun onJsPrompt(view: WebView, url: String, message: String, defaultValue: String, result: JsPromptResult): Boolean {
+            Log.e("XXX", "----------- 2")
             result.confirm(JSBridgeKt.callNative(view, message))
             return true
         }
@@ -181,10 +195,13 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
 
     var webViewClient = object: WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            Log.e("XXX", "----------- 3 url " + url)
             if (url.contains("onArticleShare?")) {
                 dialog?.show()
+                return false
+            } else {
+                return false
             }
-            return true
         }
     }
 }
