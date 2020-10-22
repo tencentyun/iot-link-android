@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.auth.entity.ProductProperty
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
-import com.tencent.iot.explorer.link.kitlink.entity.PropertyEntity
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerDivider
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.control_standard_big_enum.view.*
@@ -20,7 +20,7 @@ class ControlStandardEnumBigHolder : CRecyclerView.CViewHolder<DevicePropertyEnt
 
     constructor(context: Context, parent: ViewGroup, resId: Int) : super(context, parent, resId)
 
-    private var list: List<PropertyEntity.MappingEntity>? = null
+    private var list: List<ProductProperty.MappingEntity>? = null
     var selectPosition = 0
 
     override fun show(position: Int) {

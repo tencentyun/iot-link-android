@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.kitlink.entity
+package com.tencent.iot.explorer.link.core.auth.entity
 
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
@@ -11,7 +11,8 @@ class ControlPanelEntity {
     var ProductId = ""
     var Config = ""
 
-    var configEntity = ConfigEntity()
+    var configEntity =
+        ConfigEntity()
 
     fun parse(): ControlPanelEntity {
         JsonManager.parseJson(Config, ConfigEntity::class.java)?.let {
@@ -64,6 +65,8 @@ class PanelEntity {
  * 面板主题
  */
 class Standard {
+    var theme = ""
+    var bgImgId = ""
     var navBar = NavBar()
     var properties = arrayListOf<Property>()
     var timingProject = false
