@@ -10,7 +10,6 @@ import com.tencent.iot.explorer.link.kitlink.entity.MessageEntity
 import com.tencent.iot.explorer.link.kitlink.holder.MsgDeviceViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.MsgFamilyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.MsgNotifyViewHolder
-import com.tencent.iot.explorer.link.kitlink.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.response.MessageListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
@@ -18,6 +17,7 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.fragment_message.*

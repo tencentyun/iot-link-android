@@ -7,7 +7,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.DeviceOnlineEntity
  */
 class DeviceOnlineResponse {
 
-    var deviceStatuses: List<DeviceOnlineEntity>? = null
+    var DeviceStatuses: List<DeviceOnlineEntity>? = null
 //    var ProductId = ""
     var RequestId = ""
 //    var TotalCnt = 0
