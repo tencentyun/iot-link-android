@@ -5,6 +5,7 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.utils.TemperatureUtils
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.entity.ProductProperty
 import java.lang.Exception
 
 /**
@@ -21,10 +22,10 @@ class DevicePropertyEntity {
     var icon = ""
 
     //产品属性
-    var numberEntity: PropertyEntity.NumberEntity? = null
-    var stringEntity: PropertyEntity.StringEntity? = null
-    var enumEntity: PropertyEntity.EnumEntity? = null
-    var boolEntity: PropertyEntity.BoolEntity? = null
+    var numberEntity: ProductProperty.NumberEntity? = null
+    var stringEntity: ProductProperty.StringEntity? = null
+    var enumEntity: ProductProperty.EnumEntity? = null
+    var boolEntity: ProductProperty.BoolEntity? = null
     var timestamp = false
 
     //数值类型：Int/Float

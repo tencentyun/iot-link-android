@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.response
 
 import com.alibaba.fastjson.JSON
-import com.tencent.iot.explorer.link.kitlink.entity.DeviceDataEntity
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceDataEntity
 
 /**
  * 设备当前数据
@@ -18,7 +18,7 @@ class DeviceDataResponse {
             val entity = DeviceDataEntity()
             entity.id = it
             entity.value = obj.getJSONObject(it).getString("Value")
-            entity.LastUpdate = obj.getJSONObject(it).getLong("LastUpdate")
+            entity.lastUpdate = obj.getJSONObject(it).getLong("LastUpdate")
             list.add(entity)
         }
         return list

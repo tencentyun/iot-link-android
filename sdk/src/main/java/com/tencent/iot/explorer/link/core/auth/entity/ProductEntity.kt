@@ -5,7 +5,7 @@ import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 /**
  * 设备归属的产品
  */
-class Product {
+class ProductEntity {
 
     var ProductId = ""
     var Name = ""
