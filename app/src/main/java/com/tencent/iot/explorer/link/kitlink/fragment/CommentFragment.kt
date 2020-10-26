@@ -45,7 +45,6 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
     override fun onResume() {
         super.onResume()
         initView()
-        getAppGetTokenTicket()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -53,6 +52,7 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
     }
 
     override fun startHere(view: View) {
+        getAppGetTokenTicket()
         setListener()
     }
 
