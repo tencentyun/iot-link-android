@@ -12,15 +12,12 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
-import com.tencent.iot.explorer.link.kitlink.fragment.MeFragment
-import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
-import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.android.tpush.XGIOperateCallback
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.android.tpush.XGPushManager
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
@@ -31,8 +28,14 @@ import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.customview.home.BottomItemEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.fragment.CommentFragment
-import com.tencent.iot.explorer.link.kitlink.util.*
-import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
+import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.MeFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.SmartFragment
+import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
+import com.tencent.iot.explorer.link.kitlink.util.DateUtils
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.tpns.baseapi.XGApiConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -123,6 +126,14 @@ class MainActivity : PActivity(), MyCallback {
                 R.mipmap.main_tab_1_normal, R.mipmap.main_tab_1_hover
             )
         )
+
+            .addMenu(
+                BottomItemEntity(
+                    getString(R.string.main_tab_5),
+                    resources.getColor(R.color.main_tab_normal), resources.getColor(R.color.main_tab_hover),
+                    R.mipmap.smart_unpressed, R.mipmap.smart_pressed
+                )
+            )
             .addMenu(
                 BottomItemEntity(
                     getString(R.string.main_tab_4),
@@ -140,6 +151,7 @@ class MainActivity : PActivity(), MyCallback {
 
         fragments.clear()
         fragments.add(HomeFragment())
+        fragments.add(SmartFragment())
         fragments.add(CommentFragment())
         fragments.add(MeFragment())
         this.supportFragmentManager.beginTransaction()
@@ -152,6 +164,13 @@ class MainActivity : PActivity(), MyCallback {
     override fun setListener() {
         home_bottom_view.setOnItemClickListener { _, position, previewPosition ->
             showFragment(position)
+            if (position == 1) {
+                window.decorView.systemUiVisibility =
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            } else {
+                window.decorView.systemUiVisibility =
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            }
         }
         (fragments[0] as? HomeFragment)?.run {
             popupListener = object : HomeFragment.PopupListener {
