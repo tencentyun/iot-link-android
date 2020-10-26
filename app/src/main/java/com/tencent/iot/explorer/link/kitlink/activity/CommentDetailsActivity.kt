@@ -34,6 +34,8 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     @Volatile
     private var url2Load: String? = null
     @Volatile
+    private var pathUrl: String? = null
+    @Volatile
     private var itemJSON: JSONObject? = null
 
     override fun getContentView(): Int {
@@ -103,12 +105,21 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     }
 
     override fun fail(msg: String?, reqCode: Int) {
+        T.show(msg)
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
+        if (response.code !== 0) {
+            T.show(response.msg)
+            return
+        }
         var js = JSON.parse(response.data.toString()) as JSONObject
-        url2Load = url2Load + "&ticket=" + js[CommonField.TOKEN_TICKET]
-        comment_detail_web.loadUrl(url2Load)
+
+        var weburl = CommonField.H5_BASE_URL + "?uin=${Utils.getAndroidID(this)}#" + pathUrl + "&ticket=${js[CommonField.TOKEN_TICKET]}"
+        url2Load = CommonField.H5_BASE_URL + "?uin=${Utils.getAndroidID(this)}#" + pathUrl
+        var itemJsonStr = Utils.getUrlParamValue(pathUrl!!, "item")
+        itemJSON = JSON.parseObject(itemJsonStr)
+        comment_detail_web.loadUrl(weburl)
     }
 
     private fun loadContent() {
@@ -123,12 +134,8 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
             comment_detail_web.webViewClient = webViewClient
             comment_detail_web.webChromeClient = webChromeClient
 
+            pathUrl = json.getString(CommonField.KEY_URL)
             getAppGetTokenTicket()
-
-            var pathUrl = json.getString(CommonField.KEY_URL)
-            url2Load = CommonField.H5_BASE_URL + "#" + pathUrl
-            var itemJsonStr = Utils.getUrlParamValue(url2Load!!, "item")
-            itemJSON = JSON.parseObject(itemJsonStr)
         }
 
     }
@@ -194,9 +201,9 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             if (url.contains("onArticleShare?")) {
                 dialog?.show()
-                return false
+                return true
             } else {
-                return false
+                return true
             }
         }
     }
