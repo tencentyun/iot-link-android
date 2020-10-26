@@ -5,6 +5,8 @@
     <string name="main_tab_2">场景</string>
     <string name="main_tab_3">我的</string>
     <string name="main_tab_4">评测</string>
+    <string name="main_tab_5">智能</string>
+
 
     <!--常用-->
     <string name="success">成功</string>
@@ -36,6 +38,22 @@
     <string name="download_failed">下载失败</string>
     <string name="wechat_share">微信好友</string>
     <string name="copy_link">复制链接</string>
+    <string name="my_smart">我的智能</string>
+    <string name="smart_log">智能日志</string>
+    <string name="check_smart_after_login">请先登录后，再查看或添加智能</string>
+    <string name="current_my_smart_no_data">当前暂无智能，点击添加智能</string>
+    <string name="login_now">立即登录</string>
+    <string name="add_now">立即添加</string>
+    <string name="smart_option_1">手动智能</string>
+    <string name="smart_option_2">自动智能</string>
+    <string name="add_manual_smart">添加手动智能</string>
+    <string name="add_automic_smart">添加自动智能</string>
+    <string name="automic">自动</string>
+    <string name="manual">手动</string>
+    <string name="no_manual_task">暂无手动任务</string>
+    <string name="add_task">添加任务</string>
+    <string name="control_dev">设备控制</string>
+    <string name="delay_time">延时</string>
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
     <string name="email_login">邮箱登录</string>
