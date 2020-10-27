@@ -22,8 +22,10 @@ import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
+import com.tencent.iot.explorer.link.kitlink.webview.WebCallBack
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_comment_detail.*
+import kotlinx.android.synthetic.main.activity_help_feedback.*
 import kotlinx.android.synthetic.main.fragment_comment.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -32,6 +34,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
     private var progressbar: ProgressBar? = null
+    private var callback: WebCallBack? = null
 
     override fun getContentView(): Int {
         return R.layout.fragment_comment
@@ -44,14 +47,26 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
     // 每次窗口返回刷新一次
     override fun onResume() {
         super.onResume()
-        initView()
+        refreshListContent()
+    }
+
+    private fun refreshListContent() {
+        if (callback != null) {
+            val jsObject = JSONObject()
+            jsObject.put(CommonField.HANDLER_NAME, "pageShow")
+            callback?.apply(jsObject)
+        }
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
+        if (!hidden) {
+            refreshListContent()
+        }
     }
 
     override fun startHere(view: View) {
+        initView()
         getAppGetTokenTicket()
         setListener()
     }
@@ -85,7 +100,8 @@ class CommentFragment : BaseFragment(), View.OnClickListener, MyCallback {
             web_comment.settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         }
 
-        web_comment.settings.setBlockNetworkImage(false);
+        web_comment.settings.setBlockNetworkImage(false)
+        callback = WebCallBack(web_comment)
     }
 
     override fun onClick(v: View?) {
