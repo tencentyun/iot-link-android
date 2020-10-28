@@ -37,6 +37,7 @@ class AppData private constructor() {
     var userSetting = UserSetting()
     var regionId = "1"
     var region = "ap-guangzhou"
+    var appLifeCircleId = "0"
 
     //activity列表
     val activityList = LinkedList<BaseActivity>()
