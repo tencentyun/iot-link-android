@@ -289,5 +289,4 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         job?.cancel()
         super.onDestroy()
     }
-
 }
