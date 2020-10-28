@@ -120,7 +120,7 @@ class SCStepFragment(type: Int, productId: String) : BaseFragment() {
 
     // 网络请求成功且返回标准内容
     private fun loadViewStandradInfo() {
-        nextBtn?.setText(R.string.smart_config_first_title)
+        nextBtn?.setText(R.string.next)
         tipContent?.setText(R.string.smart_config_first_hint2)
         pic?.setImageResource(R.mipmap.image_smart_config)
     }
