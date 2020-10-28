@@ -8,29 +8,30 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.customview.dialog.WifiHelperDialog
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.core.utils.LocationUtil
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import kotlinx.android.synthetic.main.fragment_wifi.*
 import kotlinx.android.synthetic.main.smart_config_second.*
 
 /**
  * 输入wifi密码
  */
-class WifiFragment(): BaseFragment() {
+class WifiFragment(type: Int) : BaseFragment() {
 
     private var type = 0
     private var wifiInfo: WifiInfo? = null
-    private var showPwd = false
+    private var bssid = ""
+    var showTipTag = false
+
+    constructor(type: Int, showTag: Boolean) : this(type) {
+        showTipTag = showTag
+    }
 
     var onCommitWifiListener: OnCommitWifiListener? = null
-    var openWifiDialog: WifiHelperDialog? = null
-    var openLocationServiceDialog: WifiHelperDialog? = null
-
-    constructor(type: Int):this(){
-       this.type = type
-    }
 
     companion object {
         const val smart_config = 0
@@ -38,6 +39,7 @@ class WifiFragment(): BaseFragment() {
     }
 
     init {
+        this.type = type
         showWifiInfo()
     }
 
@@ -46,25 +48,30 @@ class WifiFragment(): BaseFragment() {
      */
     private fun showWifiInfo() {
         context?.let {
-            val wifiManager =
-                it.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val wifiManager = it.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             wifiInfo = wifiManager.connectionInfo
+
             if (wifiInfo == null || wifiInfo!!.bssid == null) {
                 tv_select_wifi.hint = getString(R.string.not_network)
-                tv_wifi_commit.isEnabled = false
-                tv_select_wifi.setText("")
-                openWifiDialog?.show()
-            } else {
-                var ssid2Set = wifiManager.connectionInfo.ssid.replace("\"", "")
-                if (!LocationUtil.isLocationServiceEnable(context)) {
-                    tv_select_wifi.hint = getString(R.string.open_location_tip)
-                    ssid2Set = ""
-                    openLocationServiceDialog?.show()
-                }
-                tv_select_wifi.setText(ssid2Set)
 
+            } else {
+                tv_select_wifi.setText(wifiManager.connectionInfo.ssid.replace("\"", ""))
+                if (tv_select_wifi.text.contains(CommonField.SSID_UNKNOWN)) {
+                    T.show(getString(R.string.open_location_tip))
+                }
+                bssid = wifiInfo!!.bssid
             }
-            tv_select_wifi.isEnabled = false
+            tv_select_wifi.isEnabled = type == soft_ap
+
+            if (showTipTag) {
+                tv_method.visibility = View.VISIBLE
+                tv_method_tip.visibility = View.VISIBLE
+                tv_tip_wifi.setText(R.string.connect_dev_wifi)
+            } else {
+                tv_method.visibility = View.GONE
+                tv_method_tip.visibility = View.GONE
+                tv_tip_wifi.setText(R.string.input_wifi_pwd)
+            }
         }
     }
 
@@ -82,36 +89,12 @@ class WifiFragment(): BaseFragment() {
     }
 
     override fun startHere(view: View) {
-        openWifiDialog = WifiHelperDialog(context, getString(R.string.please_open_wifi))
-        openWifiDialog?.setOnDismisListener(object: WifiHelperDialog.OnDismisListener{
-            override fun onOkClicked() {
-                startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
-            }
-
-            override fun onCancelClicked() {}
-        })
-        openLocationServiceDialog = WifiHelperDialog(context, getString(R.string.please_open_location_service))
-        openLocationServiceDialog?.setOnDismisListener(object: WifiHelperDialog.OnDismisListener{
-            override fun onOkClicked() {
-                startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            }
-
-            override fun onCancelClicked() {}
-        })
         showWifiInfo()
         et_select_wifi_pwd.addClearImage(iv_wifi_eye_clear)
-        et_select_wifi_pwd.addShowImage(
-            iv_wifi_eye,
-            R.mipmap.icon_visible,
-            R.mipmap.icon_invisible
-        )
+        et_select_wifi_pwd.addShowImage(iv_wifi_eye, R.mipmap.icon_visible, R.mipmap.icon_invisible)
 
         tv_select_wifi.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                s?.let {
-                    tv_wifi_commit.isEnabled = it.isNotEmpty()
-                }
-            }
+            override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -132,28 +115,11 @@ class WifiFragment(): BaseFragment() {
                 et_select_wifi_pwd
             )
         }
-        /*iv_wifi_eye.setOnClickListener {
-            showPwd = !showPwd
-            et_select_wifi_pwd.inputType = if (showPwd) {
-                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            } else {
-                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-            iv_wifi_eye.setImageResource(
-                if (showPwd) {
-                    R.mipmap.icon_invisible
-                } else {
-                    R.mipmap.icon_visible
-                }
-            )
-            et_select_wifi_pwd.setSelection(et_select_wifi_pwd.length())
-        }*/
+
         container_wifi.setOnClickListener {
-            KeyBoardUtils.hideKeyBoard(
-                context,
-                et_select_wifi_pwd
-            )
+            KeyBoardUtils.hideKeyBoard(context, et_select_wifi_pwd)
         }
+
         iv_select_wifi.setOnClickListener {
             startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
         }

@@ -1,9 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.util.Log
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
+import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.fragment.*
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -11,7 +11,9 @@ import com.tencent.iot.explorer.link.mvp.presenter.GetBindDeviceTokenPresenter
 import com.tencent.iot.explorer.link.mvp.view.GetBindDeviceTokenView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.LocationUtil
+import kotlinx.android.synthetic.main.activity_smart_connect.*
 import kotlinx.android.synthetic.main.activity_soft_ap.*
+import java.util.ArrayList
 
 class SoftApActivity : PActivity(), GetBindDeviceTokenView {
 
@@ -22,11 +24,9 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
 
     private lateinit var softAppStepFragment: SoftAppStepFragment
     private lateinit var wifiFragment: WifiFragment
+    private lateinit var devWifiFragment: WifiFragment
     private lateinit var softHotspotFragment: SoftHotspotFragment
     private lateinit var connectProgressFragment: ConnectProgressFragment
-    private var loadViewTextType = LoadViewTxtType.LoadLocalViewTxt.ordinal // 0 加载本地文案  1 尝试加载远端配置文案
-    private var productId = ""
-
 
     private var closePopup: CommonPopupWindow? = null
 
@@ -34,25 +34,34 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
         return R.layout.activity_soft_ap
     }
 
+    private fun showProgress() {
+        val stepsBeanList = ArrayList<StepBean>()
+        stepsBeanList.add(StepBean(getString(R.string.config_hardware)))
+        stepsBeanList.add(StepBean(getString(R.string.set_target_wifi)))
+        stepsBeanList.add(StepBean(getString(R.string.connect_device)))
+        stepsBeanList.add(StepBean(getString(R.string.start_config_network)))
+        softap_step_progress.currentStep = 1
+        softap_step_progress.setStepViewTexts(stepsBeanList)
+        softap_step_progress.setTextSize(12)
+    }
+
     override fun initView() {
-        loadViewTextType = intent.getIntExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadLocalViewTxt.ordinal)
-        if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
-            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
-        }
+        showProgress()
 
         presenter = GetBindDeviceTokenPresenter(this)
-        softAppStepFragment = SoftAppStepFragment(loadViewTextType, productId)
+        softAppStepFragment = SoftAppStepFragment()
         wifiFragment = WifiFragment(WifiFragment.soft_ap)
-        softHotspotFragment = SoftHotspotFragment(loadViewTextType, productId)
-        connectProgressFragment = ConnectProgressFragment(WifiFragment.soft_ap, loadViewTextType, productId)
+        devWifiFragment = WifiFragment(WifiFragment.soft_ap, true)
+        softHotspotFragment = SoftHotspotFragment()
+        connectProgressFragment = ConnectProgressFragment(WifiFragment.soft_ap)
 
         this.supportFragmentManager.beginTransaction()
             .add(R.id.container_soft_ap, softAppStepFragment)
-            .show(softAppStepFragment)
-            .commit()
+            .show(softAppStepFragment).commit()
     }
 
     override fun setListener() {
+
         tv_soft_ap_cancel.setOnClickListener {
             if (connectProgressFragment.isVisible) {
                 showPopup()
@@ -60,18 +69,18 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
                 finish()
             }
         }
+
         softAppStepFragment.onNextListener = object : SoftAppStepFragment.OnNextListener {
             override fun onNext() {
-                showTitle(
-                    getString(R.string.smart_config_second_title),
-                    getString(R.string.cancel)
-                )
+                softap_step_progress.currentStep = 2
+                softap_step_progress.refreshStepViewState()
                 showFragment(wifiFragment, softAppStepFragment)
                 if (!LocationUtil.isLocationServiceEnable(this@SoftApActivity)) {
                     T.showLonger(resources.getString(R.string.open_location_tip))
                 }
             }
         }
+
         wifiFragment.onCommitWifiListener = object : WifiFragment.OnCommitWifiListener {
             override fun commitWifi(ssid: String, bssid: String?, password: String) {
                 this@SoftApActivity.let {
@@ -82,32 +91,28 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
                 presenter.getBindDeviceToken()
             }
         }
+
         softHotspotFragment.onNextListener = object : SoftHotspotFragment.OnNextListener {
             override fun onNext() {
-                connectProgressFragment.setWifiInfo(ssid, bssid, password)
-                showFragment(connectProgressFragment, softHotspotFragment)
-                showTitle(
-                    getString(R.string.smart_config_third_connect_progress)
-                    , getString(R.string.close)
-                )
+                showFragment(devWifiFragment, softHotspotFragment)
             }
         }
-        connectProgressFragment.onRestartListener =
-            object : ConnectProgressFragment.OnRestartListener {
-                override fun restart() {
-                    showFragment(softAppStepFragment, connectProgressFragment)
-                    showTitle(
-                        getString(R.string.soft_ap),
-                        getString(R.string.close)
-                    )
 
-                }
+        devWifiFragment.onCommitWifiListener = object: WifiFragment.OnCommitWifiListener {
+            override fun commitWifi(ssid: String, bssid: String?, password: String) {
+                softap_step_progress.currentStep = 4
+                softap_step_progress.refreshStepViewState()
+                connectProgressFragment.setWifiInfo(this@SoftApActivity.ssid,
+                    this@SoftApActivity.bssid, this@SoftApActivity.password)
+                showFragment(connectProgressFragment, devWifiFragment)
             }
-    }
+        }
 
-    private fun showTitle(title: String, cancel: String) {
-        tv_soft_ap_title.text = title
-        tv_soft_ap_cancel.text = cancel
+        connectProgressFragment.onRestartListener = object : ConnectProgressFragment.OnRestartListener {
+            override fun restart() {
+                showFragment(softAppStepFragment, connectProgressFragment)
+            }
+        }
     }
 
     private fun showFragment(showFragment: BaseFragment, hideFragment: BaseFragment) {
@@ -116,6 +121,7 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
                 .show(showFragment)
                 .hide(hideFragment)
                 .commit()
+
         } else {
             this.supportFragmentManager.beginTransaction()
                 .add(R.id.container_soft_ap, showFragment)
@@ -165,11 +171,9 @@ class SoftApActivity : PActivity(), GetBindDeviceTokenView {
     }
 
     override fun onSuccess(token: String) {
+        softap_step_progress.currentStep = 3
+        softap_step_progress.refreshStepViewState()
         showFragment(softHotspotFragment, wifiFragment)
-        showTitle(
-            getString(R.string.soft_ap),
-            getString(R.string.close)
-        )
         L.e("getToken onSuccess token:" + token)
     }
 

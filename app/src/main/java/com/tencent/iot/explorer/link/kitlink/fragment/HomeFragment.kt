@@ -51,7 +51,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
         initView()
         setListener()
         //请求数据
-//        requestData()
+        requestData()
     }
 
     override fun onResume() {
