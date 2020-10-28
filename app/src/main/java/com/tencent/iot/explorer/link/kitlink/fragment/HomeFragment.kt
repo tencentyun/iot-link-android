@@ -1,11 +1,14 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.graphics.Rect
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
@@ -16,18 +19,29 @@ import com.tencent.iot.explorer.link.mvp.presenter.HomeFragmentPresenter
 import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerDivider
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.head_home.*
 
 /**
  * 设备界面
  */
-class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerItemView {
+class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerItemView, MyCallback {
 
     private lateinit var presenter: HomeFragmentPresenter
 
@@ -322,11 +336,41 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
         clickView: View,
         position: Int
     ) {
-        put("device", presenter.getDeviceEntity(position))
-        jumpActivity(ControlPanelActivity::class.java)
+        val device = presenter.getDeviceEntity(position)
+        put("device", device)
+        val productList  = arrayListOf<String>()
+        productList.add(device.ProductId)
+        HttpRequest.instance.getProductsConfig(productList, this)
     }
 
     interface PopupListener {
         fun onPopupListener(familyList: List<FamilyEntity>)
+    }
+
+    override fun fail(msg: String?, reqCode: Int) {
+        msg?.let { L.e(it) }
+    }
+
+    override fun success(response: BaseResponse, reqCode: Int) {
+        when (reqCode) {
+            RequestCode.get_products_config -> {
+                if (response.isSuccess()) {
+                    response.parse(ProductsConfigResponse::class.java)?.run {
+                        val config = JsonManager.parseJson(
+                            Data[0].Config,
+                            ProdConfigDetailEntity::class.java
+                        )
+                        val panelInfo = JSON.parseObject(config.Panel)
+                        if (panelInfo["type"] == "h5") {
+                            jumpActivity(DevicePanelActivity::class.java)
+                        } else if (panelInfo["type"] == "standard") {
+                            jumpActivity(ControlPanelActivity::class.java)
+                        }
+                    }
+                } else {
+                    T.show(response.msg)
+                }
+            }
+        }
     }
 }

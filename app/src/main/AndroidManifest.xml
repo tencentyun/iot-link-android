@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        package="com.tencent.iot.explorer.link">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.tencent.iot.explorer.link">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -42,16 +42,16 @@
     <!--picture end-->
 
     <application
-            android:name=".App"
-            android:allowBackup="false"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme"
-            android:usesCleartextTraffic="true"
-            android:requestLegacyExternalStorage="true"
-            tools:replace="android:allowBackup">
+        android:name=".App"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
+        tools:replace="android:allowBackup">
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -81,8 +81,8 @@
         <activity android:name=".kitlink.activity.CommentDetailsActivity" />
         <activity android:name=".kitlink.activity.CloudTimingActivity" /> <!-- 信鸽Android P -->
         <uses-library
-                android:name="org.apache.http.legacy"
-                android:required="false" />
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <activity android:name=".kitlink.activity.MainActivity">
             <intent-filter>
@@ -90,7 +90,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".kitlink.activity.GuideActivity">
+            android:name=".kitlink.activity.GuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -117,8 +117,8 @@
         <activity android:name=".kitlink.activity.HelpWebViewActivity"
             android:launchMode="singleTop" />
         <activity
-                android:name=".kitlink.activity.FeedbackActivity"
-                android:windowSoftInputMode="adjustPan" />
+            android:name=".kitlink.activity.FeedbackActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".kitlink.activity.UserInfoActivity" />
         <activity android:name=".kitlink.activity.SetPasswordActivity" />
         <activity android:name=".kitlink.activity.GetCodeActivity" />
@@ -128,13 +128,15 @@
         <activity android:name=".kitlink.activity.AddDeviceActivity" />
         <activity android:name=".kitlink.activity.RegisterActivity" />
         <activity android:name=".kitlink.activity.MessageActivity" /> <!-- 微信回调 -->
+        <activity android:name=".kitlink.activity.DevicePanelActivity" />
+        <activity android:name=".kitlink.activity.FeedbackForH5Activity" />
         <activity
-                android:name=".kitlink.wxapi.WXEntryActivity"
-                android:exported="true"
-                android:label="@string/app_name"
-                android:launchMode="singleTask"
-                android:taskAffinity="com.tencent.iot.explorer.link.kitlink"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:name=".kitlink.wxapi.WXEntryActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.tencent.iot.explorer.link.kitlink"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity-alias
             android:name="${applicationId}.wxapi.WXEntryActivity"
             android:exported="true"
@@ -158,8 +160,8 @@
             </intent-filter>
         </receiver> <!-- 腾讯地地图 meta-data -->
         <meta-data
-                android:name="TencentMapSDK"
-                android:value="${MAP_SDK_VALUE}" />
+            android:name="TencentMapSDK"
+            android:value="${MAP_SDK_VALUE}" />
 
         <meta-data
             android:name="firebase_performance_logcat_enabled"
