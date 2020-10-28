@@ -16,6 +16,7 @@ open class DeviceEntity {
     var DeviceType = ""
     var CreateTime = 0L
     var UpdateTIme = 0L
+    var FromUserID = ""
 
     //在线状态
     var online = 0

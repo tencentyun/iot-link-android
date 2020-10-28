@@ -1,7 +1,9 @@
 package com.tencent.iot.explorer.link
 
+import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import androidx.multidex.MultiDex
@@ -9,17 +11,20 @@ import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
-import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
 import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
+import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
+import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.mvp.ParentView
+import java.util.*
 
 
 /**
  * APP
  */
-class App : Application() {
+class App : Application(), Application.ActivityLifecycleCallbacks {
 
     companion object {
         //app数据
@@ -95,6 +100,8 @@ class App : Application() {
         XGPushConfig.enablePullUpOtherApp(applicationContext, PULL_OTHER)
         language = SharePreferenceUtil.getString(this, CONFIG, "language")
         data.readLocalUser(this)
+        data.appLifeCircleId = UUID.randomUUID().toString()
+        registerActivityLifecycleCallbacks(this)
     }
 
     /**
@@ -107,4 +114,36 @@ class App : Application() {
         T.setContext(null)
     }
 
+    private var activityReferences = 0
+    private var isActivityChangingConfigurations = false
+
+    override fun onActivityStarted(activity: Activity) {
+        if (++activityReferences == 1 && !isActivityChangingConfigurations) {
+            // App enters foreground
+            if (activity is AppLifeCircleListener) {
+                activity.onAppGoforeground()
+            }
+        }
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+        isActivityChangingConfigurations = activity.isChangingConfigurations
+        if (--activityReferences == 0 && !isActivityChangingConfigurations) {
+            // App enters background
+            if (activity is AppLifeCircleListener) {
+                activity.onAppGoBackground()
+            }
+        }
+    }
+
+    override fun onActivityPaused(activity: Activity) {}
+    override fun onActivityDestroyed(activity: Activity) {}
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+    override fun onActivityResumed(activity: Activity) {}
+}
+
+interface AppLifeCircleListener {
+    fun onAppGoforeground()
+    fun onAppGoBackground()
 }
