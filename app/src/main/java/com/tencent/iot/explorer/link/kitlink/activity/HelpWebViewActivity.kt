@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -47,12 +48,17 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
     private val FILE_CHOOSER_RESULT_CODE = 10000
     private val FILE_CAMERA_RESULT_CODE = 9999
 
+    private var configQuestionList = false
+
     override fun getContentView(): Int {
         return  R.layout.activity_help_feedback
     }
 
     override fun initView() {
         webStatus = 0
+        if (intent.hasExtra(CommonField.CONFIG_QUESTION_LIST)) {
+            configQuestionList = intent.getBooleanExtra(CommonField.CONFIG_QUESTION_LIST, false)
+        }
         initWebView()
         iv_back.setColorFilter(R.color.black_333333)
         getAppGetTokenTicket()
@@ -138,6 +144,9 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
                 }
                 if (!App.isOEMApp()) {
                     url += "&appID=" + T.getContext().applicationInfo.packageName
+                }
+                if (configQuestionList) {
+                    url += "/#/pages/Functional/HelpCenter/QnAList/QnAList?genCateID=config7"
                 }
 
                 help_web.loadUrl(url)
