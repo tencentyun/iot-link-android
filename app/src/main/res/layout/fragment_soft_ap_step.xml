@@ -1,71 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="60dp"
-        >
-
-    <TextView
-        android:id="@+id/tv_soft_ap_tip"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
-        android:layout_marginEnd="20dp"
-            android:text="@string/soft_ap_first_title"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_18"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            >
 
-    <ImageView
-            android:id="@+id/iv_soft_ap"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="33dp"
-            android:layout_marginEnd="20dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_soft_ap_tip"
-        app:layout_constraintDimensionRatio="h,16:10"
-        />
+            <TextView
+                android:id="@+id/tip_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/soft_ap_first_title"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_18"
+                android:textStyle="bold" />
 
-    <TextView
-            android:id="@+id/tv_soft_banner_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_soft_ap"
-            android:layout_marginStart="20dp"
-            android:lineSpacingExtra="10dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="20dp"
-        app:layout_constraintTop_toBottomOf="@id/iv_soft_ap"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_14" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/iv_soft_ap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tip_title"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/image_smart_config"
+                />
 
+            <TextView
+                android:id="@+id/tv_soft_banner_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_soft_ap"
+                android:layout_marginStart="20dp"
+                android:lineSpacingExtra="10dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
+                android:text="@string/soft_ap_first_toast"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_14" />
+
+            <TextView
+                android:id="@+id/tv_soft_first_commit"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/btn_rad4_color_0052d9"
+                android:gravity="center"
+                android:text="@string/next"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_20"
+                android:layout_below="@+id/tv_soft_banner_title"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="20dp"
+                />
+        </LinearLayout>
     </ScrollView>
-
-    <TextView
-            android:id="@+id/tv_soft_first_commit"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/btn_rad4_color_0052d9"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_20" />
 
 </RelativeLayout>

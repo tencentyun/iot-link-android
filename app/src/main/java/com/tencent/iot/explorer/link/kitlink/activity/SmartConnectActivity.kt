@@ -3,14 +3,18 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
-import com.tencent.iot.explorer.link.kitlink.fragment.*
+import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
+import com.tencent.iot.explorer.link.kitlink.fragment.BaseFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.ConnectProgressFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.SCStepFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.mvp.presenter.GetBindDeviceTokenPresenter
 import com.tencent.iot.explorer.link.mvp.view.GetBindDeviceTokenView
 import com.tencent.iot.explorer.link.core.utils.LocationUtil
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import kotlinx.android.synthetic.main.activity_smart_connect.*
 
 /**
@@ -32,23 +36,37 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
         return R.layout.activity_smart_connect
     }
 
+    private fun showProgress() {
+        val stepsBeanList = ArrayList<StepBean>()
+        stepsBeanList.add(StepBean(getString(R.string.config_hardware)))
+        stepsBeanList.add(StepBean(getString(R.string.select_wifi)))
+        stepsBeanList.add(StepBean(getString(R.string.start_config_network)))
+        smart_config_step_progress.currentStep = 1
+        smart_config_step_progress.setStepViewTexts(stepsBeanList)
+        smart_config_step_progress.setTextSize(12)
+    }
+
     override fun initView() {
         loadViewTextType = intent.getIntExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadLocalViewTxt.ordinal)
         if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
             productId = intent.getStringExtra(CommonField.PRODUCT_ID)
         }
 
+        showProgress()
+
         presenter = GetBindDeviceTokenPresenter(this)
-        scStepFragment = SCStepFragment(loadViewTextType, productId)
+        scStepFragment = SCStepFragment()
         scStepFragment.onNextListener = object : SCStepFragment.OnNextListener {
             override fun onNext() {
+                smart_config_step_progress.currentStep = 2
+                smart_config_step_progress.refreshStepViewState()
                 showFragment(wifiFragment, scStepFragment)
                 if (!LocationUtil.isLocationServiceEnable(this@SmartConnectActivity)) {
                     T.showLonger(getString(R.string.open_location_service_for_wifi)) //请您打开手机位置以便获取WIFI名称
                 }
             }
         }
-        wifiFragment = WifiFragment(WifiFragment.smart_config)
+        wifiFragment = WifiFragment(WifiFragment.smart_config,false)
         wifiFragment.onCommitWifiListener = object : WifiFragment.OnCommitWifiListener {
             override fun commitWifi(ssid: String, bssid: String?, password: String) {
                 if (TextUtils.isEmpty(bssid)) {
@@ -61,40 +79,28 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
             }
         }
         connectProgressFragment = ConnectProgressFragment(WifiFragment.smart_config, loadViewTextType, productId)
-        connectProgressFragment.onRestartListener =
-            object : ConnectProgressFragment.OnRestartListener {
-                override fun restart() {
-                    showFragment(scStepFragment, connectProgressFragment)
-                    showTitle(
-                        getString(R.string.smart_config),
-                        getString(R.string.close)
-                    )
-                }
+        connectProgressFragment.onRestartListener = object : ConnectProgressFragment.OnRestartListener {
+            override fun restart() {
+                showFragment(scStepFragment, connectProgressFragment)
             }
+        }
         supportFragmentManager.beginTransaction()
             .add(R.id.container_smart_connect, scStepFragment)
             .commit()
     }
 
-    private fun showTitle(title: String, cancel: String) {
-        tv_smart_connect_title.text = title
-        tv_smart_connect_cancel.text = cancel
-    }
-
     private fun showFragment(showFragment: BaseFragment, hideFragment: BaseFragment) {
         val transaction = this.supportFragmentManager.beginTransaction()
         if (showFragment.isAdded) {
-            transaction.show(showFragment).hide(hideFragment)
-                .commit()
+            transaction.show(showFragment).hide(hideFragment).commit()
+
         } else {
-            transaction.add(R.id.container_smart_connect, showFragment)
-                .hide(hideFragment)
-                .commit()
+            transaction.add(R.id.container_smart_connect, showFragment).hide(hideFragment).commit()
         }
     }
 
     override fun setListener() {
-        tv_smart_connect_cancel.setOnClickListener {
+        tv_smart_config_back.setOnClickListener {
             if (connectProgressFragment.isVisible) {
                 showPopup()
             } else {
@@ -139,11 +145,8 @@ class SmartConnectActivity : BaseActivity(), GetBindDeviceTokenView {
     }
 
     override fun onSuccess(token: String) {
-        L.e("getToken onSuccess token:" + token)
-        showTitle(
-            getString(R.string.smart_config_third_connect_progress)
-            , getString(R.string.close)
-        )
+        smart_config_step_progress.currentStep = 3
+        smart_config_step_progress.refreshStepViewState()
         showFragment(connectProgressFragment, wifiFragment)
     }
 
