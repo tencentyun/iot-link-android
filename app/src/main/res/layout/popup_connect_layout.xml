@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/connect_dialog_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/connect_loading_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_cell"
+        android:padding="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <ImageView
+            android:id="@+id/iv_connect_progress"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/success"
+            android:layout_alignParentTop="true"
+            />
+        <TextView
+            android:id="@+id/tv_view"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:layout_below="@id/iv_connect_progress"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/connect_failed_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_failed_cell"
+        android:paddingTop="30dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginStart="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/connect_failed_tip"
+            android:text="@string/wifi_connect_failed"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/connect_failed_reason"
+            android:text="@string/check_wifi_pwd"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/connect_failed_tip"
+            android:layout_centerHorizontal="true"
+            />
+
+        <View
+            android:id="@+id/divid_line"
+            android:layout_width="match_parent"
+            android:layout_below="@id/connect_failed_reason"
+            android:layout_centerHorizontal="true"
+            android:background="@color/gray_dddddd"
+            android:layout_height="1dp"/>
+
+        <TextView
+            android:id="@+id/i_got_it"
+            android:layout_below="@id/divid_line"
+            android:text="@string/i_got_it"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/complete_progress"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
