@@ -119,7 +119,7 @@
     <string name="share_device">共享的设备</string>
     <string name="scan_add">扫码添加</string>
     <string name="smart_config">智能配网</string>
-    <string name="not_network">未连接</string>
+    <string name="not_network">请点击箭头按钮选择WIFI</string>
     <string name="connecting_to_wifi">请连接WIFI</string>
     <string name="soft_ap">自助配网</string>
     <string name="message">消息</string>
@@ -140,9 +140,9 @@
     <string name="no_room">没有可选的房间</string>
     <string name="no_device_and_add">当前暂无设备，点击按钮进行添加</string>
     <string name="no_add_permission">无添加权限</string>
-    <string name="smart_config_first">将设备设置为智能配网模式</string>
+    <string name="smart_config_first">将设备设置为一键配网模式</string>
     <string name="smart_config_first_hint">若指示灯已经在快闪，可跳过该步骤。</string>
-    <string name="smart_config_first_hint2">1.接通设备电源。\n2.长按复位键（开关）5秒。\n3.指示灯进入快闪状态。</string>
+    <string name="smart_config_first_hint2">1.接通设备电源；\n2.长按复位键（开关），切换设备配网模式到一键配网（不同设备操作方式有所不同）；\n3.指示灯快闪即进入一键配网模式。</string>
     <string name="connect_toast">请将设备与手机尽量靠近</string>
     <string name="smart_config_first_title">提示灯在快闪</string>
     <string name="smart_config_second_title">连接WI-FI</string>
@@ -150,12 +150,12 @@
     <string name="smart_config_second_hint">请输入密码</string>
     <string name="smart_config_third_connect_progress">配网进度</string>
 
-    <string name="soft_ap_first_title">将设备设置为自助配网模式</string>
+    <string name="soft_ap_first_title">将设备设置为热点配网模式</string>
     <string name="soft_ap_first_toast1">若指示灯已经在慢闪，可跳过该步骤。</string>
-    <string name="soft_ap_first_toast">1.接通设备电源。\n2.长按复位键（开关）5秒，指示灯快闪时，在次长按复位键3秒。\n3.指示灯进入慢闪状态。</string>
-    <string name="soft_ap_first_button">提示灯在慢闪</string>
+    <string name="soft_ap_first_toast">1.接通设备电源；\n2.长按复位键（开关），切换设备配网模式到热点配网（不同设备操作方式有所不同）；\n3.指示灯慢闪即进入热点配网模式。</string>
+    <string name="soft_ap_first_button">下一步</string>
     <string name="soft_ap_hotspot_set">将手机WIFI连接设备热点</string>
-    <string name="soft_ap_hotspot_step_1">1.手机WIFI连接到如下图所示的设备热点</string>
+    <string name="soft_ap_hotspot_step_1">请前往手机WiFi设置页面，连接上图所示设备WiFi</string>
     <string name="soft_ap_hotspot_step_2">2.返回APP,添加设备</string>
     <string name="soft_ap_connect_hotspot">连接设备热点</string>
     <string name="reconnect">重新连接</string>

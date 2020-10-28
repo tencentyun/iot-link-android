@@ -1,68 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    android:layout_height="match_parent">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="60dp"
+            android:orientation="vertical"
             >
-    <TextView
-        android:id="@+id/tv_smart_config_tip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-            android:layout_marginTop="40dp"
-            android:text="@string/smart_config_first"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_18"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-        />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/smart_config_first"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_18"
+                android:textStyle="bold" />
 
-    <ImageView
-        app:layout_constraintTop_toBottomOf="@id/tv_smart_config_tip"
-        android:id="@+id/iv_smart_config"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintDimensionRatio="h,16:10"/>
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/iv_smart_config"
-            android:id="@+id/tv_smart_config_hint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_smart_config"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
-            android:lineSpacingExtra="10dp"
-            android:layout_marginEnd="20dp"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_14" />
+            <ImageView
+                android:id="@+id/iv_smart_config"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/image_smart_config"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_smart_config_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:lineSpacingExtra="10dp"
+                android:layout_marginEnd="20dp"
+                android:maxLines="5"
+                android:text="@string/smart_config_first_hint2"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/ts_14" />
+
+            <TextView
+                android:id="@+id/tv_smart_first_commit"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_below="@+id/tv_smart_config_hint"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/btn_rad4_color_0052d9"
+                android:gravity="center"
+                android:text="@string/next"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_20" />
+        </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/tv_smart_first_commit"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/btn_rad4_color_0052d9"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/ts_20" />
 </RelativeLayout>
