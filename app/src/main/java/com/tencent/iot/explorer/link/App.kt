@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link
 import android.app.Application
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import androidx.multidex.MultiDex
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
@@ -59,16 +60,22 @@ class App : Application() {
         fun needUpgrade(newVersion: String): Boolean {
             if (TextUtils.isEmpty(newVersion)) return false
             var currentVersion = BuildConfig.VERSION_NAME
+
             // 如果是主干版本，强制升级
             if (currentVersion.startsWith(MUST_UPGRADE_TAG)) return true
 
             var newVerArr = newVersion.split(".")
             var curVerArr = currentVersion.split(".")
             for (i in 0..2) {
-                if (i < newVerArr.size && i < curVerArr.size &&
-                    Utils.getFirstSeriesNumFromStr(newVerArr.get(i)) >
-                    Utils.getFirstSeriesNumFromStr(curVerArr.get(i))) {
-                    return true
+                // 按照顺序新版本只要有一位小于当前版本，直接认为无需升级
+                if (i < newVerArr.size && i < curVerArr.size ) {
+                    if (Utils.getFirstSeriesNumFromStr(newVerArr.get(i)) <
+                            Utils.getFirstSeriesNumFromStr(curVerArr.get(i))) {
+                        return false
+                    } else if (Utils.getFirstSeriesNumFromStr(newVerArr.get(i)) >
+                        Utils.getFirstSeriesNumFromStr(curVerArr.get(i))) {
+                        return true
+                    }
                 }
             }
             return false
