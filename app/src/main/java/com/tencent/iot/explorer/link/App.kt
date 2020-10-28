@@ -13,6 +13,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
 import com.tencent.iot.explorer.link.core.utils.Utils
+import java.util.*
 
 
 /**
@@ -88,6 +89,7 @@ class App : Application() {
         XGPushConfig.enablePullUpOtherApp(applicationContext, PULL_OTHER)
         language = SharePreferenceUtil.getString(this, CONFIG, "language")
         data.readLocalUser(this)
+        data.appLifeCircleId = UUID.randomUUID().toString()
     }
 
     /**
