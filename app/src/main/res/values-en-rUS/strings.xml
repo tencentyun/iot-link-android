@@ -4,6 +4,7 @@
     <string name="main_tab_1">首页</string>
     <string name="main_tab_2">场景</string>
     <string name="main_tab_3">我的</string>
+    <string name="main_tab_4">评测</string>
 
     <!--常用-->
     <string name="success">成功</string>
@@ -29,9 +30,12 @@
     <string name="back_home">返回首页</string>
     <string name="q_feedback">问题反馈</string>
     <string name="copy">已复制</string>
+    <string name="copyed">已复制到剪切板</string>
     <string name="open_WIFI">请打开 WIFI</string>
     <string name="download_success">下载成功</string>
     <string name="download_failed">下载失败</string>
+    <string name="wechat_share">微信好友</string>
+    <string name="copy_link">复制链接</string>
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
     <string name="email_login">邮箱登录</string>
@@ -51,6 +55,7 @@
     <string name="get_mobile_code_sent">验证码已经发送到您的手机:</string>
     <string name="get_email_code_sent">验证码已经发送到您的邮箱:</string>
     <string name="not_wechat_client">未安装微信客户端</string>
+    <string name="not_install_wechat_client">微信未安装，请安装后重试</string>
     <string name="cancel_wechat">取消授权</string>
 
 
@@ -119,7 +124,7 @@
     <string name="share_device">共享的设备</string>
     <string name="scan_add">扫码添加</string>
     <string name="smart_config">智能配网</string>
-    <string name="not_network">未连接</string>
+    <string name="not_network">请点击箭头按钮选择WIFI</string>
     <string name="connecting_to_wifi">请连接WIFI</string>
     <string name="soft_ap">自助配网</string>
     <string name="message">消息</string>
@@ -127,6 +132,7 @@
     <string name="connect_success">连接成功</string>
     <string name="connect_fail">连接失败</string>
     <string name="add_new_device">继续添加新设备</string>
+    <string name="add_other_device">继续添加其他设备</string>
     <string name="back_to_home_page">返回首页</string>
     <string name="connect_again">按步骤重试</string>
     <string name="tab_connect_way">切换配网方式</string>
@@ -140,26 +146,31 @@
     <string name="no_room">没有可选的房间</string>
     <string name="no_device_and_add">当前暂无设备，点击按钮进行添加</string>
     <string name="no_add_permission">无添加权限</string>
-    <string name="smart_config_first">将设备设置为智能配网模式</string>
+    <string name="smart_config_first">将设备设置为一键配网模式</string>
     <string name="smart_config_first_hint">若指示灯已经在快闪，可跳过该步骤。</string>
-    <string name="smart_config_first_hint2">1.接通设备电源。\n2.长按复位键（开关）5秒。\n3.指示灯进入快闪状态。</string>
+    <string name="smart_config_first_hint2">1.接通设备电源；\n2.长按复位键（开关），切换设备配网模式到一键配网（不同设备操作方式有所不同）；\n3.指示灯快闪即进入一键配网模式。</string>
     <string name="connect_toast">请将设备与手机尽量靠近</string>
     <string name="smart_config_first_title">提示灯在快闪</string>
     <string name="smart_config_second_title">连接WI-FI</string>
     <string name="smart_config_second">输入WI-FI密码</string>
     <string name="smart_config_second_hint">请输入密码</string>
     <string name="smart_config_third_connect_progress">配网进度</string>
+    <string name="smart_config_config_network">一键配网</string>
+    <string name="softap_config_network">热点配网</string>
 
-    <string name="soft_ap_first_title">将设备设置为自助配网模式</string>
+    <string name="soft_ap_first_title">将设备设置为热点配网模式</string>
     <string name="soft_ap_first_toast1">若指示灯已经在慢闪，可跳过该步骤。</string>
-    <string name="soft_ap_first_toast">1.接通设备电源。\n2.长按复位键（开关）5秒，指示灯快闪时，在次长按复位键3秒。\n3.指示灯进入慢闪状态。</string>
-    <string name="soft_ap_first_button">提示灯在慢闪</string>
+    <string name="soft_ap_first_toast">1.接通设备电源；\n2.长按复位键（开关），切换设备配网模式到热点配网（不同设备操作方式有所不同）；\n3.指示灯慢闪即进入热点配网模式。</string>
+    <string name="soft_ap_first_button">下一步</string>
     <string name="soft_ap_hotspot_set">将手机WIFI连接设备热点</string>
-    <string name="soft_ap_hotspot_step_1">1.手机WIFI连接到如下图所示的设备热点</string>
+    <string name="soft_ap_hotspot_step_1">请前往手机WiFi设置页面，连接上图所示设备WiFi</string>
     <string name="soft_ap_hotspot_step_2">2.返回APP,添加设备</string>
+    <string name="soft_ap_hotspot_step">1.将手机连接到上图所示的WI-FI；\n2.或者手动去系统WI-FI设置页连接</string>
     <string name="soft_ap_connect_hotspot">连接设备热点</string>
     <string name="reconnect">重新连接</string>
     <string name="soft_ap_connect_confirm">连接正确，进入下一步</string>
+    <string name="handle_method">操作方式</string>
+    <string name="method_step">1.点击WiFi名称右侧的下拉按钮，前往手机WiFi设置界面选择设备热点后，返回APP。\n2.填写设备密码，若设备热点无密码则无需填写。\n3.点击下一步，开始配网。</string>
 
     <string name="offline">离线</string>
     <string name="online">设备在线</string>
@@ -168,6 +179,10 @@
     <string name="power_off">电源开关：关闭</string>
     <string name="on">开启</string>
     <string name="off">关闭</string>
+    <string name="dialog_tip">提示</string>
+    <string name="to_set">去开启</string>
+    <string name="please_open_wifi">手机WIFI未开启，请开启并连接WIFI</string>
+    <string name="please_open_location_service">请开启手机定位服务，以便获取附近WIFI信号</string>
 
     <string name="device_details">设备详情</string>
     <string name="remark_name">备注名称</string>
@@ -190,6 +205,35 @@
     <string name="mac_address">MAC地址</string>
     <string name="ip_address">IP地址</string>
     <string name="firmware_version">固件版本</string>
+    <string name="config_hardware">配置硬件</string>
+    <string name="select_wifi">选择目标WIFI</string>
+    <string name="set_target_wifi">设置目标WIFI</string>
+    <string name="start_config_network">开始配网</string>
+    <string name="input_wifi_pwd">请输入WIFI密码</string>
+    <string name="connect_dev_wifi">将手机WIFI连接设备热点</string>
+    <string name="tip_wifi">WIFI</string>
+    <string name="wifi_hz_advised">建议使用2.4G WIFI</string>
+    <string name="wifi_list_refresh">刷新</string>
+    <string name="connect_device">连接设备</string>
+    <string name="soft_config_network">热点配网</string>
+    <string name="click_get_wifi">点击获取WIFI列表</string>
+    <string name="please_open_gps">请打开手机GPS定位后获取WIFI列表。</string>
+    <string name="wifi_connect_failed">连接失败</string>
+    <string name="wifi_connect_success">连接成功，请继续</string>
+    <string name="check_wifi_pwd">请检查您的WIFI密码是否正确</string>
+    <string name="i_got_it">我知道了</string>
+    <string name="wifi_connecting">WIFI连接中...</string>
+    <string name="phone_connect_device">手机与设备连接成功</string>
+    <string name="phone_send_device">向设备发送消息成功</string>
+    <string name="device_connect_cloud">设备连接云端成功</string>
+    <string name="init_success">初始化成功</string>
+    <string name="config_net_failed">配网失败</string>
+    <string name="reson_config_net_info">1.确认设备处于一键配网模式（指示灯慢闪）\n2.核对家庭WIFI密码是否正确\n3.确认路由设备是否为2.4GWIFI频段</string>
+    <string name="softap_reson_config_net_info">1.确认设备处于热点模式（指示灯慢闪）\n2.确认是否连接到设备热点\n3.核对家庭WIFI密码是否正确\n4.确认路由设备是否为2.4GWIFI频段</string>
+    <string name="more_reason">查看更多失败原因</string>
+    <string name="switch_softap">切换到热点配网</string>
+    <string name="switch_smart_config">切换到一键配网</string>
+    <string name="add_device_success">配网完成，添加设备成功</string>
 
     <!--云端定时-->
     <string name="cloud_timing">云端定时</string>
@@ -316,7 +360,7 @@
     <string name="mobile_phone_number_invalid">手机号格式不正确</string>
     <string name="email_null">请输入邮箱地址</string>
     <string name="email_invalid">邮箱地址格式不正确</string>
-    <string name="password_style">密码支持8&#8211;20位，必须包含字母和数字</string>
+    <string name="password_style">密码支持8&#8211;16位，必须包含字母和数字</string>
     <string name="toast_password_not_verify">两次输入的密码不一致</string>
     <string name="toast_login">密码修改成功，请重新登录</string>
     <!--customview end-->
@@ -405,6 +449,7 @@
     <string name="unregister_failed">反注册失败</string>
     <string name="recv_msg">收到消息:</string>
     <string name="register_success">注册成功1. token：</string>
+    <string name="registe_success">注册成功</string>
     <string name="register_failed">注册失败，错误码：</string>
     <string name="notification_opened">通知被打开 :</string>
     <string name="notification_removed">通知被清除 :</string>
