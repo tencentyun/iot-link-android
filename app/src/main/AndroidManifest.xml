@@ -128,6 +128,7 @@
         <activity android:name=".kitlink.activity.AddDeviceActivity" />
         <activity android:name=".kitlink.activity.RegisterActivity" />
         <activity android:name=".kitlink.activity.MessageActivity" /> <!-- 微信回调 -->
+        <activity android:name=".kitlink.activity.DevicePanelActivity" />
         <activity
                 android:name=".kitlink.wxapi.WXEntryActivity"
                 android:exported="true"
