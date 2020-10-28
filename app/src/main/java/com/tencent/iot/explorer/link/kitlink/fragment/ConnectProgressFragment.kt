@@ -1,22 +1,23 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.content.Intent
-import android.text.TextUtils
+import android.graphics.Color
+import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.activity.HelpCenterActivity
-import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
+import com.tencent.iot.explorer.link.core.link.entity.SmartConfigStep
+import com.tencent.iot.explorer.link.core.link.entity.SoftAPStep
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.customview.progress.WaveProgress
-import com.tencent.iot.explorer.link.kitlink.activity.SmartConnectActivity
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.activity.*
 import kotlinx.android.synthetic.main.connected.*
-import kotlinx.android.synthetic.main.connecting.*
 import kotlinx.android.synthetic.main.fragment_connect_progress.*
 import kotlinx.android.synthetic.main.unconnected.*
 
@@ -32,13 +33,28 @@ class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : Bas
     private var wifiPassword = ""
     private var loadType: Int
     private var productId: String
+    private var rotate = RotateAnimation(0f, 360f,
+        Animation.RELATIVE_TO_SELF, 0.5f,
+        Animation.RELATIVE_TO_SELF, 0.5f)
 
     var onRestartListener: OnRestartListener? = null
+    @Volatile
+    private var state = ConnectProgressState.Init;
+
+    enum class ConnectProgressState (val id:Int) {
+        Init(0), MobileAndDeviceConnectSuccess(1), SendMessageToDeviceSuccess(2), DeviceConnectServiceSuccess(3),InitSuccess(4);
+    }
 
     init {
         this.type = type
         this.loadType = loadType
         this.productId = productId
+        val lin = LinearInterpolator()
+        rotate.setInterpolator(lin)
+        rotate.setDuration(2000) //设置动画持续周期
+        rotate.setRepeatCount(-1) //设置重复次数
+        rotate.setFillAfter(true) //动画执行完后是否停留在执行完的状态
+        rotate.setStartOffset(10) //执行前的等待时间
     }
 
     fun setWifiInfo(ssid: String, bssid: String, wifiPassword: String) {
@@ -57,7 +73,6 @@ class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : Bas
         }
     }
 
-
     override fun getPresenter(): IPresenter? {
         return presenter
     }
@@ -67,42 +82,99 @@ class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : Bas
     }
 
     override fun startHere(view: View) {
-        showConnecting()
-        setListener()
+        refreshView()
         presenter = ConnectPresenter(this)
         presenter.setWifiInfo(ssid, bssid, wifiPassword)
         presenter.initService(type, context!!)
         presenter.startConnect()
     }
 
-    private fun setListener() {
-        tv_connect_again.setOnClickListener(this)
-        tv_tab_connect_way.setOnClickListener(this)
-        tv_add_new_device.setOnClickListener(this)
-        tv_back_to_home_page.setOnClickListener(this)
-        tv_connect_more_cause.setOnClickListener(this)
+    private fun refreshView() {
+        activity?.run {
+            runOnUiThread {
+                when (state) {
+                    ConnectProgressState.Init -> { //初始状态
+                        iv_phone_connect_device.animation = rotate
+                        iv_phone_send_device.animation = rotate
+                        iv_device_connect_cloud.animation = rotate
+                        iv_init_success.animation = rotate
+                        tv_phone_connect_device.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_phone_send_device.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_init_success.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                    }
+                    ConnectProgressState.MobileAndDeviceConnectSuccess -> { //手机与设备连接成功状态
+                        iv_phone_connect_device.animation = null
+                        iv_phone_send_device.animation = rotate
+                        iv_device_connect_cloud.animation = rotate
+                        iv_init_success.animation = rotate
+                        iv_phone_connect_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_phone_send_device.setImageResource(R.mipmap.loading)
+                        iv_device_connect_cloud.setImageResource(R.mipmap.loading)
+                        iv_init_success.setImageResource(R.mipmap.loading)
+                        tv_phone_connect_device.setTextColor(Color.BLACK)
+                        tv_phone_send_device.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_init_success.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                    }
+                    ConnectProgressState.SendMessageToDeviceSuccess -> { //手机与设备连接成功，向设备发送消息成功状态
+                        iv_phone_connect_device.animation = null
+                        iv_phone_send_device.animation = null
+                        iv_device_connect_cloud.animation = rotate
+                        iv_init_success.animation = rotate
+                        iv_phone_connect_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_phone_send_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_device_connect_cloud.setImageResource(R.mipmap.loading)
+                        iv_init_success.setImageResource(R.mipmap.loading)
+                        tv_phone_connect_device.setTextColor(Color.BLACK)
+                        tv_phone_send_device.setTextColor(Color.BLACK)
+                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_init_success.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                    }
+                    ConnectProgressState.DeviceConnectServiceSuccess -> {//手机与设备连接成功，向设备发送消息成功，设备连接云端成功状态
+                        iv_phone_connect_device.animation = null
+                        iv_phone_send_device.animation = null
+                        iv_device_connect_cloud.animation = null
+                        iv_init_success.animation = rotate
+                        iv_phone_connect_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_phone_send_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_device_connect_cloud.setImageResource(R.mipmap.wifi_selected)
+                        iv_init_success.setImageResource(R.mipmap.loading)
+                        tv_phone_connect_device.setTextColor(Color.BLACK)
+                        tv_phone_send_device.setTextColor(Color.BLACK)
+                        tv_device_connect_cloud.setTextColor(Color.BLACK)
+                        tv_init_success.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                    }
+                    ConnectProgressState.InitSuccess -> {//手机与设备连接成功，向设备发送消息成功，设备连接云端成功，初始化成功状态
+                        iv_phone_connect_device.animation = null
+                        iv_phone_send_device.animation = null
+                        iv_device_connect_cloud.animation = null
+                        iv_init_success.animation = null
+                        iv_phone_connect_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_phone_send_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_device_connect_cloud.setImageResource(R.mipmap.wifi_selected)
+                        iv_init_success.setImageResource(R.mipmap.wifi_selected)
+                        tv_phone_connect_device.setTextColor(Color.BLACK)
+                        tv_phone_send_device.setTextColor(Color.BLACK)
+                        tv_device_connect_cloud.setTextColor(Color.BLACK)
+                        tv_init_success.setTextColor(Color.BLACK)
+                        App.data.setRefreshLevel(2)
 
-        wp_connected.setOnIncreaseListener(object : WaveProgress.OnIncreaseListener {
-            override fun finish(view: WaveProgress, progress: Int) {
-                activity?.runOnUiThread {
-                    tv_progress?.run {
-                        text = "$progress"
-                        if (progress >= 100) {
-                            progress_bg.setBackgroundResource(R.drawable.bg_progress_100)
-                            showConnectSuccess()
-                        }
+                        var successIntent = Intent(context, ConfigNetSuccessActivity::class.java)
+                        successIntent.putExtra(CommonField.CONFIG_NET_TYPE, type)
+                        successIntent.putExtra(CommonField.DEVICE_NAME, presenter.model?.deviceInfo?.deviceName)
+                        startActivity(successIntent)
+                        finish()
                     }
                 }
             }
-        })
+        }
     }
 
     override fun onClick(v: View?) {
         when (v) {
             tv_connect_again -> {
                 presenter.stopConnect()
-                wp_connected.setProgress(0)
-                showConnecting()
                 onRestartListener?.restart()
             }
             // 切换连接方式
@@ -126,6 +198,7 @@ class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : Bas
 //                    jumpActivity(SmartConnectActivity::class.java)
                     startActivityWithExtra(SmartConnectActivity::class.java, loadType, productId)
                 }
+                jumpActivity(SoftApActivity::class.java)
             }
             tv_back_to_home_page -> {
                 backToMain()
@@ -143,33 +216,54 @@ class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : Bas
         startActivity(intent)
     }
 
-    override fun connectSuccess() {
-        activity?.run {
-            runOnUiThread {
-                wp_connected.setProgress(100, true)
-                App.data.setRefreshLevel(2)
-            }
-        }
-    }
+    override fun connectSuccess() {}
 
+    // 根据回调，处理界面的进度步骤
     override fun connectStep(step: Int) {
-        activity?.run {
-            runOnUiThread {
-                L.e("progress=${step * 100 / 5}")
-                wp_connected.setProgress(step * 100 / 5, true)
-                progress_bg.setBackgroundResource(R.drawable.bg_progress)
+        if (type == WifiFragment.smart_config) {
+            when (step) {
+                SmartConfigStep.STEP_DEVICE_CONNECTED_TO_WIFI.ordinal -> {
+                    state = ConnectProgressState.MobileAndDeviceConnectSuccess
+                    refreshView()
+                }
+                SmartConfigStep.STEP_GOT_DEVICE_INFO.ordinal -> {
+                    state = ConnectProgressState.SendMessageToDeviceSuccess
+                    refreshView()
+                }
+                SmartConfigStep.STEP_DEVICE_BOUND.ordinal -> {
+                    state = ConnectProgressState.DeviceConnectServiceSuccess
+                    refreshView()
+                }
+                SmartConfigStep.STEP_LINK_SUCCESS.ordinal -> {
+                    state = ConnectProgressState.InitSuccess
+                    refreshView()
+                }
+            }
+
+        } else {
+            when (step) {
+                SoftAPStep.STEP_SEND_WIFI_INFO.ordinal -> {
+                    state = ConnectProgressState.MobileAndDeviceConnectSuccess
+                    refreshView()
+                }
+                SoftAPStep.STEP_GOT_DEVICE_INFO.ordinal -> {
+                    state = ConnectProgressState.SendMessageToDeviceSuccess
+                    refreshView()
+                }
+                SoftAPStep.STEP_DEVICE_BOUND.ordinal -> {
+                    state = ConnectProgressState.DeviceConnectServiceSuccess
+                    refreshView()
+                }
+                SoftAPStep.STEP_LINK_SUCCESS.ordinal -> {
+                    state = ConnectProgressState.InitSuccess
+                    refreshView()
+                }
             }
         }
     }
 
     override fun deviceConnectToWifiFail() {
-        activity?.run {
-            runOnUiThread {
-                wp_connected?.setProgress(0)
-                T.show(getString(R.string.connect_failed_check_password))
-                showConnectFail()
-            }
-        }
+        showfailedReason()
     }
 
     override fun softApConnectToWifiFail(ssid: String) {
@@ -179,43 +273,22 @@ class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : Bas
     }
 
     override fun connectFail(code: String, message: String) {
-        activity?.run {
-            runOnUiThread {
-                showConnectFail()
-                if (!TextUtils.isEmpty(message))
-                    T.show(message)
-                L.e("connectFail:$message")
-            }
-        }
-    }
-
-
-    private fun showConnecting() {
-        if (connecting != null) {
-            connecting.visibility = View.VISIBLE
-            connected.visibility = View.GONE
-            unconnected.visibility = View.GONE
-        }
-    }
-
-    private fun showConnectSuccess() {
-        if (connecting != null) {
-            connecting.visibility = View.GONE
-            connected.visibility = View.VISIBLE
-            unconnected.visibility = View.GONE
-        }
-    }
-
-    private fun showConnectFail() {
-        if (connecting != null) {
-            connecting.visibility = View.GONE
-            connected.visibility = View.GONE
-            unconnected.visibility = View.VISIBLE
-        }
+        showfailedReason()
     }
 
     interface OnRestartListener {
         fun restart()
+    }
+
+    private fun showfailedReason() {
+        activity?.run {
+            runOnUiThread {
+                var failedIntent = Intent(context, ConfigNetFailedActivity::class.java)
+                failedIntent.putExtra(CommonField.CONFIG_NET_TYPE, type)
+                startActivity(failedIntent)
+                finish()
+            }
+        }
     }
 
 }
