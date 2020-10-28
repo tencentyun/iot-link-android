@@ -21,6 +21,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerDivider
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.head_home.*
 
@@ -323,7 +324,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
         position: Int
     ) {
         put("device", presenter.getDeviceEntity(position))
-        jumpActivity(ControlPanelActivity::class.java)
+        jumpActivity(DevicePanelActivity::class.java)
     }
 
     interface PopupListener {
