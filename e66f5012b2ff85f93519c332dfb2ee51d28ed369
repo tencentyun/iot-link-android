@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f80058a9_7e0b8030",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/dialog/ConnectWifiDialog.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-10-29T13:25:15Z",
+      "side": 1,
+      "message": "这块是特意写成return的吗？",
+      "range": {
+        "startLine": 155,
+        "startChar": 17,
+        "endLine": 155,
+        "endChar": 23
+      },
+      "revId": "e66f5012b2ff85f93519c332dfb2ee51d28ed369",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64966a65_4a896960",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/fragment/ConnectProgressFragment.kt",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-10-29T13:25:15Z",
+      "side": 1,
+      "message": "这块是不是可以加点注释或者用常量 会不会更清晰点",
+      "range": {
+        "startLine": 92,
+        "startChar": 20,
+        "endLine": 92,
+        "endChar": 21
+      },
+      "revId": "e66f5012b2ff85f93519c332dfb2ee51d28ed369",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
