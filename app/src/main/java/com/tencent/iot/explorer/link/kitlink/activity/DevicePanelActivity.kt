@@ -161,9 +161,11 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
             L.e("shouldOverrideUrlLoading: " + url)
             when {
                 url.contains("goDeviceDetailPage") -> {
+                    callBackToH5(getCallbackId(url))
                     jumpActivity(DeviceDetailsActivity::class.java)
                 }
                 url.contains("goFeedBackPage") -> {
+                    callBackToH5(getCallbackId(url))
                     jumpActivity(FeedbackForH5Activity::class.java)
                 }
                 url.contains("goDeviceInfoPage") -> {
@@ -202,7 +204,7 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
     }
 
     private fun callBackToH5(id: String) {
-        if (callback != null) {
+        if (callback != null && id.isNotEmpty()) {
             val jsonObject1 = JSONObject()
             val jsonObject2 = JSONObject()
             jsonObject2["result"] = "true"
@@ -216,7 +218,11 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
     private fun getCallbackId(url: String): String {
         val uri = Uri.parse(url)
         val param = JSON.parseObject(uri.query)
-        return param["callbackId"].toString()
+        return if (param["callbackId"] != null) {
+            param["callbackId"].toString()
+        } else {
+            ""
+        }
     }
 
     private fun showEditPopup() {
