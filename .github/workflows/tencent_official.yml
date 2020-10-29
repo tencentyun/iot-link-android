@@ -43,6 +43,7 @@ jobs:
           export KEY_ID_OF_SIGN=$IOT_GPG_KEYNAME
           export PASSWORD_OF_SIGN=$IOT_GPG_PASSPHRASE
           sh .github/scripts/updateValuesForSign.sh
+          sh .github/scripts/updateVersionCodeForRelease.sh
       - name: Adapt build.gradle from debug to release
         run: |
           sed -i 's#opensource_keystore#tencent_official_keystore#g' app/build.gradle
