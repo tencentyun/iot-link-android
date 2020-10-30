@@ -6,6 +6,7 @@ package com.tencent.iot.explorer.link.core.auth.entity
  */
 class FamilyEntity {
     var FamilyId = ""
+    var FamilyType = 0
     var FamilyName = ""
     var Role = 0   // 1:自己是管理员  0：普通成员
     var CreateTime = 0L
