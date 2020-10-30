@@ -76,7 +76,7 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
                             "&appID=${T.getContext().applicationInfo.packageName}" +
                             "&platform=android" +
                             "&regionId=${App.data.regionId}"
-                    if (deviceEntity?.FromUserID?.length!! > 0) {
+                    if (deviceEntity?.shareDevice!!) {
                         url += "&isShareDevice=true"
                     }
                     showUrl(url)
