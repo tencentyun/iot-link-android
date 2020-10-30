@@ -44,6 +44,7 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
 
     override fun initView() {
         initWebView()
+        Log.e("XXX", "---------1")
         iv_back.setColorFilter(R.color.black_333333)
         tv_title.setText("")
     }
