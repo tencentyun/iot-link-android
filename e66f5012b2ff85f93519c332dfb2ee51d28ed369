@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "777ecf4e_96fbe973",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/dialog/ConnectWifiDialog.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-10-30T02:31:34Z",
+      "side": 1,
+      "message": "已在Patchset5中改为break。",
+      "parentUuid": "f80058a9_7e0b8030",
+      "range": {
+        "startLine": 155,
+        "startChar": 17,
+        "endLine": 155,
+        "endChar": 23
+      },
+      "revId": "e66f5012b2ff85f93519c332dfb2ee51d28ed369",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64966a65_4a896960",
         "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/fragment/ConnectProgressFragment.kt",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "e66f5012b2ff85f93519c332dfb2ee51d28ed369",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0789de7d_6913e17a",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/fragment/ConnectProgressFragment.kt",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-10-30T02:31:34Z",
+      "side": 1,
+      "message": "已在Patchset5中，添加了enum和注释。",
+      "parentUuid": "64966a65_4a896960",
+      "range": {
+        "startLine": 92,
+        "startChar": 20,
+        "endLine": 92,
+        "endChar": 21
+      },
+      "revId": "e66f5012b2ff85f93519c332dfb2ee51d28ed369",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
     }
   ]
 }
