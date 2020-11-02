@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/tv_tip_title"
+        android:paddingBottom="7dp"
+        android:paddingTop="20dp"
+        />
+
+    <com.tencent.iot.explorer.link.customview.image.RoundedImageView
+        android:id="@+id/iv_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="h, 4:1.1"
+        app:layout_constraintTop_toBottomOf="@id/tv_tip_title"
+        android:scaleType="fitXY"
+        app:riv_corner_radius="7dp"
+        />
+
+    <ImageView
+        android:id="@+id/iv_open_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/iv_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_background"
+        app:layout_constraintEnd_toEndOf="@id/iv_background"
+        app:layout_constraintWidth_percent="0.13"
+        app:layout_constraintDimensionRatio="w, 1:1"
+        android:src="@mipmap/start_task"
+        android:layout_marginRight="20dp" />
+
+    <Switch
+        android:id="@+id/iv_switch_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        app:layout_constraintTop_toTopOf="@id/iv_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_background"
+        app:layout_constraintEnd_toStartOf="@id/iv_open_btn"
+        android:thumb="@drawable/selector_switch_thumb"
+        android:track="@drawable/switch_setting_selector"
+        android:layout_marginRight="20dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/iv_background"
+        app:layout_constraintEnd_toStartOf="@id/iv_switch_btn"
+        app:layout_constraintTop_toTopOf="@id/iv_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_background"
+        android:padding="15dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_intelligence_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_content_tip"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_content_tip"
+            android:layout_width="match_parent"
+            android:singleLine="true"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_intelligence_name"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

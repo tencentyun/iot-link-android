@@ -5,6 +5,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.customview.PageAdapter
+import com.tencent.iot.explorer.link.kitlink.fragment.BaseFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.MessageFragment
 import kotlinx.android.synthetic.main.activity_message.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -21,7 +22,7 @@ class MessageActivity : BaseActivity() {
     private val page1 = MessageFragment(1)
     private val page2 = MessageFragment(2)
     private val page3 = MessageFragment(3)
-    private val mPageList: MutableList<MessageFragment> = ArrayList()
+    private val mPageList: MutableList<BaseFragment> = ArrayList()
     private lateinit var mAdapter :PageAdapter
 
 
@@ -71,7 +72,9 @@ class MessageActivity : BaseActivity() {
             }
         }
 
-        override fun onPageSelected(position: Int) {}
+        override fun onPageSelected(position: Int) {
+            tab_message.getTabAt(position)?.select()
+        }
 
     }
 
