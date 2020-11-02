@@ -162,33 +162,33 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
             L.e("shouldOverrideUrlLoading: " + url)
             when {
                 url.contains("goDeviceDetailPage") -> {
-                    callBackToH5(getCallbackId(url))
                     jumpActivity(DeviceDetailsActivity::class.java)
+                    callBackToH5(getCallbackId(url))
                 }
                 url.contains("goFeedBackPage") -> {
-                    callBackToH5(getCallbackId(url))
                     jumpActivity(FeedbackForH5Activity::class.java)
+                    callBackToH5(getCallbackId(url))
                 }
                 url.contains("goDeviceInfoPage") -> {
-                    callBackToH5(getCallbackId(url))
                     jumpActivity(DeviceInfoActivity::class.java)
+                    callBackToH5(getCallbackId(url))
                 }
                 url.contains("goEditDeviceNamePage") -> {
-                    callBackToH5(getCallbackId(url))
                     showEditPopup()
+                    callBackToH5(getCallbackId(url))
                 }
                 url.contains("goRoomSettingPage") -> {
-                    callBackToH5(getCallbackId(url))
                     jumpActivity(SelectRoomActivity::class.java)
+                    callBackToH5(getCallbackId(url))
                 }
                 url.contains("goShareDevicePage") -> {
-                    callBackToH5(getCallbackId(url))
                     jumpActivity(ShareUserListActivity::class.java)
+                    callBackToH5(getCallbackId(url))
                 }
                 url.contains("navBack") -> {
-                    callBackToH5(getCallbackId(url))
                     App.data.setRefreshLevel(2) // 2: 刷新设备列表
                     backToMain()
+                    callBackToH5(getCallbackId(url))
                 }
                 url.contains("reloadAfterUnmount") -> {
                     callBackToH5(getCallbackId(url))
