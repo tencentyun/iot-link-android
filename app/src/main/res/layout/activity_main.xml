@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".kitlink.activity.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".kitlink.activity.MainActivity">
 
     <FrameLayout
             android:id="@+id/main_container"
@@ -25,12 +26,34 @@
             android:layout_height="50dp"
             android:layout_alignParentBottom="true" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#48000000"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_main_add"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:src="@mipmap/main_add"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        />
+
     <View
             android:id="@+id/main_bg"
-            android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#48000000"
-            android:visibility="gone" />
+/>
 
 </RelativeLayout>
