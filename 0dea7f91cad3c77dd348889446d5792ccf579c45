@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f575a4a8_ed9b69d9",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/home/HomeBottomView.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-02T06:35:42Z",
+      "side": 1,
+      "message": "\u0026\u0026 这块逻辑是不是有点问题",
+      "range": {
+        "startLine": 71,
+        "startChar": 20,
+        "endLine": 71,
+        "endChar": 76
+      },
+      "revId": "0dea7f91cad3c77dd348889446d5792ccf579c45",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1d458ae_fb0a2280",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/image/RoundedDrawable.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-02T06:35:42Z",
+      "side": 1,
+      "message": "canvas.drawOval(mDrawableRect, mBitmapPaint); 这句应该可以提上去",
+      "range": {
+        "startLine": 269,
+        "startChar": 8,
+        "endLine": 272,
+        "endChar": 53
+      },
+      "revId": "0dea7f91cad3c77dd348889446d5792ccf579c45",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24c8bbaf_d328ac72",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/image/RoundedDrawable.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-02T06:35:42Z",
+      "side": 1,
+      "message": "canvas.drawRoundRect(mDrawableRect, radius, radius, mBitmapPaint); 同上",
+      "range": {
+        "startLine": 278,
+        "startChar": 10,
+        "endLine": 283,
+        "endChar": 76
+      },
+      "revId": "0dea7f91cad3c77dd348889446d5792ccf579c45",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8e6b299_29906471",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/fragment/MySmartFragment.kt",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-02T06:35:42Z",
+      "side": 1,
+      "message": "可以删掉",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 49
+      },
+      "revId": "0dea7f91cad3c77dd348889446d5792ccf579c45",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
