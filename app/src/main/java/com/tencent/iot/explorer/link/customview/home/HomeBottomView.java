@@ -7,7 +7,9 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 底部控件
@@ -22,7 +24,11 @@ public class HomeBottomView extends LinearLayout {
     private LinkedList<MenuItemView> bottomViews = new LinkedList<>();
     private OnItemClickListener onItemClickListener;
     private int currentPosition = 0, previewPosition = -1;
+    private List<Integer> unclickAbleItems = new ArrayList();
 
+    public void addUnclickAbleItem(int pos) {
+        unclickAbleItems.add(pos);
+    }
 
     public HomeBottomView(Context context) {
         super(context);
@@ -62,7 +68,13 @@ public class HomeBottomView extends LinearLayout {
             lp.weight = 1;
             for (int i = 0; i < bottomList.size(); i++) {
                 MenuItemView view = new MenuItemView(getContext());
-                setListener(view, i);
+                if (unclickAbleItems == null || unclickAbleItems.size() == 0) {
+                    setListener(view, i);
+                } else if (unclickAbleItems.contains(i)) {  //在不可被选中的位置中的按钮不添加点击修改状态的事件
+
+                } else {
+                    setListener(view, i);
+                }
                 view.tvTitle.setText(bottomList.get(i).title);
                 view.tvTitle.setTextColor(bottomList.get(i).normalColor);
                 view.ivIcon.setImageResource(bottomList.get(i).normalSrc);
