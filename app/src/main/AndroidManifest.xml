@@ -28,29 +28,27 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 访问网络的变化, 需要某些信息用于网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 访问手机当前状态, 需要某些信息用于网络定位 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" /> <!-- 访问手机当前状态, 需要某些信息用于网络定位 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!--picture start-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- picture start -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <!--picture end-->
 
     <application
         android:name=".App"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
         tools:replace="android:allowBackup">
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -62,7 +60,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".kitlink.activity.DeviceCategoryActivity"/>
+        <activity android:name=".kitlink.activity.DeviceCategoryActivity" />
         <activity android:name=".kitlink.activity.DeviceInfoActivity" />
         <activity android:name=".kitlink.activity.SelectRoomActivity" />
         <activity android:name=".kitlink.activity.ShareActivity" />
@@ -89,8 +87,7 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".kitlink.activity.GuideActivity">
+        <activity android:name=".kitlink.activity.GuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -117,7 +114,10 @@
         <activity android:name=".kitlink.activity.ConfigNetFailedActivity"
             android:launchMode="singleTask" />
         <activity android:name=".kitlink.activity.ConfigNetSuccessActivity"/>
-        <activity android:name=".kitlink.activity.HelpWebViewActivity"
+        <activity android:name=".kitlink.activity.AddAutoicTaskActivity" />
+        <activity android:name=".kitlink.activity.AddManualTaskActivity" />
+        <activity
+            android:name=".kitlink.activity.HelpWebViewActivity"
             android:launchMode="singleTop" />
         <activity
             android:name=".kitlink.activity.FeedbackActivity"
@@ -140,12 +140,11 @@
             android:launchMode="singleTask"
             android:taskAffinity="com.tencent.iot.explorer.link.kitlink"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity-alias
             android:name="${applicationId}.wxapi.WXEntryActivity"
             android:exported="true"
-            android:targetActivity=".kitlink.wxapi.WXEntryActivity" />
-
-        <!--picture start-->
+            android:targetActivity=".kitlink.wxapi.WXEntryActivity" /> <!-- picture start -->
         <activity
             android:name=".kitlink.util.picture.imageselectorbrowser.ImageSelectorBrowseActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -153,9 +152,7 @@
             android:name=".kitlink.util.picture.imageselectorbrowser.ImageSelectorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".kitlink.util.picture.clipimage.ClipPictureActivity" />
-        <activity android:name=".kitlink.util.picture.clipimage.ImageSimpleBrowseActivity" />
-        <!--picture end-->
-
+        <activity android:name=".kitlink.util.picture.clipimage.ImageSimpleBrowseActivity" /> <!-- picture end -->
         <receiver android:name=".MessageReceiver">
             <intent-filter>
                 <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE" />

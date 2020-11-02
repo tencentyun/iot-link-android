@@ -55,5 +55,8 @@
         <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
     </style>
 
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">16sp</item>
+    </style>
 
 </resources>
