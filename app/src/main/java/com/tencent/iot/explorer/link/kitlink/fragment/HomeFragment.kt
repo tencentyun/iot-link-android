@@ -357,9 +357,9 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
                             ProdConfigDetailEntity::class.java
                         )
                         val panelInfo = JSON.parseObject(config.Panel)
-                        if (panelInfo["type"] == "h5") {
+                        if (panelInfo != null && panelInfo["type"] == "h5") {
                             jumpActivity(DevicePanelActivity::class.java)
-                        } else if (panelInfo["type"] == "standard") {
+                        } else {
                             jumpActivity(ControlPanelActivity::class.java)
                         }
                     }
