@@ -1,7 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.content.Intent
+import com.google.android.gms.common.internal.service.Common
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import kotlinx.android.synthetic.main.activity_add_manual_task.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -21,13 +24,15 @@ class AddManualTaskActivity : BaseActivity() {
         options.add(getString(R.string.delay_time))
         optionsDialog = ListOptionsDialog(this, options)
         optionsDialog?.setOnDismisListener(onItemClickedListener)
+
     }
 
     private var onItemClickedListener = ListOptionsDialog.OnDismisListener {
         if (it == 0) {
 
         } else if (it == 1) {
-
+            var intent = Intent(this, DelayTimeActivity::class.java)
+            startActivity(intent)
         }
     }
 
