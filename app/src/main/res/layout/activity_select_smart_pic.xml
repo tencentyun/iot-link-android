@@ -6,7 +6,7 @@
     android:background="@color/white">
 
     <include
-            android:id="@+id/shbv_add_autoic_task"
+            android:id="@+id/shbv_select_pic"
             layout="@layout/menu_back_layout" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,9 +21,10 @@
         >
 
         <TextView
+            android:id="@+id/tv_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/next"
+            android:text="@string/save"
             android:gravity="center"
             android:textColor="@color/white"
             android:paddingTop="9dp"
@@ -36,23 +37,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
-        android:id="@+id/sv_help"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray_F5F5F5"
-        android:layout_above="@id/layout_btn"
-        android:layout_below="@+id/shbv_add_autoic_task">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gv_pic"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/white"
+                android:layout_above="@id/layout_btn"
+                android:layout_below="@+id/shbv_select_pic"
+                android:padding="5dp"
+                />
 
 </RelativeLayout>
