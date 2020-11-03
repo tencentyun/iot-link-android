@@ -16,8 +16,8 @@
         android:id="@+id/layout_btn"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
         >
 
         <TextView
@@ -26,9 +26,9 @@
             android:text="@string/next"
             android:gravity="center"
             android:textColor="@color/white"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:textSize="15sp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:textSize="14sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/background_circle_bule_gradient"

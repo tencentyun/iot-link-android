@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/layout_smart_name"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_tip_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/tv_tip_name"
+            app:layout_constraintBottom_toBottomOf="@id/tv_tip_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@mipmap/icon_arrow"
+            app:layout_constraintDimensionRatio="h,1:1"
+            android:rotation="180"
+            android:id="@+id/iv_go"
+            />
+
+        <TextView
+            android:id="@+id/tv_dev_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_tip_name"
+            app:layout_constraintBottom_toBottomOf="@id/tv_tip_name"
+            app:layout_constraintEnd_toStartOf="@id/iv_go"
+            app:layout_constraintStart_toEndOf="@id/tv_tip_name"
+            android:text="@string/unset"
+            android:textSize="15sp"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/gray_A1A7B2"
+            android:singleLine="true"
+            android:gravity="right"
+            />
+
+        <View
+            android:id="@+id/v_divide_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_tip_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="12dp"
+            android:background="@color/gray_F5F5F5"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
