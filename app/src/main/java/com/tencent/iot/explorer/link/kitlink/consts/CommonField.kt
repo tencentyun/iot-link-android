@@ -47,6 +47,14 @@ object CommonField {
     const val KEY_URL = "url"
     const val H5_BASE_URL = "https://iot.cloud.tencent.com/explorer-h5/evaluation/"
     const val WECHAT_MINI_PROGRAM_PATH = "pages/Index/TabPages/Evaluation/EvaluationDetail/EvaluationDetail?item="
+    const val EDIT_EXTRA = "editExtra"
+    const val DELAY_TIME_TASK = "delayTask"
+    const val EXTRA_PIC_URL = "extraPicUrl"
+    const val EXYRA_TASK_NAME = "taskName"
+    const val EXTRA_PRODUCT_ID = "productId"
+    const val EXTRA_DEV_MODES = "extraDevMode"
+    const val EXTRA_DEV_DETAIL = "devDetail"
+    const val EXTRA_ALL_MANUAL_TASK = "allManualTask"
 
 
     /*******上传文件********/
@@ -127,6 +135,10 @@ object CommonField {
     const val QR_CODE_REQUEST_CODE = 103
     const val LOGIN_REQUEST_CODE = 108
     const val H5_REQUEST_LOGIN_CODE = 10
+    const val ADD_DELAY_TIME_REQ_CODE = 0x1101
+    const val EDIT_DELAY_TIME_REQ_CODE = 0x1102
+    const val REQUEST_PIC_REQ_CODE = 0x1103
+    const val REQUEST_TASK_NAME_REQ_CODE = 0x1104
 
     const val SSID_UNKNOWN = "<unknown ssid>"
     const val EXTRA_TITLE = "title"
