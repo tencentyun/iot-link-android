@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,19 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.squareup.picasso.Picasso;
 import com.tencent.iot.explorer.link.App;
 import com.tencent.iot.explorer.link.R;
+import com.tencent.iot.explorer.link.T;
+import com.tencent.iot.explorer.link.kitlink.entity.Action;
 import com.tencent.iot.explorer.link.kitlink.entity.Automation;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapter.ViewHolder> {
 
@@ -53,7 +59,7 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
         refreashList();
     }
 
-    public void setManualList(int pos, Automation manual) {
+    public void setManual(int pos, Automation manual) {
         this.manualList.set(pos, manual);
         refreashList();
     }
@@ -154,10 +160,24 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
             }
         }
 
-        Picasso.get().load(list.get(position).getIcon()).into(holder.background);
+        if (!TextUtils.isEmpty(list.get(position).getIcon())) {
+            Picasso.get().load(list.get(position).getIcon()).into(holder.background);
+        }
         holder.intelligenceName.setText(list.get(position).getName());
-        holder.desc.setText(list.get(position).getDesc());
 
+        List<Action> allActions = JSON.parseArray(list.get(position).getActions().toJSONString(), Action.class);
+        if (allActions != null && allActions.size() > 0) {
+            Set<String> caculateTotal = new HashSet<>();
+            for (int i = 0; i < allActions.size(); i++) {
+                if (!TextUtils.isEmpty(allActions.get(i).getProductId()) && !TextUtils.isEmpty(allActions.get(i).getDeviceName())) {
+                    caculateTotal.add(allActions.get(i).getProductId() + "/" + allActions.get(i).getDeviceName());
+                }
+            }
+
+            holder.desc.setText(T.getContext().getString(R.string.num_devices, "" + caculateTotal.size()));
+        } else {
+            holder.desc.setText(T.getContext().getString(R.string.num_devices, "" + 0));
+        }
     }
 
     @Override

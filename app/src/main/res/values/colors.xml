@@ -37,12 +37,16 @@
     <color name="black_999999">#999999</color>
     <color name="black_15161A">#15161A</color>
     <!--    灰色-->
+    <color name="gray_A1A7B2">#A1A7B2</color>
     <color name="gray_bbbbbb">#BBBBBB</color>
     <color name="gray_cccccc">#CCCCCC</color>
+    <color name="gray_c2c5cc">#C2C5CC</color>
     <color name="gray_d7d7d7">#D7D7D7</color>
     <color name="gray_d0d0d0">#D0D0D0</color>
     <color name="gray_dcdcdc">#DCDCDC</color>
     <color name="gray_dddddd">#DDDDDD</color>
+    <color name="grey_e5e5e5">#E5E5E5</color>
+    <color name="grey_E1E4E9">#E1E4E9</color>
     <color name="gray_F2F2F2">#F2F2F2</color>
     <color name="gray_F2F4F5">#F2F4F5</color>
     <color name="gray_F5F5F5">#F5F5F5</color>
@@ -50,6 +54,7 @@
     <color name="gray_e6e6e6">#E6E6E6</color>
     <color name="gray_e0e0e0">#E0E0E0</color>
     <color name="gray_666666">#666666</color>
+    <color name="gray_6C7078">#6C7078</color>
 
     <!--红色-->
     <color name="red_eb3d3d">#EB3D3D</color>
