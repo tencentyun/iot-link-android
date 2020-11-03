@@ -54,6 +54,19 @@
     <string name="add_task">添加任务</string>
     <string name="control_dev">设备控制</string>
     <string name="delay_time">延时</string>
+    <string name="run_all_task">执行以下任务</string>
+    <string name="delay_time_can_not_be_last_one">延时不能设置为最后一个任务</string>
+    <string name="no_task_to_add">没有任务</string>
+    <string name="complete_task_info">完善智能信息</string>
+    <string name="smart_pic">智能图片</string>
+    <string name="smart_name">智能名称</string>
+    <string name="select_smart_pic">选择智能图片</string>
+    <string name="add_smart_name">填写智能名称</string>
+    <string name="select_dev">选择设备</string>
+    <string name="current_dev_no_this_function">该设备暂无功能可作为智能任务，试试其他设备吧</string>
+    <string name="please_input_smart_pic">请设置智能图片</string>
+    <string name="please_input_smart_name">请设置智能名称</string>
+
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
     <string name="email_login">邮箱登录</string>

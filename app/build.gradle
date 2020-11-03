@@ -180,6 +180,7 @@ dependencies {
     implementation project(path: ':sdk')
     implementation 'com.belerweb:pinyin4j:2.5.0'
     implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.6'
-
+    implementation 'cn.aigestudio.wheelpicker:WheelPicker:1.1.3'
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 
 }
