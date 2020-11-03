@@ -47,7 +47,7 @@ object CommonField {
     const val KEY_URL = "url"
     const val H5_BASE_URL = "https://iot.cloud.tencent.com/explorer-h5/evaluation/"
     const val WECHAT_MINI_PROGRAM_PATH = "pages/Index/TabPages/Evaluation/EvaluationDetail/EvaluationDetail?item="
-
+    const val EDIT_EXTRA = "editExtra"
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
