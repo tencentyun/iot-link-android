@@ -20,7 +20,7 @@
                 android:text="@string/recommend"
                 android:textColor="@color/gray"
                 android:layout_marginTop="13dp"
-            android:paddingLeft="10dp"
+                android:paddingLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

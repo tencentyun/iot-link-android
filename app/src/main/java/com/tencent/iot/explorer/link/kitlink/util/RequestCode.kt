@@ -113,5 +113,10 @@ object RequestCode {
     const val describe_product_config = 7003
     /*************设备推荐接口结束**************/
 
+    /*************场景联动接口开始**************/
+    const val create_manual_task = 8001
+    const val query_all_manual_task = 8002
+    /*************场景联动接口结束**************/
+
 
 }

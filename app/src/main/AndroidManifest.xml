@@ -77,12 +77,14 @@
         <activity android:name=".kitlink.activity.AddRoomActivity" />
         <activity android:name=".kitlink.activity.AddFamilyActivity" />
         <activity android:name=".kitlink.activity.CommentDetailsActivity" />
+        <activity android:name=".kitlink.activity.DelayTimeActivity" />
         <activity android:name=".kitlink.activity.CloudTimingActivity" /> <!-- 信鸽Android P -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".kitlink.activity.MainActivity">
+        <activity android:name=".kitlink.activity.MainActivity"
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -115,7 +117,13 @@
             android:launchMode="singleTask" />
         <activity android:name=".kitlink.activity.ConfigNetSuccessActivity"/>
         <activity android:name=".kitlink.activity.AddAutoicTaskActivity" />
-        <activity android:name=".kitlink.activity.AddManualTaskActivity" />
+        <activity android:name=".kitlink.activity.AddManualTaskActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".kitlink.activity.CompleteTaskInfoActivity" />
+        <activity android:name=".kitlink.activity.SelectTaskPicActivity" />
+        <activity android:name=".kitlink.activity.AddTaskNameActivity" />
+        <activity android:name=".kitlink.activity.DeviceModeInfoActivity" />
+        <activity android:name=".kitlink.activity.SmartSelectDevActivity" />
         <activity
             android:name=".kitlink.activity.HelpWebViewActivity"
             android:launchMode="singleTop" />

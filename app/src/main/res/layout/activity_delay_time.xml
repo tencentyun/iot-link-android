@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <include
+            android:id="@+id/shbv_delay_time"
+            layout="@layout/menu_back_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/layout_btn"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/background_circle_bule_gradient"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ScrollView
+        android:id="@+id/sv_help"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_F5F5F5"
+        android:layout_below="@+id/shbv_delay_time"
+        android:layout_above="@id/layout_btn"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                >
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/v_center"
+                    />
+
+                <com.aigestudio.wheelpicker.WheelPicker
+                    android:id="@+id/wheel_delay_time_hour"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:wheel_item_text_size="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/v_center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:wheel_indicator_size="1dp"
+                    app:wheel_indicator_color="@color/grey_e5e5e5"
+                    app:wheel_cyclic="true"
+                    app:wheel_selected_item_text_color="@color/black"
+                    />
+
+                <com.aigestudio.wheelpicker.WheelPicker
+                    android:id="@+id/wheel_delay_time_min"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:wheel_item_text_size="15sp"
+                    app:layout_constraintStart_toStartOf="@id/v_center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/wheel_delay_time_hour"
+                    app:wheel_indicator_size="1dp"
+                    app:wheel_indicator_color="@color/grey_e5e5e5"
+                    app:wheel_cyclic="true"
+                    app:wheel_selected_item_text_color="@color/black"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </ScrollView>
+
+</RelativeLayout>

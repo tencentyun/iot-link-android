@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <include
+            android:id="@+id/shbv_sel_dev"
+            layout="@layout/menu_back_layout" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/shbv_sel_dev"
+        android:id="@+id/v_h_line"
+        android:background="@color/gray_F5F5F5"
+        />
+
+    <LinearLayout
+        android:id="@+id/container_normal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/v_h_line"
+        android:orientation="horizontal">
+
+        <q.rorbin.verticaltablayout.VerticalTabLayout
+            android:id="@+id/vtab_device_category"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="@color/gray_F5F5F5"
+            app:indicator_color="@color/white"
+            app:indicator_gravity="fill"
+            app:tab_height="50dp"
+            app:tab_mode="scrollable" />
+
+        <FrameLayout
+            android:id="@+id/devce_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

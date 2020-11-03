@@ -11,6 +11,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.SceneEntity
 import com.tencent.iot.explorer.link.retrofit.StringRequest
 import java.util.*
 import com.tencent.iot.explorer.link.retrofit.Callback
@@ -1322,5 +1323,33 @@ class HttpRequest private constructor() {
         tokenPost(param, callback, RequestCode.get_products_config)
     }
     /****************************************   设备推荐接口结束   *******************************************************/
+
+
+    /****************************************   场景联动接口开始   *******************************************************/
+    fun createManualTask(sceneEntity: SceneEntity, callback: MyCallback) {
+        val param = tokenParams("AppCreateScene")
+        param["SceneName"] = sceneEntity.sceneName
+        param["SceneIcon"] = sceneEntity.sceneIcon
+        param["FamilyId"] = sceneEntity.familyId
+        param["Actions"] = sceneEntity.actions!!
+        tokenPost(param, callback, RequestCode.create_manual_task)
+    }
+
+    //curl http://127.0.0.1:8088/tokenapiv1 -d '{
+    //    "AccessToken":"xxxv2",
+    //    "RequestId":"req_1",
+    //    "Action":"AppGetSceneList",
+    //    "FamilyId":"f_9b309d84c9624a60a11b4c3d9588fcc1",
+    //    "Offset":0,
+    //    "Limit":10
+    //}'
+    fun queryManualTask(familyId: String, offset: Int, callback: MyCallback) {
+        val param = tokenParams("AppGetSceneList")
+        param["FamilyId"] = familyId
+        param["Offset"] = offset
+        param["Limit"] = 20
+        tokenPost(param, callback, RequestCode.query_all_manual_task)
+    }
+    /****************************************   场景联动接口结束   *******************************************************/
 
 }
