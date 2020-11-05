@@ -41,6 +41,9 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
     private View centreView;
     private ConstraintLayout outLayout;
     private UpgradeInfo info;
+    private boolean mIsForceUpgrade;
+    private static boolean dialogShowing = false;
+    private static boolean dialogShowed = false;
 
     public UpgradeDialog(Context context, UpgradeInfo info) {
         super(context, R.style.iOSDialog);
@@ -98,9 +101,13 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         publishTime.setText(mContext.getResources().getString(R.string.publish_time) +
                 mContext.getResources().getString(R.string.splite_from_name) + info.getPublishTime());
         outLayout.setBackgroundColor(mContext.getResources().getColor(R.color.dialog_background));
-        if (info.getUpgradeType() == 1) {
+        if (info.getUpgradeType() == 1) { // 2:静默更新不提示 1:强制升级 0:用户确认
             btnNextTime.setVisibility(View.GONE);
             centreView.setVisibility(View.GONE);
+            // 拦截物理返回按键
+            setCancelable(false);
+            setCanceledOnTouchOutside(false);
+            mIsForceUpgrade = true;
         }
     }
 
@@ -109,16 +116,29 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.upgrade_dialog_layout:
             case R.id.tv_next:
+                if (!mIsForceUpgrade) {
+                    dismiss();
+                    dialogShowing = false;
+                }
                 break;
             case R.id.tv_upgrade_now:
                 if (onDismisListener != null) {
                     onDismisListener.OnClickUpgrade(info.getUrl());
+                    dismiss();
+                    dialogShowing = false;
                 }
                 break;
             default:
                 break;
         }
-        dismiss();
+    }
+
+    public static boolean dialogShowing() {
+        return dialogShowing;
+    }
+
+    public static boolean dialogShowed() {
+        return dialogShowed;
     }
 
     private volatile OnDismisListener onDismisListener;
@@ -142,6 +162,8 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         params.gravity = Gravity.CENTER;
         getWindow().setAttributes(params);
         getWindow().setContentView(view);
+        dialogShowing = true;
+        dialogShowed = true;
     }
 
 }
