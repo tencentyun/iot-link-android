@@ -81,6 +81,7 @@ class WifiFragment() : BaseFragment() {
                 tv_method.visibility = View.VISIBLE
                 tv_method_tip.visibility = View.VISIBLE
                 tv_tip_wifi.setText(R.string.connect_dev_wifi)
+                et_select_wifi_pwd.setHint( R.string.smart_config_second_hint_not_required)
             } else {
                 tv_method.visibility = View.GONE
                 tv_method_tip.visibility = View.GONE

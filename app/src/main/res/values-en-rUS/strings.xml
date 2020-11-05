@@ -154,6 +154,7 @@
     <string name="smart_config_second_title">连接WI-FI</string>
     <string name="smart_config_second">输入WI-FI密码</string>
     <string name="smart_config_second_hint">请输入密码</string>
+    <string name="smart_config_second_hint_not_required">请输入密码(非必填)</string>
     <string name="smart_config_third_connect_progress">配网进度</string>
     <string name="smart_config_config_network">一键配网</string>
     <string name="softap_config_network">热点配网</string>
