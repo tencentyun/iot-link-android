@@ -28,10 +28,9 @@
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         >
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             >
             <ImageView
@@ -39,11 +38,15 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/loading"
+                android:layout_centerVertical="true"
+                android:layout_alignTop="@id/tv_phone_connect_device"
+                android:layout_alignBottom="@id/tv_phone_connect_device"
                 />
             <TextView
                 android:id="@+id/tv_phone_connect_device"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/iv_phone_connect_device"
                 android:textSize="16sp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -51,12 +54,11 @@
                 android:text="@string/phone_connect_device"
                 />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             >
             <ImageView
@@ -64,11 +66,15 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/loading"
+                android:layout_centerVertical="true"
+                android:layout_alignTop="@id/tv_phone_send_device"
+                android:layout_alignBottom="@id/tv_phone_send_device"
                 />
             <TextView
                 android:id="@+id/tv_phone_send_device"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/iv_phone_send_device"
                 android:textSize="16sp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -76,12 +82,11 @@
                 android:text="@string/phone_send_device"
                 />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             >
             <ImageView
@@ -89,11 +94,15 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/loading"
+                android:layout_centerVertical="true"
+                android:layout_alignTop="@id/tv_device_connect_cloud"
+                android:layout_alignBottom="@id/tv_device_connect_cloud"
                 />
             <TextView
                 android:id="@+id/tv_device_connect_cloud"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/iv_device_connect_cloud"
                 android:textSize="16sp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -101,12 +110,11 @@
                 android:text="@string/device_connect_cloud"
                 />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             >
             <ImageView
@@ -114,11 +122,15 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/loading"
+                android:layout_centerVertical="true"
+                android:layout_alignTop="@id/tv_init_success"
+                android:layout_alignBottom="@id/tv_init_success"
                 />
             <TextView
                 android:id="@+id/tv_init_success"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/iv_init_success"
                 android:textSize="16sp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -126,7 +138,7 @@
                 android:text="@string/init_success"
                 />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
