@@ -53,7 +53,7 @@ class MainActivity : PActivity(), MyCallback {
     private var familyPopup: FamilyListPopup? = null
 //    private var addDialog: ListOptionsDialog? = null
 
-    private val INSTALL_PERMISS_CODE = 1
+    private var isForceUpgrade = true
 
     override fun getContentView(): Int {
         return R.layout.activity_main
@@ -70,12 +70,7 @@ class MainActivity : PActivity(), MyCallback {
         if (cancelAccountTime > 0) {
             showCancelAccountStoppedDialog(cancelAccountTime)
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // 获取安装未知源 app 的权限，调用下载接口
-        if (requestCode == INSTALL_PERMISS_CODE && resultCode == Activity.RESULT_OK) {
+        if (isForceUpgrade) {
             startUpdateApp()
         }
     }
@@ -89,10 +84,13 @@ class MainActivity : PActivity(), MyCallback {
                 if (response.isSuccess()) {
                     val json = response.data as JSONObject
                     val info = UpgradeInfo.convertJson2UpgradeInfo(json)
-                    if (App.needUpgrade(info!!.version) && info.upgradeType != 2) {
-                        val dialog = UpgradeDialog(this@MainActivity, info)
-                        dialog.setOnDismisListener(upgradeDialogListener)
-                        dialog.show()
+                    if (App.needUpgrade(info!!.version) && info.upgradeType != 2 && !UpgradeDialog.dialogShowing()) {
+                        isForceUpgrade = info.upgradeType == 1 // 2:静默更新不提示 1:强制升级 0:用户确认
+                        if (isForceUpgrade || (!isForceUpgrade && !UpgradeDialog.dialogShowed())) {
+                            val dialog = UpgradeDialog(this@MainActivity, info)
+                            dialog.setOnDismisListener(upgradeDialogListener)
+                            dialog.show()
+                        }
                     }
                 }
             }
@@ -168,7 +166,6 @@ class MainActivity : PActivity(), MyCallback {
             .add(R.id.main_container, fragments[0])
             .show(fragments[0])
             .commit()
-        startUpdateApp()
     }
 
 //    private fun showOptionDialog() {
@@ -270,25 +267,6 @@ class MainActivity : PActivity(), MyCallback {
 
     override fun success(response: BaseResponse, reqCode: Int) {
     }
-
-//    private fun showFragment(position: Int, previewPosition: Int) {
-//        StatusBarUtil.setStatusBarDarkTheme(this, true)
-//        /*if (position == 2) {
-//            //设置白色状态栏
-//            StatusBarUtil.setStatusBarDarkTheme(this, false)
-//        } else {
-//            //设置黑色状态栏
-//            StatusBarUtil.setStatusBarDarkTheme(this, true)
-//        }*/
-//        val transaction = this.supportFragmentManager.beginTransaction()
-//        if (fragments[position].isAdded) {
-//            transaction.show(fragments[position]).hide(fragments[previewPosition]).commit()
-//        } else {
-//            transaction.add(R.id.main_container, fragments[position])
-//                .show(fragments[position]).hide(fragments[previewPosition])
-//                .commit()
-//        }
-//    }
 
     private fun showFragment(position: Int) {
         val transaction = this.supportFragmentManager.beginTransaction()
