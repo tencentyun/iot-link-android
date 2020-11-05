@@ -38,6 +38,7 @@
                 android:id="@+id/iv_phone_connect_device"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="7dp"
                 android:src="@mipmap/loading"
                 />
             <TextView
@@ -63,6 +64,7 @@
                 android:id="@+id/iv_phone_send_device"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="7dp"
                 android:src="@mipmap/loading"
                 />
             <TextView
@@ -88,6 +90,7 @@
                 android:id="@+id/iv_device_connect_cloud"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="7dp"
                 android:src="@mipmap/loading"
                 />
             <TextView
@@ -113,6 +116,7 @@
                 android:id="@+id/iv_init_success"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="7dp"
                 android:src="@mipmap/loading"
                 />
             <TextView
