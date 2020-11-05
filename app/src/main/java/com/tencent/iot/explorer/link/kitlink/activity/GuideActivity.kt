@@ -1,14 +1,24 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.SystemClock
 import android.text.TextUtils
 import android.view.View
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
+import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
+import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_guide.*
 
@@ -24,6 +34,7 @@ class GuideActivity  : PActivity(), View.OnClickListener{
     private val counts = 5 //点击次数
     private val duration = 3 * 1000.toLong() //规定有效时间
     private val hits = LongArray(counts)
+    private var isForceUpgrade = true
 
     override fun getPresenter(): IPresenter? {
         return null
@@ -43,6 +54,13 @@ class GuideActivity  : PActivity(), View.OnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isForceUpgrade) {
+            startUpdateApp()
         }
     }
 
@@ -76,5 +94,44 @@ class GuideActivity  : PActivity(), View.OnClickListener{
                 }
             }
         }
+    }
+
+    private fun startUpdateApp() {
+        HttpRequest.instance.getLastVersion(object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                T.show(msg)
+            }
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    val json = response.data as JSONObject
+                    val info = UpgradeInfo.convertJson2UpgradeInfo(json)
+                    if (App.needUpgrade(info!!.version) && info.upgradeType != 2 && !UpgradeDialog.dialogShowing()) {
+                        isForceUpgrade = info.upgradeType == 1 // 2:静默更新不提示 1:强制升级 0:用户确认
+                        if (isForceUpgrade || (!isForceUpgrade && !UpgradeDialog.dialogShowed())) {
+                            val dialog = UpgradeDialog(this@GuideActivity, info)
+                            dialog.setOnDismisListener(upgradeDialogListener)
+                            dialog.show()
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private var upgradeDialogListener =
+        UpgradeDialog.OnDismisListener { url ->
+            val dialog = ProgressDialog(this@GuideActivity, url)
+            dialog.setOnDismisListener(downloadListener)
+            dialog.show()
+        }
+
+    private var downloadListener = object: ProgressDialog.OnDismisListener {
+        override fun onDownloadSuccess(path: String) {
+            FileUtils.installApk(this@GuideActivity, path)
+        }
+        override fun onDownloadFailed() {
+            T.show(resources.getString(R.string.download_failed))
+        }
+        override fun onDownloadProgress(currentProgress: Int, size: Int) { }
     }
 }
