@@ -130,6 +130,17 @@ class WifiFragment() : BaseFragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+        et_select_wifi_pwd.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                isNextClickable()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
         tv_wifi_commit.setOnClickListener {
             wifiInfo?.let {
                 onCommitWifiListener?.commitWifi(
@@ -155,7 +166,8 @@ class WifiFragment() : BaseFragment() {
 
     private fun isNextClickable() {
         if (tv_select_wifi.text != null && (TextUtils.isEmpty(tv_select_wifi.text.toString())) ||
-            tv_select_wifi.text.toString().equals(CommonField.SSID_UNKNOWN)) {
+            tv_select_wifi.text.toString().equals(CommonField.SSID_UNKNOWN) ||
+            (!showTipTag && et_select_wifi_pwd.text != null && (TextUtils.isEmpty(et_select_wifi_pwd.text.toString())))) {
             tv_wifi_commit.isClickable = false
             tv_wifi_commit.background = getDrawable(context!!, R.drawable.bg_edit)
             return
