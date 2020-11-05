@@ -148,6 +148,7 @@
     <string name="smart_config_second_title">连接WI-FI</string>
     <string name="smart_config_second">输入WI-FI密码</string>
     <string name="smart_config_second_hint">请输入密码</string>
+    <string name="smart_config_second_hint_not_required">请输入密码(非必填)</string>
     <string name="smart_config_third_connect_progress">配网进度</string>
 
     <string name="soft_ap_first_title">将设备设置为热点配网模式</string>
