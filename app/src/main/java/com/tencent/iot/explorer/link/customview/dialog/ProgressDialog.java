@@ -127,6 +127,9 @@ public class ProgressDialog extends Dialog implements View.OnClickListener {
             return;
         }
         DownloadRequest.get().download(url, dir2StoreApk, downloadlistener);
+        // 拦截物理返回按键
+        setCancelable(false);
+        setCanceledOnTouchOutside(false);
     }
 
     DownloadRequest.OnDownloadListener downloadlistener = new DownloadRequest.OnDownloadListener() {
