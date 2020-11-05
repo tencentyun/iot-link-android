@@ -27,8 +27,6 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class AboutUsActivity : BaseActivity() {
 
-    val INSTALL_PERMISS_CODE = 1
-
     private val ANDROID_ID = Utils.getAndroidID(T.getContext())
 
     override fun getContentView(): Int {
@@ -116,14 +114,6 @@ class AboutUsActivity : BaseActivity() {
             var dialog = ProgressDialog(this@AboutUsActivity, url)
             dialog.setOnDismisListener(downloadListener)
             dialog.show()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // 获取安装未知源 app 的权限，调用下载接口
-        if (requestCode == INSTALL_PERMISS_CODE && resultCode == Activity.RESULT_OK) {
-            startUpdateApp()
         }
     }
 
