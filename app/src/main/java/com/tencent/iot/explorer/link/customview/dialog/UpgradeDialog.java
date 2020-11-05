@@ -41,6 +41,8 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
     private View centreView;
     private ConstraintLayout outLayout;
     private UpgradeInfo info;
+    private boolean mIsForceUpgrade;
+    private static boolean isDialogShow = false;
 
     public UpgradeDialog(Context context, UpgradeInfo info) {
         super(context, R.style.iOSDialog);
@@ -101,6 +103,10 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         if (info.getUpgradeType() == 1) {
             btnNextTime.setVisibility(View.GONE);
             centreView.setVisibility(View.GONE);
+            // 拦截物理返回按键
+            setCancelable(false);
+            setCanceledOnTouchOutside(false);
+            mIsForceUpgrade = true;
         }
     }
 
@@ -109,16 +115,25 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.upgrade_dialog_layout:
             case R.id.tv_next:
+                if (!mIsForceUpgrade) {
+                    dismiss();
+                    isDialogShow = false;
+                }
                 break;
             case R.id.tv_upgrade_now:
                 if (onDismisListener != null) {
                     onDismisListener.OnClickUpgrade(info.getUrl());
+                    dismiss();
+                    isDialogShow = false;
                 }
                 break;
             default:
                 break;
         }
-        dismiss();
+    }
+
+    public static boolean isDialogShow() {
+        return isDialogShow;
     }
 
     private volatile OnDismisListener onDismisListener;
@@ -142,6 +157,7 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         params.gravity = Gravity.CENTER;
         getWindow().setAttributes(params);
         getWindow().setContentView(view);
+        isDialogShow = true;
     }
 
 }
