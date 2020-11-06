@@ -51,7 +51,7 @@ class MainActivity : PActivity(), MyCallback {
     private val fragments = arrayListOf<Fragment>()
 
     private var familyPopup: FamilyListPopup? = null
-    private var addDialog: ListOptionsDialog? = null
+//    private var addDialog: ListOptionsDialog? = null
 
     private val INSTALL_PERMISS_CODE = 1
 
@@ -121,7 +121,7 @@ class MainActivity : PActivity(), MyCallback {
         FirebaseCrashlytics.getInstance().setUserId(userId)
         FirebaseAnalytics.getInstance(this).setUserId(userId)
         openXGPush()
-        home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
+//        home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
         home_bottom_view.addMenu(
             BottomItemEntity(
                 getString(R.string.main_tab_1),
@@ -137,13 +137,13 @@ class MainActivity : PActivity(), MyCallback {
                     R.mipmap.smart_unpressed, R.mipmap.smart_pressed
                 )
             )
-            .addMenu(
-                BottomItemEntity(
-                    "",
-                    resources.getColor(R.color.translucent), resources.getColor(R.color.translucent),
-                    R.color.translucent, R.color.translucent
-                )
-            )
+//            .addMenu(
+//                BottomItemEntity(
+//                    "",
+//                    resources.getColor(R.color.translucent), resources.getColor(R.color.translucent),
+//                    R.color.translucent, R.color.translucent
+//                )
+//            )
             .addMenu(
                 BottomItemEntity(
                     getString(R.string.main_tab_4),
@@ -171,47 +171,47 @@ class MainActivity : PActivity(), MyCallback {
         startUpdateApp()
     }
 
-    private fun showOptionDialog() {
-        if (addDialog == null) {
-            var options = ArrayList<String>()
-            options.add(getString(R.string.smart_option_1))
-            options.add(getString(R.string.smart_option_2))
-            addDialog = ListOptionsDialog(this, options)
-            addDialog?.setOnDismisListener(onItemClickedListener)
-        }
-        addDialog?.show()
-    }
-
-    private var onItemClickedListener = ListOptionsDialog.OnDismisListener {
-        if (it == 0) {
-            jumpActivity(AddManualTaskActivity::class.java)
-        } else if (it == 1) {
-            jumpActivity(AddAutoicTaskActivity::class.java)
-        }
-    }
+//    private fun showOptionDialog() {
+//        if (addDialog == null) {
+//            var options = ArrayList<String>()
+//            options.add(getString(R.string.smart_option_1))
+//            options.add(getString(R.string.smart_option_2))
+//            addDialog = ListOptionsDialog(this, options)
+//            addDialog?.setOnDismisListener(onItemClickedListener)
+//        }
+//        addDialog?.show()
+//    }
+//
+//    private var onItemClickedListener = ListOptionsDialog.OnDismisListener {
+//        if (it == 0) {
+//            jumpActivity(AddManualTaskActivity::class.java)
+//        } else if (it == 1) {
+//            jumpActivity(AddAutoicTaskActivity::class.java)
+//        }
+//    }
 
     override fun setListener() {
         iv_main_add.setOnClickListener{
-            showOptionDialog()
+//            showOptionDialog()
         }
 
         home_bottom_view.setOnItemClickListener { _, position, previewPosition ->
-            if (position == 2) {
-                return@setOnItemClickListener
-            }
-
-            var tagPos = position
-            if (tagPos > 2) {
-                tagPos = tagPos - 1
-            }
-            showFragment(tagPos)
-            if (tagPos == 1) {
-                window.decorView.systemUiVisibility =
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            } else {
-                window.decorView.systemUiVisibility =
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
+//            if (position == 2) {
+//                return@setOnItemClickListener
+//            }
+//
+//            var tagPos = position
+//            if (tagPos > 2) {
+//                tagPos = tagPos - 1
+//            }
+            showFragment(position)
+//            if (tagPos == 1) {
+//                window.decorView.systemUiVisibility =
+//                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//            } else {
+//                window.decorView.systemUiVisibility =
+//                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+//            }
         }
         (fragments[0] as? HomeFragment)?.run {
             popupListener = object : HomeFragment.PopupListener {

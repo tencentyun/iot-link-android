@@ -18,7 +18,6 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
-            android:layout_marginEnd="37dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:layout_weight="1"
@@ -29,5 +28,13 @@
             android:text="@string/title_name"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_18" />
+
+    <ImageView
+        android:id="@+id/iv_right_btn"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:visibility="invisible"
+        android:padding="10dp"
+        />
 
 </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
