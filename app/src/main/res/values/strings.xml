@@ -341,9 +341,9 @@
 3.是否修改了路由器的名称或密码，可以尝试重新连接\n
 4.设备是否与路由器距离果园、隔墙或有其他遮挡物</string>
 
-    <string name="device">\t\t设备\t\t</string>
-    <string name="family">\t\t家庭\t\t</string>
-    <string name="notify">\t\t通知\t\t</string>
+    <string name="device">设备</string>
+    <string name="family">家庭</string>
+    <string name="notify">通知</string>
     <string name="open_location_tip">开启定位获取WiFi信息</string>
     <string name="upgrade_tip">版本升级V2.0</string>
     <string name="repair_bug">1、修复了一些已知 bug</string>
