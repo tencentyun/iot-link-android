@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36957875_f923f3a9",
+        "filename": "app/src/main/res/layout/fragment_connect_progress.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2020-11-06T02:44:09Z",
+      "side": 1,
+      "message": "\u003cRelativeLayout\n            android:layout_width\u003d\"wrap_content\"\n            android:layout_height\u003d\"wrap_content\"\n            android:layout_gravity\u003d\"center_vertical\"\n            \u003e\n            \u003cImageView\n                android:id\u003d\"@+id/iv_phone_connect_device\"\n                android:layout_width\u003d\"20dp\"\n                android:layout_height\u003d\"20dp\"\n                android:src\u003d\"@mipmap/loading\"\n                android:layout_centerVertical\u003d\"true\"\n                android:layout_alignTop\u003d\"@id/tv_phone_connect_device\"\n                android:layout_alignBottom\u003d\"@id/tv_phone_connect_device\"\n                /\u003e\n            \u003cTextView\n                android:id\u003d\"@+id/tv_phone_connect_device\"\n                android:layout_width\u003d\"wrap_content\"\n                android:layout_height\u003d\"wrap_content\"\n                android:layout_toRightOf\u003d\"@id/iv_phone_connect_device\"\n                android:textSize\u003d\"16sp\"\n                android:paddingTop\u003d\"5dp\"\n                android:paddingBottom\u003d\"5dp\"\n                android:paddingLeft\u003d\"10dp\"\n                android:text\u003d\"@string/phone_connect_device\"\n                /\u003e\n\n        \u003c/RelativeLayout\u003e\n  \n用这种方式 是不是会比较好",
+      "range": {
+        "startLine": 31,
+        "startChar": 7,
+        "endLine": 51,
+        "endChar": 42
+      },
+      "revId": "2225bc66f07f1a350a58796e8e90f5637fcb55ac",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
