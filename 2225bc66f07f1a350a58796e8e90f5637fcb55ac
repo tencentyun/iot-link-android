@@ -22,6 +22,30 @@
       "revId": "2225bc66f07f1a350a58796e8e90f5637fcb55ac",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88fca6ce_dabb8b74",
+        "filename": "app/src/main/res/layout/fragment_connect_progress.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-11-06T07:13:27Z",
+      "side": 1,
+      "message": "已在Patchset2中修改。",
+      "parentUuid": "36957875_f923f3a9",
+      "range": {
+        "startLine": 31,
+        "startChar": 7,
+        "endLine": 51,
+        "endChar": 42
+      },
+      "revId": "2225bc66f07f1a350a58796e8e90f5637fcb55ac",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
     }
   ]
 }
