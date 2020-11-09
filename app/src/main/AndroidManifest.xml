@@ -50,6 +50,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity android:name=".kitlink.activity.SmartConfigStepActivity"></activity>
+        <activity android:name=".kitlink.activity.DeviceWifiActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -83,8 +86,9 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".kitlink.activity.MainActivity"
-            android:launchMode="singleTask" >
+        <activity
+            android:name=".kitlink.activity.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -113,11 +117,13 @@
         <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
         <activity android:name=".kitlink.activity.HelpCenterActivity" />
-        <activity android:name=".kitlink.activity.ConfigNetFailedActivity"
+        <activity
+            android:name=".kitlink.activity.ConfigNetFailedActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".kitlink.activity.ConfigNetSuccessActivity"/>
+        <activity android:name=".kitlink.activity.ConfigNetSuccessActivity" />
         <activity android:name=".kitlink.activity.AddAutoicTaskActivity" />
-        <activity android:name=".kitlink.activity.AddManualTaskActivity"
+        <activity
+            android:name=".kitlink.activity.AddManualTaskActivity"
             android:launchMode="singleTask" />
         <activity android:name=".kitlink.activity.CompleteTaskInfoActivity" />
         <activity android:name=".kitlink.activity.SelectTaskPicActivity" />
@@ -160,7 +166,11 @@
             android:name=".kitlink.util.picture.imageselectorbrowser.ImageSelectorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".kitlink.util.picture.clipimage.ClipPictureActivity" />
-        <activity android:name=".kitlink.util.picture.clipimage.ImageSimpleBrowseActivity" /> <!-- picture end -->
+        <activity android:name=".kitlink.util.picture.clipimage.ImageSimpleBrowseActivity" />
+        <activity android:name=".kitlink.activity.ConnectProgressActivity" />
+        <activity android:name=".kitlink.activity.SoftHotspotActivity" />
+        <activity android:name=".kitlink.activity.WifiActivity" />
+        <activity android:name=".kitlink.activity.SoftApStepActivity" /> <!-- picture end -->
         <receiver android:name=".MessageReceiver">
             <intent-filter>
                 <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE" />
@@ -170,7 +180,6 @@
         <meta-data
             android:name="TencentMapSDK"
             android:value="${MAP_SDK_VALUE}" />
-
         <meta-data
             android:name="firebase_performance_logcat_enabled"
             android:value="true" />
