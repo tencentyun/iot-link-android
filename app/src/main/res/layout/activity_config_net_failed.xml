@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".kitlink.activity.SoftApActivity">
+        tools:context=".kitlink.activity.ConfigNetFailedActivity">
 
     <com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView
             android:id="@+id/sbhv_config_net_failed"

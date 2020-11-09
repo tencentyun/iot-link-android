@@ -15,12 +15,12 @@ import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
 import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 
 /**
  * 配网进度、绑定设备
@@ -41,10 +41,10 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     var checkDeviceBindTokenStateStarted = false
     var deviceInfo: DeviceInfo? = null
 
-    var type = WifiFragment.smart_config
+    var type = DeviceFragment.ConfigType.SmartConfig.id
 
     fun initService(type: Int, context: Context) {
-        if (type == WifiFragment.smart_config) {
+        if (type == DeviceFragment.ConfigType.SmartConfig.id) {
             smartConfig =
                 SmartConfigService(context.applicationContext)
         } else {
@@ -219,8 +219,8 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     override fun success(response: BaseResponse, reqCode: Int) {
         if (response.isSuccess()) {
             when(type) {
-                WifiFragment.smart_config -> smartConfigListener.onStep(SmartConfigStep.STEP_LINK_SUCCESS)
-                WifiFragment.soft_ap -> softAPListener.onStep(SoftAPStep.STEP_LINK_SUCCESS)
+                DeviceFragment.ConfigType.SmartConfig.id -> smartConfigListener.onStep(SmartConfigStep.STEP_LINK_SUCCESS)
+                DeviceFragment.ConfigType.SoftAp.id -> softAPListener.onStep(SoftAPStep.STEP_LINK_SUCCESS)
             }
             view?.connectSuccess()
         } else {

@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.presenter
 
 import android.content.Context
-import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.mvp.ParentPresenter
 import com.tencent.iot.explorer.link.mvp.model.ConnectModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
@@ -20,7 +20,7 @@ class ConnectPresenter(view: ConnectView) :
 
     fun isNullService(type: Int): Boolean {
         if (model == null) throw NullPointerException("ConnectModel is not init")
-        return if (type == WifiFragment.smart_config) {
+        return if (type == DeviceFragment.ConfigType.SmartConfig.id) {
             model!!.smartConfig == null
         } else {
             model!!.softAP == null
@@ -41,7 +41,7 @@ class ConnectPresenter(view: ConnectView) :
      */
     fun startConnect() {
         model?.run {
-            if (type == WifiFragment.smart_config) {
+            if (type == DeviceFragment.ConfigType.SmartConfig.id) {
                 startSmartConnect()
             } else {
                 startSoftAppConnect()
@@ -54,7 +54,7 @@ class ConnectPresenter(view: ConnectView) :
      */
     fun stopConnect() {
         model?.run {
-            if (type == WifiFragment.smart_config) {
+            if (type == DeviceFragment.ConfigType.SmartConfig.id) {
                 model?.smartConfig?.stopConnect()
             } else {
                 model?.softAP?.stopConnect()
