@@ -1,32 +1,33 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
-import android.util.Log
+import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
+import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
+import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import kotlinx.android.synthetic.main.activity_config_net_failed.*
 
 class ConfigNetFailedActivity : BaseActivity() {
-    var type = WifiFragment.smart_config
+    var type = DeviceFragment.ConfigType.SmartConfig.id
 
     override fun getContentView(): Int {
         return R.layout.activity_config_net_failed
     }
 
     override fun initView() {
-        type = intent.getIntExtra(CommonField.CONFIG_NET_TYPE, WifiFragment.smart_config)
+        type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
 
         when (type) {
 
-            WifiFragment.smart_config -> {
+            DeviceFragment.ConfigType.SmartConfig.id -> {
                 tv_config_net_failed_title.setText(R.string.smart_config_config_network)
                 tv_config_net_failed_reason.setText(R.string.reson_config_net_info)
                 tv_soft_first_commit.setText(R.string.switch_softap)
             }
 
-            WifiFragment.soft_ap -> {
+            DeviceFragment.ConfigType.SoftAp.id -> {
                 tv_config_net_failed_title.setText(R.string.softap_config_network)
                 tv_config_net_failed_reason.setText(R.string.softap_reson_config_net_info)
                 tv_soft_first_commit.setText(R.string.switch_smart_config)
@@ -45,19 +46,19 @@ class ConfigNetFailedActivity : BaseActivity() {
         override fun onClick(v: View?) {
             when(v) {
                 tv_soft_first_commit -> {
-                    if (type == WifiFragment.soft_ap) {
-                        jumpActivity(SmartConnectActivity::class.java)
+                    if (type == DeviceFragment.ConfigType.SoftAp.id) {
+                        startActivityWithExtra(SmartConfigStepActivity::class.java, "")
                     } else {
-                        jumpActivity(SoftApActivity::class.java)
+                        startActivityWithExtra(SoftApStepActivity::class.java, "")
                     }
                     this@ConfigNetFailedActivity.finish()
                 }
 
                 tv_retry -> {
-                    if (type == WifiFragment.soft_ap) {
-                        jumpActivity(SoftApActivity::class.java)
+                    if (type == DeviceFragment.ConfigType.SoftAp.id) {
+                        startActivityWithExtra(SoftApStepActivity::class.java, "")
                     } else {
-                        jumpActivity(SmartConnectActivity::class.java)
+                        startActivityWithExtra(SmartConfigStepActivity::class.java, "")
                     }
                     this@ConfigNetFailedActivity.finish()
                 }
@@ -73,6 +74,15 @@ class ConfigNetFailedActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
+        val intent = Intent(this, cls)
+        if (!TextUtils.isEmpty(productId)) {
+            intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
+            intent.putExtra(CommonField.PRODUCT_ID, productId)
+        }
+        startActivity(intent)
     }
 
     override fun onDestroy() {
