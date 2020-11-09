@@ -41,6 +41,7 @@ object CommonField {
     const val CONFIG_QUESTION_LIST = "configQuestionList"
     const val FIREBASE_USER_ID = "UserID"
     const val LOAD_VIEW_TXT_TYPE = "loadViewTxtType"
+    const val CONFIG_TYPE = "configType"
     const val HARD_WARE_GUIDE = "hardwareGuide"
     const val CONNECT_AP_GUIDE = "connectApGuide"
     const val EXTRA_INFO = "extraInfo"
@@ -73,6 +74,8 @@ object CommonField {
     const val PHONE_NUMBER = "PhoneNumber"
     const val VERIFY_CODE = "VerificationCode"
     const val PWD = "Password"
+    const val SSID = "ssid"
+    const val BSSID = "bssid"
     const val NEW_PWD = "NewPassword"
     const val EMAIL = "Email"
     const val PHONE = "phone"
@@ -120,7 +123,7 @@ object CommonField {
     const val PRODUCTS = "Products"
     const val DATA_TEMPLATE = "DataTemplate"
     const val PROPERTIES = "properties"
-    const val CONFIG_NET_TYPE = "configNetType"
+//    const val CONFIG_NET_TYPE = "configNetType"
 
     /***********请求类型标记参数************/
     const val NULL_STR = "null"
