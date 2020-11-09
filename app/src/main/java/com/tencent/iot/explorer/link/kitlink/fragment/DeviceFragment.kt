@@ -17,8 +17,6 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.FullGridView
-import com.tencent.iot.explorer.link.kitlink.activity.SmartConnectActivity
-import com.tencent.iot.explorer.link.kitlink.activity.SoftApActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.CategoryDeviceEntity
@@ -32,6 +30,8 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.activity.SmartConfigStepActivity
+import com.tencent.iot.explorer.link.kitlink.activity.SoftApStepActivity
 import kotlinx.android.synthetic.main.fragment_devices.*
 
 
@@ -51,6 +51,10 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
         Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
+
+    enum class ConfigType (val id:Int) {
+        SoftAp(1), SmartConfig(0);
+    }
 
     constructor(c: Context):this() {
         mContext = c
@@ -111,13 +115,13 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                         }
 
                         if (wifiConfigTypeList == "{}" || TextUtils.isEmpty(wifiConfigTypeList)) {
-                            startActivityWithExtra(SmartConnectActivity::class.java, productId)
+                            startActivityWithExtra(SmartConfigStepActivity::class.java, productId)
                         } else if (wifiConfigTypeList.contains("[")) {
                             val typeList = JsonManager.parseArray(wifiConfigTypeList)
                             if (typeList.size > 0 && typeList[0] == "softap") {
-                                startActivityWithExtra(SoftApActivity::class.java, productId)
+                                startActivityWithExtra(SoftApStepActivity::class.java, productId)
                             } else {
-                                startActivityWithExtra(SmartConnectActivity::class.java, productId)
+                                startActivityWithExtra(SmartConfigStepActivity::class.java, productId)
                             }
                         }
                     }
@@ -157,7 +161,7 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                         HttpRequest.instance.getProductsConfig(productsList, this)
                     }
                     R.id.gv_devices->{
-                        jumpActivity(SmartConnectActivity::class.java)
+                        startActivityWithExtra(SmartConfigStepActivity::class.java, "")
                     }
                 }
             }
@@ -176,7 +180,7 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                 productsList.add(productList[recommDeviceIndex].ProductId)
                 HttpRequest.instance.getProductsConfig(productsList, this)
             } else {
-                jumpActivity(SmartConnectActivity::class.java)
+                jumpActivity(SmartConfigStepActivity::class.java)
             }
         }
     }
