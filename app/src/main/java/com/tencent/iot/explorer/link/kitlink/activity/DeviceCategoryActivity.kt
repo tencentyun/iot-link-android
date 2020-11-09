@@ -223,10 +223,10 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                             }
                         }
                         contains("page=softap") -> {
-                            jumpActivity(SoftApActivity::class.java)
+                            jumpActivity(SoftApStepActivity::class.java)
                         }
                         contains("page=smartconfig") -> {
-                            jumpActivity(SmartConnectActivity::class.java)
+                            jumpActivity(SmartConfigStepActivity::class.java)
                         }
                         contains("page=adddevice") && contains("productId") -> {
                             var productid = Utils.getUrlParamValue(this, "productId")
@@ -263,14 +263,14 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     }
 
                     if (wifiConfigTypeList.equals("{}") || TextUtils.isEmpty(wifiConfigTypeList)) {
-                        startActivityWithExtra(SmartConnectActivity::class.java, productId)
+                        startActivityWithExtra(SmartConfigStepActivity::class.java, productId)
 
                     } else if (wifiConfigTypeList.contains("[")) {
                         val typeList = JsonManager.parseArray(wifiConfigTypeList)
                         if (typeList.size > 0 && typeList[0] == "softap") {
-                            startActivityWithExtra(SoftApActivity::class.java, productId)
+                            startActivityWithExtra(SoftApStepActivity::class.java, productId)
                         } else {
-                            startActivityWithExtra(SmartConnectActivity::class.java, productId)
+                            startActivityWithExtra(SmartConfigStepActivity::class.java, productId)
                         }
                     }
                 }
