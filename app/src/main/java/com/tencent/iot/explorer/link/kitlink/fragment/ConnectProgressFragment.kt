@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.unconnected.*
 class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : BaseFragment(), ConnectView, View.OnClickListener {
 
     private lateinit var presenter: ConnectPresenter
-    private var type = WifiFragment.smart_config
+    private var type = DeviceFragment.ConfigType.SmartConfig.id
     private var ssid = ""
     private var bssid = ""
     private var wifiPassword = ""
@@ -161,7 +161,7 @@ class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : Bas
                         App.data.setRefreshLevel(2)
 
                         var successIntent = Intent(context, ConfigNetSuccessActivity::class.java)
-                        successIntent.putExtra(CommonField.CONFIG_NET_TYPE, type)
+                        successIntent.putExtra(CommonField.CONFIG_TYPE, type)
                         successIntent.putExtra(CommonField.DEVICE_NAME, presenter.model?.deviceInfo?.deviceName)
                         startActivity(successIntent)
                         finish()
@@ -284,7 +284,7 @@ class ConnectProgressFragment(type: Int, loadType: Int, productId: String) : Bas
         activity?.run {
             runOnUiThread {
                 var failedIntent = Intent(context, ConfigNetFailedActivity::class.java)
-                failedIntent.putExtra(CommonField.CONFIG_NET_TYPE, type)
+                failedIntent.putExtra(CommonField.CONFIG_TYPE, type)
                 startActivity(failedIntent)
                 finish()
             }
