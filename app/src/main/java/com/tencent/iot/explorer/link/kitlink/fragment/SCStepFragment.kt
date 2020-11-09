@@ -104,8 +104,6 @@ class SCStepFragment(type: Int, productId: String) : BaseFragment() {
                         } else {
                             Picasso.get().load(hardwareGuide.bgImg)
                                 .placeholder(R.drawable.imageselector_default_error)
-                                .resize(App.data.screenWith / 5, App.data.screenWith / 5)
-                                .centerCrop()
                                 .into(pic)
                         }
                     } else {
