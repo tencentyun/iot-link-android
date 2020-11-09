@@ -177,7 +177,7 @@
         android:text="@string/next"
         android:textColor="@color/white"
         android:textSize="@dimen/ts_18"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="180dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
