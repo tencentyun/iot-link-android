@@ -32,6 +32,7 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.activity.SoftAppStepActivity
 import kotlinx.android.synthetic.main.fragment_devices.*
 
 
@@ -51,6 +52,10 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
         Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
+
+    enum class ConfigType (val id:Int) {
+        SoftAp(1), SmartConfig(0);
+    }
 
     constructor(c: Context):this() {
         mContext = c
@@ -111,13 +116,13 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                         }
 
                         if (wifiConfigTypeList == "{}" || TextUtils.isEmpty(wifiConfigTypeList)) {
-                            startActivityWithExtra(SmartConnectActivity::class.java, productId)
+                            startActivityWithExtra(SoftAppStepActivity::class.java, productId, ConfigType.SmartConfig.id)
                         } else if (wifiConfigTypeList.contains("[")) {
                             val typeList = JsonManager.parseArray(wifiConfigTypeList)
                             if (typeList.size > 0 && typeList[0] == "softap") {
-                                startActivityWithExtra(SoftApActivity::class.java, productId)
+                                startActivityWithExtra(SoftAppStepActivity::class.java, productId, ConfigType.SoftAp.id)
                             } else {
-                                startActivityWithExtra(SmartConnectActivity::class.java, productId)
+                                startActivityWithExtra(SoftAppStepActivity::class.java, productId, ConfigType.SmartConfig.id)
                             }
                         }
                     }
@@ -126,11 +131,12 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
         }
     }
 
-    private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
+    private fun startActivityWithExtra(cls: Class<*>?, productId: String, configType: Int) {
         val intent = Intent(context, cls)
         if (!TextUtils.isEmpty(productId)) {
             intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
             intent.putExtra(CommonField.PRODUCT_ID, productId)
+            intent.putExtra(CommonField.CONFIG_TYPE, configType)
         }
         startActivity(intent)
     }
