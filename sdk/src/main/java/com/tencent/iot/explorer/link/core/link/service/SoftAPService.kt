@@ -89,7 +89,7 @@ class SoftAPService(context: Context) : ConfigService(){
      * 通过 udp 报文发送 wifi 的账号/密码
      */
     private fun sendUdpPacketWithWifiInfo() {
-        val wifiMsg = genLinkString(task.mSsid, task.mPassword, task.mAccessToken, task.mRegion).toByteArray()
+        val wifiMsg = genSoftApLinkString(task.mSsid, task.mPassword, task.mAccessToken, task.mRegion).toByteArray()
         val datagramPacket =
             DatagramPacket(wifiMsg, wifiMsg.size, InetAddress.getByName(host), port)
         recvWifiMsgFeedback()
