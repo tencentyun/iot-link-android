@@ -68,10 +68,10 @@ class AddDeviceActivity : PActivity(), MyCallback {
                 startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
             }
             1 -> {
-                jumpActivity(SmartConnectActivity::class.java)
+                jumpActivity(SmartConfigStepActivity::class.java)
             }
             2 -> {
-                jumpActivity(SoftApActivity::class.java)
+                jumpActivity(SoftAppStepActivity::class.java)
             }
         }
     }
