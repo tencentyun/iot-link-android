@@ -25,6 +25,7 @@ import com.tencent.iot.explorer.link.kitlink.activity.DeviceModeInfoActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.CategoryDeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.RecommDeviceEntity
+import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
@@ -40,10 +41,12 @@ class SelDeviceFragment() : BaseFragment(), MyCallback {
     private val deviceList = ArrayList<DeviceEntity>() //App.data.deviceList
     var deviceListEnd = false
     private var deviceTotal = 0
+    private var routeType = RouteType.MANUAL_TASK_ROUTE
 
-    constructor(c: Context, roomId: String):this() {
+    constructor(c: Context, routeType: Int, roomId: String):this() {
         mContext = c
         this.roomId = roomId
+        this.routeType = routeType
     }
 
     override fun getPresenter(): IPresenter? {
@@ -78,6 +81,7 @@ class SelDeviceFragment() : BaseFragment(), MyCallback {
             if (deviceList != null && deviceList.get(pos) != null) {
                 var intent = Intent(context!!, DeviceModeInfoActivity::class.java)
                 intent.putExtra(CommonField.EXTRA_PRODUCT_ID, JSON.toJSONString(deviceList.get(pos)))
+                intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, routeType)
                 startActivity(intent)
             }
         }

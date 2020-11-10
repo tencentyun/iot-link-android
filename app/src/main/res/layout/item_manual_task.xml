@@ -44,7 +44,7 @@
 
     <com.chauthai.swipereveallayout.SwipeRevealLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/background_failed_cell"
         android:id="@+id/swipeRevealLayout"
         app:mode="same_level"

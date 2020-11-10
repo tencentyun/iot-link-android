@@ -18,6 +18,7 @@ import com.tencent.iot.explorer.link.kitlink.activity.AddAutoicTaskActivity
 import com.tencent.iot.explorer.link.kitlink.activity.AddManualTaskActivity
 import com.tencent.iot.explorer.link.kitlink.adapter.IntelligenceAdapter
 import com.tencent.iot.explorer.link.kitlink.entity.Automation
+import com.tencent.iot.explorer.link.kitlink.response.AutomationListResponse
 import com.tencent.iot.explorer.link.kitlink.response.SceneListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
@@ -109,6 +110,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
     // 刷新列表数据，从而触发页面的更新
     private fun refreshListData() {
         HttpRequest.instance.queryManualTask(App.data.getCurrentFamily().FamilyId, manualListOffset, this)
+        HttpRequest.instance.queryAutomicTask(App.data.getCurrentFamily().FamilyId, this)
     }
 
     private fun loadAlldata() {
@@ -135,9 +137,28 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
     override fun success(response: BaseResponse, reqCode: Int) {
         when(reqCode) {
+            RequestCode.query_all_automic_task -> {
+                if (response.code == 0) {
+                    var automationListResponse = JSON.parseObject(response.data.toString(), AutomationListResponse::class.java)
+                    if (automationListResponse.List != null && automationListResponse.List.size > 0) {
+                        for (i in 0 until automationListResponse.List.size) {
+                            var automation = Automation()
+                            automation.type = 1
+                            automation.Icon = automationListResponse.List.get(i).Icon
+                            automation.Name = automationListResponse.List.get(i).Name
+//                            automation.actions = automationListResponse.List.get(i).Actions
+                            automicList.add(automation)
+                            automicListLoadOver = true
+                            Log.e("XXX", "bbbbbbb")
+                            loadDataOver()
+                        }
+                    }
+                }
+            }
+
             RequestCode.query_all_manual_task -> {
                 if (response.code == 0) {
-
+                    Log.e("XXX", "resp.data " + response.data)
                     var sceneListResponse = JSON.parseObject(response.data.toString(), SceneListResponse::class.java)
                     if (sceneListResponse.SceneList != null && sceneListResponse.SceneList.size > 0) {
                         for (i in 0 until sceneListResponse.SceneList.size) {
@@ -152,7 +173,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             HttpRequest.instance.queryManualTask(App.data.getCurrentFamily().FamilyId, manualListOffset, this)
                         } else {
                             manualListLoadOver = true
-                            automicListLoadOver = true
+                            Log.e("XXX", "aaaaaa")
                             loadDataOver()
                         }
 
