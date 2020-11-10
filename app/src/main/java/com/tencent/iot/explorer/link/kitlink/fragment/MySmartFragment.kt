@@ -137,7 +137,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
         when(reqCode) {
             RequestCode.query_all_manual_task -> {
                 if (response.code == 0) {
-
+                    Log.e("XXX", "resp.data " + response.data)
                     var sceneListResponse = JSON.parseObject(response.data.toString(), SceneListResponse::class.java)
                     if (sceneListResponse.SceneList != null && sceneListResponse.SceneList.size > 0) {
                         for (i in 0 until sceneListResponse.SceneList.size) {
