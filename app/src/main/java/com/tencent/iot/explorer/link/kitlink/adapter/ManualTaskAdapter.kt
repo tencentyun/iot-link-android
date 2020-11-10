@@ -17,9 +17,14 @@ import java.util.*
 
 class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<ManualTaskAdapter.ViewHolder>() {
     var list: MutableList<ManualTask> = LinkedList()
+    var showHeader: Boolean = true
 
     init {
         this.list = list
+    }
+
+    constructor(list: MutableList<ManualTask>, showHeader: Boolean): this(list) {
+        this.showHeader = showHeader
     }
 
     class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
@@ -68,7 +73,7 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == 0) {
+        if (position == 0 && showHeader) {
             holder.firstItem.visibility = View.VISIBLE
             holder.addTask.setOnClickListener{
                 if (onItemClicked != null) {
@@ -82,13 +87,19 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
             Picasso.get().load(R.mipmap.delay_time_icon).into(holder.ivType)
             holder.taskDesc.setText("" + list[position].hour + T.getContext().getString(R.string.unit_h)
             + list[position].min + T.getContext().getString(R.string.unit_m))
-        } else {
+        } else if (list[position].type == 0) {
             if (!TextUtils.isEmpty(list[position].iconUrl)) {
                 Picasso.get().load(list[position].iconUrl).into(holder.ivType)
             } else {
                 Picasso.get().load(R.drawable.device_placeholder).into(holder.ivType)
             }
             holder.taskDesc.setText(": " + list[position].task)
+        } else if (list[position].type == 2) {
+            Picasso.get().load(R.mipmap.send_msg_icon).into(holder.ivType)
+            holder.taskDesc.setText(list[position].task)
+        } else if (list[position].type == 3) {
+            Picasso.get().load(R.mipmap.sel_manual_task_icon).into(holder.ivType)
+            holder.taskDesc.setText(list[position].task)
         }
 
         holder.devName.setText(list[position].devName)

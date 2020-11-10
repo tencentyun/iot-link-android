@@ -28,6 +28,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
     private var devModes = ArrayList<DevModeInfo>()
     private var adapter: DevModeAdapter = DevModeAdapter(devModes)
     private var deviceEntity: DeviceEntity? = null
+    private var routeType = 0
 
     override fun getContentView(): Int {
         return R.layout.activity_device_mode_info
@@ -37,6 +38,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         tv_title.setText("")
 
         var deviceEntityStr = intent.getStringExtra(CommonField.EXTRA_PRODUCT_ID)
+        routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, 0)
         deviceEntity = JSON.parseObject(deviceEntityStr, DeviceEntity::class.java)
 
         val layoutManager = LinearLayoutManager(this)
@@ -116,7 +118,15 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                     passDevModes.add(devModes.get(i))
                 }
             }
-            var intent = Intent(this@DeviceModeInfoActivity, AddManualTaskActivity::class.java)
+
+            var intent = Intent()
+            if (routeType == 0) {
+                intent = Intent(this@DeviceModeInfoActivity, AddManualTaskActivity::class.java)
+
+            } else {
+                intent = Intent(this@DeviceModeInfoActivity, AddAutoicTaskActivity::class.java)
+
+            }
             intent.putExtra(CommonField.EXTRA_DEV_MODES, JSON.toJSONString(passDevModes))
             intent.putExtra(CommonField.EXTRA_DEV_DETAIL, JSON.toJSONString(deviceEntity))
             startActivity(intent)

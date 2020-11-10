@@ -32,6 +32,7 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
     private var smartName = ""
     private var handler = Handler()
     private var taskList: MutableList<ManualTask>? = null
+    private var routeType = 0  // 0 手动路由至此窗口   1 自动路由至此窗口
 
     override fun getContentView(): Int {
         return R.layout.activity_complete_task_info
@@ -40,6 +41,7 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
     override fun initView() {
         tv_title.setText(R.string.complete_task_info)
         var str = intent.getStringExtra(CommonField.EXTRA_ALL_MANUAL_TASK)
+        routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, 0)
         taskList = JSON.parseArray(str, ManualTask::class.java)
         loadView()
     }

@@ -1347,7 +1347,7 @@ class HttpRequest private constructor() {
         val param = tokenParams("AppGetSceneList")
         param["FamilyId"] = familyId
         param["Offset"] = offset
-        param["Limit"] = 20
+        param["Limit"] = 999
         tokenPost(param, callback, RequestCode.query_all_manual_task)
     }
     /****************************************   场景联动接口结束   *******************************************************/

@@ -15,7 +15,6 @@
                 android:id="@+id/lv_all_smart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="25dp"
                 />
 
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
