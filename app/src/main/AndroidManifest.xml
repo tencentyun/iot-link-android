@@ -112,7 +112,6 @@
         <activity android:name=".kitlink.activity.RegionActivity" />
         <activity android:name=".kitlink.activity.WebActivity" />
         <activity android:name=".kitlink.activity.DeviceDetailsActivity" />
-        <activity android:name=".kitlink.activity.SmartConnectActivity" />
         <activity android:name=".kitlink.activity.ControlPanelActivity" />
         <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
@@ -141,8 +140,6 @@
         <activity android:name=".kitlink.activity.GetCodeActivity" />
         <activity android:name=".kitlink.activity.ForgotPasswordActivity" />
         <activity android:name=".kitlink.activity.CountryCodeActivity" />
-        <activity android:name=".kitlink.activity.SoftApActivity" />
-        <activity android:name=".kitlink.activity.AddDeviceActivity" />
         <activity android:name=".kitlink.activity.RegisterActivity" />
         <activity android:name=".kitlink.activity.MessageActivity" /> <!-- 微信回调 -->
         <activity android:name=".kitlink.activity.DevicePanelActivity" />
