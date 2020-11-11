@@ -2,7 +2,6 @@ package com.tencent.iot.explorer.link.mvp.presenter
 
 import android.content.Context
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
-import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
 import com.tencent.iot.explorer.link.mvp.ParentPresenter
 import com.tencent.iot.explorer.link.mvp.model.ConnectModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
