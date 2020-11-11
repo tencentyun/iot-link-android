@@ -49,14 +49,14 @@ class ConfigNetFailedActivity : BaseActivity() {
                     if (type == DeviceFragment.ConfigType.SoftAp.id) {
                         startActivityWithExtra(SmartConfigStepActivity::class.java, "")
                     } else {
-                        startActivityWithExtra(SoftAppStepActivity::class.java, "")
+                        startActivityWithExtra(SoftApStepActivity::class.java, "")
                     }
                     this@ConfigNetFailedActivity.finish()
                 }
 
                 tv_retry -> {
                     if (type == DeviceFragment.ConfigType.SoftAp.id) {
-                        startActivityWithExtra(SoftAppStepActivity::class.java, "")
+                        startActivityWithExtra(SoftApStepActivity::class.java, "")
                     } else {
                         startActivityWithExtra(SmartConfigStepActivity::class.java, "")
                     }
