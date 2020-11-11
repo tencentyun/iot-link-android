@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "530b74dd_8ac4758a",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/AddDeviceActivity.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-11T10:58:35Z",
+      "side": 1,
+      "message": "SoftAppStepActivity --\u003e SoftApStepActivity",
+      "range": {
+        "startLine": 74,
+        "startChar": 29,
+        "endLine": 74,
+        "endChar": 48
+      },
+      "revId": "f2abfec076f37fa240d15f0fa4aa899c313426f7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c7698ab_b38a286f",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/SmartConfigStepActivity.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-11T10:58:35Z",
+      "side": 1,
+      "message": "这两行我记得在1030提交删掉了\nhttp://cid.qq.com/r/c/tencentyun/iot-link-android/+/1030",
+      "range": {
+        "startLine": 130,
+        "startChar": 32,
+        "endLine": 131,
+        "endChar": 45
+      },
+      "revId": "f2abfec076f37fa240d15f0fa4aa899c313426f7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a99ab054_de9aab89",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/SoftAppStepActivity.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-11T10:58:35Z",
+      "side": 1,
+      "message": "这样貌似图片不清晰，我在1030提交上删掉了\nhttp://cid.qq.com/r/c/tencentyun/iot-link-android/+/1030",
+      "range": {
+        "startLine": 121,
+        "startChar": 32,
+        "endLine": 122,
+        "endChar": 45
+      },
+      "revId": "f2abfec076f37fa240d15f0fa4aa899c313426f7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
