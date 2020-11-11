@@ -4,7 +4,6 @@ import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
-import com.tencent.iot.explorer.link.kitlink.fragment.WifiFragment
 import kotlinx.android.synthetic.main.activity_config_net_success.*
 
 class ConfigNetSuccessActivity : BaseActivity() {

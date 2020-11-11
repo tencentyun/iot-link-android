@@ -19,7 +19,6 @@ import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import kotlinx.android.synthetic.main.activity_soft_ap.softap_step_progress
 import kotlinx.android.synthetic.main.activity_soft_app_step.*
 import java.util.ArrayList
 
