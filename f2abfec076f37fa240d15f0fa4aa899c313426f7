@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3146b8ca_b5afcfa5",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/AddDeviceActivity.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-11-12T01:32:59Z",
+      "side": 1,
+      "message": "已在Patchset5中修改SoftAppStepActivity的名字renamed为SoftApStepActivity，  AddDeviceActivity是多余的Activity所以在另一个一起提的commit里面删掉了这个类。",
+      "parentUuid": "530b74dd_8ac4758a",
+      "range": {
+        "startLine": 74,
+        "startChar": 29,
+        "endLine": 74,
+        "endChar": 48
+      },
+      "revId": "f2abfec076f37fa240d15f0fa4aa899c313426f7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6c7698ab_b38a286f",
         "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/SmartConfigStepActivity.kt",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "8109a46c_f0f411c5",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/SmartConfigStepActivity.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-11-12T01:32:59Z",
+      "side": 1,
+      "message": "已在Patchset5中修改",
+      "parentUuid": "6c7698ab_b38a286f",
+      "range": {
+        "startLine": 130,
+        "startChar": 32,
+        "endLine": 131,
+        "endChar": 45
+      },
+      "revId": "f2abfec076f37fa240d15f0fa4aa899c313426f7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a99ab054_de9aab89",
         "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/SoftAppStepActivity.kt",
         "patchSetId": 3
@@ -68,6 +116,30 @@
       "revId": "f2abfec076f37fa240d15f0fa4aa899c313426f7",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22c48ac8_bb83a139",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/SoftAppStepActivity.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-11-12T01:32:59Z",
+      "side": 1,
+      "message": "已在Patchset5中修改",
+      "parentUuid": "a99ab054_de9aab89",
+      "range": {
+        "startLine": 121,
+        "startChar": 32,
+        "endLine": 122,
+        "endChar": 45
+      },
+      "revId": "f2abfec076f37fa240d15f0fa4aa899c313426f7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
     }
   ]
 }
