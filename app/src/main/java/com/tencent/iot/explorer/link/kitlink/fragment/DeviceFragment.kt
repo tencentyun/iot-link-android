@@ -31,7 +31,7 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConfigStepActivity
-import com.tencent.iot.explorer.link.kitlink.activity.SoftAppStepActivity
+import com.tencent.iot.explorer.link.kitlink.activity.SoftApStepActivity
 import kotlinx.android.synthetic.main.fragment_devices.*
 
 
@@ -119,7 +119,7 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                         } else if (wifiConfigTypeList.contains("[")) {
                             val typeList = JsonManager.parseArray(wifiConfigTypeList)
                             if (typeList.size > 0 && typeList[0] == "softap") {
-                                startActivityWithExtra(SoftAppStepActivity::class.java, productId)
+                                startActivityWithExtra(SoftApStepActivity::class.java, productId)
                             } else {
                                 startActivityWithExtra(SmartConfigStepActivity::class.java, productId)
                             }
