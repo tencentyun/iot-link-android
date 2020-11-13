@@ -158,6 +158,12 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
             } else {
                 holder.titleName.setVisibility(View.GONE);
             }
+
+            if (list.get(position).getStatus() == 0) {
+                holder.switchBtn.setChecked(true);
+            } else {
+                holder.switchBtn.setChecked(false);
+            }
         }
 
         if (!TextUtils.isEmpty(list.get(position).getIcon())) {
@@ -165,18 +171,20 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
         }
         holder.intelligenceName.setText(list.get(position).getName());
 
-        List<Action> allActions = JSON.parseArray(list.get(position).getActions().toJSONString(), Action.class);
-        if (allActions != null && allActions.size() > 0) {
-            Set<String> caculateTotal = new HashSet<>();
-            for (int i = 0; i < allActions.size(); i++) {
-                if (!TextUtils.isEmpty(allActions.get(i).getProductId()) && !TextUtils.isEmpty(allActions.get(i).getDeviceName())) {
-                    caculateTotal.add(allActions.get(i).getProductId() + "/" + allActions.get(i).getDeviceName());
+        if (list.get(position).getType() == 0) {
+            List<Action> allActions = JSON.parseArray(list.get(position).getActions().toJSONString(), Action.class);
+            if (allActions != null && allActions.size() > 0) {
+                Set<String> caculateTotal = new HashSet<>();
+                for (int i = 0; i < allActions.size(); i++) {
+                    if (!TextUtils.isEmpty(allActions.get(i).getProductId()) && !TextUtils.isEmpty(allActions.get(i).getDeviceName())) {
+                        caculateTotal.add(allActions.get(i).getProductId() + "/" + allActions.get(i).getDeviceName());
+                    }
                 }
-            }
 
-            holder.desc.setText(T.getContext().getString(R.string.num_devices, "" + caculateTotal.size()));
-        } else {
-            holder.desc.setText(T.getContext().getString(R.string.num_devices, "" + 0));
+                holder.desc.setText(T.getContext().getString(R.string.num_devices, "" + caculateTotal.size()));
+            } else {
+                holder.desc.setText(T.getContext().getString(R.string.num_devices, "" + 0));
+            }
         }
     }
 
