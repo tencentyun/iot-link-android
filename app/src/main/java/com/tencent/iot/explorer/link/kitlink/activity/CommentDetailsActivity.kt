@@ -32,11 +32,15 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     private var progressbar: ProgressBar? = null
     private var dialog: ShareOptionDialog? = null
     @Volatile
-    private var url2Load: String? = null
-    @Volatile
     private var pathUrl: String? = null
     @Volatile
-    private var itemJSON: JSONObject? = null
+    private var wechatPath = ""
+    @Volatile
+    private var wechatShareUrl = ""
+    @Volatile
+    private var webShareUrl = ""
+    @Volatile
+    private var shareImg = ""
 
     override fun getContentView(): Int {
         return  R.layout.activity_comment_detail
@@ -82,19 +86,16 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
 
     private var onDismisListener = object : ShareOptionDialog.OnDismisListener {
         override fun onShareWechatClicked() {
-            if (itemJSON == null || TextUtils.isEmpty(url2Load)) {
+            if (TextUtils.isEmpty(wechatPath) || TextUtils.isEmpty(wechatShareUrl)) {
                 T.show(getString(R.string.unknown_error))
                 return
             }
 
-            var path = CommonField.WECHAT_MINI_PROGRAM_PATH + itemJSON!!.toJSONString()
-            var picUrl = itemJSON!!.getString("articleImg")
-
-            WeChatLogin.getInstance().shareMiniProgram(this@CommentDetailsActivity, url2Load!!, path, picUrl)
+            WeChatLogin.getInstance().shareMiniProgram(this@CommentDetailsActivity, wechatShareUrl, wechatPath, shareImg)
         }
 
         override fun onCopyLinkClicked() {
-            Utils.copy(this@CommentDetailsActivity, this@CommentDetailsActivity.url2Load)
+            Utils.copy(this@CommentDetailsActivity, webShareUrl)
             T.show(getString(R.string.copyed))
         }
 
@@ -114,11 +115,7 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
             return
         }
         var js = JSON.parse(response.data.toString()) as JSONObject
-
         var weburl = CommonField.H5_BASE_URL + "?uin=${Utils.getAndroidID(this)}#" + pathUrl + "&ticket=${js[CommonField.TOKEN_TICKET]}"
-        url2Load = CommonField.H5_BASE_URL + "?uin=${Utils.getAndroidID(this)}#" + pathUrl
-        var itemJsonStr = Utils.getUrlParamValue(pathUrl!!, "item")
-        itemJSON = JSON.parseObject(itemJsonStr)
         comment_detail_web.loadUrl(weburl)
     }
 
@@ -188,8 +185,7 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
             tv_title.setText(title)
         }
 
-        override fun onReceivedTouchIconUrl(view: WebView?, url: String?, precomposed: Boolean) {
-        }
+        override fun onReceivedTouchIconUrl(view: WebView?, url: String?, precomposed: Boolean) {}
 
         override fun onJsPrompt(view: WebView, url: String, message: String, defaultValue: String, result: JsPromptResult): Boolean {
             result.confirm(JSBridgeKt.callNative(view, message))
@@ -200,11 +196,36 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     var webViewClient = object: WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             if (url.contains("onArticleShare?")) {
+                makeShortUrl(url)
                 dialog?.show()
                 return true
             } else {
                 return true
             }
+        }
+    }
+
+    private fun makeShortUrl (url: String) {
+        Log.e("XXX", "url " + url)
+        var uri = Uri.parse(url)
+        if (TextUtils.isEmpty(uri.encodedQuery)) return
+
+        var json = JSONObject.parseObject(uri.encodedQuery)
+
+        if (json.containsKey("webShareUrl")) {
+            webShareUrl = json.getString("webShareUrl")
+        }
+
+        if (json.containsKey("wechatShareUrl")) {
+            wechatShareUrl = json.getString("wechatShareUrl")
+        }
+
+        if (json.containsKey("wechatPagePath")) {
+            wechatPath = json.getString("wechatPagePath")
+        }
+
+        if (json.containsKey("shareImg")) {
+            shareImg = json.getString("shareImg")
         }
     }
 }
