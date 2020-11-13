@@ -10,4 +10,5 @@ class Automation {
     var type = 0 // 0 手动   1 自动
     var desc = "" // x 个设备
     var actions: JSONArray? = null
+    var id = ""
 }

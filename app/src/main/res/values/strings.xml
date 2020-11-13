@@ -56,6 +56,7 @@
     <string name="delay_time">延时</string>
     <string name="run_all_task">执行以下任务</string>
     <string name="delay_time_can_not_be_last_one">延时不能设置为最后一个任务</string>
+    <string name="at_least_one_condition_2_start">至少包含一个条件</string>
     <string name="no_task_to_add">没有任务</string>
     <string name="complete_task_info">完善智能信息</string>
     <string name="smart_pic">智能图片</string>
@@ -66,6 +67,29 @@
     <string name="current_dev_no_this_function">该设备暂无功能可作为智能任务，试试其他设备吧</string>
     <string name="please_input_smart_pic">请设置智能图片</string>
     <string name="please_input_smart_name">请设置智能名称</string>
+    <string name="add_task_condition">添加条件</string>
+    <string name="fit_all_condition">满足以下所有条件</string>
+    <string name="fit_one_of_all_condition">满足以下任一条件</string>
+    <string name="working_time">生效时间段</string>
+    <string name="run_this_all_tasks">执行以下任务</string>
+    <string name="dev_status_changed">设备状态发生变化</string>
+    <string name="dev_timer">定时</string>
+    <string name="sel_manual_task">选择手动</string>
+    <string name="send_notification">发送通知</string>
+    <string name="repeat_days">重复周期</string>
+    <string name="defination_by_user">自定义</string>
+    <string name="defination_by_user_with_content">自定义（%s）</string>
+    <string name="work_time_all_day">全天（24小时）</string>
+    <string name="work_time_all_day_tip">全天</string>
+    <string name="working_time_tip">时间段</string>
+    <string name="end_time_earlier_start_time">结束时间不能早于开始时间</string>
+    <string name="at_least_select_one_day">请至少选择一天</string>
+    <string name="select_notification_type">选择通知类型</string>
+    <string name="select_manual_smart">选择手动智能</string>
+    <string name="select_all">全选</string>
+    <string name="disselect_all">取消全选</string>
+    <string name="at_least_select_one_msg_type">请至少选择一种通知类型</string>
+    <string name="equals_str">等于</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -266,6 +290,8 @@
     <string name="switch_softap">切换到热点配网</string>
     <string name="switch_smart_config">切换到一键配网</string>
     <string name="add_device_success">配网完成，添加设备成功</string>
+    <string name="run_one_time">执行一次</string>
+    <string name="msg_center">消息中心</string>
 
     <!--云端定时-->
     <string name="cloud_timing">云端定时</string>
@@ -492,6 +518,8 @@
     <string name="unit_s">秒</string>
     <string name="unit_m">分钟</string>
     <string name="unit_h">小时</string>
+    <string name="unit_m_single">分</string>
+    <string name="unit_h_single">时</string>
     <string name="load_image_failed_please_reload">图片加载错误，请重新选择图片</string>
     <string name="clip_image_failed_please_reclip">图片裁剪异常，请重新选择图片</string>
     <string name="sdcard_not_detected">未检测到SD卡</string>
