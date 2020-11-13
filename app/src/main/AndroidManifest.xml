@@ -119,16 +119,19 @@
         <activity
             android:name=".kitlink.activity.ConfigNetFailedActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".kitlink.activity.ConfigNetSuccessActivity" />
-        <activity android:name=".kitlink.activity.AddAutoicTaskActivity" />
-        <activity
-            android:name=".kitlink.activity.AddManualTaskActivity"
+        <activity android:name=".kitlink.activity.ConfigNetSuccessActivity"/>
+        <activity android:name=".kitlink.activity.AddAutoicTaskActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".kitlink.activity.AddManualTaskActivity"
             android:launchMode="singleTask" />
         <activity android:name=".kitlink.activity.CompleteTaskInfoActivity" />
         <activity android:name=".kitlink.activity.SelectTaskPicActivity" />
         <activity android:name=".kitlink.activity.AddTaskNameActivity" />
         <activity android:name=".kitlink.activity.DeviceModeInfoActivity" />
         <activity android:name=".kitlink.activity.SmartSelectDevActivity" />
+        <activity android:name=".kitlink.activity.TimerActivity" />
+        <activity android:name=".kitlink.activity.SetSendMsgActivity"/>
+        <activity android:name=".kitlink.activity.SelectManualTaskActivity"/>
         <activity
             android:name=".kitlink.activity.HelpWebViewActivity"
             android:launchMode="singleTop" />

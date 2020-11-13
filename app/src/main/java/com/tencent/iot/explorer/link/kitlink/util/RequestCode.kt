@@ -116,6 +116,9 @@ object RequestCode {
     /*************场景联动接口开始**************/
     const val create_manual_task = 8001
     const val query_all_manual_task = 8002
+    const val create_automic_task = 8003
+    const val query_all_automic_task = 8004
+
     /*************场景联动接口结束**************/
 
 

@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.text.TextUtils
+import android.util.Log
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.*
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.auth.util.SignatureUtil
@@ -11,6 +13,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.AutomicTaskEntity
 import com.tencent.iot.explorer.link.kitlink.entity.SceneEntity
 import com.tencent.iot.explorer.link.retrofit.StringRequest
 import java.util.*
@@ -1335,19 +1338,44 @@ class HttpRequest private constructor() {
         tokenPost(param, callback, RequestCode.create_manual_task)
     }
 
-    //curl http://127.0.0.1:8088/tokenapiv1 -d '{
-    //    "AccessToken":"xxxv2",
-    //    "RequestId":"req_1",
-    //    "Action":"AppGetSceneList",
-    //    "FamilyId":"f_9b309d84c9624a60a11b4c3d9588fcc1",
-    //    "Offset":0,
-    //    "Limit":10
-    //}'
+    fun createAutomicTask(automicTaskEntity: AutomicTaskEntity, callback: MyCallback) {
+        val param = tokenParams("AppCreateAutomation")
+        param["Name"] = automicTaskEntity.name
+        param["Icon"] = automicTaskEntity.icon
+        param["FamilyId"] = automicTaskEntity.familyId
+        param["Actions"] = automicTaskEntity.actionsJson!!
+        param["Status"] = automicTaskEntity.status
+        param["MatchType"] = automicTaskEntity.matchType
+        param["Conditions"] = automicTaskEntity.conditionsJson!!
+        param["EffectiveBeginTime"] = String.format("%02d:%02d", automicTaskEntity.workTimeMode.startTimeHour,
+            automicTaskEntity.workTimeMode.startTimerMin)
+        param["EffectiveEndTime"] = String.format("%02d:%02d", automicTaskEntity.workTimeMode.endTimeHour,
+            automicTaskEntity.workTimeMode.endTimeMin)
+        if (automicTaskEntity.workTimeMode.workDayType == 3) {
+            param["EffectiveDays"] = automicTaskEntity.workTimeMode.workDays
+        } else if (automicTaskEntity.workTimeMode.workDayType == 2) {
+            param["EffectiveDays"] = "1111111"
+        } else if (automicTaskEntity.workTimeMode.workDayType == 1) {
+            param["EffectiveDays"] = "0111110"
+        } else if (automicTaskEntity.workTimeMode.workDayType == 0) {
+            param["EffectiveDays"] = "1000001"
+        }
+
+        Log.e("XXX", "param \n" + JSON.toJSONString(param))
+        tokenPost(param, callback, RequestCode.create_automic_task)
+    }
+
+    fun queryAutomicTask(familyId: String, callback: MyCallback) {
+        val param = tokenParams("AppGetAutomationList")
+        param["FamilyId"] = familyId
+        tokenPost(param, callback, RequestCode.query_all_automic_task)
+    }
+
     fun queryManualTask(familyId: String, offset: Int, callback: MyCallback) {
         val param = tokenParams("AppGetSceneList")
         param["FamilyId"] = familyId
         param["Offset"] = offset
-        param["Limit"] = 20
+        param["Limit"] = 999
         tokenPost(param, callback, RequestCode.query_all_manual_task)
     }
     /****************************************   场景联动接口结束   *******************************************************/

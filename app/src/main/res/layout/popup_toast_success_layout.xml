@@ -15,17 +15,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/background_cell"
-        android:padding="40dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
         >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@mipmap/create_task_success"
             android:id="@+id/tv_status"
+            app:layout_constraintDimensionRatio="h,1:1"
             />
 
         <TextView
