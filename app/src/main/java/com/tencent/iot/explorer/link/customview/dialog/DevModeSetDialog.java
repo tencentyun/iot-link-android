@@ -29,6 +29,7 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
     private TextView save;
     private RecyclerView options;
     private ConstraintLayout outsideLayout;
+    private ConstraintLayout insideLayout;
     private ConstraintLayout barLayout;
     private DevModeOptionsAdapter adapter;
     private HorizontalProgressBarWithNumber bar;
@@ -74,6 +75,7 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
     @Override
     public void initView() {
         outsideLayout = view.findViewById(R.id.outside_dialog_layout);
+        insideLayout = view.findViewById(R.id.layout_inside);
         barLayout = view.findViewById(R.id.layout_bar);
         cancel = view.findViewById(R.id.tv_cancel);
         options = view.findViewById(R.id.lv_options);
@@ -95,6 +97,7 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         save.setOnClickListener(onClickListener);
         increase.setOnClickListener(onClickListener);
         decrease.setOnClickListener(onClickListener);
+        insideLayout.setOnClickListener(onClickListener);
 
         bar.setCircleColor(context.getResources().getColor(R.color.white));
         bar.setCircleTextColor(context.getResources().getColor(R.color.blue_006EFF));
@@ -151,6 +154,8 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
                     }
                     progress -= modeInt.getStep();
                     bar.setProgress(progress);
+                    return;
+                case R.id.layout_inside:
                     return;
             }
             dismiss();
