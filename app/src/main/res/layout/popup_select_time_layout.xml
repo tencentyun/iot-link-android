@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/outside_dialog_layout"
+    android:background="@color/dialog_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_top_radius_cell"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/layout_all"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintBottom_toTopOf="@id/layout_btn"
+            android:id="@+id/v_space_2"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/layout_btn"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:background="@color/white"
+            >
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/v_center"
+                />
+
+            <TextView
+                android:id="@+id/tv_ok"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/background_circle_bule_gradient"
+                android:gravity="center"
+                android:paddingTop="9dp"
+                android:paddingBottom="9dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/v_center"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:gravity="center"
+                android:paddingTop="9dp"
+                android:paddingBottom="9dp"
+                android:textSize="14sp"
+                android:layout_marginRight="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/v_center"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/complete_progress"
+                android:background="@drawable/background_circle_grey"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_dialog_default_start"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/v_space_2">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lv_day_options_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            />
+        
+        <View
+            android:id="@+id/v_space_1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintBottom_toTopOf="@id/lv_day_options_type"
+            />
+
+        <TextView
+            android:id="@+id/tv_repeat_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/v_space_1"
+            android:text="@string/repeat_days"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:textSize="15sp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintBottom_toTopOf="@id/tv_repeat_tip"
+            android:id="@+id/v_space_3"
+            />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/layout_defination_by_user"
+                app:layout_constraintStart_toStartOf="@id/tv_defination_by_user"
+                app:layout_constraintTop_toTopOf="@id/tv_defination_by_user"
+                app:layout_constraintBottom_toBottomOf="@id/tv_defination_by_user"
+                app:layout_constraintEnd_toEndOf="@id/iv_status_defination_by_user"
+                />
+        <TextView
+            android:id="@+id/tv_defination_by_user"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="@string/defination_by_user"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@id/v_space_3"
+            app:layout_constraintEnd_toStartOf="@+id/iv_status_defination_by_user"
+            app:layout_constraintStart_toStartOf="@id/tv_repeat_tip" />
+
+        <ImageView
+            android:id="@+id/iv_status_defination_by_user"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="15dp"
+            android:src="@mipmap/dev_mode_unsel"
+            app:layout_constraintBottom_toBottomOf="@id/tv_defination_by_user"
+            app:layout_constraintDimensionRatio="h, 1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_defination_by_user" />
+        <ImageView
+            android:id="@+id/iv_status_defination_by_user_check"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="15dp"
+            android:src="@mipmap/ic_done_white"
+            app:layout_constraintBottom_toBottomOf="@id/tv_defination_by_user"
+            app:layout_constraintDimensionRatio="h, 1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_defination_by_user" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintBottom_toTopOf="@id/tv_defination_by_user"
+            android:id="@+id/v_space_4"
+            />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/layout_defination_default"
+                app:layout_constraintStart_toStartOf="@id/tv_defination_default"
+                app:layout_constraintTop_toTopOf="@id/tv_defination_default"
+                app:layout_constraintBottom_toBottomOf="@id/tv_defination_default"
+                app:layout_constraintEnd_toEndOf="@id/iv_status_defination_default"
+                />
+
+        <TextView
+            android:id="@+id/tv_defination_default"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="@string/work_time_all_day"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@id/v_space_4"
+            app:layout_constraintEnd_toStartOf="@+id/iv_status_defination_default"
+            app:layout_constraintStart_toStartOf="@id/tv_repeat_tip" />
+
+        <ImageView
+            android:id="@+id/iv_status_defination_default"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="15dp"
+            android:src="@mipmap/dev_mode_unsel"
+            app:layout_constraintBottom_toBottomOf="@id/tv_defination_default"
+            app:layout_constraintDimensionRatio="h, 1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_defination_default" />
+
+        <ImageView
+            android:id="@+id/iv_status_defination_default_check"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="15dp"
+            android:src="@mipmap/ic_done_white"
+            app:layout_constraintBottom_toBottomOf="@id/tv_defination_default"
+            app:layout_constraintDimensionRatio="h, 1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_defination_default" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintBottom_toTopOf="@id/tv_defination_default"
+            android:id="@+id/v_space_5"
+            />
+
+        <TextView
+            android:id="@+id/tv_defination_tip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="@string/working_time_tip"
+            android:textSize="15sp"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@id/v_space_5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_repeat_tip" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintBottom_toTopOf="@id/tv_defination_tip"
+            android:id="@+id/v_space_6"
+            />
+
+        <TextView
+            android:id="@+id/tv_dialog_tip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="@string/working_time"
+            android:textSize="15sp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@id/v_space_6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_dialog_defination_day_by_user"
+            app:layout_constraintBottom_toTopOf="@id/v_space_2"
+            android:visibility="gone"
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gv_time_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                />
+
+            <View
+                android:id="@+id/v_space_7"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_F5F5F5"
+                app:layout_constraintBottom_toTopOf="@id/gv_time_options"
+                />
+
+            <TextView
+                android:id="@+id/tv_time_tip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/v_space_7"
+                android:text="@string/defination_by_user"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="@id/tv_time_tip"
+                app:layout_constraintBottom_toBottomOf="@id/tv_time_tip"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintDimensionRatio="h,1:1"
+                android:layout_marginLeft="7dp"
+                android:padding="15dp"
+                android:src="@mipmap/icon_back_black"
+                android:id="@+id/iv_back_dialog_defination_day_by_user"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_dialog_defination_time_by_user"
+            app:layout_constraintBottom_toTopOf="@id/v_space_2"
+            android:visibility="gone"
+            >
+            <LinearLayout
+                android:id="@+id/layout_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="horizontal"
+                >
+
+                <com.aigestudio.wheelpicker.WheelPicker
+                    android:id="@+id/wheel_start_time_hour"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:wheel_item_text_size="15sp"
+                    app:wheel_indicator_size="1dp"
+                    app:wheel_indicator_color="@color/grey_e5e5e5"
+                    android:layout_weight="0.33"
+                    app:wheel_selected_item_text_color="@color/black"
+                    />
+
+                <com.aigestudio.wheelpicker.WheelPicker
+                    android:id="@+id/wheel_start_time_min"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:wheel_item_text_size="15sp"
+                    app:wheel_indicator_size="1dp"
+                    app:wheel_indicator_color="@color/grey_e5e5e5"
+                    android:layout_weight="0.33"
+                    app:wheel_selected_item_text_color="@color/black"
+                    />
+
+                <com.aigestudio.wheelpicker.WheelPicker
+                    android:id="@+id/wheel_center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:wheel_item_text_size="15sp"
+                    app:wheel_indicator_size="1dp"
+                    app:wheel_indicator_color="@color/grey_e5e5e5"
+                    android:layout_weight="0.4"
+                    app:wheel_selected_item_text_color="@color/black"
+                    />
+
+                <com.aigestudio.wheelpicker.WheelPicker
+                    android:id="@+id/wheel_end_time_hour"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:wheel_item_text_size="15sp"
+                    app:wheel_indicator_size="1dp"
+                    app:wheel_indicator_color="@color/grey_e5e5e5"
+                    android:layout_weight="0.33"
+                    app:wheel_selected_item_text_color="@color/black"
+                    />
+
+                <com.aigestudio.wheelpicker.WheelPicker
+                    android:id="@+id/wheel_end_time_min"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:wheel_item_text_size="15sp"
+                    app:wheel_indicator_size="1dp"
+                    app:wheel_indicator_color="@color/grey_e5e5e5"
+                    android:layout_weight="0.33"
+                    app:wheel_selected_item_text_color="@color/black"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/v_space_8"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_F5F5F5"
+                app:layout_constraintBottom_toTopOf="@id/layout_time"
+                />
+
+            <TextView
+                android:id="@+id/tv_time_long_tip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/v_space_8"
+                android:text="@string/defination_by_user"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="@id/tv_time_long_tip"
+                app:layout_constraintBottom_toBottomOf="@id/tv_time_long_tip"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintDimensionRatio="h,1:1"
+                android:layout_marginLeft="7dp"
+                android:padding="15dp"
+                android:id="@+id/iv_back_dialog_defination_time_by_user"
+                android:src="@mipmap/icon_back_black"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
