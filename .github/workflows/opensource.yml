@@ -22,6 +22,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          rm -rf sdkdemo-config.json
+          gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdkdemo/sdkdemo-config.json.asc > sdkdemo-config.json
       - name: set up JDK 1.8
         uses: actions/setup-java@v1
         with:
