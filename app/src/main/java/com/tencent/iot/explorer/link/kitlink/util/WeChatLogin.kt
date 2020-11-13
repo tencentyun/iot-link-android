@@ -100,10 +100,17 @@ class WeChatLogin {
                 msg.title = context.getString(R.string.app_name)
                 miniProgramObj.userName = "gh_2aa6447f2b7c"
                 miniProgramObj.path = path
-                val bitmap: Bitmap = Picasso.get().load(picPath).get()
-                val sendBitmap = Bitmap.createScaledBitmap(bitmap!!, 200, 200, true)
-                bitmap?.recycle()
-                msg.thumbData = Utils.bmpToByteArray(sendBitmap)
+                if (!TextUtils.isEmpty(picPath)) {
+                    val bitmap: Bitmap = Picasso.get().load(picPath).get()
+                    val sendBitmap = Bitmap.createScaledBitmap(bitmap!!, 200, 200, true)
+                    bitmap?.recycle()
+                    msg.thumbData = Utils.bmpToByteArray(sendBitmap)
+                } else {
+                    val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher)
+                    val sendBitmap = Bitmap.createScaledBitmap(bitmap!!, 200, 200, true)
+                    bitmap?.recycle()
+                    msg.thumbData = Utils.bmpToByteArray(sendBitmap)
+                }
 
                 val req = SendMessageToWX.Req()
                 req.message = msg
