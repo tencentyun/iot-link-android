@@ -50,12 +50,17 @@ object CommonField {
     const val WECHAT_MINI_PROGRAM_PATH = "pages/Index/TabPages/Evaluation/EvaluationDetail/EvaluationDetail?item="
     const val EDIT_EXTRA = "editExtra"
     const val DELAY_TIME_TASK = "delayTask"
+    const val TIMER_TASK = "timerTask"
     const val EXTRA_PIC_URL = "extraPicUrl"
     const val EXYRA_TASK_NAME = "taskName"
     const val EXTRA_PRODUCT_ID = "productId"
     const val EXTRA_DEV_MODES = "extraDevMode"
     const val EXTRA_DEV_DETAIL = "devDetail"
     const val EXTRA_ALL_MANUAL_TASK = "allManualTask"
+    const val EXTRA_ALL_AUTOMIC_TASK = "allAutomicTask"
+    const val EXTRA_ROUTE_TYPE = "routeType"
+    const val EXTRA_SEND_MSG = "sendMsgType"
+    const val EXTRA_ADD_MANUAL_TASK = "addManualTask"
 
 
     /*******上传文件********/
@@ -142,6 +147,10 @@ object CommonField {
     const val EDIT_DELAY_TIME_REQ_CODE = 0x1102
     const val REQUEST_PIC_REQ_CODE = 0x1103
     const val REQUEST_TASK_NAME_REQ_CODE = 0x1104
+    const val ADD_TIMER_REQ_CODE = 0x1105
+    const val ADD_SEND_MSG_REQ_CODE = 0x1106
+    const val ADD_MANUAL_TASK_REQ_CODE = 0x1107
+    const val EDIT_TIMER_REQ_CODE = 0x1108
 
     const val SSID_UNKNOWN = "<unknown ssid>"
     const val EXTRA_TITLE = "title"

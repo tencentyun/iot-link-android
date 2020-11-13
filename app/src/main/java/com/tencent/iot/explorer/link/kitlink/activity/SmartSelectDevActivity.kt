@@ -11,6 +11,8 @@ import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.fragment.SelDeviceFragment
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
@@ -29,6 +31,7 @@ class SmartSelectDevActivity : BaseActivity(), MyCallback, VerticalTabLayout.OnT
     @Volatile
     private var roomList = ArrayList<RoomEntity>()
     private var roomTotal = 0
+    private var startType = RouteType.MANUAL_TASK_ROUTE
 
     override fun getContentView(): Int {
         return R.layout.activity_smart_sel_dev
@@ -36,6 +39,7 @@ class SmartSelectDevActivity : BaseActivity(), MyCallback, VerticalTabLayout.OnT
 
     override fun initView() {
         tv_title.setText(R.string.select_dev)
+        startType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
         roomList.add(RoomEntity())  // 默认的全部设备
         loadRoomList()
     }
@@ -49,7 +53,7 @@ class SmartSelectDevActivity : BaseActivity(), MyCallback, VerticalTabLayout.OnT
         val fragmentList = arrayListOf<Fragment>()
         if (roomList != null) {
             for (i in 0 until roomList.size) {
-                val fragment = SelDeviceFragment(this, roomList.get(i).RoomId)
+                val fragment = SelDeviceFragment(this, startType, roomList.get(i).RoomId)
                 fragmentList.add(fragment)
             }
         }

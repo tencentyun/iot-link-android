@@ -16,7 +16,9 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.customview.dialog.SuccessToastDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.AutomicTaskEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
+import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.entity.SceneEntity
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
@@ -32,6 +34,8 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
     private var smartName = ""
     private var handler = Handler()
     private var taskList: MutableList<ManualTask>? = null
+    private var routeType = RouteType.MANUAL_TASK_ROUTE  // 0 手动路由至此窗口   1 2 自动路由至此窗口
+    private var automicTaskEntity: AutomicTaskEntity? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_complete_task_info
@@ -39,8 +43,14 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
 
     override fun initView() {
         tv_title.setText(R.string.complete_task_info)
-        var str = intent.getStringExtra(CommonField.EXTRA_ALL_MANUAL_TASK)
-        taskList = JSON.parseArray(str, ManualTask::class.java)
+        routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
+        if (routeType == RouteType.MANUAL_TASK_ROUTE) {
+            var str = intent.getStringExtra(CommonField.EXTRA_ALL_MANUAL_TASK)
+            taskList = JSON.parseArray(str, ManualTask::class.java)
+        } else {
+            var str = intent.getStringExtra(CommonField.EXTRA_ALL_AUTOMIC_TASK)
+            automicTaskEntity = JSON.parseObject(str, AutomicTaskEntity::class.java)
+        }
         loadView()
     }
 
@@ -68,12 +78,115 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
                 return@setOnClickListener
             }
 
-            if (taskList == null) {
+            if (routeType == RouteType.MANUAL_TASK_ROUTE && taskList == null) {
                 return@setOnClickListener
             }
 
-            createManualTask()
+            if (routeType == RouteType.MANUAL_TASK_ROUTE) {
+                createManualTask()
+            } else {
+                createAutomicTask()
+            }
         }
+    }
+
+    private fun createAutomicTask() {
+        automicTaskEntity?.familyId = App.data.getCurrentFamily().FamilyId
+        automicTaskEntity?.icon = this.smartPicUrl
+        automicTaskEntity?.name = this.smartName
+        if (automicTaskEntity?.tasks != null) {
+            automicTaskEntity?.actionsJson = JSONArray()
+            for (i in 0 until automicTaskEntity?.tasks!!.size) {
+                var taskJson = JSONObject()
+                if (automicTaskEntity?.tasks?.get(i)?.type == 1) {  // 延时任务
+                    taskJson.put("ActionType", 1)
+                    taskJson.put("Data", automicTaskEntity?.tasks!!.get(i).hour * 60 * 60 + automicTaskEntity?.tasks!!.get(i).min * 60) // 单位是s
+
+                } else if (automicTaskEntity?.tasks?.get(i)?.type == 0) {  // 设备控制
+                    taskJson.put("ActionType", 0)
+                    taskJson.put("ProductId", automicTaskEntity?.tasks?.get(i)?.productId)
+                    taskJson.put("DeviceName", automicTaskEntity?.tasks?.get(i)?.deviceName)
+                    taskJson.put("AliasName", automicTaskEntity?.tasks?.get(i)?.aliasName)
+                    taskJson.put("IconUrl", automicTaskEntity?.tasks?.get(i)?.iconUrl)
+
+                    var jsonAction = JSONObject()
+                    // 存在 key 值的使用 key，不存在 key 的使用 value，进度没有 key，bool 和 enum 存在 key
+                    if (TextUtils.isEmpty(automicTaskEntity?.tasks?.get(i)?.taskKey)) {
+                        jsonAction.put(automicTaskEntity?.tasks?.get(i)?.actionId, automicTaskEntity?.tasks?.get(i)?.task)
+                    } else {
+                        jsonAction.put(automicTaskEntity?.tasks?.get(i)?.actionId, automicTaskEntity?.tasks?.get(i)?.taskKey)
+                    }
+                    taskJson.put("Data", jsonAction.toJSONString())
+                } else if (automicTaskEntity?.tasks?.get(i)?.type == 2) {  // 通知
+                    taskJson.put("ActionType", 3)
+                    taskJson.put("ProductId", automicTaskEntity?.tasks?.get(i)?.productId)
+                    taskJson.put("DeviceName", automicTaskEntity?.tasks?.get(i)?.deviceName)
+                    taskJson.put("AliasName", automicTaskEntity?.tasks?.get(i)?.aliasName)
+                    taskJson.put("IconUrl", automicTaskEntity?.tasks?.get(i)?.iconUrl)
+                    taskJson.put("Data", "测试使用的固定字符串")
+
+                } else if (automicTaskEntity?.tasks?.get(i)?.type == 3) {  // 选择手动
+                    taskJson.put("ActionType", 2)
+//                    taskJson.put("ProductId", automicTaskEntity?.tasks?.get(i)?.productId)
+//                    taskJson.put("DeviceName", automicTaskEntity?.tasks?.get(i)?.deviceName)
+//                    taskJson.put("AliasName", automicTaskEntity?.tasks?.get(i)?.aliasName)
+//                    taskJson.put("IconUrl", automicTaskEntity?.tasks?.get(i)?.iconUrl)
+                    taskJson.put("Data", automicTaskEntity?.tasks?.get(i)?.sceneId)
+
+                }
+                automicTaskEntity?.actionsJson?.add(taskJson)
+            }
+        }
+
+        if (automicTaskEntity?.conditions != null) {
+            automicTaskEntity?.conditionsJson = JSONArray()
+            for (i in 0 until automicTaskEntity?.conditions!!.size) {
+                var conditionJson = JSONObject()
+                conditionJson.put("CondId", System.currentTimeMillis().toString())
+
+                if (automicTaskEntity?.conditions?.get(i)?.type == 4) {  // 定时
+                    conditionJson.put("CondType", 0)
+                    var propertyJson = JSONObject()
+                    propertyJson.put("ProductId", automicTaskEntity?.conditions?.get(i)?.productId)
+                    propertyJson.put("DeviceName", automicTaskEntity?.conditions?.get(i)?.deviceName)
+                    propertyJson.put("Op", "eq")
+                    propertyJson.put("IconUrl", automicTaskEntity?.conditions?.get(i)?.iconUrl)
+                    if (TextUtils.isEmpty(automicTaskEntity?.conditions?.get(i)?.taskKey)) {
+                        propertyJson.put("Value", automicTaskEntity?.conditions?.get(i)?.task)
+                    } else {
+                        propertyJson.put("Value", automicTaskEntity?.conditions?.get(i)?.taskKey)
+                    }
+                    propertyJson.put("AliasName", automicTaskEntity?.conditions?.get(i)?.aliasName)
+                    propertyJson.put("PropertyId", automicTaskEntity?.conditions?.get(i)?.actionId)
+                    conditionJson.put("Property", propertyJson)
+
+                } else if (automicTaskEntity?.conditions?.get(i)?.type == 5) {  // 场景
+                    conditionJson.put("CondType", 1)
+                    var timerJson = JSONObject()
+                    var dayStr = ""
+                    if (automicTaskEntity?.conditions?.get(i)?.workDayType == 0) {
+                        dayStr = "0000000"
+                    } else if (automicTaskEntity?.conditions?.get(i)?.workDayType == 1) {
+                        dayStr = "1111111"
+                    } else if (automicTaskEntity?.conditions?.get(i)?.workDayType == 2) {
+                        dayStr = "0111110"
+                    } else if (automicTaskEntity?.conditions?.get(i)?.workDayType == 3) {
+                        dayStr = "1000001"
+                    } else {
+                        dayStr = automicTaskEntity?.conditions?.get(i)?.workDays!!
+                    }
+                    timerJson.put("Days", dayStr)
+                    var time = String.format("%02d:%02d", automicTaskEntity?.conditions?.get(i)?.hour,
+                        automicTaskEntity?.conditions?.get(i)?.min)
+                    timerJson.put("TimePoint", time)
+                    conditionJson.put("Timer", timerJson)
+                }
+                automicTaskEntity?.conditionsJson?.add(conditionJson)
+            }
+        }
+
+        HttpRequest.instance.createAutomicTask(automicTaskEntity!!, this)
+
     }
 
     private fun createManualTask() {
