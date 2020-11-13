@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a8d8059_73b86d22",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/TimerActivity.kt",
+        "patchSetId": 5
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-13T03:23:36Z",
+      "side": 1,
+      "message": "缩进",
+      "range": {
+        "startLine": 145,
+        "startChar": 12,
+        "endLine": 148,
+        "endChar": 18
+      },
+      "revId": "10bc33ba01fbfa12da1c4e3962504d4a97816a24",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
