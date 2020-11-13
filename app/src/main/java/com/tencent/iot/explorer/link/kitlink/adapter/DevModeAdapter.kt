@@ -19,11 +19,13 @@ import kotlinx.android.synthetic.main.activity_complete_task_info.*
 import org.w3c.dom.Text
 import java.util.*
 
-class DevModeAdapter(list: MutableList<DevModeInfo>) : RecyclerView.Adapter<DevModeAdapter.ViewHolder>() {
+class DevModeAdapter(list: MutableList<DevModeInfo>, type: Int) : RecyclerView.Adapter<DevModeAdapter.ViewHolder>() {
     var list: MutableList<DevModeInfo> = LinkedList()
+    var type = 0
 
     init {
         this.list = list
+        this.type = type
     }
 
     class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
@@ -54,9 +56,12 @@ class DevModeAdapter(list: MutableList<DevModeInfo>) : RecyclerView.Adapter<DevM
         holder.nameTxt.setText(list.get(position).name)
         if (TextUtils.isEmpty(list.get(position).value)) {
             holder.valueTxt.setText(R.string.unset)
+        } else if (this.type == 2) {
+            holder.valueTxt.setText(T.getContext().getString(R.string.equals_str) + " " + list.get(position).value)
         } else {
             holder.valueTxt.setText(list.get(position).value)
         }
+
         if (position == list.lastIndex) {
             holder.line.visibility = View.INVISIBLE
         } else {
