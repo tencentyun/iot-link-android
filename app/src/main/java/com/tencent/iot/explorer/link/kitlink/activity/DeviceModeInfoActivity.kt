@@ -26,8 +26,9 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class DeviceModeInfoActivity : BaseActivity(), MyCallback {
 
     private var devModes = ArrayList<DevModeInfo>()
-    private var adapter: DevModeAdapter = DevModeAdapter(devModes)
+    private var adapter: DevModeAdapter? = null
     private var deviceEntity: DeviceEntity? = null
+    private var routeType = RouteType.MANUAL_TASK_ROUTE
 
     override fun getContentView(): Int {
         return R.layout.activity_device_mode_info
@@ -37,6 +38,8 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         tv_title.setText("")
 
         var deviceEntityStr = intent.getStringExtra(CommonField.EXTRA_PRODUCT_ID)
+        routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
+        adapter = DevModeAdapter(devModes, routeType)
         deviceEntity = JSON.parseObject(deviceEntityStr, DeviceEntity::class.java)
 
         val layoutManager = LinearLayoutManager(this)
@@ -74,7 +77,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                         if (dialog.currentIndex >= 0) {
                             devModes.get(pos).value = keyBooleanValues.get(dialog.currentIndex).value
                             devModes.get(pos).key = keyBooleanValues.get(dialog.currentIndex).key
-                            adapter.notifyDataSetChanged()
+                            adapter?.notifyDataSetChanged()
                         }
                     }
 
@@ -91,7 +94,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                 dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
                     override fun onSaveClicked() {
                         devModes.get(pos).value = dialog.progress.toString()
-                        adapter.notifyDataSetChanged()
+                        adapter?.notifyDataSetChanged()
                     }
 
                     override fun onCancelClicked() {}
@@ -116,7 +119,15 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                     passDevModes.add(devModes.get(i))
                 }
             }
-            var intent = Intent(this@DeviceModeInfoActivity, AddManualTaskActivity::class.java)
+
+            var intent = Intent()
+            if (routeType == RouteType.MANUAL_TASK_ROUTE) {
+                intent = Intent(this@DeviceModeInfoActivity, AddManualTaskActivity::class.java)
+
+            } else {
+                intent = Intent(this@DeviceModeInfoActivity, AddAutoicTaskActivity::class.java)
+                intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, routeType)
+            }
             intent.putExtra(CommonField.EXTRA_DEV_MODES, JSON.toJSONString(passDevModes))
             intent.putExtra(CommonField.EXTRA_DEV_DETAIL, JSON.toJSONString(deviceEntity))
             startActivity(intent)
@@ -179,7 +190,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                         layout_no_data.visibility = View.GONE
                         tv_ok.isClickable = true
                     }
-                    adapter.notifyDataSetChanged()
+                    adapter?.notifyDataSetChanged()
                 }
             }
         }
