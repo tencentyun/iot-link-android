@@ -61,6 +61,8 @@ object CommonField {
     const val EXTRA_ROUTE_TYPE = "routeType"
     const val EXTRA_SEND_MSG = "sendMsgType"
     const val EXTRA_ADD_MANUAL_TASK = "addManualTask"
+    const val EXTRA_REFRESH = "refreshTag"
+
 
 
     /*******上传文件********/

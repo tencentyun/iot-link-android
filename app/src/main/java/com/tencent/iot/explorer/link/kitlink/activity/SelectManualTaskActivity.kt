@@ -82,7 +82,7 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
                 var tmp = manualList.get(adapter?.index?.elementAt(i) as Int)
                 var manualTask = ManualTask()
                 manualTask.type = 3
-                manualTask.devName = getString(R.string.sel_manual_task)
+                manualTask.aliasName = getString(R.string.sel_manual_task)
                 manualTask.task = tmp.Name
                 manualTask.sceneId = tmp.id
                 retList.add(manualTask)

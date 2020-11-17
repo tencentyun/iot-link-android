@@ -28,7 +28,9 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
     private var devModes = ArrayList<DevModeInfo>()
     private var adapter: DevModeAdapter? = null
     private var deviceEntity: DeviceEntity? = null
+    private var manualTask: ManualTask? = null
     private var routeType = RouteType.MANUAL_TASK_ROUTE
+    private var keepList = ArrayList<String>()
 
     override fun getContentView(): Int {
         return R.layout.activity_device_mode_info
@@ -38,9 +40,14 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         tv_title.setText("")
 
         var deviceEntityStr = intent.getStringExtra(CommonField.EXTRA_PRODUCT_ID)
+        var manualTaskStr = intent.getStringExtra(CommonField.EXTRA_DEV_MODES)
+
         routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
         adapter = DevModeAdapter(devModes, routeType)
+        // 新增依赖的对象
         deviceEntity = JSON.parseObject(deviceEntityStr, DeviceEntity::class.java)
+        // 修改依赖的对象
+        manualTask = JSON.parseObject(manualTaskStr, ManualTask::class.java)
 
         val layoutManager = LinearLayoutManager(this)
         lv_dev_mode.setLayoutManager(layoutManager)
@@ -48,6 +55,12 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         lv_dev_mode.setAdapter(adapter)
 
         loadView()
+    }
+
+    private fun loadProductConfig(productId: String) {
+        var products = ArrayList<String>()
+        products.add(productId)
+        HttpRequest.instance.getProductsConfig(products, this)
     }
 
     private var onListItemClicked = object : DevModeAdapter.OnItemClicked{
@@ -121,13 +134,19 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
             }
 
             var intent = Intent()
-            if (routeType == RouteType.MANUAL_TASK_ROUTE) {
+            if (routeType == RouteType.MANUAL_TASK_ROUTE || routeType == RouteType.EDIT_MANUAL_TASK_ROUTE) {
                 intent = Intent(this@DeviceModeInfoActivity, AddManualTaskActivity::class.java)
-
-            } else {
+            } else if (routeType == RouteType.AUTOMIC_TASK_ROUTE || routeType == RouteType.AUTOMIC_CONDITION_ROUTE
+                || routeType == RouteType.EDIT_AUTOMIC_TASK_ROUTE || routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE) {
                 intent = Intent(this@DeviceModeInfoActivity, AddAutoicTaskActivity::class.java)
-                intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, routeType)
+            } else if (routeType == RouteType.EDIT_MANUAL_TASK_DETAIL_ROUTE || routeType == RouteType.ADD_MANUAL_TASK_DETAIL_ROUTE) {
+                intent = Intent(this@DeviceModeInfoActivity, EditManualTaskActivity::class.java)
+            } else if (routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE || routeType == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE ||
+                routeType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE || routeType == RouteType.ADD_AUTOMIC_TASK_DETAIL_ROUTE) {
+                intent = Intent(this@DeviceModeInfoActivity, EditAutoicTaskActivity::class.java)
             }
+
+            intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, routeType)
             intent.putExtra(CommonField.EXTRA_DEV_MODES, JSON.toJSONString(passDevModes))
             intent.putExtra(CommonField.EXTRA_DEV_DETAIL, JSON.toJSONString(deviceEntity))
             startActivity(intent)
@@ -135,14 +154,51 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
     }
 
     fun loadView() {
-        if (deviceEntity == null) {
-            return
-        }
-        var products = ArrayList<String>()
-        products.add(deviceEntity!!.ProductId)
-        HttpRequest.instance.deviceProducts(products, this)
-        tv_title.setText(deviceEntity!!.getAlias())
+        if (routeType == RouteType.AUTOMIC_CONDITION_ROUTE ||
+            routeType == RouteType.MANUAL_TASK_ROUTE ||
+            routeType == RouteType.AUTOMIC_TASK_ROUTE ||
+            routeType == RouteType.ADD_MANUAL_TASK_DETAIL_ROUTE ||
+            routeType == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE ||
+            routeType == RouteType.ADD_AUTOMIC_TASK_DETAIL_ROUTE) {
+            if (deviceEntity == null) return
 
+            var products = ArrayList<String>()
+            products.add(deviceEntity!!.ProductId)
+//            loadProductConfig(deviceEntity!!.ProductId)
+            HttpRequest.instance.deviceProducts(products, this)
+            tv_title.setText(deviceEntity!!.getAlias())
+
+        } else if (routeType == RouteType.EDIT_MANUAL_TASK_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_TASK_ROUTE ||
+            routeType == RouteType.EDIT_MANUAL_TASK_DETAIL_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE) {
+
+            if (manualTask == null) return
+
+            tv_title.setText(manualTask!!.getAlias())
+            deviceEntity = DeviceEntity()
+            deviceEntity!!.IconUrl = manualTask!!.iconUrl
+            deviceEntity!!.ProductId = manualTask!!.productId
+            deviceEntity!!.DeviceName = manualTask!!.deviceName
+            deviceEntity!!.AliasName = manualTask!!.aliasName
+            keepList.add(manualTask!!.actionId)
+            var products = ArrayList<String>()
+            products.add(deviceEntity!!.ProductId)
+            HttpRequest.instance.deviceProducts(products, this)
+        }
+    }
+
+    private fun refreshView() {
+        if (devModes == null || devModes.size <= 0) {
+            layout_no_data.visibility = View.VISIBLE
+            tv_ok.isClickable = false
+        } else {
+            layout_no_data.visibility = View.GONE
+            tv_ok.isClickable = true
+        }
+        adapter?.notifyDataSetChanged()
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -151,6 +207,8 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
 
     override fun success(response: BaseResponse, reqCode: Int) {
         when(reqCode) {
+            RequestCode.get_products_config -> { }
+
             RequestCode.device_product -> {
                 if (response.isSuccess()) {
 
@@ -183,14 +241,29 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                             devModes.add(devModeInfo)
                         }
                     }
-                    if (devModes == null || devModes.size <= 0) {
-                        layout_no_data.visibility = View.VISIBLE
-                        tv_ok.isClickable = false
-                    } else {
-                        layout_no_data.visibility = View.GONE
-                        tv_ok.isClickable = true
+
+                    if (routeType == RouteType.EDIT_MANUAL_TASK_ROUTE ||
+                        routeType == RouteType.EDIT_AUTOMIC_TASK_ROUTE ||
+                        routeType == RouteType.EDIT_MANUAL_TASK_DETAIL_ROUTE ||
+                        routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
+                        routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
+                        routeType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE) {
+
+                        var it = devModes.iterator()
+                        while(it.hasNext()) {
+                            var devInfo = it.next()
+                            if (!keepList.contains(devInfo.id)) {
+                                it.remove()
+                            } else {
+                                devInfo.id = manualTask!!.actionId
+                                devInfo.name = manualTask!!.taskTip
+                                devInfo.value = manualTask!!.task
+                                devInfo.key = manualTask!!.taskKey
+                                devInfo.pos = manualTask!!.pos
+                            }
+                        }
                     }
-                    adapter?.notifyDataSetChanged()
+                    refreshView()
                 }
             }
         }
