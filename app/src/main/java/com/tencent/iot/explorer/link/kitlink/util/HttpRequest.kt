@@ -1378,6 +1378,24 @@ class HttpRequest private constructor() {
         param["Limit"] = 999
         tokenPost(param, callback, RequestCode.query_all_manual_task)
     }
+
+    fun runManualTask(sceneId: String, callback: MyCallback) {
+        val param = tokenParams("AppRunScene")
+        param["SceneId"] = sceneId
+        tokenPost(param, callback, RequestCode.run_manual_task)
+    }
+
+    fun delManualTask(sceneId: String, callback: MyCallback) {
+        val param = tokenParams("AppDeleteScene")
+        param["SceneId"] = sceneId
+        tokenPost(param, callback, RequestCode.del_manual_task)
+    }
+
+    fun delAutomicTask(automationId: String, callback: MyCallback) {
+        val param = tokenParams("AppDeleteAutomation")
+        param["AutomationId"] = automationId
+        tokenPost(param, callback, RequestCode.del_automic_task)
+    }
     /****************************************   场景联动接口结束   *******************************************************/
 
 }

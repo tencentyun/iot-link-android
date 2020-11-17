@@ -167,7 +167,7 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
             holder.taskDesc.setText(": " + T.getContext().getString(R.string.equals_str) + " " + list[position].task)
         }
 
-        holder.devName.setText(list[position].devName)
+        holder.devName.setText(list[position].getAlias())
         holder.taskTip.setText(list[position].taskTip)
 
         if (position != indexOpen2Keep) {
@@ -196,8 +196,4 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
     fun setOnItemClicked(onItemClicked: OnItemClicked?) {
         this.onItemClicked = onItemClicked
     }
-
-//    override fun notifyDataSetChanged() {
-//
-//    }
 }
