@@ -32,8 +32,9 @@ class SetSendMsgActivity : BaseActivity(){
                 val intent = Intent()
                 var manualTask = ManualTask()
                 manualTask.type = 2
-                manualTask.devName = getString(R.string.send_notification)
+                manualTask.aliasName = getString(R.string.send_notification)
                 manualTask.task = getString(R.string.msg_center)
+                manualTask.notificationType = 0
                 intent.putExtra(CommonField.EXTRA_SEND_MSG, JSON.toJSONString(manualTask))
                 setResult(RESULT_OK, intent)
                 finish()

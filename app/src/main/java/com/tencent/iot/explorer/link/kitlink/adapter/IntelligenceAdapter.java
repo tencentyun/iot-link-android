@@ -1,17 +1,20 @@
 package com.tencent.iot.explorer.link.kitlink.adapter;
 
-import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSON;
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.squareup.picasso.Picasso;
 import com.tencent.iot.explorer.link.App;
 import com.tencent.iot.explorer.link.R;
@@ -42,6 +45,8 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
     public List<Automation> getManualList() {
         return manualList;
     }
+
+    public int indexOpen2Keep = -1;
 
     // 每修改一个元素都要进行一次数组的全修改，效率不高后续可以提高，依赖 linkedlist 的特性做插入修改
     public void addAutomic(Automation automic) {
@@ -84,6 +89,14 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
         refreashList();
     }
 
+    public void removeItem(int pos) {
+        list.remove(pos);
+    }
+
+    public void setItemStatus(int pos, int status) {
+        list.get(pos).setStatus(status);
+    }
+
     public void refreashList() {
         list.clear();
         list.addAll(manualList);
@@ -98,6 +111,9 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
         ImageView background;
         Switch switchBtn;
         TextView desc;
+        SwipeRevealLayout swipeRevealLayout;
+        ImageView deleteBtn;
+        ConstraintLayout contentLayout;
 
         ViewHolder(View view) {
             super(view);
@@ -108,8 +124,10 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
             background = view.findViewById(R.id.iv_background);
             switchBtn = view.findViewById(R.id.iv_switch_btn);
             desc = view.findViewById(R.id.tv_content_tip);
+            swipeRevealLayout = view.findViewById(R.id.swipeRevealLayout);
+            deleteBtn = view.findViewById(R.id.iv_delete);
+            contentLayout = view.findViewById(R.id.content_layout);
         }
-
     }
 
     @Override
@@ -117,14 +135,69 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_intelligence, parent, false);
         final ViewHolder holder = new ViewHolder(view);
 
-        holder.layoutView.setOnClickListener(new View.OnClickListener() {
+        holder.contentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view1) {
+            public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 if (onItemClicked != null) {
                     onItemClicked.onItemClicked(list.get(position));
                 }
             }
+        });
+
+        holder.btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                if (onItemClicked != null) {
+                    onItemClicked.onRunTaskClicked(list.get(position));
+                }
+            }
+        });
+
+        holder.switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isPressed()) {
+                    int position = holder.getAdapterPosition();
+                    if (onItemClicked != null) {
+                        onItemClicked.onSwitchStatus(position, isChecked, list.get(position));
+                    }
+                }
+            }
+        });
+
+        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                if (onItemClicked != null) {
+                    onItemClicked.onItemDeleteClicked(position, list.get(position));
+                    indexOpen2Keep = -1;
+                    IntelligenceAdapter.this.notifyDataSetChanged();
+                }
+            }
+        });
+
+        holder.swipeRevealLayout.setSwipeListener(new SwipeRevealLayout.SwipeListener() {
+            @Override
+            public void onClosed(SwipeRevealLayout view) {
+                int position = holder.getAdapterPosition();
+                if (position == indexOpen2Keep) {
+                    indexOpen2Keep = -1;
+                    IntelligenceAdapter.this.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onOpened(SwipeRevealLayout view) {
+                int position = holder.getAdapterPosition();
+                indexOpen2Keep = position;
+                IntelligenceAdapter.this.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onSlide(SwipeRevealLayout view, float slideOffset) { }
         });
         return holder;
     }
@@ -185,6 +258,14 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
             } else {
                 holder.desc.setText(T.getContext().getString(R.string.num_devices, "" + 0));
             }
+        } else {  // 自动需要重新发起网络请求才能获取到设备内容
+            holder.desc.setText("");
+        }
+
+        if (position != indexOpen2Keep) {
+            holder.swipeRevealLayout.close(false);
+        } else {
+            holder.swipeRevealLayout.open(false);
         }
     }
 
@@ -195,6 +276,9 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
 
     public interface OnItemClicked {
         void onItemClicked(Automation automation);
+        void onRunTaskClicked(Automation automation);
+        void onSwitchStatus(int postion, boolean isChecked, Automation automation);
+        void onItemDeleteClicked(int postion, Automation automation);
     }
 
     private OnItemClicked onItemClicked;
