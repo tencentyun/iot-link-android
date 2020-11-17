@@ -15,13 +15,14 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.entity.DevModeInfo
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
+import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import kotlinx.android.synthetic.main.activity_complete_task_info.*
 import org.w3c.dom.Text
 import java.util.*
 
 class DevModeAdapter(list: MutableList<DevModeInfo>, type: Int) : RecyclerView.Adapter<DevModeAdapter.ViewHolder>() {
     var list: MutableList<DevModeInfo> = LinkedList()
-    var type = 0
+    var type = RouteType.MANUAL_TASK_ROUTE
 
     init {
         this.list = list
@@ -56,7 +57,8 @@ class DevModeAdapter(list: MutableList<DevModeInfo>, type: Int) : RecyclerView.A
         holder.nameTxt.setText(list.get(position).name)
         if (TextUtils.isEmpty(list.get(position).value)) {
             holder.valueTxt.setText(R.string.unset)
-        } else if (this.type == 2) {
+        } else if (this.type == RouteType.AUTOMIC_CONDITION_ROUTE || this.type == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
+                this.type == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE || this.type == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE) {
             holder.valueTxt.setText(T.getContext().getString(R.string.equals_str) + " " + list.get(position).value)
         } else {
             holder.valueTxt.setText(list.get(position).value)

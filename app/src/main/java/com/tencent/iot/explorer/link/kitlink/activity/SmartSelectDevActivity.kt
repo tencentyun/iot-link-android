@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.fragment.SelDeviceFragment
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
@@ -21,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_device_category.*
 import kotlinx.android.synthetic.main.activity_smart_sel_dev.*
 import kotlinx.android.synthetic.main.activity_smart_sel_dev.vtab_device_category
 import kotlinx.android.synthetic.main.menu_back_layout.*
+import okhttp3.Route
 import q.rorbin.verticaltablayout.VerticalTabLayout
 import q.rorbin.verticaltablayout.widget.TabView
 
@@ -40,6 +43,27 @@ class SmartSelectDevActivity : BaseActivity(), MyCallback, VerticalTabLayout.OnT
     override fun initView() {
         tv_title.setText(R.string.select_dev)
         startType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
+        if (startType == RouteType.EDIT_MANUAL_TASK_ROUTE ||
+            startType == RouteType.EDIT_AUTOMIC_TASK_ROUTE ||
+            startType == RouteType.EDIT_MANUAL_TASK_DETAIL_ROUTE ||
+            startType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
+            startType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
+            startType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE    ) {
+
+            var passStr = intent.getStringExtra(CommonField.EDIT_EXTRA)
+            if (!TextUtils.isEmpty(passStr)) {
+                var manualTask = JSON.parseObject(passStr, ManualTask::class.java)
+                if (manualTask != null && (manualTask.type == 0 || manualTask.type == 5)) {  // 设备控制型任务
+                    var intent = Intent(this@SmartSelectDevActivity!!, DeviceModeInfoActivity::class.java)
+                    intent.putExtra(CommonField.EXTRA_DEV_MODES, JSON.toJSONString(manualTask))
+                    intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, startType)
+                    startActivity(intent)
+                    finish()
+                    return
+                }
+            }
+        }
+
         roomList.add(RoomEntity())  // 默认的全部设备
         loadRoomList()
     }
