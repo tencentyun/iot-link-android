@@ -88,7 +88,7 @@ class TimerActivity : BaseActivity() {
             val intent = Intent()
             var manualTask = ManualTask()
             manualTask.type = 4
-            manualTask.devName = getString(R.string.dev_timer)
+            manualTask.aliasName = getString(R.string.dev_timer)
             manualTask.hour = wheel_delay_time_hour.currentItemPosition
             manualTask.min = wheel_delay_time_min.currentItemPosition
             manualTask.pos = editExtra.pos
