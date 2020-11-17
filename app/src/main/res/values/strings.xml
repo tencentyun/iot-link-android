@@ -47,7 +47,9 @@
     <string name="smart_option_1">手动智能</string>
     <string name="smart_option_2">自动智能</string>
     <string name="add_manual_smart">添加手动智能</string>
+    <string name="edit_manual_smart">编辑手动智能</string>
     <string name="add_automic_smart">添加自动智能</string>
+    <string name="edit_automic_smart">编辑自动智能</string>
     <string name="automic">自动</string>
     <string name="manual">手动</string>
     <string name="no_manual_task">暂无手动任务</string>
@@ -90,6 +92,9 @@
     <string name="disselect_all">取消全选</string>
     <string name="at_least_select_one_msg_type">请至少选择一种通知类型</string>
     <string name="equals_str">等于</string>
+    <string name="run_manual_task_success">执行手动智能成功</string>
+    <string name="success_update">修改成功</string>
+
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>

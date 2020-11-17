@@ -35,7 +35,7 @@ class DelayTimeActivity : BaseActivity() {
         tv_ok.setOnClickListener {
             val intent = Intent()
             var manualTask = ManualTask()
-            manualTask.devName = getString(R.string.delay_time)
+            manualTask.aliasName = getString(R.string.delay_time)
             manualTask.hour = wheel_delay_time_hour.currentItemPosition
             manualTask.min = wheel_delay_time_min.currentItemPosition
             manualTask.pos = editExtra.pos
