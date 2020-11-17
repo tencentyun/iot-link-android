@@ -11,4 +11,5 @@ class Automation {
     var desc = "" // x 个设备
     var actions: JSONArray? = null
     var id = ""
+    var sceneListItem: SceneListItem? = null
 }

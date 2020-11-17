@@ -91,6 +91,12 @@ class AddAutoicTaskActivity : BaseActivity() {
                 delayTimeExtra.pos = pos
                 intent.putExtra(CommonField.EDIT_EXTRA, JSON.toJSONString(delayTimeExtra))
                 startActivityForResult(intent, CommonField.EDIT_DELAY_TIME_REQ_CODE)
+            } else if (manualTask!!.type == 0) {
+                var intent = Intent(this@AddAutoicTaskActivity, SmartSelectDevActivity::class.java)
+                manualTask.pos = pos
+                intent.putExtra(CommonField.EDIT_EXTRA, JSON.toJSONString(manualTask))
+                intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.EDIT_AUTOMIC_TASK_ROUTE)
+                startActivity(intent)
             }
         }
 
@@ -317,7 +323,7 @@ class AddAutoicTaskActivity : BaseActivity() {
             if (!TextUtils.isEmpty(devDetailStr)) {
                 var dev = JSON.parseObject(devDetailStr, DeviceEntity::class.java)
                 task.iconUrl = dev.IconUrl
-                task.devName = dev.getAlias()
+//                task.devName = dev.getAlias()
                 task.productId = dev.ProductId
                 task.deviceName = dev.DeviceName
                 task.aliasName = dev.AliasName
@@ -332,6 +338,9 @@ class AddAutoicTaskActivity : BaseActivity() {
             } else if (routeType == RouteType.AUTOMIC_TASK_ROUTE) {
                 task.type = 0
                 manualTasks.add(task)
+            } else if (routeType == RouteType.EDIT_AUTOMIC_TASK_ROUTE) {
+                task.type = 0
+                manualTasks.set(devModeInfos.get(i).pos, task)
             }
         }
 

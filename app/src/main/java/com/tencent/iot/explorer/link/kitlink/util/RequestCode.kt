@@ -118,6 +118,9 @@ object RequestCode {
     const val query_all_manual_task = 8002
     const val create_automic_task = 8003
     const val query_all_automic_task = 8004
+    const val run_manual_task = 8005
+    const val del_manual_task = 8006
+    const val del_automic_task = 8007
 
     /*************场景联动接口结束**************/
 
