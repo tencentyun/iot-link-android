@@ -17,6 +17,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DelayTimeExtra
 import com.tencent.iot.explorer.link.kitlink.entity.DevModeInfo
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
+import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import kotlinx.android.synthetic.main.activity_add_manual_task.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
@@ -57,6 +58,12 @@ class AddManualTaskActivity : BaseActivity() {
                 delayTimeExtra.pos = pos
                 intent.putExtra(CommonField.EDIT_EXTRA, JSON.toJSONString(delayTimeExtra))
                 startActivityForResult(intent, CommonField.EDIT_DELAY_TIME_REQ_CODE)
+            } else if (manualTask!!.type == 0) {  // 编辑设备控制任务
+                var intent = Intent(this@AddManualTaskActivity, SmartSelectDevActivity::class.java)
+                manualTask.pos = pos
+                intent.putExtra(CommonField.EDIT_EXTRA, JSON.toJSONString(manualTask))
+                intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.EDIT_MANUAL_TASK_ROUTE)
+                startActivity(intent)
             }
         }
 
@@ -131,6 +138,7 @@ class AddManualTaskActivity : BaseActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         var str = intent.getStringExtra(CommonField.EXTRA_DEV_MODES)
+        var type = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
         var devModeInfos = JSON.parseArray(str, DevModeInfo::class.java)
         if (devModeInfos == null || devModeInfos.size <= 0) {
             return
@@ -143,15 +151,20 @@ class AddManualTaskActivity : BaseActivity() {
             if (!TextUtils.isEmpty(devDetailStr)) {
                 var dev = JSON.parseObject(devDetailStr, DeviceEntity::class.java)
                 task.iconUrl = dev.IconUrl
-                task.devName = dev.getAlias()
+//                task.devName = dev.getAlias()
                 task.productId = dev.ProductId
                 task.deviceName = dev.DeviceName
+                task.aliasName = dev.AliasName
             }
             task.actionId = devModeInfos.get(i).id
             task.taskTip = devModeInfos.get(i).name
             task.task = devModeInfos.get(i).value
             task.taskKey = devModeInfos.get(i).key
-            manualTasks.add(task)
+            if (type == RouteType.MANUAL_TASK_ROUTE) {
+                manualTasks.add(task)
+            } else {
+                manualTasks.set(devModeInfos.get(i).pos, task)
+            }
         }
 
         adapter?.notifyDataSetChanged()

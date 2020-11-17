@@ -7,4 +7,5 @@ class SceneEntity {
     var sceneIcon = ""
     var familyId = ""
     var actions: JSONArray? = null
+    var sceneId = ""
 }

@@ -132,6 +132,10 @@
         <activity android:name=".kitlink.activity.TimerActivity" />
         <activity android:name=".kitlink.activity.SetSendMsgActivity"/>
         <activity android:name=".kitlink.activity.SelectManualTaskActivity"/>
+        <activity android:name=".kitlink.activity.EditManualTaskActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".kitlink.activity.EditAutoicTaskActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".kitlink.activity.HelpWebViewActivity"
             android:launchMode="singleTop" />
