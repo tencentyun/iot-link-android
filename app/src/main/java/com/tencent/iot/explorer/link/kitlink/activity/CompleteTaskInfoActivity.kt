@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
@@ -22,6 +22,7 @@ import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.entity.SceneEntity
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.Utils
 import kotlinx.android.synthetic.main.activity_complete_task_info.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -94,94 +95,86 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
         automicTaskEntity?.familyId = App.data.getCurrentFamily().FamilyId
         automicTaskEntity?.icon = this.smartPicUrl
         automicTaskEntity?.name = this.smartName
-        if (automicTaskEntity?.tasks != null) {
-            automicTaskEntity?.actionsJson = JSONArray()
-            for (i in 0 until automicTaskEntity?.tasks!!.size) {
+        if (automicTaskEntity?.tasksItem != null) {
+            automicTaskEntity?.actions = JSONArray()
+            for (i in 0 until automicTaskEntity?.tasksItem!!.size) {
                 var taskJson = JSONObject()
-                if (automicTaskEntity?.tasks?.get(i)?.type == 1) {  // 延时任务
+                if (automicTaskEntity?.tasksItem?.get(i)?.type == 1) {  // 延时任务
                     taskJson.put("ActionType", 1)
-                    taskJson.put("Data", automicTaskEntity?.tasks!!.get(i).hour * 60 * 60 + automicTaskEntity?.tasks!!.get(i).min * 60) // 单位是s
+                    taskJson.put("Data", automicTaskEntity?.tasksItem!!.get(i).hour * 60 * 60 + automicTaskEntity?.tasksItem!!.get(i).min * 60) // 单位是s
 
-                } else if (automicTaskEntity?.tasks?.get(i)?.type == 0) {  // 设备控制
+                } else if (automicTaskEntity?.tasksItem?.get(i)?.type == 0) {  // 设备控制
                     taskJson.put("ActionType", 0)
-                    taskJson.put("ProductId", automicTaskEntity?.tasks?.get(i)?.productId)
-                    taskJson.put("DeviceName", automicTaskEntity?.tasks?.get(i)?.deviceName)
-                    taskJson.put("AliasName", automicTaskEntity?.tasks?.get(i)?.aliasName)
-                    taskJson.put("IconUrl", automicTaskEntity?.tasks?.get(i)?.iconUrl)
+                    taskJson.put("ProductId", automicTaskEntity?.tasksItem?.get(i)?.productId)
+                    taskJson.put("DeviceName", automicTaskEntity?.tasksItem?.get(i)?.deviceName)
+                    taskJson.put("AliasName", automicTaskEntity?.tasksItem?.get(i)?.aliasName)
+                    taskJson.put("IconUrl", automicTaskEntity?.tasksItem?.get(i)?.iconUrl)
 
                     var jsonAction = JSONObject()
                     // 存在 key 值的使用 key，不存在 key 的使用 value，进度没有 key，bool 和 enum 存在 key
-                    if (TextUtils.isEmpty(automicTaskEntity?.tasks?.get(i)?.taskKey)) {
-                        jsonAction.put(automicTaskEntity?.tasks?.get(i)?.actionId, automicTaskEntity?.tasks?.get(i)?.task)
+                    if (TextUtils.isEmpty(automicTaskEntity?.tasksItem?.get(i)?.taskKey)) {
+                        jsonAction.put(automicTaskEntity?.tasksItem?.get(i)?.actionId, automicTaskEntity?.tasksItem?.get(i)?.task)
                     } else {
-                        jsonAction.put(automicTaskEntity?.tasks?.get(i)?.actionId, automicTaskEntity?.tasks?.get(i)?.taskKey)
+                        jsonAction.put(automicTaskEntity?.tasksItem?.get(i)?.actionId, automicTaskEntity?.tasksItem?.get(i)?.taskKey)
                     }
                     taskJson.put("Data", jsonAction.toJSONString())
-                } else if (automicTaskEntity?.tasks?.get(i)?.type == 2) {  // 通知
+                } else if (automicTaskEntity?.tasksItem?.get(i)?.type == 2) {  // 通知
                     taskJson.put("ActionType", 3)
-                    taskJson.put("ProductId", automicTaskEntity?.tasks?.get(i)?.productId)
-                    taskJson.put("DeviceName", automicTaskEntity?.tasks?.get(i)?.deviceName)
-                    taskJson.put("AliasName", automicTaskEntity?.tasks?.get(i)?.aliasName)
-                    taskJson.put("IconUrl", automicTaskEntity?.tasks?.get(i)?.iconUrl)
-                    taskJson.put("Data", "测试使用的固定字符串")
+                    taskJson.put("Data", automicTaskEntity?.tasksItem?.get(i)?.notificationType)
 
-                } else if (automicTaskEntity?.tasks?.get(i)?.type == 3) {  // 选择手动
+                } else if (automicTaskEntity?.tasksItem?.get(i)?.type == 3) {  // 选择手动
                     taskJson.put("ActionType", 2)
-//                    taskJson.put("ProductId", automicTaskEntity?.tasks?.get(i)?.productId)
-//                    taskJson.put("DeviceName", automicTaskEntity?.tasks?.get(i)?.deviceName)
-//                    taskJson.put("AliasName", automicTaskEntity?.tasks?.get(i)?.aliasName)
-//                    taskJson.put("IconUrl", automicTaskEntity?.tasks?.get(i)?.iconUrl)
-                    taskJson.put("Data", automicTaskEntity?.tasks?.get(i)?.sceneId)
-
+                    taskJson.put("Data", automicTaskEntity?.tasksItem?.get(i)?.sceneId)
+                    taskJson.put("DeviceName", automicTaskEntity?.tasksItem?.get(i)?.task)
                 }
-                automicTaskEntity?.actionsJson?.add(taskJson)
+                automicTaskEntity?.actions?.add(taskJson)
             }
         }
 
-        if (automicTaskEntity?.conditions != null) {
-            automicTaskEntity?.conditionsJson = JSONArray()
-            for (i in 0 until automicTaskEntity?.conditions!!.size) {
+        if (automicTaskEntity?.conditionsItem != null) {
+            automicTaskEntity?.conditions = JSONArray()
+            for (i in 0 until automicTaskEntity?.conditionsItem!!.size) {
                 var conditionJson = JSONObject()
                 conditionJson.put("CondId", System.currentTimeMillis().toString())
 
-                if (automicTaskEntity?.conditions?.get(i)?.type == 4) {  // 定时
+                if (automicTaskEntity?.conditionsItem?.get(i)?.type == 5) {  // 场景
                     conditionJson.put("CondType", 0)
                     var propertyJson = JSONObject()
-                    propertyJson.put("ProductId", automicTaskEntity?.conditions?.get(i)?.productId)
-                    propertyJson.put("DeviceName", automicTaskEntity?.conditions?.get(i)?.deviceName)
+                    propertyJson.put("ProductId", automicTaskEntity?.conditionsItem?.get(i)?.productId)
+                    propertyJson.put("DeviceName", automicTaskEntity?.conditionsItem?.get(i)?.deviceName)
                     propertyJson.put("Op", "eq")
-                    propertyJson.put("IconUrl", automicTaskEntity?.conditions?.get(i)?.iconUrl)
-                    if (TextUtils.isEmpty(automicTaskEntity?.conditions?.get(i)?.taskKey)) {
-                        propertyJson.put("Value", automicTaskEntity?.conditions?.get(i)?.task)
+                    propertyJson.put("IconUrl", automicTaskEntity?.conditionsItem?.get(i)?.iconUrl)
+                    if (TextUtils.isEmpty(automicTaskEntity?.conditionsItem?.get(i)?.taskKey)) {
+                        propertyJson.put("Value", automicTaskEntity?.conditionsItem?.get(i)?.task)
                     } else {
-                        propertyJson.put("Value", automicTaskEntity?.conditions?.get(i)?.taskKey)
+                        propertyJson.put("Value", automicTaskEntity?.conditionsItem?.get(i)?.taskKey)
                     }
-                    propertyJson.put("AliasName", automicTaskEntity?.conditions?.get(i)?.aliasName)
-                    propertyJson.put("PropertyId", automicTaskEntity?.conditions?.get(i)?.actionId)
+                    propertyJson.put("AliasName", automicTaskEntity?.conditionsItem?.get(i)?.aliasName)
+                    propertyJson.put("PropertyId", automicTaskEntity?.conditionsItem?.get(i)?.actionId)
                     conditionJson.put("Property", propertyJson)
 
-                } else if (automicTaskEntity?.conditions?.get(i)?.type == 5) {  // 场景
+                } else if (automicTaskEntity?.conditionsItem?.get(i)?.type == 4) {  // 定时
                     conditionJson.put("CondType", 1)
                     var timerJson = JSONObject()
                     var dayStr = ""
-                    if (automicTaskEntity?.conditions?.get(i)?.workDayType == 0) {
+                    if (automicTaskEntity?.conditionsItem?.get(i)?.workDayType == 0) {
                         dayStr = "0000000"
-                    } else if (automicTaskEntity?.conditions?.get(i)?.workDayType == 1) {
+                    } else if (automicTaskEntity?.conditionsItem?.get(i)?.workDayType == 1) {
                         dayStr = "1111111"
-                    } else if (automicTaskEntity?.conditions?.get(i)?.workDayType == 2) {
+                    } else if (automicTaskEntity?.conditionsItem?.get(i)?.workDayType == 2) {
                         dayStr = "0111110"
-                    } else if (automicTaskEntity?.conditions?.get(i)?.workDayType == 3) {
+                    } else if (automicTaskEntity?.conditionsItem?.get(i)?.workDayType == 3) {
                         dayStr = "1000001"
                     } else {
-                        dayStr = automicTaskEntity?.conditions?.get(i)?.workDays!!
+                        dayStr = automicTaskEntity?.conditionsItem?.get(i)?.workDays!!
                     }
                     timerJson.put("Days", dayStr)
-                    var time = String.format("%02d:%02d", automicTaskEntity?.conditions?.get(i)?.hour,
-                        automicTaskEntity?.conditions?.get(i)?.min)
+                    var time = String.format("%02d:%02d", automicTaskEntity?.conditionsItem?.get(i)?.hour,
+                        automicTaskEntity?.conditionsItem?.get(i)?.min)
                     timerJson.put("TimePoint", time)
                     conditionJson.put("Timer", timerJson)
                 }
-                automicTaskEntity?.conditionsJson?.add(conditionJson)
+                automicTaskEntity?.conditions?.add(conditionJson)
             }
         }
 
@@ -263,6 +256,7 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
             Thread {
                 Thread.sleep(1000)
                 handler.post {
+                    Utils.sendRefreshBroadcast(this@CompleteTaskInfoActivity)
                     dialog.dismiss()
                     jumpActivity(MainActivity::class.java)
                 }

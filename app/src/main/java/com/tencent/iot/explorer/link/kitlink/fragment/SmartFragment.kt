@@ -56,6 +56,7 @@ class SmartFragment : BaseFragment(), View.OnClickListener {
 
     private fun setListener() {
         fragment_pager.setOnPageChangeListener(pageSelectListener)
+        fragment_pager.setPagingEnabled(false)
         tv_login_now_btn.setOnClickListener(this)
         iv_right_btn.setOnClickListener(this)
 
