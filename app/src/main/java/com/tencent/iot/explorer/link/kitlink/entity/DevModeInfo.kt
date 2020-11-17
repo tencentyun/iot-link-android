@@ -11,4 +11,5 @@ class DevModeInfo {
     var required = false
     var mode = ""
     var define: JSONObject? = null
+    var pos = 0
 }

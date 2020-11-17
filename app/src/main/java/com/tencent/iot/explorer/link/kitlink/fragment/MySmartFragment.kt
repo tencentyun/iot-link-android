@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
+import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import android.view.View
@@ -16,7 +17,9 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.kitlink.activity.AddAutoicTaskActivity
 import com.tencent.iot.explorer.link.kitlink.activity.AddManualTaskActivity
+import com.tencent.iot.explorer.link.kitlink.activity.EditManualTaskActivity
 import com.tencent.iot.explorer.link.kitlink.adapter.IntelligenceAdapter
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.Automation
 import com.tencent.iot.explorer.link.kitlink.response.AutomationListResponse
 import com.tencent.iot.explorer.link.kitlink.response.SceneListResponse
@@ -76,8 +79,66 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
     }
 
     private var onItemClicked = object: IntelligenceAdapter.OnItemClicked {
-        override fun onItemClicked(automation: Automation?) {
+        override fun onSwitchStatus(postion: Int, isChecked: Boolean, automation: Automation?) {
 
+        }
+
+        override fun onItemClicked(automation: Automation?) {
+            var intent = Intent(context, EditManualTaskActivity::class.java)
+            intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(automation))
+            startActivity(intent)
+        }
+
+        override fun onRunTaskClicked(automation: Automation?) {
+            if (automation!!.type == 0) {
+                HttpRequest.instance.runManualTask(automation!!.id, this@MySmartFragment)
+            }
+        }
+
+        override fun onItemDeleteClicked(postion: Int, automation: Automation?) {
+            if (automation!!.type == 0) {
+                HttpRequest.instance.delManualTask(automation!!.id, object: MyCallback{
+                    override fun fail(msg: String?, reqCode: Int) {
+                        T.show(msg)
+                    }
+
+                    override fun success(response: BaseResponse, reqCode: Int) {
+                        when(reqCode) {
+                            RequestCode.del_manual_task -> {
+                                if (response.code == 0) {
+                                    T.show(getString(R.string.delete_success))
+                                    adapter?.removeItem(postion);
+                                    adapter?.notifyDataSetChanged();
+                                } else {
+                                    T.show(response.msg)
+                                }
+                            }
+                        }
+                    }
+
+                })
+            } else if (automation!!.type == 1) {
+                HttpRequest.instance.delAutomicTask(automation!!.id, object: MyCallback{
+                    override fun fail(msg: String?, reqCode: Int) {
+                        T.show(msg)
+                    }
+
+                    override fun success(response: BaseResponse, reqCode: Int) {
+                        when(reqCode) {
+                            RequestCode.del_automic_task -> {
+                                if (response.code == 0) {
+                                    T.show(getString(R.string.delete_success))
+                                    adapter?.removeItem(postion);
+                                    adapter?.notifyDataSetChanged();
+                                } else {
+                                    T.show(response.msg)
+                                }
+                            }
+                        }
+                    }
+
+                })
+            }
         }
     }
 
@@ -137,6 +198,13 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
     override fun success(response: BaseResponse, reqCode: Int) {
         when(reqCode) {
+            RequestCode.run_manual_task -> {
+                if (response.code == 0) {
+                    T.show(getString(R.string.run_manual_task_success))
+                } else {
+                    T.show(response.msg)
+                }
+            }
             RequestCode.query_all_automic_task -> {
                 if (response.code == 0) {
                     var automationListResponse = JSON.parseObject(response.data.toString(), AutomationListResponse::class.java)
@@ -146,7 +214,8 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             automation.type = 1
                             automation.Icon = automationListResponse.List.get(i).Icon
                             automation.Name = automationListResponse.List.get(i).Name
-//                            automation.actions = automationListResponse.List.get(i).Actions
+                            automation.id = automationListResponse.List.get(i).AutomationId
+
                             automicList.add(automation)
                             automicListLoadOver = true
                             Log.e("XXX", "bbbbbbb")
@@ -166,6 +235,8 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             automation.Icon = sceneListResponse.SceneList.get(i).SceneIcon
                             automation.Name = sceneListResponse.SceneList.get(i).SceneName
                             automation.actions = sceneListResponse.SceneList.get(i).Actions
+                            automation.id = sceneListResponse.SceneList.get(i).SceneId
+                            automation.sceneListItem = sceneListResponse.SceneList.get(i)
                             manualList.add(automation)
                         }
                         if (manualList.size < sceneListResponse.Total) {
@@ -173,10 +244,8 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             HttpRequest.instance.queryManualTask(App.data.getCurrentFamily().FamilyId, manualListOffset, this)
                         } else {
                             manualListLoadOver = true
-                            Log.e("XXX", "aaaaaa")
                             loadDataOver()
                         }
-
                     }
                 } else {
                     T.show(response.msg)
