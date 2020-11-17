@@ -1338,15 +1338,24 @@ class HttpRequest private constructor() {
         tokenPost(param, callback, RequestCode.create_manual_task)
     }
 
+    fun updateManualTask(sceneEntity: SceneEntity, callback: MyCallback) {
+        val param = tokenParams("AppModifyScene")
+        param["SceneName"] = sceneEntity.sceneName
+        param["SceneIcon"] = sceneEntity.sceneIcon
+        param["Actions"] = sceneEntity.actions!!
+        param["SceneId"] = sceneEntity.sceneId
+        tokenPost(param, callback, RequestCode.update_manual_task)
+    }
+
     fun createAutomicTask(automicTaskEntity: AutomicTaskEntity, callback: MyCallback) {
         val param = tokenParams("AppCreateAutomation")
         param["Name"] = automicTaskEntity.name
         param["Icon"] = automicTaskEntity.icon
         param["FamilyId"] = automicTaskEntity.familyId
-        param["Actions"] = automicTaskEntity.actionsJson!!
+        param["Actions"] = automicTaskEntity.actions!!
         param["Status"] = automicTaskEntity.status
         param["MatchType"] = automicTaskEntity.matchType
-        param["Conditions"] = automicTaskEntity.conditionsJson!!
+        param["Conditions"] = automicTaskEntity.conditions!!
         param["EffectiveBeginTime"] = String.format("%02d:%02d", automicTaskEntity.workTimeMode.startTimeHour,
             automicTaskEntity.workTimeMode.startTimerMin)
         param["EffectiveEndTime"] = String.format("%02d:%02d", automicTaskEntity.workTimeMode.endTimeHour,
@@ -1361,8 +1370,35 @@ class HttpRequest private constructor() {
             param["EffectiveDays"] = "1000001"
         }
 
-        Log.e("XXX", "param \n" + JSON.toJSONString(param))
+        Log.e("XXX", "----------> \n" + JSON.toJSONString(param))
         tokenPost(param, callback, RequestCode.create_automic_task)
+    }
+
+    fun updateAutomicTask(automicTaskEntity: AutomicTaskEntity, callback: MyCallback) {
+        val param = tokenParams("AppModifyAutomation")
+        param["Name"] = automicTaskEntity.name
+        param["Icon"] = automicTaskEntity.icon
+        param["AutomationId"] = automicTaskEntity.automationId
+        param["Actions"] = automicTaskEntity.actions!!
+        param["Status"] = automicTaskEntity.status
+//        param["FamilyId"] = automicTaskEntity.familyId
+        param["MatchType"] = automicTaskEntity.matchType
+        param["Conditions"] = automicTaskEntity.conditions!!
+        param["EffectiveBeginTime"] = String.format("%02d:%02d", automicTaskEntity.workTimeMode.startTimeHour,
+            automicTaskEntity.workTimeMode.startTimerMin)
+        param["EffectiveEndTime"] = String.format("%02d:%02d", automicTaskEntity.workTimeMode.endTimeHour,
+            automicTaskEntity.workTimeMode.endTimeMin)
+        if (automicTaskEntity.workTimeMode.workDayType == 3) {
+            param["EffectiveDays"] = automicTaskEntity.workTimeMode.workDays
+        } else if (automicTaskEntity.workTimeMode.workDayType == 2) {
+            param["EffectiveDays"] = "1111111"
+        } else if (automicTaskEntity.workTimeMode.workDayType == 1) {
+            param["EffectiveDays"] = "0111110"
+        } else if (automicTaskEntity.workTimeMode.workDayType == 0) {
+            param["EffectiveDays"] = "1000001"
+        }
+
+        tokenPost(param, callback, RequestCode.update_automic_task)
     }
 
     fun queryAutomicTask(familyId: String, callback: MyCallback) {
@@ -1377,6 +1413,38 @@ class HttpRequest private constructor() {
         param["Offset"] = offset
         param["Limit"] = 999
         tokenPost(param, callback, RequestCode.query_all_manual_task)
+    }
+
+    fun runManualTask(sceneId: String, callback: MyCallback) {
+        val param = tokenParams("AppRunScene")
+        param["SceneId"] = sceneId
+        tokenPost(param, callback, RequestCode.run_manual_task)
+    }
+
+    fun delManualTask(sceneId: String, callback: MyCallback) {
+        val param = tokenParams("AppDeleteScene")
+        param["SceneId"] = sceneId
+        tokenPost(param, callback, RequestCode.del_manual_task)
+    }
+
+    fun delAutomicTask(automationId: String, callback: MyCallback) {
+        val param = tokenParams("AppDeleteAutomation")
+        param["AutomationId"] = automationId
+        tokenPost(param, callback, RequestCode.del_automic_task)
+    }
+
+    fun getAutomicTaskDetail(automationId: String, callback: MyCallback) {
+        val param = tokenParams("AppDescribeAutomation")
+        param["AutomationId"] = automationId
+        tokenPost(param, callback, RequestCode.get_automic_task_detail)
+    }
+
+    // status 0:开启 1:关闭
+    fun updateAutomicTaskStatus(automationId: String, status: Int, callback: MyCallback) {
+        val param = tokenParams("AppModifyAutomationStatus")
+        param["AutomationId"] = automationId
+        param["Status"] = status
+        tokenPost(param, callback, RequestCode.update_automic_task_status)
     }
     /****************************************   场景联动接口结束   *******************************************************/
 
