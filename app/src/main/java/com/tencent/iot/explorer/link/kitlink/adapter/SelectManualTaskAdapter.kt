@@ -21,9 +21,14 @@ import kotlin.collections.HashSet
 class SelectManualTaskAdapter(list: MutableList<Automation>) : RecyclerView.Adapter<SelectManualTaskAdapter.ViewHolder>() {
     var list: MutableList<Automation> = LinkedList()
     var index: MutableSet<Int> = HashSet()
+    var singleCheck = false
 
     init {
         this.list = list
+    }
+
+    constructor(list: MutableList<Automation>, singleCheck: Boolean): this(list) {
+        this.singleCheck = singleCheck
     }
 
     class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
@@ -41,9 +46,14 @@ class SelectManualTaskAdapter(list: MutableList<Automation>) : RecyclerView.Adap
         val holder = ViewHolder(view)
         view.setOnClickListener {
             val position = holder.adapterPosition
-            if (index.contains(position)) {
-                index.remove(position)
+            if (!singleCheck) {
+                if (index.contains(position)) {
+                    index.remove(position)
+                } else {
+                    index.add(position)
+                }
             } else {
+                index.clear()
                 index.add(position)
             }
             this@SelectManualTaskAdapter.notifyDataSetChanged()
