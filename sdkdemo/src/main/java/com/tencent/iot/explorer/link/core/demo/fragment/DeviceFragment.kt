@@ -1,8 +1,10 @@
 package com.tencent.iot.explorer.link.core.demo.fragment
 
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ToastUtils
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.DeviceCallback
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
@@ -10,18 +12,21 @@ import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.FamilyListResponse
 import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
-import com.tencent.iot.explorer.link.core.demo.adapter.DeviceAdapter
-import com.tencent.iot.explorer.link.core.demo.adapter.FamilyAdapter
-import com.tencent.iot.explorer.link.core.demo.adapter.RoomAdapter
-import com.tencent.iot.explorer.link.core.auth.response.FamilyListResponse
 import com.tencent.iot.explorer.link.core.demo.activity.AddDeviceActivity
 import com.tencent.iot.explorer.link.core.demo.activity.ControlPanelActivity
+import com.tencent.iot.explorer.link.core.demo.adapter.DeviceAdapter
+import com.tencent.iot.explorer.link.core.demo.adapter.FamilyAdapter
 import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.adapter.RoomAdapter
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.trtc.TRTCMainActivity
 import com.tencent.iot.explorer.link.core.demo.view.MyDivider
+import com.tencent.liteav.login.model.ProfileManager
+import com.tencent.liteav.login.ui.LoginActivity
 import kotlinx.android.synthetic.main.fragment_device.*
 
 class DeviceFragment : BaseFragment(), MyCallback {
@@ -60,6 +65,9 @@ class DeviceFragment : BaseFragment(), MyCallback {
     }
 
     private fun setListener() {
+        tv_trtc.setOnClickListener {
+            login()
+        }
         tv_add_device.setOnClickListener {
             jumpActivity(AddDeviceActivity::class.java)
         }
@@ -136,6 +144,17 @@ class DeviceFragment : BaseFragment(), MyCallback {
                     }
                 })
         }
+    }
+
+    private fun login() {
+        val userId: String = "2627"//warning test
+        ProfileManager.getInstance().login(userId, "", object : ProfileManager.ActionCallback {
+            override fun onSuccess() {
+                jumpActivity(TRTCMainActivity::class.java)
+            }
+
+            override fun onFailed(code: Int, msg: String) {}
+        })
     }
 
     private fun showFamily() {
