@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tencent.iot.explorer.link.core.demo.trtc.TRTCMainActivity">
+
+    <include layout="@layout/menu_back_layout"
+        android:id="@+id/menu_add_device"/>
+
+    <TextView
+        android:id="@+id/tv_audio_call"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingStart="48dp"
+        android:paddingEnd="48dp"
+        android:text="语音呼叫"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menu_add_device" />
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="13dp"
+        android:rotation="180"
+        android:src="@mipmap/icon_back"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_audio_call"
+        app:layout_constraintRight_toRightOf="@+id/tv_audio_call"
+        app:layout_constraintTop_toTopOf="@+id/tv_audio_call" />
+
+    <TextView
+        android:id="@+id/tv_video_call"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingStart="48dp"
+        android:paddingEnd="48dp"
+        android:text="视频呼叫"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_audio_call" />
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="13dp"
+        android:rotation="180"
+        android:src="@mipmap/icon_back"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_video_call"
+        app:layout_constraintRight_toRightOf="@+id/tv_video_call"
+        app:layout_constraintTop_toTopOf="@+id/tv_video_call" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
