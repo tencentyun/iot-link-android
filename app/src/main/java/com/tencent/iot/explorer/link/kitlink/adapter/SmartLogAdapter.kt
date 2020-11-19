@@ -11,14 +11,12 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.chauthai.swipereveallayout.SwipeRevealLayout
-import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.entity.LogMessage
-import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
-import kotlinx.android.synthetic.main.activity_complete_task_info.*
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest.Companion.instance
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import java.util.*
 
 class SmartLogAdapter(context: Context, list: MutableList<LogMessage>) : RecyclerView.Adapter<SmartLogAdapter.ViewHolder>() {
@@ -99,10 +97,20 @@ class SmartLogAdapter(context: Context, list: MutableList<LogMessage>) : Recycle
             if (list.get(position).resultCode != 0 && holder.moreInfo.visibility == View.VISIBLE) {
                 holder.moreBtn.rotation = -90F
                 holder.moreInfo.visibility = View.GONE
+                list.get(position).opened = false
             } else if (list.get(position).resultCode != 0 && holder.moreInfo.visibility == View.GONE) {
                 holder.moreBtn.rotation = 90F
                 holder.moreInfo.visibility = View.VISIBLE
+                list.get(position).opened = true
             }
+        }
+
+        if (list.get(position).opened) {
+            holder.moreBtn.rotation = 90F
+            holder.moreInfo.visibility = View.VISIBLE
+        } else {
+            holder.moreInfo.visibility = View.GONE
+            holder.moreBtn.rotation = -90F
         }
     }
 

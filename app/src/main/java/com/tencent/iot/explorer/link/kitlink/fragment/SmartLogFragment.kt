@@ -56,6 +56,7 @@ class SmartLogFragment() : BaseFragment(), MyCallback {
         log_refreshLayout.setRefreshFooter(ClassicsFooter(context))
         log_refreshLayout.setOnRefreshListener(onRefreshListener)
         log_refreshLayout.setOnLoadMoreListener(onLoadMoreListener)
+        reloadData()
     }
 
     private var onRefreshListener = OnRefreshListener {
