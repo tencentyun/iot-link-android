@@ -66,6 +66,7 @@ class HttpRequest private constructor() {
         val param = HashMap<String, Any>()
         param["lang"] = Utils.getLang()
         param["Platform"] = "android"
+        param["Agent"] = "android"
 //        param["AppID"] = T.getContext().applicationInfo.packageName
         return param
     }
