@@ -987,10 +987,11 @@ class HttpRequest private constructor() {
     /**
      * 获取设备详情
      */
-    fun getDeviceInfo(productId: String, deviceName: String, callback: MyCallback) {
+    fun getDeviceInfo(productId: String, deviceName: String, familyId: String, callback: MyCallback) {
         val param = tokenParams("AppGetDeviceInFamily")
         param["ProductId"] = productId
         param["DeviceName"] = deviceName
+        param["FamilyId"] = familyId
         tokenPost(param, callback, RequestCode.get_device_info)
     }
 
