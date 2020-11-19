@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/title_layout"
+        >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_day"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="@dimen/ts_24"
+        />
+
+    <TextView
+        android:id="@+id/tv_mouth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/ts_14"
+        app:layout_constraintBottom_toBottomOf="@id/tv_day"
+        app:layout_constraintStart_toEndOf="@id/tv_day"
+        android:layout_marginLeft="5dp"
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title_layout"
+        >
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/iv_status"
+            app:layout_constraintEnd_toEndOf="@id/iv_status"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/gray_c2c5cc"
+            />
+
+        <ImageView
+            android:id="@+id/iv_status"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_task_name"
+            app:layout_constraintBottom_toBottomOf="@id/tv_task_name"
+            android:src="@mipmap/right"
+            />
+
+        <ImageView
+            android:id="@+id/iv_more"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="20dp"
+            android:rotation="-90"
+            android:src="@mipmap/icon_arrow"
+            app:layout_constraintBottom_toBottomOf="@id/iv_status"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_status" />
+
+        <TextView
+            android:id="@+id/tv_task_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/iv_more"
+            app:layout_constraintStart_toEndOf="@id/iv_status"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="@dimen/ts_18"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/tv_task_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_task_name"
+            android:textSize="@dimen/ts_14"
+            app:layout_constraintEnd_toStartOf="@+id/iv_more"
+            android:id="@+id/tv_run_desc"
+            android:layout_marginTop="5dp"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/tv_task_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_run_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/more_layout"
+            >
+
+            <View
+                android:id="@+id/v_space"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@color/gray_c2c5cc"
+                />
+
+            <com.tencent.iot.explorer.link.customview.FullListView
+                android:id="@+id/lv_failed_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:paddingTop="3dp"
+                android:listSelector="@android:color/transparent"
+                app:layout_constraintTop_toBottomOf="@id/v_space"
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/more_layout"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

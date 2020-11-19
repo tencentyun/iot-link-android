@@ -525,6 +525,7 @@
     <string name="unit_h">小时</string>
     <string name="unit_m_single">分</string>
     <string name="unit_h_single">时</string>
+    <string name="unit_mouth">月</string>
     <string name="load_image_failed_please_reload">图片加载错误，请重新选择图片</string>
     <string name="clip_image_failed_please_reclip">图片裁剪异常，请重新选择图片</string>
     <string name="sdcard_not_detected">未检测到SD卡</string>
