@@ -33,6 +33,7 @@ import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.fragment_my_smart.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * 我的智能
@@ -42,9 +43,8 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
     private var addDialog: ListOptionsDialog? = null
     private var options = ArrayList<String>()
     private var adapter: IntelligenceAdapter? = null
-    private var automicList: MutableList<Automation> = ArrayList()
-    private var manualList: MutableList<Automation> = ArrayList()
-    private var handler: Handler = Handler()
+    private var automicList: MutableList<Automation> = CopyOnWriteArrayList()
+    private var manualList: MutableList<Automation> = CopyOnWriteArrayList()
     private var manualListOffset = 0
     private var automicListOffset = 0
     @Volatile
@@ -71,10 +71,8 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
         adapter = IntelligenceAdapter()
         adapter?.setOnItemClicked(onItemClicked)
         lv_all_smart.setAdapter(adapter)
-
-        //下拉刷新及上拉加载
-        smart_refreshLayout.setEnableRefresh(true)  // 禁止上拉刷新
-        smart_refreshLayout.setRefreshHeader(ClassicsHeader(context)) //https://github.com/scwang90/SmartRefreshLayout
+        smart_refreshLayout.setEnableRefresh(true)
+        smart_refreshLayout.setRefreshHeader(ClassicsHeader(context))
         smart_refreshLayout.setEnableLoadMore(false)
         smart_refreshLayout.setRefreshFooter(ClassicsFooter(context))
         smart_refreshLayout.setOnRefreshListener(onRefreshListener)
@@ -95,8 +93,6 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                 Log.e("XXX", "refreshTag " + refreshTag)
                 if (refreshTag != 0){
                     loadAlldata()
-                } else {
-
                 }
             }
         }
@@ -105,7 +101,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
     private var onItemClicked = object: IntelligenceAdapter.OnItemClicked {
         override fun onSwitchStatus(postion: Int, isChecked: Boolean, automation: Automation?) {
-            if (!isChecked) {//updateAutomicTaskStatus
+            if (!isChecked) {
                 switchStatus(automation!!.id, 1, postion)
             } else {
                 switchStatus(automation!!.id, 0, postion)
@@ -214,7 +210,6 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                     }
                 }
             }
-
         })
     }
 
@@ -229,18 +224,6 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
             jumpActivity(AddManualTaskActivity::class.java)
         } else if (it == 1) {
             jumpActivity(AddAutoicTaskActivity::class.java)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        loadAlldata()
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-
         }
     }
 
@@ -270,6 +253,17 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
     override fun fail(msg: String?, reqCode: Int) {
         T.show(msg)
+        when(reqCode) {
+            RequestCode.query_all_automic_task -> {
+                automicListLoadOver = true
+                loadDataOver()
+            }
+            RequestCode.query_all_manual_task -> {
+                manualList.clear()
+                manualListLoadOver = true
+                loadDataOver()
+            }
+        }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
@@ -281,6 +275,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                     T.show(response.msg)
                 }
             }
+
             RequestCode.query_all_automic_task -> {
                 if (response.code == 0) {
                     var automationListResponse = JSON.parseObject(response.data.toString(), AutomationListResponse::class.java)
@@ -292,16 +287,18 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             automation.Name = automationListResponse.List.get(i).Name
                             automation.id = automationListResponse.List.get(i).AutomationId
                             automicList.add(automation)
-                            automicListLoadOver = true
-                            loadDataOver()
                         }
                     }
                 }
+
+                // 自动智能列表没有分页，只要查询有结果就结束刷新
+                automicListLoadOver = true
+                loadDataOver()
             }
 
             RequestCode.query_all_manual_task -> {
                 if (response.code == 0) {
-                    Log.e("XXX", "resp.data " + response.data)
+
                     var sceneListResponse = JSON.parseObject(response.data.toString(), SceneListResponse::class.java)
                     if (sceneListResponse.SceneList != null && sceneListResponse.SceneList.size > 0) {
                         for (i in 0 until sceneListResponse.SceneList.size) {
@@ -313,10 +310,12 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             automation.sceneListItem = sceneListResponse.SceneList.get(i)
                             manualList.add(automation)
                         }
+
+                        //手动智能是分页查询，还有数据继续调用查询接口
                         if (manualList.size < sceneListResponse.Total) {
                             manualListOffset = manualList.size
                             HttpRequest.instance.queryManualTask(App.data.getCurrentFamily().FamilyId, manualListOffset, this)
-                        } else {
+                        } else {    //查询到没有数据开始刷新界面
                             manualListLoadOver = true
                             loadDataOver()
                         }
