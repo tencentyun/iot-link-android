@@ -59,11 +59,10 @@ object CommonField {
     const val EXTRA_ALL_MANUAL_TASK = "allManualTask"
     const val EXTRA_ALL_AUTOMIC_TASK = "allAutomicTask"
     const val EXTRA_ROUTE_TYPE = "routeType"
+    const val EXTRA_SINGLE_CHECK = "singleCheck"
     const val EXTRA_SEND_MSG = "sendMsgType"
     const val EXTRA_ADD_MANUAL_TASK = "addManualTask"
     const val EXTRA_REFRESH = "refreshTag"
-
-
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
@@ -153,6 +152,8 @@ object CommonField {
     const val ADD_SEND_MSG_REQ_CODE = 0x1106
     const val ADD_MANUAL_TASK_REQ_CODE = 0x1107
     const val EDIT_TIMER_REQ_CODE = 0x1108
+    const val EDIT_MANUAL_TASK_REQ_CODE = 0x1109
+
 
     const val SSID_UNKNOWN = "<unknown ssid>"
     const val EXTRA_TITLE = "title"
