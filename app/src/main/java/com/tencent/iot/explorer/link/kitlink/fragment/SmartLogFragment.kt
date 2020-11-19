@@ -95,8 +95,12 @@ class SmartLogFragment() : BaseFragment(), MyCallback {
                     for (i in 0 until logResponesData.msgs!!.size) {
                         logs.add(logResponesData.msgs!!.get(i))
                     }
-                    msgId = logs.get(logs.lastIndex).msgId
-                    adapter?.notifyDataSetChanged()
+
+                    // 存在数据集的时候，更新最后的一条的消息 ID
+                    if (logs.size > 0) {
+                        msgId = logs.get(logs.lastIndex).msgId
+                        adapter?.notifyDataSetChanged()
+                    }
                 } else {
                     log_refreshLayout.finishRefresh()
                     log_refreshLayout.finishLoadMore()
