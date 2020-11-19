@@ -125,6 +125,7 @@ object RequestCode {
     const val get_automic_task_detail = 8009
     const val update_automic_task_status = 8010
     const val update_automic_task = 8011
+    const val get_run_task_log = 8012
 
 
     /*************场景联动接口结束**************/
