@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
+import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
@@ -26,6 +28,8 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
     private var manualListOffset = 0
     private var manualList: MutableList<Automation> = ArrayList()
     private var adapter: SelectManualTaskAdapter? = null
+    private var singleCheck = false // 0 多选  1 单选
+    private var passManualTask: ManualTask? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_select_manual_task
@@ -34,8 +38,17 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
     override fun initView() {
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.select_manual_smart)
+        singleCheck = intent.getBooleanExtra(CommonField.EXTRA_SINGLE_CHECK, false)
 
-        adapter = SelectManualTaskAdapter(manualList)
+        if (!singleCheck) {
+            adapter = SelectManualTaskAdapter(manualList)
+        } else {
+            tv_select_all_btn.visibility = View.GONE
+            adapter = SelectManualTaskAdapter(manualList, singleCheck)
+            var extraStr = intent.getStringExtra(CommonField.EDIT_EXTRA)
+            passManualTask = JSON.parseObject(extraStr, ManualTask::class.java)
+            Log.e("XXX", "passManualTask " + JSON.toJSONString(passManualTask))
+        }
         adapter?.setOnItemClicked(onItemClicked)
         val layoutManager = LinearLayoutManager(this)
         lv_manual_task.setLayoutManager(layoutManager)
@@ -85,6 +98,12 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
                 manualTask.aliasName = getString(R.string.sel_manual_task)
                 manualTask.task = tmp.Name
                 manualTask.sceneId = tmp.id
+                Log.e("XXX", "------------- 1")
+                if (singleCheck) {
+                    Log.e("XXX", "------------- 2 passManualTask!!.pos " + passManualTask!!.pos)
+                    Log.e("XXX", "------------- 2 manualTask.pos " + manualTask.pos)
+                    manualTask.pos = passManualTask!!.pos
+                }
                 retList.add(manualTask)
             }
             intent.putExtra(CommonField.EXTRA_ADD_MANUAL_TASK, JSON.toJSONString(retList))
@@ -127,6 +146,14 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
     }
 
     private fun loadDataOver() {
+        if (singleCheck) {
+            for (i in 0 until manualList.size) {
+                if (passManualTask!!.sceneId == manualList.get(i).id) {
+                    adapter?.index = hashSetOf(i)
+                    break
+                }
+            }
+        }
         adapter?.notifyDataSetChanged()
     }
 
