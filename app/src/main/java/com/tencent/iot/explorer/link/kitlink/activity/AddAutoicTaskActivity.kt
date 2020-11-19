@@ -103,6 +103,12 @@ class AddAutoicTaskActivity : BaseActivity() {
                 intent.putExtra(CommonField.EDIT_EXTRA, JSON.toJSONString(manualTask))
                 intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.EDIT_AUTOMIC_TASK_ROUTE)
                 startActivity(intent)
+            } else if (manualTask!!.type == 3) {
+                var intent = Intent(this@AddAutoicTaskActivity, SelectManualTaskActivity::class.java)
+                manualTask.pos = pos
+                intent.putExtra(CommonField.EDIT_EXTRA, JSON.toJSONString(manualTask))
+                intent.putExtra(CommonField.EXTRA_SINGLE_CHECK, true)
+                startActivityForResult(intent, CommonField.EDIT_MANUAL_TASK_REQ_CODE)
             }
         }
 
@@ -274,8 +280,8 @@ class AddAutoicTaskActivity : BaseActivity() {
             manualTasks.add(task)
         } else if (requestCode == CommonField.ADD_MANUAL_TASK_REQ_CODE &&
             resultCode == Activity.RESULT_OK && data != null) {
-            var delayTaskStr = data?.getStringExtra(CommonField.EXTRA_ADD_MANUAL_TASK)
-            var tasks = JSON.parseArray(delayTaskStr, ManualTask::class.java)
+            var manualTaskStr = data?.getStringExtra(CommonField.EXTRA_ADD_MANUAL_TASK)
+            var tasks = JSON.parseArray(manualTaskStr, ManualTask::class.java)
             manualTasks.addAll(tasks)
         } else if (CommonField.EDIT_TIMER_REQ_CODE == requestCode &&
             resultCode == Activity.RESULT_OK && data != null) {
@@ -291,6 +297,13 @@ class AddAutoicTaskActivity : BaseActivity() {
             var timerTaskStr = data?.getStringExtra(CommonField.TIMER_TASK)
             var task = JSON.parseObject(timerTaskStr, ManualTask::class.java)
             manualConditions.add(task)
+        } else if (CommonField.EDIT_MANUAL_TASK_REQ_CODE == requestCode &&
+            resultCode == Activity.RESULT_OK && data != null) {
+            var manualTaskStr = data?.getStringExtra(CommonField.EXTRA_ADD_MANUAL_TASK)
+            var tasks = JSON.parseArray(manualTaskStr, ManualTask::class.java)
+            for (ele in tasks) {
+                manualTasks.set(ele.pos, ele)
+            }
         }
 
         conditionAdapter?.notifyDataSetChanged()

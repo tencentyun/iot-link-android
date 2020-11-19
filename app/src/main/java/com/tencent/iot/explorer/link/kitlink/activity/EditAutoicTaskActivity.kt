@@ -174,6 +174,12 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                 intent.putExtra(CommonField.EDIT_EXTRA, JSON.toJSONString(manualTask))
                 intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE)
                 startActivity(intent)
+            } else if (manualTask!!.type == 3) {
+                var intent = Intent(this@EditAutoicTaskActivity, SelectManualTaskActivity::class.java)
+                manualTask.pos = pos
+                intent.putExtra(CommonField.EDIT_EXTRA, JSON.toJSONString(manualTask))
+                intent.putExtra(CommonField.EXTRA_SINGLE_CHECK, true)
+                startActivityForResult(intent, CommonField.EDIT_MANUAL_TASK_REQ_CODE)
             }
         }
 
@@ -469,6 +475,14 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
             var timerTaskStr = data?.getStringExtra(CommonField.TIMER_TASK)
             var task = JSON.parseObject(timerTaskStr, ManualTask::class.java)
             manualConditions.add(task)
+
+        } else if (CommonField.EDIT_MANUAL_TASK_REQ_CODE == requestCode &&
+            resultCode == Activity.RESULT_OK && data != null) {
+            var manualTaskStr = data?.getStringExtra(CommonField.EXTRA_ADD_MANUAL_TASK)
+            var tasks = JSON.parseArray(manualTaskStr, ManualTask::class.java)
+            for (ele in tasks) {
+                manualTasks.set(ele.pos, ele)
+            }
         }
 
         refreshView()
