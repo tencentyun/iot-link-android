@@ -1446,6 +1446,16 @@ class HttpRequest private constructor() {
         param["Status"] = status
         tokenPost(param, callback, RequestCode.update_automic_task_status)
     }
+
+    fun getTaskRunLog(msgId: String, familyId: String, callback: MyCallback) {
+        val param = tokenParams("AppGetSceneAndAutomationLogs")
+        param["Limit"] = 20
+        param["FamilyId"] = familyId
+        if (!TextUtils.isEmpty(msgId)) {
+            param["MsgId"] = msgId
+        }
+        tokenPost(param, callback, RequestCode.get_run_task_log)
+    }
     /****************************************   场景联动接口结束   *******************************************************/
 
 }
