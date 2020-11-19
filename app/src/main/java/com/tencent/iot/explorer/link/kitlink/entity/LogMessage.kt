@@ -38,4 +38,5 @@ class LogMessage {
     var mouth = ""
     var year = ""
     var time = ""
+    var opened = false
 }
