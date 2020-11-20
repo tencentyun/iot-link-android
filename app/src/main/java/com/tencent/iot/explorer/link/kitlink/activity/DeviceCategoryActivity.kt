@@ -33,6 +33,7 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.kitlink.customview.MyScrollView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
@@ -146,7 +147,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     }
                 }
             }
-            RequestCode.scan_bind_device-> {
+            RequestCode.scan_bind_device, RequestCode.sig_bind_device-> {
                 if (response.isSuccess()) {
                     T.show(getString(R.string.add_sucess)) //添加成功
                     App.data.setRefreshLevel(2)
@@ -234,6 +235,11 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                             productsList.add(productid!!)
                             HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
                         }
+                        contains("hmacsha") && contains(";") -> { //蓝牙签名绑定 的设备
+                            // ${product_id};${device_name};${random};${timestamp};hmacsha256;sign
+                            val deviceInfo = TrtcDeviceInfo(this)
+                            bleSigBindDevice(deviceInfo, "bluetooth_sign")
+                        }
                         else -> {//之前旧版本虚拟设备二维码只有签名
                             bindDevice(this)
                         }
@@ -292,6 +298,14 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
      */
     private fun bindDevice(signature: String) {
         HttpRequest.instance.scanBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId, signature, this)
+    }
+
+    /**
+     * 蓝牙签名绑定设备
+     */
+    private fun bleSigBindDevice(deviceInfo: TrtcDeviceInfo, bindType: String) {
+        HttpRequest.instance.sigBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId,
+            deviceInfo, bindType, this)
     }
 
     private fun generateFragments() : List<Fragment>{
