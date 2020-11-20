@@ -146,7 +146,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     }
                 }
             }
-            RequestCode.scan_bind_device-> {
+            RequestCode.scan_bind_device, RequestCode.sig_bind_device-> {
                 if (response.isSuccess()) {
                     T.show(getString(R.string.add_sucess)) //添加成功
                     App.data.setRefreshLevel(2)
@@ -234,6 +234,14 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                             productsList.add(productid!!)
                             HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
                         }
+                        contains("hmacsha") && contains(";") -> { //蓝牙签名绑定 的设备
+                            // ${product_id};${device_name};${random};${timestamp};hmacsha256;sign
+                            val deviceInfo = this.split(";")
+                            if (deviceInfo.size == 6) {
+                                val deviceId = deviceInfo[0] + "/" + deviceInfo[1]
+                                bleSigBindDevice(deviceId, deviceInfo[2].toLong(), deviceInfo[3], deviceInfo[4], "bluetooth_sign", deviceInfo[5])
+                            }
+                        }
                         else -> {//之前旧版本虚拟设备二维码只有签名
                             bindDevice(this)
                         }
@@ -292,6 +300,15 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
      */
     private fun bindDevice(signature: String) {
         HttpRequest.instance.scanBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId, signature, this)
+    }
+
+    /**
+     * 蓝牙签名绑定设备
+     */
+    private fun bleSigBindDevice(deviceId: String, deviceTimestamp: Long, connId: String,
+                                 signMethod: String, bindType: String, signature: String) {
+        HttpRequest.instance.sigBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId,
+            deviceId, deviceTimestamp, connId, signMethod, bindType, signature, this)
     }
 
     private fun generateFragments() : List<Fragment>{
