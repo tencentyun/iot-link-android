@@ -11,11 +11,13 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.customview.dialog.DevModeSetDialog
 import com.tencent.iot.explorer.link.customview.dialog.KeyBooleanValue
 import com.tencent.iot.explorer.link.kitlink.adapter.DevModeAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
+import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
@@ -37,23 +39,18 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
     }
 
     override fun initView() {
-        tv_title.setText("")
-
+        routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
         var deviceEntityStr = intent.getStringExtra(CommonField.EXTRA_PRODUCT_ID)
         var manualTaskStr = intent.getStringExtra(CommonField.EXTRA_DEV_MODES)
+        deviceEntity = JSON.parseObject(deviceEntityStr, DeviceEntity::class.java)  // 新增依赖的对象
+        manualTask = JSON.parseObject(manualTaskStr, ManualTask::class.java) // 修改依赖的对象
 
-        routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
         adapter = DevModeAdapter(devModes, routeType)
-        // 新增依赖的对象
-        deviceEntity = JSON.parseObject(deviceEntityStr, DeviceEntity::class.java)
-        // 修改依赖的对象
-        manualTask = JSON.parseObject(manualTaskStr, ManualTask::class.java)
-
         val layoutManager = LinearLayoutManager(this)
         lv_dev_mode.setLayoutManager(layoutManager)
         adapter?.setOnItemClicked(onListItemClicked)
         lv_dev_mode.setAdapter(adapter)
-
+        tv_title.setText("")
         loadView()
     }
 
@@ -65,56 +62,63 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
 
     private var onListItemClicked = object : DevModeAdapter.OnItemClicked{
         override fun onItemClicked(pos: Int, devModeInfo: DevModeInfo) {
-            if (devModeInfo.define!!.get("type") == "bool" ||devModeInfo.define!!.get("type") == "enum") {
-
-                var keyBooleanValues = ArrayList<KeyBooleanValue>()
-                var mapJson = devModeInfo.define!!.getJSONObject("mapping")
-
-                var startIndex = -1
-                var i = 0
-                for (key in mapJson.keys) {
-                    var keyBooleanValue = KeyBooleanValue()
-                    keyBooleanValue.key = key
-                    keyBooleanValue.value = mapJson[key].toString()
-                    keyBooleanValues.add(keyBooleanValue)
-                    if (!TextUtils.isEmpty(devModes.get(pos).value) &&
-                        devModes.get(pos).value == keyBooleanValue.value) {  // 当对应界面存在进度值时候，使用存在的进度值做数据
-                        startIndex = i
-                    }
-                    i++
-                }
-                var dialog = DevModeSetDialog(this@DeviceModeInfoActivity, keyBooleanValues, devModeInfo.name, startIndex)
-                dialog.show()
-                dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
-                    override fun onSaveClicked() {
-                        if (dialog.currentIndex >= 0) {
-                            devModes.get(pos).value = keyBooleanValues.get(dialog.currentIndex).value
-                            devModes.get(pos).key = keyBooleanValues.get(dialog.currentIndex).key
-                            adapter?.notifyDataSetChanged()
-                        }
-                    }
-
-                    override fun onCancelClicked() {}
-                })
-
-            } else if (devModeInfo.define!!.get("type") == "int") {
-                var modeInt = JSON.parseObject(devModeInfo.define!!.toJSONString(), ModeInt::class.java)
-                if (!TextUtils.isEmpty(devModes.get(pos).value)) {  // 当对应界面存在进度值时候，使用存在的进度值做数据
-                    modeInt.start = Integer.valueOf(devModes.get(pos).value)
-                }
-                var dialog = DevModeSetDialog(this@DeviceModeInfoActivity, devModeInfo.name, modeInt)
-                dialog.show()
-                dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
-                    override fun onSaveClicked() {
-                        devModes.get(pos).value = dialog.progress.toString()
-                        adapter?.notifyDataSetChanged()
-                    }
-
-                    override fun onCancelClicked() {}
-                })
+            var type = devModeInfo.define!!.get("type")
+            if (type == "bool" || type == "enum") {
+                showMapDialog(pos, devModeInfo)
+            } else if (type == "int" || type == "float") {
+                showNumDialog(pos, devModeInfo)
             }
         }
+    }
 
+    private fun showMapDialog(pos: Int, devModeInfo: DevModeInfo) {
+        var keyBooleanValues = ArrayList<KeyBooleanValue>()
+        var mapJson = devModeInfo.define!!.getJSONObject("mapping")
+
+        var startIndex = -1
+        var i = 0
+        for (key in mapJson.keys) {
+            var keyBooleanValue = KeyBooleanValue()
+            keyBooleanValue.key = key
+            keyBooleanValue.value = mapJson[key].toString()
+            keyBooleanValues.add(keyBooleanValue)
+            if (!TextUtils.isEmpty(devModes.get(pos).value) &&
+                devModes.get(pos).value == keyBooleanValue.value) {  // 当对应界面存在进度值时候，使用存在的进度值做数据
+                startIndex = i
+            }
+            i++
+        }
+        var dialog = DevModeSetDialog(this@DeviceModeInfoActivity, keyBooleanValues, devModeInfo.name, startIndex)
+        dialog.show()
+        dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
+            override fun onSaveClicked() {
+                if (dialog.currentIndex >= 0) {
+                    devModes.get(pos).value = keyBooleanValues.get(dialog.currentIndex).value
+                    devModes.get(pos).key = keyBooleanValues.get(dialog.currentIndex).key
+                    adapter?.notifyDataSetChanged()
+                }
+            }
+
+            override fun onCancelClicked() {}
+        })
+    }
+
+    private fun showNumDialog(pos: Int, devModeInfo: DevModeInfo) {
+        Log.e("XXX", "devModeInfo " + JSON.toJSONString(devModeInfo))
+        var modeInt = JSON.parseObject(devModeInfo.define!!.toJSONString(), ModeInt::class.java)
+        if (!TextUtils.isEmpty(devModes.get(pos).value)) {  // 当对应界面存在进度值时候，使用存在的进度值做数据
+            modeInt.start = Integer.valueOf(devModes.get(pos).value)
+        }
+        var dialog = DevModeSetDialog(this@DeviceModeInfoActivity, devModeInfo.name, modeInt)
+        dialog.show()
+        dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
+            override fun onSaveClicked() {
+                devModes.get(pos).value = dialog.progress.toString()
+                adapter?.notifyDataSetChanged()
+            }
+
+            override fun onCancelClicked() {}
+        })
     }
 
     override fun setListener() {
@@ -164,7 +168,6 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
 
             var products = ArrayList<String>()
             products.add(deviceEntity!!.ProductId)
-//            loadProductConfig(deviceEntity!!.ProductId)
             HttpRequest.instance.deviceProducts(products, this)
             tv_title.setText(deviceEntity!!.getAlias())
 
@@ -202,12 +205,21 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-
+        T.show(msg)
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
         when(reqCode) {
-            RequestCode.get_products_config -> { }
+            RequestCode.get_products_config -> {
+                Log.e("XXX", "resp " + response.data)
+                response.parse(ProductsConfigResponse::class.java)?.run {
+                    var config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
+                    keepActions(config)
+                    keepConditions(config)
+                    keepOne4Edit()
+                    refreshView()
+                }
+            }
 
             RequestCode.device_product -> {
                 if (response.isSuccess()) {
@@ -215,10 +227,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                     var dataTemplate: DataTemplate? = null
                     if (!TextUtils.isEmpty(response.data.toString())) {
                         var products = JSON.parseObject(response.data.toString(), ProductsEntity::class.java)
-                        Log.e("XXX", "products " + JSONObject.toJSONString(products))
-                        if (products == null || products.Products == null) {
-                            return
-                        }
+                        if (products == null || products.Products == null) return
 
                         for (i in 0 until products!!.Products!!.size) {
                             var productEntity = JSON.parseObject(products!!.Products!!.getString(i), ProductEntity::class.java)
@@ -229,41 +238,76 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                         }
                     }
 
-                    if (dataTemplate == null || dataTemplate.properties == null || dataTemplate.properties!!.size == 0) {
-                        return
-                    }
-
+                    if (dataTemplate == null || dataTemplate.properties == null || dataTemplate.properties!!.size == 0) return
                     for (i in 0 until dataTemplate.properties!!.size) {
                         var devModeInfo = JSON.parseObject(dataTemplate.properties!!.get(i).toString(), DevModeInfo::class.java)
-                        Log.e("XXX", "devModeInfo " + JSONObject.toJSONString(devModeInfo))
-                        if (devModeInfo != null && !devModeInfo.required && devModeInfo.mode == "rw"
-                            && (devModeInfo.define != null && devModeInfo.define!!.get("type") != "string")) {
-                            devModes.add(devModeInfo)
-                        }
+                        devModes.add(devModeInfo)
                     }
 
-                    if (routeType == RouteType.EDIT_MANUAL_TASK_ROUTE ||
-                        routeType == RouteType.EDIT_AUTOMIC_TASK_ROUTE ||
-                        routeType == RouteType.EDIT_MANUAL_TASK_DETAIL_ROUTE ||
-                        routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
-                        routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
-                        routeType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE) {
+                    loadProductConfig(deviceEntity!!.ProductId)
+                }
+            }
+        }
+    }
 
-                        var it = devModes.iterator()
-                        while(it.hasNext()) {
-                            var devInfo = it.next()
-                            if (!keepList.contains(devInfo.id)) {
-                                it.remove()
-                            } else {
-                                devInfo.id = manualTask!!.actionId
-                                devInfo.name = manualTask!!.taskTip
-                                devInfo.value = manualTask!!.task
-                                devInfo.key = manualTask!!.taskKey
-                                devInfo.pos = manualTask!!.pos
-                            }
-                        }
+    private fun keepActions(config: ProdConfigDetailEntity) {
+        if (routeType == RouteType.MANUAL_TASK_ROUTE ||
+            routeType == RouteType.AUTOMIC_TASK_ROUTE ||
+            routeType == RouteType.EDIT_MANUAL_TASK_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_TASK_ROUTE ||
+            routeType == RouteType.EDIT_MANUAL_TASK_DETAIL_ROUTE ||
+            routeType == RouteType.ADD_MANUAL_TASK_DETAIL_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE ||
+            routeType == RouteType.ADD_AUTOMIC_TASK_DETAIL_ROUTE) {
+            if (config != null && config.AppAutomation != null && config.AppAutomation!!.actions != null) {
+                var it = devModes.iterator()
+                while(it.hasNext()) {
+                    var devInfo = it.next()
+                    if (!config.AppAutomation!!.actions.contains(devInfo.id)) {
+                        it.remove()
                     }
-                    refreshView()
+                }
+            }
+        }
+    }
+
+    private fun keepConditions(config: ProdConfigDetailEntity) {
+        if (routeType == RouteType.AUTOMIC_CONDITION_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
+            routeType == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE) {
+            if (config != null && config.AppAutomation != null && config.AppAutomation!!.conditions != null) {
+                var it = devModes.iterator()
+                while(it.hasNext()) {
+                    var devInfo = it.next()
+                    if (!config.AppAutomation!!.conditions.contains(devInfo.id)) {
+                        it.remove()
+                    }
+                }
+            }
+        }
+    }
+
+    // 编辑方式进入该界面，只保留一条
+    private fun keepOne4Edit() {
+        if (routeType == RouteType.EDIT_MANUAL_TASK_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_TASK_ROUTE ||
+            routeType == RouteType.EDIT_MANUAL_TASK_DETAIL_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE) {
+
+            var it = devModes.iterator()
+            while(it.hasNext()) {
+                var devInfo = it.next()
+                if (!keepList.contains(devInfo.id)) {
+                    it.remove()
+                } else {
+                    devInfo.id = manualTask!!.actionId
+                    devInfo.name = manualTask!!.taskTip
+                    devInfo.value = manualTask!!.task
+                    devInfo.key = manualTask!!.taskKey
+                    devInfo.pos = manualTask!!.pos
                 }
             }
         }

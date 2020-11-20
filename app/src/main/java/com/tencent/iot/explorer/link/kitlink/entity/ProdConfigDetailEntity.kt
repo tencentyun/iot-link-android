@@ -9,4 +9,5 @@ class ProdConfigDetailEntity {
     var WifiSoftAP = ""
     var WifiSmartConfig = ""
     var WifiConfTypeList = ""
+    var AppAutomation: AppAutomation? = null
 }

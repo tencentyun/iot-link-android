@@ -721,7 +721,8 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                         var devModeInfo = JSON.parseObject(dataTemplate.properties!!.get(i).toString(), DevModeInfo::class.java)
                         if (devModeInfo.id == task.actionId) {
                             task.taskTip = devModeInfo.name
-                            if (devModeInfo.define!!.get("type") == "bool" ||devModeInfo.define!!.get("type") == "enum") {
+                            var type = devModeInfo.define!!.get("type")
+                            if (type == "bool" || type == "enum") {
                                 var mapJson = devModeInfo.define!!.getJSONObject("mapping")
                                 for (key in mapJson.keys) {
                                     if (key == task.taskKey) {
@@ -729,7 +730,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                                         break
                                     }
                                 }
-                            } else if (devModeInfo.define!!.get("type") == "int") {
+                            } else if (type == "int" || type == "float") {
                                 task.taskKey = ""
                             }
                         }
