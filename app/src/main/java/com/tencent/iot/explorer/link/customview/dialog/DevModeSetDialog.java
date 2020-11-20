@@ -1,9 +1,13 @@
 package com.tencent.iot.explorer.link.customview.dialog;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -11,6 +15,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jaygoo.widget.OnRangeChangedListener;
+import com.jaygoo.widget.RangeSeekBar;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.customview.HorizontalProgressBarWithNumber;
 import com.tencent.iot.explorer.link.customview.dialog.adapter.DevModeOptionsAdapter;
@@ -32,10 +38,11 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
     private ConstraintLayout insideLayout;
     private ConstraintLayout barLayout;
     private DevModeOptionsAdapter adapter;
-    private HorizontalProgressBarWithNumber bar;
+    private RangeSeekBar bar;
     private Context context;
     private List<KeyBooleanValue> content = new ArrayList<>();
     private TextView title;
+    private TextView currentProgress;
     private String titleStr;
     private ImageView increase;
     private ImageView decrease;
@@ -84,6 +91,7 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         bar = view.findViewById(R.id.bar_score_progrss);
         decrease = view.findViewById(R.id.iv_decrease);
         increase = view.findViewById(R.id.iv_increase);
+        currentProgress = view.findViewById(R.id.progress);
 
 
         title.setText(titleStr);
@@ -99,23 +107,33 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         decrease.setOnClickListener(onClickListener);
         insideLayout.setOnClickListener(onClickListener);
 
-        bar.setCircleColor(context.getResources().getColor(R.color.white));
-        bar.setCircleTextColor(context.getResources().getColor(R.color.blue_006EFF));
-        bar.setUnReachedColor(context.getResources().getColor(R.color.grey_E1E4E9));
-        bar.setReachedBarColor(context.getResources().getColor(R.color.blue_006EFF));
-
         if (type == 1) {
             options.setVisibility(View.GONE);
             barLayout.setVisibility(View.VISIBLE);
-            bar.setMax(modeInt.getMax());
-            bar.setMin(modeInt.getMin());
+            bar.setRange(modeInt.getMin(), modeInt.getMax());
             bar.setProgress(progress);
-
+            bar.setIndicatorText(String.valueOf(progress));
+            bar.setOnRangeChangedListener(onRangeChangedListener);
         } else {
             options.setVisibility(View.VISIBLE);
             barLayout.setVisibility(View.GONE);
         }
     }
+
+    private OnRangeChangedListener onRangeChangedListener = new OnRangeChangedListener() {
+
+        @Override
+        public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
+            progress = (int)leftValue;
+            view.getLeftSeekBar().setIndicatorText(String.valueOf((int)leftValue));
+        }
+
+        @Override
+        public void onStartTrackingTouch(RangeSeekBar view, boolean isLeft) { }
+
+        @Override
+        public void onStopTrackingTouch(RangeSeekBar view, boolean isLeft) { }
+    };
 
     private DevModeOptionsAdapter.OnItemClicked onItemClicked = new DevModeOptionsAdapter.OnItemClicked() {
         @Override
@@ -142,16 +160,18 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
                     }
                     break;
                 case R.id.iv_increase:
-                    if (progress >= bar.getMax()) {
+                    if (progress >= bar.getMaxProgress()) {
                         return;
                     }
+
                     progress += modeInt.getStep();
                     bar.setProgress(progress);
                     return;
                 case R.id.iv_decrease:
-                    if (progress <= 0) {
+                    if (progress <= bar.getMinProgress()) {
                         return;
                     }
+
                     progress -= modeInt.getStep();
                     bar.setProgress(progress);
                     return;
