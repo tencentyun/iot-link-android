@@ -101,8 +101,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="h,1:1"
                 android:src="@mipmap/decrease_btn_style"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/bar_score_progrss"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="20dp"
                 android:id="@+id/iv_decrease"
@@ -113,14 +112,13 @@
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="h,1:1"
                 android:src="@mipmap/increase_btn_style"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/bar_score_progrss"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginRight="20dp"
                 android:id="@+id/iv_increase"
                 />
 
-            <com.tencent.iot.explorer.link.customview.HorizontalProgressBarWithNumber
+            <com.jaygoo.widget.RangeSeekBar
                 android:id="@+id/bar_score_progrss"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -128,9 +126,24 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_decrease"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                app:rsb_indicator_background_color="@color/dialog_background"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:rsb_gravity="bottom"
+                app:rsb_indicator_height="46dp"
+                app:rsb_indicator_padding_bottom="15dp"
+                app:rsb_indicator_show_mode="alwaysShow"
+                app:rsb_indicator_text_color="@color/white"
+                app:rsb_indicator_text_size="12sp"
+                app:rsb_indicator_width="50dp"
+                app:rsb_mode="single"
+                app:rsb_progress_color="@color/blue_006EFF"
+                app:rsb_progress_default_color="@color/grey_E1E4E9"
+                app:rsb_thumb_drawable="@drawable/bar_point"
+                app:rsb_thumb_height="25dp"
+                app:rsb_thumb_width="25dp"
+                app:rsb_tick_mark_layout_gravity="bottom"
+                app:rsb_tick_mark_mode="other"
+                app:rsb_tick_mark_text_margin="15dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
