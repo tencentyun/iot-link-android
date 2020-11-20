@@ -78,6 +78,9 @@ object RequestCode {
     const val get_bind_device_token = 3012
     const val check_device_bind_token_state = 3013
 
+    const val sig_bind_device = 3014
+
+
     /*************设备接口结束**************/
 
     /*************云端定时接口开始**************/

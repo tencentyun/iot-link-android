@@ -11,6 +11,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.IPUtil
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.AutomicTaskEntity
@@ -936,6 +937,27 @@ class HttpRequest private constructor() {
         param["RoomId"] = roomId
         param["DeviceSignature"] = signature
         tokenPost(param, callback, RequestCode.scan_bind_device)
+    }
+
+    /**
+     * 扫码绑定设备, 蓝牙签名绑定设备
+     */
+    fun sigBindDevice(
+        familyId: String,
+        roomId: String,
+        deviceInfo: TrtcDeviceInfo,
+        bindType: String,
+        callback: MyCallback) {
+        val param = tokenParams("AppSigBindDeviceInFamily")
+        param["FamilyId"] = familyId
+        param["RoomId"] = roomId
+        param["DeviceId"] = deviceInfo.productId + "/" + deviceInfo.deviceName
+        param["DeviceTimestamp"] = deviceInfo.timestamp
+        param["ConnId"] = deviceInfo.connId
+        param["SignMethod"] = deviceInfo.signMethod
+        param["BindType"] = bindType
+        param["Signature"] = deviceInfo.signature
+        tokenPost(param, callback, RequestCode.sig_bind_device)
     }
 
     /**
