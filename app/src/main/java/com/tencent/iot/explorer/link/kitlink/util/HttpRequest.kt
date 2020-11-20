@@ -938,6 +938,31 @@ class HttpRequest private constructor() {
     }
 
     /**
+     * 扫码绑定设备, 蓝牙签名绑定设备
+     */
+    fun sigBindDevice(
+        familyId: String,
+        roomId: String,
+        deviceId: String,
+        deviceTimestamp: Long,
+        connId: String,
+        signMethod: String,
+        bindType: String,
+        signature: String,
+        callback: MyCallback) {
+        val param = tokenParams("AppSigBindDeviceInFamily")
+        param["FamilyId"] = familyId
+        param["RoomId"] = roomId
+        param["DeviceId"] = deviceId
+        param["DeviceTimestamp"] = deviceTimestamp
+        param["ConnId"] = connId
+        param["SignMethod"] = signMethod
+        param["BindType"] = bindType
+        param["Signature"] = signature
+        tokenPost(param, callback, RequestCode.sig_bind_device)
+    }
+
+    /**
      * WIFI配网绑定设备
      */
     fun wifiBindDevice(familyId: String, deviceInfo: DeviceInfo, callback: MyCallback) {
