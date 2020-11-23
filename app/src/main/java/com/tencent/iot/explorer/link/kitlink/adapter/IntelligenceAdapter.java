@@ -232,7 +232,7 @@ public class IntelligenceAdapter extends RecyclerView.Adapter<IntelligenceAdapte
                 holder.titleName.setVisibility(View.GONE);
             }
 
-            if (list.get(position).getStatus() == 0) {
+            if (list.get(position).getStatus() == 1) {
                 holder.switchBtn.setChecked(true);
             } else {
                 holder.switchBtn.setChecked(false);
