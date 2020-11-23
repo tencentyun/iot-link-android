@@ -40,6 +40,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     var productId = ""
     var deviceName = ""
     var deviceId = ""
+    var isTrtcProd = false
 
     private var hasPanel = false
     private var hasProduct = false
@@ -231,6 +232,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     navBar = getNavBar()
                     hasTimerCloud = isTimingProject()
                     uiList.addAll(getUIList())
+                    isTrtcProd = it[0].configEntity.Global.trtc
                     L.e("uiList = ${JsonManager.toJson(uiList)}")
                     if (uiList.isNotEmpty()) {
                         hasPanel = true
@@ -273,6 +275,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
             devicePropertyEntity.type = property.ui.type
             devicePropertyEntity.icon = property.ui.icon
             devicePropertyEntity.big = property.big
+            devicePropertyEntity.trtc = isTrtcProd
             //完善devicePropertyEntity
             completeProperty(devicePropertyEntity)
             //数据不全不显示
