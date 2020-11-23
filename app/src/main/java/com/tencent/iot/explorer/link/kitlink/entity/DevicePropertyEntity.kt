@@ -34,6 +34,8 @@ class DevicePropertyEntity {
     var required = true
     var mode = ""
 
+    var trtc = false
+
     private var value: Any? = null
     var LastUpdate = 0L
 
