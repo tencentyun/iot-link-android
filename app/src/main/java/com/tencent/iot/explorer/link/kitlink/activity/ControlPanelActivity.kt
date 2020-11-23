@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.NavBar
@@ -132,9 +133,9 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         deviceEntity?.let {
             if (it.online == 1)
                 PanelThemeManager.instance.doAction(
-                        viewHolder,
-                        clickView,
-                        position
+                    viewHolder,
+                    clickView,
+                    position
                 )
         }
     }
