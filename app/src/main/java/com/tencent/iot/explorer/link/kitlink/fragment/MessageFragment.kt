@@ -1,9 +1,11 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
@@ -273,6 +275,7 @@ class MessageFragment(category: Int) : BaseFragment(), CRecyclerView.RecyclerIte
     }
 
     override fun getViewType(position: Int): Int {
+        Log.e("XXX", "messageList " + JSON.toJSONString(messageList))
         return when (messageList[position].Attachments == null) {
             true -> {
                 when (messageList[position].Category) {
@@ -283,7 +286,13 @@ class MessageFragment(category: Int) : BaseFragment(), CRecyclerView.RecyclerIte
                 }
             }
             else -> {
-                1
+                when(messageList[position].MsgType) {
+                    302,303 -> {
+                        2
+                    }
+                    else -> 1
+                }
+
             }
         }
     }
