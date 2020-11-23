@@ -90,7 +90,6 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
         var recevier = object: BroadcastReceiver(){
             override fun onReceive(context: Context?, intent: Intent?) {
                 var refreshTag = intent?.getIntExtra(CommonField.EXTRA_REFRESH, 0);
-                Log.e("XXX", "refreshTag " + refreshTag)
                 if (refreshTag != 0){
                     loadAlldata()
                 }
@@ -102,9 +101,9 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
     private var onItemClicked = object: IntelligenceAdapter.OnItemClicked {
         override fun onSwitchStatus(postion: Int, isChecked: Boolean, automation: Automation?) {
             if (!isChecked) {
-                switchStatus(automation!!.id, 1, postion)
-            } else {
                 switchStatus(automation!!.id, 0, postion)
+            } else {
+                switchStatus(automation!!.id, 1, postion)
             }
         }
 
@@ -136,7 +135,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
     }
 
     private fun switchStatus(automationId: String, status: Int, postion: Int) {
-        HttpRequest.instance.updateAutomicTaskStatus(automationId, 1, object: MyCallback{
+        HttpRequest.instance.updateAutomicTaskStatus(automationId, status, object: MyCallback{
             override fun fail(msg: String?, reqCode: Int) {
                 T.show(msg)
                 if (status == 0) {
@@ -286,6 +285,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             automation.Icon = automationListResponse.List.get(i).Icon
                             automation.Name = automationListResponse.List.get(i).Name
                             automation.id = automationListResponse.List.get(i).AutomationId
+                            automation.Status = automationListResponse.List.get(i).Status
                             automicList.add(automation)
                         }
                     }
