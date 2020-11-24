@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf2bd159_f110a0a4",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/util/HttpRequest.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 963,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2020-11-24T01:58:59Z",
+      "side": 1,
+      "message": "算上回调对象含9个参数，是否可以通过类参数，减少传递的参数",
+      "range": {
+        "startLine": 942,
+        "startChar": 0,
+        "endLine": 963,
+        "endChar": 5
+      },
+      "revId": "ebf0478bbd0c9f80c42a11e381ff17c5153a0f35",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
