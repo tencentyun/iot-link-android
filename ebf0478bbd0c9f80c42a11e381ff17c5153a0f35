@@ -22,6 +22,30 @@
       "revId": "ebf0478bbd0c9f80c42a11e381ff17c5153a0f35",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9a13e8a_c207dca9",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/util/HttpRequest.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 963,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-24T02:42:49Z",
+      "side": 1,
+      "message": "新增entity TrtcDeviceInfo， 已修复",
+      "parentUuid": "cf2bd159_f110a0a4",
+      "range": {
+        "startLine": 942,
+        "startChar": 0,
+        "endLine": 963,
+        "endChar": 5
+      },
+      "revId": "ebf0478bbd0c9f80c42a11e381ff17c5153a0f35",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
     }
   ]
 }
