@@ -116,6 +116,9 @@
         <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
         <activity android:name=".kitlink.activity.HelpCenterActivity" />
+        <activity android:name="com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity" />
+        <activity android:name="com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity" />
+
         <activity
             android:name=".kitlink.activity.ConfigNetFailedActivity"
             android:launchMode="singleTask" />

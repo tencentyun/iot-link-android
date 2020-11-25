@@ -37,6 +37,10 @@ import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import com.tencent.tpns.baseapi.XGApiConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -112,6 +116,36 @@ class MainActivity : PActivity(), MyCallback {
             T.show(resources.getString(R.string.download_failed))
         }
         override fun onDownloadProgress(currentProgress: Int, size: Int) { }
+    }
+
+    private fun start() {
+        var rk = RoomKey()
+        rk.appId = 1400446390
+        rk.callType = TRTCCalling.TYPE_VIDEO_CALL
+        rk.roomId = "13e66cb9b344e04db0db131d838c624990f3ab43"
+        rk.userId = "1400446390155721212008337408"
+        rk.userSig = "eJxEjkGrgkAURv-LXT98d8ZxHAfeQp*8xUtqYdHanGtepTATE6L-HqjQ9nyHj-OEfZZ7NHXcE1ijFeLXjNjRdeCKqQcLQiEqpf0IRRCEUkghEY3vhwoNLP7dtUXXsQP7kdeFz2AhSZttJMusdt-p*JcUu-zR8qYpbweqSJT-p7Yejr9x3U-xz3o58IXACo1aShEos9BxLpIewusdAAD--4mqNOs_"
+        TRTCVideoCallActivity.startCallSomeone(this, rk)
+    }
+
+    private fun startb() {
+        var rk = RoomKey()
+        rk.appId = 1400446390
+        rk.callType = TRTCCalling.TYPE_VIDEO_CALL
+        rk.roomId = "13e66cb9b344e04db0db131d838c624990f3ab43"
+        rk.userId = "1400446390155721212008337408"
+        rk.userSig = "eJxEjkGrgkAURv-LXT98d8ZxHAfeQp*8xUtqYdHanGtepTATE6L-HqjQ9nyHj-OEfZZ7NHXcE1ijFeLXjNjRdeCKqQcLQiEqpf0IRRCEUkghEY3vhwoNLP7dtUXXsQP7kdeFz2AhSZttJMusdt-p*JcUu-zR8qYpbweqSJT-p7Yejr9x3U-xz3o58IXACo1aShEos9BxLpIewusdAAD--4mqNOs_"
+        TRTCVideoCallActivity.startBeingCall(this, rk, "8EJDD7581C/keyitest_34")
+    }
+
+    private fun startc() {
+        var rk = RoomKey()
+        rk.appId = 1400446390
+        rk.callType = TRTCCalling.TYPE_AUDIO_CALL
+        rk.roomId = "13e66cb9b344e04db0db131d838c624990f3ab43"
+        rk.userId = "1400446390155721212008337408"
+        rk.userSig = "eJxEjkGrgkAURv-LXT98d8ZxHAfeQp*8xUtqYdHanGtepTATE6L-HqjQ9nyHj-OEfZZ7NHXcE1ijFeLXjNjRdeCKqQcLQiEqpf0IRRCEUkghEY3vhwoNLP7dtUXXsQP7kdeFz2AhSZttJMusdt-p*JcUu-zR8qYpbweqSJT-p7Yejr9x3U-xz3o58IXACo1aShEos9BxLpIewusdAAD--4mqNOs_"
+        TRTCAudioCallActivity.startCallSomeone(this, rk)
     }
 
     override fun initView() {
@@ -193,6 +227,13 @@ class MainActivity : PActivity(), MyCallback {
         }
 
         home_bottom_view.setOnItemClickListener { _, position, previewPosition ->
+            if (position == 1) {
+                start()
+            } else if (position == 2) {
+                startb()
+            } else if (position == 3) {
+                startc();
+            }
 //            if (position == 2) {
 //                return@setOnItemClickListener
 //            }
