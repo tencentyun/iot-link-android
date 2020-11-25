@@ -15,7 +15,7 @@ import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils

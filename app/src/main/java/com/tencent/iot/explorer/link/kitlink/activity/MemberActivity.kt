@@ -9,7 +9,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.link.entity.MemberEntity
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
 import kotlinx.android.synthetic.main.activity_member.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

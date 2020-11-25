@@ -5,7 +5,7 @@ import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.response.UserInfoResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.UploadView

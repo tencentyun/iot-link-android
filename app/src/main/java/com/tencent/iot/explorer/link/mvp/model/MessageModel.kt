@@ -5,7 +5,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
 import com.tencent.iot.explorer.link.core.auth.response.MessageListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.MessageView
