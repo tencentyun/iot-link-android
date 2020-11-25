@@ -17,7 +17,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity;
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse;
 import com.tencent.iot.explorer.link.kitlink.entity.ActionResult;
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest;
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback;
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
