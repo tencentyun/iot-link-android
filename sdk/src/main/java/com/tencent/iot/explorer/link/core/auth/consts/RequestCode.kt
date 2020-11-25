@@ -67,6 +67,7 @@ object RequestCode {
     const val change_room = 3011
     const val get_bind_device_token = 3012
     const val check_device_bind_token_state = 3013
+    const val trtc_call_device = 3015
 
     /*************设备接口结束**************/
 
