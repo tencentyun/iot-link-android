@@ -14,7 +14,7 @@ import com.tencent.iot.explorer.link.kitlink.holder.MsgFamilyViewHolder
 import com.tencent.iot.explorer.link.kitlink.holder.MsgNotifyViewHolder
 import com.tencent.iot.explorer.link.core.auth.response.MessageListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.scwang.smart.refresh.layout.api.RefreshLayout

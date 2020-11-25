@@ -5,7 +5,7 @@ import android.text.TextUtils
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.auth.response.AppCosAuthResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.cos.xml.CosXmlServiceConfig
 import com.tencent.cos.xml.CosXmlSimpleService
