@@ -14,8 +14,15 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse;
 import com.tencent.iot.explorer.link.kitlink.activity.HelpWebViewActivity;
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField;
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest;
+import com.tencent.iot.explorer.link.kitlink.util.MyCallback;
+import com.tencent.iot.explorer.trtc.entity.TRTCParamsEntity;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MessageReceiver extends XGPushBaseReceiver {
 	private static final String TAG = MessageReceiver.class.getSimpleName();
@@ -147,6 +154,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		// APP自主处理消息的过程...
 		Log.d(TAG, text);
 		show(context, text);
+		checkMsgWithAction(context, message.getCustomContent());
 	}
 
 	private void checkMsgWithAction(Context context, String msg) {
@@ -160,9 +168,30 @@ public class MessageReceiver extends XGPushBaseReceiver {
 						PushedMessageType.FEEDBACK.getValueStr())) {
 			Intent intent = new Intent(App.Companion.getActivity(), HelpWebViewActivity.class);
 			App.Companion.getActivity().startActivity(intent);
+		} else if (msgJson.containsKey(CommonField.TRTC_CALLTYPE)) {
+			final String callType = msgJson.getString(CommonField.TRTC_CALLTYPE);
+			String deviceId = msgJson.getString(CommonField.TRTC_DEVICEID);
+			// 调用 CallDevice 接口
+			HttpRequest.Companion.getInstance().trtcCallDevice(deviceId, new MyCallback() {
+				@Override
+				public void fail(@Nullable String msg, int reqCode) {
+					T.show(msg);
+				}
+				@Override
+				public void success(@NotNull BaseResponse response, int reqCode) {
+					if (response.isSuccess()) {
+						// 解析 response, 得到enterRoom必须的参数
 
+						// 根据 callType, 拉起语音或者视频的被呼页面
+						if (callType.equals(CommonField.TRTC_AUDIOCALL)) {
+
+						} else if (callType.equals(CommonField.TRTC_VIDEOCALL)) {
+
+						}
+					}
+				}
+			});
 		}
-
 	}
 
 }
