@@ -24,7 +24,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.utils.PhotoUtils
 import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt

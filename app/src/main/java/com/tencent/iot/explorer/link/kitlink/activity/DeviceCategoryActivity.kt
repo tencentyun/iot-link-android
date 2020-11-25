@@ -32,6 +32,7 @@ import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryListResponse
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.kitlink.customview.MyScrollView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView

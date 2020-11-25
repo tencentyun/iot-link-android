@@ -12,7 +12,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.holder.RoomListFootHolder
 import com.tencent.iot.explorer.link.kitlink.holder.RoomListViewHolder
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_room_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

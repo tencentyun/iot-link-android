@@ -16,7 +16,7 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.entity.LogMessage
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest.Companion.instance
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import java.util.*
 
 class SmartLogAdapter(context: Context, list: MutableList<LogMessage>) : RecyclerView.Adapter<SmartLogAdapter.ViewHolder>() {
