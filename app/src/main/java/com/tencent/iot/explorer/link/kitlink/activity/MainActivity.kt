@@ -1,9 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -119,7 +117,6 @@ class MainActivity : PActivity(), MyCallback {
         FirebaseCrashlytics.getInstance().setUserId(userId)
         FirebaseAnalytics.getInstance(this).setUserId(userId)
         openXGPush()
-//        home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
         home_bottom_view.addMenu(
             BottomItemEntity(
                 getString(R.string.main_tab_1),
@@ -135,13 +132,6 @@ class MainActivity : PActivity(), MyCallback {
                     R.mipmap.smart_unpressed, R.mipmap.smart_pressed
                 )
             )
-//            .addMenu(
-//                BottomItemEntity(
-//                    "",
-//                    resources.getColor(R.color.translucent), resources.getColor(R.color.translucent),
-//                    R.color.translucent, R.color.translucent
-//                )
-//            )
             .addMenu(
                 BottomItemEntity(
                     getString(R.string.main_tab_4),
@@ -168,47 +158,11 @@ class MainActivity : PActivity(), MyCallback {
             .commit()
     }
 
-//    private fun showOptionDialog() {
-//        if (addDialog == null) {
-//            var options = ArrayList<String>()
-//            options.add(getString(R.string.smart_option_1))
-//            options.add(getString(R.string.smart_option_2))
-//            addDialog = ListOptionsDialog(this, options)
-//            addDialog?.setOnDismisListener(onItemClickedListener)
-//        }
-//        addDialog?.show()
-//    }
-//
-//    private var onItemClickedListener = ListOptionsDialog.OnDismisListener {
-//        if (it == 0) {
-//            jumpActivity(AddManualTaskActivity::class.java)
-//        } else if (it == 1) {
-//            jumpActivity(AddAutoicTaskActivity::class.java)
-//        }
-//    }
-
     override fun setListener() {
-        iv_main_add.setOnClickListener{
-//            showOptionDialog()
-        }
+        iv_main_add.setOnClickListener{}
 
         home_bottom_view.setOnItemClickListener { _, position, previewPosition ->
-//            if (position == 2) {
-//                return@setOnItemClickListener
-//            }
-//
-//            var tagPos = position
-//            if (tagPos > 2) {
-//                tagPos = tagPos - 1
-//            }
             showFragment(position)
-//            if (tagPos == 1) {
-//                window.decorView.systemUiVisibility =
-//                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//            } else {
-//                window.decorView.systemUiVisibility =
-//                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-//            }
         }
         (fragments[0] as? HomeFragment)?.run {
             popupListener = object : HomeFragment.PopupListener {
@@ -322,7 +276,6 @@ class MainActivity : PActivity(), MyCallback {
             timestamp = t
             T.show(getString(R.string.tap_more_exit)) //再按一下退出应用
         }
-//        super.onBackPressed()
     }
 
     private fun showCancelAccountStoppedDialog(time: Long){
