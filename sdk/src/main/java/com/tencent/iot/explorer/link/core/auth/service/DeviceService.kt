@@ -365,6 +365,15 @@ internal class DeviceService : BaseService(), DeviceImpl {
         tokenPost(param, callback, RequestCode.check_device_bind_token_state)
     }
 
+    /**
+     * 手机请求加入房间
+     */
+    override fun trtcCallDevice(deviceId: String, callback: MyCallback) {
+        val param = tokenParams("App::IotRTC::CallDevice")
+        param["DeviceId"] = deviceId
+        tokenPost(param, callback, RequestCode.trtc_call_device)
+    }
+
     override fun wifiBindDevice(userId: String, bindDeviceToken: String, familyId: String,
                                 deviceInfo: DeviceInfo, callback: MyCallback) {
         val param = tokenParams("AppTokenBindDeviceFamily")
