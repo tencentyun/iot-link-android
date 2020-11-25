@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.holder.FamilyListFootHolder
 import com.tencent.iot.explorer.link.kitlink.holder.FamilyListViewHolder
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_family_list.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

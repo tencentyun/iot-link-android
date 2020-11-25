@@ -12,7 +12,7 @@ import com.tencent.iot.explorer.link.kitlink.holder.ShareUserHeadHolder
 import com.tencent.iot.explorer.link.kitlink.holder.ShareUserHolder
 import com.tencent.iot.explorer.link.core.auth.response.ShareUserResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_share_user_list.*

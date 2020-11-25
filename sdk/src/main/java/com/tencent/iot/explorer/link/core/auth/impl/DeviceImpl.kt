@@ -135,4 +135,9 @@ interface DeviceImpl {
 
     fun wifiBindDevice(userId: String, bindDeviceToken: String, familyId: String, deviceInfo: DeviceInfo, callback: MyCallback)
 
+    /**
+     * 手机请求加入房间
+     */
+    fun trtcCallDevice(deviceId: String, callback: MyCallback)
+
 }
