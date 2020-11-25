@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0f61577_e6461151",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/fragment/MessageFragment.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-25T02:16:53Z",
+      "side": 1,
+      "message": "加个注释？",
+      "range": {
+        "startLine": 290,
+        "startChar": 20,
+        "endLine": 290,
+        "endChar": 27
+      },
+      "revId": "5ce6aa615e8f2494ef0b0d54989b819fae765fb0",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
