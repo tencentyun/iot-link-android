@@ -1092,6 +1092,15 @@ class HttpRequest private constructor() {
         tokenPost(param, callback, RequestCode.check_device_bind_token_state)
     }
 
+    /**
+     * 手机请求加入房间
+     */
+    fun trtcCallDevice(deviceId: String, callback: MyCallback) {
+        val param = tokenParams("App::IotRTC::CallDevice")
+        param["DeviceId"] = deviceId
+        tokenPost(param, callback, RequestCode.control_device)
+    }
+
     /****************************************   设备接口结束  ************************************************/
 
     /******************************************   云端定时接口开始  *************************************************************/

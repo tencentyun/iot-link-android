@@ -90,6 +90,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
     override fun onCreate() {
         super.onCreate()
         MultiDex.install(this)
+        IoTAuth.setWebSocketTag(Utils.getAndroidID(this)) // 设置wss的uin
         IoTAuth.init(BuildConfig.TencentIotLinkAppkey, BuildConfig.TencentIotLinkAppSecret)
         //初始化弹框
         T.setContext(this.applicationContext)
