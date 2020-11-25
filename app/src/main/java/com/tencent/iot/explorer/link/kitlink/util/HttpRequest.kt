@@ -1098,7 +1098,7 @@ class HttpRequest private constructor() {
     fun trtcCallDevice(deviceId: String, callback: MyCallback) {
         val param = tokenParams("App::IotRTC::CallDevice")
         param["DeviceId"] = deviceId
-        tokenPost(param, callback, RequestCode.control_device)
+        tokenPost(param, callback, RequestCode.trtc_call_device)
     }
 
     /****************************************   设备接口结束  ************************************************/
