@@ -19,7 +19,7 @@ import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.ShareOptionDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
 import kotlinx.android.synthetic.main.activity_comment_detail.*

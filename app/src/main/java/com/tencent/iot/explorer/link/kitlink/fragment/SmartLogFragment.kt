@@ -17,7 +17,7 @@ import com.tencent.iot.explorer.link.kitlink.adapter.SmartLogAdapter
 import com.tencent.iot.explorer.link.kitlink.entity.LogMessage
 import com.tencent.iot.explorer.link.kitlink.entity.LogResponesData
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.fragment_smart_log.*

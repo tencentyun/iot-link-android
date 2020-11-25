@@ -6,7 +6,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
 import com.tencent.iot.explorer.link.kitlink.response.TimerListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.TimerListView

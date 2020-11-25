@@ -15,7 +15,7 @@ import com.tencent.iot.explorer.link.kitlink.entity.Automation
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import com.tencent.iot.explorer.link.kitlink.response.SceneListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.kitlink.util.MyCallback
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import kotlinx.android.synthetic.main.activity_delay_time.*
 import kotlinx.android.synthetic.main.activity_select_manual_task.*
