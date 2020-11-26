@@ -13,9 +13,19 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
+import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
+import com.tencent.iot.explorer.link.core.auth.message.resp.RespFailMessage
+import com.tencent.iot.explorer.link.core.auth.message.resp.RespSuccessMessage
+import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.*
+import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
+import com.tencent.iot.explorer.link.core.auth.socket.callback.MessageCallback
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.response.ShareDeviceListResponse
 
 class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(view), MyCallback {
@@ -267,13 +277,19 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                             deviceListEnd,
                             shareDeviceListEnd
                         )
-//                        if (deviceListEnd && roomId == "" && deviceList.isNotEmpty()) {
                         if (deviceListEnd && roomId == "") {
                             //到底时开始加载共享的设备列表,并且是在全部设备这个房间时
                             refreshShareDeviceList()
                         }
                         //在线状态
                         getDeviceOnlineStatus(deviceList.size - DeviceList.size)
+
+                        val productIdList = ArrayList<String>()
+                        // TRTC: 轮询在线的trtc设备的call_status
+                        for (device in deviceList) {
+                            productIdList.add(device.ProductId)
+                        }
+                        getProductsConfig(productIdList, deviceList)
                     }
                 }
             }
@@ -306,4 +322,57 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
         }
     }
 
+    private fun getProductsConfig(productIds: List<String>, deviceList: List<DeviceEntity>) {
+        HttpRequest.instance.getProductsConfig(productIds, object:MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    response.parse(ControlPanelResponse::class.java)?.Data?.let { it ->
+                        it.forEach {
+                            if (it.configEntity.Global.trtc) {
+                                val trtcDeviceIdList = ArrayString()
+                                for (device in deviceList) {
+                                    if (device.ProductId == it.ProductId) {
+                                        trtcDeviceIdList.addValue(device.DeviceId)
+                                        getDeviceCallStatus(device)
+                                    }
+                                }
+                                // TRTC: trtc设备注册websocket监听
+                                IoTAuth.registerActivePush(trtcDeviceIdList, null)
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun getDeviceCallStatus(device: DeviceEntity) {
+        HttpRequest.instance.deviceData(device.ProductId, device.DeviceName, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+            override fun success(response: BaseResponse, reqCode: Int) {
+                // 解析设备状态
+
+                // 判断设备的video_call_status, audio_call_status字段是否等于1，若等于1，就调用CallDevice接口
+
+            }
+        })
+    }
+
+    private fun trtcCallDevice(device: DeviceEntity) {
+        HttpRequest.instance.trtcCallDevice(device.DeviceId, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                // 解析房间参数，并拉起被呼叫页面
+            }
+        })
+    }
 }
