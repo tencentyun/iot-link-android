@@ -170,7 +170,7 @@ class AddAutoicTaskActivity : BaseActivity() {
                 } else {
                     automicTaskEntity.matchType = 1
                 }
-                automicTaskEntity.status = 0
+                automicTaskEntity.status = 1
                 automicTaskEntity.conditionsItem = manualConditions
                 automicTaskEntity.tasksItem = manualTasks
                 automicTaskEntity.workTimeMode = workTimeMode
