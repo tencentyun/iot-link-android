@@ -12,4 +12,5 @@ class Automation {
     var actions: JSONArray? = null
     var id = ""
     var sceneListItem: SceneListItem? = null
+    var flag = 0
 }
