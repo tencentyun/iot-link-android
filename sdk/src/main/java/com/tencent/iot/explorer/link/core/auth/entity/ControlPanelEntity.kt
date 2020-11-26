@@ -45,7 +45,7 @@ class ControlPanelEntity {
 
 class ConfigEntity {
     var profile = Profile()
-    var Global = Any()
+    var Global = Global()
     var Panel = PanelEntity()
     var ShortCut = Any()
     var WifiSoftAP = Any()
@@ -54,6 +54,10 @@ class ConfigEntity {
 
 class Profile {
     var ProductId = ""
+}
+
+class Global {
+    var trtc = false
 }
 
 class PanelEntity {
