@@ -119,6 +119,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
     private var isActivityChangingConfigurations = false
 
     override fun onActivityStarted(activity: Activity) {
+        Utils.clearMsgNotify(activity, data.notificationId)
         if (++activityReferences == 1 && !isActivityChangingConfigurations) {
             // App enters foreground
             if (activity is AppLifeCircleListener) {
@@ -140,7 +141,9 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
     override fun onActivityPaused(activity: Activity) {}
     override fun onActivityDestroyed(activity: Activity) {}
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        Utils.clearMsgNotify(activity, data.notificationId)
+    }
     override fun onActivityResumed(activity: Activity) {}
 }
 
