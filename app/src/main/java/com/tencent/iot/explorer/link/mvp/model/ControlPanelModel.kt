@@ -4,10 +4,6 @@ import android.os.Handler
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
-import com.tencent.iot.explorer.link.core.auth.entity.DeviceDataEntity
-import com.tencent.iot.explorer.link.core.auth.entity.NavBar
-import com.tencent.iot.explorer.link.core.auth.entity.ProductProperty
-import com.tencent.iot.explorer.link.core.auth.entity.Property
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
@@ -21,9 +17,11 @@ import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.response.*
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.*
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -80,11 +78,48 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     if (id == it.id) {
                         it.setValue(payload.getValue(id))
                         view?.showControlPanel(navBar, hasTimerCloud)
+                        var jsonObject = JSONObject(payload.json)
+                        val action = jsonObject.getString("action");
+                        if (action.equals("DeviceChange")) { //收到了设备属性改变的wss消息
+                            var paramsObject = jsonObject.getJSONObject("params") as JSONObject
+                            val subType = paramsObject.getString("SubType")
+                            if (subType.equals("Report")) { //收到了设备端属性状态改变的wss消息
+
+                                var payloadParamsObject = JSONObject(payload.payload)
+                                val payloadParamsJson = payloadParamsObject.getJSONObject("params")
+                                var videoCallStatus = -1
+                                if (payloadParamsJson.has("video_call_status")) {
+                                    videoCallStatus = payloadParamsJson.getInt("video_call_status")
+                                }
+                                var audioCallStatus = -1
+                                if (payloadParamsJson.has("audio_call_status")) {
+                                    audioCallStatus = payloadParamsJson.getInt("audio_call_status")
+                                }
+
+                                // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
+                                if (videoCallStatus == 1 || audioCallStatus == 1) {
+                                    trtcCallDevice()
+                                }
+                            }
+                        }
                         return@set
                     }
                 }
             }
         }
+    }
+
+    private fun trtcCallDevice() {
+        HttpRequest.instance.trtcCallDevice("$productId/$deviceName", object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                // 解析房间参数，并拉起被呼叫页面
+                L.d(response.toString())
+            }
+        })
     }
 
     /**
