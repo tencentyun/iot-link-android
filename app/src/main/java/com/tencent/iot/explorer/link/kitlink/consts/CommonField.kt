@@ -9,6 +9,7 @@ object CommonField {
     const val APP_KEY = "AppKey"
     //安卓params
     const val ACTION_PARAM = "ActionParams"
+    const val PARAM = "params"
     const val PATH = "path"
     //客户端平台
     const val PLATFORM = "Platform"
@@ -131,6 +132,9 @@ object CommonField {
     const val DATA_TEMPLATE = "DataTemplate"
     const val PROPERTIES = "properties"
 //    const val CONFIG_NET_TYPE = "configNetType"
+    const val MODULE_ACTION = "action"
+    const val SUB_TYPE = "SubType"
+    const val REPORT = "Report"
 
     /***********请求类型标记参数************/
     const val NULL_STR = "null"
