@@ -33,9 +33,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:gravity="center"
             android:background="@color/white"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:textSize="15sp"
+            android:paddingTop="13dp"
+            android:paddingBottom="13dp"
+            android:textSize="16sp"
             android:textColor="@color/black"
             />
 

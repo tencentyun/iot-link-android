@@ -91,7 +91,6 @@ class SmartLogFragment() : BaseFragment(), MyCallback {
                     log_refreshLayout.finishLoadMore()
                     var dataJson = response.data as JSONObject
                     var logResponesData = JSON.parseObject(dataJson.getString("Data"), LogResponesData::class.java)
-                    Log.e("XXX", "log " + JSON.toJSONString(logResponesData))
                     for (i in 0 until logResponesData.msgs!!.size) {
                         logs.add(logResponesData.msgs!!.get(i))
                     }
@@ -100,6 +99,9 @@ class SmartLogFragment() : BaseFragment(), MyCallback {
                     if (logs.size > 0) {
                         msgId = logs.get(logs.lastIndex).msgId
                         adapter?.notifyDataSetChanged()
+                        layout_no_data.visibility = View.GONE
+                    } else {
+                        layout_no_data.visibility = View.VISIBLE
                     }
                 } else {
                     log_refreshLayout.finishRefresh()
