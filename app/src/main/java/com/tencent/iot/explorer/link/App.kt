@@ -119,6 +119,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
     private var isActivityChangingConfigurations = false
 
     override fun onActivityStarted(activity: Activity) {
+        Utils.clearMsgNotify(activity, data.notificationId)
         if (++activityReferences == 1 && !isActivityChangingConfigurations) {
             // App enters foreground
             if (activity is AppLifeCircleListener) {
