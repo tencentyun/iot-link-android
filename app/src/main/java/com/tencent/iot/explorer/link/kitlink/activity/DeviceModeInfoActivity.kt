@@ -136,6 +136,10 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                     passDevModes.add(devModes.get(i))
                 }
             }
+            if (passDevModes.size <= 0) {
+                T.show(getString(R.string.please_set_first))
+                return@setOnClickListener
+            }
 
             var intent = Intent()
             if (routeType == RouteType.MANUAL_TASK_ROUTE || routeType == RouteType.EDIT_MANUAL_TASK_ROUTE) {
@@ -197,21 +201,23 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         if (devModes == null || devModes.size <= 0) {
             layout_no_data.visibility = View.VISIBLE
             tv_ok.isClickable = false
+            layout_btn.visibility = View.GONE
         } else {
             layout_no_data.visibility = View.GONE
             tv_ok.isClickable = true
+            layout_btn.visibility = View.VISIBLE
         }
         adapter?.notifyDataSetChanged()
     }
 
     override fun fail(msg: String?, reqCode: Int) {
         T.show(msg)
+        refreshView()
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
         when(reqCode) {
             RequestCode.get_products_config -> {
-                Log.e("XXX", "resp " + response.data)
                 response.parse(ProductsConfigResponse::class.java)?.run {
                     var config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
                     keepActions(config)
@@ -238,7 +244,10 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                         }
                     }
 
-                    if (dataTemplate == null || dataTemplate.properties == null || dataTemplate.properties!!.size == 0) return
+                    if (dataTemplate == null || dataTemplate.properties == null || dataTemplate.properties!!.size == 0) {
+                        refreshView()
+                        return
+                    }
                     for (i in 0 until dataTemplate.properties!!.size) {
                         var devModeInfo = JSON.parseObject(dataTemplate.properties!!.get(i).toString(), DevModeInfo::class.java)
                         devModes.add(devModeInfo)
