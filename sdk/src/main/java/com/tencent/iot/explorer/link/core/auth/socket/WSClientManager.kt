@@ -129,6 +129,8 @@ internal class WSClientManager private constructor() {
         }
 
         override fun payloadMessage(payload: Payload) {
+            // websocket消息总入口
+            L.e(payload.toString())
             activePushCallbacks.forEach {
                 it.success(payload)
             }
