@@ -113,8 +113,10 @@ class AddManualTaskActivity : BaseActivity() {
     private fun refreshView() {
         if (manualTasks.size <= 0) {
             layout_no_data.visibility = View.VISIBLE
+            layout_btn.visibility = View.GONE
         } else {
             layout_no_data.visibility = View.GONE
+            layout_btn.visibility = View.VISIBLE
         }
     }
 
