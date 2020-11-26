@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.utils
 
+import android.app.NotificationManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -9,6 +10,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
+import androidx.core.content.ContextCompat.getSystemService
 import com.tencent.iot.explorer.link.core.log.L
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -206,6 +208,11 @@ object Utils {
             bitmap = BitmapFactory.decodeResource(context.resources, vectorDrawableId)
         }
         return bitmap
+    }
+
+    fun clearMsgNotify(context: Context, noticeId: Int) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(noticeId)
     }
 //    @JvmStatic
 //    fun main(args: Array<String>) {
