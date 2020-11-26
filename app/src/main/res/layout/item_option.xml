@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/black"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:textSize="15sp"
+        android:paddingTop="13dp"
+        android:paddingBottom="13dp"
+        android:textSize="16sp"
         android:background="@drawable/background_white_top_radius_cell"
         app:layout_constraintTop_toTopOf="parent"
     />
