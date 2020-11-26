@@ -6,16 +6,16 @@
         android:layout_height="match_parent">
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
-            android:id="@+id/smart_refreshLayout"
+        android:id="@+id/smart_refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lv_all_smart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/lv_all_smart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+            />
 
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
@@ -73,8 +73,6 @@
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
