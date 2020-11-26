@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.text.TextUtils
@@ -52,6 +53,12 @@ class MainActivity : PActivity(), MyCallback {
 //    private var addDialog: ListOptionsDialog? = null
 
     private var isForceUpgrade = true
+
+    private var permissions = arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
 
     override fun getContentView(): Int {
         return R.layout.activity_main
@@ -117,6 +124,7 @@ class MainActivity : PActivity(), MyCallback {
         FirebaseCrashlytics.getInstance().setUserId(userId)
         FirebaseAnalytics.getInstance(this).setUserId(userId)
         openXGPush()
+        requestPermission(permissions)
         home_bottom_view.addMenu(
             BottomItemEntity(
                 getString(R.string.main_tab_1),
