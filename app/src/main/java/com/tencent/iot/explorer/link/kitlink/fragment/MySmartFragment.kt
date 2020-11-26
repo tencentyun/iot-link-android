@@ -289,6 +289,8 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             automicList.add(automation)
                         }
                     }
+                } else {
+                    T.show(response.msg)
                 }
 
                 // 自动智能列表没有分页，只要查询有结果就结束刷新
@@ -315,14 +317,13 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                         if (manualList.size < sceneListResponse.Total) {
                             manualListOffset = manualList.size
                             HttpRequest.instance.queryManualTask(App.data.getCurrentFamily().FamilyId, manualListOffset, this)
-                        } else {    //查询到没有数据开始刷新界面
-                            manualListLoadOver = true
-                            loadDataOver()
                         }
                     }
                 } else {
                     T.show(response.msg)
                 }
+                manualListLoadOver = true
+                loadDataOver()
             }
         }
     }
