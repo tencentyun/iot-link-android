@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9431374_f41b1bc7",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/EditAutoicTaskActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-26T14:42:27Z",
+      "side": 1,
+      "message": "if...else...",
+      "range": {
+        "startLine": 606,
+        "startChar": 24,
+        "endLine": 612,
+        "endChar": 25
+      },
+      "revId": "ca1c762f87f5677081c6c3722f00e422a110425d",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06ae4f93_30af863b",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/EditAutoicTaskActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-11-26T14:42:27Z",
+      "side": 1,
+      "message": "shouldDelete?",
+      "range": {
+        "startLine": 744,
+        "startChar": 16,
+        "endLine": 744,
+        "endChar": 24
+      },
+      "revId": "ca1c762f87f5677081c6c3722f00e422a110425d",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
