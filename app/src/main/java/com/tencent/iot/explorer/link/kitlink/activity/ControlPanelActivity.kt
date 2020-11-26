@@ -16,6 +16,10 @@ import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.popup.OfflinePopupWindow
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -155,6 +159,16 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
             initTheme()
             PanelThemeManager.instance.showTheme(this, timingProject)
             showNavBar(navBar)
+        }
+    }
+
+    override fun enterRoom(room: RoomKey) {
+        runOnUiThread {
+            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
+                TRTCVideoCallActivity.startCallSomeone(this, room)
+            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
+                TRTCAudioCallActivity.startCallSomeone(this, room)
+            }
         }
     }
 
