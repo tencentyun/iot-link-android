@@ -89,7 +89,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_no_data"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/shbv_add_autoic_task"
         android:layout_above="@id/layout_btn"
         android:paddingBottom="50dp"
@@ -111,7 +111,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.7"
+            app:layout_constraintWidth_percent="0.6"
             android:adjustViewBounds="true"
             android:id="@+id/iv_no_manual_task"
             />
