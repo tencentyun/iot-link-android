@@ -38,6 +38,7 @@ class AppData private constructor() {
     var regionId = "1"
     var region = "ap-guangzhou"
     var appLifeCircleId = "0"
+    var notificationId = 0
 
     //activity列表
     val activityList = LinkedList<BaseActivity>()
