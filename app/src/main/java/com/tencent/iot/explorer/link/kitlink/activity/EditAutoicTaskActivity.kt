@@ -47,6 +47,8 @@ import kotlinx.android.synthetic.main.activity_edit_automic_task.tv_next
 import kotlinx.android.synthetic.main.activity_edit_automic_task.tv_tip_title
 import kotlinx.android.synthetic.main.activity_edit_automic_task.tv_working_time_value
 import kotlinx.android.synthetic.main.activity_edit_automic_task.working_time_layout
+import kotlinx.android.synthetic.main.add_new_item_layout.*
+import kotlinx.android.synthetic.main.add_new_item_layout.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
@@ -77,6 +79,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
 
     override fun initView() {
         tv_title.setText(R.string.edit_automic_smart)
+        add_automic_item_layout.tv_tip_add_condition.setText(R.string.add_task)
 
         var infoStr = intent.getStringExtra(CommonField.EXTRA_INFO)
         if (TextUtils.isEmpty(infoStr)) return

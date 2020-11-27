@@ -1397,11 +1397,11 @@ class HttpRequest private constructor() {
         if (automicTaskEntity.workTimeMode.workDayType == 3) {
             param["EffectiveDays"] = automicTaskEntity.workTimeMode.workDays
         } else if (automicTaskEntity.workTimeMode.workDayType == 2) {
-            param["EffectiveDays"] = "1111111"
+            param["EffectiveDays"] = "1000001"
         } else if (automicTaskEntity.workTimeMode.workDayType == 1) {
             param["EffectiveDays"] = "0111110"
         } else if (automicTaskEntity.workTimeMode.workDayType == 0) {
-            param["EffectiveDays"] = "1000001"
+            param["EffectiveDays"] = "1111111"
         }
 
         Log.e("XXX", "----------> \n" + JSON.toJSONString(param))
@@ -1425,11 +1425,11 @@ class HttpRequest private constructor() {
         if (automicTaskEntity.workTimeMode.workDayType == 3) {
             param["EffectiveDays"] = automicTaskEntity.workTimeMode.workDays
         } else if (automicTaskEntity.workTimeMode.workDayType == 2) {
-            param["EffectiveDays"] = "1111111"
+            param["EffectiveDays"] = "1000001"
         } else if (automicTaskEntity.workTimeMode.workDayType == 1) {
             param["EffectiveDays"] = "0111110"
         } else if (automicTaskEntity.workTimeMode.workDayType == 0) {
-            param["EffectiveDays"] = "1000001"
+            param["EffectiveDays"] = "1111111"
         }
 
         tokenPost(param, callback, RequestCode.update_automic_task)
