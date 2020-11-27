@@ -66,7 +66,8 @@ class SmartLogAdapter(context: Context, list: MutableList<LogMessage>) : Recycle
         if (position == 0) {
             holder.dateTipLayout.visibility = View.VISIBLE
         } else if (list.get(position).mouth == list.get(position - 1).mouth &&
-                list.get(position).day == list.get(position - 1).day) {
+                list.get(position).day == list.get(position - 1).day &&
+                list.get(position).year == list.get(position - 1).year) {
             holder.dateTipLayout.visibility = View.GONE
         } else {
             holder.dateTipLayout.visibility = View.VISIBLE
