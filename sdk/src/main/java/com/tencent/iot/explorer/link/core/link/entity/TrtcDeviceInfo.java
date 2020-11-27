@@ -1,5 +1,8 @@
 package com.tencent.iot.explorer.link.core.link.entity;
 
+import com.alibaba.fastjson.util.Base64;
+import com.tencent.iot.explorer.link.core.utils.Utils;
+
 public class TrtcDeviceInfo {
 
     private String mProductId;
@@ -18,7 +21,7 @@ public class TrtcDeviceInfo {
             mConnId = items[2];
             mTimestamp = Long.parseLong(items[3]);
             mSignMethod = items[4];
-            mSignature = items[5];
+            mSignature = Utils.INSTANCE.bytesToHexString(Base64.decodeFast(items[5]));
         }
     }
 
