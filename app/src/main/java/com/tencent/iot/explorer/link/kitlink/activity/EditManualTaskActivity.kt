@@ -87,6 +87,10 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
         for (i in 0 until automation!!.sceneListItem!!.Actions!!.size) {
             var task = ManualTask()
             var json = automation!!.sceneListItem!!.Actions!!.get(i) as JSONObject
+            if (json == null) {
+                continue
+            }
+            Log.e("XXX", "json " + json.toJSONString())
             if (json.getIntValue("ActionType") == 1) {
                 var time = json.getLongValue("Data")
                 task.type = 1
@@ -95,11 +99,18 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
                 task.min = tmpSeconds / 60
                 task.aliasName = getString(R.string.delay_time)
             } else {
-
-                task.type = json.getIntValue("ActionType")
-                task.deviceName = json.getString("DeviceName")
-                task.productId = json.getString("ProductId")
-                task.iconUrl = json.getString("IconUrl")
+                if (json.containsKey("ActionType")) {
+                    task.type = json.getIntValue("ActionType")
+                }
+                if (json.containsKey("DeviceName")) {
+                    task.deviceName = json.getString("DeviceName")
+                }
+                if (json.containsKey("ProductId")) {
+                    task.productId = json.getString("ProductId")
+                }
+                if (json.containsKey("IconUrl")) {
+                    task.iconUrl = json.getString("IconUrl")
+                }
                 var value = json.getString("Data")
                 var dataJson = JSON.parseObject(value)
                 for (keys in dataJson.keys) {
@@ -328,7 +339,6 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
         }
         sceneEntity.actions = jsonArr
         sceneEntity.sceneId = automation!!.id
-
         HttpRequest.instance.updateManualTask(sceneEntity, this)
     }
 
