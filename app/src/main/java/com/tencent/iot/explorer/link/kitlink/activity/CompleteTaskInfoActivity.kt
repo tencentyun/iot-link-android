@@ -57,6 +57,7 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
 
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
+        tv_cancel.setOnClickListener { finish() }
         layout_smart_pic.setOnClickListener {
             var intent = Intent(this, SelectTaskPicActivity::class.java)
             intent.putExtra(CommonField.EXTRA_PIC_URL, smartPicUrl)
