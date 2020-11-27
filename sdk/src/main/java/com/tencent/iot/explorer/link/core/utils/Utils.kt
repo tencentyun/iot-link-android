@@ -10,7 +10,6 @@ import android.graphics.Canvas
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
-import androidx.core.content.ContextCompat.getSystemService
 import com.tencent.iot.explorer.link.core.log.L
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -213,6 +212,24 @@ object Utils {
     fun clearMsgNotify(context: Context, noticeId: Int) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(noticeId)
+    }
+
+    /**
+     * byte[]数组转换为16进制的字符串
+     *
+     * @param bytes 要转换的字节数组
+     * @return 转换后的结果
+     */
+    fun bytesToHexString(bytes: ByteArray): String? {
+        val sb = StringBuilder()
+        for (i in bytes.indices) {
+            val hex = Integer.toHexString(0xFF and bytes[i].toInt())
+            if (hex.length == 1) {
+                sb.append('0')
+            }
+            sb.append(hex)
+        }
+        return sb.toString()
     }
 //    @JvmStatic
 //    fun main(args: Array<String>) {
