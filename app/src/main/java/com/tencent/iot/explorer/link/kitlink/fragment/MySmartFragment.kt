@@ -30,6 +30,7 @@ import com.tencent.iot.explorer.link.kitlink.response.AutomationListResponse
 import com.tencent.iot.explorer.link.kitlink.response.SceneListResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.customview.dialog.TipDialog
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.fragment_my_smart.*
@@ -109,9 +110,21 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
         override fun onItemClicked(automation: Automation?) {
             if (automation?.type == 0) {
-                var intent = Intent(context, EditManualTaskActivity::class.java)
-                intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(automation))
-                startActivity(intent)
+                if (automation.flag == 0) {
+                    var intent = Intent(context, EditManualTaskActivity::class.java)
+                    intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(automation))
+                    startActivity(intent)
+                } else {
+                    var dialog = TipDialog(context)
+                    dialog.show()
+                    dialog.setOnDismisListener {
+                        automation.actions?.clear()
+                        var intent = Intent(context, EditManualTaskActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(automation))
+                        startActivity(intent)
+                    }
+                }
+
             } else if (automation?.type == 1) {
                 var intent = Intent(context, EditAutoicTaskActivity::class.java)
                 intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(automation))
@@ -277,6 +290,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
             RequestCode.query_all_automic_task -> {
                 if (response.code == 0) {
+                    Log.e("XXX", "response data " + response.data)
                     var automationListResponse = JSON.parseObject(response.data.toString(), AutomationListResponse::class.java)
                     if (automationListResponse.List != null && automationListResponse.List.size > 0) {
                         for (i in 0 until automationListResponse.List.size) {
@@ -300,7 +314,6 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
             RequestCode.query_all_manual_task -> {
                 if (response.code == 0) {
-
                     var sceneListResponse = JSON.parseObject(response.data.toString(), SceneListResponse::class.java)
                     if (sceneListResponse.SceneList != null && sceneListResponse.SceneList.size > 0) {
                         for (i in 0 until sceneListResponse.SceneList.size) {
@@ -309,6 +322,7 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                             automation.Name = sceneListResponse.SceneList.get(i).SceneName
                             automation.actions = sceneListResponse.SceneList.get(i).Actions
                             automation.id = sceneListResponse.SceneList.get(i).SceneId
+                            automation.flag = sceneListResponse.SceneList.get(i).Flag
                             automation.sceneListItem = sceneListResponse.SceneList.get(i)
                             manualList.add(automation)
                         }
