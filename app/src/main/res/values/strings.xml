@@ -102,6 +102,7 @@
     <string name="condition_can_not_more_then_20">最多添加20个条件</string>
     <string name="success_update_close">关闭自动智能成功</string>
     <string name="success_update_open">打开自动智能成功</string>
+    <string name="unknown_device">未知设备</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
