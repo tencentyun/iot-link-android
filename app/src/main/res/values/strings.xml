@@ -95,6 +95,9 @@
     <string name="equals_str">等于</string>
     <string name="run_manual_task_success">执行手动智能成功</string>
     <string name="success_update">修改成功</string>
+    <string name="name_illeagal">名称不能超过20个字符</string>
+    <string name="task_can_not_more_then_20">最多添加20个任务</string>
+    <string name="condition_can_not_more_then_20">最多添加20个条件</string>
 
 
     <!--登陆注册-->
