@@ -100,6 +100,8 @@
     <string name="name_illeagal">名称不能超过20个字符</string>
     <string name="task_can_not_more_then_20">最多添加20个任务</string>
     <string name="condition_can_not_more_then_20">最多添加20个条件</string>
+    <string name="success_update_close">关闭自动智能成功</string>
+    <string name="success_update_open">打开自动智能成功</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
