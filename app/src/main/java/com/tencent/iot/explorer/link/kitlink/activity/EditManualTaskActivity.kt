@@ -222,6 +222,10 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
     }
 
     private var onItemClickedListener = ListOptionsDialog.OnDismisListener {
+        if (manualTasks.size >= 20) {
+            T.show(getString(R.string.task_can_not_more_then_20))
+            return@OnDismisListener
+        }
         if (it == 0) {
             var intent = Intent(this, SmartSelectDevActivity::class.java)
             intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.ADD_MANUAL_TASK_DETAIL_ROUTE)
@@ -352,6 +356,10 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
         }
 
         var devDetailStr = intent.getStringExtra(CommonField.EXTRA_DEV_DETAIL)
+        if (type == RouteType.ADD_MANUAL_TASK_DETAIL_ROUTE && devModeInfos.size + manualTasks.size > 20) {
+            T.show(getString(R.string.task_can_not_more_then_20))
+            return
+        }
         for (i in 0 .. devModeInfos.size - 1) {
             var task = ManualTask()
             task.type = 0

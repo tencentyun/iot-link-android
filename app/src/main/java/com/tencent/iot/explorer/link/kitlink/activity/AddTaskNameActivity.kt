@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import kotlinx.android.synthetic.main.activity_add_task_name.*
@@ -30,6 +31,11 @@ class AddTaskNameActivity : BaseActivity() {
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         tv_ok.setOnClickListener {
+            if (ev_task_name.text.toString().trim().length > 20) {
+                T.show(getString(R.string.name_illeagal))
+                return@setOnClickListener
+            }
+
             val intent = Intent()
             intent.putExtra(CommonField.EXYRA_TASK_NAME, ev_task_name.text.toString())
             setResult(RESULT_OK, intent)
