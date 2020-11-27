@@ -228,6 +228,10 @@ class AddAutoicTaskActivity : BaseActivity() {
 
     private var listOptionsClicked = object : ListOptionsDialog.OnDismisListener {
         override fun onItemClicked(pos: Int) {
+            if (manualConditions.size >= 20) {
+                T.show(getString(R.string.condition_can_not_more_then_20))
+                return
+            }
             if (pos == 0) {
                 var intent = Intent(this@AddAutoicTaskActivity, SmartSelectDevActivity::class.java)
                 intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.AUTOMIC_CONDITION_ROUTE)
@@ -241,6 +245,10 @@ class AddAutoicTaskActivity : BaseActivity() {
 
     private var listTasksClicked = object : ListOptionsDialog.OnDismisListener {
         override fun onItemClicked(pos: Int) {
+            if (manualTasks.size >= 20) {
+                T.show(getString(R.string.task_can_not_more_then_20))
+                return
+            }
             if (pos == 3) {
                 var intent = Intent(this@AddAutoicTaskActivity, SetSendMsgActivity::class.java)
                 startActivityForResult(intent, CommonField.ADD_SEND_MSG_REQ_CODE)
@@ -285,7 +293,11 @@ class AddAutoicTaskActivity : BaseActivity() {
             resultCode == Activity.RESULT_OK && data != null) {
             var manualTaskStr = data?.getStringExtra(CommonField.EXTRA_ADD_MANUAL_TASK)
             var tasks = JSON.parseArray(manualTaskStr, ManualTask::class.java)
-            manualTasks.addAll(tasks)
+            if (manualTasks.size + tasks.size > 20) {
+                T.show(getString(R.string.task_can_not_more_then_20))
+            } else {
+                manualTasks.addAll(tasks)
+            }
         } else if (CommonField.EDIT_TIMER_REQ_CODE == requestCode &&
             resultCode == Activity.RESULT_OK && data != null) {
             var timerTaskStr = data?.getStringExtra(CommonField.TIMER_TASK)
@@ -336,6 +348,14 @@ class AddAutoicTaskActivity : BaseActivity() {
         var routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
         var devModeInfos = JSON.parseArray(str, DevModeInfo::class.java)
         if (devModeInfos == null || devModeInfos.size <= 0) {
+            return
+        }
+
+        if (routeType == RouteType.AUTOMIC_CONDITION_ROUTE && manualConditions.size + devModeInfos.size > 20) {
+            T.show(getString(R.string.condition_can_not_more_then_20))
+            return
+        } else if (routeType == RouteType.AUTOMIC_TASK_ROUTE && manualTasks.size + devModeInfos.size > 20) {
+            T.show(getString(R.string.task_can_not_more_then_20))
             return
         }
 

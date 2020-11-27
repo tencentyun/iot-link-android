@@ -412,6 +412,10 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
 
     private var listOptionsClicked = object : ListOptionsDialog.OnDismisListener {
         override fun onItemClicked(pos: Int) {
+            if (manualConditions.size >= 20) {
+                T.show(getString(R.string.condition_can_not_more_then_20))
+                return
+            }
             if (pos == 0) {
                 var intent = Intent(this@EditAutoicTaskActivity, SmartSelectDevActivity::class.java)
                 intent.putExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE)
@@ -425,6 +429,10 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
 
     private var listTasksClicked = object : ListOptionsDialog.OnDismisListener {
         override fun onItemClicked(pos: Int) {
+            if (manualTasks.size >= 20) {
+                T.show(getString(R.string.task_can_not_more_then_20))
+                return
+            }
             if (pos == 3) {
                 var intent = Intent(this@EditAutoicTaskActivity, SetSendMsgActivity::class.java)
                 startActivityForResult(intent, CommonField.ADD_SEND_MSG_REQ_CODE)
@@ -469,7 +477,11 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
             resultCode == Activity.RESULT_OK && data != null) {
             var delayTaskStr = data?.getStringExtra(CommonField.EXTRA_ADD_MANUAL_TASK)
             var tasks = JSON.parseArray(delayTaskStr, ManualTask::class.java)
-            manualTasks.addAll(tasks)
+            if (manualTasks.size + tasks.size > 20) {
+                T.show(getString(R.string.task_can_not_more_then_20))
+            } else {
+                manualTasks.addAll(tasks)
+            }
         } else if (CommonField.EDIT_TIMER_REQ_CODE == requestCode &&
             resultCode == Activity.RESULT_OK && data != null) {
             var timerTaskStr = data?.getStringExtra(CommonField.TIMER_TASK)
@@ -535,6 +547,14 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
         var routeType = intent.getIntExtra(CommonField.EXTRA_ROUTE_TYPE, RouteType.MANUAL_TASK_ROUTE)
         var devModeInfos = JSON.parseArray(str, DevModeInfo::class.java)
         if (devModeInfos == null || devModeInfos.size <= 0) {
+            return
+        }
+
+        if (routeType == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE && manualConditions.size + devModeInfos.size > 20) {
+            T.show(getString(R.string.condition_can_not_more_then_20))
+            return
+        } else if (routeType == RouteType.ADD_AUTOMIC_TASK_DETAIL_ROUTE && manualTasks.size + devModeInfos.size > 20) {
+            T.show(getString(R.string.task_can_not_more_then_20))
             return
         }
 

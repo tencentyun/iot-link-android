@@ -97,6 +97,9 @@
     <string name="success_update">修改成功</string>
     <string name="please_set_first">请先进行设置后保存</string>
     <string name="smart_not_work">智能失效</string>
+    <string name="name_illeagal">名称不能超过20个字符</string>
+    <string name="task_can_not_more_then_20">最多添加20个任务</string>
+    <string name="condition_can_not_more_then_20">最多添加20个条件</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
