@@ -17,6 +17,8 @@ import com.tencent.iot.explorer.link.kitlink.adapter.ManualTaskAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
 import kotlinx.android.synthetic.main.activity_add_autoic_task.*
+import kotlinx.android.synthetic.main.add_new_item_layout.*
+import kotlinx.android.synthetic.main.add_new_item_layout.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -38,6 +40,7 @@ class AddAutoicTaskActivity : BaseActivity() {
 
     override fun initView() {
         tv_title.setText(R.string.add_automic_smart)
+        add_automic_item_layout.tv_tip_add_condition.setText(R.string.add_task)
         options.add(getString(R.string.dev_status_changed))
         options.add(getString(R.string.dev_timer))
 

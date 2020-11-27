@@ -18,7 +18,7 @@ class ManualTask {
     var productId = ""
     var actionId = ""
     var workDays = ""
-    var workDayType = 0
+    var workDayType = 0 // 0 执行一次  1 每天  2 工作日  3 周末  4 自定义
     var sceneId = ""
     var condId = ""
     var notificationType = 0 // 消息中心
