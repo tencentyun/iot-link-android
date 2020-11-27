@@ -80,6 +80,10 @@ class AddManualTaskActivity : BaseActivity() {
     }
 
     private var onItemClickedListener = ListOptionsDialog.OnDismisListener {
+        if (manualTasks.size >= 20) {
+            T.show(getString(R.string.task_can_not_more_then_20))
+            return@OnDismisListener
+        }
         if (it == 0) {
             jumpActivity(SmartSelectDevActivity::class.java)
         } else if (it == 1) {
@@ -147,6 +151,10 @@ class AddManualTaskActivity : BaseActivity() {
         }
 
         var devDetailStr = intent.getStringExtra(CommonField.EXTRA_DEV_DETAIL)
+        if (type == RouteType.MANUAL_TASK_ROUTE && devModeInfos.size + manualTasks.size > 20) {
+            T.show(getString(R.string.task_can_not_more_then_20))
+            return
+        }
         for (i in 0 .. devModeInfos.size - 1) {
             var task = ManualTask()
             task.type = 0
