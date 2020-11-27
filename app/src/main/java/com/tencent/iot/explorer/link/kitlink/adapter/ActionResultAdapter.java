@@ -79,15 +79,17 @@ public class ActionResultAdapter extends BaseAdapter {
                             public void success(@NotNull BaseResponse response, int reqCode) {
                                 if (response.isSuccess()) {
                                     JSONObject json = JSON.parseObject(response.getData().toString());
-                                    if (json == null) return;
+                                    if (json == null || !json.containsKey("Data")) return;
 
                                     String data = json.getString("Data");
                                     if (TextUtils.isEmpty(data)) return;
 
                                     DeviceEntity deviceEntity = JSON.parseObject(data, DeviceEntity.class);
-                                    Log.e("XXX", "deviceEntity json " + JSON.toJSONString(deviceEntity));
                                     tmpHolder.name.setText(deviceEntity.getAlias());
                                     allInfo.get(position).setDeviceAliasName(deviceEntity.getAlias());
+                                } else {
+                                    tmpHolder.name.setText(context.getString(R.string.unknown_device));
+                                    allInfo.get(position).setDeviceAliasName(context.getString(R.string.unknown_device));
                                 }
                             }
                         });

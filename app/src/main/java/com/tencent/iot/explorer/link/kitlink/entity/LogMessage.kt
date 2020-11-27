@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
 import android.util.Log
+import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,15 +16,8 @@ class LogMessage {
     var createAt = ""
     set(value) {
         field = value
-        //2020-11-17T12:43:04.256Z
 
-        var timeArr = field.split(".")
-        if (timeArr.size <= 0) {
-            return
-        }
-
-        var timeStr = timeArr.get(0).replace("T", " ")
-
+        var timeStr = DateUtils.utc2Local(field)
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val date: Date = sdf.parse(timeStr)
         this.day = date.date.toString()

@@ -1,12 +1,16 @@
 package com.tencent.iot.explorer.link.kitlink.util;
 
+import android.util.Log;
+
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.T;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class DateUtils {
     public static String getFormatDate(Date date) {
@@ -50,5 +54,26 @@ public class DateUtils {
         DateFormat df = new SimpleDateFormat(format);
         String str = df.format(d);
         return str;
+    }
+
+    public static String utc2Local(String utcTime) {
+        //UTC时间格式
+        SimpleDateFormat utcFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        utcFormater.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date gpsUTCDate = null;
+        try {
+            gpsUTCDate = utcFormater.parse(utcTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat localFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//当地时间格式
+        localFormater.setTimeZone(TimeZone.getDefault());
+        if (gpsUTCDate == null) {
+            return localFormater.format(System.currentTimeMillis());
+        }
+
+        String localTime = localFormater.format(gpsUTCDate.getTime());
+        return localTime;
     }
 }
