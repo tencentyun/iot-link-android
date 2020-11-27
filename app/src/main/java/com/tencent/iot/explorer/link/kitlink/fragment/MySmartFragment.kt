@@ -163,7 +163,11 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                 when(reqCode) {
                     RequestCode.update_automic_task_status -> {
                         if (response.code == 0) {
-                            T.show(getString(R.string.success_update))
+                            if (status != 1) {
+                                T.show(getString(R.string.success_update_close))
+                            } else {
+                                T.show(getString(R.string.success_update_open))
+                            }
                             adapter?.setItemStatus(postion, status)
                             adapter?.notifyDataSetChanged();
                         } else {
