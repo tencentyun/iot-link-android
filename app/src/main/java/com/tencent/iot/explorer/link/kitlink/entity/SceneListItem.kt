@@ -9,4 +9,5 @@ class SceneListItem {
     var SceneName = ""
     var SceneIcon = ""
     var Actions: JSONArray? = null
+    var Flag = 0
 }

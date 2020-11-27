@@ -96,6 +96,7 @@
     <string name="run_manual_task_success">执行手动智能成功</string>
     <string name="success_update">修改成功</string>
     <string name="please_set_first">请先进行设置后保存</string>
+    <string name="smart_not_work">智能失效</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -298,6 +299,8 @@
     <string name="add_device_success">配网完成，添加设备成功</string>
     <string name="run_one_time">执行一次</string>
     <string name="msg_center">消息中心</string>
+    <string name="smart_lost_device">当前智能设备丢失，请重新设置动作</string>
+
 
     <!--云端定时-->
     <string name="cloud_timing">云端定时</string>

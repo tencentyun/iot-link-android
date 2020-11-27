@@ -5,6 +5,7 @@ import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
@@ -23,6 +24,8 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.response.DeviceListResponse
+import com.tencent.iot.explorer.link.kitlink.adapter.DeviceAdapter
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.kitlink.util.Utils
 import kotlinx.android.synthetic.main.activity_add_autoic_task.*
@@ -46,6 +49,7 @@ import kotlinx.android.synthetic.main.activity_edit_automic_task.tv_working_time
 import kotlinx.android.synthetic.main.activity_edit_automic_task.working_time_layout
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
 
@@ -58,6 +62,9 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
     private var adapter: ManualTaskAdapter? = null
     private var manualConditions: MutableList<ManualTask> = LinkedList()
     private var conditionAdapter: ManualTaskAdapter? = null
+    private val deviceList = CopyOnWriteArrayList<DeviceEntity>()
+    private var deviceListEnd = false
+
     @Volatile
     private var smartPicUrl = ""
     @Volatile
@@ -110,8 +117,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
 
         layout_task_detail.visibility = View.GONE
         loadTitleViewData()
-
-        HttpRequest.instance.getAutomicTaskDetail(automation!!.id, this)
+        HttpRequest.instance.deviceList(App.data.getCurrentFamily().FamilyId, "", deviceList.size, this)
     }
 
     fun loadTitleViewData() {
@@ -588,6 +594,24 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                     T.show(response.msg)
                 }
             }
+
+            RequestCode.device_list -> {
+                if (response.isSuccess()) {
+                    response.parse(DeviceListResponse::class.java)?.run {
+                        deviceList.addAll(DeviceList)
+                        if (Total >= 0) {
+                            deviceListEnd = deviceList.size >= Total
+                        }
+
+                        if (!deviceListEnd) {  // 请求没结束，继续请求设备列表
+                            HttpRequest.instance.deviceList(App.data.getCurrentFamily().FamilyId, "", deviceList.size, this@EditAutoicTaskActivity)
+                        } else {
+                            HttpRequest.instance.getAutomicTaskDetail(automation!!.id, this@EditAutoicTaskActivity)
+                        }
+                    }
+                }
+            }
+
         }
 
     }
@@ -595,6 +619,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
     private fun convertResp2LocalData(jsonObject: JSONObject) {
         if (jsonObject == null) return
 
+        Log.e("XXX", "jsonObject " + jsonObject.toJSONString())
         var automicTaskEntity = JSONObject.parseObject(jsonObject.getString("Data"), AutomicTaskEntity::class.java)
         Log.e("XXX", "automicTaskEntity " + JSON.toJSONString(automicTaskEntity))
         workTimeMode.workDays = automicTaskEntity.effectiveDays
@@ -623,6 +648,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
         for (i in 0 until jsonArr.size) {
             var task = ManualTask()
             var json = jsonArr.get(i) as JSONObject
+            Log.e("XXX", "json >> " + json.toJSONString())
             if (json.getIntValue("ActionType") == 1) {
                 var time = json.getLongValue("Data")
                 task.type = 1
@@ -631,25 +657,41 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                 task.min = tmpSeconds / 60
                 task.aliasName = getString(R.string.delay_time)
             } else if (json.getIntValue("ActionType") == 0) {
-                task.type = json.getIntValue("ActionType")
-                task.deviceName = json.getString("DeviceName")
-                task.productId = json.getString("ProductId")
-                task.iconUrl = json.getString("IconUrl")
-                var value = json.getString("Data")
-                var dataJson = JSON.parseObject(value)
-                for (keys in dataJson.keys) {
-                    task.actionId = keys
-                    task.taskKey = dataJson.getIntValue(keys).toString()
-                    task.task = dataJson.getIntValue(keys).toString()
+                if (json.containsKey("ActionType")) {
+                    task.type = json.getIntValue("ActionType")
+                }
+                if (json.containsKey("DeviceName")) {
+                    task.deviceName = json.getString("DeviceName")
+                }
+                if (json.containsKey("ProductId")) {
+                    task.productId = json.getString("ProductId")
+                }
+                if (json.containsKey("IconUrl")) {
+                    task.iconUrl = json.getString("IconUrl")
+                }
+                if (json.containsKey("AliasName")) {
+                    task.aliasName = json.getString("AliasName")
+                }
+                if (json.containsKey("Data")) {
+                    var value = json.getString("Data")
+                    var dataJson = JSON.parseObject(value)
+                    for (keys in dataJson.keys) {
+                        task.actionId = keys
+                        task.taskKey = dataJson.getIntValue(keys).toString()
+                        task.task = dataJson.getIntValue(keys).toString()
+                    }
                 }
 
                 convertKey2Value(task)
             } else if (json.getIntValue("ActionType") == 2) {
-                Log.e("XXX", "json " + json.toJSONString())
                 task.type = 3
                 task.aliasName = getString(R.string.sel_manual_task)
-                task.sceneId = json.getString("Data")
-                task.task = json.getString("DeviceName")
+                if (json.containsKey("Data")) {
+                    task.sceneId = json.getString("Data")
+                }
+                if (json.containsKey("DeviceName")) {
+                    task.task = json.getString("DeviceName")
+                }
             } else if (json.getIntValue("ActionType") == 3) {
                 task.type = 2
                 task.aliasName = getString(R.string.send_notification)
@@ -657,6 +699,8 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                     task.task = getString(R.string.msg_center)
                 }
             }
+
+            if (shouldDelete(task)) continue
             manualTasks.add(task)
         }
         refreshView()
@@ -688,9 +732,25 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                 manualTask.hour = Integer.valueOf(automicCondition.timer!!.timePoint.split(":").get(0))
                 manualTask.min = Integer.valueOf(automicCondition.timer!!.timePoint.split(":").get(1))
             }
+
+            if (shouldDelete(manualTask)) continue
             manualConditions.add(manualTask)
         }
         refreshView()
+    }
+
+    private fun shouldDelete(task: ManualTask): Boolean {
+        if (task.type != 5 && task.type != 0) {  // 不是场景也不是设备控制，无需剔除
+            return false
+        }
+
+        for (i in 0 until deviceList.size) {
+            if (!TextUtils.isEmpty(deviceList.get(i).ProductId) && !TextUtils.isEmpty(deviceList.get(i).DeviceName) &&
+                deviceList.get(i).ProductId == task.productId && deviceList.get(i).DeviceName == task.deviceName) {
+                return false
+            }
+        }
+        return true
     }
 
     private fun convertKey2Value(task: ManualTask) {
