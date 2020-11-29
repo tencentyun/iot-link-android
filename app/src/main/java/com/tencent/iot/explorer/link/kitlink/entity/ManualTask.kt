@@ -10,6 +10,7 @@ class ManualTask {
     var propertyId = ""
     var taskTip = ""
     var task = ""
+    var unit = ""
     var taskKey = ""
     var hour = 0 // 当 type 为 0 时，该字段生效
     var min = 0 // 当 type 为 0 时，该字段生效
