@@ -23,7 +23,7 @@ class LogMessage {
         this.day = date.date.toString()
         this.mouth = (date.month + 1).toString()
         this.year = (date.year + 1970).toString()
-        this.time = String.format("%02d:%02d", date.hours, date.minutes)
+        this.time = String.format("%02d:%02d:%02d", date.hours, date.minutes, date.seconds)
     }
     var msgId = ""
     var sceneId = ""
