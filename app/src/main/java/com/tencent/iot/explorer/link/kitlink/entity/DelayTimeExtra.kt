@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.entity
 
 class DelayTimeExtra {
     var startHours = 0
-    var endHours = 24
+    var endHours = 23
     var startMinute = 0
     var endMinute = 59
     var editAble = true
