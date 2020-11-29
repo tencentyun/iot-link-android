@@ -373,6 +373,7 @@ class AddAutoicTaskActivity : BaseActivity() {
             task.actionId = devModeInfos.get(i).id
             task.taskTip = devModeInfos.get(i).name
             task.task = devModeInfos.get(i).value
+            task.unit = devModeInfos.get(i).unit
             task.taskKey = devModeInfos.get(i).key
             if (routeType == RouteType.AUTOMIC_CONDITION_ROUTE) {
                 task.type = 5

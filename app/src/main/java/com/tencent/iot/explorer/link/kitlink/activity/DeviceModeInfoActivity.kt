@@ -114,6 +114,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
             override fun onSaveClicked() {
                 devModes.get(pos).value = dialog.progress.toString()
+                devModes.get(pos).unit = modeInt.unit
                 adapter?.notifyDataSetChanged()
             }
 
@@ -317,6 +318,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                     devInfo.value = manualTask!!.task
                     devInfo.key = manualTask!!.taskKey
                     devInfo.pos = manualTask!!.pos
+                    devInfo.unit = manualTask!!.unit
                 }
             }
         }
