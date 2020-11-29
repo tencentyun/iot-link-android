@@ -298,7 +298,7 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
             }
 
             if (manualTasks.size <= 0) {
-                T.show(getString(R.string.no_task_to_add))
+                T.show(getString(R.string.please_add_task))
             } else if (manualTasks[manualTasks!!.lastIndex].type == 1) {
                 T.show(getString(R.string.delay_time_can_not_be_last_one))
             } else {
