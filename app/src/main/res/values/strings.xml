@@ -103,6 +103,8 @@
     <string name="success_update_close">关闭自动智能成功</string>
     <string name="success_update_open">打开自动智能成功</string>
     <string name="unknown_device">未知设备</string>
+    <string name="please_add_task">请添加任务</string>
+    <string name="no_manual_task_please_add_first">暂无手动智能，请先添加</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
