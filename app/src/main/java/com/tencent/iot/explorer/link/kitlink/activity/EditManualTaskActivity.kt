@@ -151,7 +151,6 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
                     if (dataTemplate == null || dataTemplate.properties == null || dataTemplate.properties!!.size == 0) { return }
 
                     for (i in 0 until dataTemplate.properties!!.size) {
-                        Log.e("XXX", "dataTemplate.properties!!.get(i).toString() " + dataTemplate.properties!!.get(i).toString())
                         var devModeInfo = JSON.parseObject(dataTemplate.properties!!.get(i).toString(), DevModeInfo::class.java)
                         if (devModeInfo.id == task.actionId) {
                             task.taskTip = devModeInfo.name

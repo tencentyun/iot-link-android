@@ -56,11 +56,9 @@ class WorkTimeMode {
 
         fun convetDaySet2Days(days: Set<Integer>): String {
             var ret = 0L
-            Log.e("XXX", "aaa " + JSON.toJSONString(days))
             for (i in days) {
                 ret = ret + (1 * Math.pow(10.0, 6 - i.toDouble())).toLong()
             }
-            Log.e("XXX", "bbb " + String.format("%07d", ret))
             return String.format("%07d", ret)
         }
 
