@@ -126,7 +126,29 @@
             android:text="@string/current_dev_no_this_function"
             android:textSize="15sp"
             android:layout_marginTop="15dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:gravity="center"
             />
+
+            <TextView
+                android:id="@+id/tv_add_now_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/please_select_other_dev"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="15sp"
+                android:layout_marginTop="20dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="27dp"
+                android:paddingRight="27dp"
+                android:textColor="@color/blue_start_color"
+                android:background="@drawable/background_bule_white_btn"
+                app:layout_constraintTop_toBottomOf="@+id/tv_nodata_tip"
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
