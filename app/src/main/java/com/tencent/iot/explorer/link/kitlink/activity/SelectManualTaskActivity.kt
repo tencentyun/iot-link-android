@@ -73,6 +73,7 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
     }
 
     override fun setListener() {
+        no_data_layout.setOnClickListener{}
         iv_back.setOnClickListener { finish() }
         tv_cancel.setOnClickListener { finish() }
         tv_select_all_btn.setOnClickListener {
@@ -126,14 +127,15 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
                             automation.id = sceneListResponse.SceneList.get(i).SceneId
                             manualList.add(automation)
                         }
+
                         if (manualList.size < sceneListResponse.Total) {
                             manualListOffset = manualList.size
                             HttpRequest.instance.queryManualTask(App.data.getCurrentFamily().FamilyId, manualListOffset, this)
-                        } else {
-                            loadDataOver()
+                            return
                         }
-
                     }
+                    loadDataOver()
+
                 } else {
                     T.show(response.msg)
                 }
@@ -149,6 +151,11 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
                     break
                 }
             }
+        }
+        if (manualList.size <= 0) {
+            no_data_layout.visibility = View.VISIBLE
+        } else {
+            no_data_layout.visibility = View.GONE
         }
         adapter?.notifyDataSetChanged()
     }
