@@ -122,6 +122,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
     }
 
     override fun setListener() {
+        tv_add_now_btn.setOnClickListener { finish() }
         iv_back.setOnClickListener { finish() }
         tv_cancel.setOnClickListener { finish() }
         tv_ok.setOnClickListener {
