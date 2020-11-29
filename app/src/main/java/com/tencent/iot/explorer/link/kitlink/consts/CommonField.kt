@@ -89,6 +89,7 @@ object CommonField {
     const val REGION_CHINA = "ap-guangzhou"
     const val REGION_USA = "na-ashburn"
     const val REGION_LIST_URL = "https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/37/config1.js"
+    const val TASK_PIC_LIST_URL = "https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/39/config2.js"
 
 
     /************返回结果通用字段*************/
