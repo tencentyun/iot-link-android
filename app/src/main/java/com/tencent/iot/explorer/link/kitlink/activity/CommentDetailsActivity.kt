@@ -206,7 +206,6 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     }
 
     private fun makeShortUrl (url: String) {
-        Log.e("XXX", "url " + url)
         var uri = Uri.parse(url)
         if (TextUtils.isEmpty(uri.encodedQuery)) return
 
