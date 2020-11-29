@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DelayTimeExtra
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
@@ -33,6 +34,11 @@ class DelayTimeActivity : BaseActivity() {
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         tv_ok.setOnClickListener {
+            if (wheel_delay_time_hour.currentItemPosition == 0 &&
+                wheel_delay_time_min.currentItemPosition == 0) {
+                T.show(getString(R.string.delay_time_at_least_one_min))
+                return@setOnClickListener
+            }
             val intent = Intent()
             var manualTask = ManualTask()
             manualTask.aliasName = getString(R.string.delay_time)
