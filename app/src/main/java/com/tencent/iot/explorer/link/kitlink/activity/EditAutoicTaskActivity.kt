@@ -573,6 +573,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
             task.taskTip = devModeInfos.get(i).name
             task.task = devModeInfos.get(i).value
             task.taskKey = devModeInfos.get(i).key
+            task.unit = devModeInfos.get(i).unit
             if (routeType == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE) {
                 task.type = 5
                 manualConditions.add(task)
@@ -815,6 +816,9 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                                 }
                             } else if (type == "int" || type == "float") {
                                 task.taskKey = ""
+                                if (devModeInfo.define!!.containsKey("unit")) {
+                                    task.unit = devModeInfo.define!!.getString("unit")
+                                }
                             }
                         }
                     }

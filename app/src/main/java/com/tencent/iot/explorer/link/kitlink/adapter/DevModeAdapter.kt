@@ -59,9 +59,9 @@ class DevModeAdapter(list: MutableList<DevModeInfo>, type: Int) : RecyclerView.A
             holder.valueTxt.setText(R.string.unset)
         } else if (this.type == RouteType.AUTOMIC_CONDITION_ROUTE || this.type == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
                 this.type == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE || this.type == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE) {
-            holder.valueTxt.setText(T.getContext().getString(R.string.equals_str) + " " + list.get(position).value)
+            holder.valueTxt.setText(T.getContext().getString(R.string.equals_str) + " " + list.get(position).value + list.get(position).unit)
         } else {
-            holder.valueTxt.setText(list.get(position).value)
+            holder.valueTxt.setText(list.get(position).value + list.get(position).unit)
         }
 
         if (position == list.lastIndex) {

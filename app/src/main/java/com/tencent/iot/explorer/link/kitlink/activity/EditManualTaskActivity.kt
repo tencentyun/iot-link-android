@@ -90,7 +90,7 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
             if (json == null) {
                 continue
             }
-            Log.e("XXX", "json " + json.toJSONString())
+
             if (json.getIntValue("ActionType") == 1) {
                 var time = json.getLongValue("Data")
                 task.type = 1
@@ -151,6 +151,7 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
                     if (dataTemplate == null || dataTemplate.properties == null || dataTemplate.properties!!.size == 0) { return }
 
                     for (i in 0 until dataTemplate.properties!!.size) {
+                        Log.e("XXX", "dataTemplate.properties!!.get(i).toString() " + dataTemplate.properties!!.get(i).toString())
                         var devModeInfo = JSON.parseObject(dataTemplate.properties!!.get(i).toString(), DevModeInfo::class.java)
                         if (devModeInfo.id == task.actionId) {
                             task.taskTip = devModeInfo.name
@@ -165,6 +166,9 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
                                 }
                             } else if (type == "int" || type == "float") {
                                 task.taskKey = ""
+                                if (devModeInfo.define!!.containsKey("unit")) {
+                                    task.unit = devModeInfo.define!!.getString("unit")
+                                }
                             }
                         }
                     }
@@ -375,6 +379,7 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
             task.taskTip = devModeInfos.get(i).name
             task.task = devModeInfos.get(i).value
             task.taskKey = devModeInfos.get(i).key
+            task.unit = devModeInfos.get(i).unit
             if (type == RouteType.ADD_MANUAL_TASK_DETAIL_ROUTE) {
                 manualTasks.add(task)
             } else if (type == RouteType.EDIT_MANUAL_TASK_DETAIL_ROUTE) {

@@ -114,7 +114,7 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
             } else {
                 Picasso.get().load(R.drawable.device_placeholder).into(holder.ivType)
             }
-            holder.taskDesc.setText(": " + list[position].task)
+            holder.taskDesc.setText(": " + list[position].task + list[position].unit)
         } else if (list[position].type == 2) {
             Picasso.get().load(R.mipmap.send_msg_icon).into(holder.ivType)
             holder.taskDesc.setText(list[position].task)
@@ -170,7 +170,7 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
             } else {
                 Picasso.get().load(R.drawable.device_placeholder).into(holder.ivType)
             }
-            holder.taskDesc.setText(": " + T.getContext().getString(R.string.equals_str) + " " + list[position].task)
+            holder.taskDesc.setText(": " + T.getContext().getString(R.string.equals_str) + " " + list[position].task + list[position].unit)
         }
 
         holder.devName.setText(list[position].getAlias())
