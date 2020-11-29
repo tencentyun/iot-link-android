@@ -169,6 +169,7 @@ class AddManualTaskActivity : BaseActivity() {
             task.actionId = devModeInfos.get(i).id
             task.taskTip = devModeInfos.get(i).name
             task.task = devModeInfos.get(i).value
+            task.unit = devModeInfos.get(i).unit
             task.taskKey = devModeInfos.get(i).key
             if (type == RouteType.MANUAL_TASK_ROUTE) {
                 manualTasks.add(task)
