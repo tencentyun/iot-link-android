@@ -130,7 +130,7 @@ object RequestCode {
     const val update_automic_task_status = 8010
     const val update_automic_task = 8011
     const val get_run_task_log = 8012
-
+    const val get_tasl_pic_list = 8013
 
     /*************场景联动接口结束**************/
 
