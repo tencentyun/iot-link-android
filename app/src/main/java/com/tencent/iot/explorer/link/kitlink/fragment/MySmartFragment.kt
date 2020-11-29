@@ -134,7 +134,13 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
         override fun onRunTaskClicked(automation: Automation?) {
             if (automation!!.type == 0) {
-                HttpRequest.instance.runManualTask(automation!!.id, this@MySmartFragment)
+                if (automation.flag == 0) {
+                    HttpRequest.instance.runManualTask(automation!!.id, this@MySmartFragment)
+                } else {
+                    var dialog = TipDialog(context)
+                    dialog.show()
+                    dialog.setOnDismisListener {}
+                }
             }
         }
 
