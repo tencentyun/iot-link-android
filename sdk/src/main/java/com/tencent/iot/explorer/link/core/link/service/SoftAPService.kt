@@ -45,7 +45,6 @@ class SoftAPService(context: Context) : ConfigService(){
             socket = DatagramSocket(port)
             L.e("gateway=${it.dhcpInfo.gateway}")
             host = intToIp(it.dhcpInfo.gateway)
-            Log.e("XXX", "host=" + host)
         }
     }
 

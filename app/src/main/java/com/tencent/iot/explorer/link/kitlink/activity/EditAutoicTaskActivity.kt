@@ -643,9 +643,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
     private fun convertResp2LocalData(jsonObject: JSONObject) {
         if (jsonObject == null) return
 
-        Log.e("XXX", "jsonObject " + jsonObject.toJSONString())
         var automicTaskEntity = JSONObject.parseObject(jsonObject.getString("Data"), AutomicTaskEntity::class.java)
-        Log.e("XXX", "automicTaskEntity " + JSON.toJSONString(automicTaskEntity))
         workTimeMode.workDays = automicTaskEntity.effectiveDays
         workTimeMode.startTimeHour = Integer.valueOf(automicTaskEntity.effectiveBeginTime.split(":").get(0))
         workTimeMode.startTimerMin = Integer.valueOf(automicTaskEntity.effectiveBeginTime.split(":").get(1))
@@ -672,7 +670,6 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
         for (i in 0 until jsonArr.size) {
             var task = ManualTask()
             var json = jsonArr.get(i) as JSONObject
-            Log.e("XXX", "json >> " + json.toJSONString())
             if (json.getIntValue("ActionType") == 1) {
                 var time = json.getLongValue("Data")
                 task.type = 1

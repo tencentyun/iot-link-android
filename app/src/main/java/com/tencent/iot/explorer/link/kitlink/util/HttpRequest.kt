@@ -1404,7 +1404,6 @@ class HttpRequest private constructor() {
             param["EffectiveDays"] = "1111111"
         }
 
-        Log.e("XXX", "----------> \n" + JSON.toJSONString(param))
         tokenPost(param, callback, RequestCode.create_automic_task)
     }
 

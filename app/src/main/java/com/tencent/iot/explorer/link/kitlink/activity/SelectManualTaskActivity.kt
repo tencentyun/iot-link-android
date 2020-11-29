@@ -47,7 +47,6 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
             adapter = SelectManualTaskAdapter(manualList, singleCheck)
             var extraStr = intent.getStringExtra(CommonField.EDIT_EXTRA)
             passManualTask = JSON.parseObject(extraStr, ManualTask::class.java)
-            Log.e("XXX", "passManualTask " + JSON.toJSONString(passManualTask))
         }
         adapter?.setOnItemClicked(onItemClicked)
         val layoutManager = LinearLayoutManager(this)
@@ -98,10 +97,7 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
                 manualTask.aliasName = getString(R.string.sel_manual_task)
                 manualTask.task = tmp.Name
                 manualTask.sceneId = tmp.id
-                Log.e("XXX", "------------- 1")
                 if (singleCheck) {
-                    Log.e("XXX", "------------- 2 passManualTask!!.pos " + passManualTask!!.pos)
-                    Log.e("XXX", "------------- 2 manualTask.pos " + manualTask.pos)
                     manualTask.pos = passManualTask!!.pos
                 }
                 retList.add(manualTask)

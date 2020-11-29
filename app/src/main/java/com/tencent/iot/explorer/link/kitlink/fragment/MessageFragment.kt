@@ -275,7 +275,6 @@ class MessageFragment(category: Int) : BaseFragment(), CRecyclerView.RecyclerIte
     }
 
     override fun getViewType(position: Int): Int {
-        Log.e("XXX", "messageList " + JSON.toJSONString(messageList))
         return when (messageList[position].Attachments == null) {
             true -> {
                 when (messageList[position].Category) {

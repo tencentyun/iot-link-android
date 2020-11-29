@@ -294,7 +294,6 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
 
             RequestCode.query_all_automic_task -> {
                 if (response.code == 0) {
-                    Log.e("XXX", "response data " + response.data)
                     var automationListResponse = JSON.parseObject(response.data.toString(), AutomationListResponse::class.java)
                     if (automationListResponse.List != null && automationListResponse.List.size > 0) {
                         for (i in 0 until automationListResponse.List.size) {

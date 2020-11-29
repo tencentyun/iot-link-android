@@ -76,7 +76,6 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
         holder.swipeRevealLayout.setSwipeListener(object: SwipeRevealLayout.SwipeListener {
             override fun onOpened(view: SwipeRevealLayout?) {
                 var position = holder.adapterPosition
-                Log.e("XXX", "position " + position)
                 indexOpen2Keep = position
                 this@ManualTaskAdapter.notifyDataSetChanged()
             }

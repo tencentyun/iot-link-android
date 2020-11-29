@@ -104,7 +104,6 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
     }
 
     private fun showNumDialog(pos: Int, devModeInfo: DevModeInfo) {
-        Log.e("XXX", "devModeInfo " + JSON.toJSONString(devModeInfo))
         var modeInt = JSON.parseObject(devModeInfo.define!!.toJSONString(), ModeInt::class.java)
         if (!TextUtils.isEmpty(devModes.get(pos).value)) {  // 当对应界面存在进度值时候，使用存在的进度值做数据
             modeInt.start = Integer.valueOf(devModes.get(pos).value)
