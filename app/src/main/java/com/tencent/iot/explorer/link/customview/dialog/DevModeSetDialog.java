@@ -93,7 +93,6 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         increase = view.findViewById(R.id.iv_increase);
         currentProgress = view.findViewById(R.id.progress);
 
-
         title.setText(titleStr);
         adapter.setOnItemClicked(onItemClicked);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.context);
@@ -112,7 +111,7 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
             barLayout.setVisibility(View.VISIBLE);
             bar.setRange(modeInt.getMin(), modeInt.getMax());
             bar.setProgress(progress);
-            bar.setIndicatorText(String.valueOf(progress));
+            bar.setIndicatorText(progress + modeInt.getUnit());
             bar.setOnRangeChangedListener(onRangeChangedListener);
         } else {
             options.setVisibility(View.VISIBLE);
@@ -125,7 +124,7 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         @Override
         public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
             progress = (int)leftValue;
-            view.getLeftSeekBar().setIndicatorText(String.valueOf((int)leftValue));
+            view.getLeftSeekBar().setIndicatorText((int)leftValue + modeInt.getUnit());
         }
 
         @Override
