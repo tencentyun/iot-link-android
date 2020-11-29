@@ -12,4 +12,5 @@ class DevModeInfo {
     var mode = ""
     var define: JSONObject? = null
     var pos = 0
+    var unit = ""
 }
