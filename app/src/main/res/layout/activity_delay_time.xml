@@ -79,7 +79,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:wheel_indicator_size="1dp"
                     app:wheel_indicator_color="@color/grey_e5e5e5"
-                    app:wheel_cyclic="true"
                     app:wheel_selected_item_text_color="@color/black"
                     />
 
@@ -94,7 +93,6 @@
                     app:layout_constraintBottom_toBottomOf="@id/wheel_delay_time_hour"
                     app:wheel_indicator_size="1dp"
                     app:wheel_indicator_color="@color/grey_e5e5e5"
-                    app:wheel_cyclic="true"
                     app:wheel_selected_item_text_color="@color/black"
                     />
 

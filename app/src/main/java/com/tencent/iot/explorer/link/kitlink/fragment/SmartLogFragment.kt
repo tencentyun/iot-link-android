@@ -44,6 +44,14 @@ class SmartLogFragment() : BaseFragment(), MyCallback {
         initView()
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            reloadData()
+        }
+    }
+
+
     fun initView() {
         val layoutManager = LinearLayoutManager(context)
         lv_all_log.setLayoutManager(layoutManager)
