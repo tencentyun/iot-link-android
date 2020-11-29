@@ -127,12 +127,12 @@ class TimerActivity : BaseActivity() {
 
     private fun initDatePicker() {
         var hours = ArrayList<String>()
-        for (i in 0 .. 24) {
+        for (i in 0 .. 23) {
             hours.add("$i" + getString(R.string.unit_h_single))
         }
 
         var minutes = ArrayList<String>()
-        for (i in 0 .. 60) {
+        for (i in 0 .. 59) {
             minutes.add("$i" + getString(R.string.unit_m_single))
         }
         wheel_delay_time_hour.setData(hours)
