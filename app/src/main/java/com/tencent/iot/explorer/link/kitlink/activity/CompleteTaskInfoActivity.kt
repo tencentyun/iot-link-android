@@ -143,7 +143,7 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
                     var propertyJson = JSONObject()
                     propertyJson.put("ProductId", automicTaskEntity?.conditionsItem?.get(i)?.productId)
                     propertyJson.put("DeviceName", automicTaskEntity?.conditionsItem?.get(i)?.deviceName)
-                    propertyJson.put("Op", "eq")
+                    propertyJson.put("Op", automicTaskEntity?.conditionsItem?.get(i)?.op)
                     propertyJson.put("IconUrl", automicTaskEntity?.conditionsItem?.get(i)?.iconUrl)
                     if (TextUtils.isEmpty(automicTaskEntity?.conditionsItem?.get(i)?.taskKey)) {
                         propertyJson.put("Value", automicTaskEntity?.conditionsItem?.get(i)?.task)

@@ -13,4 +13,5 @@ class DevModeInfo {
     var define: JSONObject? = null
     var pos = 0
     var unit = ""
+    var op = OpValue.OP_EQ
 }
