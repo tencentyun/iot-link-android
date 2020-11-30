@@ -23,6 +23,7 @@ class ManualTask {
     var sceneId = ""
     var condId = ""
     var notificationType = 0 // 消息中心
+    var op = OpValue.OP_EQ
 
     fun getAlias(): String {
         return if (TextUtils.isEmpty(aliasName)) {

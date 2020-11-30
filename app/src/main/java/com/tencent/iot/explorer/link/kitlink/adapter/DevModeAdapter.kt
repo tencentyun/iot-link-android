@@ -15,6 +15,7 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.entity.DevModeInfo
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
+import com.tencent.iot.explorer.link.kitlink.entity.OpValue
 import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import kotlinx.android.synthetic.main.activity_complete_task_info.*
 import org.w3c.dom.Text
@@ -59,7 +60,16 @@ class DevModeAdapter(list: MutableList<DevModeInfo>, type: Int) : RecyclerView.A
             holder.valueTxt.setText(R.string.unset)
         } else if (this.type == RouteType.AUTOMIC_CONDITION_ROUTE || this.type == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
                 this.type == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE || this.type == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE) {
-            holder.valueTxt.setText(T.getContext().getString(R.string.equals_str) + " " + list.get(position).value + list.get(position).unit)
+
+            var prefix = ""
+            if (list.get(position).op.equals(OpValue.OP_GR)) {
+                prefix = T.getContext().getString(R.string.tag_gr)
+            } else if (list.get(position).op.equals(OpValue.OP_LT)) {
+                prefix = T.getContext().getString(R.string.tag_lt)
+            } else {
+                prefix = T.getContext().getString(R.string.tag_eq)
+            }
+            holder.valueTxt.setText(prefix + " " + list.get(position).value + list.get(position).unit)
         } else {
             holder.valueTxt.setText(list.get(position).value + list.get(position).unit)
         }

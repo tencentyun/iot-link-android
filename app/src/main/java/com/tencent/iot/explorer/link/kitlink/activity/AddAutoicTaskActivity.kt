@@ -377,6 +377,7 @@ class AddAutoicTaskActivity : BaseActivity() {
             task.taskKey = devModeInfos.get(i).key
             if (routeType == RouteType.AUTOMIC_CONDITION_ROUTE) {
                 task.type = 5
+                task.op = devModeInfos.get(i).op
                 manualConditions.add(task)
             } else if (routeType == RouteType.AUTOMIC_TASK_ROUTE) {
                 task.type = 0
@@ -385,6 +386,7 @@ class AddAutoicTaskActivity : BaseActivity() {
                 task.type = 0
                 manualTasks.set(devModeInfos.get(i).pos, task)
             } else if (routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE) {
+                task.op = devModeInfos.get(i).op
                 task.type = 5
                 manualConditions.set(devModeInfos.get(i).pos, task)
             }
