@@ -108,12 +108,21 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         if (!TextUtils.isEmpty(devModes.get(pos).value)) {  // 当对应界面存在进度值时候，使用存在的进度值做数据
             modeInt.start = Integer.valueOf(devModes.get(pos).value)
         }
+        if (routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
+            routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
+            routeType == RouteType.AUTOMIC_CONDITION_ROUTE ||
+            routeType == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE) {
+            modeInt.showOp = true
+            modeInt.op = devModes.get(pos).op
+        }
+
         var dialog = DevModeSetDialog(this@DeviceModeInfoActivity, devModeInfo.name, modeInt)
         dialog.show()
         dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
             override fun onSaveClicked() {
                 devModes.get(pos).value = dialog.progress.toString()
                 devModes.get(pos).unit = modeInt.unit
+                devModes.get(pos).op = modeInt.op
                 adapter?.notifyDataSetChanged()
             }
 
@@ -319,6 +328,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                     devInfo.key = manualTask!!.taskKey
                     devInfo.pos = manualTask!!.pos
                     devInfo.unit = manualTask!!.unit
+                    devInfo.op = manualTask!!.op
                 }
             }
         }

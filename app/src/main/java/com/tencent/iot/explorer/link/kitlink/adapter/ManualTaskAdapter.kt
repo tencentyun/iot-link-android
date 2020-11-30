@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
+import com.tencent.iot.explorer.link.kitlink.entity.OpValue
 import kotlinx.android.synthetic.main.activity_timer.*
 import java.util.*
 
@@ -169,7 +170,16 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
             } else {
                 Picasso.get().load(R.drawable.device_placeholder).into(holder.ivType)
             }
-            holder.taskDesc.setText(": " + T.getContext().getString(R.string.equals_str) + " " + list[position].task + list[position].unit)
+
+            var prefix = ""
+            if (list.get(position).op.equals(OpValue.OP_GR)) {
+                prefix = T.getContext().getString(R.string.tag_gr)
+            } else if (list.get(position).op.equals(OpValue.OP_LT)) {
+                prefix = T.getContext().getString(R.string.tag_lt)
+            } else {
+                prefix = T.getContext().getString(R.string.tag_eq)
+            }
+            holder.taskDesc.setText(": " + prefix + " " + list[position].task + list[position].unit)
         }
 
         holder.devName.setText(list[position].getAlias())
