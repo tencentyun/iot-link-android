@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.tencent.iot.explorer.link.R;
@@ -23,6 +24,7 @@ import com.tencent.iot.explorer.link.customview.dialog.adapter.DevModeOptionsAda
 import com.tencent.iot.explorer.link.customview.dialog.adapter.ListOptionsAdapter;
 import com.tencent.iot.explorer.link.kitlink.entity.DevModeInfo;
 import com.tencent.iot.explorer.link.kitlink.entity.ModeInt;
+import com.tencent.iot.explorer.link.kitlink.entity.OpValue;
 
 import org.json.JSONObject;
 
@@ -33,10 +35,14 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
 
     private TextView cancel;
     private TextView save;
+    private TextView tvGr;
+    private TextView tvEq;
+    private TextView tvLt;
     private RecyclerView options;
     private ConstraintLayout outsideLayout;
     private ConstraintLayout insideLayout;
     private ConstraintLayout barLayout;
+    private ConstraintLayout eqLayout;
     private DevModeOptionsAdapter adapter;
     private RangeSeekBar bar;
     private Context context;
@@ -81,6 +87,7 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void initView() {
+        eqLayout = view.findViewById(R.id.layout_op_btn);
         outsideLayout = view.findViewById(R.id.outside_dialog_layout);
         insideLayout = view.findViewById(R.id.layout_inside);
         barLayout = view.findViewById(R.id.layout_bar);
@@ -92,6 +99,9 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         decrease = view.findViewById(R.id.iv_decrease);
         increase = view.findViewById(R.id.iv_increase);
         currentProgress = view.findViewById(R.id.progress);
+        tvGr = view.findViewById(R.id.tv_gr);
+        tvEq = view.findViewById(R.id.tv_eq);
+        tvLt = view.findViewById(R.id.tv_lt);
 
         title.setText(titleStr);
         adapter.setOnItemClicked(onItemClicked);
@@ -105,6 +115,9 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         increase.setOnClickListener(onClickListener);
         decrease.setOnClickListener(onClickListener);
         insideLayout.setOnClickListener(onClickListener);
+        tvGr.setOnClickListener(onClickListener);
+        tvEq.setOnClickListener(onClickListener);
+        tvLt.setOnClickListener(onClickListener);
 
         if (type == 1) {
             options.setVisibility(View.GONE);
@@ -113,9 +126,37 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
             bar.setProgress(progress);
             bar.setIndicatorText(progress + modeInt.getUnit());
             bar.setOnRangeChangedListener(onRangeChangedListener);
+            Log.e("XXX", "modeInt " + JSON.toJSONString(modeInt));
+            if (modeInt.getShowOp()) {
+                eqLayout.setVisibility(View.VISIBLE);
+                resetStartEqBtnStatus();
+            } else {
+                eqLayout.setVisibility(View.GONE);
+            }
+
         } else {
             options.setVisibility(View.VISIBLE);
             barLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void resetStartEqBtnStatus() {
+        tvGr.setBackground(null);
+        tvGr.setTextColor(getContext().getResources().getColor(R.color.black));
+        tvEq.setBackground(null);
+        tvEq.setTextColor(getContext().getResources().getColor(R.color.black));
+        tvLt.setBackground(null);
+        tvLt.setTextColor(getContext().getResources().getColor(R.color.black));
+
+        if (modeInt.getOp().equals(OpValue.OP_GR)) {
+            tvGr.setBackgroundResource(R.drawable.background_circle_bule);
+            tvGr.setTextColor(getContext().getResources().getColor(R.color.white));
+        } else if (modeInt.getOp().equals(OpValue.OP_EQ)) {
+            tvEq.setBackgroundResource(R.drawable.background_circle_bule);
+            tvEq.setTextColor(getContext().getResources().getColor(R.color.white));
+        } else if (modeInt.getOp().equals(OpValue.OP_LT)) {
+            tvLt.setBackgroundResource(R.drawable.background_circle_bule);
+            tvLt.setTextColor(getContext().getResources().getColor(R.color.white));
         }
     }
 
@@ -175,6 +216,18 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
                     bar.setProgress(progress);
                     return;
                 case R.id.layout_inside:
+                    return;
+                case R.id.tv_gr:
+                    modeInt.setOp(OpValue.OP_GR);
+                    resetStartEqBtnStatus();
+                    return;
+                case R.id.tv_eq:
+                    modeInt.setOp(OpValue.OP_EQ);
+                    resetStartEqBtnStatus();
+                    return;
+                case R.id.tv_lt:
+                    modeInt.setOp(OpValue.OP_LT);
+                    resetStartEqBtnStatus();
                     return;
             }
             dismiss();

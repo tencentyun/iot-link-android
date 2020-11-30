@@ -329,7 +329,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                     var propertyJson = JSONObject()
                     propertyJson.put("ProductId", automicTaskEntity?.conditionsItem?.get(i)?.productId)
                     propertyJson.put("DeviceName", automicTaskEntity?.conditionsItem?.get(i)?.deviceName)
-                    propertyJson.put("Op", "eq")
+                    propertyJson.put("Op", automicTaskEntity?.conditionsItem?.get(i)?.op)
                     propertyJson.put("IconUrl", automicTaskEntity?.conditionsItem?.get(i)?.iconUrl)
                     if (TextUtils.isEmpty(automicTaskEntity?.conditionsItem?.get(i)?.taskKey)) {
                         propertyJson.put("Value", automicTaskEntity?.conditionsItem?.get(i)?.task)
@@ -575,6 +575,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
             task.taskKey = devModeInfos.get(i).key
             task.unit = devModeInfos.get(i).unit
             if (routeType == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE) {
+                task.op = devModeInfos.get(i).op
                 task.type = 5
                 manualConditions.add(task)
             } else if (routeType == RouteType.ADD_AUTOMIC_TASK_DETAIL_ROUTE) {
@@ -584,6 +585,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                 task.type = 0
                 manualTasks.set(devModeInfos.get(i).pos, task)
             } else if (routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE) {
+                task.op = devModeInfos.get(i).op
                 task.type = 5
                 manualConditions.set(devModeInfos.get(i).pos, task)
             }
@@ -743,6 +745,7 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                 manualTask.taskKey = automicCondition.property!!.value.toString()
                 manualTask.task = automicCondition.property!!.value.toString()
                 manualTask.iconUrl = automicCondition.property!!.iconUrl
+                manualTask.op = automicCondition.property!!.op
                 convertKey2Value(manualTask)
 
             } else if (automicCondition.condType == 1) {  // 定时
