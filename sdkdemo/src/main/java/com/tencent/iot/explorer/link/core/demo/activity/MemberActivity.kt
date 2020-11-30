@@ -61,7 +61,7 @@ class MemberActivity : BaseActivity(), MyCallback {
                 View.VISIBLE
             }
             if (!TextUtils.isEmpty(Avatar))
-                Picasso.with(this@MemberActivity).load(Avatar).into(iv_member_portrait)
+                Picasso.get().load(Avatar).into(iv_member_portrait)
         }
     }
 
