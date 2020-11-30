@@ -24,12 +24,11 @@
         android:background="@color/gray_F5F5F5"
         />
 
-    <TextView
+    <ImageView
         android:id="@+id/tv_status"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="✓"
-        android:textColor="@color/complete_progress"
+        android:src="@mipmap/task_selected"
         app:layout_constraintBottom_toBottomOf="@id/item_tip"
         app:layout_constraintDimensionRatio="h, 1:1"
         app:layout_constraintEnd_toEndOf="parent"

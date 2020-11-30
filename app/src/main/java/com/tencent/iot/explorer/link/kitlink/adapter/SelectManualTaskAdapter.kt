@@ -33,7 +33,7 @@ class SelectManualTaskAdapter(list: MutableList<Automation>) : RecyclerView.Adap
 
     class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
         var taskName: TextView
-        var status: TextView
+        var status: ImageView
 
         init {
             taskName = layoutView.findViewById(R.id.item_tip)
