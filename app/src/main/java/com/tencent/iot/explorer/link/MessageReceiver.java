@@ -14,8 +14,17 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback;
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity;
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse;
+import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity;
+import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.kitlink.activity.HelpWebViewActivity;
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField;
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest;
+import com.tencent.iot.explorer.trtc.model.RoomKey;
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity;
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity;
 
 public class MessageReceiver extends XGPushBaseReceiver {
     private static final String TAG = MessageReceiver.class.getSimpleName();
@@ -148,6 +157,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         // APP自主处理消息的过程...
         Log.d(TAG, text);
         show(context, text);
+        // checkMsgWithAction(context, message.getCustomContent());
     }
 
     private void checkMsgWithAction(Context context, String msg) {
@@ -161,8 +171,40 @@ public class MessageReceiver extends XGPushBaseReceiver {
                         PushedMessageType.FEEDBACK.getValueStr())) {
             Intent intent = new Intent(App.Companion.getActivity(), HelpWebViewActivity.class);
             App.Companion.getActivity().startActivity(intent);
-
+        } else if (msgJson.containsKey(CommonField.TRTC_AUDIO_CALL_STATUS)) {
+            final int videoCallStatus = msgJson.getInteger(CommonField.TRTC_VIDEO_CALL_STATUS);
+            final int audioCallStatus = msgJson.getInteger(CommonField.TRTC_AUDIO_CALL_STATUS);
+            final String userId = msgJson.getString(CommonField.TRTC_USR_ID);
+            // 调用 CallDevice 接口
+//            HttpRequest.Companion.getInstance().trtcCallDevice(userId, new MyCallback() {
+//                @Override
+//                public void fail(String msg, int reqCode) {
+//                    L.INSTANCE.e(msg);
+//                }
+//                @Override
+//                public void success(BaseResponse response, int reqCode) {
+//                    if (response.isSuccess()) {
+//                        JSONObject json = JSON.parseObject(response.getData().toString());
+//                        if (json == null || !json.containsKey(CommonField.TRTC_PARAMS)) return;
+//                        String data = json.getString(CommonField.TRTC_PARAMS);
+//                        if (TextUtils.isEmpty(data)) return;
+//
+//                        TRTCParamsEntity params = JSON.parseObject(data, TRTCParamsEntity.class);
+//                        RoomKey roomKey = new RoomKey();
+//                        roomKey.setAppId(params.getSdkAppId());
+//                        roomKey.setUserId(params.getUserId());
+//                        roomKey.setUserSig(params.getUserSig());
+//                        // 根据 callType, 拉起语音或者视频的被呼页面
+//                        if (videoCallStatus == 1) {
+//                            // 视频通话
+//                            TRTCAudioCallActivity.startBeingCall(App.Companion.getActivity(), roomKey, userId);
+//                        } else if (audioCallStatus == 1) {
+//                            // 语音通话
+//                            TRTCAudioCallActivity.startBeingCall(App.Companion.getActivity(), roomKey, userId);
+//                        }
+//                    }
+//                }
+//            });
         }
-
     }
 }
