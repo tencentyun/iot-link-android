@@ -43,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_task_title"
-            android:textColor="@color/complete_progress"
+            android:textColor="@color/bule_0066ff"
             android:layout_marginRight="20dp" />
         <View
             android:layout_width="match_parent"
