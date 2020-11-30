@@ -123,7 +123,7 @@ class PersonalInfoActivity : BaseActivity(), MyCallback {
             tv_nick.text = it.NickName
             tv_telephone_number.text = it.PhoneNumber
             if (!TextUtils.isEmpty(it.Avatar))
-                Picasso.with(this).load(it.Avatar).into(user_info_portrait)
+                Picasso.get().load(it.Avatar).into(user_info_portrait)
         }
     }
 

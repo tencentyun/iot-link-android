@@ -15,7 +15,7 @@ class ShareUserHolder : BaseHolder<ShareUserEntity> {
         data.run {
             itemView.tv_item_user_alias.text = NickName
             if (!TextUtils.isEmpty(Avatar))
-                Picasso.with(itemView.context).load(Avatar).into(itemView.iv_item_share_user)
+                Picasso.get().load(Avatar).into(itemView.iv_item_share_user)
             //2020-01-08  14：02
             itemView.tv_item_user_date.text =
                 DateFormatUtil.forString(BindTime * 1000, "yyyy-MM-dd HH:mm")
