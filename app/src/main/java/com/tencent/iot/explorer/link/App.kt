@@ -5,26 +5,34 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import androidx.multidex.MultiDex
+import com.alibaba.fastjson.JSON
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.socket.callback.StartBeingCallCallback
 import com.tencent.iot.explorer.link.core.auth.util.Weak
+import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
-import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.mvp.ParentView
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import java.util.*
 
 
 /**
  * APP
  */
-class App : Application(), Application.ActivityLifecycleCallbacks {
+class App : Application(), Application.ActivityLifecycleCallbacks, StartBeingCallCallback {
 
     companion object {
         //app数据
@@ -85,6 +93,10 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
             }
             return false
         }
+
+        fun setEnableEnterRoomCallback(enable: Boolean) {
+            IoTAuth.setEnableEnterRoomCallback(enable)
+        }
     }
 
     override fun onCreate() {
@@ -103,6 +115,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
         data.readLocalUser(this)
         data.appLifeCircleId = UUID.randomUUID().toString()
         registerActivityLifecycleCallbacks(this)
+        IoTAuth.addEnterRoomCallback(this)
     }
 
     /**
@@ -143,6 +156,48 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
     override fun onActivityResumed(activity: Activity) {}
+
+    /**
+     * 呼叫设备获取trtc参数信息
+     */
+    override fun startBeingCall(callingType: Int, deviceId: String) {
+        HttpRequest.instance.trtcCallDevice(deviceId, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                // 解析房间参数，并呼叫页面
+                val json = response.data as com.alibaba.fastjson.JSONObject
+                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) return;
+                val data = json.getString(MessageConst.TRTC_PARAMS)
+                if (TextUtils.isEmpty(data)) return;
+                val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
+
+
+                enterRoom(callingType, params, deviceId)
+            }
+        })
+    }
+
+    /**
+     * 被设备呼叫进入trtc房间通话
+     */
+    private fun enterRoom(callingType: Int, params: TRTCParamsEntity, deviceId: String) {
+        var room = RoomKey()
+        room.userId = params.UserId
+        room.appId = params.SdkAppId
+        room.userSig = params.UserSig
+        room.roomId = params.StrRoomId
+        room.callType = callingType
+        activity?.runOnUiThread {
+            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
+                TRTCVideoCallActivity.startBeingCall(activity, room, deviceId)
+            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
+                TRTCAudioCallActivity.startBeingCall(activity, room, deviceId)
+            }
+        }
+    }
 }
 
 interface AppLifeCircleListener {
