@@ -7,5 +7,5 @@ class AutomicProperty {
     var iconUrl = ""
     var propertyId = ""
     var op = ""
-    var value = 0
+    var value = ""
 }
