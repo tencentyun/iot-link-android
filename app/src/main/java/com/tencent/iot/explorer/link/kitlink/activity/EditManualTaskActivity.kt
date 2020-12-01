@@ -111,6 +111,9 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
                 if (json.containsKey("IconUrl")) {
                     task.iconUrl = json.getString("IconUrl")
                 }
+                if (json.containsKey("AliasName")) {
+                    task.aliasName = json.getString("AliasName")
+                }
                 var value = json.getString("Data")
                 var dataJson = JSON.parseObject(value)
                 for (keys in dataJson.keys) {
