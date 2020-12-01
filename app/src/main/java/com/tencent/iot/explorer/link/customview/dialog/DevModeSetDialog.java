@@ -53,10 +53,10 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
     private ImageView increase;
     private ImageView decrease;
     private ModeInt modeInt;
-    private int progress;
+    private float progress;
     private int type = 0; // 0 显示选项列表   1 显示拖动控制条
 
-    public int getProgress() {
+    public float getProgress() {
         return progress;
     }
 
@@ -123,10 +123,9 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
             options.setVisibility(View.GONE);
             barLayout.setVisibility(View.VISIBLE);
             bar.setRange(modeInt.getMin(), modeInt.getMax());
-            bar.setProgress(progress);
-            bar.setIndicatorText(progress + modeInt.getUnit());
+//            bar.setIndicatorText(progress + modeInt.getUnit());
             bar.setOnRangeChangedListener(onRangeChangedListener);
-            Log.e("XXX", "modeInt " + JSON.toJSONString(modeInt));
+            bar.setProgress(progress);
             if (modeInt.getShowOp()) {
                 eqLayout.setVisibility(View.VISIBLE);
                 resetStartEqBtnStatus();
@@ -164,8 +163,13 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
 
         @Override
         public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
-            progress = (int)leftValue;
-            view.getLeftSeekBar().setIndicatorText((int)leftValue + modeInt.getUnit());
+            progress = leftValue;
+//            String.format("%.2f", leftValue)
+            if (!modeInt.getIfInteger()) {
+                view.getLeftSeekBar().setIndicatorText(String.format("%.1f", leftValue) + modeInt.getUnit());
+            } else {
+                view.getLeftSeekBar().setIndicatorText((int)leftValue + modeInt.getUnit());
+            }
         }
 
         @Override
