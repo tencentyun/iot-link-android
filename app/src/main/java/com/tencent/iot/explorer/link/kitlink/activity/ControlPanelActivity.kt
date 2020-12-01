@@ -162,6 +162,9 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         }
     }
 
+    /**
+     * 呼叫设备进入trtc房间通话
+     */
     override fun enterRoom(room: RoomKey) {
         runOnUiThread {
             if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {

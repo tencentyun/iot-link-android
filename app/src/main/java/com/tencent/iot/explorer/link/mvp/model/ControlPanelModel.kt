@@ -120,7 +120,9 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
             }
         }
     }
-
+    /**
+     * 呼叫设备获取trtc参数信息
+     */
     private fun trtcCallDevice(callingType: Int) {
         HttpRequest.instance.trtcCallDevice("$productId/$deviceName", object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
