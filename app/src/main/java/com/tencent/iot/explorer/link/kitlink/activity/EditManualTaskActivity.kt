@@ -118,8 +118,8 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
                 var dataJson = JSON.parseObject(value)
                 for (keys in dataJson.keys) {
                     task.actionId = keys
-                    task.taskKey = dataJson.getIntValue(keys).toString()
-                    task.task = dataJson.getIntValue(keys).toString()
+                    task.taskKey = dataJson.getString(keys)
+                    task.task = dataJson.getString(keys)
                 }
 
                 loadTaskVauleInfo(task)
