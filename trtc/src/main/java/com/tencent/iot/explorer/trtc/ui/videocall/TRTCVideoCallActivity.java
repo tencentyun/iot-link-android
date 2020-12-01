@@ -73,6 +73,8 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     private Handler mTimeHandler;
     private HandlerThread mTimeHandlerThread;
 
+    private RoomKey mRoomKey;
+
     /**
      * 拨号相关成员变量
      */
@@ -359,6 +361,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         RoomKey roomKey = JSON.parseObject(roomKeyStr, RoomKey.class);
         mSelfModel = new UserInfo();
         mSelfModel.setUserId(roomKey.getUserId());
+        mRoomKey = roomKey;
         //自己的资料
 //        mSelfModel = (UserInfo) intent.getSerializableExtra(PARAM_SELF_INFO);
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
@@ -453,6 +456,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 //2.接听电话
 //                mTRTCCalling.accept();
 //                mTRTCCalling.enterTRTCRoom();
+                startInviting(mRoomKey);
                 showCallingView();
             }
         });
