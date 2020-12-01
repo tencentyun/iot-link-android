@@ -9,7 +9,9 @@ import android.util.Log
 import androidx.multidex.MultiDex
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.socket.callback.EnterRoomCallback
 import com.tencent.iot.explorer.link.core.auth.util.Weak
+import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.core.utils.Utils
@@ -18,13 +20,17 @@ import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.mvp.ParentView
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import java.util.*
 
 
 /**
  * APP
  */
-class App : Application(), Application.ActivityLifecycleCallbacks {
+class App : Application(), Application.ActivityLifecycleCallbacks, EnterRoomCallback {
 
     companion object {
         //app数据
@@ -103,6 +109,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
         data.readLocalUser(this)
         data.appLifeCircleId = UUID.randomUUID().toString()
         registerActivityLifecycleCallbacks(this)
+        IoTAuth.addEnterRoomCallback(this)
     }
 
     /**
@@ -143,6 +150,22 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
     override fun onActivityResumed(activity: Activity) {}
+
+    override fun enterRoom(callingType: Int, params: TRTCParamsEntity, deviceId: String) {
+        var room = RoomKey()
+        room.userId = params.UserId
+        room.appId = params.SdkAppId
+        room.userSig = params.UserSig
+        room.roomId = params.StrRoomId
+        room.callType = callingType
+        activity?.runOnUiThread {
+            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
+                TRTCVideoCallActivity.startBeingCall(activity, room, deviceId)
+            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
+                TRTCAudioCallActivity.startBeingCall(activity, room, deviceId)
+            }
+        }
+    }
 }
 
 interface AppLifeCircleListener {

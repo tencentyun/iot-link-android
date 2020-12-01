@@ -162,6 +162,9 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         }
     }
 
+    /**
+     * 呼叫设备进入trtc房间通话
+     */
     override fun enterRoom(room: RoomKey) {
         runOnUiThread {
             if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
@@ -262,11 +265,11 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     fun showEnumPopup(entity: DevicePropertyEntity) {
         if (enumPopup == null) {
             enumPopup = EnumPopupWindow(this)
-            enumPopup?.onUploadListener = object : EnumPopupWindow.OnUploadListener {
-                override fun upload(value: String) {
-                    controlDevice(entity.id, value)
-                    enumPopup?.dismiss()
-                }
+        }
+        enumPopup?.onUploadListener = object : EnumPopupWindow.OnUploadListener {
+            override fun upload(value: String) {
+                controlDevice(entity.id, value)
+                enumPopup?.dismiss()
             }
         }
         enumPopup!!.showTitle(entity.name)

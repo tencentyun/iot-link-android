@@ -1,6 +1,9 @@
 package com.tencent.iot.explorer.link.core.auth.socket
 
 import android.text.TextUtils
+import com.alibaba.fastjson.JSON
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.resp.RespFailMessage
@@ -8,14 +11,14 @@ import com.tencent.iot.explorer.link.core.auth.message.resp.RespSuccessMessage
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.message.upload.HeartMessage
 import com.tencent.iot.explorer.link.core.auth.message.upload.IotMsg
-import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
-import com.tencent.iot.explorer.link.core.auth.socket.callback.ConnectionCallback
-import com.tencent.iot.explorer.link.core.auth.socket.callback.DispatchCallback
-import com.tencent.iot.explorer.link.core.auth.socket.callback.MessageCallback
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.socket.callback.*
 import com.tencent.iot.explorer.link.core.auth.socket.entity.RequestEntity
 import com.tencent.iot.explorer.link.core.auth.util.WifiUtil
+import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.core.log.L
 import kotlinx.coroutines.*
+import org.json.JSONObject
 import java.net.URI
 import java.util.*
 
@@ -47,6 +50,9 @@ internal class WSClientManager private constructor() {
 
     //设备监听器
     private val activePushCallbacks = LinkedList<ActivePushCallback>()
+
+    //enterRoom监听
+    private var enterRoomCallback: EnterRoomCallback? = null
 
     //保活相关参数
     private var isKeep = false
@@ -131,6 +137,37 @@ internal class WSClientManager private constructor() {
         override fun payloadMessage(payload: Payload) {
             // websocket消息总入口
             L.e(payload.toString())
+            var jsonObject = JSONObject(payload.json)
+            val action = jsonObject.getString(MessageConst.MODULE_ACTION);
+            if (action == MessageConst.DEVICE_CHANGE) { //收到了设备属性改变的wss消息
+                var paramsObject = jsonObject.getJSONObject(MessageConst.PARAM) as JSONObject
+                val subType = paramsObject.getString(MessageConst.SUB_TYPE)
+                if (subType == MessageConst.REPORT) { //收到了设备端属性状态改变的wss消息
+
+                    var payloadParamsObject = JSONObject(payload.payload)
+                    val payloadParamsJson = payloadParamsObject.getJSONObject(MessageConst.PARAM)
+                    var videoCallStatus = -1
+                    if (payloadParamsJson.has(MessageConst.TRTC_VIDEO_CALL_STATUS)) {
+                        videoCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_VIDEO_CALL_STATUS)
+                    }
+                    var audioCallStatus = -1
+                    if (payloadParamsJson.has(MessageConst.TRTC_AUDIO_CALL_STATUS)) {
+                        audioCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_AUDIO_CALL_STATUS)
+                    }
+
+                    var deviceId = ""
+                    if (payloadParamsJson.has(MessageConst.USERID)) {
+                        deviceId = payloadParamsJson.getString(MessageConst.USERID)
+                    }
+
+                    // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
+                    if (videoCallStatus == 1) {
+                        trtcCallDevice(2, deviceId)
+                    } else if (audioCallStatus == 1) {
+                        trtcCallDevice(1, deviceId)
+                    }
+                }
+            }
             activePushCallbacks.forEach {
                 it.success(payload)
             }
@@ -147,6 +184,38 @@ internal class WSClientManager private constructor() {
                 confirmQueue.remove(this)
                 messageCallback?.unknownMessage(reqId, json)
             }
+        }
+    }
+
+    /**
+     * 呼叫设备获取trtc参数信息
+     */
+    private fun trtcCallDevice(callingType: Int, deviceId: String) {
+        IoTAuth.deviceImpl.trtcCallDevice(deviceId, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                // 解析房间参数，并呼叫页面
+                val json = response.data as com.alibaba.fastjson.JSONObject
+                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) return;
+                val data = json.getString(MessageConst.TRTC_PARAMS)
+                if (TextUtils.isEmpty(data)) return;
+                val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
+
+
+                enterRoom(callingType, params, deviceId)
+            }
+        })
+    }
+
+    /**
+     * 被设备呼叫进入trtc房间通话
+     */
+    private fun enterRoom(callingType: Int, params: TRTCParamsEntity, deviceId: String) {
+        if (enterRoomCallback != null) {
+            enterRoomCallback!!.enterRoom(callingType, params, deviceId)
         }
     }
 
@@ -266,6 +335,13 @@ internal class WSClientManager private constructor() {
             activePushCallbacks.removeFirst()
         }
         activePushCallbacks.addLast(callback)
+    }
+
+    /**
+     * 添加进入trtc房间的监听器
+     */
+    fun addEnterRoomCallback(callback: EnterRoomCallback) {
+        enterRoomCallback = callback
     }
 
     /**
