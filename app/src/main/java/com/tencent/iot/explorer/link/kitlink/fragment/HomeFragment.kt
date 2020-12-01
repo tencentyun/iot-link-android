@@ -31,6 +31,10 @@ import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.head_home.*
 
@@ -302,6 +306,19 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
         crv_home_fragment.notifyDataChanged()
     }
 
+    /**
+     * 被设备呼叫进入trtc房间通话
+     */
+    override fun enterRoom(room: RoomKey, deviceId: String) {
+//        this.activity?.runOnUiThread {
+//            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
+//                TRTCVideoCallActivity.startBeingCall(this.activity, room, deviceId)
+//            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
+//                TRTCAudioCallActivity.startBeingCall(this.activity, room, deviceId)
+//            }
+//        }
+    }
+
     override fun getViewType(position: Int): Int {
         return when (presenter.getDeviceEntity(position).shareDevice) {
             true -> if (presenter.getDeviceEntity(position).DeviceId == "title") 2 else 1 //共享的设备
@@ -356,11 +373,15 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
                             Data[0].Config,
                             ProdConfigDetailEntity::class.java
                         )
-                        val panelInfo = JSON.parseObject(config.Panel)
-                        if (panelInfo != null && panelInfo["type"] == "h5") {
-                            jumpActivity(DevicePanelActivity::class.java)
-                        } else {
+                        if (config == null) {
                             jumpActivity(ControlPanelActivity::class.java)
+                        } else {
+                            val panelInfo = JSON.parseObject(config.Panel)
+                            if (panelInfo != null && panelInfo["type"] == "h5") {
+                                jumpActivity(DevicePanelActivity::class.java)
+                            } else {
+                                jumpActivity(ControlPanelActivity::class.java)
+                            }
                         }
                     }
                 } else {
