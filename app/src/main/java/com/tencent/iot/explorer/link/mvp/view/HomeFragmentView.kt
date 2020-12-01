@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.view
 
 import com.tencent.iot.explorer.link.mvp.ParentView
+import com.tencent.iot.explorer.trtc.model.RoomKey
 
 interface HomeFragmentView : ParentView {
 
@@ -16,5 +17,7 @@ interface HomeFragmentView : ParentView {
     )
 
     fun showDeviceOnline()
+
+    fun enterRoom(room: RoomKey, deviceId: String)
 
 }
