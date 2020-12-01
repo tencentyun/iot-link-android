@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.text.TextUtils
+import android.util.Log
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
@@ -15,6 +16,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.util.Utils
 import kotlinx.android.synthetic.main.activity_device_details.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -90,6 +92,7 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
                 deviceEntity?.run {
                     presenter.deleteDevice(ProductId, DeviceName)
                 }
+                Utils.sendRefreshBroadcast(this@DeviceDetailsActivity)
             }
 
             override fun cancel(popupWindow: CommonPopupWindow) {
