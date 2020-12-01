@@ -10,6 +10,7 @@ import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.service.*
 import com.tencent.iot.explorer.link.core.auth.socket.WSClientManager
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
+import com.tencent.iot.explorer.link.core.auth.socket.callback.StartBeingCallCallback
 import com.tencent.iot.explorer.link.core.auth.socket.callback.MessageCallback
 import com.tencent.iot.explorer.link.core.log.L
 
@@ -206,6 +207,10 @@ object IoTAuth {
      */
     fun addActivePushCallback(callback: ActivePushCallback) {
         WSClientManager.instance.addActivePushCallback(callback)
+    }
+
+    fun addEnterRoomCallback(callback: StartBeingCallCallback) {
+        WSClientManager.instance.addEnterRoomCallback(callback)
     }
 
     /**
