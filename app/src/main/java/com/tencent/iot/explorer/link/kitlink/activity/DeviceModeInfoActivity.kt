@@ -65,8 +65,10 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
             var type = devModeInfo.define!!.get("type")
             if (type == "bool" || type == "enum") {
                 showMapDialog(pos, devModeInfo)
-            } else if (type == "int" || type == "float") {
-                showNumDialog(pos, devModeInfo)
+            } else if (type == "int") {
+                showNumDialog(true, pos, devModeInfo)
+            } else if (type == "float") {
+                showNumDialog(false, pos, devModeInfo)
             }
         }
     }
@@ -103,11 +105,12 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         })
     }
 
-    private fun showNumDialog(pos: Int, devModeInfo: DevModeInfo) {
+    private fun showNumDialog(ifInteger: Boolean, pos: Int, devModeInfo: DevModeInfo) {
         var modeInt = JSON.parseObject(devModeInfo.define!!.toJSONString(), ModeInt::class.java)
         if (!TextUtils.isEmpty(devModes.get(pos).value)) {  // 当对应界面存在进度值时候，使用存在的进度值做数据
-            modeInt.start = Integer.valueOf(devModes.get(pos).value)
+            modeInt.start = devModes.get(pos).value.toFloat()
         }
+        modeInt.ifInteger = ifInteger
         if (routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
             routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
             routeType == RouteType.AUTOMIC_CONDITION_ROUTE ||
@@ -120,7 +123,11 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
         dialog.show()
         dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
             override fun onSaveClicked() {
-                devModes.get(pos).value = dialog.progress.toString()
+                if (!modeInt.ifInteger) {
+                    devModes.get(pos).value = String.format("%.1f", dialog.progress)//dialog.progress.toString()
+                } else {
+                    devModes.get(pos).value = dialog.progress.toInt().toString()
+                }
                 devModes.get(pos).unit = modeInt.unit
                 devModes.get(pos).op = modeInt.op
                 adapter?.notifyDataSetChanged()
