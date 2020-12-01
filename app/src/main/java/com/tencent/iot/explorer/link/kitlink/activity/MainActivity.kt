@@ -57,7 +57,8 @@ class MainActivity : PActivity(), MyCallback {
     private var permissions = arrayOf(
         Manifest.permission.CAMERA,
         Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.RECORD_AUDIO
     )
 
     override fun getContentView(): Int {

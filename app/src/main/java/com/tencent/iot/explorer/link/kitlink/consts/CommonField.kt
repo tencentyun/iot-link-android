@@ -9,7 +9,6 @@ object CommonField {
     const val APP_KEY = "AppKey"
     //安卓params
     const val ACTION_PARAM = "ActionParams"
-    const val PARAM = "params"
     const val PATH = "path"
     //客户端平台
     const val PLATFORM = "Platform"
@@ -132,9 +131,6 @@ object CommonField {
     const val DATA_TEMPLATE = "DataTemplate"
     const val PROPERTIES = "properties"
 //    const val CONFIG_NET_TYPE = "configNetType"
-    const val MODULE_ACTION = "action"
-    const val SUB_TYPE = "SubType"
-    const val REPORT = "Report"
 
     /***********请求类型标记参数************/
     const val NULL_STR = "null"
@@ -172,9 +168,4 @@ object CommonField {
     const val XG_ACCESS_POINT_CHINA = "tpns.tencent.com"
     const val XG_ACCESS_POINT_USA = "tpns.hk.tencent.com"
 
-    /*********** TRTC **********/
-    const val TRTC_AUDIO_CALL_STATUS = "audio_call_status"
-    const val TRTC_VIDEO_CALL_STATUS = "video_call_status"
-    const val TRTC_USR_ID = "userid"
-    const val TRTC_PARAMS = "TRTCParams"
 }
