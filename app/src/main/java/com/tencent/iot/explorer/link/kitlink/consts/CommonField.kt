@@ -173,8 +173,8 @@ object CommonField {
     const val XG_ACCESS_POINT_USA = "tpns.hk.tencent.com"
 
     /*********** TRTC **********/
-    const val TRTC_AUDIO_CALL_STATUS = "audio_call_status"
-    const val TRTC_VIDEO_CALL_STATUS = "video_call_status"
-    const val TRTC_USR_ID = "userid"
+    const val TRTC_AUDIO_CALL_STATUS = "_sys_audio_call_status"
+    const val TRTC_VIDEO_CALL_STATUS = "_sys_video_call_status"
+    const val TRTC_USR_ID = "_sys_userid"
     const val TRTC_PARAMS = "TRTCParams"
 }
