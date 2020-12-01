@@ -16,6 +16,7 @@ import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback;
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity;
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst;
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse;
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity;
 import com.tencent.iot.explorer.link.core.log.L;
@@ -171,10 +172,10 @@ public class MessageReceiver extends XGPushBaseReceiver {
                         PushedMessageType.FEEDBACK.getValueStr())) {
             Intent intent = new Intent(App.Companion.getActivity(), HelpWebViewActivity.class);
             App.Companion.getActivity().startActivity(intent);
-        } else if (msgJson.containsKey(CommonField.TRTC_AUDIO_CALL_STATUS)) {
-            final int videoCallStatus = msgJson.getInteger(CommonField.TRTC_VIDEO_CALL_STATUS);
-            final int audioCallStatus = msgJson.getInteger(CommonField.TRTC_AUDIO_CALL_STATUS);
-            final String userId = msgJson.getString(CommonField.TRTC_USR_ID);
+        } else if (msgJson.containsKey(MessageConst.TRTC_AUDIO_CALL_STATUS)) {
+            final int videoCallStatus = msgJson.getInteger(MessageConst.TRTC_VIDEO_CALL_STATUS);
+            final int audioCallStatus = msgJson.getInteger(MessageConst.TRTC_AUDIO_CALL_STATUS);
+            final String userId = msgJson.getString(MessageConst.USERID);
             // 调用 CallDevice 接口
 //            HttpRequest.Companion.getInstance().trtcCallDevice(userId, new MyCallback() {
 //                @Override
