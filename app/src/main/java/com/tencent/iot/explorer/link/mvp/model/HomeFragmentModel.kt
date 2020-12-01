@@ -17,10 +17,15 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.*
+import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField.DATA
 import com.tencent.iot.explorer.link.kitlink.response.ShareDeviceListResponse
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCCalling
 
 class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(view), MyCallback {
 
@@ -316,6 +321,9 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
         }
     }
 
+    /**
+     * 获取设备产品配置
+     */
     private fun getProductsConfig(productIds: List<String>, deviceList: List<DeviceEntity>) {
         HttpRequest.instance.getProductsConfig(productIds, object:MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
@@ -352,12 +360,16 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
         })
     }
 
+    /**
+     * 获取 设备当前状态(如亮度、开关状态等)
+     */
     private fun getDeviceCallStatus(device: DeviceEntity) {
         HttpRequest.instance.deviceData(device.ProductId, device.DeviceName, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
             }
             override fun success(response: BaseResponse, reqCode: Int) {
+                return
                 if (response.code == 0) { //获取 设备当前状态(如亮度、开关状态等) 成功
                     // 解析设备状态
                     val json = response.data as JSONObject
@@ -365,14 +377,16 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                     if (dataJson == null || dataJson.isEmpty()) {
                         return
                     }
-                    val videoCallStatusJson = dataJson.getJSONObject("video_call_status")
+                    val videoCallStatusJson = dataJson.getJSONObject(MessageConst.TRTC_VIDEO_CALL_STATUS)
                     val videoCallStatus = videoCallStatusJson.getInteger("Value")
 
-                    val audioCallStatusJson = dataJson.getJSONObject("audio_call_status")
+                    val audioCallStatusJson = dataJson.getJSONObject(MessageConst.TRTC_AUDIO_CALL_STATUS)
                     val audioCallStatus = audioCallStatusJson.getInteger("Value")
                     // 判断设备的video_call_status, audio_call_status字段是否等于1，若等于1，就调用CallDevice接口
-                    if (videoCallStatus == 1 || audioCallStatus == 1) {
-                        trtcCallDevice(device)
+                    if (videoCallStatus == 1) {
+                        trtcCallDevice(device, TRTCCalling.TYPE_VIDEO_CALL)
+                    } else if (audioCallStatus == 1) {
+                        trtcCallDevice(device, TRTCCalling.TYPE_AUDIO_CALL)
                     }
                 }
 
@@ -380,7 +394,10 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
         })
     }
 
-    private fun trtcCallDevice(device: DeviceEntity) {
+    /**
+     * 被设备呼叫获取trtc参数信息
+     */
+    private fun trtcCallDevice(device: DeviceEntity, callingType: Int) {
         HttpRequest.instance.trtcCallDevice(device.DeviceId, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
@@ -388,7 +405,19 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
 
             override fun success(response: BaseResponse, reqCode: Int) {
                 // 解析房间参数，并拉起被呼叫页面
-                L.d(response.toString())
+                val json = response.data as JSONObject
+                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) return;
+                val data = json.getString(MessageConst.TRTC_PARAMS)
+                if (TextUtils.isEmpty(data)) return;
+                val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
+
+                var room = RoomKey()
+                room.userId = params.UserId
+                room.appId = params.SdkAppId
+                room.userSig = params.UserSig
+                room.roomId = params.StrRoomId
+                room.callType = callingType
+                view?.enterRoom(room, device.DeviceId)
             }
         })
     }

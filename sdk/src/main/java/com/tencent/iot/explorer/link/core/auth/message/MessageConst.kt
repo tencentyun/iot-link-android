@@ -31,4 +31,13 @@ object MessageConst {
     const val DATA_TEMPLATE = "DataTemplate"
     const val PROPERTIES = "properties"
 
+    const val MODULE_ACTION = "action"
+    const val PARAM = "params"
+    const val SUB_TYPE = "SubType"
+    const val REPORT = "Report"
+    const val TRTC_AUDIO_CALL_STATUS = "_sys_audio_call_status"
+    const val TRTC_VIDEO_CALL_STATUS = "_sys_video_call_status"
+    const val TRTC_PARAMS = "TRTCParams"
+    const val USERID = "_sys_userid"
+
 }
