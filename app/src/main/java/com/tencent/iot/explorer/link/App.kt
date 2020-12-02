@@ -24,6 +24,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.trtc.model.RoomKey
 import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.trtc.model.TRTCUIManager
 import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import java.util.*
@@ -161,41 +162,12 @@ class App : Application(), Application.ActivityLifecycleCallbacks, StartBeingCal
      * 呼叫设备获取trtc参数信息
      */
     override fun startBeingCall(callingType: Int, deviceId: String) {
-        HttpRequest.instance.trtcCallDevice(deviceId, object: MyCallback {
-            override fun fail(msg: String?, reqCode: Int) {
-                if (msg != null) L.e(msg)
-            }
+        TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManger())
 
-            override fun success(response: BaseResponse, reqCode: Int) {
-                // 解析房间参数，并呼叫页面
-                val json = response.data as com.alibaba.fastjson.JSONObject
-                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) return;
-                val data = json.getString(MessageConst.TRTC_PARAMS)
-                if (TextUtils.isEmpty(data)) return;
-                val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
-
-
-                enterRoom(callingType, params, deviceId)
-            }
-        })
-    }
-
-    /**
-     * 被设备呼叫进入trtc房间通话
-     */
-    private fun enterRoom(callingType: Int, params: TRTCParamsEntity, deviceId: String) {
-        var room = RoomKey()
-        room.userId = params.UserId
-        room.appId = params.SdkAppId
-        room.userSig = params.UserSig
-        room.roomId = params.StrRoomId
-        room.callType = callingType
-        activity?.runOnUiThread {
-            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
-                TRTCVideoCallActivity.startBeingCall(activity, room, deviceId)
-            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
-                TRTCAudioCallActivity.startBeingCall(activity, room, deviceId)
-            }
+        if (callingType == TRTCCalling.TYPE_VIDEO_CALL) {
+            TRTCVideoCallActivity.startBeingCall(activity, RoomKey(), deviceId)
+        } else if (callingType == TRTCCalling.TYPE_AUDIO_CALL) {
+            TRTCAudioCallActivity.startBeingCall(activity, RoomKey(), deviceId)
         }
     }
 }
