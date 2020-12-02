@@ -91,8 +91,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         public void onError(int code, String msg) {
             //发生了错误，报错并退出该页面
 //            ToastUtils.showLong(getString(R.string.trtccalling_toast_call_error_msg, code, msg));
-            finish();
-            TRTCUIManager.getInstance().removeCallingParamsCallback();
+            removeCallbackAndFinish();
         }
 
         @Override
@@ -201,8 +200,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             if (mSponsorUserInfo != null) {
 //                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_cancel_call, mSponsorUserInfo.userName));
             }
-            finish();
-            TRTCUIManager.getInstance().removeCallingParamsCallback();
+            removeCallbackAndFinish();
         }
 
         @Override
@@ -210,8 +208,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             if (mSponsorUserInfo != null) {
 //                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_timeout, mSponsorUserInfo.userName));
             }
-            finish();
-            TRTCUIManager.getInstance().removeCallingParamsCallback();
+            removeCallbackAndFinish();
         }
 
         @Override
@@ -219,8 +216,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             if (mSponsorUserInfo != null) {
 //                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_end, mSponsorUserInfo.userName));
             }
-            finish();
-            TRTCUIManager.getInstance().removeCallingParamsCallback();
+            removeCallbackAndFinish();
         }
 
         @Override
@@ -293,6 +289,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.trtccalling_audiocall_activity_call_main);
 
+        TRTCUIManager.getInstance().isCalling = true;
         TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
             @Override
             public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {
@@ -317,6 +314,13 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //        mTRTCCalling.hangup();
         mTRTCCalling.exitRoom();
         super.onBackPressed();
+    }
+
+    private void removeCallbackAndFinish() {
+
+        finish();
+        TRTCUIManager.getInstance().isCalling = false;
+        TRTCUIManager.getInstance().removeCallingParamsCallback();
     }
 
     @Override
@@ -432,8 +436,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                mTRTCCalling.reject();
                 mTRTCCalling.exitRoom();
-                finish();
-                TRTCUIManager.getInstance().removeCallingParamsCallback();
+                removeCallbackAndFinish();
             }
         });
         mLayoutDialing.setOnClickListener(new View.OnClickListener() {
@@ -465,8 +468,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                mTRTCCalling.hangup();
                 mTRTCCalling.exitRoom();
-                finish();
-                TRTCUIManager.getInstance().removeCallingParamsCallback();
+                removeCallbackAndFinish();
             }
         });
         mLayoutDialing.setVisibility(View.GONE);
@@ -490,8 +492,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                mTRTCCalling.hangup();
                 mTRTCCalling.exitRoom();
-                finish();
-                TRTCUIManager.getInstance().removeCallingParamsCallback();
+                removeCallbackAndFinish();
             }
         });
         showTimeCount();
