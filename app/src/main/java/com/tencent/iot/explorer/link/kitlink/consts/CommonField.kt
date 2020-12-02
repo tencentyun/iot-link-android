@@ -168,4 +168,6 @@ object CommonField {
     const val XG_ACCESS_POINT_CHINA = "tpns.tencent.com"
     const val XG_ACCESS_POINT_USA = "tpns.hk.tencent.com"
 
+    const val CURRENT_FAMILY_ID = "CurrentFamilyId"
+    const val CURRENT_ROOM_ID = "CurrentRoomId"
 }
