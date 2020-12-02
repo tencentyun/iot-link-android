@@ -26,6 +26,8 @@ import com.tencent.iot.explorer.trtc.model.IntentParams;
 import com.tencent.iot.explorer.trtc.model.RoomKey;
 import com.tencent.iot.explorer.trtc.model.TRTCCalling;
 import com.tencent.iot.explorer.trtc.model.TRTCCallingDelegate;
+import com.tencent.iot.explorer.trtc.model.TRTCCallingParamsCallback;
+import com.tencent.iot.explorer.trtc.model.TRTCUIManager;
 import com.tencent.iot.explorer.trtc.model.UserInfo;
 import com.tencent.iot.explorer.trtc.model.impl.TRTCCallingImpl;
 import com.tencent.iot.explorer.trtc.ui.audiocall.audiolayout.TRTCAudioLayout;
@@ -90,6 +92,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             //发生了错误，报错并退出该页面
 //            ToastUtils.showLong(getString(R.string.trtccalling_toast_call_error_msg, code, msg));
             finish();
+            TRTCUIManager.getInstance().removeCallingParamsCallback();
         }
 
         @Override
@@ -199,6 +202,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_cancel_call, mSponsorUserInfo.userName));
             }
             finish();
+            TRTCUIManager.getInstance().removeCallingParamsCallback();
         }
 
         @Override
@@ -207,6 +211,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_timeout, mSponsorUserInfo.userName));
             }
             finish();
+            TRTCUIManager.getInstance().removeCallingParamsCallback();
         }
 
         @Override
@@ -215,6 +220,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_end, mSponsorUserInfo.userName));
             }
             finish();
+            TRTCUIManager.getInstance().removeCallingParamsCallback();
         }
 
         @Override
@@ -287,6 +293,19 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.trtccalling_audiocall_activity_call_main);
 
+        TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
+            @Override
+            public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {
+                //1.分配自己的画面
+                mLayoutManagerTRTC.setMySelfUserId(mSelfModel.getUserId());
+                addUserToManager(mSelfModel);
+                //2.接听电话
+//                mTRTCCalling.accept();
+                mTRTCCalling.enterTRTCRoom(roomKey);
+                showCallingView();
+            }
+        });
+
         initView();
         initData();
         initListener();
@@ -357,7 +376,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             if (params != null) {
                 mOtherInvitingUserInfoList = params.mUserInfos;
             }
-            showWaitingResponseView(roomKey);
+            showWaitingResponseView();
         } else {
             // 主叫方
             if (roomKey != null) {
@@ -397,7 +416,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     /**
      * 等待接听界面
      */
-    public void showWaitingResponseView(RoomKey roomKey) {
+    public void showWaitingResponseView() {
         //1. 展示对方的画面
         TRTCAudioLayout layout = mLayoutManagerTRTC.allocAudioCallLayout(mSponsorUserInfo.getUserId());
         layout.setUserId(mSponsorUserInfo.getUserId());
@@ -414,18 +433,13 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //                mTRTCCalling.reject();
                 mTRTCCalling.exitRoom();
                 finish();
+                TRTCUIManager.getInstance().removeCallingParamsCallback();
             }
         });
         mLayoutDialing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //1.分配自己的画面
-                mLayoutManagerTRTC.setMySelfUserId(mSelfModel.getUserId());
-                addUserToManager(mSelfModel);
-                //2.接听电话
-//                mTRTCCalling.accept();
-                mTRTCCalling.enterTRTCRoom(roomKey);
-                showCallingView();
+                TRTCUIManager.getInstance().didAcceptJoinRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
             }
         });
         //4. 展示其他用户界面
@@ -452,6 +466,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //                mTRTCCalling.hangup();
                 mTRTCCalling.exitRoom();
                 finish();
+                TRTCUIManager.getInstance().removeCallingParamsCallback();
             }
         });
         mLayoutDialing.setVisibility(View.GONE);
@@ -476,6 +491,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //                mTRTCCalling.hangup();
                 mTRTCCalling.exitRoom();
                 finish();
+                TRTCUIManager.getInstance().removeCallingParamsCallback();
             }
         });
         showTimeCount();
