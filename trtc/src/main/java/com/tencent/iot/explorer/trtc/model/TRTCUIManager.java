@@ -8,6 +8,8 @@ public class TRTCUIManager {
 
     private TRTCSessionManager sessionManager = null;
 
+    public Boolean isCalling = false;
+
     public synchronized static TRTCUIManager getInstance() {
         if (instance == null) {
             instance = new TRTCUIManager();
