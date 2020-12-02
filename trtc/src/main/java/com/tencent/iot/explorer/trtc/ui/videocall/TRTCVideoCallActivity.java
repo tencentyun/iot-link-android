@@ -297,6 +297,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.trtccalling_videocall_activity_call_main);
 
+        TRTCUIManager.getInstance().isCalling = true;
         TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
             @Override
             public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {
@@ -325,6 +326,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mTRTCCalling.closeCamera();
 //        mTRTCCalling.removeDelegate(mTRTCCallingDelegate);
         finish();
+        TRTCUIManager.getInstance().isCalling = false;
         TRTCUIManager.getInstance().removeCallingParamsCallback();
     }
 
