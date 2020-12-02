@@ -13,7 +13,7 @@ import com.tencent.iot.explorer.trtc.model.TRTCCalling
 import com.tencent.iot.explorer.trtc.model.TRTCSessionManager
 import com.tencent.iot.explorer.trtc.model.TRTCUIManager
 
-class TRTCAppSessionManger : TRTCSessionManager() {
+class TRTCAppSessionManager : TRTCSessionManager() {
 
     override fun joinRoom(callingType: Int, deviceId: String) {
         super.joinRoom(callingType, deviceId)
