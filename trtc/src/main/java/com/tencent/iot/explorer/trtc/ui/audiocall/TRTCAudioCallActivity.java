@@ -26,6 +26,8 @@ import com.tencent.iot.explorer.trtc.model.IntentParams;
 import com.tencent.iot.explorer.trtc.model.RoomKey;
 import com.tencent.iot.explorer.trtc.model.TRTCCalling;
 import com.tencent.iot.explorer.trtc.model.TRTCCallingDelegate;
+import com.tencent.iot.explorer.trtc.model.TRTCCallingParamsCallback;
+import com.tencent.iot.explorer.trtc.model.TRTCUIManager;
 import com.tencent.iot.explorer.trtc.model.UserInfo;
 import com.tencent.iot.explorer.trtc.model.impl.TRTCCallingImpl;
 import com.tencent.iot.explorer.trtc.ui.audiocall.audiolayout.TRTCAudioLayout;
@@ -287,6 +289,19 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.trtccalling_audiocall_activity_call_main);
 
+        TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
+            @Override
+            public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {
+                //1.分配自己的画面
+                mLayoutManagerTRTC.setMySelfUserId(mSelfModel.getUserId());
+                addUserToManager(mSelfModel);
+                //2.接听电话
+//                mTRTCCalling.accept();
+                mTRTCCalling.enterTRTCRoom(roomKey);
+                showCallingView();
+            }
+        });
+
         initView();
         initData();
         initListener();
@@ -357,7 +372,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             if (params != null) {
                 mOtherInvitingUserInfoList = params.mUserInfos;
             }
-            showWaitingResponseView(roomKey);
+            showWaitingResponseView();
         } else {
             // 主叫方
             if (roomKey != null) {
@@ -397,7 +412,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     /**
      * 等待接听界面
      */
-    public void showWaitingResponseView(RoomKey roomKey) {
+    public void showWaitingResponseView() {
         //1. 展示对方的画面
         TRTCAudioLayout layout = mLayoutManagerTRTC.allocAudioCallLayout(mSponsorUserInfo.getUserId());
         layout.setUserId(mSponsorUserInfo.getUserId());
@@ -419,13 +434,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         mLayoutDialing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //1.分配自己的画面
-                mLayoutManagerTRTC.setMySelfUserId(mSelfModel.getUserId());
-                addUserToManager(mSelfModel);
-                //2.接听电话
-//                mTRTCCalling.accept();
-                mTRTCCalling.enterTRTCRoom(roomKey);
-                showCallingView();
+                TRTCUIManager.getInstance().didAcceptJoinRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
             }
         });
         //4. 展示其他用户界面
