@@ -6,21 +6,20 @@ import android.content.DialogInterface
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.R
 import com.tencent.android.tpush.XGIOperateCallback
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.android.tpush.XGPushManager
-import com.tencent.iot.explorer.link.BuildConfig
+import com.tencent.iot.explorer.link.*
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
-import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.FileUtils
@@ -35,7 +34,19 @@ import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
+import com.tencent.iot.explorer.link.core.auth.response.ControlPanelResponse
+import com.tencent.iot.explorer.link.core.auth.response.DeviceListResponse
+import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.HomeFragmentPresenter
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import com.tencent.tpns.baseapi.XGApiConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -44,7 +55,7 @@ import kotlin.system.exitProcess
 /**
  * main页面
  */
-class MainActivity : PActivity(), MyCallback {
+class MainActivity : PActivity(), MyCallback, AppLifeCircleListener {
     private var previousPosition = 0
 
     private val fragments = arrayListOf<Fragment>()
@@ -53,6 +64,8 @@ class MainActivity : PActivity(), MyCallback {
 //    private var addDialog: ListOptionsDialog? = null
 
     private var isForceUpgrade = true
+
+    private var isFirstTimeIn = true
 
     private var permissions = arrayOf(
         Manifest.permission.CAMERA,
@@ -228,6 +241,128 @@ class MainActivity : PActivity(), MyCallback {
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
+        when (reqCode) {
+            RequestCode.device_list -> {
+                if (response.isSuccess()) {
+                    response.parse(DeviceListResponse::class.java)?.run {
+                        val deviceList = DeviceList
+                        val productIdList = ArrayList<String>()
+                        // TRTC: 轮询在线的trtc设备的call_status
+                        for (device in DeviceList) {
+                            productIdList.add(device.ProductId)
+                        }
+                        getProductsConfig(productIdList, deviceList)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getProductsConfig(productIds: List<String>, deviceList: List<DeviceEntity>) {
+        HttpRequest.instance.getProductsConfig(productIds, object:MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    response.parse(ControlPanelResponse::class.java)?.Data?.let {
+                        it.forEach{
+                            var callingMyApp = false
+                            it.parse().run {
+                                if (configEntity.Global.trtc) {
+                                    val trtcDeviceIdList = ArrayString()
+                                    for (device in deviceList) {
+                                        if (device.ProductId == ProductId) {
+                                            trtcDeviceIdList.addValue(device.DeviceId)
+                                            getDeviceCallStatus(device)
+                                            callingMyApp = true
+                                            break //目前只考虑接收一台设备通话的请求
+                                        }
+                                    }
+                                    // TRTC: trtc设备注册websocket监听
+                                    IoTAuth.registerActivePush(trtcDeviceIdList, null)
+                                }
+                            }
+                            if (callingMyApp) {
+                                return
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    /**
+     * 获取 设备当前状态(如亮度、开关状态等)
+     */
+    private fun getDeviceCallStatus(device: DeviceEntity) {
+        HttpRequest.instance.deviceData(device.ProductId, device.DeviceName, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.code == 0) { //获取 设备当前状态(如亮度、开关状态等) 成功
+                    // 解析设备状态
+                    val json = response.data as JSONObject
+                    val dataJson = json.getJSONObject(CommonField.DATA)
+                    if (dataJson == null || dataJson.isEmpty()) {
+                        return
+                    }
+                    val videoCallStatusJson = dataJson.getJSONObject(MessageConst.TRTC_VIDEO_CALL_STATUS)
+                    val videoCallStatus = videoCallStatusJson.getInteger("Value")
+
+                    val audioCallStatusJson = dataJson.getJSONObject(MessageConst.TRTC_AUDIO_CALL_STATUS)
+                    val audioCallStatus = audioCallStatusJson.getInteger("Value")
+                    // 判断设备的video_call_status, audio_call_status字段是否等于1，若等于1，就调用CallDevice接口
+                    if (videoCallStatus == 1) {
+                        trtcCallDevice(device, TRTCCalling.TYPE_VIDEO_CALL)
+                    } else if (audioCallStatus == 1) {
+                        trtcCallDevice(device, TRTCCalling.TYPE_AUDIO_CALL)
+                    }
+                }
+
+            }
+        })
+    }
+
+    /**
+     * 被设备呼叫获取trtc参数信息
+     */
+    private fun trtcCallDevice(device: DeviceEntity, callingType: Int) {
+        HttpRequest.instance.trtcCallDevice(device.DeviceId, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                // 解析房间参数，并拉起被呼叫页面
+                val json = response.data as JSONObject
+                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) return;
+                val data = json.getString(MessageConst.TRTC_PARAMS)
+                if (TextUtils.isEmpty(data)) return;
+                val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
+
+                var room = RoomKey()
+                room.userId = params.UserId
+                room.appId = params.SdkAppId
+                room.userSig = params.UserSig
+                room.roomId = params.StrRoomId
+                room.callType = callingType
+                enterRoom(room, device.DeviceId)
+            }
+        })
+    }
+
+    private fun enterRoom(room: RoomKey, deviceId: String) {
+        runOnUiThread {
+            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
+                TRTCVideoCallActivity.startBeingCall(this, room, deviceId)
+            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
+                TRTCAudioCallActivity.startBeingCall(this, room, deviceId)
+            }
+        }
     }
 
     private fun showFragment(position: Int) {
@@ -300,5 +435,22 @@ class MainActivity : PActivity(), MyCallback {
                 })
         builder.create()
         builder.show()
+    }
+
+    override fun onAppGoforeground() {
+        if (!isFirstTimeIn) {
+            HttpRequest.instance.deviceList(
+                App.data.getCurrentFamily().FamilyId,
+                App.data.getCurrentRoom().RoomId,
+                0,
+                this
+            )
+        } else {
+            isFirstTimeIn = false
+        }
+    }
+
+    override fun onAppGoBackground() {
+        L.e("out MainActivity===============")
     }
 }
