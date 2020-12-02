@@ -39,6 +39,8 @@ class AppData private constructor() {
     var region = "ap-guangzhou"
     var appLifeCircleId = "0"
     var notificationId = 0
+    var isForeground = false
+    var isCalling = false
 
     //activity列表
     val activityList = LinkedList<BaseActivity>()
@@ -97,10 +99,12 @@ class AppData private constructor() {
 
     fun setCurrentFamily(position: Int) {
         this.familyEntity = familyList[position]
+        SharePreferenceUtil.saveString(App.Companion.activity, App.CONFIG, CommonField.CURRENT_FAMILY_ID, familyEntity.FamilyId)
     }
 
     fun setCurrentRoom(position: Int) {
         this.currentRoom = roomList[position]
+        SharePreferenceUtil.saveString(App.Companion.activity, App.CONFIG, CommonField.CURRENT_ROOM_ID, currentRoom.RoomId)
     }
 
     /**
