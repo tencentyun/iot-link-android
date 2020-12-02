@@ -26,6 +26,8 @@ import com.tencent.iot.explorer.trtc.model.IntentParams;
 import com.tencent.iot.explorer.trtc.model.RoomKey;
 import com.tencent.iot.explorer.trtc.model.TRTCCalling;
 import com.tencent.iot.explorer.trtc.model.TRTCCallingDelegate;
+import com.tencent.iot.explorer.trtc.model.TRTCCallingParamsCallback;
+import com.tencent.iot.explorer.trtc.model.TRTCUIManager;
 import com.tencent.iot.explorer.trtc.model.UserInfo;
 import com.tencent.iot.explorer.trtc.model.impl.TRTCCallingImpl;
 import com.tencent.iot.explorer.trtc.ui.videocall.videolayout.TRTCVideoLayout;
@@ -72,8 +74,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     private int                    mTimeCount;
     private Handler mTimeHandler;
     private HandlerThread mTimeHandlerThread;
-
-    private RoomKey mRoomKey;
 
     /**
      * 拨号相关成员变量
@@ -297,6 +297,17 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.trtccalling_videocall_activity_call_main);
 
+        TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
+            @Override
+            public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {
+                //2.接听电话
+//                mTRTCCalling.accept();
+//                mTRTCCalling.enterTRTCRoom();
+                startInviting(roomKey);
+                showCallingView();
+            }
+        });
+
         initView();
         initData();
         initListener();
@@ -314,6 +325,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mTRTCCalling.closeCamera();
 //        mTRTCCalling.removeDelegate(mTRTCCallingDelegate);
         finish();
+        TRTCUIManager.getInstance().removeCallingParamsCallback();
     }
 
     @Override
@@ -361,7 +373,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         RoomKey roomKey = JSON.parseObject(roomKeyStr, RoomKey.class);
         mSelfModel = new UserInfo();
         mSelfModel.setUserId(roomKey.getUserId());
-        mRoomKey = roomKey;
         //自己的资料
 //        mSelfModel = (UserInfo) intent.getSerializableExtra(PARAM_SELF_INFO);
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
@@ -453,11 +464,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mDialingLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //2.接听电话
-//                mTRTCCalling.accept();
-//                mTRTCCalling.enterTRTCRoom();
-                startInviting(mRoomKey);
-                showCallingView();
+                TRTCUIManager.getInstance().didAcceptJoinRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
             }
         });
         //4. 展示其他用户界面
