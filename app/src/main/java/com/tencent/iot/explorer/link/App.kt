@@ -122,6 +122,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
         Utils.clearMsgNotify(activity, data.notificationId)
         if (++activityReferences == 1 && !isActivityChangingConfigurations) {
             // App enters foreground
+            data.isForeground = true
             if (activity is AppLifeCircleListener) {
                 activity.onAppGoforeground()
             }
@@ -132,6 +133,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
         isActivityChangingConfigurations = activity.isChangingConfigurations
         if (--activityReferences == 0 && !isActivityChangingConfigurations) {
             // App enters background
+            data.isForeground = false
             if (activity is AppLifeCircleListener) {
                 activity.onAppGoBackground()
             }
@@ -143,6 +145,53 @@ class App : Application(), Application.ActivityLifecycleCallbacks {
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
     override fun onActivityResumed(activity: Activity) {}
+<<<<<<< Updated upstream
+=======
+
+    /**
+     * 呼叫设备获取trtc参数信息
+     */
+    override fun startBeingCall(callingType: Int, deviceId: String) {
+        if (data.isForeground) {
+            HttpRequest.instance.trtcCallDevice(deviceId, object : MyCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    if (msg != null) L.e(msg)
+                }
+
+                override fun success(response: BaseResponse, reqCode: Int) {
+                    // 解析房间参数，并呼叫页面
+                    val json = response.data as com.alibaba.fastjson.JSONObject
+                    if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) return;
+                    val data = json.getString(MessageConst.TRTC_PARAMS)
+                    if (TextUtils.isEmpty(data)) return;
+                    val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
+
+
+                    enterRoom(callingType, params, deviceId)
+                }
+            })
+        }
+    }
+
+    /**
+     * 被设备呼叫进入trtc房间通话
+     */
+    private fun enterRoom(callingType: Int, params: TRTCParamsEntity, deviceId: String) {
+        var room = RoomKey()
+        room.userId = params.UserId
+        room.appId = params.SdkAppId
+        room.userSig = params.UserSig
+        room.roomId = params.StrRoomId
+        room.callType = callingType
+        activity?.runOnUiThread {
+            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
+//                TRTCVideoCallActivity.startBeingCall(activity, room, deviceId)
+            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
+//                TRTCAudioCallActivity.startBeingCall(activity, room, deviceId)
+            }
+        }
+    }
+>>>>>>> Stashed changes
 }
 
 interface AppLifeCircleListener {
