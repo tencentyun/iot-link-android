@@ -139,7 +139,12 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
                 } else {
                     var dialog = TipDialog(context)
                     dialog.show()
-                    dialog.setOnDismisListener {}
+                    dialog.setOnDismisListener {
+                        automation.actions?.clear()
+                        var intent = Intent(context, EditManualTaskActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(automation))
+                        startActivity(intent)
+                    }
                 }
             }
         }
