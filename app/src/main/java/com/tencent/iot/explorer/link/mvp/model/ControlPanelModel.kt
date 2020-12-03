@@ -263,8 +263,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     hasProduct = true
                     mergeData()
                 }
-
-                if (uiList.size == 0) {
+                if (!hasProduct && uiList.size == 0) {
                     processPropertyList()
                     mergeData()
                 }
