@@ -22,7 +22,7 @@ class ControlPanelHolder : BaseHolder<ControlPanel> {
                     itemView.tv_template_value.text = value
                 }
                 else -> {
-                    itemView.tv_btn_type.text = "按钮类型：$type，图标：$icon"
+//                    itemView.tv_btn_type.text = "按钮类型：$type，图标：$icon"
                     itemView.tv_template_value.text = define?.getText(value) ?: "0"
                 }
             }
