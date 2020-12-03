@@ -244,6 +244,10 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                         requestDeviceData()
                         //合并
                         mergeData()
+                    } else {
+                        processPropertyList()
+                        mergeData()
+                        hasProduct = false
                     }
                 }
             }
@@ -261,11 +265,6 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     propertyList.addAll(this)
                     L.e("propertyList = ${JsonManager.toJson(propertyList)}")
                     hasProduct = true
-                    mergeData()
-                }
-
-                if (uiList.size == 0) {
-                    processPropertyList()
                     mergeData()
                 }
             }
@@ -299,6 +298,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         }
         if (uiList.size != 0) {
             hasPanel = true
+            hasProduct = true
         }
     }
 
