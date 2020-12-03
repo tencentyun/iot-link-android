@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:scaleType="centerCrop"
-        android:src="@drawable/trtccalling_wait_background" />
+        android:scaleType="centerCrop" />
 
     <FrameLayout
         android:id="@+id/fl_shade"
