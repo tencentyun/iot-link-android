@@ -31,7 +31,6 @@
         android:id="@+id/tv_inviting_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/trtccalling_inviting_tag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/trtc_layout_manager" />
@@ -48,11 +47,22 @@
         app:layout_constraintTop_toBottomOf="@id/tv_inviting_tag" />
 
     <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:textSize="@dimen/trtccalling_text_size_middle"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@+id/ll_hangup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
