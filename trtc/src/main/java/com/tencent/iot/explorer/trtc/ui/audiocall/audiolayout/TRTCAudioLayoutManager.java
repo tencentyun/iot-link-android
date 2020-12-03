@@ -169,7 +169,7 @@ public class TRTCAudioLayoutManager extends RelativeLayout {
         for (TRTCLayoutEntity entity : mLayoutEntityList) {
             if (entity.layout.getVisibility() == VISIBLE) {
                 if (userId.equals(entity.userId)) {
-                    entity.layout.setAudioVolume(audioVolume);
+//                    entity.layout.setAudioVolume(audioVolume);
                 }
             }
         }

@@ -238,7 +238,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 String userId = entry.getKey();
                 TRTCAudioLayout layout = mLayoutManagerTRTC.findAudioCallLayout(userId);
                 if (layout != null) {
-                    layout.setAudioVolume(entry.getValue());
+//                    layout.setAudioVolume(entry.getValue());
                 }
             }
         }
