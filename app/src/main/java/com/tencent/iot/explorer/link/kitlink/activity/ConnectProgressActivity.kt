@@ -100,6 +100,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
     }
 
     override fun initView() {
+        productId = intent.getStringExtra(CommonField.PRODUCT_ID)
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
         if (intent.hasExtra(CommonField.SSID)) {
             ssid = intent.getStringExtra(CommonField.SSID)
@@ -308,6 +309,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
                 if (!quit) {
                     var failedIntent = Intent(this, ConfigNetFailedActivity::class.java)
                     failedIntent.putExtra(CommonField.CONFIG_TYPE, type)
+                    failedIntent.putExtra(CommonField.PRODUCT_ID, productId)
                     startActivity(failedIntent)
                     backToDeviceCategoryActivity()
                 }
