@@ -40,6 +40,7 @@ class AppData private constructor() {
     var appLifeCircleId = "0"
     var notificationId = 0
     var isForeground = false
+    var callingDeviceId = "" //主动呼叫的设备的id
 
     //activity列表
     val activityList = LinkedList<BaseActivity>()
