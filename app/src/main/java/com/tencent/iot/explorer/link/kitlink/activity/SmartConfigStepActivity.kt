@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
 import com.alibaba.fastjson.JSONObject
@@ -31,6 +32,17 @@ class SmartConfigStepActivity : PActivity() {
 
     override fun getContentView(): Int {
         return R.layout.activity_smart_config_step
+    }
+
+    companion object {
+        fun startActivityWithExtra(context: Context, productId: String?) {
+            val intent = Intent(context, SmartConfigStepActivity::class.java)
+            if (!TextUtils.isEmpty(productId)) {
+                intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
+                intent.putExtra(CommonField.PRODUCT_ID, productId)
+            }
+            context.startActivity(intent)
+        }
     }
 
     private fun refreshTypeView() {

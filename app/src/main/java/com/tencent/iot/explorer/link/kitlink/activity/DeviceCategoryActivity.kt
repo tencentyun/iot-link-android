@@ -5,10 +5,12 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -225,10 +227,14 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                             }
                         }
                         contains("page=softap") -> {
-                            jumpActivity(SoftApStepActivity::class.java)
+                            var uri = Uri.parse(this)
+                            var productId = uri.getQueryParameter(CommonField.EXTRA_PRODUCT_ID)
+                            SoftApStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
                         }
                         contains("page=smartconfig") -> {
-                            jumpActivity(SmartConfigStepActivity::class.java)
+                            var uri = Uri.parse(this)
+                            var productId = uri.getQueryParameter(CommonField.EXTRA_PRODUCT_ID)
+                            SmartConfigStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
                         }
                         contains("page=adddevice") && contains("productId") -> {
                             var productid = Utils.getUrlParamValue(this, "productId")
