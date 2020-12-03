@@ -59,6 +59,11 @@ abstract class BaseActivity : AppCompatActivity() {
         startHere()
     }
 
+    override fun onResume() {
+        super.onResume()
+        App.activity = this
+    }
+
     /**
      * 检查权限
      */
