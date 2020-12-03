@@ -247,6 +247,7 @@
     <string name="soft_ap_connect_confirm">连接正确，进入下一步</string>
     <string name="handle_method">操作方式</string>
     <string name="method_step">1.点击WiFi名称右侧的下拉按钮，前往手机WiFi设置界面选择设备热点后，返回APP。\n2.填写设备密码，若设备热点无密码则无需填写。\n3.点击下一步，开始配网。</string>
+    <string name="default_soft_ap_name">tcloud_XXX</string>
 
     <string name="offline">离线</string>
     <string name="online">设备在线</string>

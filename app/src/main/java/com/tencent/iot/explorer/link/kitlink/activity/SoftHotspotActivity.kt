@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.R
@@ -88,11 +89,13 @@ class SoftHotspotActivity : PActivity() {
     private fun loadViewStandradInfo() {
         tv_soft_connect_hotspot_tip.visibility = View.VISIBLE
         tv_soft_connect_hotspot_tip.setText(R.string.soft_ap_hotspot_step_1)
+        tv_ap_name.setText(R.string.default_soft_ap_name)
     }
 
     private fun loadViewInfo() {
         tv_soft_connect_hotspot_tip.visibility = View.VISIBLE
         if (TextUtils.isEmpty(productId)) {
+            loadViewStandradInfo()
             return
         }
 
@@ -106,16 +109,30 @@ class SoftHotspotActivity : PActivity() {
             override fun success(response: BaseResponse, reqCode: Int) {
                 response.parse(ProductsConfigResponse::class.java)?.run {
                     val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
-
-                    if (TextUtils.isEmpty(config.WifiSoftAP)) {
+                    if (config == null || TextUtils.isEmpty(config.WifiSoftAP)) {
+                        loadViewStandradInfo()
                         return
                     }
 
                     var json = JSONObject.parseObject(config.WifiSoftAP)
                     if (json.containsKey(CommonField.HARD_WARE_GUIDE)) {
                         var connectApGuide = JSONObject.parseObject(json.getString(CommonField.CONNECT_AP_GUIDE), ConnectApGuide::class.java)
-                        if (connectApGuide != null && !TextUtils.isEmpty(connectApGuide.message)) {
+
+                        if (connectApGuide == null) {
+                            loadViewStandradInfo()
+                            return@run
+                        }
+
+                        if (!TextUtils.isEmpty(connectApGuide.message)) {
                             tv_soft_connect_hotspot_tip.setText(connectApGuide.message)
+                        } else {
+                            tv_soft_connect_hotspot_tip.setText(R.string.soft_ap_hotspot_step_1)
+                        }
+
+                        if (!TextUtils.isEmpty(connectApGuide.apName)) {
+                            tv_ap_name.setText(connectApGuide.apName)
+                        } else {
+                            tv_ap_name.setText(R.string.default_soft_ap_name)
                         }
                     }
                 }
