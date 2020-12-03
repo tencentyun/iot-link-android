@@ -250,10 +250,13 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
      * @param context
      * @param roomKey
      */
-    public static void startCallSomeone(Context context, RoomKey roomKey) {
+    public static void startCallSomeone(Context context, RoomKey roomKey, String beingCallUserId) {
         Intent starter = new Intent(context, TRTCAudioCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_CALL);
         starter.putExtra(PARAM_SELF_INFO, JSON.toJSONString(roomKey));
+        UserInfo beingCallUserInfo = new UserInfo();
+        beingCallUserInfo.setUserId(beingCallUserId);
+        starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserInfo);
         context.startActivity(starter);
     }
 
@@ -392,7 +395,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //                for (UserInfo userInfo : mCallUserInfoList) {
 //                    mCallUserModelMap.put(userInfo.getUserId(), userInfo);
 //                }
-                startInviting(roomKey);
+//                startInviting(roomKey);
                 showInvitingView();
             }
         }

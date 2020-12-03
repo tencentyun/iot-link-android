@@ -17,6 +17,10 @@ import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.popup.OfflinePopupWindow
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCUIManager
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -249,8 +253,15 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
      */
     fun showEnumPopup(entity: DevicePropertyEntity) {
         //特殊处理，当设备为trtc设备时。虽然call_status是枚举类型，但产品要求不弹弹窗，点击即拨打语音或视频通话。
-        if (entity.id == MessageConst.TRTC_AUDIO_CALL_STATUS || entity.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
+        if (entity.id == MessageConst.TRTC_AUDIO_CALL_STATUS) {
             controlDevice(entity.id, "1")
+            TRTCUIManager.getInstance().isCalling = true
+            TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
+            return
+        } else if (entity.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
+            controlDevice(entity.id, "1")
+            TRTCUIManager.getInstance().isCalling = true
+            TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
             return
         }
         if (enumPopup == null) {

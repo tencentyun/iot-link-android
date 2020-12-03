@@ -67,6 +67,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     private Group mInvitingGroup;
     private LinearLayout mImgContainerLl;
     private TextView mTimeTv;
+    private TextView mStatusView;
     private ImageView mSponsorAvatarImg;
     private TextView mSponsorUserNameTv;
     private Group                  mSponsorGroup;
@@ -125,6 +126,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                         return;
                     }
                     videoLayout.setVideoAvailable(false);
+                    mStatusView.setText(R.string.trtccalling_dialed_is_busy);
                 }
             });
         }
@@ -267,10 +269,13 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
      * @param context
      * @param roomKey
      */
-    public static void startCallSomeone(Context context, RoomKey roomKey) {
+    public static void startCallSomeone(Context context, RoomKey roomKey, String beingCallUserId) {
         Intent starter = new Intent(context, TRTCVideoCallActivity.class);
-        starter.putExtra(PARAM_TYPE, roomKey.getCallType());
+        starter.putExtra(PARAM_TYPE, TYPE_CALL);
         starter.putExtra(PARAM_SELF_INFO, JSON.toJSONString(roomKey));
+        UserInfo beingCallUserInfo = new UserInfo();
+        beingCallUserInfo.setUserId(beingCallUserId);
+        starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserInfo);
         context.startActivity(starter);
     }
 
@@ -399,7 +404,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 //                for (UserInfo userInfo : mCallUserInfoList) {
 //                    mCallUserModelMap.put(userInfo.userId, userInfo);
 //                }
-                startInviting(roomKey);
+//                startInviting(roomKey);
                 showInvitingView();
             }
         }
@@ -431,6 +436,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mSponsorAvatarImg = (ImageView) findViewById(R.id.iv_sponsor_avatar);
         mSponsorUserNameTv = (TextView) findViewById(R.id.tv_sponsor_user_name);
         mSponsorGroup = (Group) findViewById(R.id.group_sponsor);
+        mStatusView = (TextView) findViewById(R.id.tv_status);
     }
 
 

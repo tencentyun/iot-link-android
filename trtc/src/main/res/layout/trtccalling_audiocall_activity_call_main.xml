@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
         android:layout_marginBottom="100dp"
+        android:text="@string/trtccalling_waiting_to_hear"
         app:layout_constraintBottom_toTopOf="@+id/tv_time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
