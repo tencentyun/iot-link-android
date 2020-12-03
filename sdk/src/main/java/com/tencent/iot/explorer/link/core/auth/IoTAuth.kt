@@ -10,7 +10,7 @@ import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.service.*
 import com.tencent.iot.explorer.link.core.auth.socket.WSClientManager
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
-import com.tencent.iot.explorer.link.core.auth.socket.callback.StartBeingCallCallback
+import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
 import com.tencent.iot.explorer.link.core.auth.socket.callback.MessageCallback
 import com.tencent.iot.explorer.link.core.log.L
 
@@ -152,8 +152,8 @@ object IoTAuth {
         WSClientManager.instance.init()
     }
 
-    fun setEnableEnterRoomCallback(enable: Boolean) {
-        WSClientManager.instance.enableEnterRoomCallback = enable
+    fun setEnablePayloadMessageCallback(enable: Boolean) {
+        WSClientManager.instance.enablePayloadMessageCallback = enable
     }
 
     /**
@@ -216,8 +216,8 @@ object IoTAuth {
     /**
      * 添加进入trtc房间的监听器
      */
-    fun addEnterRoomCallback(callback: StartBeingCallCallback) {
-        WSClientManager.instance.addEnterRoomCallback(callback)
+    fun addEnterRoomCallback(callback: PayloadMessageCallback) {
+        WSClientManager.instance.addPayloadMessageCallback(callback)
     }
 
     /**

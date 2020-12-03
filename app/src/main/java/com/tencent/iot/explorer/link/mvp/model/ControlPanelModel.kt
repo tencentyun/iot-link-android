@@ -2,7 +2,6 @@ package com.tencent.iot.explorer.link.mvp.model
 
 import android.os.Handler
 import android.text.TextUtils
-import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
@@ -10,8 +9,8 @@ import com.tencent.iot.explorer.link.core.auth.entity.DeviceDataEntity
 import com.tencent.iot.explorer.link.core.auth.entity.NavBar
 import com.tencent.iot.explorer.link.core.auth.entity.ProductProperty
 import com.tencent.iot.explorer.link.core.auth.entity.Property
-import com.tencent.iot.explorer.link.core.auth.message.MessageConst
-import com.tencent.iot.explorer.link.core.auth.message.MessageConst.DEVICE_CHANGE
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_AUDIO_CALL_STATUS
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_VIDEO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
@@ -20,7 +19,6 @@ import com.tencent.iot.explorer.link.core.auth.response.DeviceDataResponse
 import com.tencent.iot.explorer.link.core.auth.response.DeviceProductResponse
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
-import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.response.UserSettingResponse
@@ -28,9 +26,6 @@ import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
-import com.tencent.iot.explorer.trtc.model.RoomKey
-import com.tencent.iot.explorer.trtc.model.TRTCCalling
-import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -88,64 +83,11 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     if (id == it.id) {
                         it.setValue(payload.getValue(id))
                         view?.showControlPanel(navBar, hasTimerCloud)
-                        var jsonObject = JSONObject(payload.json)
-                        val action = jsonObject.getString(MessageConst.MODULE_ACTION);
-                        if (action == DEVICE_CHANGE) { //收到了设备属性改变的wss消息
-                            var paramsObject = jsonObject.getJSONObject(MessageConst.PARAM) as JSONObject
-                            val subType = paramsObject.getString(MessageConst.SUB_TYPE)
-                            if (subType == MessageConst.REPORT) { //收到了设备端属性状态改变的wss消息
-
-                                var payloadParamsObject = JSONObject(payload.payload)
-                                val payloadParamsJson = payloadParamsObject.getJSONObject(MessageConst.PARAM)
-                                var videoCallStatus = -1
-                                if (payloadParamsJson.has(MessageConst.TRTC_VIDEO_CALL_STATUS)) {
-                                    videoCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_VIDEO_CALL_STATUS)
-                                }
-                                var audioCallStatus = -1
-                                if (payloadParamsJson.has(MessageConst.TRTC_AUDIO_CALL_STATUS)) {
-                                    audioCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_AUDIO_CALL_STATUS)
-                                }
-
-                                // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
-                                if (videoCallStatus == 1) {
-                                    trtcCallDevice(TRTCCalling.TYPE_VIDEO_CALL)
-                                } else if (audioCallStatus == 1) {
-                                    trtcCallDevice(TRTCCalling.TYPE_AUDIO_CALL)
-                                }
-                            }
-                        }
                         return@set
                     }
                 }
             }
         }
-    }
-    /**
-     * 呼叫设备获取trtc参数信息
-     */
-    private fun trtcCallDevice(callingType: Int) {
-        HttpRequest.instance.trtcCallDevice("$productId/$deviceName", object: MyCallback {
-            override fun fail(msg: String?, reqCode: Int) {
-                if (msg != null) L.e(msg)
-            }
-
-            override fun success(response: BaseResponse, reqCode: Int) {
-                // 解析房间参数，并呼叫页面
-                val json = response.data as com.alibaba.fastjson.JSONObject
-                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) return;
-                val data = json.getString(MessageConst.TRTC_PARAMS)
-                if (TextUtils.isEmpty(data)) return;
-                val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
-
-                var room = RoomKey()
-                room.userId = params.UserId
-                room.appId = params.SdkAppId
-                room.userSig = params.UserSig
-                room.roomId = params.StrRoomId
-                room.callType = callingType
-                view?.enterRoom(room)
-            }
-        })
     }
 
     /**
@@ -197,6 +139,11 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
             "{\"$id\":$value}"
         } else {
             "{\"$id\":\"$value\"}"
+        }
+        if (id == TRTC_VIDEO_CALL_STATUS || id == TRTC_AUDIO_CALL_STATUS) { //如果点击选择的是trtc设备的呼叫状态
+            if (value == "1") { //并且状态值为1，代表应用正在call设备
+                App.data.callingDeviceId = "$productId/$deviceName" //保存下设备id（productId/deviceName）
+            }
         }
         HttpRequest.instance.controlDevice(productId, deviceName, data, this)
     }
@@ -398,6 +345,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(runnable)
+        App.data.callingDeviceId = "" //暂时打电话的入口只在控制面板内，所以销毁了控制面板，就重置一下callingDeviceId为空字符串，代表没有在打电话了。
         IoTAuth.removeActivePushCallback(ArrayString(deviceId), this)
     }
 
