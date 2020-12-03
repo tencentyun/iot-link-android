@@ -10,6 +10,7 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_AUDIO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_VIDEO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
@@ -29,6 +30,10 @@ import com.tencent.iot.explorer.link.core.demo.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.core.demo.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.core.demo.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.core.demo.view.MyDivider
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCUIManager
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -320,6 +325,18 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
      * 显示枚举弹框
      */
     fun showEnumPopup(entity: ControlPanel) {
+        //特殊处理，当设备为trtc设备时。虽然call_status是枚举类型，但产品要求不弹弹窗，点击即拨打语音或视频通话。
+        if (entity.id == MessageConst.TRTC_AUDIO_CALL_STATUS) {
+            controlDevice(entity.id, "1")
+            TRTCUIManager.getInstance().isCalling = true
+            TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
+            return
+        } else if (entity.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
+            controlDevice(entity.id, "1")
+            TRTCUIManager.getInstance().isCalling = true
+            TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
+            return
+        }
         if (enumPopup == null) {
             enumPopup = EnumPopupWindow(this)
         }

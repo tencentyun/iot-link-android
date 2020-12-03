@@ -108,13 +108,12 @@ class App : Application(), PayloadMessageCallback {
     fun enterRoom(room: RoomKey) {
         activity?.runOnUiThread {
             if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
-                TRTCUIManager.getInstance().isCalling = true
-                TRTCVideoCallActivity.startCallSomeone(activity, room, data.callingDeviceId)
+                TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_VIDEO_CALL, App.data.callingDeviceId, room)
+                App.data.callingDeviceId = ""
             } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
-                TRTCUIManager.getInstance().isCalling = true
-                TRTCAudioCallActivity.startCallSomeone(activity, room, data.callingDeviceId)
+                TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_AUDIO_CALL, App.data.callingDeviceId, room)
+                App.data.callingDeviceId = ""
             }
-            data.callingDeviceId = ""
         }
     }
 
