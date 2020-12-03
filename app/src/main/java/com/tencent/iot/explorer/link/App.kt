@@ -355,13 +355,12 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
      */
     fun enterRoom(room: RoomKey) {
         activity?.runOnUiThread {
-            App.data.callingDeviceId = ""
             if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
-                TRTCUIManager.getInstance().isCalling = true
-                TRTCVideoCallActivity.startCallSomeone(this, room)
+                TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_VIDEO_CALL, App.data.callingDeviceId, room)
+                App.data.callingDeviceId = ""
             } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
-                TRTCUIManager.getInstance().isCalling = true
-                TRTCAudioCallActivity.startCallSomeone(this, room)
+                TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_AUDIO_CALL, App.data.callingDeviceId, room)
+                App.data.callingDeviceId = ""
             }
         }
     }
