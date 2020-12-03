@@ -5,10 +5,7 @@ import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.DeviceDataEntity
-import com.tencent.iot.explorer.link.core.auth.entity.NavBar
-import com.tencent.iot.explorer.link.core.auth.entity.ProductProperty
-import com.tencent.iot.explorer.link.core.auth.entity.Property
+import com.tencent.iot.explorer.link.core.auth.entity.*
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_AUDIO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_VIDEO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
@@ -20,6 +17,7 @@ import com.tencent.iot.explorer.link.core.auth.response.DeviceProductResponse
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.response.UserSettingResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
@@ -265,7 +263,42 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     hasProduct = true
                     mergeData()
                 }
+
+                if (uiList.size == 0) {
+                    processPropertyList()
+                    mergeData()
+                }
             }
+        }
+    }
+
+    private fun processPropertyList() {
+        uiList.clear()
+        var firstProperty = true
+        propertyList.forEach {
+            var defineObject = org.json.JSONObject(it.define)
+            if (defineObject.has(CommonField.DEFINE_TYPE)) {
+                val type = defineObject.get(CommonField.DEFINE_TYPE)
+                if (type != CommonField.DEFINE_TYPE_STRING && type != CommonField.DEFINE_TYPE_TIMESTAMP) { //过滤掉string和timestamp类型，他们不需要ui
+                    var property = Property()
+                    property.big = firstProperty
+                    property.id = it.id
+                    property.ui = UI()
+                    if (type != CommonField.DEFINE_TYPE_STRUCT) {
+                        property.ui.icon = "create"
+                        property.ui.type = "btn-col-1"
+                    } else {
+                        property.ui.icon = "create"
+                        property.ui.type = "btn-col-1"
+                    }
+                    uiList.add(property)
+
+                    firstProperty = false;
+                }
+            }
+        }
+        if (uiList.size != 0) {
+            hasPanel = true
         }
     }
 
