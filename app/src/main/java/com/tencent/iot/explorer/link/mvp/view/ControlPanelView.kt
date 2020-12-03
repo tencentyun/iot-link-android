@@ -7,6 +7,4 @@ import com.tencent.iot.explorer.trtc.model.RoomKey
 interface ControlPanelView : ParentView {
 
     fun showControlPanel(navBar: NavBar?, timingProject: Boolean)
-
-    fun enterRoom(room: RoomKey)
 }

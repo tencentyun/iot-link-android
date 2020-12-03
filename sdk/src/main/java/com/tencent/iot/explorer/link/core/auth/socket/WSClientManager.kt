@@ -47,7 +47,7 @@ internal class WSClientManager private constructor() {
     private val activePushCallbacks = LinkedList<ActivePushCallback>()
 
     //enterRoom监听
-    private var enterRoomCallback: StartBeingCallCallback? = null
+    private var payloadMessageCallback: PayloadMessageCallback? = null
 
     //保活相关参数
     private var isKeep = false
@@ -55,7 +55,7 @@ internal class WSClientManager private constructor() {
     private var param = "{\"action\":\"Hello\",\"reqId\":${MessageConst.HEART_ID}}"
 
     //enterRoom监听使能参数
-    public var enableEnterRoomCallback = true
+    public var enablePayloadMessageCallback = true
 
 
     /**
@@ -135,41 +135,8 @@ internal class WSClientManager private constructor() {
         override fun payloadMessage(payload: Payload) {
             // websocket消息总入口
             L.e(payload.toString())
-            var jsonObject = JSONObject(payload.json)
-            val action = jsonObject.getString(MessageConst.MODULE_ACTION);
-            if (action == MessageConst.DEVICE_CHANGE) { //收到了设备属性改变的wss消息
-                var paramsObject = jsonObject.getJSONObject(MessageConst.PARAM) as JSONObject
-                val subType = paramsObject.getString(MessageConst.SUB_TYPE)
-                if (subType == MessageConst.REPORT) { //收到了设备端属性状态改变的wss消息
-
-                    var payloadParamsObject = JSONObject(payload.payload)
-                    val payloadParamsJson = payloadParamsObject.getJSONObject(MessageConst.PARAM)
-                    var videoCallStatus = -1
-                    if (payloadParamsJson.has(MessageConst.TRTC_VIDEO_CALL_STATUS)) {
-                        videoCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_VIDEO_CALL_STATUS)
-                    }
-                    var audioCallStatus = -1
-                    if (payloadParamsJson.has(MessageConst.TRTC_AUDIO_CALL_STATUS)) {
-                        audioCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_AUDIO_CALL_STATUS)
-                    }
-
-                    var deviceId = ""
-                    if (payloadParamsJson.has(MessageConst.USERID)) {
-                        deviceId = payloadParamsJson.getString(MessageConst.USERID)
-                    }
-
-                    // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
-                    if (videoCallStatus == 1) {
-
-                        if (enterRoomCallback != null && enableEnterRoomCallback) {
-                            enterRoomCallback!!.startBeingCall(2, deviceId)
-                        }
-                    } else if (audioCallStatus == 1) {
-                        if (enterRoomCallback != null && enableEnterRoomCallback) {
-                            enterRoomCallback!!.startBeingCall(1, deviceId)
-                        }
-                    }
-                }
+            if (payloadMessageCallback != null && enablePayloadMessageCallback) {
+                payloadMessageCallback!!.payloadMessage(payload)
             }
             activePushCallbacks.forEach {
                 it.success(payload)
@@ -311,8 +278,8 @@ internal class WSClientManager private constructor() {
     /**
      * 添加进入trtc房间的监听器
      */
-    fun addEnterRoomCallback(callback: StartBeingCallCallback) {
-        enterRoomCallback = callback
+    fun addPayloadMessageCallback(callback: PayloadMessageCallback) {
+        payloadMessageCallback = callback
     }
 
     /**
