@@ -104,6 +104,8 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                 if (response.isSuccess()) {
                     response.parse(ProductsConfigResponse::class.java)?.run {
                         val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
+                        if (config == null) return
+
                         val wifiConfigTypeList = config.WifiConfTypeList
                         var productId = ""
                         if (!TextUtils.isEmpty(config.profile)) {

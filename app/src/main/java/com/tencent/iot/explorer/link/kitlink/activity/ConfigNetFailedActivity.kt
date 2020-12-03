@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_config_net_failed.*
 
 class ConfigNetFailedActivity : BaseActivity() {
     var type = DeviceFragment.ConfigType.SmartConfig.id
+    var productId = ""
 
     override fun getContentView(): Int {
         return R.layout.activity_config_net_failed
@@ -18,6 +19,7 @@ class ConfigNetFailedActivity : BaseActivity() {
 
     override fun initView() {
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
+        productId = intent.getStringExtra(CommonField.PRODUCT_ID)
 
         when (type) {
 
@@ -47,18 +49,18 @@ class ConfigNetFailedActivity : BaseActivity() {
             when(v) {
                 tv_soft_first_commit -> {
                     if (type == DeviceFragment.ConfigType.SoftAp.id) {
-                        startActivityWithExtra(SmartConfigStepActivity::class.java, "")
+                        SmartConfigStepActivity.startActivityWithExtra(this@ConfigNetFailedActivity, productId)
                     } else {
-                        startActivityWithExtra(SoftApStepActivity::class.java, "")
+                        SoftApStepActivity.startActivityWithExtra(this@ConfigNetFailedActivity, productId)
                     }
                     this@ConfigNetFailedActivity.finish()
                 }
 
                 tv_retry -> {
                     if (type == DeviceFragment.ConfigType.SoftAp.id) {
-                        startActivityWithExtra(SoftApStepActivity::class.java, "")
+                        SoftApStepActivity.startActivityWithExtra(this@ConfigNetFailedActivity, productId)
                     } else {
-                        startActivityWithExtra(SmartConfigStepActivity::class.java, "")
+                        SmartConfigStepActivity.startActivityWithExtra(this@ConfigNetFailedActivity, productId)
                     }
                     this@ConfigNetFailedActivity.finish()
                 }
@@ -76,14 +78,14 @@ class ConfigNetFailedActivity : BaseActivity() {
         }
     }
 
-    private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
-        val intent = Intent(this, cls)
-        if (!TextUtils.isEmpty(productId)) {
-            intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
-            intent.putExtra(CommonField.PRODUCT_ID, productId)
-        }
-        startActivity(intent)
-    }
+//    private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
+//        val intent = Intent(this, cls)
+//        if (!TextUtils.isEmpty(productId)) {
+//            intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
+//            intent.putExtra(CommonField.PRODUCT_ID, productId)
+//        }
+//        startActivity(intent)
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
