@@ -343,7 +343,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             public void onClick(View v) {
                 isMuteMic = !isMuteMic;
                 mTRTCCalling.setMicMute(isMuteMic);
-                mImageMute.setActivated(isMuteMic);
+//                mImageMute.setActivated(isMuteMic);
 //                ToastUtils.showLong(isMuteMic ? R.string.trtccalling_toast_enable_mute : R.string.trtccalling_toast_disable_mute);
             }
         });
@@ -356,7 +356,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //                ToastUtils.showLong(isHandsFree ? R.string.trtccalling_toast_use_speaker : R.string.trtccalling_toast_use_handset);
             }
         });
-        mImageMute.setActivated(isMuteMic);
+//        mImageMute.setActivated(isMuteMic);
         mImageHandsFree.setActivated(isHandsFree);
     }
 
