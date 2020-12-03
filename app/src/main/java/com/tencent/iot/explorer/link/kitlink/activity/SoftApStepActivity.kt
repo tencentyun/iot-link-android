@@ -1,10 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
 import com.alibaba.fastjson.JSONObject
 import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
@@ -30,6 +30,17 @@ class SoftApStepActivity : PActivity() {
 
     override fun getContentView(): Int {
         return R.layout.activity_soft_ap_step
+    }
+
+    companion object {
+        fun startActivityWithExtra(context: Context, productId: String?) {
+            val intent = Intent(context, SoftApStepActivity::class.java)
+            if (!TextUtils.isEmpty(productId)) {
+                intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
+                intent.putExtra(CommonField.PRODUCT_ID, productId)
+            }
+            context.startActivity(intent)
+        }
     }
 
     private fun refreshTypeView() {
@@ -92,7 +103,7 @@ class SoftApStepActivity : PActivity() {
                 response.parse(ProductsConfigResponse::class.java)?.run {
                     val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
 
-                    if (TextUtils.isEmpty(config.WifiSoftAP)) {
+                    if (config == null || TextUtils.isEmpty(config.WifiSoftAP)) {
                         loadViewStandradInfo()
                         return
                     }
