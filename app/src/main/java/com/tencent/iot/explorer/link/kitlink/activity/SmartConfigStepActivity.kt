@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import com.alibaba.fastjson.JSONObject
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
@@ -111,11 +112,11 @@ class SmartConfigStepActivity : PActivity() {
                     val config =
                         JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
 
-                    if (TextUtils.isEmpty(config.WifiSoftAP)) {
+                    if (TextUtils.isEmpty(config.WifiSmartConfig)) {
                         loadViewStandradInfo()
                         return
                     }
-                    var json = JSONObject.parseObject(config.WifiSoftAP)
+                    var json = JSONObject.parseObject(config.WifiSmartConfig)
                     if (json.containsKey(CommonField.HARD_WARE_GUIDE)) {
 
                         var hardwareGuide = JSONObject.parseObject(
