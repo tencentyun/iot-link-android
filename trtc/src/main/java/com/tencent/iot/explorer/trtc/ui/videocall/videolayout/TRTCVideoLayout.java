@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.trtc.ui.videocall.videolayout;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -78,6 +79,7 @@ public class TRTCVideoLayout extends RelativeLayout {
         mTextUserName = (TextView) findViewById(R.id.tv_user_name);
         mLayoutNoVideo = (FrameLayout) findViewById(R.id.fl_no_video);
         mProgressAudio = (ProgressBar) findViewById(R.id.progress_bar_audio);
+        mProgressAudio.setVisibility(View.GONE);
     }
 
     public boolean isMoveAble() {
