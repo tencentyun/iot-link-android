@@ -10,6 +10,8 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_AUDIO_CALL_STATUS
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_VIDEO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
@@ -176,6 +178,11 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
     private fun controlDevice(id: String, value: String) {
         L.d("上报数据:id=$id value=$value")
         val data = "{\"$id\":\"$value\"}"
+        if (id == TRTC_VIDEO_CALL_STATUS || id == TRTC_AUDIO_CALL_STATUS) { //如果点击选择的是trtc设备的呼叫状态
+            if (value == "1") { //并且状态值为1，代表应用正在call设备
+                App.data.callingDeviceId = "${device?.ProductId}/${device?.DeviceName}" //保存下设备id（productId/deviceName）
+            }
+        }
         device?.let {
             IoTAuth.deviceImpl.controlDevice(it.ProductId, it.DeviceName, data,
                     object : MyCallback {
@@ -416,6 +423,7 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
         numberPopup?.dismiss()
         //清空面板数据
         IoTAuth.deviceImpl.clearData()
+        App.data.callingDeviceId = "" //暂时打电话的入口只在控制面板内，所以销毁了控制面板，就重置一下callingDeviceId为空字符串，代表没有在打电话了。
         //移除当前监听回调
         device?.run {
             IoTAuth.removeActivePushCallback(ArrayString(DeviceId), this@ControlPanelActivity)
