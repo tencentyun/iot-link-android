@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".App"
@@ -42,6 +43,8 @@
         <activity android:name=".activity.FamilyListActivity" />
         <activity android:name=".activity.ControlPanelActivity" />
         <activity android:name=".activity.RegisterActivity" />
+        <activity android:name="com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity" />
+        <activity android:name="com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
