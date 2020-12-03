@@ -289,6 +289,13 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                             productIdList.add(device.ProductId)
                         }
                         getProductsConfig(productIdList, deviceList)
+
+                        val deviceIdList = ArrayString()
+                        for (device in deviceList) {
+                            deviceIdList.addValue(device.DeviceId)
+                        }
+                        // TRTC: trtc设备注册websocket监听
+                        IoTAuth.registerActivePush(deviceIdList, null)
                     }
                 }
             }

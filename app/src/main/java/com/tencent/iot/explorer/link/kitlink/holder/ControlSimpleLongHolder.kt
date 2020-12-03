@@ -24,11 +24,6 @@ class ControlSimpleLongHolder : CRecyclerView.CViewHolder<DevicePropertyEntity> 
             if (id == MessageConst.TRTC_AUDIO_CALL_STATUS || id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
                 itemView.tv_simple_long_value.visibility = View.GONE
                 itemView.iv_simple_long_arrow.visibility = View.GONE
-                var text = name
-                if (text.length > 2) {
-                    text = text.substring(0, text.length - 2)
-                    itemView.tv_simple_long_name.text = text
-                }
             }
             when (id) {
                 "color" -> itemView.iv_simple_long.setImageResource(R.mipmap.icon_control_color)
