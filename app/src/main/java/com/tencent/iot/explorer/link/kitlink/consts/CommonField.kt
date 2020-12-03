@@ -168,4 +168,11 @@ object CommonField {
     const val XG_ACCESS_POINT_CHINA = "tpns.tencent.com"
     const val XG_ACCESS_POINT_USA = "tpns.hk.tencent.com"
 
+
+    /*******物模型类型********/
+    const val DEFINE_TYPE = "type"
+    const val DEFINE_TYPE_STRING = "string"
+    const val DEFINE_TYPE_TIMESTAMP = "timestamp"
+    const val DEFINE_TYPE_STRUCT = "struct"
+
 }
