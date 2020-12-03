@@ -237,6 +237,9 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
             RequestCode.get_products_config -> {
                 response.parse(ProductsConfigResponse::class.java)?.run {
                     var config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
+                    if (config == null) {
+                        return@run
+                    }
                     keepActions(config)
                     keepConditions(config)
                     keepOne4Edit()
