@@ -156,6 +156,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                             mCallUserInfoList.remove(userInfo);
 //                            ToastUtils.showLong(getString(R.string.trtccalling_toast_user_reject_call, userInfo.userName));
                         }
+                        removeCallbackAndFinish();
                     }
                 }
             });
@@ -176,6 +177,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                             mCallUserInfoList.remove(userInfo);
 //                            ToastUtils.showLong(getString(R.string.trtccalling_toast_user_not_response, userInfo.userName));
                         }
+                        removeCallbackAndFinish();
                     }
                 }
             });
@@ -193,6 +195,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                     mCallUserInfoList.remove(userInfo);
 //                    ToastUtils.showLong(getString(R.string.trtccalling_toast_user_busy, userInfo.userName));
                 }
+                removeCallbackAndFinish();
             }
         }
 

@@ -141,6 +141,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
                     }
+                    stopCameraAndFinish();
                 }
             });
         }
@@ -160,6 +161,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                             mCallUserInfoList.remove(userInfo);
 //                            ToastUtils.showLong(getString(R.string.trtccalling_toast_user_reject_call, userInfo.userName));
                         }
+                        stopCameraAndFinish();
                     }
                 }
             });
@@ -180,6 +182,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                             mCallUserInfoList.remove(userInfo);
 //                            ToastUtils.showLong(getString(R.string.trtccalling_toast_user_not_response, userInfo.userName));
                         }
+                        stopCameraAndFinish();
                     }
                 }
             });
@@ -197,6 +200,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                     mCallUserInfoList.remove(userInfo);
 //                    ToastUtils.showLong(getString(R.string.trtccalling_toast_user_busy, userInfo.userName));
                 }
+                stopCameraAndFinish();
             }
         }
 
