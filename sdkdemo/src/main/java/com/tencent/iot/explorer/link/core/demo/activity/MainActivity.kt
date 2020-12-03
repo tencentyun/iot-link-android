@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
+import android.Manifest
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.core.demo.R
@@ -12,11 +13,17 @@ class MainActivity : BaseActivity() {
     private lateinit var previousTab: TabLayout.Tab
     private val fragments = arrayListOf<Fragment>()
 
+    private var permissions = arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.RECORD_AUDIO
+    )
+
     override fun getContentView(): Int {
         return R.layout.activity_main
     }
 
     override fun initView() {
+        requestPermission(permissions)
         tb_bottom.addTab(tb_bottom.newTab().setIcon(R.mipmap.main_tab_1_hover).setText("设备"), true)
         previousTab = tb_bottom.getTabAt(0)!!
         tb_bottom.addTab(tb_bottom.newTab().setIcon(R.mipmap.main_tab_3_normal).setText("我的"))

@@ -5,12 +5,31 @@ import androidx.multidex.MultiDex
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.entity.User
 import com.tencent.iot.explorer.link.core.auth.listener.LoginExpiredListener
+import com.tencent.iot.explorer.link.core.auth.socket.callback.StartBeingCallCallback
+import com.tencent.iot.explorer.link.core.auth.util.Weak
+import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.trtc.model.TRTCUIManager
+import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
 
-class App : Application() {
+class App : Application(), StartBeingCallCallback {
 
     companion object {
         val data = AppData.instance
+        var activity by Weak<BaseActivity>()
+        fun appStartBeingCall(callingType: Int, deviceId: String) {
+            TRTCUIManager.getInstance().setSessionManager(TRTCSdkDemoSessionManager())
+            if (callingType == TRTCCalling.TYPE_VIDEO_CALL) {
+                TRTCUIManager.getInstance().isCalling = true
+                TRTCVideoCallActivity.startBeingCall(activity, RoomKey(), deviceId)
+            } else if (callingType == TRTCCalling.TYPE_AUDIO_CALL) {
+                TRTCUIManager.getInstance().isCalling = true
+                TRTCAudioCallActivity.startBeingCall(activity, RoomKey(), deviceId)
+            }
+        }
     }
 
     private val APP_KEY = BuildConfig.TencentIotLinkSDKDemoAppkey
@@ -32,10 +51,15 @@ class App : Application() {
         })
         IoTAuth.registerSharedBugly(this) //接入共享式bugly
         MultiDex.install(this)
+        IoTAuth.addEnterRoomCallback(this)
     }
 
     override fun onTerminate() {
         IoTAuth.destroy()
         super.onTerminate()
+    }
+
+    override fun startBeingCall(callingType: Int, deviceId: String) {
+        appStartBeingCall(callingType, deviceId)
     }
 }
