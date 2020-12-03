@@ -57,7 +57,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     }
 
     override fun initView() {
-        App.setEnableEnterRoomCallback(false)
+//        App.setEnableEnterRoomCallback(false)
         presenter = ControlPanelPresenter(this)
         deviceEntity = get("device")
         deviceEntity?.run {
@@ -161,21 +161,6 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
             initTheme()
             PanelThemeManager.instance.showTheme(this, timingProject)
             showNavBar(navBar)
-        }
-    }
-
-    /**
-     * 呼叫设备进入trtc房间通话
-     */
-    override fun enterRoom(room: RoomKey) {
-        runOnUiThread {
-            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
-                TRTCUIManager.getInstance().isCalling = true
-                TRTCVideoCallActivity.startCallSomeone(this, room)
-            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
-                TRTCUIManager.getInstance().isCalling = true
-                TRTCAudioCallActivity.startCallSomeone(this, room)
-            }
         }
     }
 
@@ -308,7 +293,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     override fun onDestroy() {
         PanelThemeManager.instance.destroy()
         job?.cancel()
-        App.setEnableEnterRoomCallback(true)
+//        App.setEnableEnterRoomCallback(true)
         super.onDestroy()
     }
 }

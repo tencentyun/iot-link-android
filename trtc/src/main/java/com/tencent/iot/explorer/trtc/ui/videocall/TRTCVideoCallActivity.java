@@ -445,7 +445,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
         //2. 展示对方的头像和蒙层
         mSponsorGroup.setVisibility(View.VISIBLE);
-        Picasso.get().load(mSponsorUserInfo.userAvatar).into(mSponsorAvatarImg);
+//        Picasso.get().load(mSponsorUserInfo.userAvatar).into(mSponsorAvatarImg);
         mSponsorUserNameTv.setText(mSponsorUserInfo.userName);
 
         //3. 展示电话对应界面
