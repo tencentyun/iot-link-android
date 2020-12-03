@@ -31,6 +31,8 @@ class AppData private constructor() {
 
     val activityList = LinkedList<BaseActivity>()
 
+    var callingDeviceId = "" //主动呼叫的设备的id
+
 
     /**
      * 切换家庭
