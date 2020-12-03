@@ -67,6 +67,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     private Group mGroupInviting;
     private LinearLayout mLayoutImgContainer;
     private TextView mTextTime;
+    private TextView mStatusView;
 
     private Runnable mTimeRunnable;
     private int           mTimeCount;
@@ -380,6 +381,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 mOtherInvitingUserInfoList = params.mUserInfos;
             }
             showWaitingResponseView();
+            mStatusView.setText(mSponsorUserInfo.getUserId()+"邀请您进行语音通话");
         } else {
             // 主叫方
             if (roomKey != null) {
@@ -413,6 +415,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         mGroupInviting = (Group) findViewById(R.id.group_inviting);
         mLayoutImgContainer = (LinearLayout) findViewById(R.id.ll_img_container);
         mTextTime = (TextView) findViewById(R.id.tv_time);
+        mStatusView = (TextView) findViewById(R.id.tv_status);
     }
 
 
@@ -423,7 +426,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         //1. 展示对方的画面
         TRTCAudioLayout layout = mLayoutManagerTRTC.allocAudioCallLayout(mSponsorUserInfo.getUserId());
         layout.setUserId(mSponsorUserInfo.getUserId());
-        Picasso.get().load(mSponsorUserInfo.userAvatar).into(layout.getImageView());
+//        Picasso.get().load(mSponsorUserInfo.userAvatar).into(layout.getImageView());
         //2. 展示电话对应界面
         mLayoutHangup.setVisibility(View.VISIBLE);
         mLayoutDialing.setVisibility(View.VISIBLE);
@@ -496,6 +499,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         });
         showTimeCount();
         hideOtherInvitingUserView();
+        mStatusView.setText(R.string.trtccalling_dialed_is_busy);
     }
 
     private void showTimeCount() {
@@ -548,7 +552,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 layoutParams.leftMargin = leftMargin;
             }
             imageView.setLayoutParams(layoutParams);
-            Picasso.get().load(userInfo.userAvatar).into(imageView);
+//            Picasso.get().load(userInfo.userAvatar).into(imageView);
             mLayoutImgContainer.addView(imageView);
         }
     }
@@ -563,7 +567,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             return null;
         }
         layout.setUserId(userInfo.getUserId());
-        Picasso.get().load(userInfo.userAvatar).into(layout.getImageView());
+//        Picasso.get().load(userInfo.userAvatar).into(layout.getImageView());
         return layout;
     }
 }
