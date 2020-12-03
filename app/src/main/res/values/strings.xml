@@ -39,7 +39,7 @@
     <string name="wechat_share">微信好友</string>
     <string name="copy_link">复制链接</string>
     <string name="my_smart">我的智能</string>
-    <string name="smart_log">智能日志</string>
+    <string name="smart_log">执行日志</string>
     <string name="check_smart_after_login">请先登录后，再查看或添加智能</string>
     <string name="current_my_smart_no_data">当前暂无智能，点击添加智能</string>
     <string name="login_now">立即登录</string>
