@@ -84,6 +84,7 @@
             android:id="@+id/img_mute"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:visibility="gone"
             android:src="@drawable/trtccalling_bg_mute_mic" />
 
     </LinearLayout>
