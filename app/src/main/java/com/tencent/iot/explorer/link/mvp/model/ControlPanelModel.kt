@@ -26,6 +26,7 @@ import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashSet
 
 
 /**
@@ -55,7 +56,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     private val deviceDataList = arrayListOf<DeviceDataEntity>()
 
     //设备产品信息及面板数据
-    val devicePropertyList = LinkedList<DevicePropertyEntity>()
+    var devicePropertyList = LinkedList<DevicePropertyEntity>()
 
     //是否显示导航栏
     private var navBar: NavBar? = null
@@ -325,6 +326,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     devicePropertyList.add(devicePropertyEntity)
                 }
         }
+        devicePropertyList = LinkedList(LinkedHashSet(devicePropertyList))
         L.e("devicePropertyList", JsonManager.toJson(devicePropertyList) ?: "")
         view?.showControlPanel(navBar, hasTimerCloud)
     }
