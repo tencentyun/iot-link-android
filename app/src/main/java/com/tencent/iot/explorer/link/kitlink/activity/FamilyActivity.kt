@@ -1,9 +1,13 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
@@ -16,6 +20,8 @@ import com.tencent.iot.explorer.link.mvp.IModel
 import com.tencent.iot.explorer.link.mvp.model.FamilyModel
 import com.tencent.iot.explorer.link.mvp.view.FamilyView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
 import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.foot_family.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -57,12 +63,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
         canDelete = App.data.familyList.size > 0
         tv_title.text = getString(R.string.family_detail)
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        val layoutManager = GridLayoutManager(this, 3)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (position == 0) 3 else if (position > model.memberList.size) 3 else 1
-            }
-        }
+        val layoutManager = LinearLayoutManager(this)
         crv_member_list.layoutManager = layoutManager
         crv_member_list.setList(model.memberList)
         crv_member_list.addRecyclerItemView(this)
@@ -180,21 +181,39 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
      * 显示修改弹框
      */
     private fun showModifyFamilyNamePopup() {
-        if (editPopupWindow == null) {
-            editPopupWindow = EditPopupWindow(this)
-            editPopupWindow?.setShowData(
-                getString(R.string.family_name),
-                familyEntity?.FamilyName ?: ""
-            )
-        }
-        editPopupWindow?.setBg(family_bg)
-        editPopupWindow?.show(family)
-        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
-            override fun onVerify(text: String) {
-                if (!TextUtils.isEmpty(text)) {
-                    model.modifyFamilyName(text)
-                }
-            }
+//        if (editPopupWindow == null) {
+//            editPopupWindow = EditPopupWindow(this)
+//            editPopupWindow?.setShowData(
+//                getString(R.string.family_name),
+//                familyEntity?.FamilyName ?: ""
+//            )
+//        }
+//        editPopupWindow?.setBg(family_bg)
+//        editPopupWindow?.show(family)
+//        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
+//            override fun onVerify(text: String) {
+//                if (!TextUtils.isEmpty(text)) {
+//                    model.modifyFamilyName(text)
+//                }
+//            }
+//        }
+        var intent = Intent(this@FamilyActivity, EditNameActivity::class.java)
+        var editNameValue = EditNameValue()
+        editNameValue.name = familyEntity?.FamilyName ?: ""
+        editNameValue.title = getString(R.string.family_setting)
+        editNameValue.tipName = getString(R.string.family_name)
+        editNameValue.btn = getString(R.string.save)
+        editNameValue.errorTip = getString(R.string.toast_name_length)
+        intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(editNameValue))
+        startActivityForResult(intent, CommonField.EDIT_NAME_REQ_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CommonField.EDIT_NAME_REQ_CODE &&
+            resultCode == Activity.RESULT_OK && data != null) {
+            var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
+            model.modifyFamilyName(extraInfo)
         }
     }
 

@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="185dp">
+        android:paddingTop="7dp"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/country_or_place"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_16"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:id="@+id/tv_country_tip"
+        android:layout_marginLeft="20dp"
+        />
 
     <TextView
             android:id="@+id/tv_register_to_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="38dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
             android:text="@string/default_country"
             android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_18"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintStart_toEndOf="@id/tv_country_tip"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,28 +38,56 @@
             android:id="@+id/iv_register_to_country"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="7dp"
             android:padding="3dp"
-            android:src="@mipmap/icon_right_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="20dp"
+            android:src="@mipmap/icon_arrow"
+            android:rotation="180"
             app:layout_constraintBottom_toBottomOf="@+id/tv_register_to_country"
             app:layout_constraintLeft_toRightOf="@+id/tv_register_to_country"
             app:layout_constraintTop_toTopOf="@id/tv_register_to_country" />
 
+    <View
+        android:id="@+id/line_country"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="7dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_register_to_country"
+        android:background="@color/gray_dddddd"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_phone_tip"
+        android:text="@string/mobile_num"
+        app:layout_constraintTop_toBottomOf="@id/line_country"
+        android:textSize="@dimen/ts_16"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black_333333"
+        />
+
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
-            android:id="@+id/et_register_phone"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="24dp"
-            android:background="@color/white"
-            android:hint="@string/mobile_number"
-            android:textCursorDrawable="@drawable/edit_blue_cursor"
-            android:inputType="phone"
-            android:textColorHint="@color/gray_cccccc"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_16"
-            app:layout_constraintBottom_toBottomOf="@+id/line_register_phone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/iv_register_phone_clear" />
+        android:id="@+id/et_register_phone"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:hint="@string/mobile_phone_number_null"
+        android:inputType="phone"
+        android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:textSize="@dimen/ts_16"
+        app:layout_constraintTop_toTopOf="@id/tv_phone_tip"
+        app:layout_constraintBottom_toBottomOf="@id/tv_phone_tip"
+        app:layout_constraintEnd_toStartOf="@+id/iv_register_phone_clear"
+        app:layout_constraintStart_toStartOf="@+id/tv_register_to_country"
+        />
 
     <ImageView
             android:id="@+id/iv_register_phone_clear"
@@ -61,11 +105,11 @@
             android:id="@+id/line_register_phone"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="134dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="7dp"
+            app:layout_constraintTop_toBottomOf="@id/et_register_phone"
             android:background="@color/gray_dddddd"
-            app:layout_constraintTop_toTopOf="parent" />
+        />
 
     <TextView
             android:id="@+id/tv_register_phone_hint"
@@ -73,21 +117,23 @@
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
             android:textSize="@dimen/ts_10"
-            app:layout_constraintLeft_toLeftOf="@+id/line_register_phone"
+            app:layout_constraintLeft_toLeftOf="@+id/et_register_phone"
             app:layout_constraintTop_toBottomOf="@+id/line_register_phone" />
 
     <TextView
             android:id="@+id/tv_register_to_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="5dp"
             android:text="@string/email_to_register"
             android:textColor="@color/blue_0052d9"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
+            android:layout_marginBottom="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_register_phone_hint"
+            app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
