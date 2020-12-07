@@ -110,6 +110,7 @@
     <string name="tag_gr">大于</string>
     <string name="tag_eq">等于</string>
     <string name="tag_lt">小于</string>
+    <string name="delete_dev">删除设备</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
