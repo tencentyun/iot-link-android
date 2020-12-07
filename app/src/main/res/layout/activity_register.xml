@@ -12,21 +12,28 @@
     <include layout="@layout/menu_back_layout"
             android:id="@+id/sbhv_register"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_F5F5F5"
+        app:layout_constraintTop_toBottomOf="@+id/sbhv_register"
+        />
+
     <com.tencent.iot.explorer.link.customview.CustomViewPager
             android:id="@+id/vp_register"
             android:layout_width="match_parent"
-            android:layout_height="185dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@+id/sbhv_register"/>
 
     <LinearLayout
             android:id="@+id/ll_register_agreement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="215dp"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sbhv_register">
+            app:layout_constraintLeft_toLeftOf="@id/btn_register_get_code"
+            app:layout_constraintTop_toBottomOf="@+id/vp_register">
 
         <ImageView
                 android:id="@+id/iv_register_agreement"
@@ -76,15 +83,17 @@
     <com.tencent.iot.explorer.link.customview.check.ClickButton
             android:id="@+id/btn_register_get_code"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            android:background="@drawable/btn_bg"
+            android:background="@drawable/background_circle_bule_gradient"
             android:text="@string/register_get_code"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts_20"
+            android:textSize="@dimen/ts_16"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             app:layout_constraintTop_toBottomOf="@+id/ll_register_agreement" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
