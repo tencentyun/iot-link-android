@@ -110,6 +110,9 @@
     <string name="tag_gr">大于</string>
     <string name="tag_eq">等于</string>
     <string name="tag_lt">小于</string>
+    <string name="delete_dev">删除设备</string>
+    <string name="length_error">长度非法</string>
+    <string name="country_or_place">国家/地区</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -143,8 +146,11 @@
     <string name="verification_code">验证码</string>
     <string name="input_verification_code">输入验证码</string>
     <string name="mobile_number">手机号码</string>
+    <string name="mobile_num">手机号</string>
     <string name="email_address">邮箱地址</string>
     <string name="password">密码</string>
+    <string name="new_password">新密码</string>
+    <string name="confirm_password">确认密码</string>
     <string name="new_password_equals_old">新密码不能与旧密码相同</string>
     <string name="verify_password">再次输入密码</string>
     <string name="forgot_password">忘记密码</string>
@@ -269,6 +275,7 @@
     <string name="device_info">设备信息</string>
     <string name="normal_problem">常见问题</string>
     <string name="no_device_share">暂未分享设备，点击按钮进行分享</string>
+    <string name="no_user_to_share_device">暂未分享给其他用户</string>
     <string name="add_device_share">添加分享</string>
     <string name="modify_alias_name">修改备注名称</string>
     <string name="delete_toast_title">确定要删除设备码？</string>
@@ -361,6 +368,7 @@
     <string name="room_setting">房间设置</string>
     <string name="delete_room">删除房间</string>
     <string name="room_name">家庭名称</string>
+    <string name="family_setting">家庭设置</string>
     <string name="member_setting">成员设置</string>
     <string name="member_name">成员名称</string>
     <string name="member_role">角色</string>
@@ -382,6 +390,7 @@
     <string name="toast_delete_member_title">您确定要删除该成员吗？</string>
     <string name="toast_delete_member_content">删除成员后，可重新邀请</string>
     <string name="toast_alias_length">昵称长度为1-20</string>
+    <string name="toast_name_length">设备名称长度为1-20</string>
     <string name="delete_success">删除成功</string>
     <string name="device_offline">设备已离线</string>
     <string name="device_offline_check">请检查：\n
@@ -465,6 +474,7 @@
     <string name="please_input_verifycode">请输入验证码</string>
     <string name="please_set_passwd">请设置您的密码</string>
     <string name="please_confirm_passwd">请再次确认您的密码</string>
+    <string name="confirm_passwd">再次确认</string>
     <string name="confirm_to_bind">确认绑定</string>
     <string name="bind_phone_number">绑定手机号</string>
     <string name="bind_email_number">绑定邮箱号</string>

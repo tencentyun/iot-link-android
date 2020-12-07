@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import java.lang.reflect.AccessibleObject.setAccessible
 
 
-class CustomViewPager : ViewPager {
+class CustomViewPager : WrapContentHeightViewPager {
 
     private var list = arrayListOf<View>()
 
