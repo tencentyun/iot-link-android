@@ -11,10 +11,18 @@
     <include layout="@layout/menu_back_layout"
         android:id="@+id/back_btn_login"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@id/back_btn_login"
+        android:background="@color/gray_F5F5F5"
+        />
+
     <com.tencent.iot.explorer.link.customview.CustomViewPager
         android:id="@+id/vp_login2"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/back_btn_login"/>
 
     <LinearLayout

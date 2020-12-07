@@ -11,11 +11,11 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="40dp"
-            android:background="@drawable/btn_rad4_color_e54545"
+            android:background="@drawable/background_white_btn_cell"
             android:gravity="center"
             android:text="@string/delete_family"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_20"
+            android:textColor="@color/red_E65A59"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toTopOf="parent" />
 
     <View
