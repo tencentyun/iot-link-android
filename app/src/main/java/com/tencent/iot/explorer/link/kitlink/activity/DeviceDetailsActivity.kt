@@ -1,7 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
@@ -16,6 +19,9 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
+import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import com.tencent.iot.explorer.link.kitlink.util.Utils
 import kotlinx.android.synthetic.main.activity_device_details.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -102,18 +108,36 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
     }
 
     private fun showEditPopup() {
-        if (editPopupWindow == null) {
+//        if (editPopupWindow == null) {
             editPopupWindow = EditPopupWindow(this)
-        }
-        deviceEntity?.run {
-            editPopupWindow?.setShowData(getString(R.string.device_name), AliasName)
-        }
-        editPopupWindow?.setBg(device_detail_bg)
-        editPopupWindow?.show(device_detail)
-        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
-            override fun onVerify(text: String) {
-                commitAlias(text)
-            }
+//        }
+//        deviceEntity?.run {
+//            editPopupWindow?.setShowData(getString(R.string.device_name), AliasName)
+//        }
+//        editPopupWindow?.setBg(device_detail_bg)
+//        editPopupWindow?.show(device_detail)
+//        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
+//            override fun onVerify(text: String) {
+//                commitAlias(text)
+//            }
+//        }
+        var intent = Intent(this@DeviceDetailsActivity, EditNameActivity::class.java)
+        var editNameValue = EditNameValue()
+        editNameValue.name = deviceEntity!!.getAlias()
+        editNameValue.title = getString(R.string.device_name)
+        editNameValue.tipName = getString(R.string.device_name)
+        editNameValue.btn = getString(R.string.save)
+        editNameValue.errorTip = getString(R.string.toast_name_length)
+        intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(editNameValue))
+        startActivityForResult(intent, CommonField.EDIT_NAME_REQ_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CommonField.EDIT_NAME_REQ_CODE &&
+            resultCode == Activity.RESULT_OK && data != null) {
+            var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
+            commitAlias(extraInfo)
         }
     }
 
