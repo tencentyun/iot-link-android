@@ -12,100 +12,125 @@
     <include layout="@layout/menu_back_layout"
         android:id="@+id/menu_logout"/>
 
-    <TextView
-        android:id="@+id/tv_logout_current_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:textSize="@dimen/ts_24"
-        android:textColor="@color/black_15161A"
-        android:textStyle="bold"
-        android:text="@string/logout_must_know"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menu_logout"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/menu_logout"
+        app:layout_constraintBottom_toTopOf="@id/logout_agreement"
+        android:fillViewport="true"
+        >
 
-    <TextView
-        android:id="@+id/tv_logout_text1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="20dp"
-        android:textSize="@dimen/ts_16"
-        android:textStyle="bold"
-        android:textColor="@color/black_15161A"
-        android:text="@string/logout_text_for_attention1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_logout_current_account"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="30dp"
+            >
+            <TextView
+                android:id="@+id/tv_logout_current_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/ts_24"
+                android:textColor="@color/black_15161A"
+                android:textStyle="bold"
+                android:text="@string/logout_must_know"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/tv_logout_text2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="20dp"
-        android:textSize="@dimen/ts_16"
-        android:textStyle="bold"
-        android:textColor="@color/black_15161A"
-        android:text="@string/logout_text_will_logout_at"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_logout_text1"/>
+            <TextView
+                android:id="@+id/tv_logout_text1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/ts_16"
+                android:textStyle="bold"
+                android:textColor="@color/black_15161A"
+                android:text="@string/logout_text_for_attention1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_logout_current_account"/>
 
-    <TextView
-        android:id="@+id/tv_logout_time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="10dp"
-        android:textSize="@dimen/ts_16"
-        android:textStyle="bold"
-        android:textColor="@color/black_15161A"
-        android:text="@string/logout_text_logout_time"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_logout_text2"/>
+            <TextView
+                android:id="@+id/tv_logout_text2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/ts_16"
+                android:textStyle="bold"
+                android:textColor="@color/black_15161A"
+                android:text="@string/logout_text_will_logout_at"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_logout_text1"/>
 
-    <TextView
-        android:id="@+id/tv_logout_text3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="20dp"
-        android:textSize="@dimen/ts_16"
-        android:textStyle="bold"
-        android:textColor="@color/black_15161A"
-        android:text="@string/logout_text_for_attention2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_logout_time"/>
+            <TextView
+                android:id="@+id/tv_logout_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="10dp"
+                android:textSize="@dimen/ts_16"
+                android:textStyle="bold"
+                android:textColor="@color/black_15161A"
+                android:text="@string/logout_text_logout_time"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_logout_text2"/>
 
-    <TextView
-        android:id="@+id/tv_logout_text4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="20dp"
-        android:textSize="@dimen/ts_16"
-        android:textColor="@color/black_15161A"
-        android:text="@string/logout_text_for_attention3"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_logout_text3"/>
+            <TextView
+                android:id="@+id/tv_logout_text3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/ts_16"
+                android:textStyle="bold"
+                android:textColor="@color/black_15161A"
+                android:text="@string/logout_text_for_attention2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_logout_time"/>
+
+            <TextView
+                android:id="@+id/tv_logout_text4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/ts_16"
+                android:textColor="@color/black_15161A"
+                android:text="@string/logout_text_for_attention3"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_logout_text3"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toTopOf="@id/logout_agreement"
+        android:background="@color/gray_cccccc"
+    />
 
     <LinearLayout
         android:id="@+id/logout_agreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:paddingTop="4dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintStart_toStartOf="@id/btn_logout"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btn_logout">
 
@@ -113,8 +138,10 @@
             android:id="@+id/iv_logout_agreement"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:padding="7dp"
-            android:src="@mipmap/icon_unselected" />
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:paddingRight="7dp"
+            android:src="@mipmap/dev_mode_unsel" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -144,7 +171,7 @@
         android:layout_marginBottom="30dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:background="@color/red_FA5151"
+        android:background="@drawable/background_circle_red_gradient"
         android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
