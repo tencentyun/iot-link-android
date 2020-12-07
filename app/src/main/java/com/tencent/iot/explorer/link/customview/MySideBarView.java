@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tencent.iot.explorer.link.R;
+
 
 public class MySideBarView extends View {
     private String str[] = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -55,7 +57,7 @@ public class MySideBarView extends View {
         int singleHeight = height / str.length;
 
         for (int i = 0; i < str.length; i++) {
-            paint.setColor(Color.BLACK);
+            paint.setColor(context.getResources().getColor(R.color.complete_progress));//Color.BLACK);
             paint.setAntiAlias(true);
             paint.setTextSize(super.getHeight() / 42);
 

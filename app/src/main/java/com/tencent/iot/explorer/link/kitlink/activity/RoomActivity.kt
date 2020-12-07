@@ -1,6 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.text.TextUtils
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
@@ -13,6 +16,8 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
 import kotlinx.android.synthetic.main.activity_room.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -108,24 +113,43 @@ class RoomActivity : BaseActivity(), MyCallback {
      * 显示修改房间弹框
      */
     private fun showModifyPopup() {
-        if (modifyRoomPopup == null) {
-            modifyRoomPopup = EditPopupWindow(this)
-            modifyRoomPopup?.setShowData(
-                getString(R.string.room_name),
-                roomEntity?.RoomName ?: ""
-            )
-        }
-        modifyRoomPopup?.setBg(room_bg)
-        modifyRoomPopup?.show(room)
-        modifyRoomPopup?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
-            override fun onVerify(text: String) {
-                if (TextUtils.isEmpty(text)) {
-                    T.show(getString(R.string.empty_room))
-                    return
-                }
-                modifyRoomName = text
-                modifyRoomName()
-            }
+//        if (modifyRoomPopup == null) {
+//            modifyRoomPopup = EditPopupWindow(this)
+//            modifyRoomPopup?.setShowData(
+//                getString(R.string.room_name),
+//                roomEntity?.RoomName ?: ""
+//            )
+//        }
+//        modifyRoomPopup?.setBg(room_bg)
+//        modifyRoomPopup?.show(room)
+//        modifyRoomPopup?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
+//            override fun onVerify(text: String) {
+//                if (TextUtils.isEmpty(text)) {
+//                    T.show(getString(R.string.empty_room))
+//                    return
+//                }
+//                modifyRoomName = text
+//                modifyRoomName()
+//            }
+//        }
+        var intent = Intent(this@RoomActivity, EditNameActivity::class.java)
+        var editNameValue = EditNameValue()
+        editNameValue.name = roomEntity?.RoomName ?: ""
+        editNameValue.title = getString(R.string.room_setting)
+        editNameValue.tipName = getString(R.string.room_name_tip)
+        editNameValue.btn = getString(R.string.save)
+        editNameValue.errorTip = getString(R.string.toast_name_length)
+        intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(editNameValue))
+        startActivityForResult(intent, CommonField.EDIT_NAME_REQ_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CommonField.EDIT_NAME_REQ_CODE &&
+            resultCode == Activity.RESULT_OK && data != null) {
+            var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
+            modifyRoomName = extraInfo
+            modifyRoomName()
         }
     }
 

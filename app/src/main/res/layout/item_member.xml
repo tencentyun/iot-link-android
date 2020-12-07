@@ -4,43 +4,77 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        >
+
     <com.tencent.iot.explorer.link.customview.image.RoundImageView
             android:id="@+id/iv_member_item_portrait"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@mipmap/image_default_portrait"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tv_member_item_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/role_owner"
+        android:textColor="@color/gray_cccccc"
+        android:textSize="@dimen/ts_12"
+        app:layout_constraintRight_toLeftOf="@id/iv_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/iv_member_item_portrait"
+        app:layout_constraintTop_toTopOf="@+id/iv_member_item_portrait" />
+
 
     <TextView
-            android:id="@+id/tv_member_item_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/member_dad"
-            android:layout_marginStart="20dp"
-            android:gravity="center_horizontal"
-            android:layout_marginEnd="20dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_14"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_member_item_portrait" />
+        android:id="@+id/tv_member_item_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="1"
+        android:text="@string/member_dad"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_14"
+        app:layout_constraintBottom_toBottomOf="@id/iv_member_item_portrait"
+        app:layout_constraintEnd_toStartOf="@+id/tv_member_item_role"
+        app:layout_constraintLeft_toRightOf="@id/iv_member_item_portrait"
+        app:layout_constraintStart_toEndOf="@+id/iv_member_item_portrait"
+        app:layout_constraintTop_toTopOf="@id/iv_member_item_portrait" />
 
-    <TextView
-            android:id="@+id/tv_member_item_role"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/role_owner"
-            android:textColor="@color/gray_cccccc"
-            android:textSize="@dimen/ts_10"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_member_item_name" />
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@mipmap/icon_arrow"
+        android:rotation="180"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_member_item_portrait"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_member_item_portrait" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/v_bottom_line"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/gray_F5F5F5"
+        android:layout_marginTop="10dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

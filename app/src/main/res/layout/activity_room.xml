@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/room"
-        android:background="@color/white"
+        android:background="@color/gray_F5F5F5"
         tools:context=".kitlink.activity.RoomActivity">
 
     <include
@@ -23,8 +23,9 @@
             android:text="@string/room_name_tip"
             android:textColor="@color/black_333333"
             android:textColorHint="@color/gray_cccccc"
-            android:textSize="@dimen/ts_18"
-            app:layout_constraintBottom_toBottomOf="@+id/line_room_setting" />
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintTop_toBottomOf="@id/room_setting_menu"
+            android:layout_marginTop="20dp"/>
 
     <TextView
             android:id="@+id/tv_room_setting_name"
@@ -38,15 +39,15 @@
             android:text="@string/hall_tip"
             android:textColor="@color/gray_cccccc"
             android:textSize="@dimen/ts_16"
-            app:layout_constraintBottom_toBottomOf="@+id/line_room_setting"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_room_setting_title"
             app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginEnd="20dp"
-
-            android:src="@mipmap/icon_right_arrow"
+            android:rotation="180"
+            android:src="@mipmap/icon_arrow"
             app:layout_constraintBottom_toBottomOf="@+id/tv_room_setting_title"
             app:layout_constraintRight_toRightOf="@+id/tv_room_setting_title"
             app:layout_constraintTop_toTopOf="@+id/tv_room_setting_title" />
@@ -56,24 +57,26 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="100dp"
             android:layout_marginEnd="16dp"
+            android:visibility="invisible"
             android:background="@color/gray_F5F5F5"
-            app:layout_constraintTop_toBottomOf="@+id/room_setting_menu" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_room_setting_title" />
 
 
     <TextView
             android:id="@+id/tv_delete_room"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/btn_rad4_color_e54545"
+            android:background="@drawable/background_white_btn_cell"
             android:gravity="center"
             android:text="@string/delete_room"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_20"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/red_E65A59"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toBottomOf="@+id/line_room_setting" />
 
     <View

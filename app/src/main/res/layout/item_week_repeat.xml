@@ -4,51 +4,71 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        android:id="@+id/content_layout"
+        >
+
     <TextView
-            android:id="@+id/tv_week_repeat_title"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:gravity="center_vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="0dp"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_18"
-            app:layout_constraintBottom_toTopOf="@+id/line_week_repeat"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/tv_week_repeat_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="10dp"
+        android:singleLine="true"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/ts_18"
+        android:paddingRight="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/iv_week_repeat_selected"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
             android:id="@+id/iv_week_repeat_selected"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_marginEnd="20dp"
-            android:src="@mipmap/icon_checked"
-            app:layout_constraintBottom_toTopOf="@+id/line_week_repeat"
+            android:src="@mipmap/task_selected"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_week_repeat_title"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/tv_week_repeat_title"
+
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
             android:id="@+id/line_week_repeat"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="20dp"
             android:background="@color/gray_F5F5F5"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/content_layout"
+        />
 
     <TextView
             android:id="@+id/tv_week_repeat_commit"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="wrap_content"
             android:text="@string/save"
             android:visibility="gone"
-            android:textSize="@dimen/ts_20"
+            android:textSize="@dimen/ts_16"
             android:textColor="@color/white"
             android:gravity="center"
-            android:background="@drawable/btn_rad4_color_0052d9"
-            app:layout_constraintTop_toBottomOf="@+id/line_week_repeat" />
+            app:layout_constraintTop_toBottomOf="@+id/line_week_repeat"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/background_circle_bule_gradient"
+
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
