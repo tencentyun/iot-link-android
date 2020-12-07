@@ -154,6 +154,7 @@ object CommonField {
     const val ADD_MANUAL_TASK_REQ_CODE = 0x1107
     const val EDIT_TIMER_REQ_CODE = 0x1108
     const val EDIT_MANUAL_TASK_REQ_CODE = 0x1109
+    const val EDIT_NAME_REQ_CODE = 0x1110
 
 
     const val SSID_UNKNOWN = "<unknown ssid>"

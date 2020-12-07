@@ -7,15 +7,17 @@
     <TextView
             android:id="@+id/tv_item_share_add"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/btn_rad4_color_006eff"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@drawable/background_white_btn_cell"
             android:gravity="center"
             android:text="@string/add_device_share"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_20"
+            android:textColor="@color/complete_progress"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toTopOf="parent" />
 
     <View

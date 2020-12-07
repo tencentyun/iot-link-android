@@ -2,48 +2,89 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="350dp">
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/tv_login_to_country_byverifycode"
+        app:layout_constraintBottom_toBottomOf="@id/tv_login_to_country_byverifycode"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/country_or_place"
+        android:textColor="@color/black"
+        android:layout_marginStart="20dp"
+        android:textSize="@dimen/ts_16"
+        android:gravity="center"
+        android:id="@+id/tv_login_to_country_byverifycode_tip"
+        />
 
     <TextView
         android:id="@+id/tv_login_to_country_byverifycode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="38dp"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="@string/default_country"
-        android:textColor="@color/black_333333"
-        android:textSize="@dimen/ts_18"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_vertical"
+        android:textColor="@color/black_888888"
+        android:textSize="@dimen/ts_16"
+        android:layout_marginStart="24dp"
+        app:layout_constraintEnd_toStartOf="@+id/iv_login_to_country_byverifycode"
+        app:layout_constraintStart_toEndOf="@+id/tv_login_to_country_byverifycode_tip"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_login_to_country_byverifycode"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="7dp"
         android:padding="3dp"
-        android:src="@mipmap/icon_right_arrow"
+        android:src="@mipmap/icon_arrow"
+        android:rotation="180"
+        android:layout_marginRight="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_login_to_country_byverifycode"
-        app:layout_constraintLeft_toRightOf="@+id/tv_login_to_country_byverifycode"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_login_to_country_byverifycode" />
+
+    <View
+        android:id="@+id/line_login_to_country_byverifycode"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:background="@color/gray_dddddd"
+        app:layout_constraintBottom_toBottomOf="@id/tv_login_to_country_byverifycode" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/et_login_phone_or_email_byverifycode"
+        app:layout_constraintBottom_toBottomOf="@id/et_login_phone_or_email_byverifycode"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/mobile_num"
+        android:textColor="@color/black"
+        android:layout_marginStart="20dp"
+        android:textSize="@dimen/ts_16"
+        android:gravity="center"
+        android:id="@+id/tv_login_phone_or_email_byverifycode"
+        />
 
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_login_phone_or_email_byverifycode"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="24dp"
         android:background="@color/white"
         android:hint="@string/mobile_or_email"
-        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:inputType="textWebEmailAddress"
-        android:textColorHint="@color/gray_cccccc"
         android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_16"
-        app:layout_constraintBottom_toTopOf="@+id/line_one"
+        app:layout_constraintEnd_toStartOf="@+id/iv_login_phone_or_email_clear_byverifycode"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/iv_login_phone_or_email_clear_byverifycode" />
+        app:layout_constraintRight_toLeftOf="@+id/iv_login_phone_or_email_clear_byverifycode"
+        app:layout_constraintStart_toStartOf="@+id/tv_login_to_country_byverifycode"
+        app:layout_constraintTop_toBottomOf="@+id/line_login_to_country_byverifycode" />
 
     <ImageView
         android:id="@+id/iv_login_phone_or_email_clear_byverifycode"
@@ -61,27 +102,40 @@
         android:id="@+id/line_one"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="134dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="20dp"
         android:background="@color/gray_dddddd"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/et_login_phone_or_email_byverifycode" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/et_login_phone_or_email_verifycode"
+        app:layout_constraintBottom_toBottomOf="@id/et_login_phone_or_email_verifycode"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/verification_code"
+        android:textColor="@color/black"
+        android:layout_marginStart="20dp"
+        android:textSize="@dimen/ts_16"
+        android:gravity="center"
+        android:id="@+id/tv_login_phone_or_email_verifycode"
+        />
 
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_login_phone_or_email_verifycode"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="24dp"
         android:background="@color/white"
         android:hint="@string/verification_code"
-        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:inputType="number"
-        android:textColorHint="@color/gray_cccccc"
         android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_16"
         app:layout_constraintBottom_toTopOf="@+id/line_two"
+        app:layout_constraintEnd_toStartOf="@+id/tv_get_verify_code"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code" />
+        app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code"
+        app:layout_constraintStart_toStartOf="@+id/tv_login_to_country_byverifycode" />
 
     <TextView
         android:id="@+id/tv_get_verify_code"
@@ -100,9 +154,8 @@
         android:id="@+id/line_two"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="68dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginTop="49dp"
+        android:layout_marginStart="20dp"
         android:background="@color/gray_dddddd"
         app:layout_constraintTop_toTopOf="@+id/line_one" />
 
@@ -113,11 +166,11 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/background_circle_bule_gradient"
         android:gravity="center"
         android:text="@string/login"
         android:textColor="@color/white"
-        android:textSize="@dimen/ts_20"
+        android:textSize="@dimen/ts_16"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line_two" />
