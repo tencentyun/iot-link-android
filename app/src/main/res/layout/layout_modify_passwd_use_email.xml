@@ -6,21 +6,36 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <TextView
+        android:id="@+id/tv_modify_passwd_byemail"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/email_address"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_16"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="@id/et_modify_passwd_byemail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_modify_passwd_byemail" />
+
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_modify_passwd_byemail"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="24dp"
         android:background="@color/white"
         android:hint="@string/please_input_email"
-        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:layout_marginStart="20dp"
         android:inputType="textEmailAddress"
-        android:textColorHint="@color/gray_cccccc"
         android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_16"
         app:layout_constraintBottom_toBottomOf="@+id/line_email"
+        app:layout_constraintEnd_toStartOf="@+id/iv_clear_email"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/iv_clear_email" />
+        app:layout_constraintRight_toLeftOf="@+id/iv_clear_email"
+        app:layout_constraintStart_toEndOf="@+id/tv_modify_passwd_byemail" />
 
     <ImageView
         android:id="@+id/iv_clear_email"
@@ -38,9 +53,8 @@
         android:id="@+id/line_email"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="68dp"
         android:background="@color/gray_dddddd"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,24 +65,39 @@
         android:textColor="@color/red_eb3d3d"
         android:textSize="@dimen/ts_10"
         app:layout_constraintLeft_toLeftOf="@+id/line_email"
+        app:layout_constraintStart_toStartOf="@+id/et_modify_passwd_byemail"
         app:layout_constraintTop_toBottomOf="@+id/line_email" />
+
+    <TextView
+        android:id="@+id/tv_email_verifycode"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/verification_code"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_16"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="@id/et_email_verifycode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_email_verifycode" />
 
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_email_verifycode"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="24dp"
         android:background="@color/white"
         android:hint="@string/please_input_verifycode"
-        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:inputType="text"
-        android:textColorHint="@color/gray_cccccc"
         android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_16"
-        app:layout_constraintTop_toBottomOf="@+id/line_email"
+        app:layout_constraintEnd_toStartOf="@+id/tv_get_verify_code"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code" />
+        app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code"
+        app:layout_constraintStart_toStartOf="@+id/et_modify_passwd_byemail"
+        app:layout_constraintTop_toBottomOf="@+id/line_email" />
 
     <TextView
         android:id="@+id/tv_get_verify_code"
@@ -87,19 +116,28 @@
         android:id="@+id/line_input_verifycode"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="20dp"
         android:background="@color/gray_dddddd"
         app:layout_constraintTop_toBottomOf="@+id/et_email_verifycode" />
+
+    <TextView
+        android:id="@+id/tv_set_password"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/new_password"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_16"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="@id/et_set_password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_set_password" />
 
     <!--设置密码-->
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_set_password"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="60dp"
-        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:background="@color/white"
         android:hint="@string/please_set_passwd"
         android:inputType="textPassword"
@@ -108,18 +146,20 @@
         android:paddingEnd="40dp"
         android:textColor="@color/black_333333"
         android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_14"
         app:layout_constraintBottom_toTopOf="@+id/line_set_pwd"
+        app:layout_constraintEnd_toStartOf="@+id/iv_clear_password"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/et_modify_passwd_byemail" />
 
     <View
         android:id="@+id/line_set_pwd"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="68dp"
-        android:layout_marginEnd="24dp"
         android:background="@color/gray_dddddd"
         app:layout_constraintTop_toBottomOf="@+id/line_input_verifycode" />
 
@@ -141,33 +181,47 @@
         android:textColor="@color/red_eb3d3d"
         android:textSize="@dimen/ts_10"
         app:layout_constraintLeft_toLeftOf="@+id/line_set_pwd"
+        app:layout_constraintStart_toStartOf="@+id/et_set_password"
         app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
+
+    <TextView
+        android:id="@+id/tv_verify_set_password"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/confirm_passwd"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_16"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="@id/et_verify_set_password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_verify_set_password" />
 
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_verify_set_password"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="24dp"
         android:background="@color/white"
-        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:hint="@string/please_confirm_passwd"
         android:inputType="textPassword"
         android:maxLength="@integer/password_max_length"
         android:maxLines="1"
         android:textColor="@color/black_333333"
         android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_14"
         app:layout_constraintBottom_toTopOf="@+id/line2_set_pwd"
+        app:layout_constraintEnd_toStartOf="@+id/iv_clear_verify_password"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/iv_clear_verify_password" />
+        app:layout_constraintRight_toLeftOf="@+id/iv_clear_verify_password"
+        app:layout_constraintStart_toStartOf="@+id/et_modify_passwd_byemail" />
 
     <View
         android:id="@+id/line2_set_pwd"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="68dp"
-        android:layout_marginEnd="24dp"
         android:background="@color/gray_dddddd"
         app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
 
@@ -189,12 +243,13 @@
         android:textColor="@color/red_eb3d3d"
         android:textSize="@dimen/ts_10"
         app:layout_constraintLeft_toLeftOf="@+id/line2_set_pwd"
+        app:layout_constraintStart_toStartOf="@+id/et_verify_set_password"
         app:layout_constraintTop_toBottomOf="@+id/line2_set_pwd" />
 
     <TextView
         android:id="@+id/tv_use_phone_verify_code_to_modify"
         android:textSize="@dimen/ts_16"
-        android:textColor="@color/blue_006EFF"
+        android:textColor="@color/blue_0052d9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

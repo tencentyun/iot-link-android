@@ -34,6 +34,7 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
     override fun initView() {
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.logout_account)
+        btn_logout.setBackgroundResource(R.drawable.background_grey_dark_cell)
         tv_logout_time.text =
             DateUtils.getFormatDateWithoutTime(DateUtils.getDateAfter(Date(), 7+1)) + " 00:00:00" // 7天后的24点
         presenter = LogoutPresenter(this)
@@ -73,9 +74,14 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
             if (isAgree) {
                 R.mipmap.icon_selected
             } else {
-                R.mipmap.icon_unselected
+                R.mipmap.dev_mode_unsel
             }
         )
+        if (isAgree) {
+            btn_logout.setBackgroundResource(R.drawable.background_circle_red_gradient)
+        } else {
+            btn_logout.setBackgroundResource(R.drawable.background_grey_dark_cell)
+        }
     }
 
     override fun unselectedAgreement() {

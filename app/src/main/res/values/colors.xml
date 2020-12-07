@@ -37,6 +37,7 @@
     <color name="black_999999">#999999</color>
     <color name="black_15161A">#15161A</color>
     <!--    灰色-->
+    <color name="gray_787880">#787880</color>
     <color name="gray_A1A7B2">#A1A7B2</color>
     <color name="gray_bbbbbb">#BBBBBB</color>
     <color name="gray_cccccc">#CCCCCC</color>
@@ -61,6 +62,9 @@
     <color name="red_eb3d3d">#EB3D3D</color>
     <color name="red_e54545">#E54545</color>
     <color name="red_FA5151">#FA5151</color>
+    <color name="red_FD8989">#FD8989</color>
+    <color name="red_E65A59">#E65A59</color>
+    <color name="ref_FA5151">#FA5151</color>
 
     <!--绿色-->
     <color name="green_1aad19">#1AAD19</color>

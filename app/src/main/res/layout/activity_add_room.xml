@@ -4,52 +4,77 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/gray_F5F5F5"
         tools:context=".kitlink.activity.AddRoomActivity">
 
     <include
             android:id="@+id/add_room_menu"
-            layout="@layout/menu_cancel_layout" />
+            layout="@layout/menu_back_layout" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_room_name"
+        app:layout_constraintBottom_toBottomOf="@id/et_room_name"
+        android:background="@color/white"
+        android:text="@string/room_name_tip"
+        android:id="@+id/tv_room_name_tip"
+        android:textSize="@dimen/ts_16"
+        android:paddingLeft="20dp"
+        android:gravity="center"
+        android:textColor="@color/black_333333"
+        android:paddingRight="12dp"
+        />
 
     <EditText
-            android:id="@+id/et_room_name"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/white"
-            android:textCursorDrawable="@drawable/edit_blue_cursor"
-            android:hint="@string/fill_room_name"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:textColor="@color/black_333333"
-            android:textColorHint="@color/gray_cccccc"
-            android:textSize="@dimen/ts_18"
-            app:layout_constraintBottom_toBottomOf="@+id/line_add_family1" />
+        android:id="@+id/et_room_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="@string/fill_room_name"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingLeft="20dp"
+        android:textColor="@color/black_333333"
+        android:textColorHint="@color/gray_cccccc"
+        android:textCursorDrawable="@drawable/edit_blue_cursor"
+        android:textSize="@dimen/ts_18"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_room_menu"
+        app:layout_constraintBottom_toBottomOf="@+id/line_add_family1"
+        app:layout_constraintStart_toEndOf="@+id/tv_room_name_tip" />
 
     <View
             android:id="@+id/line_add_family1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="100dp"
             android:layout_marginEnd="16dp"
             android:background="@color/gray_F5F5F5"
-            app:layout_constraintTop_toBottomOf="@+id/add_room_menu" />
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@+id/et_room_name" />
 
 
     <TextView
             android:id="@+id/btn_add_room"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/btn_bg"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@drawable/background_circle_bule_gradient"
             android:gravity="center"
             android:text="@string/confirm"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts_20"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
