@@ -112,6 +112,11 @@ class ClickButton : AppCompatTextView {
             }
         }
         this.isEnabled = able
+        if (this.isEnabled) {
+            this.setBackgroundResource(R.drawable.background_circle_bule_gradient)
+        } else {
+            this.setBackgroundResource(R.drawable.background_grey_dark_cell)
+        }
     }
 
     private fun isContain(editText: EditText): Boolean {

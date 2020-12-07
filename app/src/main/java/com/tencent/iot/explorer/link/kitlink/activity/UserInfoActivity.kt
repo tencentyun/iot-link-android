@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.SystemClock
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
@@ -21,6 +23,10 @@ import com.tencent.iot.explorer.link.mvp.presenter.UserInfoPresenter
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
+import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.ImageSelectorActivity
 import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.ImageSelectorConstant.REQUEST_IMAGE
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageSelectorUtils
@@ -150,33 +156,55 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     }
 
     private fun showCameraPopup() {
-        if (popupWindow == null) {
-            popupWindow = CameraPopupWindow(this)
+//        if (popupWindow == null) {
+//            popupWindow = CameraPopupWindow(this)
+//        }
+//        popupWindow?.setBg(user_info_popup_bg)
+//        popupWindow?.show(user_info)
+        var options = ArrayList<String>()
+        options.add(getString(R.string.take_photo))
+        options.add(getString(R.string.select_local_album))
+        var optionDialog = ListOptionsDialog(this, options)
+        optionDialog.show()
+        optionDialog.setOnDismisListener {
+            if (it == 0) {
+                ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_SINGLE, true, 1)
+            } else if (it == 1) {
+                ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_MULTI, false, 1)
+            }
         }
-        popupWindow?.setBg(user_info_popup_bg)
-        popupWindow?.show(user_info)
     }
 
     private fun showEditPopup() {
-        if (editPopupWindow == null) {
-            editPopupWindow = EditPopupWindow(this)
-        }
-        editPopupWindow?.setShowData(
-            getString(R.string.nick),
-            App.data.userInfo.NickName
-        )
-        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
-            override fun onVerify(text: String) {
-                if (TextUtils.isEmpty(text)) {
-                    T.show(getString(R.string.input_nick_name)) //请输入昵称
-                    return
-                }
-                presenter.modifyNick(text)
-                editPopupWindow?.dismiss()
-            }
-        }
-        editPopupWindow?.setBg(user_info_popup_bg)
-        editPopupWindow?.show(user_info)
+//        if (editPopupWindow == null) {
+//            editPopupWindow = EditPopupWindow(this)
+//        }
+//        editPopupWindow?.setShowData(
+//            getString(R.string.nick),
+//            App.data.userInfo.NickName
+//        )
+//        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
+//            override fun onVerify(text: String) {
+//                if (TextUtils.isEmpty(text)) {
+//                    T.show(getString(R.string.input_nick_name)) //请输入昵称
+//                    return
+//                }
+//                presenter.modifyNick(text)
+//                editPopupWindow?.dismiss()
+//            }
+//        }
+//        editPopupWindow?.setBg(user_info_popup_bg)
+//        editPopupWindow?.show(user_info)
+
+        var intent = Intent(this, EditNameActivity::class.java)
+        var editNameValue = EditNameValue()
+        editNameValue.name = App.data.userInfo.NickName
+        editNameValue.title = getString(R.string.modify_nick)
+        editNameValue.tipName = getString(R.string.nick)
+        editNameValue.btn = getString(R.string.save)
+        editNameValue.errorTip = getString(R.string.toast_alias_length)
+        intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(editNameValue))
+        startActivityForResult(intent, CommonField.EDIT_NAME_REQ_CODE)
     }
 
     private fun showRegion(region: String) {
@@ -281,6 +309,12 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
             TIMEZONE_REQUESTCODE -> {// 选择时区
 
             }
+        }
+
+        if (requestCode == CommonField.EDIT_NAME_REQ_CODE &&
+            resultCode == Activity.RESULT_OK && data != null) {
+            var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
+            presenter.modifyNick(extraInfo)
         }
     }
 

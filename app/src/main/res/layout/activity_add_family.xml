@@ -4,50 +4,97 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/gray_F5F5F5"
         tools:context=".kitlink.activity.AddFamilyActivity">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="@id/add_family_menu"
+        app:layout_constraintBottom_toBottomOf="@id/add_family_menu" />
     <include
             android:id="@+id/add_family_menu"
-            layout="@layout/menu_cancel_layout" />
+            layout="@layout/menu_back_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_layout"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/add_family_menu"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_family_name"
+            app:layout_constraintBottom_toBottomOf="@id/et_family_name"
+            android:text="@string/family_name"
+            android:id="@+id/tv_family_name"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="@dimen/ts_16"
+            />
 
     <EditText
             android:id="@+id/et_family_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:background="@color/white"
+            app:layout_constraintStart_toEndOf="@id/tv_family_name"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textCursorDrawable="@drawable/edit_blue_cursor"
             android:hint="@string/fill_family_name"
             android:maxLength="20"
             android:maxLines="1"
-            android:paddingStart="20dp"
+            android:paddingStart="40dp"
             android:paddingEnd="20dp"
             android:textColor="@color/black_333333"
             android:textColorHint="@color/gray_cccccc"
-            android:textSize="@dimen/ts_18"
+        android:textSize="@dimen/ts_16"
             app:layout_constraintBottom_toBottomOf="@+id/line_add_family1" />
 
     <View
             android:id="@+id/line_add_family1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="100dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="20dp"
             android:background="@color/gray_F5F5F5"
-            app:layout_constraintTop_toBottomOf="@+id/add_family_menu" />
+            app:layout_constraintTop_toBottomOf="@+id/et_family_name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/et_family_address"
+            app:layout_constraintBottom_toBottomOf="@id/et_family_address"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:id="@+id/tv_family_address"
+            android:text="@string/family_address"
+            android:textSize="@dimen/ts_16"
+            />
 
     <EditText
             android:id="@+id/et_family_address"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:hint="@string/family_address"
             android:background="@color/white"
             android:textCursorDrawable="@drawable/edit_blue_cursor"
             android:maxLength="20"
             android:maxLines="1"
-            android:paddingStart="20dp"
+            android:paddingStart="40dp"
             android:paddingEnd="20dp"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintStart_toStartOf="@id/et_family_name"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/line_add_family2"
             app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />
 
@@ -80,23 +127,28 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="60dp"
             android:layout_marginEnd="16dp"
             android:background="@color/gray_F5F5F5"
-            app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@+id/et_family_address" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
             android:id="@+id/btn_add_family"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/btn_bg"
             android:gravity="center"
             android:text="@string/confirm"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts_20"
-            app:layout_constraintTop_toBottomOf="@+id/line_add_family2" />
+            android:textSize="@dimen/ts_18"
+            android:background="@drawable/background_grey_dark_cell"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

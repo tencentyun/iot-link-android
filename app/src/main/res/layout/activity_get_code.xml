@@ -11,14 +11,20 @@
     <include
             android:id="@+id/sbhv_get_code"
             layout="@layout/menu_back_layout" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@id/sbhv_get_code"
+        android:background="@color/gray_F5F5F5"
+        />
 
     <com.tencent.iot.explorer.link.customview.check.VerifyCodeView
             android:id="@+id/vcv_get_code"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="70dp"
-            android:layout_marginStart="65dp"
-            android:layout_marginEnd="65dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintTop_toBottomOf="@+id/sbhv_get_code"
             app:length="6"
             app:selected_background="@drawable/verify_code_bg"
@@ -32,7 +38,7 @@
             android:id="@+id/tv_get_code_show_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:text="@string/get_mobile_code_sent"
             android:textColor="@color/black_888888"
             android:textSize="@dimen/ts_12"

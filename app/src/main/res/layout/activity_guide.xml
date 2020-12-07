@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent">
     <ImageView
         android:id="@+id/imageView"
@@ -26,32 +27,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <Button
+    <TextView
         android:id="@+id/btn_create_new_account"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="175dp"
+        android:layout_marginTop="100dp"
         android:text="@string/create_new_account"
-        android:textSize="18sp"
+        android:gravity="center"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:textSize="@dimen/ts_16"
         android:textColor="@color/white"
-        android:background="@color/blue_0052d9"
+        android:background="@drawable/background_circle_bule_gradient"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/tv_use_existed_account_to_login"
-        android:textSize="18sp"
-        android:textColor="@color/blue_0052d9"
-        android:layout_width="wrap_content"
+        android:textColor="@color/complete_progress"
+        android:background="@drawable/background_bule_white_btn"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:gravity="center"
         android:text="@string/use_existed_account_to_login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_create_new_account" />
+        android:textSize="@dimen/ts_16"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintEnd_toEndOf="@id/btn_create_new_account"
+        app:layout_constraintStart_toStartOf="@id/btn_create_new_account"
+        app:layout_constraintTop_toBottomOf="@id/btn_create_new_account" />
     <TextView
         android:id="@+id/tv_empty_area"
         android:layout_width="match_parent"

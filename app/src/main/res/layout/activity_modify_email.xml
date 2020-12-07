@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="@color/gray_F5F5F5"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,21 +10,45 @@
         android:id="@+id/menu_modify_email"
         layout="@layout/menu_back_layout" />
 
-    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
-        android:id="@+id/et_modify_email"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="24dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/menu_modify_email"
+        android:layout_marginTop="20dp"
         android:background="@color/white"
-        android:hint="@string/please_input_email"
-        android:textCursorDrawable="@drawable/edit_blue_cursor"
-        android:inputType="textWebEmailAddress"
-        android:textColorHint="@color/gray_cccccc"
-        android:textColor="@color/black_333333"
+        android:id="@+id/layout_top"
+        >
+
+    <TextView
+        android:id="@+id/tv_modify_email"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/email_address"
+        android:textColor="@color/black"
         android:textSize="@dimen/ts_16"
-        app:layout_constraintBottom_toTopOf="@+id/line_modify_email"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/iv_modify_email_clear" />
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="@id/et_modify_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_modify_email" />
+
+        <com.tencent.iot.explorer.link.customview.check.VerifyEdit
+            android:id="@+id/et_modify_email"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@color/white"
+            android:hint="@string/please_input_email"
+            android:inputType="textWebEmailAddress"
+            android:textColor="@color/black_333333"
+            android:textColorHint="@color/gray_cccccc"
+            android:textCursorDrawable="@drawable/edit_blue_cursor"
+            android:textSize="@dimen/ts_16"
+            android:layout_marginStart="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/line_modify_email"
+            app:layout_constraintEnd_toStartOf="@+id/iv_modify_email_clear"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/iv_modify_email_clear"
+            app:layout_constraintStart_toEndOf="@+id/tv_modify_email" />
     <TextView
         android:id="@+id/tv_modify_email_hint"
         android:layout_width="wrap_content"
@@ -50,27 +74,40 @@
         android:id="@+id/line_modify_email"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="68dp"
         android:background="@color/gray_dddddd"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tencent.iot.explorer.link.customview.check.VerifyEdit
-        android:id="@+id/et_modify_email_verifycode"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="24dp"
-        android:background="@color/white"
-        android:hint="@string/please_input_verifycode"
-        android:textCursorDrawable="@drawable/edit_blue_cursor"
-        android:inputType="number"
-        android:textColorHint="@color/gray_cccccc"
-        android:textColor="@color/black_333333"
+    <TextView
+        android:id="@+id/tv_modify_email_verifycode"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/verification_code"
+        android:textColor="@color/black"
         android:textSize="@dimen/ts_16"
-        app:layout_constraintBottom_toTopOf="@+id/line_modify_email_verifycode"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code" />
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="@id/et_modify_email_verifycode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_modify_email_verifycode" />
+
+        <com.tencent.iot.explorer.link.customview.check.VerifyEdit
+            android:id="@+id/et_modify_email_verifycode"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@color/white"
+            android:hint="@string/please_input_verifycode"
+            android:inputType="number"
+            android:textColor="@color/black_333333"
+            android:textColorHint="@color/gray_cccccc"
+            android:textCursorDrawable="@drawable/edit_blue_cursor"
+            android:textSize="@dimen/ts_16"
+            app:layout_constraintBottom_toTopOf="@+id/line_modify_email_verifycode"
+            app:layout_constraintEnd_toStartOf="@+id/tv_get_verify_code"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code"
+            app:layout_constraintStart_toEndOf="@+id/tv_modify_email_hint" />
 
 
     <TextView
@@ -94,7 +131,10 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:background="@color/gray_dddddd"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@+id/line_modify_email" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.tencent.iot.explorer.link.customview.check.ClickButton
         android:id="@+id/btn_confirm_to_modify"
@@ -103,13 +143,13 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/background_grey_dark_cell"
         android:gravity="center"
-        android:text="@string/confirm_to_modify"
+        android:text="@string/confirm"
         android:textColor="@color/white"
-        android:textSize="@dimen/ts_20"
+        android:textSize="@dimen/ts_16"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line_modify_email_verifycode" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
