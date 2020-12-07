@@ -12,7 +12,9 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import kotlinx.android.synthetic.main.activity_add_room.*
+import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.*
+import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
 
 /**
  * 新增房间
@@ -31,7 +33,7 @@ class AddRoomActivity : BaseActivity(), MyCallback {
     }
 
     override fun setListener() {
-        tv_back.setOnClickListener { finish() }
+        iv_back.setOnClickListener { finish() }
         btn_add_room.setOnClickListener { addRoom() }
     }
 

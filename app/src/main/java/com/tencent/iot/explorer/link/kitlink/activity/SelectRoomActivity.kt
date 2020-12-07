@@ -114,11 +114,14 @@ class SelectRoomActivity : BaseActivity(), CRecyclerView.RecyclerItemView {
                 entity?.run {
                     itemView.tv_week_repeat_title.text = this.RoomName
                     itemView.iv_week_repeat_selected.setImageResource(
-                        if (selectedRoom?.RoomId == this.RoomId) R.mipmap.icon_checked
-                        else R.mipmap.icon_unchecked
+                        if (selectedRoom?.RoomId == this.RoomId) R.mipmap.task_selected
+                        else R.color.translucent
                     )
                     itemView.tv_week_repeat_commit.visibility =
                         if (position == roomList.size - 1) View.VISIBLE else View.GONE
+
+                    itemView.line_week_repeat.visibility =
+                        if (position == roomList.size - 1) View.GONE else View.VISIBLE
                 }
                 itemView.tv_week_repeat_commit.setOnClickListener {
                     save()
