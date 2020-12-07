@@ -288,6 +288,9 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
             routeType == RouteType.ADD_MANUAL_TASK_DETAIL_ROUTE ||
             routeType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE ||
             routeType == RouteType.ADD_AUTOMIC_TASK_DETAIL_ROUTE) {
+            if (config.AppAutomation == null) {
+                config.AppAutomation = AppAutomation()
+            }
             if (config != null && config.AppAutomation != null && config.AppAutomation!!.actions != null) {
                 var it = devModes.iterator()
                 while(it.hasNext()) {
@@ -305,6 +308,9 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
             routeType == RouteType.EDIT_AUTOMIC_CONDITION_ROUTE ||
             routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE ||
             routeType == RouteType.ADD_AUTOMIC_CONDITION_DETAIL_ROUTE) {
+            if (config.AppAutomation == null) {
+                config.AppAutomation = AppAutomation()
+            }
             if (config != null && config.AppAutomation != null && config.AppAutomation!!.conditions != null) {
                 var it = devModes.iterator()
                 while(it.hasNext()) {
