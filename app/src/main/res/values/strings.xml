@@ -110,6 +110,9 @@
     <string name="tag_gr">大于</string>
     <string name="tag_eq">等于</string>
     <string name="tag_lt">小于</string>
+    <string name="delete_dev">删除设备</string>
+    <string name="length_error">长度非法</string>
+    <string name="country_or_place">国家/地区</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -143,6 +146,7 @@
     <string name="verification_code">验证码</string>
     <string name="input_verification_code">输入验证码</string>
     <string name="mobile_number">手机号码</string>
+    <string name="mobile_num">手机号</string>
     <string name="email_address">邮箱地址</string>
     <string name="password">密码</string>
     <string name="new_password_equals_old">新密码不能与旧密码相同</string>
@@ -269,6 +273,7 @@
     <string name="device_info">设备信息</string>
     <string name="normal_problem">常见问题</string>
     <string name="no_device_share">暂未分享设备，点击按钮进行分享</string>
+    <string name="no_user_to_share_device">暂未分享给其他用户</string>
     <string name="add_device_share">添加分享</string>
     <string name="modify_alias_name">修改备注名称</string>
     <string name="delete_toast_title">确定要删除设备码？</string>
