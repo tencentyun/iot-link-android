@@ -67,9 +67,9 @@ class App : Application(), PayloadMessageCallback {
     }
 
     fun startBeingCall(callingType: Int, deviceId: String) {
-        if (App.data.callingDeviceId != "") {
+        if (App.data.callingDeviceId != "") { //App主动呼叫
             trtcCallDevice(callingType)
-        } else {
+        } else { //App被动呼叫
             appStartBeingCall(callingType, deviceId)
         }
     }
