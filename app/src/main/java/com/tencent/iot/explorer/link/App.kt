@@ -315,9 +315,9 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
      * 呼叫设备获取trtc参数信息
      */
     fun startBeingCall(callingType: Int, deviceId: String) {
-        if (App.data.callingDeviceId != "") { //是设备打给App的通话
+        if (App.data.callingDeviceId != "") { //App主动呼叫
             trtcCallDevice(callingType)
-        } else { //是App主动唤起的通话
+        } else { //App被动
             appStartBeingCall(callingType, deviceId)
         }
     }
