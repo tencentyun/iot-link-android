@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58a16000_b6220458",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/WrapContentHeightViewPager.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-09T12:16:19Z",
+      "side": 1,
+      "message": "这个change里面 注释掉的内容 是不是可以删掉",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 7
+      },
+      "revId": "09cecf5065a6d0e81c50eb9b2ef092fe260d516d",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
