@@ -70,7 +70,7 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-def libVersion = rootProject.ext.android.versionNameStr + '-SNAPSHOT'
+def libVersion = rootProject.ext.android.versionName + '-SNAPSHOT'
 ext.isReleaseVersion = !libVersion.endsWith("SNAPSHOT")
 publishing {
     publications {
@@ -80,7 +80,7 @@ publishing {
             version libVersion
             artifact(androidSourcesJar)
             artifact(androidJavadocsJar)
-            artifact file('build/outputs/aar/trtc-release.aar')
+            artifact file('build/outputs/aar/explorer-link-trtc-release.aar')
 
             pom {
                 name = 'explorer link trtc'

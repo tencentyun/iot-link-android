@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
-apply from: "../parse_json.gradle"
 apply plugin: 'signing'
 
 android {
@@ -69,7 +68,7 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-def libVersion = rootProject.ext.android.versionNameStr + '-SNAPSHOT'
+def libVersion = rootProject.ext.android.versionName + '-SNAPSHOT'
 ext.isReleaseVersion = !libVersion.endsWith("SNAPSHOT")
 publishing {
     publications {

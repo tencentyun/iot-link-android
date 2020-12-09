@@ -81,8 +81,8 @@ dependencies {
         exclude group: 'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
     }
 
-    if (findProject(':explorer-link-android') != null) {
-        implementation project(path: ':explorer-link-android')
+    if (findProject(':sdk:explorer-link-android') != null) {
+        implementation project(path: ':sdk:explorer-link-android')
     } else {
         implementation 'com.tencent.iot.explorer:explorer-link-android:+'
     }
@@ -96,8 +96,8 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.73'
     implementation "com.tencent.iot.thirdparty.android:esptouch:0.3.7.2"
     implementation 'com.android.support:multidex:1.0.3'
-    if (findProject(':explorer-link-trtc') != null) {
-        implementation project(path: ':explorer-link-trtc')
+    if (findProject(':sdk:explorer-link-trtc') != null) {
+        implementation project(path: ':sdk:explorer-link-trtc')
     } else {
         implementation 'com.tencent.iot.explorer:explorer-link-trtc:+'
     }
