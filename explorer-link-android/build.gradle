@@ -79,16 +79,16 @@ publishing {
             version libVersion
             artifact(androidSourcesJar)
             artifact(androidJavadocsJar)
-            artifact file('build/outputs/aar/sdk-release.aar')
+            artifact file('build/outputs/aar/explorer-link-android-release.aar')
 
             pom {
                 name = 'explorer link android'
                 description = 'Tencent Link Android library'
-                url = 'https://github.com/tencentyun/iot-link-android/tree/master/sdk'
+                url = 'https://github.com/tencentyun/iot-link-android/tree/master/explorer-link-android'
                 licenses {
                     license {
                         name = 'Tencent Binary License'
-                        url = 'https://github.com/tencentyun/iot-link-android/blob/master/sdk/LICENSE'
+                        url = 'https://github.com/tencentyun/iot-link-android/blob/master/explorer-link-android/LICENSE'
                     }
                 }
                 developers {
