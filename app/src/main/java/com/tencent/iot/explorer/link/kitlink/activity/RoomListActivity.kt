@@ -85,6 +85,7 @@ class RoomListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerItemV
      */
     private fun refreshRoomList() {
         roomList.clear()
+        crv_room_list.notifyDataChanged()
         loadMoreRoomList()
     }
 
