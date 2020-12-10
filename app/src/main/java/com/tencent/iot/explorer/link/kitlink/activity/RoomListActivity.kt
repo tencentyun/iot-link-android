@@ -15,6 +15,7 @@ import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.activity_room_list.*
+import kotlinx.android.synthetic.main.foot_room_list.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 /**
@@ -124,12 +125,18 @@ class RoomListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerItemV
     ) {
         familyEntity?.run {
             put("room",roomList[position])
-            jumpActivity(RoomActivity::class.java)
+            if (familyEntity?.Role == 1) {
+                jumpActivity(RoomActivity::class.java)
+            }
         }
     }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*> {
-        return RoomListViewHolder(this, parent, R.layout.item_room_list)
+        var show = false
+        if (familyEntity?.Role == 1) {
+            show = true
+        }
+        return RoomListViewHolder(this, parent, R.layout.item_room_list, show)
     }
 
     override fun getViewType(position: Int): Int {
@@ -137,15 +144,23 @@ class RoomListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerItemV
     }
 
     private fun showRoomList() {
-        if (roomList.size > 0) {
-            //已经作限制，可以重复调用，已经添加时不会再添加
+//        if (roomList.size > 0) {
+//            //已经作限制，可以重复调用，已经添加时不会再添加
             crv_room_list.addFooter(roomListFootHolder)
             crv_room_list.notifyDataChanged()
             cl_no_room.visibility = View.GONE
             crv_room_list.visibility = View.VISIBLE
-        } else {
-            cl_no_room.visibility = View.VISIBLE
-            crv_room_list.visibility = View.GONE
-        }
+//        } else {
+//            cl_no_room.visibility = View.VISIBLE
+//            crv_room_list.visibility = View.GONE
+//        }
+            if (familyEntity?.Role == 1) {
+                roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.complete_progress))
+                roomListFootHolder.itemView.tv_add_room.setBackgroundResource(R.drawable.background_white_btn_cell)
+            } else {
+                roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.white))
+                roomListFootHolder.itemView.tv_add_room.setBackgroundResource(R.drawable.background_grey_dark_cell)
+                roomListFootHolder.itemView.tv_add_room.visibility = View.GONE
+            }
     }
 }
