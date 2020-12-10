@@ -28,14 +28,14 @@
             <TextView
                 android:id="@+id/tv_title_avatar"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="55dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/avatar"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_18"
+                android:textSize="@dimen/ts_16"
                 app:layout_constraintTop_toBottomOf="@id/line_user_id"
                 tools:ignore="MissingConstraints" />
 
@@ -71,14 +71,14 @@
             <TextView
                 android:id="@+id/tv_title_nick"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="55dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/nick"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_18"
+                android:textSize="@dimen/ts_16"
                 app:layout_constraintTop_toBottomOf="@+id/line_avatar"
                 tools:layout_editor_absoluteX="0dp" />
 
@@ -112,7 +112,7 @@
             <TextView
                 android:id="@+id/tv_title_user_id"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="55dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:layout_marginTop="1dp"
@@ -120,7 +120,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/user_id"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_18"
+                android:textSize="@dimen/ts_16"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_nick" />
 
@@ -147,7 +147,7 @@
             <TextView
                 android:id="@+id/tv_account_and_safety"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="55dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:layout_marginTop="20dp"
@@ -155,7 +155,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/account_and_safety"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_18"
+                android:textSize="@dimen/ts_16"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_nick" />
 
             <ImageView
@@ -180,7 +180,7 @@
             <TextView
                 android:id="@+id/tv_temperature_unit_title"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="55dp"
                 android:layout_marginTop="20dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
@@ -188,7 +188,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/the_unit_of_temperature"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_18"
+                android:textSize="@dimen/ts_16"
                 app:layout_constraintTop_toBottomOf="@+id/tv_account_and_safety"
                 tools:layout_editor_absoluteX="0dp" />
 
@@ -226,14 +226,14 @@
             <TextView
                 android:id="@+id/tv_time_zone_title"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="55dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/time_zone"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_18"
+                android:textSize="@dimen/ts_16"
                 app:layout_constraintTop_toBottomOf="@+id/line_temperature"
                 tools:layout_editor_absoluteX="0dp" />
 
@@ -284,8 +284,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_empty_area0"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:paddingBottom="9dp"
-                android:paddingTop="9dp"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
                 android:background="@drawable/background_white_btn_cell"
                 android:gravity="center"
                 android:textColor="@color/red_E65A59"
