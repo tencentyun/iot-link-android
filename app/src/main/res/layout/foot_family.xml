@@ -7,13 +7,15 @@
     <TextView
             android:id="@+id/tv_delete_family"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/background_white_btn_cell"
             android:gravity="center"
             android:text="@string/delete_family"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:textColor="@color/red_E65A59"
             android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toTopOf="parent" />
