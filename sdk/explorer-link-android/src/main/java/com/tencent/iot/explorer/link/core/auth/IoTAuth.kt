@@ -152,6 +152,13 @@ object IoTAuth {
         WSClientManager.instance.init()
     }
 
+    /**
+     * 设置登录前的请求api
+     */
+    fun setAppAPI(value: String) {
+        BaseService.OEM_APP_API = value
+    }
+
     fun setEnablePayloadMessageCallback(enable: Boolean) {
         WSClientManager.instance.enablePayloadMessageCallback = enable
     }
