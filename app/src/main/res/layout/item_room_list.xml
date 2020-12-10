@@ -39,6 +39,7 @@
             app:layout_constraintTop_toTopOf="@+id/tv_room_name" />
 
     <ImageView
+            android:id="@+id/iv_go"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginEnd="20dp"
