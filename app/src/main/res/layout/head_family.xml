@@ -28,7 +28,7 @@
             android:gravity="center_vertical|right"
             android:maxLines="1"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp"
+            android:paddingEnd="0dp"
             android:text="@string/my_family"
             android:textColor="@color/gray_cccccc"
             android:textSize="@dimen/ts_16"
@@ -38,6 +38,7 @@
             app:layout_constraintTop_toTopOf="@+id/tv_head_family_name_title" />
 
     <ImageView
+            android:id="@+id/iv_family_name_set"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginEnd="20dp"
@@ -78,7 +79,7 @@
             android:gravity="center_vertical|right"
             android:maxLines="1"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp"
+            android:paddingEnd="0dp"
             android:visibility="invisible"
             android:text="@string/three_rooms"
             android:textColor="@color/gray_cccccc"
