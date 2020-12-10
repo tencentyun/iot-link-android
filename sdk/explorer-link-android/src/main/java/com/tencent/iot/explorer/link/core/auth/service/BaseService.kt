@@ -17,12 +17,9 @@ import kotlin.collections.HashMap
 open class BaseService {
 
     companion object {
-
-        const val OEM_APP_API = "https://iot.cloud.tencent.com/api/exploreropen/appapi" // 需要替换为自建后台服务地址
-        const val OEM_TOKEN_API = "https://iot.cloud.tencent.com/api/exploreropen/tokenapi"  // 可安全在设备端调用。
-
-        const val APP_COS_AUTH = "https://iot.cloud.tencent.com/api/studioapp/AppCosAuth"
-
+        var OEM_APP_API = "https://iot.cloud.tencent.com/api/exploreropen/appapi" // 需要替换为自建后台服务地址
+        var OEM_TOKEN_API = "https://iot.cloud.tencent.com/api/exploreropen/tokenapi"  // 可安全在设备端调用。
+        var APP_COS_AUTH = "https://iot.cloud.tencent.com/api/studioapp/AppCosAuth"
     }
 
     /**

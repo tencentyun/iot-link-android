@@ -38,7 +38,7 @@ internal class WSClientManager private constructor() {
     //消息响应分发
     private val handler = DispatchMsgHandler()
 
-    private val host = "wss://iot.cloud.tencent.com/ws/explorer"
+    private var host = "wss://iot.cloud.tencent.com/ws/explorer"
     private val messageList = LinkedList<String>()
     private val requestQueue = LinkedList<RequestEntity>()
     private val confirmQueue = LinkedList<RequestEntity>()
@@ -88,6 +88,10 @@ internal class WSClientManager private constructor() {
         isKeep = true
         createSocketClient()
         startHeartJob()
+    }
+
+    fun setBrokerUrl(value: String) {
+        host = value
     }
 
     /**
