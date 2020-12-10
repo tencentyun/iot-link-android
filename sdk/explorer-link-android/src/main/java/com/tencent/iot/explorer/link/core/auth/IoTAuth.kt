@@ -152,6 +152,31 @@ object IoTAuth {
         WSClientManager.instance.init()
     }
 
+    /**
+     * 设置登录前的请求api
+     */
+    fun setAppAPI(value: String) {
+        BaseService.OEM_APP_API = value
+    }
+
+    /**
+     * 设置登录后的请求api
+     */
+    fun setTokenAPI(value: String) {
+        BaseService.OEM_TOKEN_API = value
+    }
+
+    fun setAppCosAuth(value: String) {
+        BaseService.APP_COS_AUTH = value
+    }
+
+    /**
+     * 设置长连接 host
+     */
+    fun setBrokerUrl(value: String) {
+        WSClientManager.instance.setBrokerUrl(value)
+    }
+
     fun setEnablePayloadMessageCallback(enable: Boolean) {
         WSClientManager.instance.enablePayloadMessageCallback = enable
     }
