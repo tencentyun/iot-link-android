@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
@@ -12,6 +14,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import kotlinx.android.synthetic.main.activity_add_room.*
+import kotlinx.android.synthetic.main.activity_add_task_name.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
@@ -35,6 +38,25 @@ class AddRoomActivity : BaseActivity(), MyCallback {
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         btn_add_room.setOnClickListener { addRoom() }
+        et_room_name.addTextChangedListener(textWatcher)
+        et_room_name.setText("")
+    }
+
+    private var textWatcher = object: TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            if (TextUtils.isEmpty(et_room_name.text.trim())) {
+                btn_add_room.isClickable = false
+                btn_add_room.setBackgroundResource(R.drawable.background_grey_dark_cell)
+            } else {
+                btn_add_room.isClickable = true
+                btn_add_room.setBackgroundResource(R.drawable.background_circle_bule_gradient)
+            }
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
     }
 
     private fun addRoom() {
