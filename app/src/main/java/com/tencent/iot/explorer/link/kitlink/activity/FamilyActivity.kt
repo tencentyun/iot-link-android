@@ -24,6 +24,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
 import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.foot_family.view.*
+import kotlinx.android.synthetic.main.head_family.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 /**
@@ -86,7 +87,11 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
                 position: Int
             ) {
                 when (position) {
-                    0 -> showModifyFamilyNamePopup()
+                    0 ->  {
+                        if (familyEntity?.Role == 1) {
+                            showModifyFamilyNamePopup()
+                        }
+                    }
                     1 -> {
                         jumpActivity(RoomListActivity::class.java)
                     }
@@ -95,6 +100,11 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
                     }
                 }
             }
+        }
+        if (familyEntity?.Role == 1) {
+            headerHolder.itemView.iv_family_name_set.visibility = View.VISIBLE
+        } else {
+            headerHolder.itemView.iv_family_name_set.visibility = View.GONE
         }
     }
 
