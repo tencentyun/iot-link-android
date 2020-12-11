@@ -58,7 +58,7 @@
             app:seek_show_text="false"
             app:seek_text_color="@color/black_333333"
             app:seek_text_padding="5dp"
-            app:seek_text_size="12sp"
+            app:seek_text_size="@dimen/ts_12"
             app:seek_text_unit="%" />
 
     <View

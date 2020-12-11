@@ -35,7 +35,7 @@
             android:background="@color/white"
             android:paddingTop="13dp"
             android:paddingBottom="13dp"
-            android:textSize="16sp"
+            android:textSize="@dimen/ts_18"
             android:textColor="@color/black"
             />
 
