@@ -22,7 +22,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:textSize="15sp"
+            android:textSize="@dimen/ts_16"
             android:textColor="@color/black"
             />
 
@@ -47,7 +47,7 @@
             app:layout_constraintEnd_toStartOf="@id/iv_go"
             app:layout_constraintStart_toEndOf="@id/tv_tip_name"
             android:text="@string/unset"
-            android:textSize="15sp"
+            android:textSize="@dimen/ts_16"
             android:layout_marginRight="15dp"
             android:textColor="@color/gray_A1A7B2"
             android:singleLine="true"

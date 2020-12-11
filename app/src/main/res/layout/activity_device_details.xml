@@ -30,7 +30,7 @@
             android:paddingEnd="20dp"
             android:text="@string/device_name"
             android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_14"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +44,7 @@
             android:gravity="end"
             android:maxLines="1"
             android:textColor="@color/gray_cccccc"
-            android:textSize="@dimen/ts_14"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintBottom_toBottomOf="@+id/tv_device_alias_title"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -76,7 +76,7 @@
             android:paddingEnd="20dp"
             android:text="@string/device_info"
             android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_14"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toBottomOf="@+id/tv_device_alias_title" />
 
 
@@ -107,7 +107,7 @@
             android:paddingEnd="20dp"
             android:text="@string/room_setting"
             android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_14"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toBottomOf="@+id/tv_device_info_title" />
 
 
@@ -137,7 +137,7 @@
             android:paddingEnd="20dp"
             android:text="@string/device_share"
             android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_14"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toBottomOf="@+id/tv_device_room_setting" />
 
 
@@ -160,13 +160,13 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="35dp"
             android:layout_marginEnd="20dp"
-            android:paddingBottom="9dp"
-            android:paddingTop="9dp"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
             android:background="@drawable/background_white_btn_cell"
             android:gravity="center"
             android:text="@string/delete_dev"
             android:textColor="@color/red_E65A59"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_18"
             app:layout_constraintTop_toBottomOf="@+id/layout_dev_detail" />
 
     <View

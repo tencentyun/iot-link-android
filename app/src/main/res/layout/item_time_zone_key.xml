@@ -10,7 +10,7 @@
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:textColor="@color/black_333333"
-    android:textSize="14sp"
+    android:textSize="@dimen/ts_16"
     android:textStyle="bold">
 
 </TextView>

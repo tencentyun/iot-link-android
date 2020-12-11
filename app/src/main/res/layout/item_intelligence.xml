@@ -122,7 +122,7 @@
             android:singleLine="true"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:textSize="16sp"
+            android:textSize="@dimen/ts_18"
             />
 
         <TextView

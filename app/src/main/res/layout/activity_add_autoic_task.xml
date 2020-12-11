@@ -27,9 +27,9 @@
             android:text="@string/next"
             android:gravity="center"
             android:textColor="@color/white"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:textSize="14sp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textSize="@dimen/ts_18"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/background_circle_bule_gradient"
@@ -70,7 +70,7 @@
                     android:paddingTop="10dp"
                     android:text="@string/fit_all_condition"
                     android:textColor="@color/black"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/ts_16"
                     />
                 <ImageView
                     android:layout_width="0dp"
@@ -134,7 +134,7 @@
                     android:paddingTop="10dp"
                     android:text="@string/run_this_all_tasks"
                     android:textColor="@color/black"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/ts_16"
                     />
 
                 <ImageView
@@ -189,7 +189,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/ts_16"
                     android:textColor="@color/black"
                     android:text="@string/working_time"
                     />
@@ -215,7 +215,7 @@
                     app:layout_constraintEnd_toStartOf="@id/iv_go"
                     app:layout_constraintStart_toEndOf="@id/tv_tip_working_time"
                     android:text="@string/unset"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/ts_16"
                     android:layout_marginRight="15dp"
                     android:textColor="@color/gray_A1A7B2"
                     android:singleLine="true"

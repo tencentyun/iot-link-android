@@ -27,7 +27,7 @@
             />
         <TextView
             android:id="@+id/tv_view"
-            android:textSize="18sp"
+            android:textSize="@dimen/ts_18"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
         <TextView
             android:id="@+id/connect_failed_tip"
             android:text="@string/wifi_connect_failed"
-            android:textSize="18sp"
+            android:textSize="@dimen/ts_18"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_centerHorizontal="true"
@@ -64,7 +64,7 @@
         <TextView
             android:id="@+id/connect_failed_reason"
             android:text="@string/check_wifi_pwd"
-            android:textSize="16sp"
+            android:textSize="@dimen/ts_16"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
             android:text="@string/i_got_it"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
-            android:textSize="18sp"
+            android:textSize="@dimen/ts_18"
             android:textColor="@color/complete_progress"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"

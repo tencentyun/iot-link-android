@@ -13,7 +13,7 @@
         android:id="@+id/tv_item_day"
         android:background="@drawable/background_grey_rounded_cell"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="@dimen/ts_16"
         android:gravity="center"
         android:paddingTop="9dp"
         android:paddingBottom="9dp"
