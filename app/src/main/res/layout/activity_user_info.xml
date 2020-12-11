@@ -35,7 +35,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/avatar"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 app:layout_constraintTop_toBottomOf="@id/line_user_id"
                 tools:ignore="MissingConstraints" />
 
@@ -78,7 +78,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/nick"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 app:layout_constraintTop_toBottomOf="@+id/line_avatar"
                 tools:layout_editor_absoluteX="0dp" />
 
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="48dp"
                 android:textColor="@color/gray_cccccc"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_title_nick"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_title_nick" />
@@ -120,7 +120,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/user_id"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_nick" />
 
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:textColor="@color/gray_cccccc"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_title_user_id"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_title_user_id" />
@@ -155,7 +155,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/account_and_safety"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_nick" />
 
             <ImageView
@@ -188,7 +188,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/the_unit_of_temperature"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 app:layout_constraintTop_toBottomOf="@+id/tv_account_and_safety"
                 tools:layout_editor_absoluteX="0dp" />
 
@@ -198,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="48dp"
                 android:textColor="@color/gray_cccccc"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 android:text="@string/celsius_unit"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_temperature_unit_title"
                 app:layout_constraintRight_toRightOf="parent"
@@ -233,7 +233,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/time_zone"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 app:layout_constraintTop_toBottomOf="@+id/line_temperature"
                 tools:layout_editor_absoluteX="0dp" />
 
@@ -243,7 +243,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="48dp"
                 android:textColor="@color/gray_cccccc"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 android:text="@string/unset"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_time_zone_title"
                 app:layout_constraintRight_toRightOf="parent"
@@ -284,12 +284,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_empty_area0"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
+                android:paddingBottom="12dp"
+                android:paddingTop="12dp"
                 android:background="@drawable/background_white_btn_cell"
                 android:gravity="center"
                 android:textColor="@color/red_E65A59"
-                android:textSize="@dimen/ts_16"
+                android:textSize="@dimen/ts_18"
                 />
 
             <View
