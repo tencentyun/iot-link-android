@@ -14,10 +14,10 @@
             android:background="@drawable/background_white_btn_cell"
             android:gravity="center"
             android:text="@string/delete_family"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:textColor="@color/red_E65A59"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_18"
             app:layout_constraintTop_toTopOf="parent" />
 
     <View

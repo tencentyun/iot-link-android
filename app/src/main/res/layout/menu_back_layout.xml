@@ -27,7 +27,7 @@
             android:maxLines="1"
             android:text="@string/title_name"
             android:textColor="@color/black"
-            android:textSize="@dimen/ts_18" />
+            android:textSize="@dimen/ts_20" />
 
     <ImageView
         android:id="@+id/iv_right_btn"

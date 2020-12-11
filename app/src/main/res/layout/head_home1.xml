@@ -54,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:textSize="@dimen/ts_18"
+        android:textSize="@dimen/ts_20"
         android:textColor="@color/black_333333"
         android:textStyle="bold"
         android:singleLine="true"

@@ -31,7 +31,7 @@
             android:gravity="center"
             android:text="@string/confirm"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_18"
             app:layout_constraintTop_toBottomOf="@+id/vp_invite" />
 
 
