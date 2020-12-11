@@ -68,7 +68,7 @@
         android:textColor="@color/black"
         android:layout_marginTop="10dp"
         android:text="@string/add_device_success"
-        android:textSize="18sp"
+        android:textSize="@dimen/ts_18"
         />
 
     <TextView
@@ -80,7 +80,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_config_net_sucess_tip"
         android:text="@string/device_name"
         android:layout_marginTop="10dp"
-        android:textSize="16sp"
+        android:textSize="@dimen/ts_16"
         />
 
     <TextView

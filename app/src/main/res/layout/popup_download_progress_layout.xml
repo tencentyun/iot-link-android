@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/tv_upgrade_tip"
             android:text="@string/upgrading"
-            android:textSize="16sp"
+            android:textSize="@dimen/ts_16"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_centerHorizontal="true"
@@ -52,7 +52,7 @@
             app:progressView_labelColorInner="@color/white"
             app:progressView_labelColorOuter="@color/complete_progress"
             app:progressView_progressFromPrevious="true"
-            app:progressView_labelSize="16sp"
+            app:progressView_labelSize="@dimen/ts_16"
         />
         </RelativeLayout>
 
