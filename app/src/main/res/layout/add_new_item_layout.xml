@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/tv_space_1"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_space_1"
             app:layout_constraintStart_toStartOf="parent"
-            android:textSize="14sp"
+            android:textSize="@dimen/ts_16"
             android:layout_marginTop="10dp"
             />
 
@@ -60,6 +60,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:text="@string/add_task_condition"
+                android:textSize="@dimen/ts_16"
                 />
 
 

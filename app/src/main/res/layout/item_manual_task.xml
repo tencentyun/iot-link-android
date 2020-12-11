@@ -25,7 +25,7 @@
         android:paddingTop="10dp"
         android:text="@string/run_all_task"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="@dimen/ts_16"
         />
 
     <ImageView
@@ -121,7 +121,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintStart_toEndOf="@id/iv_type"
             app:layout_constraintEnd_toStartOf="@id/iv_go"
             app:layout_constraintTop_toTopOf="parent"
@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_dev_name"
             app:layout_constraintStart_toStartOf="@id/tv_dev_name"
-            android:textSize="14sp"
+            android:textSize="@dimen/ts_16"
             android:singleLine="true"
             android:layout_marginTop="10dp"
             android:paddingLeft="15dp"
