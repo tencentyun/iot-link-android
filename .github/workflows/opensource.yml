@@ -47,6 +47,7 @@ jobs:
       - name: Send alert
         if: always()
         env:
+          ALERTMANANGER_BASIC_AUTH: ${{ secrets.ALERTMANANGER_BASIC_AUTH }}
           GITHUB_CONTEXT: ${{ toJson(github) }}
           JOB_CONTEXT: ${{ toJson(job) }}
           STEPS_CONTEXT: ${{ toJson(steps) }}
