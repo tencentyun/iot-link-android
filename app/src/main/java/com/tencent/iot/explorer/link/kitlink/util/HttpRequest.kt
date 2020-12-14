@@ -1047,6 +1047,11 @@ class HttpRequest private constructor() {
         tokenPost(param, callback, RequestCode.device_product)
     }
 
+    fun deviceProductInfo(productId: String, callback: MyCallback) {
+        val param = tokenParams("AppGetProductInfo")
+        param["ProductId"] = productId
+        postJson(param, callback, RequestCode.device_product_info)
+    }
     /**
      * 发送设备分享
      */
