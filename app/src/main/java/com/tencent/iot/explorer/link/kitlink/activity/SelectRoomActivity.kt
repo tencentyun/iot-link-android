@@ -36,7 +36,9 @@ class SelectRoomActivity : BaseActivity(), CRecyclerView.RecyclerItemView {
         deviceEntity = get("device")
 
         selectedRoom = get<RoomEntity>("select_room")
-        roomList.addAll(App.data.roomList.subList(1, App.data.roomList.size))
+        if (App.data.roomList.size >= 1) {
+            roomList.addAll(App.data.roomList.subList(1, App.data.roomList.size))
+        }
         if (TextUtils.isEmpty(selectedRoom?.RoomId) && !TextUtils.isEmpty(deviceEntity!!.RoomId)) {
             roomList.forEach {
                 if (it.RoomId == deviceEntity!!.RoomId){
