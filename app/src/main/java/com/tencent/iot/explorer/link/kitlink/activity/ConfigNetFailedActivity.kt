@@ -19,7 +19,7 @@ class ConfigNetFailedActivity : BaseActivity() {
 
     override fun initView() {
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
-        productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+        productId = intent.getStringExtra(CommonField.PRODUCT_ID) ?: ""
 
         when (type) {
 
