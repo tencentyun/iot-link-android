@@ -54,5 +54,4 @@ jobs:
           RUNNER_CONTEXT: ${{ toJson(runner) }}
           STRATEGY_CONTEXT: ${{ toJson(strategy) }}
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: |
-          python3 .github/scripts/send_alert.py
+        run: python3 .github/scripts/send_alert.py
