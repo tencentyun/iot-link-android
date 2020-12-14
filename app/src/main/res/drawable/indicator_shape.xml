@@ -6,12 +6,12 @@
         <shape>
 
             <size
-                android:width="20dp"
+                android:width="56dp"
                 android:height="2dp" />
 
             <corners android:radius="3dp" />
 
-            <solid android:color="@color/white" />
+            <solid android:color="@color/blue_0052d9" />
 
         </shape>
     </item>
