@@ -113,6 +113,7 @@
     <string name="delete_dev">删除设备</string>
     <string name="length_error">长度非法</string>
     <string name="country_or_place">国家/地区</string>
+    <string name="default_product_name">（产品的名称）</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -321,7 +322,8 @@
     <string name="run_one_time">执行一次</string>
     <string name="msg_center">消息中心</string>
     <string name="smart_lost_device">当前智能设备丢失，请重新设置动作</string>
-
+    <string name="bind_now">立即绑定</string>
+    <string name="bind_dev">绑定设备</string>
 
     <!--云端定时-->
     <string name="cloud_timing">云端定时</string>
@@ -456,6 +458,7 @@
     <!--customview end-->
 
     <string name="welcome_to_use_tencent_ll">欢迎使用腾讯连连</string>
+    <string name="welcome_to_use_product">欢迎使用</string>
     <string name="create_new_account">创建新账号</string>
     <string name="use_existed_account_to_login">使用已有账号登录</string>
     <string name="account_passwd_login">账号密码登录</string>
