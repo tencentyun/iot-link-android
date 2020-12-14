@@ -100,7 +100,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
     }
 
     override fun initView() {
-        productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+        productId = intent.getStringExtra(CommonField.PRODUCT_ID) ?: ""
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
         if (intent.hasExtra(CommonField.SSID)) {
             ssid = intent.getStringExtra(CommonField.SSID)
