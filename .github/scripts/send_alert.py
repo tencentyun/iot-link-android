@@ -24,9 +24,9 @@ def send(labels, url=None, annotations=None):
       'annotations':
           annotations,
       'startsAt':
-          datetime.datetime.now().astimezone(
-              datetime.timezone(datetime.timedelta(hours=8))).isoformat()
+          datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=8))).isoformat()
   }
+  print('===============time : ' + datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=8))).isoformat())
   # auth = base64.b64encode(f"user:password".encode()).decode("ascii")
   headers = {
       'Content-type': 'application/json',
