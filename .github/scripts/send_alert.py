@@ -77,6 +77,6 @@ if __name__ == '__main__':
   }
   head_commit = github['event']['head_commit']
   url = f'{head_commit["url"]}/checks'
-  annotations = {'commit': head_commit['message'], 'receivers': 'ArchurSpace, 25088358528'}
+  annotations = {'commit': head_commit['message'], 'receivers': 'ArchurSpace'}
 
   send(labels, url=url, annotations=annotations)
