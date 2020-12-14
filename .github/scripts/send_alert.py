@@ -32,24 +32,24 @@ def send(labels, url=None, annotations=None):
       'Authorization': f'Basic {os.environ["ALERTMANANGER_BASIC_AUTH"]}'
   }
   data = [alert]
-  req = urllib.request.Request('https://alert.goodow.com/api/v2/alerts',
+  # req = urllib.request.Request('https://alert.goodow.com/api/v2/alerts',
+  #                              data=json.dumps(data).encode('utf-8'),
+  #                              headers=headers)
+  headers['Host'] = 'alert.goodow.com'
+  req = urllib.request.Request('https://119.29.125.143:443/api/v2/alerts',
                                data=json.dumps(data).encode('utf-8'),
                                headers=headers)
+  ctx = ssl.create_default_context()
+  ctx.check_hostname = False
+  ctx.verify_mode = ssl.CERT_NONE
+  resp = urllib.request.urlopen(req, context=ctx)
   # try:
-  resp = urllib.request.urlopen(req)
+  #   resp = urllib.request.urlopen(req)
   # except URLError as e:
   #   logging.info(f'retry, {type(e.reason)}({e.reason})')
   #   # [Errno 104] Connection reset by peer
   #   # [Errno 110] Connection timed out
   #   # if isinstance(e.reason, ConnectionResetError):
-  #   headers['Host'] = 'alert.goodow.com'
-  #   req = urllib.request.Request('https://119.29.125.143:443/api/v2/alerts',
-  #                                data=json.dumps(data).encode('utf-8'),
-  #                                headers=headers)
-  #   ctx = ssl.create_default_context()
-  #   ctx.check_hostname = False
-  #   ctx.verify_mode = ssl.CERT_NONE
-  #   resp = urllib.request.urlopen(req, context=ctx)
 
   if resp.status != 200:
     print('发送 Alert 出错', resp.status, resp.reason)
