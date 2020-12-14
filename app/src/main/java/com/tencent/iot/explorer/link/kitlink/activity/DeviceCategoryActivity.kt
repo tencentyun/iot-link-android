@@ -41,6 +41,7 @@ import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
 import kotlinx.android.synthetic.main.activity_device_category.*
@@ -241,6 +242,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                             val productsList  = arrayListOf<String>()
                             productsList.add(productid!!)
                             HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
+
                         }
                         contains("hmacsha") && contains(";") -> { //蓝牙签名绑定 的设备
                             // ${product_id};${device_name};${random};${timestamp};hmacsha256;sign
@@ -266,6 +268,12 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 response.parse(ProductsConfigResponse::class.java)?.run {
                     val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
                     val wifiConfigTypeList = config.WifiConfTypeList
+                    if (ProductGlobal.isProductGlobalLegal(config.Global)) {
+                        var intent = Intent(this@DeviceCategoryActivity, ProductIntroduceActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_INFO, Data[0].Config)
+                        startActivity(intent)
+                        return@run
+                    }
                     var productId = ""
                     if (!TextUtils.isEmpty(config.profile)) {
                         var jsonProFile = JSON.parseObject(config.profile)
@@ -276,28 +284,19 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     }
 
                     if (wifiConfigTypeList.equals("{}") || TextUtils.isEmpty(wifiConfigTypeList)) {
-                        startActivityWithExtra(SmartConfigStepActivity::class.java, productId)
+                        SmartConfigStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
 
                     } else if (wifiConfigTypeList.contains("[")) {
                         val typeList = JsonManager.parseArray(wifiConfigTypeList)
                         if (typeList.size > 0 && typeList[0] == "softap") {
-                            startActivityWithExtra(SoftApStepActivity::class.java, productId)
+                            SoftApStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
                         } else {
-                            startActivityWithExtra(SmartConfigStepActivity::class.java, productId)
+                            SmartConfigStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
                         }
                     }
                 }
             }
         }
-    }
-
-    private fun startActivityWithExtra(cls: Class<*>?, productId: String) {
-        var intent = Intent(this, cls)
-        if (!TextUtils.isEmpty(productId)) {
-            intent.putExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadRemoteViewTxt.ordinal)
-            intent.putExtra(CommonField.PRODUCT_ID, productId)
-        }
-        startActivity(intent)
     }
 
     /**

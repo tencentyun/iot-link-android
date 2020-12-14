@@ -80,7 +80,7 @@ object RequestCode {
 
     const val sig_bind_device = 3014
     const val trtc_call_device = 3015
-
+    const val device_product_info = 3016
 
     /*************设备接口结束**************/
 
