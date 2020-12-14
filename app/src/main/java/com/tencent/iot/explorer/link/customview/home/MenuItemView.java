@@ -39,7 +39,7 @@ public class MenuItemView extends RelativeLayout {
         tvTitle = new TextView(getContext());
         tvTitle.setId(View.generateViewId());
         tvTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         LayoutParams lptv = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         lptv.bottomMargin = (int) getContext().getResources().getDisplayMetrics().density * 3;
         lptv.topMargin = (int) getContext().getResources().getDisplayMetrics().density * 5;
