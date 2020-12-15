@@ -20,6 +20,7 @@ import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.squareup.picasso.Picasso;
 import com.tencent.iot.explorer.link.R;
+import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.ImageShowUtils;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.ImageUtils;
 
@@ -203,9 +204,9 @@ public class ImageSelectorBrowseActivity extends Activity implements OnClickList
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(myCaptureFile)));
 
             } catch (FileNotFoundException e) {
-                Log.d(LOG_TAG, "FileNotFoundException" + e.toString());
+                L.INSTANCE.e(LOG_TAG, "FileNotFoundException" + e.toString());
             } catch (IOException e) {
-                Log.d(LOG_TAG, "IOException" + e.toString());
+                L.INSTANCE.e(LOG_TAG, "IOException" + e.toString());
             }
             return;
         }
