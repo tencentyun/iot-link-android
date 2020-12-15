@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 
+import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.kitlink.util.picture.clipimage.ClipView.OnDrawListenerComplete;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.BitmapUtils;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.ImageUtils;
@@ -129,7 +130,7 @@ public class ClipPictureActivity extends Activity implements OnTouchListener {
                 clipBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
                 mBitmapByte = baos.toByteArray();
-                Log.e("--------", mBitmapByte.length / 1024 + " kb");
+                L.INSTANCE.e(mBitmapByte.length / 1024 + " kb");
                 Intent intent = new Intent(ClipPictureActivity.this, ImageSimpleBrowseActivity.class);
 
 //                intent.putExtras(ImageSimpleBrowseActivity.getBundle(mBitmapByte));

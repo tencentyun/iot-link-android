@@ -193,7 +193,7 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
         if (requestCode == 100) {
             data?.let {
                 it.getStringExtra(CommonField.COUNTRY_CODE)?.run {
-                    L.e("lurs=$this")
+                    L.e(this)
                     presenter.setCountryCode(this)
                 }
             }
