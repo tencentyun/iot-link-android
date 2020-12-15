@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f35d011_b0726e0e",
+        "filename": "doc/SDK开发/私有化/API请求域名配置指引.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-12-15T07:49:11Z",
+      "side": 1,
+      "message": "IoTAuth.init()   ----\u003e   IoTAuth.init(APP_KEY)    \n调用位置可参考[这里]    -----\u003e   调用位置可参考[APP SDK 创建引导.md]",
+      "revId": "d4596fddb8aadbbb41c9751edb6e0707be6093c7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
