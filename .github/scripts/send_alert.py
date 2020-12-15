@@ -84,4 +84,4 @@ if __name__ == '__main__':
   annotations = {'commit': head_commit['message'], 'receivers': '25088358528,ArchurSpace'}
   print('========= start ===========')
   send(labels, url=url, annotations=annotations)
-  print('========= stop ===========')
+  print('========= stop ============')
