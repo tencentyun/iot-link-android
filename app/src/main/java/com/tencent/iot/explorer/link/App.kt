@@ -131,6 +131,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         T.setContext(this.applicationContext)
         //日志开关
         L.isLog = DEBUG_VERSION
+        L.LOG_LEVEL = L.LEVEL_ERROR
         //信鸽推送日志开关
         XGPushConfig.enableDebug(applicationContext, DEBUG_VERSION)
         XGPushConfig.enablePullUpOtherApp(applicationContext, PULL_OTHER)
