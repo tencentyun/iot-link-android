@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.tencent.iot.explorer.link.core.log.L;
 
 import java.io.File;
 
@@ -46,7 +47,7 @@ public class ImageManager {
 
     public static void setImagePath(Context context, ImageView imageView, String url, int resId) {
         if (TextUtils.isEmpty(url)) return;
-        Log.e("图片路径", url);
+        L.INSTANCE.d("图片路径", url);
         if (resId > 0)
             Picasso.get().load(url).error(resId).into(imageView);
         else Picasso.get().load(url).into(imageView);

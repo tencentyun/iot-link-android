@@ -47,7 +47,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         Intent viewIntent = new Intent(UPDATE_LISTVIEW_ACTION);
         context.sendBroadcast(viewIntent);
         show(context, context.getString(R.string.new_msg_be_showed) + notifiShowedRlt.toString());
-        Log.d(TAG, context.getString(R.string.new_msg_be_showed) + notifiShowedRlt.toString() + context.getString(R.string.push_channel) + notifiShowedRlt.getPushChannel());
+        L.INSTANCE.d(TAG, context.getString(R.string.new_msg_be_showed) + notifiShowedRlt.toString() + context.getString(R.string.push_channel) + notifiShowedRlt.getPushChannel());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         } else {
             text = context.getString(R.string.unregister_failed) + errorCode; //"反注册失败"
         }
-        Log.d(TAG, text);
+        L.INSTANCE.d(TAG, text);
         show(context, text);
 
     }
@@ -77,7 +77,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         } else {
             text = "\"" + tagName + "\"" + context.getResources().getString(R.string.failed_set_with_error_code) + errorCode;
         }
-        Log.d(TAG, text);
+        L.INSTANCE.d(TAG, text);
         show(context, text);
 
     }
@@ -93,7 +93,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         } else {
             text = "\"" + tagName + "\"" + context.getResources().getString(R.string.failed_delete_with_error_code) + errorCode;
         }
-        Log.d(TAG, text);
+        L.INSTANCE.d(TAG, text);
         show(context, text);
 
     }
@@ -127,7 +127,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         }
 
         // APP自主处理的过程。。。
-        Log.d(TAG, text);
+        L.INSTANCE.d(TAG, text);
         show(context, text);
 
         checkMsgWithAction(context, message.getCustomContent());
@@ -147,7 +147,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         } else {
             text = message + context.getString(R.string.register_failed) + errorCode; // "注册失败，错误码："
         }
-        Log.d(TAG, text);
+        L.INSTANCE.d(TAG, text);
         show(context, text);
     }
 
@@ -156,7 +156,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     public void onTextMessage(Context context, XGPushTextMessage message) {
         String text = context.getString(R.string.recv_msg) + message.toString();//"收到消息:"
         // APP自主处理消息的过程...
-        Log.d(TAG, text);
+        L.INSTANCE.d(TAG, text);
         show(context, text);
         // checkMsgWithAction(context, message.getCustomContent());
     }
