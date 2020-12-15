@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.retrofit.converter
 
-import android.util.Log
+import com.tencent.iot.explorer.link.core.log.L
 
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -15,7 +15,7 @@ class StringRequestBodyConverter : Converter<String, RequestBody> {
 
     @Throws(IOException::class)
     override fun convert(s: String): RequestBody {
-        Log.e("lurs", "请求数据json：$s")
+        L.e("请求数据json：$s")
         return RequestBody.create(MEDIA_TYPE, s)
     }
 
