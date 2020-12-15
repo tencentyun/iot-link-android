@@ -12,6 +12,7 @@ import android.util.Log;
 
 
 import com.tencent.iot.explorer.link.R;
+import com.tencent.iot.explorer.link.core.log.L;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,7 +37,7 @@ public class BitmapUtils {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            Log.e("--------","length: "+os.toByteArray().length / 1024 + " kb");
+            L.INSTANCE.d("length: "+os.toByteArray().length / 1024 + " kb");
             if (os.toByteArray().length / 1024 > 300) {//判断如果图片大于150kb,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
                 os.reset();//重置baos即清空baos
                 image.compress(Bitmap.CompressFormat.JPEG, 20, os);//这里压缩20%，把压缩后的数据存放到baos中

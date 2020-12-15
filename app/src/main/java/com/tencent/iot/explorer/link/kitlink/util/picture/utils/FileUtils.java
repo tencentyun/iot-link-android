@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.tencent.iot.explorer.link.core.log.L;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -99,10 +101,10 @@ public class FileUtils {
             result = file.getAbsolutePath();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Log.i(TAG, "savaImage() has FileNotFoundException");
+            L.INSTANCE.e(TAG, "savaImage() has FileNotFoundException");
         } catch (IOException e) {
             e.printStackTrace();
-            Log.i(TAG, "savaImage() has IOException");
+            L.INSTANCE.e(TAG, "savaImage() has IOException");
         }
 
         return result;

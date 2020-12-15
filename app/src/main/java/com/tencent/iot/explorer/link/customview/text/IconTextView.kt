@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.annotation.ColorInt
 import com.tencent.iot.explorer.link.customview.CView
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.log.L
 
 /**
  * 带图标的TextView
@@ -195,7 +196,7 @@ class IconTextView : CView {
         val x: Float
         val y: Float
         val path = Path()
-        Log.e("", "iconTriangleDirection=$iconTriangleDirection")
+        L.e("iconTriangleDirection=$iconTriangleDirection")
         when (iconTriangleDirection) {
             TriangleDirection.TOP.ordinal -> {
                 x = (iconRect.right + iconRect.left) / 2f
