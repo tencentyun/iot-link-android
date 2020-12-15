@@ -16,6 +16,24 @@
       "revId": "d4596fddb8aadbbb41c9751edb6e0707be6093c7",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dc571a5_b28f97d9",
+        "filename": "doc/SDK开发/私有化/API请求域名配置指引.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-15T07:59:57Z",
+      "side": 1,
+      "message": "已修改",
+      "parentUuid": "7f35d011_b0726e0e",
+      "revId": "d4596fddb8aadbbb41c9751edb6e0707be6093c7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
     }
   ]
 }
