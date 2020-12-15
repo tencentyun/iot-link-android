@@ -6,6 +6,7 @@ import android.util.Log
 import android.webkit.WebView
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.log.L
 import java.lang.reflect.Method
 
 object JSBridgeKt {
@@ -14,7 +15,7 @@ object JSBridgeKt {
     var exposedMethods: MutableMap<String, HashMap<String, Method>> = HashMap()
 
     fun register(exposedName: String, clazz: Class<BridgeImpl>) {
-        Log.d(TAG, "register exposedMethods=" + JSON.toJSONString(exposedMethods))
+        L.d(TAG, "register exposedMethods=" + JSON.toJSONString(exposedMethods))
         if (!exposedMethods.containsKey(exposedName)) {
             exposedMethods.put(exposedName, getAllMethod(clazz))
         }
@@ -23,8 +24,8 @@ object JSBridgeKt {
     private fun getAllMethod(injectedCls: Class<*>): HashMap<String, Method> {
         var methodsMap = HashMap<String, Method>()
         var methods = injectedCls.declaredMethods
-        Log.d(TAG, "getAllMethod exposedMethods=" + JSON.toJSONString(exposedMethods))
-        Log.d(TAG, "getAllMethod methods=" + JSON.toJSONString(methods))
+        L.d(TAG, "getAllMethod exposedMethods=" + JSON.toJSONString(exposedMethods))
+        L.d(TAG, "getAllMethod methods=" + JSON.toJSONString(methods))
 
         for (method in methods) {
             var name = method.getName()
@@ -57,9 +58,9 @@ object JSBridgeKt {
             }
         }
 
-        Log.d(TAG, "uriString=" + uriString)
-        Log.d(TAG, "exposedMethods=" + JSON.toJSONString(exposedMethods))
-        Log.d(TAG, "className=" + className)
+        L.d(TAG, "uriString=" + uriString)
+        L.d(TAG, "exposedMethods=" + JSON.toJSONString(exposedMethods))
+        L.d(TAG, "className=" + className)
         if (exposedMethods.containsKey(className)) {
             val methodHashMap = exposedMethods[className]
 
@@ -70,7 +71,7 @@ object JSBridgeKt {
                 constructor.isAccessible = true
                 val targetActivity = constructor.newInstance()
                 val method = methodHashMap[methodName]
-                Log.d(TAG, "methodName=" + methodName)
+                L.d(TAG, "methodName=" + methodName)
 
                 if (method != null) {
                     try {

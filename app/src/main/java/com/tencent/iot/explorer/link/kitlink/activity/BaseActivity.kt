@@ -16,6 +16,7 @@ import com.tencent.iot.explorer.link.DataHolder
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.status.StatusBarUtil
 import java.util.*
 
@@ -233,10 +234,10 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun checkPermissions(permissions: Array<String>): Boolean {
         for (p in permissions) {
             if (ActivityCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_DENIED) {
-                Log.e("lurs", p + "被拒绝")
+                L.e(p + "被拒绝")
                 return false
             }
-            Log.e("lurs", p + "已经申请成功")
+            L.e(p + "已经申请成功")
         }
         return true
     }

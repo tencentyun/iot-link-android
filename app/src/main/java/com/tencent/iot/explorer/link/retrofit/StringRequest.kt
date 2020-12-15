@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.retrofit
 
 import android.util.Log
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.retrofit.adapter.StringCallAdapterFactory
 import com.tencent.iot.explorer.link.retrofit.converter.StringConverterFactory
 import com.tencent.iot.explorer.link.retrofit.request.*
@@ -82,15 +83,15 @@ class StringRequest private constructor() {
             override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                 call?.cancel()
                 callback.fail(throwable?.message, reqCode)
-                Log.d(TAG, "请求失败：${throwable?.message}")
+                L.d(TAG, "请求失败：${throwable?.message}")
             }
 
             override fun onResponse(call: Call<String>?, response: retrofit2.Response<String>) {
                 if (response.isSuccessful) {
-                    Log.d(TAG, "请求成功：${response.body()}")
+                    L.d(TAG, "请求成功：${response.body()}")
                     callback.success(response.body(), reqCode)
                 } else {
-                    Log.d(TAG, "请求成功：${response.errorBody()}")
+                    L.d(TAG, "请求成功：${response.errorBody()}")
                     callback.success(response.errorBody().string(), reqCode)
                 }
             }
@@ -113,15 +114,15 @@ class StringRequest private constructor() {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                     call?.cancel()
                     callback.fail(throwable?.message, reqCode)
-                    Log.d(TAG, "请求失败：${throwable?.message}")
+                    L.d(TAG, "请求失败：${throwable?.message}")
                 }
 
                 override fun onResponse(call: Call<String>?, response: retrofit2.Response<String>) {
                     if (response.isSuccessful) {
-                        Log.d(TAG, "请求成功：${response.body()}")
+                        L.d(TAG, "请求成功：${response.body()}")
                         callback.success(response.body(), reqCode)
                     } else {
-                        Log.d(TAG, "请求成功：${response.errorBody()}")
+                        L.d(TAG, "请求成功：${response.errorBody()}")
                         callback.success(response.errorBody().string(), reqCode)
                     }
                 }
@@ -145,15 +146,15 @@ class StringRequest private constructor() {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                     call?.cancel()
                     callback.fail(throwable?.message, reqCode)
-                    Log.d(TAG, "请求失败：${throwable?.message}")
+                    L.d(TAG, "请求失败：${throwable?.message}")
                 }
 
                 override fun onResponse(call: Call<String>?, response: retrofit2.Response<String>) {
                     if (response.isSuccessful) {
-                        Log.d(TAG, "请求成功：${response.body()}")
+                        L.d(TAG, "请求成功：${response.body()}")
                         callback.success(response.body(), reqCode)
                     } else {
-                        Log.d(TAG, "请求成功：${response.errorBody()}")
+                        L.d(TAG, "请求成功：${response.errorBody()}")
                         callback.success(response.errorBody().string(), reqCode)
                     }
                 }
@@ -177,15 +178,15 @@ class StringRequest private constructor() {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                     call?.cancel()
                     callback.fail(throwable?.message, reqCode)
-                    Log.d(TAG, "请求失败：${throwable?.message}")
+                    L.d(TAG, "请求失败：${throwable?.message}")
                 }
 
                 override fun onResponse(call: Call<String>?, response: retrofit2.Response<String>) {
                     if (response.isSuccessful) {
-                        Log.d(TAG, "请求成功：${response.body()}")
+                        L.d(TAG, "请求成功：${response.body()}")
                         callback.success(response.body(), reqCode)
                     } else {
-                        Log.d(TAG, "请求成功：${response.errorBody()}")
+                        L.d(TAG, "请求成功：${response.errorBody()}")
                         callback.success(response.errorBody().string(), reqCode)
                     }
                 }
@@ -225,15 +226,15 @@ class StringRequest private constructor() {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                     call?.cancel()
                     callback.fail(throwable?.message, reqCode)
-                    Log.d(TAG, "请求失败：${throwable?.message}")
+                    L.d(TAG, "请求失败：${throwable?.message}")
                 }
 
                 override fun onResponse(call: Call<String>?, response: retrofit2.Response<String>) {
                     if (response.isSuccessful) {
-                        Log.d(TAG, "请求成功：${response.body()}")
+                        L.d(TAG, "请求成功：${response.body()}")
                         callback.success(response.body(), reqCode)
                     } else {
-                        Log.d(TAG, "请求成功：${response.errorBody()}")
+                        L.d(TAG, "请求成功：${response.errorBody()}")
                         callback.success(response.errorBody().string(), reqCode)
                     }
                 }
@@ -266,15 +267,15 @@ class StringRequest private constructor() {
                 override fun onFailure(call: Call<String>?, throwable: Throwable?) {
                     call?.cancel()
                     callback.fail(throwable?.message, reqCode)
-                    Log.d(TAG, "请求失败：${throwable?.message}")
+                    L.d(TAG, "请求失败：${throwable?.message}")
                 }
 
                 override fun onResponse(call: Call<String>?, response: retrofit2.Response<String>) {
                     if (response.isSuccessful) {
-                        Log.d(TAG, "请求成功：${response.body()}")
+                        L.d(TAG, "请求成功：${response.body()}")
                         callback.success(response.body(), reqCode)
                     } else {
-                        Log.d(TAG, "请求成功：${response.errorBody()}")
+                        L.d(TAG, "请求成功：${response.errorBody()}")
                         callback.success(response.errorBody().string(), reqCode)
                     }
                 }

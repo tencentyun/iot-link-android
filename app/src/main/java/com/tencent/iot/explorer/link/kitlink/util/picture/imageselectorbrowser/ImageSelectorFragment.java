@@ -34,6 +34,7 @@ import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import com.tencent.iot.explorer.link.R;
+import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.ImageSelectorActivity.Mode;
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.FileUtils;
@@ -365,7 +366,7 @@ public class ImageSelectorFragment extends Fragment implements OnClickListener{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // 相机拍照完成后，返回图片路径
-        Log.e("*********拍照返回的图片",mTmpPath + "    --");
+        L.INSTANCE.d(mTmpPath);
         if(requestCode == REQUEST_CAMERA){
             if (mTmpFile == null){
                 mTmpFile = new File(mTmpPath);
@@ -386,7 +387,7 @@ public class ImageSelectorFragment extends Fragment implements OnClickListener{
 
     @SuppressLint("NewApi") @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        Log.d(TAG, "on change");
+        L.INSTANCE.d(TAG, "on change");
 
         if(mFolderPopupWindow != null){
             if(mFolderPopupWindow.isShowing()){
