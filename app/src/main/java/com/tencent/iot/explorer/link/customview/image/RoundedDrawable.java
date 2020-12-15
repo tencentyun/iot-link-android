@@ -22,6 +22,8 @@ import android.widget.ImageView.ScaleType;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
+import com.tencent.iot.explorer.link.core.log.L;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -122,7 +124,7 @@ public class RoundedDrawable extends Drawable {
       drawable.draw(canvas);
     } catch (Exception e) {
       e.printStackTrace();
-      Log.w(TAG, "Failed to create bitmap from drawable!");
+      L.INSTANCE.w(TAG, "Failed to create bitmap from drawable!");
       bitmap = null;
     }
 

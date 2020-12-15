@@ -11,6 +11,7 @@ import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.AppData
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.log.L
 
 
 object BridgeImpl {
@@ -18,9 +19,9 @@ object BridgeImpl {
 
     // h5调用原生方法，不回调
     fun testFormH5(webView: WebView, param: JSONObject, callback: WebCallBack) {
-        Log.d(TAG, "testFormH5")
+        L.d(TAG, "testFormH5")
         val type = param.getString("type")
-        Log.d(TAG, "type: $type")
+        L.d(TAG, "type: $type")
 
         when (type) {
             CommonField.WAY_SOURCE -> T.show(type)
@@ -29,9 +30,9 @@ object BridgeImpl {
 
     // h5调用原生方法，并回调
     fun testFormH5AndBack(webView: WebView, param: JSONObject, callback: WebCallBack) {
-        Log.d(TAG, "testFormH5AndBack")
+        L.d(TAG, "testFormH5AndBack")
         val type = param.getString("type")
-        Log.d(TAG, "type: $type")
+        L.d(TAG, "type: $type")
         val data = JSONObject()
 
         when (type) {
@@ -50,9 +51,9 @@ object BridgeImpl {
 
     // 原生调用h5后回调的原生方法
     fun testH5Func(webView: WebView, param: JSONObject, callback: WebCallBack) {
-        Log.d(TAG, "testH5Func")
+        L.d(TAG, "testH5Func")
         val result = param.getString("result")
-        Log.d(TAG, "testH5Func result=" + result)
+        L.d(TAG, "testH5Func result=" + result)
         T.show(result)
     }
 
