@@ -364,9 +364,9 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
         adapter?.automicList = automicList
         adapter?.notifyDataSetChanged()
         if (adapter?.list == null || adapter?.list?.size == 0) {
-            layout_no_data.visibility = View.VISIBLE
+            if (layout_no_data != null) layout_no_data.visibility = View.VISIBLE
         } else {
-            layout_no_data.visibility = View.GONE
+            if (layout_no_data != null) layout_no_data.visibility = View.GONE
         }
     }
 
