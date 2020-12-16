@@ -12,14 +12,15 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
+import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import kotlinx.android.synthetic.main.activity_product_introducation.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class ProductIntroduceActivity : BaseActivity(), MyCallback {
     private var config: ProdConfigDetailEntity? = null
     private var productId = ""
-    private var handler = Handler()
 
     override fun getContentView(): Int {
         return R.layout.activity_product_introducation
@@ -27,13 +28,19 @@ class ProductIntroduceActivity : BaseActivity(), MyCallback {
 
     override fun initView() {
         tv_title.setText(getString(R.string.bind_dev))
-        loadRemoteRes()
+        productId = intent.getStringExtra(CommonField.EXTRA_INFO)
+        HttpRequest.instance.getProductsConfig(arrayListOf(productId), this)
     }
 
-    private fun loadRemoteRes() {
-        var extra = intent.getStringExtra(CommonField.EXTRA_INFO)
-        config = JSONObject.parseObject(extra, ProdConfigDetailEntity::class.java)
-        var productGlobal = JSONObject.parseObject(config?.Global, ProductGlobal::class.java)
+    private fun loadRemoteRes(productGlobalStr: String) {
+        var productGlobal = JSON.parseObject(productGlobalStr, ProductGlobal::class.java)
+        if (productGlobal == null) {
+            productGlobal = ProductGlobal()
+        }
+        loadRemoteRes(productGlobal)
+    }
+
+    private fun loadRemoteRes(productGlobal: ProductGlobal) {
 
         if (TextUtils.isEmpty(productGlobal.IconUrlAdvertise)) {
             iv_product_intrduce?.setImageResource(R.mipmap.product_intrduce)
@@ -49,14 +56,6 @@ class ProductIntroduceActivity : BaseActivity(), MyCallback {
             tv_use_tip.setText(productGlobal.addDeviceHintMsg)
         }
 
-        if (!TextUtils.isEmpty(config?.profile)) {
-            var jsonProFile = JSON.parseObject(config?.profile)
-            if (jsonProFile != null && jsonProFile.containsKey("ProductId") &&
-                !TextUtils.isEmpty(jsonProFile.getString("ProductId"))) {
-                productId = jsonProFile.getString("ProductId")
-            }
-        }
-
         HttpRequest.instance.deviceProducts(arrayListOf(productId), this)
     }
 
@@ -67,8 +66,9 @@ class ProductIntroduceActivity : BaseActivity(), MyCallback {
 
     private fun configNet4Dev() {
 
-        val wifiConfigTypeList = config!!.WifiConfTypeList
+        if (config == null || config!!.WifiConfTypeList == null) return
 
+        val wifiConfigTypeList = config!!.WifiConfTypeList
         if (wifiConfigTypeList.equals("{}") || TextUtils.isEmpty(wifiConfigTypeList)) {
             SmartConfigStepActivity.startActivityWithExtra(this@ProductIntroduceActivity, productId)
 
@@ -92,23 +92,31 @@ class ProductIntroduceActivity : BaseActivity(), MyCallback {
             return
         }
 
-        if (!TextUtils.isEmpty(response.data.toString())) {
-            var products = JSON.parseObject(response.data.toString(), ProductsEntity::class.java)
-            if (products == null || products.Products == null) return
-
-            for (i in 0 until products!!.Products!!.size) {
-                var productEntity = JSON.parseObject(products!!.Products!!.getString(i), ProductEntity::class.java)
-                if (productEntity.ProductId == productId) { // 匹配到 productId 一致的数据，则显示返回的产品名
-                    handler.post {
-                        tv_product_name.setText(productEntity.Name)
+        when(reqCode) {
+            RequestCode.get_products_config -> {
+                response.parse(ProductsConfigResponse::class.java)?.run {
+                    config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
+                    if (config != null) {
+                        loadRemoteRes(config!!.Global)
                     }
-                    return
                 }
             }
 
-            // 没有找到对应 productId 的产品名，显示默认信息
-            handler.post {
-                tv_product_name.setText(R.string.default_product_name)
+            RequestCode.device_product -> {
+                if (!TextUtils.isEmpty(response.data.toString())) {
+                    var products = JSON.parseObject(response.data.toString(), ProductsEntity::class.java)
+                    if (products == null || products.Products == null) return
+
+                    for (i in 0 until products!!.Products!!.size) {
+                        var productEntity = JSON.parseObject(products!!.Products!!.getString(i), ProductEntity::class.java)
+                        if (productEntity.ProductId == productId) { // 匹配到 productId 一致的数据，则显示返回的产品名
+                            tv_product_name.setText(productEntity.Name)
+                            return
+                        }
+                    }
+
+                    tv_product_name.setText(R.string.default_product_name)
+                }
             }
         }
     }
