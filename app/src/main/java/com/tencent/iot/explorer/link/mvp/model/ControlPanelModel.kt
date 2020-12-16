@@ -8,6 +8,7 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.*
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_AUDIO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_VIDEO_CALL_STATUS
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst.USERID
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
@@ -17,6 +18,7 @@ import com.tencent.iot.explorer.link.core.auth.response.DeviceProductResponse
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.response.UserSettingResponse
@@ -134,7 +136,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
      */
     fun controlDevice(id: String, value: String) {
         L.d("上报数据:id=$id value=$value")
-        val data = if (isCovertInt(value)) {
+        var data = if (isCovertInt(value)) {
             "{\"$id\":$value}"
         } else {
             "{\"$id\":\"$value\"}"
@@ -142,6 +144,8 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         if (id == TRTC_VIDEO_CALL_STATUS || id == TRTC_AUDIO_CALL_STATUS) { //如果点击选择的是trtc设备的呼叫状态
             if (value == "1") { //并且状态值为1，代表应用正在call设备
                 App.data.callingDeviceId = "$productId/$deviceName" //保存下设备id（productId/deviceName）
+                val userId = SharePreferenceUtil.getString(App.activity, App.CONFIG, CommonField.USER_ID)
+                data = "{\"$id\":$value, \"$USERID\":\"$userId\"}"
             }
         }
         HttpRequest.instance.controlDevice(productId, deviceName, data, this)
