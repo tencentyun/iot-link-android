@@ -391,6 +391,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 if (payloadParamsJson.has(MessageConst.USERID)) {
                     deviceId = payloadParamsJson.getString(MessageConst.USERID)
                 }
+                deviceId = payload.deviceId
 
                 // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
                 if (videoCallStatus == 1) {
