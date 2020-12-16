@@ -239,9 +239,15 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                         }
                         contains("page=adddevice") && contains("productId") -> {
                             var productid = Utils.getUrlParamValue(this, "productId")
-                            val productsList  = arrayListOf<String>()
+                            val productsList = arrayListOf<String>()
                             productsList.add(productid!!)
-                            HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
+                            if (contains("preview=1")) {
+                                var intent = Intent(this@DeviceCategoryActivity, ProductIntroduceActivity::class.java)
+                                intent.putExtra(CommonField.EXTRA_INFO, productid)
+                                startActivity(intent)
+                            } else {
+                                HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
+                            }
 
                         }
                         contains("hmacsha") && contains(";") -> { //蓝牙签名绑定 的设备
@@ -268,12 +274,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 response.parse(ProductsConfigResponse::class.java)?.run {
                     val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
                     val wifiConfigTypeList = config.WifiConfTypeList
-                    if (ProductGlobal.isProductGlobalLegal(config.Global)) {
-                        var intent = Intent(this@DeviceCategoryActivity, ProductIntroduceActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_INFO, Data[0].Config)
-                        startActivity(intent)
-                        return@run
-                    }
                     var productId = ""
                     if (!TextUtils.isEmpty(config.profile)) {
                         var jsonProFile = JSON.parseObject(config.profile)
