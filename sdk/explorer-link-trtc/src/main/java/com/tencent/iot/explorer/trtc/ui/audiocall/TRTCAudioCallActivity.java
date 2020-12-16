@@ -137,6 +137,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
                     }
+                    removeCallbackAndFinish();
                 }
             });
         }
