@@ -395,9 +395,9 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
 
                 // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
                 if (videoCallStatus == 1) {
-                    startBeingCall(2, deviceId)
+                    startBeingCall(TRTCCalling.TYPE_VIDEO_CALL, deviceId)
                 } else if (audioCallStatus == 1) {
-                    startBeingCall(1, deviceId)
+                    startBeingCall(TRTCCalling.TYPE_AUDIO_CALL, deviceId)
                 }
             }
         }
