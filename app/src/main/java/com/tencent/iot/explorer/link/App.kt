@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.widget.Toast
 import androidx.multidex.MultiDex
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
@@ -391,6 +392,19 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 if (payloadParamsJson.has(MessageConst.USERID)) {
                     deviceId = payloadParamsJson.getString(MessageConst.USERID)
                 }
+
+                // 判断主动呼叫的回调中收到的_sys_userid不为自己的userid则被其他用户抢先呼叫设备了，提示用户 对方正忙...
+                val userId = SharePreferenceUtil.getString(activity, App.CONFIG, CommonField.USER_ID)
+                if (App.data.callingDeviceId != "" && !deviceId.equals(userId)) {
+                    if (TRTCUIManager.getInstance().isCalling) { //当前正显示音视频通话页面，finish掉
+                        TRTCUIManager.getInstance().exitRoom()
+                        activity?.runOnUiThread {
+                            Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                        }
+                        return
+                    }
+                }
+                
                 deviceId = payload.deviceId
 
                 // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
@@ -398,6 +412,8 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                     startBeingCall(TRTCCalling.TYPE_VIDEO_CALL, deviceId)
                 } else if (audioCallStatus == 1) {
                     startBeingCall(TRTCCalling.TYPE_AUDIO_CALL, deviceId)
+                } else if (videoCallStatus == 0 || audioCallStatus == 0) { //空闲或拒绝了，当前正显示音视频通话页面的话，finish掉
+                    TRTCUIManager.getInstance().exitRoom()
                 }
             }
         }
