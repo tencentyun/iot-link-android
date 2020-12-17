@@ -324,7 +324,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     }
 
     private void removeCallbackAndFinish() {
-
+        mTRTCCalling.exitRoom();
         finish();
         TRTCUIManager.getInstance().isCalling = false;
         TRTCUIManager.getInstance().removeCallingParamsCallback();
@@ -444,7 +444,6 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                mTRTCCalling.reject();
-                mTRTCCalling.exitRoom();
                 removeCallbackAndFinish();
             }
         });
@@ -476,7 +475,6 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                mTRTCCalling.hangup();
-                mTRTCCalling.exitRoom();
                 removeCallbackAndFinish();
             }
         });
