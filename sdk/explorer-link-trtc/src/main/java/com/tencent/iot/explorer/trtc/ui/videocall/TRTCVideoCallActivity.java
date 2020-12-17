@@ -331,6 +331,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     }
 
     private void stopCameraAndFinish() {
+        mTRTCCalling.exitRoom();
         mTRTCCalling.closeCamera();
 //        mTRTCCalling.removeDelegate(mTRTCCallingDelegate);
         finish();
@@ -468,14 +469,13 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                mTRTCCalling.reject();
-                mTRTCCalling.exitRoom();
                 stopCameraAndFinish();
             }
         });
         mDialingLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TRTCUIManager.getInstance().didAcceptJoinRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
+                TRTCUIManager.getInstance().didAcceptJoinRoom(TRTCCalling.TYPE_VIDEO_CALL, mSponsorUserInfo.getUserId());
             }
         });
         //4. 展示其他用户界面
