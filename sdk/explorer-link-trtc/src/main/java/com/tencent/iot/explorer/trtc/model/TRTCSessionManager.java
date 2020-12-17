@@ -6,4 +6,8 @@ public class TRTCSessionManager {
 
     }
 
+    public void exitRoom(Integer callingType, String deviceId) {
+
+    }
+
 }

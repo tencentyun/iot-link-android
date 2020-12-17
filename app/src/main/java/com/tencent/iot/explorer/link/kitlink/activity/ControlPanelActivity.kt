@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
@@ -249,16 +250,43 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     }
 
     /**
+     * 检查设备TRTC状态是否空闲
+     */
+    fun checkTRTCCallStatusIsBusy() : Boolean {
+        var audioCallStatus = "0";
+        var videoCallStatus = "0";
+        presenter.model!!.devicePropertyList.forEach {
+            if (it.id == MessageConst.TRTC_AUDIO_CALL_STATUS) {
+                audioCallStatus = it.getValue()
+            }
+            if (it.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
+                videoCallStatus = it.getValue()
+            }
+        }
+        if (audioCallStatus != "0" || videoCallStatus != "0") { //表示设备不在空闲状态，提示用户 对方正忙...
+            Toast.makeText(this, "对方正忙...", Toast.LENGTH_LONG).show()
+            return true
+        }
+        return false
+    }
+
+    /**
      * 显示枚举弹框
      */
     fun showEnumPopup(entity: DevicePropertyEntity) {
         //特殊处理，当设备为trtc设备时。虽然call_status是枚举类型，但产品要求不弹弹窗，点击即拨打语音或视频通话。
         if (entity.id == MessageConst.TRTC_AUDIO_CALL_STATUS) {
+            if (checkTRTCCallStatusIsBusy()) {
+                return
+            }
             controlDevice(entity.id, "1")
             TRTCUIManager.getInstance().isCalling = true
             TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
             return
         } else if (entity.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
+            if (checkTRTCCallStatusIsBusy()) {
+                return
+            }
             controlDevice(entity.id, "1")
             TRTCUIManager.getInstance().isCalling = true
             TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
