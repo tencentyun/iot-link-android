@@ -21,6 +21,11 @@ class TRTCAppSessionManager : TRTCSessionManager() {
         startBeingCall(callingType, deviceId)
     }
 
+    override fun exitRoom(callingType: Int, deviceId: String) {
+        super.exitRoom(callingType, deviceId)
+
+    }
+
     /**
      * 呼叫设备获取trtc参数信息
      */
