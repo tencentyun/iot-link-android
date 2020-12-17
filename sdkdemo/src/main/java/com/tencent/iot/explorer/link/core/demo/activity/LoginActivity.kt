@@ -40,6 +40,9 @@ class LoginActivity : BaseActivity(), LoginCallback {
         btn_to_forgot.setOnClickListener {
             jumpActivity(ForgotPasswordActivity::class.java)
         }
+        tv_config_net.setOnClickListener {
+            jumpActivity(ConfigNetActivity::class.java)
+        }
     }
 
     private fun login() {
