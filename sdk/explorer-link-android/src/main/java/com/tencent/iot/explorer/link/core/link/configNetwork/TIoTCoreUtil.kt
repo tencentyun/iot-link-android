@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.link.configNetwork
 
+import android.content.Context
 import android.graphics.Bitmap
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
@@ -7,9 +8,19 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
+import com.tencent.iot.explorer.link.core.auth.http.Reconnect
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.LinkTask
+import com.tencent.iot.explorer.link.core.link.entity.SoftAPStep
+import com.tencent.iot.explorer.link.core.link.listener.SoftAPConfigNetListener
+import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
+import com.tencent.iot.explorer.link.core.link.service.SoftAPService
 import java.util.*
 
 class TIoTCoreUtil {
+
+    var softAPService: SoftAPService? = null
+    var softAPConfigNetListener: SoftAPConfigNetListener? = null
 
     fun generateQrCodeWithConfig(qrcodeConfig: QrcodeConfig): Bitmap? {
         if (qrcodeConfig.height <= 0 || qrcodeConfig.width <= 0) {
@@ -42,5 +53,46 @@ class TIoTCoreUtil {
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
         return bitmap
     }
+
+    fun configNetBySoftAp(context: Context, task: LinkTask, listener: SoftAPConfigNetListener) {
+        softAPConfigNetListener = listener
+        if (context == null) {
+            if (softAPConfigNetListener != null) {
+                softAPConfigNetListener!!.onFail("error", "context is null")
+            }
+            return
+        }
+        softAPService = SoftAPService(context)
+        softAPService?.startConnect(task, softAPListener)
+    }
+
+    private val softAPListener = object : SoftAPListener {
+        override fun onSuccess(deviceInfo: DeviceInfo) {
+            if (softAPConfigNetListener != null) {
+                softAPConfigNetListener!!.onSuccess()
+            }
+        }
+
+        override fun onFail(code: String, msg: String) {
+            if (softAPConfigNetListener != null) {
+                softAPConfigNetListener!!.onFail(code, msg)
+            }
+        }
+
+        override fun reconnectedSuccess(deviceInfo: DeviceInfo) {
+            if (softAPConfigNetListener != null) {
+                softAPConfigNetListener!!.reconnectedSuccess()
+            }
+        }
+
+        override fun reconnectedFail(deviceInfo: DeviceInfo, ssid: String) {
+            if (softAPConfigNetListener != null) {
+                softAPConfigNetListener!!.reconnectedFail()
+            }
+        }
+
+        override fun onStep(step: SoftAPStep) {}
+    }
+
 
 }
