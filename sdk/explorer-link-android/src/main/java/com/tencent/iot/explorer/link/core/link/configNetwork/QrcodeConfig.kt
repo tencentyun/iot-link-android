@@ -1,10 +1,6 @@
 package com.tencent.iot.explorer.link.core.link.configNetwork
 
-class QrcodeConfig {
-    var ssid = ""
-    var bssid = ""
-    var wifiPwd = ""
-    var token = ""
+class QrcodeConfig: ConfigNetConfig() {
     var width = 200  // 默认位图宽度
     var height = 200  // 默认位图高度
 }

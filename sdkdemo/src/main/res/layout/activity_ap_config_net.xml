@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditText
+        android:id="@+id/ev_wifi_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ssid"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/ev_bssid_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="bssid"
+        app:layout_constraintTop_toBottomOf="@id/ev_wifi_name"
+        />
+
+    <EditText
+        android:id="@+id/ev_wifi_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="wifi 密码"
+        app:layout_constraintTop_toBottomOf="@id/ev_bssid_name"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ev_token"
+        android:hint="配网 token"
+        app:layout_constraintTop_toBottomOf="@id/ev_wifi_pwd"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ev_token"
+        android:id="@+id/btn_start_config_net"
+        android:text="开始配网"
+        />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/btn_start_config_net"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/tv_status"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
