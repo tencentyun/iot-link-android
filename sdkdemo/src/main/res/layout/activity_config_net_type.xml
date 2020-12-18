@@ -14,4 +14,14 @@
         android:text="二维码配网"
         />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_ap_config_net"
+        app:layout_constraintTop_toBottomOf="@id/tv_qrcode_config_net"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="ap 配网"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

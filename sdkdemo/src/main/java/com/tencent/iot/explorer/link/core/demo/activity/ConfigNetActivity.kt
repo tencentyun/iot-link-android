@@ -17,6 +17,10 @@ class ConfigNetActivity : BaseActivity() {
         tv_qrcode_config_net.setOnClickListener{
             jumpActivity(QrcodeConfigNetActivity::class.java)
         }
+
+        tv_ap_config_net.setOnClickListener {
+            jumpActivity(ApConfigNetActivity::class.java)
+        }
     }
 
 }
