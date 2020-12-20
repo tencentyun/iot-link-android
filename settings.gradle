@@ -1,4 +1,4 @@
 include ':sdk:explorer-link-video'
 include ':app', 'sdk:explorer-link-android'
 include ':sdkdemo'
-include 'sdk:explorer-link-trtc'
+include 'sdk:explorer-link-rtc'
