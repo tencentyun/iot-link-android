@@ -76,11 +76,11 @@ publishing {
     publications {
         aar(MavenPublication) {
             groupId 'com.tencent.iot.explorer'
-            artifactId 'explorer-link-trtc'
+            artifactId 'explorer-link-rtc'
             version libVersion
             artifact(androidSourcesJar)
             artifact(androidJavadocsJar)
-            artifact file('build/outputs/aar/explorer-link-trtc-release.aar')
+            artifact file('build/outputs/aar/explorer-link-rtc-release.aar')
 
             pom {
                 name = 'explorer link trtc'
