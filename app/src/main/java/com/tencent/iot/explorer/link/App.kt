@@ -114,9 +114,11 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
 
                 if (callingType == TRTCCalling.TYPE_VIDEO_CALL) {
                     TRTCUIManager.getInstance().isCalling = true
+                    TRTCUIManager.getInstance().deviceId = deviceId
                     TRTCVideoCallActivity.startBeingCall(activity, RoomKey(), deviceId)
                 } else if (callingType == TRTCCalling.TYPE_AUDIO_CALL) {
                     TRTCUIManager.getInstance().isCalling = true
+                    TRTCUIManager.getInstance().deviceId = deviceId
                     TRTCAudioCallActivity.startBeingCall(activity, RoomKey(), deviceId)
                 }
             }
@@ -413,7 +415,9 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 } else if (audioCallStatus == 1) {
                     startBeingCall(TRTCCalling.TYPE_AUDIO_CALL, deviceId)
                 } else if (videoCallStatus == 0 || audioCallStatus == 0) { //空闲或拒绝了，当前正显示音视频通话页面的话，finish掉
-                    TRTCUIManager.getInstance().exitRoom()
+                    if (TRTCUIManager.getInstance().deviceId == deviceId) {
+                        TRTCUIManager.getInstance().exitRoom()
+                    }
                 }
             }
         }
