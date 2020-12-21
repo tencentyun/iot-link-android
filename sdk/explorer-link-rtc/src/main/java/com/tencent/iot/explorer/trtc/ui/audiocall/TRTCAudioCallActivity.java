@@ -332,6 +332,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         mTRTCCalling.exitRoom();
         finish();
         TRTCUIManager.getInstance().isCalling = false;
+        TRTCUIManager.getInstance().deviceId = "";
         TRTCUIManager.getInstance().removeCallingParamsCallback();
     }
 
