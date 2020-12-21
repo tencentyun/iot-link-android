@@ -10,6 +10,8 @@ public class TRTCUIManager {
 
     public Boolean isCalling = false;
 
+    public String deviceId = "";
+
     public synchronized static TRTCUIManager getInstance() {
         if (instance == null) {
             instance = new TRTCUIManager();
