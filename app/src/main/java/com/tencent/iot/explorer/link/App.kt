@@ -114,9 +114,11 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
 
                 if (callingType == TRTCCalling.TYPE_VIDEO_CALL) {
                     TRTCUIManager.getInstance().isCalling = true
+                    TRTCUIManager.getInstance().deviceId = deviceId
                     TRTCVideoCallActivity.startBeingCall(activity, RoomKey(), deviceId)
                 } else if (callingType == TRTCCalling.TYPE_AUDIO_CALL) {
                     TRTCUIManager.getInstance().isCalling = true
+                    TRTCUIManager.getInstance().deviceId = deviceId
                     TRTCAudioCallActivity.startBeingCall(activity, RoomKey(), deviceId)
                 }
             }
@@ -375,7 +377,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         if (action == MessageConst.DEVICE_CHANGE) { //收到了设备属性改变的wss消息
             var paramsObject = jsonObject.getJSONObject(MessageConst.PARAM) as org.json.JSONObject
             val subType = paramsObject.getString(MessageConst.SUB_TYPE)
-            if (subType == MessageConst.REPORT) { //收到了设备端属性状态改变的wss消息
+            if (subType == MessageConst.REPORT) { //收到了设备端上报的属性状态改变的wss消息
 
                 var payloadParamsObject = org.json.JSONObject(payload.payload)
                 val payloadParamsJson = payloadParamsObject.getJSONObject(MessageConst.PARAM)
@@ -395,13 +397,22 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
 
                 // 判断主动呼叫的回调中收到的_sys_userid不为自己的userid则被其他用户抢先呼叫设备了，提示用户 对方正忙...
                 val userId = SharePreferenceUtil.getString(activity, App.CONFIG, CommonField.USER_ID)
-                if (App.data.callingDeviceId != "" && !deviceId.equals(userId)) {
+                if (App.data.callingDeviceId != "" && deviceId != userId) {
                     if (TRTCUIManager.getInstance().isCalling) { //当前正显示音视频通话页面，finish掉
                         TRTCUIManager.getInstance().exitRoom()
                         activity?.runOnUiThread {
                             Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
                         }
                         return
+                    }
+                }
+
+                // 判断被动呼叫时，已经被一台设备呼叫，又接到其他设备的呼叫请求，则调用AppControldeviceData拒绝其他设备的请求
+                if (App.data.callingDeviceId == "" && TRTCUIManager.getInstance().isCalling) {
+                    if (videoCallStatus != -1) {
+                        controlDevice(MessageConst.TRTC_VIDEO_CALL_STATUS, "0", payload.deviceId)
+                    } else if (audioCallStatus != -1) {
+                        controlDevice(MessageConst.TRTC_AUDIO_CALL_STATUS, "0", payload.deviceId)
                     }
                 }
                 
@@ -413,10 +424,43 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 } else if (audioCallStatus == 1) {
                     startBeingCall(TRTCCalling.TYPE_AUDIO_CALL, deviceId)
                 } else if (videoCallStatus == 0 || audioCallStatus == 0) { //空闲或拒绝了，当前正显示音视频通话页面的话，finish掉
-                    TRTCUIManager.getInstance().exitRoom()
+                    if (TRTCUIManager.getInstance().deviceId == deviceId) {
+                        TRTCUIManager.getInstance().exitRoom()
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * 用户控制设备(上报数据)
+     */
+    fun controlDevice(id: String, value: String, deviceId: String) {
+
+        val list = deviceId.split("/")
+
+        var productId = ""
+        var deviceName = ""
+        if (list.size == 2) {
+            productId = list[0]
+            deviceName = list[1]
+        } else { //deviceId格式有问题
+            return
+        }
+
+        L.d("上报数据:id=$id value=$value")
+        val userId = SharePreferenceUtil.getString(activity, CONFIG, CommonField.USER_ID)
+        var data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\"}"
+        HttpRequest.instance.controlDevice(productId, deviceName, data, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+
+            }
+
+        })
     }
 }
 
