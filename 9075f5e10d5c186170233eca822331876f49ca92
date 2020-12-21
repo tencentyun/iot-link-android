@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c8c19f2_ba225343",
+        "filename": "sdk/explorer-link-android/src/main/java/com/tencent/iot/explorer/link/core/link/configNetwork/TIoTCoreUtil.kt",
+        "patchSetId": 5
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-21T03:19:36Z",
+      "side": 1,
+      "message": "!!  -- \u003e ？",
+      "range": {
+        "startLine": 71,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 13
+      },
+      "revId": "9075f5e10d5c186170233eca822331876f49ca92",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
