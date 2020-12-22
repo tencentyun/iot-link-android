@@ -44,4 +44,10 @@ public class TRTCUIManager {
             callingParamsCallback.exitRoom();
         }
     }
+
+    public void userBusy() {
+        if (callingParamsCallback != null) {
+            callingParamsCallback.userBusy();
+        }
+    }
 }
