@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 用于展示语音通话的主界面，通话的接听和拒绝就是在这个界面中完成的。
@@ -113,6 +116,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                     if (layout != null) {
                         layout.stopLoading();
                     } else {
+                        TRTCUIManager.getInstance().otherEnterRoom = true;
                         UserInfo model = new UserInfo();
                         model.setUserId(userId);
                         model.userName = userId;
@@ -288,6 +292,42 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 //        context.startActivity(starter);
 //    }
 
+    private void checkoutOtherIsEnterRoom15seconds() {
+        TimerTask task = new TimerTask(){
+            public void run(){
+                if (!TRTCUIManager.getInstance().otherEnterRoom) { //自己已进入房间15秒内对方没有进入房间 则显示对方已挂断，并主动退出
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "对方已挂断", Toast.LENGTH_LONG).show();
+                            removeCallbackAndFinish();
+                        }
+                    });
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 15000);
+    }
+
+    private void checkoutOtherIsEnterRoom60seconds() {
+        TimerTask task = new TimerTask(){
+            public void run(){
+                if (!TRTCUIManager.getInstance().enterRoom) { //呼叫了60秒，对方未接听 显示对方无人接听，并退出
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "对方无人接听", Toast.LENGTH_LONG).show();
+                            removeCallbackAndFinish();
+                        }
+                    });
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 60000);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -306,7 +346,11 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 //2.接听电话
 //                mTRTCCalling.accept();
                 mTRTCCalling.enterTRTCRoom(roomKey);
+                if (roomKey != null) {
+                    TRTCUIManager.getInstance().enterRoom = true;
+                }
                 showCallingView();
+                checkoutOtherIsEnterRoom15seconds();
             }
 
             @Override
@@ -318,6 +362,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         initView();
         initData();
         initListener();
+        checkoutOtherIsEnterRoom60seconds();
     }
 
     @Override
@@ -332,6 +377,8 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         mTRTCCalling.exitRoom();
         finish();
         TRTCUIManager.getInstance().isCalling = false;
+        TRTCUIManager.getInstance().enterRoom = false;
+        TRTCUIManager.getInstance().otherEnterRoom = false;
         TRTCUIManager.getInstance().deviceId = "";
         TRTCUIManager.getInstance().removeCallingParamsCallback();
     }
