@@ -395,6 +395,10 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                     deviceId = payloadParamsJson.getString(MessageConst.USERID)
                 }
 
+                if (audioCallStatus == 0 || videoCallStatus == 0) {
+                    data.callingDeviceId = ""
+                }
+
                 // 判断主动呼叫的回调中收到的_sys_userid不为自己的userid则被其他用户抢先呼叫设备了，提示用户 对方正忙...
                 val userId = SharePreferenceUtil.getString(activity, App.CONFIG, CommonField.USER_ID)
                 if (App.data.callingDeviceId != "" && deviceId != userId) {
