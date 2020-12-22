@@ -3,6 +3,11 @@
     <string name="trtccalling_tips_start_call">"点击上方按钮发起呼叫"</string>
     <string name="trtccalling_dialed_is_busy">"正在通话中..."</string>
     <string name="trtccalling_waiting_to_hear">"等待接听中..."</string>
+    <string name="trtccalling_waiting_to_hear_audio">"语音呼叫中..."</string>
+    <string name="trtccalling_dialed_is_busy_audio">"语音通话中..."</string>
+    <string name="trtccalling_customer_hand_up">"对方已挂断..."</string>
+    <string name="trtccalling_customer_no_resp">"对方无人接听..."</string>
+    <string name="trtccalling_customer_busy">"对方正忙..."</string>
     <string name="trtccalling_call_time_default">"00:01"</string>
     <string name="trtccalling_contact_default_name">"测试123"</string>
     <string name="trtccalling_invite_video_call">"邀请您进行视频通话..."</string>
