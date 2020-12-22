@@ -6,7 +6,7 @@ import java.net.DatagramSocket
 
 open class ConfigService {
     var host = ""
-    val port = 8266
+    var port = 8266
     var socket: DatagramSocket? = null
 
     //第一步发送 wifi 信息到设备
