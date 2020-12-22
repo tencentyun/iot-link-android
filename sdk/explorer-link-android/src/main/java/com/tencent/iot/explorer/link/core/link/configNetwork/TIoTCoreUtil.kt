@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.link.configNetwork
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.google.zxing.BarcodeFormat
@@ -21,6 +22,7 @@ class TIoTCoreUtil {
 
     var softAPService: SoftAPService? = null
     var softAPConfigNetListener: SoftAPConfigNetListener? = null
+    var port = 8266
 
     fun generateQrCodeWithConfig(qrcodeConfig: QrcodeConfig): Bitmap? {
         if (qrcodeConfig.height <= 0 || qrcodeConfig.width <= 0) {
@@ -60,7 +62,11 @@ class TIoTCoreUtil {
             softAPConfigNetListener?.onFail("error", "context is null")
             return
         }
-        softAPService = SoftAPService(context)
+        if (softAPService == null || softAPService?.port != port) {
+            softAPService?.socket?.close()
+            softAPService?.port = port
+            softAPService = SoftAPService(context)
+        }
         softAPService?.startConnect(task, softAPListener)
     }
 

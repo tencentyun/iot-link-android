@@ -5,11 +5,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditText
+        android:id="@+id/tv_port"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="端口"
+        android:text="8266"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <EditText
         android:id="@+id/ev_wifi_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="ssid"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_port"
         />
 
     <EditText
