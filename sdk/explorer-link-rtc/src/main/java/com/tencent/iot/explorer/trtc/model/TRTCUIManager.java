@@ -10,6 +10,10 @@ public class TRTCUIManager {
 
     public Boolean isCalling = false;
 
+    public Boolean enterRoom = false;  //对方进入房间标识
+
+    public Boolean otherEnterRoom = false;  //对方进入房间标识
+
     public String deviceId = "";
 
     public synchronized static TRTCUIManager getInstance() {
