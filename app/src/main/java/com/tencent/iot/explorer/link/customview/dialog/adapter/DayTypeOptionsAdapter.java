@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.T;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -104,7 +103,7 @@ public class DayTypeOptionsAdapter extends RecyclerView.Adapter<DayTypeOptionsAd
             holder.option.setBackgroundResource(R.drawable.background_bule_rounded_cell);
             holder.option.setTextColor(T.getContext().getResources().getColor(R.color.complete_progress));
         } else {
-            holder.option.setBackgroundResource(R.drawable.background_grey_rounded_cell);
+            holder.option.setBackgroundResource(R.drawable.background_grey_rounded_bg);
             holder.option.setTextColor(T.getContext().getResources().getColor(R.color.black));
         }
     }

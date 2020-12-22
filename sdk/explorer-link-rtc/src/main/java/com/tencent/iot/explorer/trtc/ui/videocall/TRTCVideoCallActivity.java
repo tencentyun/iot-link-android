@@ -320,6 +320,11 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             public void exitRoom() {
                 stopCameraAndFinish();
             }
+
+            @Override
+            public void userBusy() {
+
+            }
         });
 
         initView();
