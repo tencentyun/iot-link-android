@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.os.Handler
+import android.text.TextUtils
+import android.util.Log
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.link.configNetwork.TIoTCoreUtil
 import com.tencent.iot.explorer.link.core.link.entity.LinkTask
@@ -14,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_qrcode_config_net.ev_wifi_pwd
 class ApConfigNetActivity : BaseActivity() {
 
     var handler = Handler()
+    var tIoTCoreUtil = TIoTCoreUtil()
 
     override fun getContentView(): Int {
         return R.layout.activity_ap_config_net
@@ -25,7 +28,10 @@ class ApConfigNetActivity : BaseActivity() {
     override fun setListener() {
         btn_start_config_net.setOnClickListener {
             Thread(Runnable {
-                var tIoTCoreUtil = TIoTCoreUtil()
+                if (!TextUtils.isEmpty(tv_port.text.toString()) && TextUtils.isDigitsOnly(tv_port.text.toString())) {
+                    tIoTCoreUtil.port = tv_port.text.toString().toInt()
+                }
+
                 var task = LinkTask()
                 task.mSsid = ev_wifi_name.text.toString()
                 task.mBssid = ev_bssid_name.text.toString()
