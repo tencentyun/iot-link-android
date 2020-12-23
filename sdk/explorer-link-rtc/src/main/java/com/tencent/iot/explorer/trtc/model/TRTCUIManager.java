@@ -35,6 +35,10 @@ public class TRTCUIManager {
         sessionManager.joinRoom(callingType, deviceId);
     }
 
+    public void refuseEnterRoom(Integer callingType, String deviceId) {
+        sessionManager.exitRoom(callingType, deviceId);
+    }
+
     public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {
         if (callingParamsCallback != null) {
             callingParamsCallback.joinRoom(callingType, deviceId, roomKey);
