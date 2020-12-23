@@ -283,6 +283,13 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                         }
                     }
 
+                    if (config != null && !TextUtils.isEmpty(config.Global) && ProductGlobal.isProductGlobalLegal(config.Global)) {
+                        var intent = Intent(this@DeviceCategoryActivity, ProductIntroduceActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_INFO, productId)
+                        startActivity(intent)
+                        return@run
+                    }
+
                     if (wifiConfigTypeList.equals("{}") || TextUtils.isEmpty(wifiConfigTypeList)) {
                         SmartConfigStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
 
