@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2a06a3c6_1b56de69",
+        "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/trtc/ui/audiocall/TRTCAudioCallActivity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-12-23T05:20:36Z",
+      "side": 1,
+      "message": "去掉了TRTCUIManager中的otherEnterRoom和enterRoom。当满足条件对方加入聊天房间或退出页面时取消定时任务。",
+      "parentUuid": "38375f89_28f924de",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 314,
+        "endChar": 5
+      },
+      "revId": "cf6eb72d273f2896ff401c53a77a4fbd7da09771",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1fe302f_0c857a82",
         "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/trtc/ui/audiocall/TRTCAudioCallActivity.java",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "64e95cc0_5afbb554",
+        "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/trtc/ui/audiocall/TRTCAudioCallActivity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-12-23T05:20:36Z",
+      "side": 1,
+      "message": "去掉了TRTCUIManager中的otherEnterRoom和enterRoom。当满足条件自己加入聊天房间或退出页面时取消定时任务。",
+      "parentUuid": "c1fe302f_0c857a82",
+      "range": {
+        "startLine": 316,
+        "startChar": 0,
+        "endLine": 332,
+        "endChar": 5
+      },
+      "revId": "cf6eb72d273f2896ff401c53a77a4fbd7da09771",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1638aac2_14922d44",
         "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/trtc/ui/videocall/TRTCVideoCallActivity.java",
         "patchSetId": 5
@@ -68,6 +116,30 @@
       "revId": "cf6eb72d273f2896ff401c53a77a4fbd7da09771",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b572c6a_7b6b428e",
+        "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/trtc/ui/videocall/TRTCVideoCallActivity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2020-12-23T05:20:36Z",
+      "side": 1,
+      "message": "去掉了TRTCUIManager中的otherEnterRoom和enterRoom。",
+      "parentUuid": "1638aac2_14922d44",
+      "range": {
+        "startLine": 307,
+        "startChar": 0,
+        "endLine": 341,
+        "endChar": 5
+      },
+      "revId": "cf6eb72d273f2896ff401c53a77a4fbd7da09771",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
     }
   ]
 }
