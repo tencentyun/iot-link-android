@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.TRTCAppSessionManager
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.NavBar
@@ -280,6 +281,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
                 return
             }
             controlDevice(entity.id, "1")
+            TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
             TRTCUIManager.getInstance().isCalling = true
             TRTCUIManager.getInstance().deviceId = App.data.callingDeviceId
             TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
@@ -290,6 +292,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
             }
             controlDevice(entity.id, "1")
             TRTCUIManager.getInstance().isCalling = true
+            TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
             TRTCUIManager.getInstance().deviceId = App.data.callingDeviceId
             TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
             return
