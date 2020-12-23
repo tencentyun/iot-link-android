@@ -448,9 +448,9 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         mSelfModel.setUserId(roomKey.getUserId());
 
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
+        mSponsorUserInfo = (UserInfo) intent.getSerializableExtra(PARAM_BEINGCALL_USER);
         if (mCallType == TYPE_BEING_CALLED) {
             // 作为被叫
-            mSponsorUserInfo = (UserInfo) intent.getSerializableExtra(PARAM_BEINGCALL_USER);
             IntentParams params = (IntentParams) intent.getSerializableExtra(PARAM_OTHER_INVITING_USER);
             if (params != null) {
                 mOtherInvitingUserInfoList = params.mUserInfos;
@@ -544,6 +544,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                mTRTCCalling.hangup();
+                TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
                 removeCallbackAndFinish();
             }
         });
