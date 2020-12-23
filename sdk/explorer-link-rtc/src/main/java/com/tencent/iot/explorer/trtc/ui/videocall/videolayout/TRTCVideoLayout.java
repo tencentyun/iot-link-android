@@ -56,7 +56,7 @@ public class TRTCVideoLayout extends RelativeLayout {
             mLayoutNoVideo.setVisibility(GONE);
         } else {
             mTCCloudViewTRTC.setVisibility(GONE);
-            mLayoutNoVideo.setVisibility(VISIBLE);
+            mLayoutNoVideo.setVisibility(GONE);
         }
     }
 
