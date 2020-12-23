@@ -402,6 +402,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 val userId = SharePreferenceUtil.getString(activity, App.CONFIG, CommonField.USER_ID)
                 if (data.callingDeviceId != "" && deviceId != userId) {
                     if (TRTCUIManager.getInstance().isCalling) { //当前正显示音视频通话页面，finish掉
+                        TRTCUIManager.getInstance().userBusy()
                         TRTCUIManager.getInstance().exitRoom()
                         activity?.runOnUiThread {
                             Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
