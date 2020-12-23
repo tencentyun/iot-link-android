@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 
 //import com.blankj.utilcode.util.CollectionUtils;
@@ -98,6 +100,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         public void onError(int code, String msg) {
             //发生了错误，报错并退出该页面
 //            ToastUtils.showLong(getString(R.string.trtccalling_toast_call_error_msg, code, msg));
+            Log.e("XXX", "onError");
             removeCallbackAndFinish();
         }
 
@@ -134,6 +137,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
         @Override
         public void onUserLeave(final String userId) {
+            Log.e("XXX", "onUserLeave userId " + userId);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -144,6 +148,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
                     }
+                    mStatusView.setText(R.string.trtccalling_customer_hand_up);
                     removeCallbackAndFinish();
                 }
             });
@@ -151,6 +156,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
         @Override
         public void onReject(final String userId) {
+            Log.e("XXX", "onReject userId " + userId);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -164,6 +170,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                             mCallUserInfoList.remove(userInfo);
 //                            ToastUtils.showLong(getString(R.string.trtccalling_toast_user_reject_call, userInfo.userName));
                         }
+                        mStatusView.setText(R.string.trtccalling_customer_hand_up);
                         removeCallbackAndFinish();
                     }
                 }
@@ -172,6 +179,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
         @Override
         public void onNoResp(final String userId) {
+            Log.e("XXX", "onNoResp");
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -185,6 +193,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                             mCallUserInfoList.remove(userInfo);
 //                            ToastUtils.showLong(getString(R.string.trtccalling_toast_user_not_response, userInfo.userName));
                         }
+                        mStatusView.setText(R.string.trtccalling_customer_no_resp);
                         removeCallbackAndFinish();
                     }
                 }
@@ -193,6 +202,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
         @Override
         public void onLineBusy(String userId) {
+            Log.e("XXX", "onLineBusy");
             if (mCallUserModelMap.containsKey(userId)) {
                 // 进入无响应环节
                 //1. 回收界面元素
@@ -209,6 +219,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
         @Override
         public void onCallingCancel() {
+            Log.e("XXX", "onCallingCancel");
             if (mSponsorUserInfo != null) {
 //                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_cancel_call, mSponsorUserInfo.userName));
             }
@@ -217,6 +228,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
         @Override
         public void onCallingTimeout() {
+            Log.e("XXX", "onCallingTimeout");
             if (mSponsorUserInfo != null) {
 //                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_timeout, mSponsorUserInfo.userName));
             }
@@ -370,7 +382,24 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
             @Override
             public void exitRoom() {
+                runOnUiThread(new Runnable() {
+                                  @Override
+                                  public void run() {
+                                      mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                                  }
+                              });
+
                 removeCallbackAndFinish();
+            }
+
+            @Override
+            public void userBusy() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStatusView.setText(R.string.trtccalling_customer_busy);
+                    }
+                });
             }
         });
 
@@ -456,7 +485,8 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 mOtherInvitingUserInfoList = params.mUserInfos;
             }
             showWaitingResponseView();
-            mStatusView.setText(mSponsorUserInfo.getUserId()+"邀请您进行语音通话");
+//            mStatusView.setText(mSponsorUserInfo.getUserId()+"邀请您进行语音通话");
+            mStatusView.setText(R.string.trtccalling_customer_calling_audio);
         } else {
             // 主叫方
             if (roomKey != null) {
@@ -574,7 +604,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         });
         showTimeCount();
         hideOtherInvitingUserView();
-        mStatusView.setText(R.string.trtccalling_dialed_is_busy);
+        mStatusView.setText(R.string.trtccalling_dialed_is_busy_audio);
     }
 
     private void showTimeCount() {

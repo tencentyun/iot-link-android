@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -100,19 +101,15 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
      */
     private TRTCCallingDelegate mTRTCCallingDelegate = new TRTCCallingDelegate() {
         @Override
-        public void onError(int code, String msg) {
-            //发生了错误，报错并退出该页面
-//            ToastUtils.showLong(getString(R.string.trtccalling_toast_call_error_msg, code, msg));
+        public void onError(int code, String msg) { //发生了错误，报错并退出该页面
             stopCameraAndFinish();
         }
 
         @Override
-        public void onInvited(String sponsor, List<String> userIdList, boolean isFromGroup, int callType) {
-        }
+        public void onInvited(String sponsor, List<String> userIdList, boolean isFromGroup, int callType) { }
 
         @Override
-        public void onGroupCallInviteeListUpdate(List<String> userIdList) {
-        }
+        public void onGroupCallInviteeListUpdate(List<String> userIdList) { }
 
         @Override
         public void onUserEnter(final String userId) {
@@ -133,7 +130,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                         return;
                     }
                     videoLayout.setVideoAvailable(false);
-                    mStatusView.setText(R.string.trtccalling_dialed_is_busy);
+                    mStatusView.setText(R.string.trtccalling_dialed_is_busy_vedio);
                 }
             });
         }
@@ -150,6 +147,12 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
                     }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                        }
+                    });
                     stopCameraAndFinish();
                 }
             });
@@ -168,7 +171,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                         UserInfo userInfo = mCallUserModelMap.remove(userId);
                         if (userInfo != null) {
                             mCallUserInfoList.remove(userInfo);
-//                            ToastUtils.showLong(getString(R.string.trtccalling_toast_user_reject_call, userInfo.userName));
                         }
                         stopCameraAndFinish();
                     }
@@ -189,7 +191,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                         UserInfo userInfo = mCallUserModelMap.remove(userId);
                         if (userInfo != null) {
                             mCallUserInfoList.remove(userInfo);
-//                            ToastUtils.showLong(getString(R.string.trtccalling_toast_user_not_response, userInfo.userName));
                         }
                         stopCameraAndFinish();
                     }
@@ -207,7 +208,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 UserInfo userInfo = mCallUserModelMap.remove(userId);
                 if (userInfo != null) {
                     mCallUserInfoList.remove(userInfo);
-//                    ToastUtils.showLong(getString(R.string.trtccalling_toast_user_busy, userInfo.userName));
                 }
                 stopCameraAndFinish();
             }
@@ -215,25 +215,16 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
         @Override
         public void onCallingCancel() {
-            if (mSponsorUserInfo != null) {
-//                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_cancel_call, mSponsorUserInfo.userName));
-            }
             stopCameraAndFinish();
         }
 
         @Override
         public void onCallingTimeout() {
-            if (mSponsorUserInfo != null) {
-//                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_timeout, mSponsorUserInfo.userName));
-            }
             stopCameraAndFinish();
         }
 
         @Override
         public void onCallEnd() {
-            if (mSponsorUserInfo != null) {
-//                ToastUtils.showLong(getString(R.string.trtccalling_toast_user_end, mSponsorUserInfo.userName));
-            }
             stopCameraAndFinish();
         }
 
@@ -248,15 +239,11 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 } else {
                     mTRTCCalling.stopRemoteView(userId);
                 }
-            } else {
-
             }
         }
 
         @Override
-        public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
-
-        }
+        public void onUserAudioAvailable(String userId, boolean isVideoAvailable) { }
 
         @Override
         public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
@@ -363,10 +350,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
         TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
             @Override
-            public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {
-                //2.接听电话
-//                mTRTCCalling.accept();
-//                mTRTCCalling.enterTRTCRoom();
+            public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {   //接听电话
                 startInviting(roomKey);
                 if (roomKey != null) {
                     removeIsEnterRoom60secondsTask();
@@ -377,6 +361,23 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
             @Override
             public void exitRoom() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                    }
+                });
+                stopCameraAndFinish();
+            }
+
+            @Override
+            public void userBusy() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStatusView.setText(R.string.trtccalling_customer_busy);
+                    }
+                });
                 stopCameraAndFinish();
             }
         });
@@ -389,7 +390,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        mTRTCCalling.hangup();
         mTRTCCalling.exitRoom();
         stopCameraAndFinish();
         super.onBackPressed();
@@ -398,7 +398,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     private void stopCameraAndFinish() {
         mTRTCCalling.exitRoom();
         mTRTCCalling.closeCamera();
-//        mTRTCCalling.removeDelegate(mTRTCCallingDelegate);
         finish();
         TRTCUIManager.getInstance().isCalling = false;
         TRTCUIManager.getInstance().deviceId = "";
@@ -421,7 +420,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 isMuteMic = !isMuteMic;
                 mTRTCCalling.setMicMute(isMuteMic);
                 mMuteImg.setActivated(isMuteMic);
-//                ToastUtils.showLong(isMuteMic ? R.string.trtccalling_toast_enable_mute : R.string.trtccalling_toast_disable_mute);
             }
         });
         mHandsfreeLl.setOnClickListener(new View.OnClickListener() {
@@ -430,7 +428,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 isHandsFree = !isHandsFree;
                 mTRTCCalling.setHandsFree(isHandsFree);
                 mHandsfreeImg.setActivated(isHandsFree);
-//                ToastUtils.showLong(isHandsFree ? R.string.trtccalling_toast_use_speaker : R.string.trtccalling_toast_use_handset);
             }
         });
         mMuteImg.setActivated(isMuteMic);
@@ -453,7 +450,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mSelfModel = new UserInfo();
         mSelfModel.setUserId(roomKey.getUserId());
         //自己的资料
-//        mSelfModel = (UserInfo) intent.getSerializableExtra(PARAM_SELF_INFO);
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
         mSponsorUserInfo = (UserInfo) intent.getSerializableExtra(PARAM_BEINGCALL_USER);
         if (mCallType == TYPE_BEING_CALLED) {
@@ -462,30 +458,28 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             if (params != null) {
                 mOtherInvitingUserInfoList = params.mUserInfos;
             }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mStatusView.setText(R.string.trtccalling_customer_calling_vedio);
+                }
+            });
             showWaitingResponseView();
         } else {
             // 主叫方
             if (roomKey != null) {
-//                mCallUserInfoList.clear();
-//                UserInfo me = new UserInfo();
-//                me.userName = roomKey.getUserId();
-//                mCallUserInfoList.add(me);
-//                for (UserInfo userInfo : mCallUserInfoList) {
-//                    mCallUserModelMap.put(userInfo.userId, userInfo);
-//                }
-//                startInviting(roomKey);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStatusView.setText(R.string.trtccalling_waiting_to_hear_vedio);
+                    }
+                });
                 showInvitingView();
             }
         }
-
     }
 
     private void startInviting(RoomKey roomKey) {
-//        List<String> list = new ArrayList<>();
-//        for (UserInfo userInfo : mCallUserInfoList) {
-//            list.add(userInfo.userId);
-//        }
-//        mTRTCCalling.groupCall(list, TRTCCalling.TYPE_VIDEO_CALL, "");
         mTRTCCalling.enterTRTCRoom(roomKey);
     }
 
@@ -508,7 +502,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mStatusView = (TextView) findViewById(R.id.tv_status);
     }
 
-
     /**
      * 等待接听界面
      */
@@ -524,8 +517,9 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
         //2. 展示对方的头像和蒙层
         mSponsorGroup.setVisibility(View.VISIBLE);
-//        Picasso.get().load(mSponsorUserInfo.userAvatar).into(mSponsorAvatarImg);
+        mSponsorGroup.setVisibility(View.INVISIBLE);
         mSponsorUserNameTv.setText(mSponsorUserInfo.userName);
+        mSponsorUserNameTv.setVisibility(View.INVISIBLE);
 
         //3. 展示电话对应界面
         mHangupLl.setVisibility(View.VISIBLE);
@@ -536,7 +530,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mTRTCCalling.reject();
                 TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
                 stopCameraAndFinish();
             }
@@ -547,8 +540,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 TRTCUIManager.getInstance().didAcceptJoinRoom(TRTCCalling.TYPE_VIDEO_CALL, mSponsorUserInfo.getUserId());
             }
         });
-        //4. 展示其他用户界面
-        showOtherInvitingUserView();
     }
 
     /**
@@ -563,16 +554,10 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         }
         videoLayout.setVideoAvailable(true);
         mTRTCCalling.openCamera(true, videoLayout.getVideoView());
-        //        for (UserInfo userModel : mCallUserInfoList) {
-        //            TRTCVideoLayout layout = addUserToManager(userModel);
-        //            layout.getShadeImg().setVisibility(View.VISIBLE);
-        //        }
-        //2. 设置底部栏
         mHangupLl.setVisibility(View.VISIBLE);
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mTRTCCalling.hangup();
                 TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
                 stopCameraAndFinish();
             }
@@ -601,7 +586,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mTRTCCalling.hangup();
                 mTRTCCalling.exitRoom();
                 stopCameraAndFinish();
             }
@@ -671,13 +655,14 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
     private TRTCVideoLayout addUserToManager(UserInfo userInfo) {
         TRTCVideoLayout layout = mLayoutManagerTrtc.allocCloudVideoView(userInfo.getUserId());
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("XXX", "------------");
+            }
+        });
         if (layout == null) {
             return null;
-        }
-        layout.getUserNameTv().setText(userInfo.userName);
-        if (!TextUtils.isEmpty(userInfo.userAvatar)) {
-//            Picasso.with(TRTCVideoCallActivity.this).load(userInfo.userAvatar).into(layout.getHeadImg());
-            Picasso.get().load(userInfo.userAvatar).into(layout.getHeadImg());
         }
         return layout;
     }

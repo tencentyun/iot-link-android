@@ -4,7 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/trtccalling_bg_main_gradient">
+    >
+
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/iv_header"
+        app:layout_constraintEnd_toEndOf="@id/iv_header"
+        android:src="@drawable/header_background_1"
+        app:layout_constraintWidth_percent="0.53"
+        app:layout_constraintVertical_bias="0.27"
+        app:layout_constraintDimensionRatio="h,1:1"
+        android:id="@+id/iv_header_background"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/iv_header"
+        app:layout_constraintEnd_toEndOf="@id/iv_header"
+        android:src="@drawable/header_background_1"
+        app:layout_constraintWidth_percent="0.33"
+        app:layout_constraintVertical_bias="0.30"
+        app:layout_constraintDimensionRatio="h,1:1"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:id="@+id/iv_header"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.31"
+        app:layout_constraintDimensionRatio="h,1:1"
+        android:src="@drawable/default_header"
+        app:layout_constraintWidth_percent="0.23"
+        android:visibility="invisible"
+        />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_horizontal_top"
@@ -99,14 +144,17 @@
 
     <TextView
         android:id="@+id/tv_status"
+        android:textColor="@color/colorWhite"
+        android:text="@string/trtccalling_waiting_to_hear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorWhite"
-        android:layout_marginBottom="100dp"
-        android:text="@string/trtccalling_waiting_to_hear"
-        app:layout_constraintBottom_toTopOf="@+id/tv_time"
+        android:textSize="16sp"
+        app:layout_constraintVertical_bias="0.6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/iv_header_background"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
     <TextView
         android:id="@+id/tv_time"
@@ -115,20 +163,36 @@
         android:layout_marginBottom="40dp"
         android:textSize="@dimen/trtccalling_text_size_middle"
         android:textColor="@color/colorWhite"
-        app:layout_constraintBottom_toTopOf="@+id/ll_hangup"
+        tools:text="@string/trtccalling_call_time_default"
+        app:layout_constraintTop_toBottomOf="@+id/iv_header_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="@string/trtccalling_call_time_default" />
+        android:layout_marginTop="20dp"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/btn_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/background_grey_rounded_bg"
+        android:padding="8dp"
+        app:layout_constraintVertical_bias="0.82"
+        app:layout_constraintTop_toBottomOf="@id/iv_header_background"
+        >
 
     <LinearLayout
         android:id="@+id/ll_mute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/gl_horizontal_bottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ll_hangup"
         app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginRight="46.7dp"
+        android:paddingLeft="20dp"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
@@ -142,17 +206,15 @@
         android:id="@+id/ll_hangup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/gl_horizontal_bottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ll_handsfree"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/ll_mute">
 
         <ImageView
             android:id="@+id/iv_hangup"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/trtccalling_bg_hangup" />
     </LinearLayout>
 
@@ -160,11 +222,12 @@
         android:id="@+id/ll_handsfree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/gl_horizontal_bottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ll_dialing"
         app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginLeft="46.7dp"
+        android:paddingRight="20dp"
         app:layout_constraintStart_toEndOf="@+id/ll_hangup">
 
         <ImageView
@@ -179,20 +242,21 @@
         android:id="@+id/ll_dialing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/gl_horizontal_bottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginLeft="80dp"
         app:layout_constraintStart_toEndOf="@+id/ll_handsfree">
 
         <ImageView
             android:id="@+id/iv_dialing"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/trtccalling_bg_dialing" />
 
     </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_horizontal_bottom"
