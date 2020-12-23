@@ -537,6 +537,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                mTRTCCalling.reject();
+                TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
                 stopCameraAndFinish();
             }
         });
