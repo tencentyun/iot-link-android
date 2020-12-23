@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "38375f89_28f924de",
+        "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/trtc/ui/audiocall/TRTCAudioCallActivity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2020-12-23T03:06:01Z",
+      "side": 1,
+      "message": "当其他用户加入聊天室的时候，取消定时器是否会更合理",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 314,
+        "endChar": 5
+      },
+      "revId": "cf6eb72d273f2896ff401c53a77a4fbd7da09771",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1fe302f_0c857a82",
+        "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/trtc/ui/audiocall/TRTCAudioCallActivity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2020-12-23T03:06:01Z",
+      "side": 1,
+      "message": "做了 60s 定时，假如在 60s 之前接听了电话，是否会取消这个定时器\n现在在退出窗口时，有取消定时器的动作",
+      "range": {
+        "startLine": 316,
+        "startChar": 0,
+        "endLine": 332,
+        "endChar": 5
+      },
+      "revId": "cf6eb72d273f2896ff401c53a77a4fbd7da09771",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1638aac2_14922d44",
+        "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/trtc/ui/videocall/TRTCVideoCallActivity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2020-12-23T03:06:01Z",
+      "side": 1,
+      "message": "定时器的取消时机",
+      "range": {
+        "startLine": 307,
+        "startChar": 0,
+        "endLine": 341,
+        "endChar": 5
+      },
+      "revId": "cf6eb72d273f2896ff401c53a77a4fbd7da09771",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
