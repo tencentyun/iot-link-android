@@ -298,7 +298,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), getString(R.string.trtccalling_customer_hand_up), Toast.LENGTH_LONG).show();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -322,18 +321,19 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         }
     }
 
-    private void checkoutIsEnterRoom60seconds() {
+    private void checkoutIsEnterRoom60seconds(boolean calling) {
         enterRoomTask = new TimerTask(){
             public void run(){
                 //呼叫了60秒，对方未接听 显示对方无人接听，并退出，进入了就取消timertask
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), getString(R.string.trtccalling_customer_no_resp), Toast.LENGTH_LONG).show();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mStatusView.setText(R.string.trtccalling_customer_no_resp);
+                                if (calling) {
+                                    mStatusView.setText(R.string.trtccalling_customer_no_resp);
+                                }
                                 mStatusView.setVisibility(View.VISIBLE);
                             }
                         });
@@ -399,9 +399,9 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         });
 
         initView();
-        initData();
+        boolean calling = initData();
         initListener();
-        checkoutIsEnterRoom60seconds();
+        checkoutIsEnterRoom60seconds(calling);
     }
 
     @Override
@@ -450,7 +450,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mHandsfreeImg.setActivated(isHandsFree);
     }
 
-    private void initData() {
+    private boolean initData() {
         // 初始化成员变量
         mTRTCCalling = new TRTCCallingImpl(this);
         mTRTCCalling.setTRTCCallingDelegate(mTRTCCallingDelegate);
@@ -461,7 +461,9 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String roomKeyStr = intent.getStringExtra(PARAM_SELF_INFO);
-        if (TextUtils.isEmpty(roomKeyStr)) return;
+        if (TextUtils.isEmpty(roomKeyStr)) {
+            finish();
+        }
         RoomKey roomKey = JSON.parseObject(roomKeyStr, RoomKey.class);
         mSelfModel = new UserInfo();
         mSelfModel.setUserId(roomKey.getUserId());
@@ -482,6 +484,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 }
             });
             showWaitingResponseView();
+            return false;
         } else {
             // 主叫方
             if (roomKey != null) {
@@ -494,6 +497,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 });
                 showInvitingView();
             }
+            return true;
         }
     }
 
