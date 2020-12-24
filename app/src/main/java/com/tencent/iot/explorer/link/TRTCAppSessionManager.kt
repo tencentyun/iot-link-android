@@ -10,10 +10,10 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.trtc.model.RoomKey
-import com.tencent.iot.explorer.trtc.model.TRTCCalling
-import com.tencent.iot.explorer.trtc.model.TRTCSessionManager
-import com.tencent.iot.explorer.trtc.model.TRTCUIManager
+import com.tencent.iot.explorer.link.rtc.model.RoomKey
+import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
+import com.tencent.iot.explorer.link.rtc.model.TRTCSessionManager
+import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 
 class TRTCAppSessionManager : TRTCSessionManager() {
 

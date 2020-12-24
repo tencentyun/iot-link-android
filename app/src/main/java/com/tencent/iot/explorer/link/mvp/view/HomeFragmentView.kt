@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.view
 
 import com.tencent.iot.explorer.link.mvp.ParentView
-import com.tencent.iot.explorer.trtc.model.RoomKey
+import com.tencent.iot.explorer.link.rtc.model.RoomKey
 
 interface HomeFragmentView : ParentView {
 
