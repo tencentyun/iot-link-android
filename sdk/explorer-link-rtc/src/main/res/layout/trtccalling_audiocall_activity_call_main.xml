@@ -48,44 +48,36 @@
 
 
     <ImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toTopOf="@id/iv_header"
+        app:layout_constraintBottom_toBottomOf="@id/iv_header"
         app:layout_constraintStart_toStartOf="@id/iv_header"
         app:layout_constraintEnd_toEndOf="@id/iv_header"
         android:src="@drawable/header_background_1"
-        app:layout_constraintWidth_percent="0.53"
-        app:layout_constraintVertical_bias="0.27"
-        app:layout_constraintDimensionRatio="h,1:1"
         android:id="@+id/iv_header_background"
         />
 
     <ImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:layout_constraintTop_toTopOf="@id/iv_header"
+        app:layout_constraintBottom_toBottomOf="@id/iv_header"
         app:layout_constraintStart_toStartOf="@id/iv_header"
         app:layout_constraintEnd_toEndOf="@id/iv_header"
         android:src="@drawable/header_background_1"
-        app:layout_constraintWidth_percent="0.33"
-        app:layout_constraintVertical_bias="0.30"
-        app:layout_constraintDimensionRatio="h,1:1"
         />
 
     <ImageView
         android:id="@+id/iv_header"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.31"
-        app:layout_constraintDimensionRatio="h,1:1"
         android:src="@drawable/default_header"
-        app:layout_constraintWidth_percent="0.23"
         />
 
     <TextView
