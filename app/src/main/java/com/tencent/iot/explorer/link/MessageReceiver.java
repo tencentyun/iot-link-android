@@ -3,8 +3,6 @@ package com.tencent.iot.explorer.link;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -14,18 +12,10 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback;
-import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity;
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst;
-import com.tencent.iot.explorer.link.core.auth.response.BaseResponse;
-import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity;
 import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.kitlink.activity.HelpWebViewActivity;
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField;
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest;
-import com.tencent.iot.explorer.trtc.model.RoomKey;
-import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity;
-import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity;
 
 public class MessageReceiver extends XGPushBaseReceiver {
     private static final String TAG = MessageReceiver.class.getSimpleName();

@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.trtc.ui.videocall.videolayout;
+package com.tencent.iot.explorer.link.rtc.ui.videocall.videolayout;
 
 import android.content.Context;
 import android.util.AttributeSet;

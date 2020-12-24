@@ -16,11 +16,11 @@ import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.log.L
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
-import com.tencent.iot.explorer.trtc.model.RoomKey
-import com.tencent.iot.explorer.trtc.model.TRTCCalling
-import com.tencent.iot.explorer.trtc.model.TRTCUIManager
-import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity
-import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity
+import com.tencent.iot.explorer.link.rtc.model.RoomKey
+import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
+import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
+import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity
 
 class App : Application(), PayloadMessageCallback {
 
