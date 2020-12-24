@@ -1,6 +1,4 @@
-package com.tencent.iot.explorer.trtc.model;
-
-import com.tencent.iot.explorer.trtc.ui.audiocall.TRTCAudioCallActivity;
+package com.tencent.iot.explorer.link.rtc.model;
 
 import java.io.Serializable;
 import java.util.List;
