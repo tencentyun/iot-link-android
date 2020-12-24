@@ -131,6 +131,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                     }
                     videoLayout.setVideoAvailable(false);
                     mStatusView.setText(R.string.trtccalling_dialed_is_busy_vedio);
+                    mStatusView.setVisibility(View.INVISIBLE);
                 }
             });
         }
@@ -151,6 +152,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                            mStatusView.setVisibility(View.VISIBLE);
                         }
                     });
                     stopCameraAndFinish();
@@ -298,7 +300,14 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "对方已挂断", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.trtccalling_customer_hand_up), Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                                mStatusView.setVisibility(View.VISIBLE);
+                            }
+                        });
                         stopCameraAndFinish();
                     }
                 });
@@ -322,7 +331,14 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "对方无人接听", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.trtccalling_customer_no_resp), Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mStatusView.setText(R.string.trtccalling_customer_no_resp);
+                                mStatusView.setVisibility(View.VISIBLE);
+                            }
+                        });
                         stopCameraAndFinish();
                     }
                 });
@@ -365,6 +381,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                        mStatusView.setVisibility(View.VISIBLE);
                     }
                 });
                 stopCameraAndFinish();
@@ -376,6 +393,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         mStatusView.setText(R.string.trtccalling_customer_busy);
+                        mStatusView.setVisibility(View.VISIBLE);
                     }
                 });
                 stopCameraAndFinish();
@@ -462,6 +480,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     mStatusView.setText(R.string.trtccalling_customer_calling_vedio);
+                    mStatusView.setVisibility(View.VISIBLE);
                 }
             });
             showWaitingResponseView();
@@ -472,6 +491,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         mStatusView.setText(R.string.trtccalling_waiting_to_hear_vedio);
+                        mStatusView.setVisibility(View.VISIBLE);
                     }
                 });
                 showInvitingView();
@@ -655,12 +675,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
     private TRTCVideoLayout addUserToManager(UserInfo userInfo) {
         TRTCVideoLayout layout = mLayoutManagerTrtc.allocCloudVideoView(userInfo.getUserId());
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("XXX", "------------");
-            }
-        });
         if (layout == null) {
             return null;
         }
