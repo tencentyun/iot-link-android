@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.trtc.ui.videocall.videolayout;
+package com.tencent.iot.explorer.link.rtc.ui.videocall.videolayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.iot.explorer.trtc.R;
+import com.tencent.iot.explorer.link.rtc.R;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
 /**

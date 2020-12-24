@@ -1,12 +1,12 @@
-package com.tencent.iot.explorer.trtc.model.impl;
+package com.tencent.iot.explorer.link.rtc.model.impl;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.tencent.iot.explorer.trtc.model.RoomKey;
-import com.tencent.iot.explorer.trtc.model.TRTCCalling;
-import com.tencent.iot.explorer.trtc.model.TRTCCallingDelegate;
+import com.tencent.iot.explorer.link.rtc.model.RoomKey;
+import com.tencent.iot.explorer.link.rtc.model.TRTCCalling;
+import com.tencent.iot.explorer.link.rtc.model.TRTCCallingDelegate;
 import com.tencent.liteav.beauty.TXBeautyManager;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.trtc.TRTCCloud;
