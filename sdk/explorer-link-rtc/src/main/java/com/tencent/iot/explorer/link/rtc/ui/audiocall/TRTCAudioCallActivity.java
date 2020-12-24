@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.trtc.ui.audiocall;
+package com.tencent.iot.explorer.link.rtc.ui.audiocall;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,27 +17,23 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 
 //import com.blankj.utilcode.util.CollectionUtils;
 //import com.blankj.utilcode.util.ToastUtils;
 import com.alibaba.fastjson.JSON;
-import com.squareup.picasso.Picasso;
-import com.tencent.iot.explorer.trtc.R;
-import com.tencent.iot.explorer.trtc.model.IntentParams;
-import com.tencent.iot.explorer.trtc.model.RoomKey;
-import com.tencent.iot.explorer.trtc.model.TRTCCalling;
-import com.tencent.iot.explorer.trtc.model.TRTCCallingDelegate;
-import com.tencent.iot.explorer.trtc.model.TRTCCallingParamsCallback;
-import com.tencent.iot.explorer.trtc.model.TRTCUIManager;
-import com.tencent.iot.explorer.trtc.model.UserInfo;
-import com.tencent.iot.explorer.trtc.model.impl.TRTCCallingImpl;
-import com.tencent.iot.explorer.trtc.ui.audiocall.audiolayout.TRTCAudioLayout;
-import com.tencent.iot.explorer.trtc.ui.audiocall.audiolayout.TRTCAudioLayoutManager;
-import com.tencent.iot.explorer.trtc.ui.videocall.TRTCVideoCallActivity;
+import com.tencent.iot.explorer.link.rtc.R;
+import com.tencent.iot.explorer.link.rtc.model.IntentParams;
+import com.tencent.iot.explorer.link.rtc.model.RoomKey;
+import com.tencent.iot.explorer.link.rtc.model.TRTCCalling;
+import com.tencent.iot.explorer.link.rtc.model.TRTCCallingDelegate;
+import com.tencent.iot.explorer.link.rtc.model.TRTCCallingParamsCallback;
+import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager;
+import com.tencent.iot.explorer.link.rtc.model.UserInfo;
+import com.tencent.iot.explorer.link.rtc.model.impl.TRTCCallingImpl;
+import com.tencent.iot.explorer.link.rtc.ui.audiocall.audiolayout.TRTCAudioLayout;
+import com.tencent.iot.explorer.link.rtc.ui.audiocall.audiolayout.TRTCAudioLayoutManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

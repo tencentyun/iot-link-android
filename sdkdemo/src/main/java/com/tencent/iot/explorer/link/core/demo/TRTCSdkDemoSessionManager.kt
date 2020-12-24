@@ -8,10 +8,10 @@ import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.trtc.model.RoomKey
-import com.tencent.iot.explorer.trtc.model.TRTCCalling
-import com.tencent.iot.explorer.trtc.model.TRTCSessionManager
-import com.tencent.iot.explorer.trtc.model.TRTCUIManager
+import com.tencent.iot.explorer.link.rtc.model.RoomKey
+import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
+import com.tencent.iot.explorer.link.rtc.model.TRTCSessionManager
+import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 
 class TRTCSdkDemoSessionManager : TRTCSessionManager() {
 
