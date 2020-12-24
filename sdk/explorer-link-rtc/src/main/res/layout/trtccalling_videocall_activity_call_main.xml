@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00ffffff"
     >
 
 
@@ -17,7 +18,7 @@
         android:src="@drawable/header_background_1"
         app:layout_constraintDimensionRatio="h,1:1"
         android:id="@+id/iv_header_background"
-        android:visibility="visible"
+        android:visibility="invisible"
         />
 
     <ImageView
