@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.trtc.model;
+package com.tencent.iot.explorer.link.rtc.model;
 
 public class TRTCSessionManager {
 

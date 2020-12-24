@@ -21,11 +21,10 @@ import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.*
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField.DATA
 import com.tencent.iot.explorer.link.kitlink.response.ShareDeviceListResponse
-import com.tencent.iot.explorer.trtc.model.RoomKey
-import com.tencent.iot.explorer.trtc.model.TRTCCalling
+import com.tencent.iot.explorer.link.rtc.model.RoomKey
+import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
 
 class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(view), MyCallback {
 
