@@ -33,6 +33,7 @@ import com.tencent.iot.explorer.link.rtc.model.UserInfo;
 import com.tencent.iot.explorer.link.rtc.model.impl.TRTCCallingImpl;
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.audiolayout.TRTCAudioLayout;
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.audiolayout.TRTCAudioLayoutManager;
+import com.tencent.iot.explorer.trtc.model.TRTCCallStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,6 +113,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 public void run() {
                     showCallingView();
                     removeOtherIsEnterRoom15secondsTask();
+                    TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_ON_THE_PHONE.getValue();
                     TRTCAudioLayout layout = mLayoutManagerTRTC.findAudioCallLayout(userId);
                     if (layout != null) {
                         layout.stopLoading();
@@ -246,6 +248,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         beingCallUserInfo.setUserId(beingCallUserId);
         starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserInfo);
         context.startActivity(starter);
+        TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_CALLING.getValue();
     }
 
     /**
@@ -261,6 +264,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         starter.putExtra(PARAM_OTHER_INVITING_USER, new IntentParams(new ArrayList<>()));
         starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(starter);
+        TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_CALLING.getValue();
     }
 
     private void checkoutOtherIsEnterRoom15seconds() {
@@ -387,6 +391,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         finish();
         TRTCUIManager.getInstance().isCalling = false;
         TRTCUIManager.getInstance().deviceId = "";
+        TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_IDLE_OR_REFUSE.getValue();
         TRTCUIManager.getInstance().removeCallingParamsCallback();
         removeIsEnterRoom60secondsTask();
         removeOtherIsEnterRoom15secondsTask();
