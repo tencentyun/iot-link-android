@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link
 
 import android.text.TextUtils
+import android.widget.Toast
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
@@ -39,6 +40,10 @@ class TRTCAppSessionManager : TRTCSessionManager() {
         HttpRequest.instance.trtcCallDevice(deviceId, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
+                App.activity?.runOnUiThread {
+                    Toast.makeText(App.activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                }
+                TRTCUIManager.getInstance().exitRoom()
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
