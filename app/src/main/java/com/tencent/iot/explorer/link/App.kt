@@ -414,9 +414,9 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
 
                 // 判断被动呼叫时，已经被一台设备呼叫，又接到其他设备的呼叫请求，则调用AppControldeviceData拒绝其他设备的请求
                 if (App.data.callingDeviceId == "" && TRTCUIManager.getInstance().isCalling) {
-                    if (videoCallStatus != -1) {
+                    if (videoCallStatus == TRTCCallStatus.TYPE_CALLING.value) {
                         controlDevice(MessageConst.TRTC_VIDEO_CALL_STATUS, "0", payload.deviceId)
-                    } else if (audioCallStatus != -1) {
+                    } else if (audioCallStatus == TRTCCallStatus.TYPE_CALLING.value) {
                         controlDevice(MessageConst.TRTC_AUDIO_CALL_STATUS, "0", payload.deviceId)
                     }
                 }
@@ -440,6 +440,13 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                                     Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
                                 }
                             }
+                        }
+                        TRTCUIManager.getInstance().exitRoom()
+                    }
+                } else if (videoCallStatus == 2 || audioCallStatus == 2) {
+                    if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value) {
+                        activity?.runOnUiThread {
+                            Toast.makeText(activity, "其他用户已接听...", Toast.LENGTH_LONG).show()
                         }
                         TRTCUIManager.getInstance().exitRoom()
                     }
