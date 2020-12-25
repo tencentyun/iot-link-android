@@ -10,6 +10,8 @@ public class TRTCUIManager {
 
     public Boolean isCalling = false;
 
+    public int callStatus = TRTCCallStatus.TYPE_IDLE_OR_REFUSE.getValue(); //应用端音视频呼叫状态
+
     public String deviceId = "";
 
     public synchronized static TRTCUIManager getInstance() {
