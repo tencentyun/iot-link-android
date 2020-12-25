@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +31,7 @@ import com.tencent.iot.explorer.link.rtc.model.UserInfo;
 import com.tencent.iot.explorer.link.rtc.model.impl.TRTCCallingImpl;
 import com.tencent.iot.explorer.link.rtc.ui.videocall.videolayout.TRTCVideoLayout;
 import com.tencent.iot.explorer.link.rtc.ui.videocall.videolayout.TRTCVideoLayoutManager;
+import com.tencent.iot.explorer.link.rtc.model.TRTCCallStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,6 +115,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 public void run() {
                     showCallingView();
                     removeOtherIsEnterRoom15secondsTask();
+                    TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_ON_THE_PHONE.getValue();
                     //1.先造一个虚拟的用户添加到屏幕上
                     UserInfo model = new UserInfo();
                     model.setUserId(userId);
@@ -271,6 +271,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         beingCallUserInfo.setUserId(beingCallUserId);
         starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserInfo);
         context.startActivity(starter);
+        TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_CALLING.getValue();
     }
 
     /**
@@ -289,6 +290,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         starter.putExtra(PARAM_OTHER_INVITING_USER, new IntentParams(new ArrayList<>()));
         starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(starter);
+        TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_CALLING.getValue();
     }
 
     private void checkoutOtherIsEnterRoom15seconds() {
@@ -417,6 +419,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         finish();
         TRTCUIManager.getInstance().isCalling = false;
         TRTCUIManager.getInstance().deviceId = "";
+        TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_IDLE_OR_REFUSE.getValue();
         TRTCUIManager.getInstance().removeCallingParamsCallback();
         removeIsEnterRoom60secondsTask();
         removeOtherIsEnterRoom15secondsTask();

@@ -35,6 +35,7 @@ import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity
+import com.tencent.iot.explorer.link.rtc.model.TRTCCallStatus
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -333,6 +334,10 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         HttpRequest.instance.trtcCallDevice(App.data.callingDeviceId, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
+                activity?.runOnUiThread {
+                    Toast.makeText(App.activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                }
+                TRTCUIManager.getInstance().exitRoom()
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
@@ -394,10 +399,6 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                     deviceId = payloadParamsJson.getString(MessageConst.USERID)
                 }
 
-                if (audioCallStatus == 0 || videoCallStatus == 0) {
-                    data.callingDeviceId = ""
-                }
-
                 // 判断主动呼叫的回调中收到的_sys_userid不为自己的userid则被其他用户抢先呼叫设备了，提示用户 对方正忙...
                 val userId = SharePreferenceUtil.getString(activity, App.CONFIG, CommonField.USER_ID)
                 if (data.callingDeviceId != "" && deviceId != userId) {
@@ -429,8 +430,23 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                     startBeingCall(TRTCCalling.TYPE_AUDIO_CALL, deviceId)
                 } else if (videoCallStatus == 0 || audioCallStatus == 0) { //空闲或拒绝了，当前正显示音视频通话页面的话，finish掉
                     if (TRTCUIManager.getInstance().deviceId == deviceId) {
+                        if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value) {
+                            if (data.callingDeviceId == "") { //被动呼叫
+                                activity?.runOnUiThread {
+                                    Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                                }
+                            } else { //主动呼叫
+                                activity?.runOnUiThread {
+                                    Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
                         TRTCUIManager.getInstance().exitRoom()
                     }
+                }
+
+                if (audioCallStatus == 0 || videoCallStatus == 0) {
+                    data.callingDeviceId = ""
                 }
             }
         }
