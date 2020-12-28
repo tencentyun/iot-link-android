@@ -320,7 +320,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
      * 呼叫设备获取trtc参数信息
      */
     fun startBeingCall(callingType: Int, deviceId: String) {
-        if (App.data.callingDeviceId != "") { //App主动呼叫
+        if (data.callingDeviceId != "") { //App主动呼叫
             trtcCallDevice(callingType)
         } else { //App被动
             appStartBeingCall(callingType, deviceId)
@@ -334,27 +334,29 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         HttpRequest.instance.trtcCallDevice(App.data.callingDeviceId, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
-                activity?.runOnUiThread {
-                    Toast.makeText(App.activity, "对方正忙...", Toast.LENGTH_LONG).show()
-                }
-                TRTCUIManager.getInstance().exitRoom()
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
                 // 解析房间参数，并呼叫页面
                 val json = response.data as com.alibaba.fastjson.JSONObject
-                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) return;
-                val data = json.getString(MessageConst.TRTC_PARAMS)
-                if (TextUtils.isEmpty(data)) return;
-                val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
+                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) {
+                    activity?.runOnUiThread {
+                        Toast.makeText(App.activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                    }
+                    TRTCUIManager.getInstance().exitRoom()
+                } else {
+                    val data = json.getString(MessageConst.TRTC_PARAMS)
+                    if (TextUtils.isEmpty(data)) return;
+                    val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
 
-                var room = RoomKey()
-                room.userId = params.UserId
-                room.appId = params.SdkAppId
-                room.userSig = params.UserSig
-                room.roomId = params.StrRoomId
-                room.callType = callingType
-                enterRoom(room)
+                    var room = RoomKey()
+                    room.userId = params.UserId
+                    room.appId = params.SdkAppId
+                    room.userSig = params.UserSig
+                    room.roomId = params.StrRoomId
+                    room.callType = callingType
+                    enterRoom(room)
+                }
             }
         })
     }
@@ -366,10 +368,8 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         activity?.runOnUiThread {
             if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
                 TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_VIDEO_CALL, App.data.callingDeviceId, room)
-                App.data.callingDeviceId = ""
             } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
                 TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_AUDIO_CALL, App.data.callingDeviceId, room)
-                App.data.callingDeviceId = ""
             }
         }
     }
@@ -413,23 +413,27 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 }
 
                 // 判断被动呼叫时，已经被一台设备呼叫，又接到其他设备的呼叫请求，则调用AppControldeviceData拒绝其他设备的请求
-                if (App.data.callingDeviceId == "" && TRTCUIManager.getInstance().isCalling) {
+                if (data.callingDeviceId == "" && TRTCUIManager.getInstance().isCalling) {
                     if (videoCallStatus == TRTCCallStatus.TYPE_CALLING.value) {
                         controlDevice(MessageConst.TRTC_VIDEO_CALL_STATUS, "0", payload.deviceId)
                     } else if (audioCallStatus == TRTCCallStatus.TYPE_CALLING.value) {
                         controlDevice(MessageConst.TRTC_AUDIO_CALL_STATUS, "0", payload.deviceId)
                     }
                 }
-                
-                deviceId = payload.deviceId
 
                 // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
                 if (videoCallStatus == 1) {
-                    startBeingCall(TRTCCalling.TYPE_VIDEO_CALL, deviceId)
+                    if (data.callingDeviceId == "" && deviceId != "" && !deviceId.contains(userId)) { //App被动呼叫 _sys_userid有值 且不包含当前用户的userid
+                    } else {
+                        startBeingCall(TRTCCalling.TYPE_VIDEO_CALL, payload.deviceId)
+                    }
                 } else if (audioCallStatus == 1) {
-                    startBeingCall(TRTCCalling.TYPE_AUDIO_CALL, deviceId)
+                    if (data.callingDeviceId == "" && deviceId != "" && !deviceId.contains(userId)) { //App被动呼叫 _sys_userid有值 且不包含当前用户的userid
+                    } else {
+                        startBeingCall(TRTCCalling.TYPE_AUDIO_CALL, payload.deviceId)
+                    }
                 } else if (videoCallStatus == 0 || audioCallStatus == 0) { //空闲或拒绝了，当前正显示音视频通话页面的话，finish掉
-                    if (TRTCUIManager.getInstance().deviceId == deviceId) {
+                    if (TRTCUIManager.getInstance().deviceId == payload.deviceId) {
                         if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value) {
                             if (data.callingDeviceId == "") { //被动呼叫
                                 activity?.runOnUiThread {
@@ -444,7 +448,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                         TRTCUIManager.getInstance().exitRoom()
                     }
                 } else if (videoCallStatus == 2 || audioCallStatus == 2) {
-                    if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value) {
+                    if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value && data.callingDeviceId == "") {
                         activity?.runOnUiThread {
                             Toast.makeText(activity, "其他用户已接听...", Toast.LENGTH_LONG).show()
                         }
