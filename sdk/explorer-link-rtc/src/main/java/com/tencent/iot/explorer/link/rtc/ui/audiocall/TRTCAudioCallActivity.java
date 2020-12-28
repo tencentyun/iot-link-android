@@ -111,7 +111,6 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 public void run() {
                     showCallingView();
                     removeOtherIsEnterRoom15secondsTask();
-                    TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_ON_THE_PHONE.getValue();
                     TRTCAudioLayout layout = mLayoutManagerTRTC.findAudioCallLayout(userId);
                     if (layout != null) {
                         layout.stopLoading();
@@ -346,6 +345,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 }
                 showCallingView();
                 checkoutOtherIsEnterRoom15seconds();
+                TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_ON_THE_PHONE.getValue();
             }
 
             @Override
