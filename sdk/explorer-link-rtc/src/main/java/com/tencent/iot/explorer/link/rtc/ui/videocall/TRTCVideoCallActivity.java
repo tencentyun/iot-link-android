@@ -115,7 +115,6 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 public void run() {
                     showCallingView();
                     removeOtherIsEnterRoom15secondsTask();
-                    TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_ON_THE_PHONE.getValue();
                     //1.先造一个虚拟的用户添加到屏幕上
                     UserInfo model = new UserInfo();
                     model.setUserId(userId);
@@ -373,6 +372,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 }
                 showCallingView();
                 checkoutOtherIsEnterRoom15seconds();
+                TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_ON_THE_PHONE.getValue();
             }
 
             @Override

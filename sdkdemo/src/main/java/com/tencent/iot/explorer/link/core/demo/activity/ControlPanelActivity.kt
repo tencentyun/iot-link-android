@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.text.TextUtils
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
@@ -20,6 +21,7 @@ import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallbac
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.TRTCSdkDemoSessionManager
 import com.tencent.iot.explorer.link.core.demo.adapter.ControlPanelAdapter
 import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
@@ -30,6 +32,7 @@ import com.tencent.iot.explorer.link.core.demo.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.core.demo.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.core.demo.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.core.demo.view.MyDivider
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
@@ -182,10 +185,12 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
      */
     private fun controlDevice(id: String, value: String) {
         L.d("上报数据:id=$id value=$value")
-        val data = "{\"$id\":\"$value\"}"
+        var data = "{\"$id\":\"$value\"}"
         if (id == TRTC_VIDEO_CALL_STATUS || id == TRTC_AUDIO_CALL_STATUS) { //如果点击选择的是trtc设备的呼叫状态
             if (value == "1") { //并且状态值为1，代表应用正在call设备
                 App.data.callingDeviceId = "${device?.ProductId}/${device?.DeviceName}" //保存下设备id（productId/deviceName）
+                val userId = App.data.userInfo.UserID
+                data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\"}"
             }
         }
         device?.let {
@@ -322,18 +327,49 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
     }
 
     /**
+     * 检查设备TRTC状态是否空闲
+     */
+    fun checkTRTCCallStatusIsBusy() : Boolean {
+        var audioCallStatus = "0";
+        var videoCallStatus = "0";
+        panelList.forEach {
+            if (it.id == TRTC_AUDIO_CALL_STATUS) {
+                audioCallStatus = it.value
+            }
+            if (it.id == TRTC_VIDEO_CALL_STATUS) {
+                videoCallStatus = it.value
+            }
+        }
+        if (audioCallStatus != "0" || videoCallStatus != "0") { //表示设备不在空闲状态，提示用户 对方正忙...
+            Toast.makeText(this, "对方正忙...", Toast.LENGTH_LONG).show()
+            return true
+        }
+        return false
+    }
+
+    /**
      * 显示枚举弹框
      */
     fun showEnumPopup(entity: ControlPanel) {
         //特殊处理，当设备为trtc设备时。虽然call_status是枚举类型，但产品要求不弹弹窗，点击即拨打语音或视频通话。
         if (entity.id == MessageConst.TRTC_AUDIO_CALL_STATUS) {
+            if (checkTRTCCallStatusIsBusy()) {
+                return
+            }
             controlDevice(entity.id, "1")
+            TRTCUIManager.getInstance().setSessionManager(TRTCSdkDemoSessionManager())
             TRTCUIManager.getInstance().isCalling = true
+            TRTCUIManager.getInstance().deviceId = App.data.callingDeviceId
             TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
             return
         } else if (entity.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
+            if (checkTRTCCallStatusIsBusy()) {
+                return
+            }
             controlDevice(entity.id, "1")
             TRTCUIManager.getInstance().isCalling = true
+            TRTCUIManager.getInstance().setSessionManager(TRTCSdkDemoSessionManager())
+            TRTCUIManager.getInstance().deviceId = App.data.callingDeviceId
             TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
             return
         }
