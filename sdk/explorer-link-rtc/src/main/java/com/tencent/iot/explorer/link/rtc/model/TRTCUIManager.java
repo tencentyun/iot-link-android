@@ -58,4 +58,10 @@ public class TRTCUIManager {
             callingParamsCallback.userBusy();
         }
     }
+
+    public void otherUserAccept() {
+        if (callingParamsCallback != null) {
+            callingParamsCallback.otherUserAccept();
+        }
+    }
 }
