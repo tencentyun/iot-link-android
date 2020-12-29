@@ -7,4 +7,6 @@ public interface TRTCCallingParamsCallback {
     void exitRoom();
 
     void userBusy();
+
+    void otherUserAccpet();
 }

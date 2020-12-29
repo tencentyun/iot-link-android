@@ -369,6 +369,18 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            @Override
+            public void otherUserAccpet() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStatusView.setText(R.string.trtccalling_other_customer_accpet);
+                    }
+                });
+
+                removeCallbackAndFinish();
+            }
         });
 
         initView();

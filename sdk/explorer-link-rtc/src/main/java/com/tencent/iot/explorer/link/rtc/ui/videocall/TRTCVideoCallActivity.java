@@ -398,6 +398,18 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 });
                 stopCameraAndFinish();
             }
+
+            @Override
+            public void otherUserAccpet() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStatusView.setText(R.string.trtccalling_other_customer_accpet);
+                        mStatusView.setVisibility(View.VISIBLE);
+                    }
+                });
+                stopCameraAndFinish();
+            }
         });
 
         initView();
