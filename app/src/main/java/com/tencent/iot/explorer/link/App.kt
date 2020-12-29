@@ -452,6 +452,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                         activity?.runOnUiThread {
                             Toast.makeText(activity, "其他用户已接听...", Toast.LENGTH_LONG).show()
                         }
+                        TRTCUIManager.getInstance().otherUserAccpet()
                         TRTCUIManager.getInstance().exitRoom()
                     }
                 }
