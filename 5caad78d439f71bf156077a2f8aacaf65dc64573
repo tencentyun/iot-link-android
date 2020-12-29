@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48165404_3c6851a2",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/App.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-29T10:53:41Z",
+      "side": 1,
+      "message": "这块拼错了，accept",
+      "range": {
+        "startLine": 455,
+        "startChar": 61,
+        "endLine": 455,
+        "endChar": 67
+      },
+      "revId": "5caad78d439f71bf156077a2f8aacaf65dc64573",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
