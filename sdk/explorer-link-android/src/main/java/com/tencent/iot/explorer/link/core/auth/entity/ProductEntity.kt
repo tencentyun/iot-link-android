@@ -14,6 +14,7 @@ class ProductEntity {
     var DataTemplate = ""
     var AppTemplate = ""
     var NetType = ""
+    var Services = arrayListOf<String>()
     var ProductType = 0
     var UpdateTime = 0L
 
