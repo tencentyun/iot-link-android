@@ -13,14 +13,13 @@ import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.ProductEntity
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
-import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
-import com.tencent.iot.explorer.link.core.auth.response.ControlPanelResponse
-import com.tencent.iot.explorer.link.core.auth.response.DeviceListResponse
-import com.tencent.iot.explorer.link.core.auth.response.DeviceOnlineResponse
+import com.tencent.iot.explorer.link.core.auth.response.*
 import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.core.log.L
@@ -222,11 +221,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                         if (!DeviceStatuses.isNullOrEmpty()) {
                             DeviceStatuses!!.forEach {
                                 if (it.Online == 1) {//设备在线
-                                    val productIds = ArrayList<String>()
-                                    val deviceList = ArrayList<DeviceEntity>()
-                                    productIds.add(productId)
-                                    deviceList.add(device)
-                                    getProductsConfig(productIds, deviceList)
+                                    getDeviceProducts(productId, device)
                                 }
                             }
                         }
@@ -236,27 +231,27 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         })
     }
 
-    private fun getProductsConfig(productIds: List<String>, deviceList: List<DeviceEntity>) {
-        HttpRequest.instance.getProductsConfig(productIds, object: MyCallback {
+    private fun getDeviceProducts(productId: String, device: DeviceEntity) {
+        HttpRequest.instance.deviceProducts(arrayListOf(productId), object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
-                if (response.isSuccess()) {
-                    response.parse(ControlPanelResponse::class.java)?.Data?.let {
-                        it.forEach{
-                            it.parse().run {
-                                if (configEntity.Global.trtc) {
+
+                if (!response.isSuccess()) return
+                response.parse(DeviceProductResponse::class.java)?.run {
+                    if (Products.isNotEmpty()) {
+                        val product = Products[0]
+
+                        if (product.Services.isNotEmpty()) {
+                            product.Services.forEach {
+                                if (it == "TRTC") { //是TRTC类产品
                                     val trtcDeviceIdList = ArrayString()
-                                    for (device in deviceList) {
-                                        if (device.ProductId == ProductId) {
-                                            trtcDeviceIdList.addValue(device.DeviceId)
-                                            getDeviceCallStatus(device)
-                                        }
-                                    }
+                                    trtcDeviceIdList.addValue(device.DeviceId)
+                                    getDeviceCallStatus(device)
                                     // TRTC: trtc设备注册websocket监听
-                                     IoTAuth.registerActivePush(trtcDeviceIdList, null)
+                                    IoTAuth.registerActivePush(trtcDeviceIdList, null)
                                 }
                             }
                         }
