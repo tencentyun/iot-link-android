@@ -21,6 +21,10 @@ class ConfigNetActivity : BaseActivity() {
         tv_ap_config_net.setOnClickListener {
             jumpActivity(ApConfigNetActivity::class.java)
         }
+
+        tv_wired_config_net.setOnClickListener {
+            jumpActivity(WiredConfigNetActivity::class.java)
+        }
     }
 
 }
