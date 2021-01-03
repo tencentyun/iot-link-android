@@ -46,6 +46,7 @@
         <activity android:name=".activity.ConfigNetActivity"/>
         <activity android:name=".activity.QrcodeConfigNetActivity"/>
         <activity android:name=".activity.ApConfigNetActivity"/>
+        <activity android:name=".activity.WiredConfigNetActivity"/>
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
         <activity android:name=".activity.LoginActivity">
