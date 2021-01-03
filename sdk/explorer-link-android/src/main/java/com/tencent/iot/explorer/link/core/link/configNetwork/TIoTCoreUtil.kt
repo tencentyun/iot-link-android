@@ -2,27 +2,37 @@ package com.tencent.iot.explorer.link.core.link.configNetwork
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
-import com.tencent.iot.explorer.link.core.auth.http.Reconnect
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.LinkTask
 import com.tencent.iot.explorer.link.core.link.entity.SoftAPStep
 import com.tencent.iot.explorer.link.core.link.listener.SoftAPConfigNetListener
 import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
+import com.tencent.iot.explorer.link.core.link.listener.WiredConfigListener
 import com.tencent.iot.explorer.link.core.link.service.SoftAPService
+import java.net.DatagramPacket
+import java.net.InetAddress
+import java.net.MulticastSocket
 import java.util.*
 
 class TIoTCoreUtil {
+    val GROUP_ADDRESS = "239.255.255.250"
+
 
     var softAPService: SoftAPService? = null
     var softAPConfigNetListener: SoftAPConfigNetListener? = null
     var port = 8266
+    @Volatile
+    var wiredStarted = false
+    @Volatile
+    var wiredRecvRun = false
+    var localHostPort = 1900
+    var destHostPort = 1900
 
     fun generateQrCodeWithConfig(qrcodeConfig: QrcodeConfig): Bitmap? {
         if (qrcodeConfig.height <= 0 || qrcodeConfig.width <= 0) {
@@ -90,5 +100,60 @@ class TIoTCoreUtil {
         override fun onStep(step: SoftAPStep) {}
     }
 
+    fun configNetByWired(token: String, wiredConfigListener: WiredConfigListener) {
+        readyReceive(token, wiredConfigListener)
+    }
+
+    private fun send(data: String) {
+        val group: InetAddress = InetAddress.getByName(GROUP_ADDRESS)
+        val multicastSocket = MulticastSocket()
+        Thread(Runnable {
+            while (wiredStarted) {
+                val bytes: ByteArray = data.toByteArray()
+                val datagramPacket = DatagramPacket(bytes, bytes.size, group, destHostPort) // 发送数据报，指定目标端口和目标地址
+                multicastSocket.send(datagramPacket)
+                Thread.sleep(1)
+            }
+        }).start()
+    }
+
+    private fun readyReceive(token: String, wiredConfigListener: WiredConfigListener) {
+        wiredRecvRun = true
+        val inetAddress = InetAddress.getByName(GROUP_ADDRESS) // 多播组
+        val multicastSocket = MulticastSocket(localHostPort) // 新建一个socket，绑定接收端口1900
+
+        multicastSocket.joinGroup(inetAddress) // 加入多播组
+        Thread(Runnable {  // 定时一分钟后结束有线配网
+            Thread.sleep(60 * 10)
+            wiredRecvRun = false
+            if (wiredConfigListener != null) {
+                wiredConfigListener.onFail()
+            }
+        }).start()
+
+        Thread(Runnable {
+            while (wiredRecvRun) {
+                val inBuff = ByteArray(64 * 1024)
+                val inPacket = DatagramPacket(inBuff, inBuff.size) // 构造接收数据报，包含要接收的数据、长度
+                inPacket.data = inBuff
+                multicastSocket.receive(inPacket) // 接收数据报
+                var recData = JSONObject.parseObject(String(inPacket.data, inPacket.offset, inPacket.length),
+                    UdpData::class.java)
+
+                if (recData != null && recData.status == "received") {
+                    wiredRecvRun = false;
+                    if (wiredConfigListener != null) {
+                        wiredConfigListener.onSuccess()
+                    }
+                } else if (recData != null && recData.status == "online") {
+                    var config = WiredConfig()
+                    config.productId = recData.productId
+                    config.deviceName = recData.deviceName
+                    config.token = token
+                    send(JSON.toJSONString(config))
+                }
+            }
+        }).start()
+    }
 
 }
