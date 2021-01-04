@@ -31,6 +31,7 @@ public class TRTCUIManager {
 
     public void removeCallingParamsCallback() {
         this.callingParamsCallback = null;
+        sessionManager.resetTRTCStatus();
     }
 
     public void didAcceptJoinRoom(Integer callingType, String deviceId) {
