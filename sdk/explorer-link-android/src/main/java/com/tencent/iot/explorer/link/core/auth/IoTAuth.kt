@@ -258,6 +258,7 @@ object IoTAuth {
      */
     fun removeAllActivePushCallback() {
         WSClientManager.instance.removeAllActivePushCallback()
+        WSClientManager.instance.removeDeviceIds(ArrayString())
     }
 
     /**
