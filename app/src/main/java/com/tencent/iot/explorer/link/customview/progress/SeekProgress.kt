@@ -421,10 +421,18 @@ class SeekProgress : View {
         else
             Bitmap.Config.RGB_565
         // 建立对应 bitmap
-        val bitmap = Bitmap.createBitmap(w, h, config)
+        var width2Set = w
+        var height2Set = h
+        if (width2Set < 1) {
+            width2Set = 1
+        }
+        if (height2Set < 1) {
+            height2Set = 1
+        }
+        val bitmap = Bitmap.createBitmap(width2Set, height2Set, config)
         // 建立对应 bitmap 的画布
         val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, w, h)
+        drawable.setBounds(0, 0, width2Set, height2Set)
         // 把 drawable 内容画到画布中
         drawable.draw(canvas)
         return bitmap
