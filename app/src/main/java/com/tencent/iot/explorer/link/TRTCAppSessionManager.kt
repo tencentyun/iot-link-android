@@ -33,6 +33,11 @@ class TRTCAppSessionManager : TRTCSessionManager() {
         }
     }
 
+    override fun resetTRTCStatus() {
+        super.resetTRTCStatus()
+        App.data.callingDeviceId = ""
+    }
+
     /**
      * 呼叫设备获取trtc参数信息
      */
