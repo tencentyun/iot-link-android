@@ -114,6 +114,10 @@ internal class WSClientManager private constructor() {
      * 移除
      */
     fun removeDeviceIds(ids: ArrayString) {
+        if (ids.size() == 0) {
+            heartMessageList.clear()
+            return
+        }
         for (i in 0 until ids.size())
             heartMessageList.remove(ids.getValue(i))
     }

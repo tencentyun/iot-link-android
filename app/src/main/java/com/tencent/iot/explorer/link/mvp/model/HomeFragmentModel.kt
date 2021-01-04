@@ -293,6 +293,8 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         for (device in deviceList) {
                             deviceIdList.addValue(device.DeviceId)
                         }
+                        // TRTC: 移除现有监听
+                        IoTAuth.removeAllActivePushCallback()
                         // TRTC: trtc设备注册websocket监听
                         IoTAuth.registerActivePush(deviceIdList, null)
                     }
