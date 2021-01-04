@@ -398,12 +398,22 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 val userId = SharePreferenceUtil.getString(activity, App.CONFIG, CommonField.USER_ID)
                 if (data.callingDeviceId != "" && deviceId != userId) {
                     if (TRTCUIManager.getInstance().isCalling) { //当前正显示音视频通话页面，finish掉
-                        TRTCUIManager.getInstance().userBusy()
-                        TRTCUIManager.getInstance().exitRoom()
-                        activity?.runOnUiThread {
-                            Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                        if (data.callingDeviceId == payload.deviceId) {
+                            TRTCUIManager.getInstance().userBusy()
+                            TRTCUIManager.getInstance().exitRoom()
+                            activity?.runOnUiThread {
+                                Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                            }
+                            return
+                        } else { //其他的设备又呼叫了该用户
+                            if (videoCallStatus == TRTCCallStatus.TYPE_CALLING.value) {
+                                controlDevice(MessageConst.TRTC_VIDEO_CALL_STATUS, "0", payload.deviceId)
+                                return
+                            } else if (audioCallStatus == TRTCCallStatus.TYPE_CALLING.value) {
+                                controlDevice(MessageConst.TRTC_AUDIO_CALL_STATUS, "0", payload.deviceId)
+                                return
+                            }
                         }
-                        return
                     }
                 }
 
@@ -450,10 +460,6 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                         TRTCUIManager.getInstance().otherUserAccept()
                         TRTCUIManager.getInstance().exitRoom()
                     }
-                }
-
-                if (audioCallStatus == 0 || videoCallStatus == 0) {
-                    data.callingDeviceId = ""
                 }
             }
         }
