@@ -294,11 +294,13 @@ class ConnectProgressActivity : PActivity(), ConnectView {
     private fun backToDeviceCategoryActivity() {
         var stop = false
         while (!stop) {
-            if (App.data.activityList.last is DeviceCategoryActivity) {
+            if (App.data.activityList.last != null && App.data.activityList.last is DeviceCategoryActivity) {
                 stop = true
             } else {
-                App.data.activityList.last.finish()
-                App.data.activityList.removeLast()
+                if (App.data.activityList.last != null) {
+                    App.data.activityList.last.finish()
+                    App.data.activityList.removeLast()
+                }
             }
         }
     }
