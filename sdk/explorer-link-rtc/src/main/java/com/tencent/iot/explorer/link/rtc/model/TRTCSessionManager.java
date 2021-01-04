@@ -10,4 +10,8 @@ public class TRTCSessionManager {
 
     }
 
+    public void resetTRTCStatus() {
+
+    }
+
 }
