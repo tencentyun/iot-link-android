@@ -315,6 +315,14 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         }
                         shareDeviceList.addAll(ShareDevices)
                         deviceList.addAll(ShareDevices)
+
+                        val deviceIdList = ArrayString()
+                        for (device in shareDeviceList) {
+                            deviceIdList.addValue(device.DeviceId)
+                        }
+                        // TRTC: trtc设备注册websocket监听
+                        IoTAuth.registerActivePush(deviceIdList, null)
+
                         view?.showDeviceList(
                             deviceList.size,
                             roomId,
