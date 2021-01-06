@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,4:3"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/vedio_player"
+            />
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_sel_date"
+        app:layout_constraintTop_toBottomOf="@id/top_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="选择日期"
+        />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_sel_date"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingLeft="20dp"
+        />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scroll"
+        app:layout_constraintTop_toBottomOf="@id/tv_date"
+        >
+
+        <LinearLayout
+            android:id="@+id/id_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:orientation="vertical"
+            android:descendantFocusability="blocksDescendants">
+
+            <com.tencent.iot.explorer.link.core.demo.view.CustomSeekBar
+                android:layout_width="800dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/seekbar"
+                android:max="1440"
+                android:progress="0"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:progressDrawable="@android:color/transparent"
+                android:thumb="@mipmap/seek_thumb_normal"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/v_grid"
+                android:layout_width="800dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/scroll"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/tv_current_time"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
