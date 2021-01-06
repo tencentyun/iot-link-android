@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
+import android.content.Intent
 import com.tencent.iot.explorer.link.core.demo.R
 import kotlinx.android.synthetic.main.activity_config_net_type.*
 
