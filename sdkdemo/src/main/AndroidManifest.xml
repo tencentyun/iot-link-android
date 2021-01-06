@@ -49,7 +49,9 @@
         <activity android:name=".activity.WiredConfigNetActivity"/>
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
-        <activity android:name=".activity.LoginActivity">
+        <activity android:name=".activity.LoginActivity"/>
+        <activity android:name=".activity.VideoModuleActivity"/>
+        <activity android:name=".activity.ModuleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,6 +64,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AddDeviceActivity" />
+        <activity android:name=".activity.IPCActivity" />
+        <activity android:name=".activity.DateIPCActivity" />
+        <activity android:name=".activity.DateSelectActivity" />
+
     </application>
 
 </manifest>
