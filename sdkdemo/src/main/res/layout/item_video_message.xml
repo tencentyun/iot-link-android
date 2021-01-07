@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:ios="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_device_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="XXX摄像头"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/ts_14"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_realtime_monitor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="实时监控"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_device_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_name" />
+
+        <Button
+            android:id="@+id/btn_local_playback"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="本地回放"
+            app:layout_constraintLeft_toRightOf="@+id/btn_realtime_monitor"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_name" />
+
+        <Button
+            android:id="@+id/btn_cloud_save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="云端存储"
+            app:layout_constraintLeft_toRightOf="@+id/btn_local_playback"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

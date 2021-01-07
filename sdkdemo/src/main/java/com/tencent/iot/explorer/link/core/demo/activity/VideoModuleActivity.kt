@@ -19,13 +19,7 @@ class VideoModuleActivity : BaseActivity() {
         }
 
         btn_2_vedio.setOnClickListener {
-            var intent = Intent(this@VideoModuleActivity, IPCActivity::class.java)
-            intent.putExtra(IPCActivity.URL, "")
-            startActivity(intent)
-        }
-
-        btn_3_vedio.setOnClickListener {
-            jumpActivity(VideoActivity::class.java)
+            jumpActivity(InputAuthorizeActivity::class.java)
         }
     }
 
