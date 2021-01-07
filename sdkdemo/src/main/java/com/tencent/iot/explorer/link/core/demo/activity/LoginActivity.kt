@@ -12,6 +12,8 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.response.UserInfoResponse
+import com.tencent.iot.explorer.link.core.test.callback.VideoCallback
+import com.tencent.iot.explorer.link.core.test.service.VideoBaseService
 import kotlinx.android.synthetic.main.activity_login.*
 
 /**
@@ -38,9 +40,20 @@ class LoginActivity : BaseActivity(), LoginCallback {
             jumpActivity(RegisterActivity::class.java)
         }
         btn_to_forgot.setOnClickListener {
-            jumpActivity(ForgotPasswordActivity::class.java)
+//            jumpActivity(ForgotPasswordActivity::class.java)
         }
         tv_config_net.setOnClickListener {
+            VideoBaseService().describeDevices("", true, 10, 0, object:
+                VideoCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+
+                }
+
+                override fun success(response: String?, reqCode: Int) {
+
+                }
+
+            })
             jumpActivity(ConfigNetActivity::class.java)
         }
     }
