@@ -68,7 +68,8 @@
         <activity android:name=".activity.IPCActivity" />
         <activity android:name=".activity.DateIPCActivity" />
         <activity android:name=".activity.DateSelectActivity" />
-
+        <activity android:name=".activity.VideoMessageActivity" />
+        <activity android:name=".activity.InputAuthorizeActivity" />
     </application>
 
 </manifest>
