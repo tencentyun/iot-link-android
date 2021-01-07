@@ -62,6 +62,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AddDeviceActivity" />
+
+        <activity android:name=".activity.VideoMessageActivity" />
     </application>
 
 </manifest>

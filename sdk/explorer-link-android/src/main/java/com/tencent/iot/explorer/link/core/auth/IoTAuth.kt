@@ -22,6 +22,9 @@ object IoTAuth {
     var APP_KEY = ""
     var APP_SECRET = ""
 
+    var SECRETI_ID = ""
+    var SECRETI_KEY = ""
+
     //登录过期监听器
     internal var loginExpiredListener: LoginExpiredListener? = null
 
@@ -150,6 +153,15 @@ object IoTAuth {
         this.APP_KEY = APP_KEY
         this.APP_SECRET = APP_SECRET
         WSClientManager.instance.init()
+    }
+
+    /**
+     * 初始化WebSocket
+     */
+    fun init(APP_KEY: String, APP_SECRET: String, SECRETI_ID: String, SECRETI_KEY: String) {
+        init(APP_KEY, APP_SECRET)
+        this.SECRETI_ID = SECRETI_ID
+        this.SECRETI_KEY = SECRETI_KEY
     }
 
     /**
