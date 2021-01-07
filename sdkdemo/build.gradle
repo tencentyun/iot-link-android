@@ -101,4 +101,5 @@ dependencies {
     } else {
         implementation 'com.tencent.iot.explorer:explorer-link-rtc:+'
     }
+    implementation project(path: ':sdk:explorer-link-rtc')
 }
