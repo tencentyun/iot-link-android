@@ -101,4 +101,8 @@ dependencies {
     } else {
         implementation 'com.tencent.iot.explorer:explorer-link-rtc:+'
     }
+
+    if (findProject(':sdk:explorer-link-rtc') != null) {
+        implementation project(path: ':sdk:video-link-android')
+    }
 }
