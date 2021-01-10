@@ -30,6 +30,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.5
+        with:
+          cmake-version: '3.17.2'
+          - name: Use cmake
+            run: cmake --version
+
       - name: install fir
         run: sudo gem install fir-cli
       - name: Fix App Version

@@ -36,6 +36,15 @@ android {
         buildConfigField 'String', 'TencentIotLinkSDKDemoAppkey', "\"${getValueById('TencentIotLinkSDKDemoAppkey')}\""
         buildConfigField 'String', 'TencentIotLinkSDKDemoAppSecret', "\"${getValueById('TencentIotLinkSDKDemoAppSecret')}\""
         multiDexEnabled true
+
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
     }
     lintOptions {
         abortOnError false
@@ -56,6 +65,7 @@ android {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:+'
@@ -101,4 +111,10 @@ dependencies {
     } else {
         implementation 'com.tencent.iot.explorer:explorer-link-rtc:+'
     }
+
+    if (findProject(':sdk:video-link-android') != null) {
+        api project(path: ':sdk:video-link-android')
+    }
+
+    implementation 'com.tencent.iot.thirdparty.android:video-ffmpeg:1.0.0-SNAPSHOT'
 }
