@@ -29,6 +29,10 @@ allprojects {
         maven {
             url "https://dl.bintray.com/tencentqcloudterminal/maven"
         }
+        // SNAPSHOT
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
         //左滑删除
         maven {
             url "https://jitpack.io"
