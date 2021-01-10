@@ -2,6 +2,7 @@
 local.properties
 .gradle/
 .idea/
+.cxx
 build/
 tenextll/build/
 tenextlldemo/build/
