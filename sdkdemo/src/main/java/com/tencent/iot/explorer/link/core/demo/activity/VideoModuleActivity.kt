@@ -2,7 +2,6 @@ package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.content.Intent
 import com.tencent.iot.explorer.link.core.demo.R
-import kotlinx.android.synthetic.main.activity_module.*
 import kotlinx.android.synthetic.main.activity_vedio_module.*
 
 class VideoModuleActivity : BaseActivity() {
@@ -26,7 +25,7 @@ class VideoModuleActivity : BaseActivity() {
         }
 
         btn_3_vedio.setOnClickListener {
-//            jumpActivity()
+            jumpActivity(VideoActivity::class.java)
         }
     }
 
