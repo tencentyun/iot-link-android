@@ -23,7 +23,8 @@ import java.net.MulticastSocket
 import java.util.*
 
 class TIoTCoreUtil {
-    val GROUP_ADDRESS = "239.0.0.255"
+    @Volatile
+    var groupAddress = "239.0.0.255"
 
     var softAPService: SoftAPService? = null
     var softAPConfigNetListener: SoftAPConfigNetListener? = null
@@ -108,7 +109,7 @@ class TIoTCoreUtil {
     }
 
     fun send(data: String) {
-        val group: InetAddress = InetAddress.getByName(GROUP_ADDRESS)
+        val group: InetAddress = InetAddress.getByName(groupAddress)
         val multicastSocket = MulticastSocket()
         Thread(Runnable {
             val bytes: ByteArray = data.toByteArray()
@@ -125,7 +126,7 @@ class TIoTCoreUtil {
             return
         }
         wiredRecvRun = true
-        val inetAddress = InetAddress.getByName(GROUP_ADDRESS) // 多播组
+        val inetAddress = InetAddress.getByName(groupAddress) // 多播组
         val multicastSocket = MulticastSocket(localHostPort) // 新建一个socket，绑定接收端口1900
 
         multicastSocket.joinGroup(inetAddress) // 加入多播组
