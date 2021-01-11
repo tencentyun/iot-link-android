@@ -31,6 +31,7 @@ class WiredConfigNetActivity : BaseActivity() {
 
     override fun setListener() {
         btn_start_config_net.setOnClickListener {
+            tIoTCoreUtil.groupAddress = ev_group_address.text.toString()
             tIoTCoreUtil.configNetByWired(ev_token.text.toString(), listener)
         }
     }
