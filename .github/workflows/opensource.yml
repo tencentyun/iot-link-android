@@ -42,7 +42,7 @@ jobs:
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.5
         with:
-          cmake-version: '3.17.2'
+          cmake-version: '3.10.2'
       - name: Use cmake
         run: |
           cmake --version
