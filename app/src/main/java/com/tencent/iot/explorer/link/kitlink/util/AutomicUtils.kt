@@ -12,7 +12,7 @@ object AutomicUtils {
         if (textView == null) return
 
         if (enable) {
-            textView.setTextColor(context.resources.getColor(R.color.blue_0052d9))
+            textView.setTextColor(context.resources.getColor(R.color.blue_0066FF))
         } else {
             textView.setTextColor(context.resources.getColor(R.color.gray_bbbbbb))
         }

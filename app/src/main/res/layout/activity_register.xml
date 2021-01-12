@@ -23,24 +23,39 @@
             android:id="@+id/vp_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             app:layout_constraintTop_toBottomOf="@+id/sbhv_register"/>
 
     <LinearLayout
             android:id="@+id/ll_register_agreement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="31dp"
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="@id/btn_register_get_code"
             app:layout_constraintTop_toBottomOf="@+id/vp_register">
 
-        <ImageView
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+            <ImageView
                 android:id="@+id/iv_register_agreement"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="7dp"
-                android:src="@mipmap/icon_selected" />
+                android:layout_centerInParent="true"
+                android:src="@mipmap/readed" />
+
+            <ImageView
+                android:id="@+id/iv_register_agreement_status"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:padding="7dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/success" />
+        </RelativeLayout>
+
 
         <TextView
                 android:layout_width="wrap_content"
@@ -48,7 +63,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/register_agree_1"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_12" />
+                android:textSize="@dimen/ts_14" />
 
         <TextView
                 android:id="@+id/tv_register_user_agreement"
@@ -58,8 +73,8 @@
                 android:paddingStart="2dp"
                 android:paddingEnd="2dp"
                 android:text="@string/register_agree_2"
-                android:textColor="@color/blue_0052d9"
-                android:textSize="@dimen/ts_12" />
+                android:textColor="@color/blue_0066FF"
+                android:textSize="@dimen/ts_14" />
 
         <TextView
                 android:layout_width="wrap_content"
@@ -67,7 +82,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/register_agree_3"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_12" />
+                android:textSize="@dimen/ts_14" />
 
         <TextView
                 android:id="@+id/tv_register_privacy_policy"
@@ -76,24 +91,22 @@
                 android:gravity="center_vertical"
                 android:paddingStart="2dp"
                 android:text="@string/register_agree_4"
-                android:textColor="@color/blue_0052d9"
-                android:textSize="@dimen/ts_12" />
+                android:textColor="@color/blue_0066FF"
+                android:textSize="@dimen/ts_14" />
     </LinearLayout>
 
     <com.tencent.iot.explorer.link.customview.check.ClickButton
             android:id="@+id/btn_register_get_code"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:gravity="center"
             android:background="@drawable/background_circle_bule_gradient"
             android:text="@string/register_get_code"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts_18"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toBottomOf="@+id/ll_register_agreement" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

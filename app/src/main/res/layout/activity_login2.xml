@@ -20,7 +20,7 @@
 
     <com.tencent.iot.explorer.link.customview.CustomViewPager
         android:id="@+id/vp_login2"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/back_btn_login"/>
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             android:textColor="@color/gray_cccccc"
             android:text="@string/other_login_way"/>
         <View
@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:textSize="@dimen/ts_16"
+        android:textSize="@dimen/ts_14"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:textColor="@color/gray_666666"

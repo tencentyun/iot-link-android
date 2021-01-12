@@ -117,7 +117,7 @@
         android:layout_marginEnd="24dp"
         android:padding="3dp"
         android:text="@string/register_get_code"
-        android:textColor="@color/blue_0052d9"
+        android:textColor="@color/blue_0066FF"
         android:textSize="@dimen/ts_18"
         app:layout_constraintBottom_toBottomOf="@+id/et_modify_email_verifycode"
         app:layout_constraintRight_toRightOf="parent"

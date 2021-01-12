@@ -71,9 +71,11 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             }
         }
         if (presenter.isAgreement()) {
-            iv_register_agreement.setImageResource(R.mipmap.icon_selected)
+            iv_register_agreement.setImageResource(R.mipmap.readed)
+            iv_register_agreement_status.visibility = View.VISIBLE
         } else {
             iv_register_agreement.setImageResource(R.mipmap.icon_unselected)
+            iv_register_agreement_status.visibility = View.GONE
         }
         if (!Utils.isChineseSystem(this)) {
             phoneView.tv_register_to_country.text = getString(R.string.country_china_en)
@@ -218,11 +220,16 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     override fun agreement(isAgree: Boolean) {
         iv_register_agreement.setImageResource(
             if (isAgree) {
-                R.mipmap.icon_selected
+                R.mipmap.readed
             } else {
                 R.mipmap.icon_unselected
             }
         )
+        if (isAgree) {
+            iv_register_agreement_status.visibility = View.VISIBLE
+        } else {
+            iv_register_agreement_status.visibility = View.GONE
+        }
         btn_register_get_code.checkStatus()
     }
 
