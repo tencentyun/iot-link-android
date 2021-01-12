@@ -1,7 +1,9 @@
 package com.tencent.iot.explorer.link.core.demo.holder
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
+import com.tencent.iot.explorer.link.core.demo.adapter.VideoMessageAdapter
 import com.tencent.iot.explorer.link.core.demo.entity.VideoMessageEntity
 import kotlinx.android.synthetic.main.item_video_message.view.*
 
@@ -13,14 +15,21 @@ class VideoMessageHolder : BaseHolder<VideoMessageEntity> {
         data.run {
             itemView.tv_device_name.text = deviceName
             itemView.btn_realtime_monitor.setOnClickListener {
-                clickItem(this@VideoMessageHolder, it, position)
+                clickButton(this@VideoMessageHolder, it, position, 0)
             }
             itemView.btn_local_playback.setOnClickListener {
-                clickItem(this@VideoMessageHolder, it, position)
+                clickButton(this@VideoMessageHolder, it, position, 1)
             }
             itemView.btn_cloud_save.setOnClickListener {
-                clickItem(this@VideoMessageHolder, it, position)
+                clickButton(this@VideoMessageHolder, it, position, 2)
             }
         }
+    }
+
+    /**
+     * 点击回调
+     */
+    fun clickButton(holder: BaseHolder<*>, clickView: View, position: Int, tag: Int) {
+        (adapter as VideoMessageAdapter).onClickButton(holder, clickView, position, tag)
     }
 }
