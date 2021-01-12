@@ -195,7 +195,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         }
 
         if (enable) {
-            textView.setTextColor(resources.getColor(R.color.blue_0052d9))
+            textView.setTextColor(resources.getColor(R.color.blue_0066FF))
         } else {
             textView.setTextColor(resources.getColor(R.color.gray_bbbbbb))
         }
