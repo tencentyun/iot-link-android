@@ -30,6 +30,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          # ninja version to download. Default: 1.10.0
+          version: 1.10.0
+      - name: Use ninja
+        run: ninja --version
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.5
         with:
