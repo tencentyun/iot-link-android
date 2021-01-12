@@ -30,21 +30,21 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Setup Ninja
-        uses: ashutoshvarma/setup-ninja@master
-        with:
-          # ninja version to download. Default: 1.10.0
-          version: 1.10.0
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      - name: Use ninja
-        run: ninja --version
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.5
-        with:
-          cmake-version: '3.17.2'
-      - name: Use cmake
-        run: cmake --version
+#      - name: Setup Ninja
+#        uses: ashutoshvarma/setup-ninja@master
+#        with:
+#          # ninja version to download. Default: 1.10.0
+#          version: 1.10.0
+#        env:
+#          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+#      - name: Use ninja
+#        run: ninja --version
+#      - name: Setup cmake
+#        uses: jwlawson/actions-setup-cmake@v1.5
+#        with:
+#          cmake-version: '3.17.2'
+#      - name: Use cmake
+#        run: cmake --version
 
       - name: install fir
         run: sudo gem install fir-cli
