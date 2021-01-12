@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.core.demo.adapter.BaseAdapter
 
 abstract class BaseHolder<T : Any> : RecyclerView.ViewHolder {
 
-    private lateinit var adapter: BaseAdapter
+    internal lateinit var adapter: BaseAdapter
 
     lateinit var data: T
 
