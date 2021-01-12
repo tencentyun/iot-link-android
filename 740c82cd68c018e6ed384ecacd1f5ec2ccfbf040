@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc20d1aa_1dab6a26",
+        "filename": "sdkdemo/src/main/AndroidManifest.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-12T01:17:49Z",
+      "side": 1,
+      "message": "vedio ---\u003e video",
+      "range": {
+        "startLine": 52,
+        "startChar": 42,
+        "endLine": 52,
+        "endChar": 61
+      },
+      "revId": "740c82cd68c018e6ed384ecacd1f5ec2ccfbf040",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
