@@ -1,14 +1,14 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.content.Context
-import android.util.Log
+import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.demo.R
-import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
+import com.tencent.iot.explorer.link.core.demo.adapter.ButtonInterface
 import com.tencent.iot.explorer.link.core.demo.adapter.VideoMessageAdapter
 import com.tencent.iot.explorer.link.core.demo.entity.VideoMessageEntity
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
@@ -58,10 +58,43 @@ class VideoMessageActivity : BaseActivity() {
 
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
-        adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
-                
+        adapter.buttonSetOnclick(object : ButtonInterface {
+            //实时监控按钮点击
+            override fun onRealtimeMonitorButtonClick(
+                holder: BaseHolder<*>,
+                clickView: View,
+                position: Int
+            ) {
+                val secretId = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID)
+                val secretKey = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
+                val productId = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
+                val deviceName = videoMessageList[position].deviceName
+                jumpActivity(VideoActivity::class.java)
             }
+            //本地回放按钮点击
+            override fun onLocalPlaybackButtonClick(
+                holder: BaseHolder<*>,
+                clickView: View,
+                position: Int
+            ) {
+
+            }
+            //云端存储按钮点击
+            override fun onCloudSaveButtonClick(
+                holder: BaseHolder<*>,
+                clickView: View,
+                position: Int
+            ) {
+                val secretId = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID)
+                val secretKey = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
+                val productId = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
+                val deviceName = videoMessageList[position].deviceName
+                var intent = Intent(this@VideoMessageActivity, IPCActivity::class.java)
+                jumpActivity(InputAuthorizeActivity::class.java)
+                intent.putExtra(IPCActivity.URL, "")
+                startActivity(intent)
+            }
+
         })
     }
 
@@ -92,8 +125,7 @@ class VideoMessageActivity : BaseActivity() {
                     }
                     runOnUiThread {
                         if (mContext != null) {
-                            adapter = VideoMessageAdapter(mContext!!, videoMessageList)
-                            rv_video_message.adapter = adapter
+                            adapter?.notifyDataSetChanged()
                         }
                     }
                 }
