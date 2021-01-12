@@ -35,6 +35,8 @@ jobs:
         with:
           # ninja version to download. Default: 1.10.0
           version: 1.10.0
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       - name: Use ninja
         run: ninja --version
       - name: Setup cmake
