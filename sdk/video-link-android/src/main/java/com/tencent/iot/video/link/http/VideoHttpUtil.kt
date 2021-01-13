@@ -18,7 +18,9 @@ import java.net.URL
  */
 object VideoHttpUtil {
 
-    var VIDEO_API = "iotexplorer.tencentcloudapi.com" // 需要替换为自建后台服务地址
+    var EXPLORER_SERVICE = "iotexplorer" // explorer
+    var VIDEO_SERVICE = "iotvideo" // video
+    val REST_HOST_URL = ".tencentcloudapi.com"
 
     private fun success(listener: HttpCallBack, response: String) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -35,17 +37,17 @@ object VideoHttpUtil {
     /**
      * post请求
      */
-    fun post(params: Map<String, Any>, headerParams: Map<String, Any>, listener: HttpCallBack) {
+    fun post(url: String, params: Map<String, Any>, headerParams: Map<String, Any>, listener: HttpCallBack) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                (URL("https://$VIDEO_API").openConnection() as? HttpURLConnection)?.run {
+                (URL("https://$url").openConnection() as? HttpURLConnection)?.run {
                     requestMethod = "POST"
                     connectTimeout = 8000
                     readTimeout = 8000
                     doOutput = true
                     doInput = true
                     addRequestProperty("Host",
-                        VIDEO_API
+                        url
                     )
                     addRequestProperty("Content-Type", "application/json; charset=utf-8")
 
@@ -80,7 +82,7 @@ object VideoHttpUtil {
                     } else {
                         fail(
                             listener,
-                            "服务器出错：$VIDEO_API"
+                            "服务器出错：$url"
                         )
                     }
                 }
@@ -88,14 +90,14 @@ object VideoHttpUtil {
                 fail(
                     listener,
                     e.message
-                        ?: "请求URL不正确：$VIDEO_API"
+                        ?: "请求URL不正确：$url"
                 )
                 e.printStackTrace()
             } catch (e: IOException) {
                 fail(
                     listener,
                     e.message
-                        ?: "数据传输时发生错误：$VIDEO_API"
+                        ?: "数据传输时发生错误：$url"
                 )
                 e.printStackTrace()
             }

@@ -105,7 +105,7 @@ class VideoMessageActivity : BaseActivity() {
         val secretId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID)
         val secretKey = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
         val productId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
-        VideoBaseService(secretId, secretKey).describeDevices(productId, object:
+        VideoBaseService(secretId, secretKey).getDeviceList(productId, object:
             VideoCallback {
             override fun fail(msg: String?, reqCode: Int) {
 
