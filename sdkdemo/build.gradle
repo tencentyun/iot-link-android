@@ -121,5 +121,6 @@ dependencies {
         api project(path: ':sdk:video-link-android')
     }
 
-    implementation 'com.tencent.iot.thirdparty.android:video-ffmpeg:1.0.0-SNAPSHOT'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
 }
