@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
@@ -69,7 +70,14 @@ class VideoMessageActivity : BaseActivity() {
                 val secretKey = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
                 val productId = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
                 val deviceName = videoMessageList[position].deviceName
-                jumpActivity(VideoActivity::class.java)
+                val intent = Intent(this@VideoMessageActivity, VideoActivity::class.java)
+                val bundle = Bundle()
+                bundle.putString(VideoConst.VIDEO_SECRET_ID, secretId)
+                bundle.putString(VideoConst.VIDEO_SECRET_KEY, secretKey)
+                bundle.putString(VideoConst.VIDEO_PRODUCT_ID, productId)
+                bundle.putString(VideoConst.VIDEO_DEVICE_NAME, deviceName)
+                intent.putExtras(bundle)
+                startActivity(intent)
             }
             //本地回放按钮点击
             override fun onLocalPlaybackButtonClick(
@@ -77,7 +85,19 @@ class VideoMessageActivity : BaseActivity() {
                 clickView: View,
                 position: Int
             ) {
-
+                val secretId = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID)
+                val secretKey = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
+                val productId = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
+                val deviceName = videoMessageList[position].deviceName
+                val intent = Intent(this@VideoMessageActivity, VideoActivity::class.java)
+                val bundle = Bundle()
+                bundle.putString(VideoConst.VIDEO_SECRET_ID, secretId)
+                bundle.putString(VideoConst.VIDEO_SECRET_KEY, secretKey)
+                bundle.putString(VideoConst.VIDEO_PRODUCT_ID, productId)
+                bundle.putString(VideoConst.VIDEO_DEVICE_NAME, deviceName)
+                bundle.putString(VideoConst.VIDEO_PLAYBACK, VideoConst.VIDEO_PLAYBACK)
+                intent.putExtras(bundle)
+                startActivity(intent)
             }
             //云端存储按钮点击
             override fun onCloudSaveButtonClick(
