@@ -48,7 +48,7 @@ class VideoMessageActivity : BaseActivity() {
 
     override fun initView() {
         mContext = applicationContext
-        tv_title.text = "录像回放"
+        tv_title.text = "摄像头列表"
 
         rv_video_message.layoutManager = LinearLayoutManager(this)
         adapter = VideoMessageAdapter(this, videoMessageList)
