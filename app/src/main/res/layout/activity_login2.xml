@@ -36,28 +36,29 @@
         app:layout_constraintTop_toBottomOf="@+id/vp_login2">
         <View
             android:id="@+id/line_one"
-            android:layout_width="80dp"
+            android:layout_width="50dp"
             android:layout_height="1dp"
             android:background="@color/gray_dddddd" />
         <TextView
             android:id="@+id/tv_other_login_way"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:textSize="@dimen/ts_14"
             android:textColor="@color/gray_cccccc"
             android:text="@string/other_login_way"/>
         <View
             android:id="@+id/line_two"
-            android:layout_width="80dp"
+            android:layout_width="50dp"
             android:layout_height="1dp"
             android:background="@color/gray_dddddd" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_wechat_login"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:src="@drawable/icon_wechat"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -69,7 +70,7 @@
         android:id="@+id/tv_wechat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginTop="10dp"
         android:textSize="@dimen/ts_14"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
