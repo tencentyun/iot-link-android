@@ -44,6 +44,10 @@ android {
     packagingOptions {
         pickFirst 'lib/armeabi-v7a/libxnet-android.so'
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
