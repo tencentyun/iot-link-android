@@ -64,7 +64,6 @@
         app:layout_constraintTop_toBottomOf="@id/line_country"
         app:layout_constraintBottom_toTopOf="@id/line_register_phone"
         android:textSize="@dimen/ts_14"
-        android:layout_marginTop="7dp"
         android:layout_marginLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
         android:textColor="@color/black_333333"
