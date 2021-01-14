@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="20dp">
+    android:paddingBottom="40dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
         app:layout_constraintTop_toTopOf="@id/et_login_phone_or_email_byverifycode"
         app:layout_constraintBottom_toBottomOf="@id/et_login_phone_or_email_byverifycode"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/mobile_num"
+        android:text="@string/account"
         android:textColor="@color/black"
         android:layout_marginStart="20dp"
         android:textSize="@dimen/ts_14"
