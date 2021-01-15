@@ -19,7 +19,7 @@ class VideoModuleActivity : BaseActivity() {
         }
 
         btn_2_vedio.setOnClickListener {
-            jumpActivity(InputAuthorizeActivity::class.java)
+            jumpActivity(VideoMessageActivity::class.java)
         }
     }
 

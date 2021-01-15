@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.demo.BuildConfig
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.adapter.ButtonInterface
 import com.tencent.iot.explorer.link.core.demo.adapter.VideoMessageAdapter
@@ -49,6 +50,10 @@ class VideoMessageActivity : BaseActivity() {
     override fun initView() {
         mContext = applicationContext
         tv_title.text = "摄像头列表"
+
+        SharePreferenceUtil.saveString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID, BuildConfig.TencentIotLinkVideoSDKDemoSecretId)
+        SharePreferenceUtil.saveString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY, BuildConfig.TencentIotLinkVideoSDKDemoSecretKey)
+        SharePreferenceUtil.saveString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID, BuildConfig.TencentIotLinkVideoSDKDemoProductId)
 
         rv_video_message.layoutManager = LinearLayoutManager(this)
         adapter = VideoMessageAdapter(this, videoMessageList)
@@ -102,36 +107,42 @@ class VideoMessageActivity : BaseActivity() {
      *  获取摄像头列表
      */
     private fun refreshVideoMessageList() {
-        val secretId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID)
-        val secretKey = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
-        val productId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
-        VideoBaseService(secretId, secretKey).getDeviceList(productId, object:
-            VideoCallback {
-            override fun fail(msg: String?, reqCode: Int) {
+//        val secretId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID)
+//        val secretKey = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
+//        val productId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
+//        VideoBaseService(secretId, secretKey).getDeviceList(productId, object:
+//            VideoCallback {
+//            override fun fail(msg: String?, reqCode: Int) {
+//
+//            }
+//
+//            override fun success(response: String?, reqCode: Int) {
+//                val jsonObject = JSON.parse(response) as JSONObject
+//                val jsonResponset = jsonObject.getJSONObject("Response") as JSONObject
+//                if (jsonResponset.containsKey("Devices")) {
+//                    val dataArray: JSONArray = jsonResponset.getJSONArray("Devices")
+//                    videoMessageList.clear()
+//                    for (i in 0 until dataArray.size) {
+//                        var device = dataArray.get(i) as JSONObject
+//                        val entity = VideoMessageEntity()
+//                        entity.deviceName = device.getString("DeviceName")
+//                        videoMessageList.add(entity)
+//                    }
+//                    runOnUiThread {
+//                        if (mContext != null) {
+//                            adapter?.notifyDataSetChanged()
+//                        }
+//                    }
+//                }
+//            }
+//
+//        })
 
-            }
-
-            override fun success(response: String?, reqCode: Int) {
-                val jsonObject = JSON.parse(response) as JSONObject
-                val jsonResponset = jsonObject.getJSONObject("Response") as JSONObject
-                if (jsonResponset.containsKey("Devices")) {
-                    val dataArray: JSONArray = jsonResponset.getJSONArray("Devices")
-                    videoMessageList.clear()
-                    for (i in 0 until dataArray.size) {
-                        var device = dataArray.get(i) as JSONObject
-                        val entity = VideoMessageEntity()
-                        entity.deviceName = device.getString("DeviceName")
-                        videoMessageList.add(entity)
-                    }
-                    runOnUiThread {
-                        if (mContext != null) {
-                            adapter?.notifyDataSetChanged()
-                        }
-                    }
-                }
-            }
-
-        })
+        for (i in 1..3) {
+            val entity = VideoMessageEntity()
+            entity.deviceName = "sp01_32820237_$i"
+            videoMessageList.add(entity)
+        }
     }
 
 }

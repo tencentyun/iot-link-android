@@ -1,4 +1,7 @@
 {
   "TencentIotLinkSDKDemoAppkey": " ",
-  "TencentIotLinkSDKDemoAppSecret": " "
+  "TencentIotLinkSDKDemoAppSecret": " ",
+  "TencentIotLinkVideoSDKDemoSecretId": " ",
+  "TencentIotLinkVideoSDKDemoSecretKey": " ",
+  "TencentIotLinkVideoSDKDemoProductId": " "
 }
