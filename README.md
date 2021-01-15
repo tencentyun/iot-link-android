@@ -111,5 +111,5 @@ app-config.json 需要配置的内容，如下：
 
 ## 第三方服务接入指引
 
-* [实时音视频接入指南](https://github.com/tencentyun/iot-link-android/blob/master/doc/第三方服务接入/实时音视频接入指南.md)
+* [实时音视频接入指南](sdk/explorer-link-rtc/README.md)
 
