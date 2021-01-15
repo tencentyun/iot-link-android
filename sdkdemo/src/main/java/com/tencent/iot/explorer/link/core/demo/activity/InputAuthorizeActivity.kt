@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
+import android.util.Log
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.demo.R

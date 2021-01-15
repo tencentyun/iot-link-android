@@ -1,19 +1,27 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
-import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.text.TextUtils
+import android.util.Log
 import android.view.View.OnTouchListener
-import android.widget.DatePicker
 import android.widget.MediaController
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
+import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.entity.BaseResponse
+import com.tencent.iot.explorer.link.core.demo.entity.TimeBlock
+import com.tencent.iot.explorer.link.core.demo.entity.VideoHistory
 import com.tencent.iot.explorer.link.core.demo.view.ProgressItem
 import com.tencent.iot.explorer.link.core.demo.view.TimeAdapter
 import com.tencent.iot.explorer.link.core.demo.view.TimeNum
+import com.tencent.iot.video.link.callback.VideoCallback
+import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.activity_date_ipc.*
 import kotlinx.android.synthetic.main.activity_ipc.vedio_player
 import java.util.*
@@ -21,46 +29,34 @@ import kotlin.collections.ArrayList
 
 
 class DateIPCActivity : BaseActivity() {
+    var productId = ""
+    var devName = ""
+    var secretKey = ""
+    var secretId = ""
     var REQ_DATE_CODE = 0x1101
-    var url = ""
     var cd = Calendar.getInstance()
     private var progressItemList: ArrayList<ProgressItem>? = null
     var adapter: TimeAdapter? = null
+    var paramDateStr = ""
+    var paramDateParamStr = ""
+    var baseUrl = ""
+    var playUrl = ""
 
     override fun getContentView(): Int {
         return R.layout.activity_date_ipc
     }
 
     override fun initView() {
-        url = intent.getStringExtra(IPCActivity.URL)
+        productId = intent.getStringExtra(PRODUCTID)
+        devName = intent.getStringExtra(DEV_NAME)
+        secretKey = intent.getStringExtra(SCRE_KEY)
+        secretId = intent.getStringExtra(SCRE_ID)
+
         initDataToSeekbar()
     }
 
     private fun initDataToSeekbar() {
         progressItemList = ArrayList()
-        // red span
-        var item = ProgressItem()
-        item.startHour = 1
-        item.endHour = 2
-        item.progressItemPercentage = ProgressItem.getProgressItemPercentage(item)
-        item.progressItemPercentageEnd = ProgressItem.getProgressItemPercentageEnd(item)
-        progressItemList!!.add(item)
-        // blue span
-        var item1 = ProgressItem()
-        item1.startHour = 3
-        item1.endHour = 6
-        item1.progressItemPercentage = ProgressItem.getProgressItemPercentage(item1)
-        item1.progressItemPercentageEnd = ProgressItem.getProgressItemPercentageEnd(item1)
-        progressItemList!!.add(item1)
-
-        var item2 = ProgressItem()
-        item2.startHour = 23
-        item2.endHour = 23
-        item2.endMin = 59
-        item2.progressItemPercentage = ProgressItem.getProgressItemPercentage(item2)
-        item2.progressItemPercentageEnd = ProgressItem.getProgressItemPercentageEnd(item2)
-        progressItemList!!.add(item2)
-
         seekbar.initData(progressItemList)
         seekbar.invalidate()
 
@@ -92,8 +88,21 @@ class DateIPCActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun setListener() {
         btn_sel_date.setOnClickListener {
-            var intent = Intent(this@DateIPCActivity, DateSelectActivity::class.java)
-            startActivityForResult(intent, REQ_DATE_CODE)
+
+            VideoBaseService(secretId, secretKey).getIPCDateData(productId, devName, object:
+                VideoCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    Toast.makeText(this@DateIPCActivity, msg, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun success(response: String?, reqCode: Int) {
+                    var resp = JSONObject.parseObject(response, BaseResponse::class.java)
+                    var intent = Intent(this@DateIPCActivity, DateSelectActivity::class.java)
+                    intent.putExtra("dataArr", resp.Response?.data)
+                    startActivityForResult(intent, REQ_DATE_CODE)
+                }
+            })
+
         }
 
         seekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
@@ -109,9 +118,57 @@ class DateIPCActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_DATE_CODE && resultCode == RESULT_OK) {
             var year = data?.getIntExtra("year", 0)
-            var month = data?.getIntExtra("month", 0)
+            var month = data?.getIntExtra("month", 0)!! + 1
             var day = data?.getIntExtra("day", 0)
-            tv_date.setText("" + year + "/" + (month!! + 1) + "/" + day)
+            tv_date.setText("" + year + "/" + month + "/" + day)
+
+            var date = Date()
+            date.year = year!!
+            date.month = month - 1
+            date.date = day
+
+            paramDateStr = String.format("%04d-%02d-%02d", year, month, day)
+            paramDateParamStr = String.format("%04d%02d%02d", year, month, day)
+
+            VideoBaseService(secretId, secretKey).getIPCTimeData(productId, devName, paramDateStr, object:
+                VideoCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    Toast.makeText(this@DateIPCActivity, msg, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun success(response: String?, reqCode: Int) {
+                    var resp = JSONObject.parseObject(response, BaseResponse::class.java)
+                    var history = JSONObject.parseObject(resp.Response?.data, VideoHistory::class.java)
+                    if (history == null) {
+                        return
+                    }
+                    baseUrl = history.VideoURL
+                    var allTimeBlock = history.TimeList
+                    if (allTimeBlock != null && allTimeBlock.size > 0) {
+                        progressItemList = ArrayList()
+                        for (i in 0 until allTimeBlock.size) {
+                            var start = Date(allTimeBlock.get(i).StartTime * 1000)
+                            var end = Date(allTimeBlock.get(i).EndTime * 1000)
+
+                            var item = ProgressItem()
+                            item.startTimeMillis = allTimeBlock.get(i).StartTime
+                            item.endTimeMillis = allTimeBlock.get(i).EndTime
+                            item.startHour = start.hours
+                            item.startMin = start.minutes
+                            item.startSec = start.seconds
+                            item.endHour = end.hours
+                            item.endMin = end.minutes
+                            item.endSec = end.seconds
+                            item.progressItemPercentage = ProgressItem.getProgressItemPercentage(item)
+                            item.progressItemPercentageEnd = ProgressItem.getProgressItemPercentageEnd(item)
+                            progressItemList!!.add(item)
+                        }
+                        seekbar.initData(progressItemList)
+                        seekbar.invalidate()
+                    }
+                }
+            })
+
         }
     }
 
@@ -120,6 +177,29 @@ class DateIPCActivity : BaseActivity() {
             var h = progress /60
             var m = progress % 60
             tv_current_time.setText("" + h + "时" + m + "分")
+            if (TextUtils.isEmpty(paramDateStr)) {
+                Toast.makeText(this@DateIPCActivity, "请选择回放日期", Toast.LENGTH_SHORT).show()
+            } else {
+                if (progressItemList != null && progressItemList!!.size > 0) {
+                    for (j in 0 until progressItemList!!.size) {
+                        var tagA = progressItemList!!.get(j).startHour * 60 + progressItemList!!.get(j).startMin
+                        var tagB = progressItemList!!.get(j).endHour * 60 + progressItemList!!.get(j).endMin
+                        var seletedTime = h * 60 + m
+                        if (tagA <= seletedTime && tagB >= seletedTime) {
+                            // 选择了合适的时间
+
+                            playUrl = baseUrl + "?starttime=" + paramDateParamStr + String.format("%02d%02d%02d", progressItemList!!.get(j).startHour, progressItemList!!.get(j).startMin, progressItemList!!.get(j).startSec) +
+                                    "&endtime=" + paramDateParamStr + String.format("%02d%02d%02d", progressItemList!!.get(j).endHour, progressItemList!!.get(j).endMin, progressItemList!!.get(j).endSec)
+                            Log.e("XXX", "playUrl " + playUrl)
+
+                            playVideo(playUrl)
+                            return
+                        }
+                    }
+                }
+                Toast.makeText(this@DateIPCActivity, "选择时间段内无回放录像", Toast.LENGTH_SHORT).show()
+
+            }
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -136,6 +216,13 @@ class DateIPCActivity : BaseActivity() {
 
     private fun stopPlay() {
         vedio_player.stopPlayback()
+    }
+
+    companion object {
+        const val PRODUCTID = "productId"
+        const val DEV_NAME = "devName"
+        const val SCRE_KEY = "secretKey"
+        const val SCRE_ID = "secretId"
     }
 
 }

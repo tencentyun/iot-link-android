@@ -6,8 +6,12 @@ public class ProgressItem {
     public int progressItemPercentageEnd;
     public int startHour;
     public int startMin;
+    public int startSec;
     public int endHour;
     public int endMin;
+    public int endSec;
+    public long startTimeMillis;
+    public long endTimeMillis;
 
     public static int getProgressItemPercentage(ProgressItem item) {
         return item.startHour * 60 + item.startMin;

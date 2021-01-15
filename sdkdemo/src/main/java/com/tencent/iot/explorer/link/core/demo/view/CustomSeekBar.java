@@ -61,8 +61,7 @@ public class CustomSeekBar extends AppCompatSeekBar {
                 progressRect.set(progressItemLeft, 0, progressItemRight, thumbheight);
                 canvas.drawRect(progressRect, progressPaint);
             }
-            super.onDraw(canvas);
         }
-
+        super.onDraw(canvas);
     }
 }

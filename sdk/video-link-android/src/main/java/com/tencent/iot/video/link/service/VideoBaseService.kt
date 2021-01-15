@@ -3,6 +3,7 @@ package com.tencent.iot.video.link.service
 import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
+import com.alibaba.fastjson.JSONPObject
 import com.tencent.iot.video.link.util.JsonManager
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoRequestCode
@@ -42,11 +43,56 @@ open class VideoBaseService(secretId: String, secretKey: String) {
         var headerParams = explorerCommonHeaderParams("GetDeviceList")
         val param = TreeMap<String, Any>()
         param["ProductId"] = productId
+        param["Limit"] = 99
         val authorization = sign(VideoHttpUtil.EXPLORER_SERVICE, headerParams, param)
         if (authorization != null) {
             headerParams["Authorization"] = authorization
         }
-        basePost(VideoHttpUtil.EXPLORER_SERVICE+VideoHttpUtil.REST_HOST_URL, param, headerParams, callback, VideoRequestCode.video_describe_devices)
+        basePost(VideoHttpUtil.EXPLORER_SERVICE + VideoHttpUtil.REST_HOST_URL, param, headerParams, callback, VideoRequestCode.video_describe_devices)
+    }
+
+    fun getIPCDateData(
+        productId: String, devName: String, callback: VideoCallback
+    ) {
+        var headerParams = videoCommonHeaderParams("DescribeCloudStorageDate", "2020-12-15")
+        val param = TreeMap<String, Any>()
+        param["ProductId"] = productId
+        param["DeviceName"] = devName
+        val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
+        if (authorization != null) {
+            headerParams["Authorization"] = authorization
+        }
+        basePost(VideoHttpUtil.VIDEO_SERVICE + VideoHttpUtil.REST_HOST_URL,
+            param, headerParams, callback, VideoRequestCode.video_describe_date)
+    }
+
+    fun getIPCTimeData(
+        productId: String, devName: String, dateStr: String, callback: VideoCallback
+    ) {
+        var headerParams = videoCommonHeaderParams("DescribeCloudStorageTime", "2020-12-15")
+        val param = TreeMap<String, Any>()
+        param["ProductId"] = productId
+        param["DeviceName"] = devName
+        param["Date"] = dateStr
+        val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
+        if (authorization != null) {
+            headerParams["Authorization"] = authorization
+        }
+        basePost(VideoHttpUtil.VIDEO_SERVICE + VideoHttpUtil.REST_HOST_URL,
+            param, headerParams, callback, VideoRequestCode.video_describe_date_time)
+    }
+
+    fun getVideoBaseUrl(productId: String, devName: String, callback: VideoCallback) {
+        var headerParams = videoCommonHeaderParams("DescribeCloudStorageVideoUrl")
+        val param = TreeMap<String, Any>()
+        param["ProductId"] = productId
+        param["DeviceName"] = devName
+        val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
+        if (authorization != null) {
+            headerParams["Authorization"] = authorization
+        }
+        basePost(VideoHttpUtil.VIDEO_SERVICE + VideoHttpUtil.REST_HOST_URL,
+            param, headerParams, callback, VideoRequestCode.video_describe_url)
     }
 
     /**
@@ -80,15 +126,25 @@ open class VideoBaseService(secretId: String, secretKey: String) {
         return param
     }
 
+    fun videoCommonHeaderParams(action: String, version: String): HashMap<String, String> {
+        val param = HashMap<String, String>()
+        param["X-TC-Action"] = action
+        param["X-TC-Version"] = version
+        param["X-TC-Region"] = "ap-guangzhou"
+        param["X-TC-Timestamp"] = (System.currentTimeMillis() / 1000).toString()
+        return param
+    }
+
     /**
      * video header接口公共参数
      */
     fun videoCommonHeaderParams(action: String): HashMap<String, String> {
-        val param = HashMap<String, String>()
-        param["X-TC-Action"] = action
-        param["X-TC-Version"] = "2019-11-26"
-        param["X-TC-Timestamp"] = (System.currentTimeMillis() / 1000).toString()
-        return param
+//        val param = HashMap<String, String>()
+//        param["X-TC-Action"] = action
+//        param["X-TC-Version"] = "2019-11-26"
+//        param["X-TC-Timestamp"] = (System.currentTimeMillis() / 1000).toString()
+//        return param
+        return videoCommonHeaderParams(action, "2019-11-26")
     }
 
     open fun sign(
