@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
@@ -94,9 +95,11 @@ class VideoMessageActivity : BaseActivity() {
                 val secretKey = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
                 val productId = SharePreferenceUtil.getString(this@VideoMessageActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
                 val deviceName = videoMessageList[position].deviceName
-                var intent = Intent(this@VideoMessageActivity, IPCActivity::class.java)
-                jumpActivity(InputAuthorizeActivity::class.java)
-                intent.putExtra(IPCActivity.URL, "")
+                var intent = Intent(this@VideoMessageActivity, DateIPCActivity::class.java)
+                intent.putExtra(DateIPCActivity.PRODUCTID, productId)
+                intent.putExtra(DateIPCActivity.DEV_NAME, deviceName)
+                intent.putExtra(DateIPCActivity.SCRE_KEY, secretKey)
+                intent.putExtra(DateIPCActivity.SCRE_ID, secretId)
                 startActivity(intent)
             }
 
