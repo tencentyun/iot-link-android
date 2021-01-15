@@ -1,5 +1,7 @@
 #ifndef __APPWRAPPER_H_
 #define __APPWRAPPER_H_
+
+#include <jni.h>
 //#ifdef __cplusplus
 //extern "C" {
 //#endif
@@ -7,6 +9,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string>
+
+__attribute__ ((visibility ("default")))
+int setJavaCallback(JNIEnv *env, jobject obj, const char* name);
 
 __attribute__ ((visibility ("default")))
 int startServiceWithXp2pInfo(std::string peername);
