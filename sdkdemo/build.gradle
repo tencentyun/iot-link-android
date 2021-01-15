@@ -35,6 +35,11 @@ android {
 
         buildConfigField 'String', 'TencentIotLinkSDKDemoAppkey', "\"${getValueById('TencentIotLinkSDKDemoAppkey')}\""
         buildConfigField 'String', 'TencentIotLinkSDKDemoAppSecret', "\"${getValueById('TencentIotLinkSDKDemoAppSecret')}\""
+
+        buildConfigField 'String', 'TencentIotLinkVideoSDKDemoSecretId', "\"${getValueById('TencentIotLinkVideoSDKDemoSecretId')}\""
+        buildConfigField 'String', 'TencentIotLinkVideoSDKDemoSecretKey', "\"${getValueById('TencentIotLinkVideoSDKDemoSecretKey')}\""
+        buildConfigField 'String', 'TencentIotLinkVideoSDKDemoProductId', "\"${getValueById('TencentIotLinkVideoSDKDemoProductId')}\""
+
         multiDexEnabled true
 
         externalNativeBuild {
