@@ -11,13 +11,12 @@
 
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jint JNICALL
 Java_com_tencent_iot_video_link_XP2P_startServiceWithXp2pInfo(JNIEnv *env, jclass clazz,
                                                               jstring peername) {
     const char *pname = env->GetStringUTFChars(peername, 0);
     LOGI("------------ startServiceWithXp2pInfo Start------------\n");
-    startServiceWithXp2pInfo(pname);
-    LOGI("------------ startServiceWithXp2pInfo End------------");
+    return startServiceWithXp2pInfo(pname);
 }
 
 extern "C"
@@ -28,21 +27,23 @@ Java_com_tencent_iot_video_link_XP2P_delegateHttpFlv(JNIEnv *env, jclass clazz) 
 }
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jint JNICALL
 Java_com_tencent_iot_video_link_XP2P_setDeviceInfo(JNIEnv *env, jclass clazz, jstring pro_id, jstring dev_name) {
+    LOGI("------------ SetDeviceInfo Start------------");
     const char *id = env->GetStringUTFChars(pro_id, 0);
     const char *name = env->GetStringUTFChars(dev_name, 0);
     int rc = setDeviceInfo(id, name);
-    LOGI("------------ SetDeviceInfo End:%d------------", rc);
+    return rc;
 }
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jint JNICALL
 Java_com_tencent_iot_video_link_XP2P_setQcloudApiCred(JNIEnv *env, jclass clazz, jstring api_id, jstring api_key) {
+    LOGI("------------ SetQcloudApiCred Start------------");
     const char *id = env->GetStringUTFChars(api_id, 0);
     const char *key = env->GetStringUTFChars(api_key, 0);
     int rc = setQcloudApiCred(id, key);
-    LOGI("------------ SetQcloudApiCred End:%d------------", rc);
+    return rc;
 }
 
 extern "C"
@@ -53,11 +54,13 @@ Java_com_tencent_iot_video_link_XP2P_runSendService(JNIEnv *env, jclass clazz) {
 }
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jint JNICALL
 Java_com_tencent_iot_video_link_XP2P_dataSend(JNIEnv *env, jclass clazz, jbyteArray data, jint len) {
+    LOGI("------------ DataSend Start------------");
     jbyte* dataPtr = env->GetByteArrayElements(data, 0);
     int rc = dataSend((uint8_t *)dataPtr, (size_t)len);
-    LOGI("------------ DataSend End:%d------------", rc);
+    LOGI("------------ DataSend End------------");
+    return rc;
 }
 
 extern "C"
@@ -68,16 +71,23 @@ Java_com_tencent_iot_video_link_XP2P_stopService(JNIEnv *env, jclass clazz) {
 }
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jint JNICALL
 Java_com_tencent_iot_video_link_XP2P_setXp2pInfoAttributes(JNIEnv *env, jclass clazz, jstring attributes) {
+    LOGI("------------ SetXp2pInfoAttributes Start------------");
     const char *_attributes = env->GetStringUTFChars(attributes, 0);
-    setXp2pInfoAttributes(_attributes);
-    LOGI("------------ SetXp2pInfoAttributes End------------");
+    return setXp2pInfoAttributes(_attributes);
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_tencent_iot_video_link_XP2P_stopSendService(JNIEnv *env, jclass clazz, jbyteArray data) {
+    LOGI("------------ StopSendService Start------------");
+    return stopSendService(nullptr);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_tencent_iot_video_link_XP2P_stopSendService(JNIEnv *env, jclass clazz, jbyteArray data) {
-    stopSendService(nullptr);
-    LOGI("------------ StopSendService End------------");
+Java_com_tencent_iot_video_link_XP2P_setCallback(JNIEnv *env, jclass clazz, jobject callback) {
+    LOGI("------------ SetCallback Start------------");
+    setJavaCallback(env, callback, "fail");
 }
