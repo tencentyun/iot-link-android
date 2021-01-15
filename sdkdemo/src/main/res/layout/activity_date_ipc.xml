@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
-        <VideoView
+        <com.tencent.iot.explorer.link.core.demo.view.CustomVideoView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/vedio_player"
@@ -37,6 +37,14 @@
         android:paddingLeft="20dp"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/btn_sel_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/tv_current_time"
+        />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +61,7 @@
             android:descendantFocusability="blocksDescendants">
 
             <com.tencent.iot.explorer.link.core.demo.view.CustomSeekBar
-                android:layout_width="800dp"
+                android:layout_width="3800dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,21 +76,12 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/v_grid"
-                android:layout_width="800dp"
+                android:layout_width="3800dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 />
         </LinearLayout>
     </HorizontalScrollView>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/scroll"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/tv_current_time"
-        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
