@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.core.demo.activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alibaba.fastjson.JSONArray;
 import com.tencent.iot.explorer.link.core.demo.R;
 import com.tencent.iot.explorer.link.core.demo.view.CalendarView;
 
@@ -32,9 +34,20 @@ public class DateSelectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_date);
+
+        String dateArrStr = getIntent().getStringExtra("dataArr");
+        List<String> all = new ArrayList<>();
+        if (!TextUtils.isEmpty(dateArrStr)) {
+            JSONArray jsonArray = JSONArray.parseArray(dateArrStr);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                String tmp = jsonArray.getString(i);
+                tmp = tmp.replace("-", "");
+                all.add(tmp);
+            }
+        }
+
         mTxtDate = (TextView) findViewById(R.id.txt_date);
         mCalendarView = (CalendarView) findViewById(R.id.calendarView);
-
         // 设置已选的日期
         mCalendarView.setSelectDate(initData());
 
@@ -53,13 +66,6 @@ public class DateSelectActivity extends AppCompatActivity {
         });
         // 设置是否能够改变日期状态
         mCalendarView.setChangeDateStatus(true);
-
-        List<String> all = new ArrayList<>();
-        all.add("20210101");
-        all.add("20210102");
-        all.add("20210103");
-        all.add("20210107");
-        all.add("20201203");
         mCalendarView.setSelectDate(all);
 
         // 设置日期点击监听
