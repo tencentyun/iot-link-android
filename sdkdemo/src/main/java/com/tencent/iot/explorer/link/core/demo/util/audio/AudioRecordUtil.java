@@ -32,6 +32,7 @@ public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
     private FLVPacker flvPacker;
 
     public static AudioRecordUtil getInstance() {
+        audioRecordUtil.init();
         return audioRecordUtil;
     }
 
@@ -70,7 +71,7 @@ public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
         if (audioRecord.getState() == AudioRecord.RECORDSTATE_RECORDING) {
             audioRecord.stop();
         }
-//        audioRecord.release();
+        audioRecord.release();
     }
 
     @Override
