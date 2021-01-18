@@ -279,7 +279,6 @@ class MainActivity : PActivity(), MyCallback {
         val t = System.currentTimeMillis()
         if (t - timestamp < 1000) {
             exitApp()
-            App.data.clear()
             exitProcess(0)
         } else {
             timestamp = t
