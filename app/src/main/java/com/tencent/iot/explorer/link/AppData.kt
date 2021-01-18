@@ -12,6 +12,7 @@ import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.recyclerview.SelectedArrayList
 import java.util.*
 
@@ -167,12 +168,21 @@ class AppData private constructor() {
     fun readLocalUser(context: Context) {
         val token = SharePreferenceUtil.getString(context, App.CONFIG, CommonField.TOKEN)
         val expireAt = SharePreferenceUtil.getLong(context, App.CONFIG, CommonField.EXPIRE_AT)
+        var countryInfo = Utils.getStringValueFromXml(T.getContext(), CommonField.COUNTRY_INFO, CommonField.COUNTRY_INFO)
+
         if (!TextUtils.isEmpty(token)) {
             user = User()
             user?.Token = token
             user?.ExpireAt = expireAt
             IoTAuth.user.Token = token
             IoTAuth.user.ExpireAt = expireAt
+            if (countryInfo != null) {
+                if (!countryInfo.contains("+")) return
+                countryInfo.split("+").let {
+                    App.data.regionId = it[1]
+                    App.data.region = it[3]
+                }
+            }
         }
     }
 
