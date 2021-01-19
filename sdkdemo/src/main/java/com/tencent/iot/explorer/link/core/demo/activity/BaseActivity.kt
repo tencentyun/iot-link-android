@@ -11,7 +11,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.tencent.iot.explorer.link.core.demo.App
+import com.tencent.iot.explorer.link.core.demo.BuildConfig
 import com.tencent.iot.explorer.link.core.demo.DataHolder
+import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.util.Watermark
 
 /**
  * baseActivity
@@ -57,6 +60,7 @@ abstract class BaseActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //在setContentView()后调用
         startHere()
+        Watermark.getInstance().show(this, BuildConfig.SDKDemoCommitID)
     }
 
     override fun onResume() {
@@ -70,10 +74,10 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun checkPermissions(permissions: Array<String>): Boolean {
         for (p in permissions) {
             if (ActivityCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_DENIED) {
-                Log.e("lurs", p + "被拒绝")
+                L.e(p + "被拒绝")
                 return false
             }
-            Log.e("lurs", p + "已经申请成功")
+            L.e(p + "已经申请成功")
         }
         return true
     }
