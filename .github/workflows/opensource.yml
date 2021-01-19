@@ -19,7 +19,7 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
       - uses: actions/checkout@v2
@@ -30,10 +30,18 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+#      - name: Setup cmake
+#        uses: jwlawson/actions-setup-cmake@v1.6
+#        with:
+#          cmake-version: '3.10.2'
       - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.6
-        with:
-          cmake-version: '3.10.2'
+        run: |
+          mkdir ~/cmake-3.10.2
+          cd ~/cmake-3.10.2
+          wget https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.sh
+          sh cmake-3.10.2-Linux-x86_64.sh --prefix ~/cmake-3.10.2
+          sudo update-alternatives --install /usr/bin/cmake cmake ~/cmake-3.10.2/bin/cmake 60
+
       - name: Use cmake
         run: |
           cmake --version
