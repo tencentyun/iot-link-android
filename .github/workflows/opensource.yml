@@ -38,8 +38,8 @@ jobs:
         run: |
           mkdir ~/cmake-3.10.2
           cd ~/cmake-3.10.2
-          y | wget https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.sh
-          n | sh cmake-3.10.2-Linux-x86_64.sh --prefix ~/cmake-3.10.2
+          y | sudo wget https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.sh
+          n | sudo sh cmake-3.10.2-Linux-x86_64.sh --prefix ~/cmake-3.10.2
           sudo update-alternatives --install /usr/bin/cmake cmake ~/cmake-3.10.2/bin/cmake 60
 
       - name: Use cmake
