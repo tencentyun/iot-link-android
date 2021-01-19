@@ -5,6 +5,7 @@ import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
@@ -718,7 +719,8 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
             } else if (json.getIntValue("ActionType") == 3) {
                 task.type = 2
                 task.aliasName = getString(R.string.send_notification)
-                if (json.containsKey("Data") && json.getIntValue("Data") == 0) {
+                if (json.containsKey("Data") && json.getString("Data") != null &&
+                    json.getString("Data").isDigitsOnly() && json.getIntValue("Data") == 0) {
                     task.task = getString(R.string.msg_center)
                 }
             }
