@@ -3,8 +3,7 @@ name: Android CI
 on:
   push:
     paths-ignore: # 有時候不想要改個文档也触发 github actions
-      - 'doc/**'
-      - 'README.md'
+      - '**.md'
       - 'LICENSE'
     tags-ignore:  # 屏蔽掉发release打tag事件
       - '*'
