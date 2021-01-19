@@ -392,9 +392,11 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         return
                     }
                     val videoCallStatusJson = dataJson.getJSONObject(MessageConst.TRTC_VIDEO_CALL_STATUS)
+                    if (videoCallStatusJson == null) return
                     val videoCallStatus = videoCallStatusJson.getInteger("Value")
 
                     val audioCallStatusJson = dataJson.getJSONObject(MessageConst.TRTC_AUDIO_CALL_STATUS)
+                    if (audioCallStatusJson == null) return
                     val audioCallStatus = audioCallStatusJson.getInteger("Value")
                     // 判断设备的video_call_status, audio_call_status字段是否等于1，若等于1，就调用CallDevice接口
                     if (videoCallStatus == 1) {
