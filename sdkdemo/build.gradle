@@ -40,6 +40,8 @@ android {
         buildConfigField 'String', 'TencentIotLinkVideoSDKDemoSecretKey', "\"${getValueById('TencentIotLinkVideoSDKDemoSecretKey')}\""
         buildConfigField 'String', 'TencentIotLinkVideoSDKDemoProductId', "\"${getValueById('TencentIotLinkVideoSDKDemoProductId')}\""
 
+        buildConfigField 'String', 'SDKDemoCommitID', "\"${rootProject.ext.android.sdkDemoCommitId}\""
+
         multiDexEnabled true
 
         externalNativeBuild {
