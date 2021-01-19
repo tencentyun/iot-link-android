@@ -56,7 +56,7 @@ public static void setDeviceInfo(String id, String name);
 public static void setXp2pInfoAttributes(String attributes);
 * 函数说明:设置物模型中xp2p信息属性名称
 * 参数说明:
-    * attributes:属性名称,该版本传入`xp2p_info`
+    * attributes:属性名称,该版本传入`_sys_xp2p_info`
 * 返回值:无返回值
 
 public static void runSendService();
