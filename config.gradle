@@ -6,7 +6,8 @@ ext {
     android = [
             versionNameStr: versionNamePrefix,
             versionName: versionAppName,
-            versionCode: 3
+            versionCode: 3,
+            sdkDemoCommitId: 'xxx'
     ]
 
     configPath = ""
