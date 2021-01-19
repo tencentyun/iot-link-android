@@ -86,7 +86,8 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
             RequestCode.get_recommend_device_list -> {
                 if (response.isSuccess()) {
                     response.parse(RecommDeviceListResponse::class.java)?.run {
-                        if (ProductList.size > 0) {
+                        if (mContext != null && recommendDevicesGridView != null &&
+                            ProductList != null && ProductList.size > 0) {
                             productList = ProductList
                             recommendDevicesGridView?.adapter = GridAdapter(mContext!!, ProductList, true)
                         } else {
@@ -94,7 +95,9 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                             if (split_line != null) split_line.visibility = View.GONE
                             if (gv_recommend_devices != null) gv_recommend_devices.visibility = View.GONE
                         }
-                        if (devicesGridView != null && mContext != null) {
+
+                        if (devicesGridView != null && mContext != null &&
+                            CategoryList != null && CategoryList.size > 0) {
                             devicesGridView!!.adapter = GridAdapter(mContext!!, CategoryList, false)
                         }
                     }
