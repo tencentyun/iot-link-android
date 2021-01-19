@@ -30,7 +30,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 3
-        versionName "1.3"
+        versionName rootProject.ext.android.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'TencentIotLinkSDKDemoAppkey', "\"${getValueById('TencentIotLinkSDKDemoAppkey')}\""
