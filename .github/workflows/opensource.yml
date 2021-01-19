@@ -19,7 +19,7 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
       - uses: actions/checkout@v2
@@ -30,10 +30,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.5
-        with:
-          cmake-version: '3.10.2'
+#      - name: Setup cmake
+#        uses: jwlawson/actions-setup-cmake@v1.5
+#        with:
+#          cmake-version: '3.10.2'
       - name: Use cmake
         run: |
           cmake --version
