@@ -27,11 +27,11 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private lateinit var deviceName: String
     private var playback: Boolean = false
     private var isSpeaking: Boolean = false
+    private var isPlaying: Boolean = true
     private var isP2PChannelAvailable: Boolean = false
 
     private lateinit var mPlayer: IjkMediaPlayer
     private val mHandler = Handler(Looper.getMainLooper())
-    private var fileOutputStream: FileOutputStream? = null
 
     private var permissions = arrayOf(
         Manifest.permission.RECORD_AUDIO
@@ -87,7 +87,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
             } else {
                 isP2PChannelAvailable = false
                 speak.visibility = View.GONE
-                stop_watch_monitor.visibility = View.GONE
+                watch_monitor.visibility = View.GONE
                 Toast.makeText(this, "P2P通道建立失败，请检查设备是否上线", Toast.LENGTH_LONG).show()
             }
         }
@@ -95,7 +95,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
 
     override fun setListener() {
         speak.setOnClickListener(this)
-        stop_watch_monitor.setOnClickListener(this)
+        watch_monitor.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -115,8 +115,16 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                     }
                 }
             }
-            stop_watch_monitor -> {
-                mPlayer.stop()
+            watch_monitor -> {
+                if (isPlaying) {
+                    mPlayer.pause()
+                    isPlaying = false
+                    watch_monitor.text = "开始播放"
+                } else {
+                    mPlayer.start()
+                    isPlaying = true
+                    watch_monitor.text = "停止播放"
+                }
             }
         }
     }
