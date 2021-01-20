@@ -110,7 +110,10 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
             }
         }
         offlinePopup?.setBg(control_panel_bg)
-        offlinePopup?.show(control_panel)
+
+        if (!this@ControlPanelActivity.isFinishing) {
+            offlinePopup?.show(control_panel)
+        }
     }
 
     /**
