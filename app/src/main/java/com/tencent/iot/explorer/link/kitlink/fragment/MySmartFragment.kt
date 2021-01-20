@@ -357,7 +357,8 @@ class MySmartFragment() : BaseFragment(), View.OnClickListener, MyCallback {
     }
 
     private fun loadDataOver() {
-        if (automicListLoadOver && manualListLoadOver && smart_refreshLayout.isRefreshing) {
+        if (automicListLoadOver && manualListLoadOver &&
+            smart_refreshLayout != null && smart_refreshLayout.isRefreshing) {
             smart_refreshLayout.finishRefresh()
         }
         adapter?.manualList = manualList
