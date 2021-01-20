@@ -62,6 +62,8 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
 
     private var onListItemClicked = object : DevModeAdapter.OnItemClicked{
         override fun onItemClicked(pos: Int, devModeInfo: DevModeInfo) {
+            if (devModeInfo.define == null) return
+
             var type = devModeInfo.define!!.get("type")
             if (type == "bool" || type == "enum") {
                 showMapDialog(pos, devModeInfo)
