@@ -95,7 +95,10 @@ class MainActivity : PActivity(), MyCallback {
                         if (isForceUpgrade || (!isForceUpgrade && !UpgradeDialog.dialogShowed())) {
                             val dialog = UpgradeDialog(this@MainActivity, info)
                             dialog.setOnDismisListener(upgradeDialogListener)
-                            dialog.show()
+
+                            if (!this@MainActivity.isFinishing) {
+                                dialog.show()
+                            }
                         }
                     }
                 }
