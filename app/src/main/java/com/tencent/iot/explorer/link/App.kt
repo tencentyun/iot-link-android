@@ -203,6 +203,15 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                                 productIdList.add(device.ProductId)
                                 getDeviceOnlineStatus(device.ProductId, deviceIds, device)
                             }
+                            // TRTC：轮询在线的trtc共享设备的call_status
+                            for (device in data.shareDeviceList) {
+                                val deviceIds = ArrayList<String>()
+                                if (!device.DeviceId.isNullOrEmpty() && !device.ProductId.isNullOrEmpty()) {
+                                    deviceIds.add(device.DeviceId)
+                                    productIdList.add(device.ProductId)
+                                    getDeviceOnlineStatus(device.ProductId, deviceIds, device)
+                                }
+                            }
                         }
                     }
                 }
