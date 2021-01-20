@@ -22,8 +22,8 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/stop_watch_monitor"
+        android:id="@+id/watch_monitor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="停止观看"/>
+        android:text="停止播放"/>
 </LinearLayout>
