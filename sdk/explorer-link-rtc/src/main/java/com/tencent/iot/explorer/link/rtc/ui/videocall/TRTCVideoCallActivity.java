@@ -567,6 +567,10 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mSponsorUserInfo == null) {
+                    stopCameraAndFinish();
+                    return;
+                }
                 TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_VIDEO_CALL, mSponsorUserInfo.getUserId());
                 stopCameraAndFinish();
             }
@@ -574,6 +578,10 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mDialingLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mSponsorUserInfo == null) {
+                    stopCameraAndFinish();
+                    return;
+                }
                 TRTCUIManager.getInstance().didAcceptJoinRoom(TRTCCalling.TYPE_VIDEO_CALL, mSponsorUserInfo.getUserId());
             }
         });
@@ -595,6 +603,10 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mSponsorUserInfo == null) {
+                    stopCameraAndFinish();
+                    return;
+                }
                 TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_VIDEO_CALL, mSponsorUserInfo.getUserId());
                 stopCameraAndFinish();
             }
