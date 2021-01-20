@@ -173,10 +173,13 @@ class MainActivity : PActivity(), MyCallback {
         home_bottom_view.setOnItemClickListener { _, position, previewPosition ->
             showFragment(position)
         }
-        (fragments[0] as? HomeFragment)?.run {
-            popupListener = object : HomeFragment.PopupListener {
-                override fun onPopupListener(familyList: List<FamilyEntity>) {
-                    this@MainActivity.showFamilyPopup(familyList)
+
+        if (fragments != null && fragments.size > 0) {
+            (fragments[0] as? HomeFragment)?.run {
+                popupListener = object : HomeFragment.PopupListener {
+                    override fun onPopupListener(familyList: List<FamilyEntity>) {
+                        this@MainActivity.showFamilyPopup(familyList)
+                    }
                 }
             }
         }
