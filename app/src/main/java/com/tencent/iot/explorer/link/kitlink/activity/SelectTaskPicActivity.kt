@@ -18,7 +18,7 @@ class SelectTaskPicActivity : BaseActivity() {
     private var listUrl = ArrayList<String>()
     private var adapter: SelectPicAdapter? = SelectPicAdapter(listUrl)
     @Volatile
-    private var picUrl = ""
+    private var picUrl: String? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_select_smart_pic
