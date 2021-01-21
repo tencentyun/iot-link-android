@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.customview.WrapContentLinearLayoutManager
 import java.lang.Exception
 import java.util.function.Predicate
 
@@ -221,7 +222,7 @@ class CRecyclerView : RecyclerView {
      */
     fun initAdapter() {
         if (layoutManager == null) {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = WrapContentLinearLayoutManager(context)
         }
         if (adapter != null) {
             notifyDataChanged()
