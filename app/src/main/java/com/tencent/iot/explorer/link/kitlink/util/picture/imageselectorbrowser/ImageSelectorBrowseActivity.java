@@ -116,8 +116,11 @@ public class ImageSelectorBrowseActivity extends Activity implements OnClickList
         if (mPosition == -1) {
             mPosition = 0;
         }
-        for (String string : mPaths) {
-            mViews.add(null);
+
+        if (mPaths != null) {
+            for (String string : mPaths) {
+                mViews.add(null);
+            }
         }
         // loadImage();
     }
