@@ -451,7 +451,9 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         }
         RoomKey roomKey = JSON.parseObject(roomKeyStr, RoomKey.class);
         mSelfModel = new UserInfo();
-        mSelfModel.setUserId(roomKey.getUserId());
+        if (roomKey != null) {
+            mSelfModel.setUserId(roomKey.getUserId());
+        }
 
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
         mSponsorUserInfo = (UserInfo) intent.getSerializableExtra(PARAM_BEINGCALL_USER);
