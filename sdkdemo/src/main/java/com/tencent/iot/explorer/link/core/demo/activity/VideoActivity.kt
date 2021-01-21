@@ -3,19 +3,17 @@ package com.tencent.iot.explorer.link.core.demo.activity
 import android.Manifest
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
 import com.tencent.iot.explorer.link.core.demo.util.audio.AudioRecordUtil
-import com.tencent.iot.video.link.XP2P
-import com.tencent.iot.video.link.callback.XP2PCallback
 import com.tencent.iot.video.link.consts.VideoConst
+import com.tencent.xnet.XP2P
+import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
