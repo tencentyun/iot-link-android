@@ -99,7 +99,7 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
         intent?.let {
             val action = it.getIntExtra(SetPasswordActivity.ACTION, -1)
             presenter.setCommonData(
-                it.getStringExtra(TYPE)!!,
+                it.getStringExtra(TYPE),
                 action
             )
             when (action) {
