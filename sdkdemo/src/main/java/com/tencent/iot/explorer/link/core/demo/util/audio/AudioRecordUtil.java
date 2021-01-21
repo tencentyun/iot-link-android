@@ -3,15 +3,8 @@ package com.tencent.iot.explorer.link.core.demo.util.audio;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.util.Log;
 
-import com.tencent.iot.explorer.link.core.demo.App;
-import com.tencent.iot.video.link.XP2P;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.tencent.xnet.XP2P;
 
 
 public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
