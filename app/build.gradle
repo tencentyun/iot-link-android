@@ -133,7 +133,7 @@ dependencies {
     //banner
     implementation 'com.youth.banner:banner:1.4.10'
     //左滑删除
-    implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.2.3'
+    implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.3.0'
     //信鸽推送
     implementation 'com.tencent.jg:jg:1.1'
     implementation 'com.tencent.tpns:tpns:1.2.0.2-release'
