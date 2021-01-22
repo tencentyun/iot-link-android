@@ -47,7 +47,7 @@ jobs:
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i "s#xxx#$rb+git.$rc#g" config.gradle
       - name: Build with Gradle
-        run: ./gradlew build --warning-mode=all
+        run: ./gradlew build --warning-mode=all --stacktrace
       - name: Package apk and aar with Gradle
         run: ./gradlew assembleOpensource
 #      - name: Publish aar to Maven
