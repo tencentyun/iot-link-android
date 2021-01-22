@@ -1,13 +1,15 @@
 def gitCommitShortHash = 'git log -1 --pretty=%h'.execute([], project.rootDir).text.trim()
 def versionNamePrefix = "1.1.0"
 def versionAppName = "1.1.0"
+def sdkVersion = "1.4.0"
 
 ext {
     android = [
             versionNameStr: versionNamePrefix,
             versionName: versionAppName,
             versionCode: 3,
-            sdkDemoCommitId: 'xxx'
+            sdkDemoCommitId: 'xxx',
+            sdkSnapshotVersion: sdkVersion
     ]
 
     configPath = ""
