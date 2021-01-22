@@ -49,7 +49,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
-        run: ./gradlew assembleOpensource
+        run: ./gradlew assemble
       - name: Publish aar to Maven
         run: ./gradlew publish
       - name: Archive the apk
