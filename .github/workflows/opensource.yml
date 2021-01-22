@@ -47,28 +47,28 @@ jobs:
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i "s#xxx#$rb+git.$rc#g" config.gradle
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --warning-mode=all
       - name: Package apk and aar with Gradle
         run: ./gradlew assembleOpensource
-      - name: Publish aar to Maven
-        run: ./gradlew publish
-      - name: Archive the apk
-        uses: actions/upload-artifact@v2
-        with:
-          path: app/build/outputs/apk/opensource/release/*.apk
-
-      - name: Build demo apk
-        run: |
-          ./gradlew :sdkdemo:assembleRelease
-
-      - name: Deploy App to fir
-        run: |
-          apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
-          demoApk=$(ls sdkdemo/build/outputs/apk/release/sdkdemo-release.apk)
-
-          rc=$(git rev-parse --short HEAD)
-          rl=$(git log --pretty=format:"%s" $rc -1)
-          fir publish $apk -T $IOT_FIRIM_API_TOKEN -c "$rl" --oversea_turbo --force_pin_history -V
-          fir publish $demoApk -T $IOT_FIRIM_API_TOKEN -c "$rl" --oversea_turbo --force_pin_history -V
-        env:
-          IOT_FIRIM_API_TOKEN: ${{ secrets.IOT_FIRIM_API_TOKEN }}
+#      - name: Publish aar to Maven
+#        run: ./gradlew publish
+#      - name: Archive the apk
+#        uses: actions/upload-artifact@v2
+#        with:
+#          path: app/build/outputs/apk/opensource/release/*.apk
+#
+#      - name: Build demo apk
+#        run: |
+#          ./gradlew :sdkdemo:assembleRelease
+#
+#      - name: Deploy App to fir
+#        run: |
+#          apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
+#          demoApk=$(ls sdkdemo/build/outputs/apk/release/sdkdemo-release.apk)
+#
+#          rc=$(git rev-parse --short HEAD)
+#          rl=$(git log --pretty=format:"%s" $rc -1)
+#          fir publish $apk -T $IOT_FIRIM_API_TOKEN -c "$rl" --oversea_turbo --force_pin_history -V
+#          fir publish $demoApk -T $IOT_FIRIM_API_TOKEN -c "$rl" --oversea_turbo --force_pin_history -V
+#        env:
+#          IOT_FIRIM_API_TOKEN: ${{ secrets.IOT_FIRIM_API_TOKEN }}
