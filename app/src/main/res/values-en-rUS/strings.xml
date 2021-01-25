@@ -133,6 +133,7 @@
     <string name="register_agree_2">User Agreement</string>
     <string name="register_agree_3">and</string>
     <string name="register_agree_4">Privacy Policy</string>
+    <string name="register_agree_5">开源软件信息</string>
     <string name="register_get_code">Get verification code</string>
     <string name="get_mobile_code_sent">The verification code has been sent to your phone:</string>
     <string name="get_email_code_sent">The verification code has been sent to your email:</string>
