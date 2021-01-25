@@ -51,7 +51,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".kitlink.activity.SmartConfigStepActivity"></activity>
+        <activity android:name=".kitlink.activity.OpensourceLicenseActivity" />
+        <activity android:name=".kitlink.activity.SmartConfigStepActivity" />
         <activity android:name=".kitlink.activity.DeviceWifiActivity" />
 
         <provider
@@ -119,7 +120,6 @@
         <activity android:name=".kitlink.activity.HelpCenterActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
-
         <activity
             android:name=".kitlink.activity.ConfigNetFailedActivity"
             android:launchMode="singleTask" />
