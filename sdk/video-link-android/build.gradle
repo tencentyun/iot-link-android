@@ -45,8 +45,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //kotlin协程
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
-    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:1.0.0-SNAPSHOT'
+    api('com.tencent.iot.thirdparty.android:xp2p-sdk:1.0.0-SNAPSHOT') {
+        changing = true
+    }
+}
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 task androidJavadocs(type: Javadoc) {
