@@ -1505,6 +1505,17 @@ class HttpRequest private constructor() {
             }
         }, reqCode)
     }
+
+    fun getOpensourceLicense(uri: String, callback: MyCustomCallBack, reqCode: Int) {
+        StringRequest.instance.postJson(STUDIO_BASE_URL, uri, "", object : Callback {
+            override fun fail(msg: String?, reqCode: Int) {
+                callback.fail(msg, reqCode)
+            }
+            override fun success(json: String, reqCode: Int) {
+                callback.success(json, reqCode)
+            }
+        }, reqCode)
+    }
     /****************************************   场景联动接口结束   *******************************************************/
 
 }
