@@ -1,5 +1,5 @@
 ### 概述
-Video（待补充）
+Video SDK 主要提供了设备P2P接入、实时监控对讲、本地回放等常带电IPC基本能力。
 
 ### SDK相关文档
 [AndroidSDK说明](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/AndroidSDK%E8%AF%B4%E6%98%8E.md)
