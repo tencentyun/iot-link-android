@@ -10,12 +10,12 @@ import android.widget.MediaController
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.util.rangeTo
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.entity.BaseResponse
-import com.tencent.iot.explorer.link.core.demo.entity.TimeBlock
 import com.tencent.iot.explorer.link.core.demo.entity.VideoHistory
 import com.tencent.iot.explorer.link.core.demo.view.ProgressItem
 import com.tencent.iot.explorer.link.core.demo.view.TimeAdapter
@@ -146,8 +146,14 @@ class DateIPCActivity : BaseActivity() {
                     var allTimeBlock = history.TimeList
                     if (allTimeBlock != null && allTimeBlock.size > 0) {
                         progressItemList = ArrayList()
-                        for (i in 0 until allTimeBlock.size) {
+                        var i = 0
+                        while (i < allTimeBlock.size) {
                             var start = Date(allTimeBlock.get(i).StartTime * 1000)
+                            while (i + 1 < allTimeBlock.size &&
+                                ((allTimeBlock.get(i).EndTime == allTimeBlock.get(i + 1).StartTime) ||   // 上一次的结束时间和下一次的开始时间重合
+                                        ((allTimeBlock.get(i).EndTime + 60) == allTimeBlock.get(i + 1).StartTime))) {  // 上一次的结束时间和下一次的开始时间相差一分钟
+                                i++
+                            }
                             var end = Date(allTimeBlock.get(i).EndTime * 1000)
 
                             var item = ProgressItem()
@@ -162,7 +168,9 @@ class DateIPCActivity : BaseActivity() {
                             item.progressItemPercentage = ProgressItem.getProgressItemPercentage(item)
                             item.progressItemPercentageEnd = ProgressItem.getProgressItemPercentageEnd(item)
                             progressItemList!!.add(item)
+                            i++
                         }
+
                         seekbar.initData(progressItemList)
                         seekbar.invalidate()
                     }
