@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".kitlink.activity.OpensourceLicenseActivity">
+
+    <!--    返回键-->
+    <include
+        android:id="@+id/about_us_sbhv"
+        layout="@layout/menu_back_layout" />
+
+    <WebView
+        android:id="@+id/wv_web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/about_us_sbhv" />
+
+</RelativeLayout>
