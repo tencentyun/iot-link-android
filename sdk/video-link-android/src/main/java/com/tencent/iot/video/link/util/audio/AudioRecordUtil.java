@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.core.demo.util.audio;
+package com.tencent.iot.video.link.util.audio;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
