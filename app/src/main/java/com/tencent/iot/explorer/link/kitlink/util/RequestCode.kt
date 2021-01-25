@@ -37,6 +37,7 @@ object RequestCode {
     const val set_region = 1031
     const val get_last_version = 1032
     const val get_region_list = 1033
+    const val get_opensource_license = 1034
 
     /*************用户接口结束**************/
 
