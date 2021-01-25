@@ -133,6 +133,7 @@
     <string name="register_agree_2">用户协议</string>
     <string name="register_agree_3">及</string>
     <string name="register_agree_4">隐私政策</string>
+    <string name="register_agree_5">开源软件信息</string>
     <string name="register_get_code">获取验证码</string>
     <string name="get_mobile_code_sent">验证码已经发送到您的手机:</string>
     <string name="get_email_code_sent">验证码已经发送到您的邮箱:</string>
