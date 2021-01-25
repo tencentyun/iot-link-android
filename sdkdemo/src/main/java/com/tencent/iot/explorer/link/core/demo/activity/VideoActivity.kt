@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
-import com.tencent.iot.explorer.link.core.demo.util.audio.AudioRecordUtil
+import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
