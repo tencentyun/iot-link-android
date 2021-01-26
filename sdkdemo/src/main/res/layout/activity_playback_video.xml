@@ -7,23 +7,16 @@
     tools:context=".activity.VideoActivity"
     android:orientation="vertical">
     <SurfaceView
-        android:id="@+id/video_view"
+        android:id="@+id/playback_video_view"
         android:layout_width="match_parent"
         android:layout_height="300dp" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/speak"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="开始对讲"/>
-    </LinearLayout>
-
     <Button
-        android:id="@+id/watch_monitor"
+        android:id="@+id/watch_playback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="停止播放"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playback_video_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
