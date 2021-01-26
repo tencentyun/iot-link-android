@@ -8,11 +8,9 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <!-- 往SDCard写入数据权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 往SDCard写入数据权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -22,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.PlaybackVideoActivity"/>
         <activity android:name=".activity.VideoActivity" />
         <activity android:name=".activity.BindMobilePhoneActivity" />
         <activity android:name=".activity.ForgotPasswordActivity" />
@@ -54,8 +53,8 @@
         <activity android:name=".activity.WiredConfigNetActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
-        <activity android:name=".activity.LoginActivity"/>
-        <activity android:name=".activity.VideoModuleActivity"/>
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.VideoModuleActivity" />
         <activity android:name=".activity.ModuleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
