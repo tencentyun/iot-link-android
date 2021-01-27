@@ -9,8 +9,6 @@ import com.tencent.xnet.XP2P;
 
 public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
 
-    private static AudioRecordUtil audioRecordUtil = new AudioRecordUtil();
-
     //设置音频采样率，44100是目前的标准，但是某些设备仍然支持22050，16000，11025
     private final int sampleRateInHz = 44100;
     //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
@@ -24,12 +22,7 @@ public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
     private PCMEncoderAAC pcmEncoderAAC;
     private FLVPacker flvPacker;
 
-    public static AudioRecordUtil getInstance() {
-        audioRecordUtil.init();
-        return audioRecordUtil;
-    }
-
-    private AudioRecordUtil() {
+    public AudioRecordUtil() {
         init();
     }
 
@@ -64,6 +57,9 @@ public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
         if (audioRecord.getState() == AudioRecord.RECORDSTATE_RECORDING) {
             audioRecord.stop();
         }
+    }
+
+    public void release() {
         audioRecord.release();
     }
 
