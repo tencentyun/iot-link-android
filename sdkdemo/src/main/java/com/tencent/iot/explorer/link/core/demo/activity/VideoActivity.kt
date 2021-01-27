@@ -29,6 +29,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private var isP2PChannelAvailable: Boolean = false
 
     private lateinit var mPlayer: IjkMediaPlayer
+    private lateinit var audioRecordUtil: AudioRecordUtil
     private val mHandler = Handler(Looper.getMainLooper())
 
     private var permissions = arrayOf(
@@ -53,6 +54,8 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
             playback = true
             speak.visibility = View.GONE
         }
+
+        audioRecordUtil = AudioRecordUtil()
 
         video_view.holder.addCallback(this)
         mPlayer = IjkMediaPlayer()
@@ -143,11 +146,11 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private fun startSpeak() {
         XP2P.runSendService()
         Thread.sleep(500)
-        AudioRecordUtil.getInstance().start()
+        audioRecordUtil.start()
     }
 
     private fun stopSpeak() {
-        AudioRecordUtil.getInstance().stop()
+        audioRecordUtil.stop()
     }
 
     private fun enableSaveLog() {
@@ -169,6 +172,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         super.onDestroy()
         mPlayer.release()
         XP2P.stopService()
+        audioRecordUtil.release()
     }
 
     override fun fail(msg: String?, errorCode: Int) {
