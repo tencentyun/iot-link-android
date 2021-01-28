@@ -8,21 +8,25 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 
-public class PCMEncoderAAC {
+public class PCMEncoder {
     //比特率
-    private final static int KEY_BIT_RATE = 96000;
+    private static final int KEY_BIT_RATE = 96000;
     //读取数据的最大字节数
-    private final static int KEY_MAX_INPUT_SIZE = 1024 * 1024;
+    private static final int KEY_MAX_INPUT_SIZE = 1024 * 1024;
     //声道数
-    private final static int CHANNEL_COUNT = 2;
+    private static final int CHANNEL_COUNT = 2;
+    public static final int AAC_FORMAT = 0;
+    public static final int G711_FORMAT = 1;
     private MediaCodec mediaCodec;
     private ByteBuffer[] encodeInputBuffers;
     private ByteBuffer[] encodeOutputBuffers;
     private MediaCodec.BufferInfo encodeBufferInfo;
     private EncoderListener encoderListener;
+    private int encodeType = 0;
 
-    public PCMEncoderAAC(int sampleRate, EncoderListener encoderListener) {
+    public PCMEncoder(int sampleRate, EncoderListener encoderListener, int encodeFormat) {
         this.encoderListener = encoderListener;
+        this.encodeType = encodeFormat;
         init(sampleRate);
     }
 
@@ -116,9 +120,5 @@ public class PCMEncoderAAC {
         packet[4] = (byte) ((packetLen & 0x7FF) >> 3);
         packet[5] = (byte) (((packetLen & 7) << 5) + 0x1F);
         packet[6] = (byte) 0xFC;
-    }
-
-    public interface EncoderListener {
-        void encodeAAC(byte[] data, long time);
     }
 }
