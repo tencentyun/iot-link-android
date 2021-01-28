@@ -48,7 +48,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         productId = bundle.get(VideoConst.VIDEO_PRODUCT_ID) as String
         deviceName = bundle.get(VideoConst.VIDEO_DEVICE_NAME) as String
 
-        audioRecordUtil = AudioRecordUtil()
+        audioRecordUtil = AudioRecordUtil(this)
 
         video_view.holder.addCallback(this)
         mPlayer = IjkMediaPlayer()

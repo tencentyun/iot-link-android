@@ -1,40 +1,46 @@
 package com.tencent.iot.video.link.util.audio;
 
+import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-
 import com.tencent.xnet.XP2P;
 
 
-public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
+public class AudioRecordUtil implements EncoderListener {
 
     //设置音频采样率，44100是目前的标准，但是某些设备仍然支持22050，16000，11025
-    private final int sampleRateInHz = 44100;
+    private int sampleRateInHz = 44100;
     //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
-    private final int channelConfig = AudioFormat.CHANNEL_IN_STEREO;
+    private int channelConfig = AudioFormat.CHANNEL_IN_STEREO;
     //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
-    private final int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
+    private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
     //录制状态
     private boolean recorderState = true;
     private byte[] buffer;
     private AudioRecord audioRecord;
-    private PCMEncoderAAC pcmEncoderAAC;
+    private PCMEncoder pcmEncoder;
     private FLVPacker flvPacker;
+    private Context context;
 
-    public AudioRecordUtil() {
-        init();
+    public AudioRecordUtil(Context ctx) {
+        context = ctx;
+        init(sampleRateInHz, channelConfig, audioFormat);
+    }
+    public AudioRecordUtil(Context ctx, int sampleRate, int channel, int bitDepth) {
+        context = ctx;
+        init(sampleRate, channel, bitDepth);
     }
 
-    private void init() {
-        int recordMinBufferSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
+    private void init(int sampleRate, int channel, int bitDepth) {
+        int recordMinBufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, bitDepth);
         //指定 AudioRecord 缓冲区大小
         buffer = new byte[recordMinBufferSize];
         //根据录音参数构造AudioRecord实体对象
-        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRateInHz, channelConfig,
-                audioFormat, recordMinBufferSize);
+        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel,
+                bitDepth, recordMinBufferSize);
         //初始化编码器
-        pcmEncoderAAC = new PCMEncoderAAC(sampleRateInHz, this);
+        pcmEncoder = new PCMEncoder(sampleRateInHz, this, PCMEncoder.AAC_FORMAT);
         flvPacker = new FLVPacker();
     }
 
@@ -69,6 +75,10 @@ public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
         XP2P.dataSend(flvData, flvData.length);
     }
 
+    @Override
+    public void encodeG711(byte[] data) {
+    }
+
     private class RecordThread extends Thread {
         @Override
         public void run() {
@@ -76,7 +86,7 @@ public class AudioRecordUtil implements PCMEncoderAAC.EncoderListener {
                 int read = audioRecord.read(buffer, 0, buffer.length);
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
-                    pcmEncoderAAC.encodeData(buffer);
+                    pcmEncoder.encodeData(buffer);
                 }
             }
         }
