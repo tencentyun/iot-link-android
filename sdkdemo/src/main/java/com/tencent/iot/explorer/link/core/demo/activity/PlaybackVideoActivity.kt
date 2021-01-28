@@ -97,6 +97,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
 
     override fun setListener() {
         watch_playback.setOnClickListener(this)
+        user_define_test.setOnClickListener(this)
         adapter.setOnItemListener(object : OnItemListener {
             override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
                 val videoEntity = videoList[position]
@@ -125,6 +126,14 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
                 } else {
                     mPlayer.start()
                     resetWatchState()
+                }
+            }
+            user_define_test -> {
+                if (isP2PChannelAvailable) {
+                    val ret = XP2P.getComandRequestWithSync("action=user_define&cmd=custom_cmd", 2*1000*1000)
+                    Toast.makeText(this, "ACK: $ret", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "P2P通道未开启", Toast.LENGTH_LONG).show()
                 }
             }
         }
