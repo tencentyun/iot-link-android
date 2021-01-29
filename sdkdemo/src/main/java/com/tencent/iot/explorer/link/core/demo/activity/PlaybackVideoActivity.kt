@@ -130,8 +130,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
             }
             user_define_test -> {
                 if (isP2PChannelAvailable) {
-                    val ret = XP2P.getComandRequestWithSync("action=user_define&cmd=custom_cmd", 2*1000*1000)
-                    Toast.makeText(this, "ACK: $ret", Toast.LENGTH_LONG).show()
+                    XP2P.getCommandRequestWithAsync("action=user_define&cmd=custom_cmd")
                 } else {
                     Toast.makeText(this, "P2P通道未开启", Toast.LENGTH_LONG).show()
                 }
@@ -143,6 +142,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
         XP2P.setDeviceInfo(productId, deviceName)
         XP2P.setQcloudApiCred(secretId, secretKey)
         XP2P.setXp2pInfoAttributes("_sys_xp2p_info")
+        XP2P.setCallback(this)
         val ret = XP2P.startServiceWithXp2pInfo("")
         return if (ret == 0) {
             Thread.sleep(1000)
@@ -174,7 +174,16 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
         XP2P.stopService()
     }
 
+    override fun commandRequest(msg: String?, len: Int) {
+        runOnUiThread {
+            Toast.makeText(this, "$msg", Toast.LENGTH_LONG).show()
+        }
+    }
+
     override fun fail(msg: String?, errorCode: Int) {
+    }
+
+    override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
     }
 
     private fun date2TimeStamp(dateString: String?, format: String?): Long {
