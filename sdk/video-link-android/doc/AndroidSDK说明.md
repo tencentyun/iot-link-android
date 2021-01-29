@@ -70,11 +70,55 @@ public void stopSendService(byte[] srvice_id);
     * srvice_id:要停止的服务句柄,该版本传入空即可
 * 返回值:无返回值
 
+public static void setCallback(XP2PCallback callback);
+* 函数说明:设置java到C++的回调object
+* 参数说明:
+    * callback:java层回调函数object
+* 返回值:无返回值
+
+public static String getComandRequestWithSync(String cmd, long timeout);
+* 函数说明:以阻塞方式向设备端发送请求资源或控制命令
+* 参数说明:
+    * cmd:命令参数,格式:`action=user_define&cmd=xxx`
+    * timeout:超时时间,单位us
+* 返回值:
+    * 成功:设备端响应请求返回的数据
+    * 失败:空字符串
+
+public static void getCommandRequestWithAsync(String cmd);
+* 函数说明:以非阻塞方式向设备端发送请求资源或控制命令,使用该方法首先需调用setCallback()注册回调
+* 参数说明:
+    * cmd:命令参数,格式:`action=user_define&cmd=xxx`
+* 返回值:无返回值
+
+public static int stopAsyncRequest(byte[] data);
+* 函数说明:销毁非阻塞发送命令服务资源,在回调函数commandRequest()触发后调用该方法
+* 参数说明:
+    * data:要停止的服务句柄,该版本传入空即可
+* 返回值:
+    * 成功:0
+    * 失败:错误码
+
+public static void startAvRecvService(String cmd);
+* 函数说明:启动接收数据服务
+* 参数说明:
+    * cmd:直播`action=live`或回放参数`action=playback`
+* 返回值:无返回值
+
+public static int stopAvRecvService(byte[] data);
+* 函数说明:停止接收数据服务
+* 参数说明:
+    * data:启动的服务句柄,当前版本传入空即可
+* 返回值:
+    * 成功:0
+    * 失败:错误码
+
 ### 附带说明
 * 函数接口调用顺序:
     * setQcloudApiCred
     * setDeviceInfo
     * setXp2pInfoAttributes
+    * setCallback
     * startServiceWithXp2pInfo
     * runSendService:如果没有发送需求可不调用该接口
     * dataSend:如果没有发送需求可不调用该接口
