@@ -91,14 +91,6 @@ public static void getCommandRequestWithAsync(String cmd);
     * cmd:命令参数,格式:`action=user_define&cmd=xxx`
 * 返回值:无返回值
 
-public static int stopAsyncRequest(byte[] data);
-* 函数说明:销毁非阻塞发送命令服务资源,在回调函数commandRequest()触发后调用该方法
-* 参数说明:
-    * data:要停止的服务句柄,该版本传入空即可
-* 返回值:
-    * 成功:0
-    * 失败:错误码
-
 public static void startAvRecvService(String cmd);
 * 函数说明:启动接收数据服务
 * 参数说明:
