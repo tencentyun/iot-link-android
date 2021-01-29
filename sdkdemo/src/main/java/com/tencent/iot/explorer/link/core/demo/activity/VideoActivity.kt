@@ -122,6 +122,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         XP2P.setDeviceInfo(productId, deviceName)
         XP2P.setQcloudApiCred(secretId, secretKey)
         XP2P.setXp2pInfoAttributes("_sys_xp2p_info")
+        XP2P.setCallback(this)
         val ret = XP2P.startServiceWithXp2pInfo("")
         return if (ret == 0) {
             Thread.sleep(1000)
@@ -163,7 +164,12 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         audioRecordUtil.release()
     }
 
+    override fun commandRequest(msg: String?, len: Int) {
+    }
+
     override fun fail(msg: String?, errorCode: Int) {
-        L.d("==============fail=============")
+    }
+
+    override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
     }
 }
