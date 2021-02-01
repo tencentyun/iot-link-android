@@ -172,4 +172,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
 
     override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
     }
+
+    override fun avDataCloseHandle(msg: String?, errorCode: Int) {
+    }
 }
