@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.core.text.isDigitsOnly
+import com.alibaba.fastjson.JSONObject
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.*
@@ -208,8 +209,11 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         if (accountVerifyEdit == null) return false
 
         var accountTxt = accountVerifyEdit.text.toString()
-        if ((accountTxt.length == 11 && accountTxt.isDigitsOnly()) ||
+        if ((presenter.getCountryCode() == "86" && accountTxt.length == 11 && accountTxt.isDigitsOnly()) ||
                     accountTxt.matches(Regex("^\\w+@(\\w+\\.)+\\w+$"))) {
+            return true
+        } else if ((presenter.getCountryCode() == "1" && accountTxt.isDigitsOnly()) ||
+            accountTxt.matches(Regex("^\\w+@(\\w+\\.)+\\w+$"))) {
             return true
         }
         return false
@@ -371,7 +375,13 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                         saveUser(user)
                         T.show(getString(R.string.login_success))
                         if (TextUtils.isEmpty(fromTag)) {
+                            // 记录登录账号的国家码
+                            var countryCodeJson = JSONObject()
+                            countryCodeJson.put(CommonField.COUNTRY_CODE, presenter.getCountryCode())
+                            Utils.setXmlStringValue(T.getContext(), CommonField.COUNTRY_CODE,
+                                CommonField.COUNTRY_CODE, countryCodeJson.toJSONString())
                             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+
                         } else {
                             val data = Intent()
                             data.putExtra("data", AppData.instance.getToken())

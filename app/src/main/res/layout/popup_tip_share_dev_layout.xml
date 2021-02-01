@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_layout"
+    android:background="@color/dialog_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tip_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_failed_cell"
+        android:paddingTop="20dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginStart="55dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/tv_title_tip"
+            android:text="@string/share_dev_tip"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/ts_14"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:text="@string/share_dev_tip_content"
+            android:textSize="@dimen/ts_16"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="left"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/black_333333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title_tip"
+            />
+
+        <TextView
+            android:id="@+id/tv_more_info_tip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_content"
+            android:text="@string/share_dev_more_info"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/black_333333"
+            />
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_more_info_url"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintTop_toTopOf="@id/tv_more_info_tip"-->
+<!--            android:textColor="@color/complete_progress"-->
+<!--            android:text="@string/register_agree_4"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tv_more_info_tip"-->
+<!--            />-->
+
+        <View
+            android:id="@+id/divid_line"
+            android:layout_width="1dp"
+            android:layout_below="@id/tv_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_more_info_tip"
+            android:background="@color/gray_dddddd"
+            android:layout_marginTop="20dp"
+            android:layout_height="1dp"/>
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_below="@id/divid_line"
+            android:text="@string/cancel"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divid_line"
+            app:layout_constraintEnd_toEndOf="@id/divid_line"
+            android:textSize="@dimen/ts_14"
+            android:textStyle="bold"
+            android:textColor="@color/black_888888"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_below="@id/divid_line"
+            android:text="@string/confirm"
+            android:layout_centerHorizontal="true"
+            android:layout_width="0dp"
+            android:textSize="@dimen/ts_14"
+            android:textStyle="bold"
+            android:textColor="@color/complete_progress"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/divid_line"
+            app:layout_constraintTop_toBottomOf="@id/divid_line"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
