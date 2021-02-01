@@ -74,6 +74,10 @@ object CommonField {
     /*************** 注册 ****************/
     const val TYPE = "Type"
     const val REG_COUNTRY_INFO = "RegCountryInfo"
+    const val USA_USER_REG_TIME_INFO = "RegTimeInfo"
+    const val USA_USER_REG_TIME_INFO_YEAR = "RegTimeInfoYear"
+    const val USA_USER_REG_TIME_INFO_MONTH = "RegTimeInfoMonth"
+    const val USA_USER_REG_TIME_INFO_DAY = "RegTimeInfoDay"
     const val COUNTRY_INFO = "CountryInfo"
     const val COUNTRY_CODE = "CountryCode"
     const val REGION_ID = "RegionID"
