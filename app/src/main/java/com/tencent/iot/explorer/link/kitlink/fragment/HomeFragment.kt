@@ -1,12 +1,14 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
 import android.graphics.Rect
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
@@ -30,6 +32,9 @@ import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.TipShareDevDialog
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -178,6 +183,27 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
         })
     }
 
+    private fun jumpAddDevActivity() {
+        var jsonStr = Utils.getStringValueFromXml(T.getContext(), CommonField.COUNTRY_CODE,
+            CommonField.COUNTRY_CODE)
+        if (TextUtils.isEmpty(jsonStr) || jsonStr == "{}") {
+            jumpActivity(DeviceCategoryActivity::class.java)
+            return
+        }
+
+        var json = JSONObject.parseObject(jsonStr)
+        if (json != null && json.containsKey(CommonField.COUNTRY_CODE) && json.getString(CommonField.COUNTRY_CODE) == "1") {
+            var dlg = TipShareDevDialog(this@HomeFragment.context)
+            dlg.show()
+            dlg.setOnDismisListener {
+                jumpActivity(DeviceCategoryActivity::class.java)
+            }
+            return
+        }
+
+        jumpActivity(DeviceCategoryActivity::class.java)
+    }
+
     private fun setListener() {
         header1.headListener = object : CRecyclerView.HeadListener {
             override fun doAction(
@@ -187,7 +213,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
             ) {
                 when (position) {
 //                    0 -> jumpActivity(AddDeviceActivity::class.java)
-                    0 -> jumpActivity(DeviceCategoryActivity::class.java)
+                    0 -> jumpAddDevActivity()
                     1 -> {
                     }
                     2 -> {
@@ -204,7 +230,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
             ) {
                 when (position) {
 //                    0 -> jumpActivity(AddDeviceActivity::class.java)
-                    0 -> jumpActivity(DeviceCategoryActivity::class.java)
+                    0 -> jumpAddDevActivity()
                     1 -> {
                     }
                     2 -> {
