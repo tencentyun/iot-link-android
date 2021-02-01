@@ -186,6 +186,9 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
     override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
     }
 
+    override fun avDataCloseHandle(msg: String?, errorCode: Int) {
+    }
+
     private fun date2TimeStamp(dateString: String?, format: String?): Long {
         val sdf = SimpleDateFormat(format)
         return sdf.parse(dateString).time / 1000
