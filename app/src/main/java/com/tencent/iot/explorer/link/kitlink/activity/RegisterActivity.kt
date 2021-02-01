@@ -2,8 +2,11 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -14,10 +17,13 @@ import com.tencent.iot.explorer.link.mvp.presenter.RegisterPresenter
 import com.tencent.iot.explorer.link.mvp.view.RegisterView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
+import com.tencent.iot.explorer.link.customview.dialog.InputBirthdayDialog
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.layout_email_register.view.*
 import kotlinx.android.synthetic.main.layout_phone_register.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
+import org.w3c.dom.Text
+import java.util.*
 
 /**
  * 手机号注册界面
@@ -83,6 +89,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         }
 
         loadLastCountryInfo()
+        showBirthDayDlg()
     }
 
     private fun initViewPager() {
@@ -243,6 +250,26 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         btn_register_get_code.changeType(phoneView.et_register_phone, presenter.getCountryCode())
     }
 
+    private fun shouldShowBirthdayDlg(): Boolean {
+        var lastTimeJson = Utils.getStringValueFromXml(this@RegisterActivity, CommonField.USA_USER_REG_TIME_INFO, CommonField.USA_USER_REG_TIME_INFO)
+        // 不存在上一次的注册信息
+        if (TextUtils.isEmpty(lastTimeJson) || lastTimeJson == "{}") return true
+
+        var json = JSONObject.parseObject(lastTimeJson)
+        var currentDate = Date()
+        var currentYear = currentDate.year + 1900
+        var currentMonth = currentDate.month + 1
+        var currentDay = currentDate.day
+        var tagYear = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_YEAR)
+        var tagMonth = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_MONTH)
+        var tagDay = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_DAY)
+        if (currentYear - tagYear > 0 && currentMonth - tagMonth == 0 && currentDay - tagDay == 0) { // 满周年
+            return true
+        }
+
+        return false
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
@@ -250,9 +277,49 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                 it.getStringExtra(CommonField.REGION_ID)?.run {
                     presenter.setCountry(this)
                     Utils.setXmlStringValue(T.getContext(), CommonField.REG_COUNTRY_INFO, CommonField.REG_COUNTRY_INFO, this)
+                    showBirthDayDlg()
                 }
             }
         }
+    }
+
+    private fun showBirthDayDlg() {
+        if (presenter.getCountryCode() == "1" && shouldShowBirthdayDlg()) {
+            var dlg = InputBirthdayDialog(this@RegisterActivity)
+            dlg.show()
+            dlg.setOnDismisListener{ year: Int, month: Int, day: Int ->
+
+                // 是否满13周岁
+                if (!ifOver13YearsOld(year, month, day)) {
+                    T.show(resources.getString(R.string.too_young_to_use))
+                    return@setOnDismisListener
+                }
+
+                var timeJson = JSONObject()
+                var currentDate = Date()
+                var currentYear = currentDate.year + 1900
+                var currentMonth = currentDate.month + 1
+                var currentDay = currentDate.day
+                // 记录本次使用的日期
+                timeJson.put(CommonField.USA_USER_REG_TIME_INFO_YEAR, currentYear)
+                timeJson.put(CommonField.USA_USER_REG_TIME_INFO_MONTH, currentMonth)
+                timeJson.put(CommonField.USA_USER_REG_TIME_INFO_DAY, currentDay)
+                Utils.setXmlStringValue(T.getContext(), CommonField.USA_USER_REG_TIME_INFO,
+                    CommonField.USA_USER_REG_TIME_INFO, timeJson.toJSONString())
+            }
+        }
+    }
+
+    private fun ifOver13YearsOld(year: Int, month: Int, day: Int): Boolean {
+        var currentDate = Date()
+        var currentYear = currentDate.year + 1900
+        var currentMonth = currentDate.month + 1
+        var currentDay = currentDate.day
+        if (currentYear - year < 13 || (currentYear - year == 13 && currentMonth - month < 0) ||
+            (currentYear - year == 13 && currentMonth - month == 0 && currentDay - day < 0)) {
+            return false
+        }
+        return true
     }
 
     private fun loadLastCountryInfo() {

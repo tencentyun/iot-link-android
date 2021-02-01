@@ -114,6 +114,7 @@
     <string name="length_error">长度非法</string>
     <string name="country_or_place">国家/地区</string>
     <string name="default_product_name">（产品的名称）</string>
+    <string name="share_dev_tip">设备共享</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -136,7 +137,8 @@
     <string name="not_wechat_client">未安装微信客户端</string>
     <string name="not_install_wechat_client">微信未安装，请安装后重试</string>
     <string name="cancel_wechat">取消授权</string>
-
+    <string name="input_birthday_for_better_react">为了给您提供更好的体验，请设置您的出生日期</string>
+    <string name="too_young_to_use">很遗憾，我们目前无法向您提供腾讯连连</string>
 
     <string name="login">登录</string>
     <string name="logout">退出登录</string>
@@ -324,6 +326,8 @@
     <string name="smart_lost_device">当前智能设备丢失，请重新设置动作</string>
     <string name="bind_now">立即绑定</string>
     <string name="bind_dev">绑定设备</string>
+    <string name="share_dev_tip_content">通过将设备名称与腾讯连连连接，即表示您同意与设备名称共享有关您的设备和设备日志的信息，第三方可以根据其条款和政策使用该设备。</string>
+    <string name="share_dev_more_info">有关更多信息，请阅读我们的</string>
 
     <!--云端定时-->
     <string name="cloud_timing">云端定时</string>
