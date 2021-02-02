@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.ViewGroup
+import androidx.core.text.isDigitsOnly
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.DataHolder
@@ -21,7 +22,11 @@ class ControlSimpleNumberBigHolder : CRecyclerView.CViewHolder<DevicePropertyEnt
         entity?.run {
             itemView.tv_simple_big_int_name.text = name
             itemView.tv_simple_big_int_value.text = getValueText()
-            val progress = getValue().toDouble().toInt()
+            var tmpValue = getValue()
+            if (tmpValue.toDoubleOrNull() == null) {
+                tmpValue = "0"
+            }
+            val progress = tmpValue.toDouble().toInt()
             L.e("progress=$progress,min=${numberEntity?.min},max=${numberEntity?.max}")
             itemView.sp_simple_big_int.setProgress(progress)
             itemView.sp_simple_big_int.setRange(
