@@ -207,6 +207,7 @@ public class TRTCAudioLayoutManager extends RelativeLayout {
             ArrayList<LayoutParams> paramList;
             if (mCount <= 1) {
                 paramList = mGrid1ParamList;
+                if (mLayoutEntityList.size() <= 0) return;
                 TRTCLayoutEntity entity = mLayoutEntityList.get(0);
                 entity.layout.setLayoutParams(paramList.get(0));
                 return;
