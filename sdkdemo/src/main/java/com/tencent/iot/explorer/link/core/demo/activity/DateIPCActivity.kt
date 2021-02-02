@@ -30,12 +30,13 @@ import kotlin.concurrent.thread
 
 
 class DateIPCActivity : BaseActivity() {
+    val tag = DateIPCActivity::class.java.simpleName
+
     var productId = ""
     var devName = ""
     var secretKey = ""
     var secretId = ""
     var REQ_DATE_CODE = 0x1101
-    var cd = Calendar.getInstance()
     private var progressItemList: ArrayList<ProgressItem>? = null
     var adapter: TimeAdapter? = null
     var paramDateStr = ""
@@ -201,7 +202,7 @@ class DateIPCActivity : BaseActivity() {
 
                             playUrl = baseUrl + "?starttime=" + paramDateParamStr + String.format("%02d%02d%02d", progressItemList!!.get(j).startHour, progressItemList!!.get(j).startMin, progressItemList!!.get(j).startSec) +
                                     "&endtime=" + paramDateParamStr + String.format("%02d%02d%02d", progressItemList!!.get(j).endHour, progressItemList!!.get(j).endMin, progressItemList!!.get(j).endSec)
-                            Log.e("XXX", "playUrl " + playUrl)
+                            Log.e(tag, "playUrl " + playUrl)
 
                             playVideo(playUrl, tagA, (progress - tagA) * 60 * 1000)
                             return
