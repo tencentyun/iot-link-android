@@ -201,7 +201,11 @@ class ConnectProgressActivity : PActivity(), ConnectView {
 
                         var successIntent = Intent(this, ConfigNetSuccessActivity::class.java)
                         successIntent.putExtra(CommonField.CONFIG_TYPE, type)
-                        successIntent.putExtra(CommonField.DEVICE_NAME, presenter.model?.deviceInfo?.deviceName)
+                        if (presenter.model?.deviceInfo?.deviceName != null) {
+                            successIntent.putExtra(CommonField.DEVICE_NAME, presenter.model?.deviceInfo?.deviceName)
+                        } else {
+                            successIntent.putExtra(CommonField.DEVICE_NAME, "")
+                        }
                         startActivity(successIntent)
                         backToDeviceCategoryActivity()
                     }
