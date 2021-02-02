@@ -1,8 +1,8 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
-import android.util.Log
+import android.text.TextUtils
 import android.widget.Toast
-import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.core.demo.BuildConfig
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.video.link.consts.VideoConst
@@ -15,9 +15,24 @@ class InputAuthorizeActivity : BaseActivity() {
     }
 
     override fun initView() {
-        val secretId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID)
-        val secretKey = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
-        val productId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
+        var secretId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_ID)
+        var secretKey = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
+        var productId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
+
+        // 没有对应的沙盒信息，导入配置项的内容
+        if (TextUtils.isEmpty(secretId.trim())) {
+            secretId = BuildConfig.TencentIotLinkVideoSDKDemoSecretId
+            secretId = secretId.trim()
+        }
+        if (TextUtils.isEmpty(secretKey.trim())) {
+            secretKey = BuildConfig.TencentIotLinkVideoSDKDemoSecretKey
+            secretKey = secretKey.trim()
+        }
+        if (TextUtils.isEmpty(productId.trim())) {
+            productId = BuildConfig.TencentIotLinkVideoSDKDemoProductId
+            productId = productId.trim()
+        }
+
         if (secretId != null) {
             et_secretid.setText(secretId)
         }
@@ -32,7 +47,7 @@ class InputAuthorizeActivity : BaseActivity() {
     override fun setListener() {
         btn_1_vedio.setOnClickListener {
             if (checkInput()) {
-                jumpActivity(VideoMessageActivity::class.java)
+                jumpActivity(VideoModuleActivity::class.java)
             }
         }
 
