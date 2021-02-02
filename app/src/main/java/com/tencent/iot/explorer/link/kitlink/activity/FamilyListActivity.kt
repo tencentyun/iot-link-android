@@ -112,7 +112,9 @@ class FamilyListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerIte
         clickView: View,
         position: Int
     ) {
-        put("family",App.data.familyList[position])
+        if (position >= App.data.familyList.size) return
+
+        put("family", App.data.familyList[position])
         jumpActivity(FamilyActivity::class.java)
     }
 
