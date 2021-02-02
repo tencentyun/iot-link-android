@@ -294,6 +294,8 @@ class ConnectProgressActivity : PActivity(), ConnectView {
     private fun backToDeviceCategoryActivity() {
         var stop = false
         while (!stop) {
+            if (App.data.activityList != null && App.data.activityList.size <= 0) break
+
             if (App.data.activityList.last != null && App.data.activityList.last is DeviceCategoryActivity) {
                 stop = true
             } else {
