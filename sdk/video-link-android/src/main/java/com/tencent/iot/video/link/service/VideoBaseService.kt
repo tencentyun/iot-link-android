@@ -38,12 +38,13 @@ open class VideoBaseService(secretId: String, secretKey: String) {
      * explorer获取设备信息列表   GetDeviceList
      */
     fun getDeviceList(
-        productId: String, callback: VideoCallback
+        productId: String, offset: Int, pageSize: Int, callback: VideoCallback
     ) {
         var headerParams = explorerCommonHeaderParams("GetDeviceList")
         val param = TreeMap<String, Any>()
         param["ProductId"] = productId
-        param["Limit"] = 99
+        param["Offset"] = offset
+        param["Limit"] = pageSize//99
         val authorization = sign(VideoHttpUtil.EXPLORER_SERVICE, headerParams, param)
         if (authorization != null) {
             headerParams["Authorization"] = authorization
