@@ -10,23 +10,45 @@
         android:id="@+id/tip_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_failed_cell"
-        android:paddingTop="20dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginStart="55dp"
+        android:background="@drawable/background_white_top_radius_cell"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         >
+
+        <ImageView
+            android:id="@+id/iv_title_tag"
+            android:layout_width="24dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="26dp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitXY"
+            app:layout_constraintDimensionRatio="h,1:1"
+            />
+
+        <TextView
+            android:id="@+id/tv_title_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:layout_marginLeft="9dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/iv_title_tag"
+            app:layout_constraintTop_toTopOf="@id/iv_title_tag"
+            app:layout_constraintBottom_toBottomOf="@id/iv_title_tag"
+            />
 
         <TextView
             android:id="@+id/tv_title_tip"
             android:text="@string/share_dev_tip"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textSize="@dimen/ts_14"
+            app:layout_constraintStart_toStartOf="@id/iv_title_tag"
+            app:layout_constraintTop_toBottomOf="@id/iv_title_tag"
+            android:textSize="@dimen/ts_22"
+            android:layout_marginTop="13dp"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
@@ -34,18 +56,17 @@
 
         <TextView
             android:id="@+id/tv_content"
-            android:text="@string/share_dev_tip_content"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="30dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="left"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:textColor="@color/black_333333"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/black_888888"
+            android:layout_marginRight="20dp"
+            android:lineSpacingMultiplier="1.2"
+            app:layout_constraintStart_toStartOf="@id/iv_title_tag"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title_tip"
             />
@@ -61,17 +82,8 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textColor="@color/black_333333"
+            android:visibility="gone"
             />
-
-<!--        <TextView-->
-<!--            android:id="@+id/tv_more_info_url"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintTop_toTopOf="@id/tv_more_info_tip"-->
-<!--            android:textColor="@color/complete_progress"-->
-<!--            android:text="@string/register_agree_4"-->
-<!--            app:layout_constraintStart_toEndOf="@id/tv_more_info_tip"-->
-<!--            />-->
 
         <View
             android:id="@+id/divid_line"
@@ -81,40 +93,50 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_more_info_tip"
             android:background="@color/gray_dddddd"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="19dp"
             android:layout_height="1dp"/>
 
         <TextView
             android:id="@+id/tv_cancel"
             android:layout_below="@id/divid_line"
-            android:text="@string/cancel"
+            android:text="@string/exit"
             android:layout_width="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divid_line"
             app:layout_constraintEnd_toEndOf="@id/divid_line"
-            android:textSize="@dimen/ts_14"
-            android:textStyle="bold"
-            android:textColor="@color/black_888888"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:textSize="@dimen/ts_16"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
             android:gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/complete_progress"
+            android:background="@drawable/background_circle_grey"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tv_ok"
             android:layout_below="@id/divid_line"
-            android:text="@string/confirm"
+            android:text="@string/agree"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_centerHorizontal="true"
             android:layout_width="0dp"
-            android:textSize="@dimen/ts_14"
-            android:textStyle="bold"
-            android:textColor="@color/complete_progress"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:textSize="@dimen/ts_16"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="30dp"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/divid_line"
             app:layout_constraintTop_toBottomOf="@id/divid_line"
+            android:textColor="@color/white"
+            android:background="@drawable/background_circle_bule_gradient"
             android:layout_height="wrap_content"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
