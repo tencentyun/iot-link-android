@@ -36,12 +36,14 @@ public class TipShareDevDialog extends IosCenterStyleDialog implements View.OnCl
         cancelBtn = view.findViewById(R.id.tv_cancel);
         outsideLayout = view.findViewById(R.id.dialog_layout);
         dialogLayout = view.findViewById(R.id.tip_layout);
-        moreInfo = view.findViewById(R.id.tv_more_info_tip);
+        moreInfo = view.findViewById(R.id.tv_content);
 
-        String part1 = getContext().getResources().getString(R.string.share_dev_more_info);
-        String str = part1 + getContext().getResources().getString(R.string.register_agree_4);
+        String str = getContext().getResources().getString(R.string.share_dev_tip_content,
+                getContext().getResources().getString(R.string.register_agree_4));
+        String lastPart = getContext().getResources().getString(R.string.register_agree_4);
         SpannableStringBuilder spannable = new SpannableStringBuilder(str);
-        spannable.setSpan(new TextClick(), part1.length(), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new TextClick(), str.length() - lastPart.length() - 1,
+                str.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         moreInfo.setMovementMethod(LinkMovementMethod.getInstance());
         moreInfo.setText(spannable);
 
@@ -49,7 +51,6 @@ public class TipShareDevDialog extends IosCenterStyleDialog implements View.OnCl
         cancelBtn.setOnClickListener(this);
         outsideLayout.setOnClickListener(this);
         dialogLayout.setOnClickListener(this);
-        moreInfo.setOnClickListener(this);
     }
 
     @Override

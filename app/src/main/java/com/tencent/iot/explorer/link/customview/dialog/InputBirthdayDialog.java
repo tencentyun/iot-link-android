@@ -12,6 +12,8 @@ import com.aigestudio.wheelpicker.WheelPicker;
 import com.aigestudio.wheelpicker.widgets.WheelDatePicker;
 import com.tencent.iot.explorer.link.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,15 +31,18 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
     private List<String> days = new ArrayList<>();
     private List<String> years = new ArrayList<>();
     private List<String> months = new ArrayList<>();
-    private final int MAX_YEAR_NUM = 1000;
+    private int MAX_YEAR_NUM;
     private final int MIN_YEAR = 1900;
     private final int MAX_MONTH_NUM = 12;
 
     public InputBirthdayDialog(Context context) {
         super(context, R.layout.popup_birthday_layout);
 
+        Date currentDate = new Date();
+        final int year = currentDate.getYear() + MIN_YEAR;
+        MAX_YEAR_NUM = year - MIN_YEAR + 1; // 出生日期最大只能是当年
         for (int i = MIN_YEAR; i < MIN_YEAR + MAX_YEAR_NUM; i++) {
-            years.add("" + i);
+            years.add(i + context.getResources().getString(R.string.unit_year));
         }
 
         for (int i = 0; i < MAX_MONTH_NUM; i++) {
@@ -68,7 +73,7 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
 
     private void initDateView() {
         Date currentDate = new Date();
-        final int year = currentDate.getYear() + 1900;
+        final int year = currentDate.getYear() + MIN_YEAR;
         final int month = currentDate.getMonth() + 1;
         final int day = currentDate.getDay();
         handler.postDelayed(new Runnable() {
@@ -85,13 +90,13 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
     private void initDayData(int year, int month) {
         days.clear();
         Date tagDate = new Date();
-        tagDate.setYear(year - 1900);
+        tagDate.setYear(year - MIN_YEAR);
         tagDate.setMonth(month - 1);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(tagDate);
         int maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         for (int i = 0; i < maxDay; i++) {
-            days.add("" + (i + 1));
+            days.add((i + 1) + getContext().getResources().getString(R.string.unit_day));
         }
         dayPicker.setData(days);
     }
@@ -119,7 +124,11 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
                 break;
             case R.id.tip_layout:
                 return;
+            case R.id.tv_cancel:
             case R.id.outside_dialog_layout:
+                if (onDismisListener != null) {
+                    onDismisListener.onCancelClicked();
+                }
             default:
                 break;
         }
@@ -130,9 +139,10 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
 
     public interface OnDismisListener {
         void onOkClicked(int year, int month, int day);
+        void onCancelClicked();
     }
 
-    public void setOnDismisListener(OnDismisListener onDismisListener) {
+    public void setOnDismissListener(OnDismisListener onDismisListener) {
         this.onDismisListener = onDismisListener;
     }
 

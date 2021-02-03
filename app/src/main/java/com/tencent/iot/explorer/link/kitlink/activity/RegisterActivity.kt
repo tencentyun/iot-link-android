@@ -2,10 +2,8 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
@@ -22,7 +20,6 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.layout_email_register.view.*
 import kotlinx.android.synthetic.main.layout_phone_register.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import org.w3c.dom.Text
 import java.util.*
 
 /**
@@ -287,26 +284,31 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         if (presenter.getCountryCode() == "1" && shouldShowBirthdayDlg()) {
             var dlg = InputBirthdayDialog(this@RegisterActivity)
             dlg.show()
-            dlg.setOnDismisListener{ year: Int, month: Int, day: Int ->
+            dlg.setOnDismissListener(object: InputBirthdayDialog.OnDismisListener {
+                override fun onOkClicked(year: Int, month: Int, day: Int) {
 
-                // 是否满13周岁
-                if (!ifOver13YearsOld(year, month, day)) {
-                    T.show(resources.getString(R.string.too_young_to_use))
-                    return@setOnDismisListener
+                    // 是否满13周岁
+                    if (!ifOver13YearsOld(year, month, day)) {
+                        T.show(resources.getString(R.string.too_young_to_use))
+                        finish()
+                        return
+                    }
+
+                    var timeJson = JSONObject()
+                    var currentDate = Date()
+                    var currentYear = currentDate.year + 1900
+                    var currentMonth = currentDate.month + 1
+                    var currentDay = currentDate.day
+                    // 记录本次使用的日期
+                    timeJson.put(CommonField.USA_USER_REG_TIME_INFO_YEAR, currentYear)
+                    timeJson.put(CommonField.USA_USER_REG_TIME_INFO_MONTH, currentMonth)
+                    timeJson.put(CommonField.USA_USER_REG_TIME_INFO_DAY, currentDay)
+                    Utils.setXmlStringValue(T.getContext(), CommonField.USA_USER_REG_TIME_INFO,
+                        CommonField.USA_USER_REG_TIME_INFO, timeJson.toJSONString())
                 }
 
-                var timeJson = JSONObject()
-                var currentDate = Date()
-                var currentYear = currentDate.year + 1900
-                var currentMonth = currentDate.month + 1
-                var currentDay = currentDate.day
-                // 记录本次使用的日期
-                timeJson.put(CommonField.USA_USER_REG_TIME_INFO_YEAR, currentYear)
-                timeJson.put(CommonField.USA_USER_REG_TIME_INFO_MONTH, currentMonth)
-                timeJson.put(CommonField.USA_USER_REG_TIME_INFO_DAY, currentDay)
-                Utils.setXmlStringValue(T.getContext(), CommonField.USA_USER_REG_TIME_INFO,
-                    CommonField.USA_USER_REG_TIME_INFO, timeJson.toJSONString())
-            }
+                override fun onCancelClicked() { finish() }
+            })
         }
     }
 
