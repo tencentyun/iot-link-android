@@ -92,7 +92,7 @@ public static void getCommandRequestWithAsync(String cmd);
 * 返回值:无返回值
 
 public static void startAvRecvService(String cmd);
-* 函数说明:启动接收数据服务
+* 函数说明:启动接收数据服务,使用该方法首先需调用setCallback()注册回调
 * 参数说明:
     * cmd:直播`action=live`或回放参数`action=playback`
 * 返回值:无返回值
@@ -104,6 +104,29 @@ public static int stopAvRecvService(byte[] data);
 * 返回值:
     * 成功:0
     * 失败:错误码
+
+### 回调函数说明
+override fun avDataRecvHandle(data: ByteArray?, len: Int);
+* 函数说明:接收音视频数据回调,收到设备端音视频数据后被调用
+* 参数说明:
+    * data:接收到的音视频数据
+    * len:接收到的音视频数据长度
+* 注意:该回调中不可做耗时操作
+
+override fun avDataCloseHandle(msg: String?, code: Int);
+* 函数说明:p2p通道关闭回调,设备端关闭p2p通道后被调用
+* 参数说明:
+    * msg:附加描述信息,当前版本可不用处理
+    * code:附加状态信息,当前版本可不用处理
+* 注意:该回调中不可做耗时操作
+
+override fun commandRequest(msg: String?, len: Int);
+* 函数说明:以非阻塞方式发送命令回调,收到设备端回应后被调用
+* 参数说明:
+    * msg:设备端回应的消息,json数组格式
+    * len:设备端回应的消息长度
+* 注意:该回调中不可做耗时操作
+
 
 ### 附带说明
 * 函数接口调用顺序:
