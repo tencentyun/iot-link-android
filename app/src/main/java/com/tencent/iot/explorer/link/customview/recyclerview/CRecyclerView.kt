@@ -255,7 +255,10 @@ class CRecyclerView : RecyclerView {
                     return footList[viewType - FOOT_VIEW_TYPE].viewHolder
                 }
                 if (recyclerItemView == null) return getDefaultHolder()
-                return recyclerItemView!!.getViewHolder(parent, viewType)
+                if (recyclerItemView!!.getViewHolder(parent, viewType) == null) {
+                    return getDefaultHolder()
+                }
+                return recyclerItemView!!.getViewHolder(parent, viewType)!!
             }
 
             override fun getItemCount(): Int {
@@ -419,7 +422,7 @@ class CRecyclerView : RecyclerView {
 
         fun getViewType(position: Int): Int
 
-        fun getViewHolder(parent: ViewGroup, viewType: Int): CViewHolder<*>
+        fun getViewHolder(parent: ViewGroup, viewType: Int): CViewHolder<*>?
 
         fun doAction(viewHolder: CViewHolder<*>, clickView: View, position: Int)
     }
