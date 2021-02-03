@@ -150,7 +150,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         }
     }
 
-    override fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*> {
+    override fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*>? {
         return PanelThemeManager.instance.getViewHolder(parent, viewType)
     }
 
