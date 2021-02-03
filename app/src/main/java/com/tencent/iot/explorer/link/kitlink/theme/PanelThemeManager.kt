@@ -91,8 +91,12 @@ class PanelThemeManager private constructor() {
     }
 
 
-    fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*> {
-        return theme!!.getViewHolder(parent, viewType)
+    fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*>? {
+        if (theme != null) {
+            return theme!!.getViewHolder(parent, viewType)
+        } else {
+            return null
+        }
     }
 
     /**
