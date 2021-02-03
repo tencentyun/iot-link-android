@@ -11,23 +11,18 @@
         android:id="@+id/tip_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_failed_cell"
-        android:paddingTop="30dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginStart="55dp"
+        android:background="@drawable/background_white_top_radius_cell"
+        android:paddingTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         >
 
         <TextView
             android:id="@+id/tv_tip"
             android:text="@string/input_birthday_for_better_react"
-            android:textSize="@dimen/ts_14"
-            android:textColor="@color/black"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
             android:layout_width="wrap_content"
             android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
@@ -37,13 +32,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             />
 
+        <View
+            android:id="@+id/v_line_1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintTop_toBottomOf="@id/tv_tip"
+            />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/wheel_timer_picker_layout"
-            app:layout_constraintTop_toBottomOf="@id/tv_tip"
-            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/v_line_1"
             >
+
             <com.aigestudio.wheelpicker.WheelPicker
                 android:id="@+id/wheel_timer_month_picker"
                 android:layout_width="0dp"
@@ -52,14 +56,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:wheel_visible_item_count="3"
+                app:wheel_visible_item_count="7"
                 app:wheel_indicator="true"
                 app:wheel_indicator_size="1dp"
-                app:wheel_item_text_size="@dimen/ts_14"
-                app:wheel_indicator_color="@color/black_333333"
-                app:layout_constraintWidth_percent="0.3"
-                app:wheel_selected_item_text_color="@color/black_333333"
-                app:wheel_item_text_color="@color/gray_6C7078"
+                app:wheel_item_text_size="@dimen/ts_16"
+                app:wheel_atmospheric="true"
+                app:wheel_item_space="20dp"
+                app:wheel_indicator_color="@color/grey_e5e5e5"
+                app:layout_constraintWidth_percent="0.33"
+                app:wheel_selected_item_text_color="@color/black_15161A"
+                app:wheel_item_text_color="@color/black_15161A"
                 />
 
             <com.aigestudio.wheelpicker.WheelPicker
@@ -70,13 +76,16 @@
                 app:layout_constraintEnd_toStartOf="@+id/wheel_timer_month_picker"
                 app:layout_constraintTop_toTopOf="@id/wheel_timer_month_picker"
                 app:wheel_indicator="true"
-                app:wheel_indicator_color="@color/black_333333"
+                app:wheel_indicator_color="@color/grey_e5e5e5"
                 app:wheel_indicator_size="1dp"
-                app:wheel_item_text_size="@dimen/ts_14"
-                app:layout_constraintWidth_percent="0.3"
-                app:wheel_selected_item_text_color="@color/black_333333"
-                app:wheel_item_text_color="@color/gray_6C7078"
-                app:wheel_visible_item_count="3" />
+                app:wheel_item_space="20dp"
+                app:wheel_item_text_size="@dimen/ts_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:wheel_selected_item_text_color="@color/black_15161A"
+                app:wheel_item_text_color="@color/black_15161A"
+                app:wheel_atmospheric="true"
+                app:wheel_item_align="right"
+                app:wheel_visible_item_count="7" />
 
             <com.aigestudio.wheelpicker.WheelPicker
                 android:id="@+id/wheel_timer_day_picker"
@@ -86,24 +95,34 @@
                 app:layout_constraintStart_toEndOf="@+id/wheel_timer_month_picker"
                 app:layout_constraintTop_toTopOf="@id/wheel_timer_month_picker"
                 app:wheel_indicator="true"
-                app:layout_constraintWidth_percent="0.3"
-                app:wheel_indicator_color="@color/black_333333"
+                app:wheel_indicator_color="@color/grey_e5e5e5"
                 app:wheel_indicator_size="1dp"
-                app:wheel_item_text_size="@dimen/ts_14"
-                app:wheel_selected_item_text_color="@color/black_333333"
-                app:wheel_item_text_color="@color/gray_6C7078"
-                app:wheel_visible_item_count="3" />
+                app:wheel_item_space="20dp"
+                app:wheel_item_align="left"
+                app:wheel_item_text_size="@dimen/ts_16"
+                app:wheel_selected_item_text_color="@color/black_15161A"
+                app:wheel_item_text_color="@color/black_15161A"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:wheel_atmospheric="true"
+                app:wheel_visible_item_count="7" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/v_line_2"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintTop_toBottomOf="@id/wheel_timer_picker_layout"
+            />
 
         <View
             android:id="@+id/divid_line"
             android:layout_width="1dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/wheel_timer_picker_layout"
+            app:layout_constraintTop_toBottomOf="@id/v_line_2"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
             android:layout_height="1dp"/>
 
         <TextView
@@ -111,15 +130,20 @@
             android:layout_below="@id/divid_line"
             android:text="@string/cancel"
             android:layout_width="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divid_line"
             app:layout_constraintEnd_toEndOf="@id/divid_line"
-            android:textSize="@dimen/ts_14"
-            android:textStyle="bold"
-            android:textColor="@color/black_888888"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:textSize="@dimen/ts_16"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
             android:gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/complete_progress"
+            android:background="@drawable/background_circle_grey"
             android:layout_height="wrap_content"/>
 
         <TextView
@@ -128,11 +152,16 @@
             android:text="@string/confirm"
             android:layout_centerHorizontal="true"
             android:layout_width="0dp"
-            android:textSize="@dimen/ts_14"
-            android:textStyle="bold"
-            android:textColor="@color/complete_progress"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/white"
+            android:background="@drawable/background_circle_bule_gradient"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="30dp"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/divid_line"
