@@ -1,10 +1,5 @@
 ## android sdk接口使用说明
 
-### 版本信息
-* 版本:v1.0
-* 修改内容:
-    * 初始版本
-* 修改时间:2021.01.14
 ---------------------------
 
 ### 接口说明
@@ -20,17 +15,6 @@ public static void stopService();
 * 函数说明:退出xp2p并释放对应的资源
 * 参数说明:⽆参数
 * 返回值:⽆返回值
-
-public static String delegateHttpFlv();
-* 函数说明:获取p2p通道建立后提供的本地url
-* 参数说明:无参数
-* 返回值:
-    * 成功:返回构建的url
-    * 失败:返回空字符串
-* 返回值说明:
-    * 返回的url是标准url,使用前需拼接成具体请求的url
-    * 如需请求直播数据,则在返回的url后拼接`ipc.flv?action=live`
-    * 如需请求本地录像数据,则在返回的url后拼接`ipc.flv?action=playback`
 
 public static void dataSend(byte[] data, int len);
 * 函数说明:通过建立的p2p通道发送数据
