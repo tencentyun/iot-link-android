@@ -289,7 +289,7 @@ class HttpRequest private constructor() {
      */
     fun getLastVersion(callback: MyCallback) {
         val param = commonParams("AppGetLatestVersion")
-        param["ClientVersion"] = "0.0.0"
+        param["ClientVersion"] = BuildConfig.VERSION_NAME
         param["AppPlatform"] = "android"
         param["Channel"] = 0
         postJson(param, callback, RequestCode.get_last_version)
