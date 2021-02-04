@@ -70,6 +70,14 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
             if (ret == 0) {
                 isP2PChannelAvailable = true
                 val url = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 0)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", 1)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100L)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10240L)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1L)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1L)
+
                 mPlayer.dataSource = url
                 mPlayer.prepareAsync()
                 mPlayer.start()
