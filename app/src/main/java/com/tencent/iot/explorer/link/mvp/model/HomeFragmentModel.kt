@@ -137,10 +137,10 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
     /**
      * 获取设备在线状态
      */
-    private fun getDeviceOnlineStatus(index: Int) {
+    private fun getDeviceOnlineStatus(index: Int, size: Int) {
         var productId = ""
         val deviceIds = arrayListOf<String>()
-        for (i in index until deviceList.size) {
+        for (i in index until size) {
             App.data.deviceList[i].let {
                 if (TextUtils.isEmpty(productId)) {
                     productId = it.ProductId
@@ -158,7 +158,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                     if (response.isSuccess()) {
                         response.parse(DeviceOnlineResponse::class.java)?.run {
                             if (!DeviceStatuses.isNullOrEmpty()) {
-                                for (i in index until deviceList.size) {
+                                for (i in index until size) {
                                     deviceList[i].run {
                                         run check@{
                                             DeviceStatuses!!.forEach {
@@ -280,7 +280,10 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                             refreshShareDeviceList()
                         }
                         //在线状态
-                        getDeviceOnlineStatus(deviceList.size - DeviceList.size)
+                        getDeviceOnlineStatus(
+                                deviceList.size - DeviceList.size,
+                                deviceList.size
+                        )
 
                         val productIdList = ArrayList<String>()
                         // TRTC: 轮询在线的trtc设备的call_status
@@ -328,7 +331,10 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                             shareDeviceListEnd
                         )
                         //在线状态
-                        getDeviceOnlineStatus(deviceList.size - ShareDevices.size)
+                        getDeviceOnlineStatus(
+                            deviceList.size - ShareDevices.size,
+                            deviceList.size
+                        )
                     }
                 }
             }
