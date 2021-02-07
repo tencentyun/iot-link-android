@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.os.Bundle
 import android.os.SystemClock
 import android.text.TextUtils
 import android.view.Gravity
@@ -128,7 +129,11 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
                 showTemperatureDialog()
             }
             tv_time_zone_title, tv_time_zone, iv_time_zone_arrow -> {// 时区
-                startActivityForResult(Intent(this, TimeZoneActivity::class.java), TIMEZONE_REQUESTCODE)
+                var intent = Intent(this, TimeZoneActivity::class.java);
+                var bundle = Bundle()
+                bundle.putString(CommonField.EXTRA_TIME_ZONE_INFO, tv_time_zone.text.toString())
+                intent.putExtra(CommonField.EXTRA_TIME_ZONE_BUNDLE_TAG, bundle)
+                startActivityForResult(intent, TIMEZONE_REQUESTCODE)
             }
             tv_empty_area0, tv_empty_area -> {// 连续点击五次复制AndroidID
                 System.arraycopy(hits, 1, hits, 0, hits.size - 1)
