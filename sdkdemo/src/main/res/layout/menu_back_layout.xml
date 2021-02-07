@@ -25,5 +25,15 @@
         android:textColor="@color/black"
         android:textSize="@dimen/ts_20"
         android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tv_p2p_version"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:paddingEnd="10dp"
+        android:text="xx"
+        android:textColor="@color/gray_e6e6e6"
+        android:textSize="@dimen/ts_16"/>
 
 </RelativeLayout>
