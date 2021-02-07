@@ -1,10 +1,13 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.customview.MySideBarView
@@ -19,6 +22,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.TipSwitchDialog
 import kotlinx.android.synthetic.main.activity_time_zone.*
 import kotlinx.android.synthetic.main.activity_time_zone.my_side_bar
 import kotlinx.android.synthetic.main.activity_time_zone.tv_show_key
@@ -38,6 +42,7 @@ class TimeZoneActivity: PActivity(),
     private var timeZoneList = ArrayList<TimeZoneEntity>()
     private var touchPosition = -1
     private var flags = IntArray(26)
+    private var tag = ""
 
     private fun getTimeZoneList() {
         if (Utils.isChineseSystem(this)) {// 中文
@@ -58,6 +63,8 @@ class TimeZoneActivity: PActivity(),
     }
 
     override fun initView() {
+        var bundle = intent.extras?.get(CommonField.EXTRA_TIME_ZONE_BUNDLE_TAG) as Bundle
+        tag = bundle.getString(CommonField.EXTRA_TIME_ZONE_INFO)!!
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.setTextColor(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.select_timezone)
@@ -118,9 +125,21 @@ class TimeZoneActivity: PActivity(),
         clickView: View,
         position: Int
     ) {
+
         val entity = timeZoneList[position]
-        HttpRequest.instance.setRegion(entity.TZ, this)
-        finish()
+        if (tag == entity.TZ) finish()  // 选择同样的时区，直接返回上一级
+
+        if (entity.TZ != null && !entity.TZ.equals(tag)) {
+            var dlg = TipSwitchDialog(this@TimeZoneActivity)
+            dlg.show()
+            dlg.setOnDismisListener(object: TipSwitchDialog.OnDismisListener {
+                override fun onOkClicked() {
+                    HttpRequest.instance.setRegion(entity.TZ, this@TimeZoneActivity)
+                }
+
+                override fun onCancelClicked() {}
+            })
+        }
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -136,7 +155,9 @@ class TimeZoneActivity: PActivity(),
                 }
             }
             RequestCode.set_region -> {// 设置时区
-                if (response.isSuccess()) { }
+                if (response.isSuccess()) {
+                    finish()
+                }
             }
         }
     }
