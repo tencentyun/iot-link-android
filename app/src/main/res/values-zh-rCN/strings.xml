@@ -32,6 +32,9 @@
     <string name="open_WIFI">请打开 WIFI</string>
     <string name="download_success">下载成功</string>
     <string name="download_failed">下载失败</string>
+    <string name="switch_time_zone_tip">确定切换时区吗</string>
+    <string name="switch_time_zone_content">您切换时区将会同步更改您为家里的智能设备设置的定时、场景等任务时区，请知悉！</string>
+
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
     <string name="email_login">邮箱登录</string>
