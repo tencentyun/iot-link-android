@@ -17,6 +17,7 @@ import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.service.VideoBaseService
+import com.tencent.xnet.XP2P
 import kotlinx.android.synthetic.main.activity_video_message.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -43,6 +44,7 @@ class VideoMessageActivity : BaseActivity() {
         secretKey = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SECRET_KEY)
         productId = SharePreferenceUtil.getString(this, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_PRODUCT_ID)
         tv_title.text = "摄像头列表"
+        tv_p2p_version.text = XP2P.getVersion()
         rv_video_message.layoutManager = LinearLayoutManager(this)
         adapter = VideoMessageAdapter(this, videoMessageList)
         rv_video_message.adapter = adapter
