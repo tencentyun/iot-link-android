@@ -63,6 +63,10 @@ object CommonField {
     const val EXTRA_SEND_MSG = "sendMsgType"
     const val EXTRA_ADD_MANUAL_TASK = "addManualTask"
     const val EXTRA_REFRESH = "refreshTag"
+    const val EXTRA_TIME_ZONE_INFO = "timeZoneInfo"
+    const val EXTRA_TIME_ZONE_BUNDLE_TAG = "timeZoneBundleTag"
+
+
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
