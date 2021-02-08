@@ -59,12 +59,12 @@ android {
         opensource {
             applicationId "com.tencent.iot.explorer.link.opensource"
             resValue("string" , "app_name_zh", "连连开源体验")
-            resValue("string" , "app_name_en", "(英)连连开源体验")
+            resValue("string" , "app_name_en", "Lianlian")
         }
         //-tencentOfficial {
         //-    applicationId "com.tencent.iot.explorer.link"
         //-    resValue("string" , "app_name_zh","腾讯连连")
-        //-    resValue("string" , "app_name_en","(英)腾讯连连")
+        //-    resValue("string" , "app_name_en","Tencent Lianlian")
         //-}
     }
 
