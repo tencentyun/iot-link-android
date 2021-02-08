@@ -12,6 +12,7 @@ import com.tencent.iot.explorer.link.core.demo.adapter.OnItemListener
 import com.tencent.iot.explorer.link.core.demo.adapter.VideoListAdapter
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
 import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
 import com.tencent.iot.explorer.link.core.demo.view.MyDivider
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.PlaybackVideoEntity
@@ -44,7 +45,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
     }
 
     override fun initView() {
-        enableSaveLog()
+        LogcatHelper.getInstance(this).start()
         adapter = VideoListAdapter(this, videoList)
         playback_video_list.addItemDecoration(MyDivider(dp2px(16), dp2px(16), dp2px(16)))
         playback_video_list.layoutManager = LinearLayoutManager(this)
@@ -152,13 +153,6 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
         }
     }
 
-    private fun enableSaveLog() {
-        val sdf = SimpleDateFormat("", Locale.SIMPLIFIED_CHINESE)
-        sdf.applyPattern("yyyy-MM-dd-HH-mm-ss")
-        val filePath: String = this.externalCacheDir!!.absolutePath + "/logcat-${sdf.format(System.currentTimeMillis())}.txt"
-        Runtime.getRuntime().exec(arrayOf("logcat", "-f", filePath, "XP2P-LOG:V", "*:S"))
-    }
-
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
     }
 
@@ -172,6 +166,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
         super.onDestroy()
         mPlayer.release()
         XP2P.stopService()
+        LogcatHelper.getInstance(this).stop()
     }
 
     override fun commandRequest(msg: String?, len: Int) {
