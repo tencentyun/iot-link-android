@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
+import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
@@ -41,7 +42,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
 
     override fun initView() {
         requestPermission(permissions)
-        enableSaveLog()
+        LogcatHelper.getInstance(this).start()
         val bundle = this.intent.extras
         secretId = bundle?.get(VideoConst.VIDEO_SECRET_ID) as String
         secretKey = bundle.get(VideoConst.VIDEO_SECRET_KEY) as String
@@ -49,7 +50,6 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         deviceName = bundle.get(VideoConst.VIDEO_DEVICE_NAME) as String
 
         audioRecordUtil = AudioRecordUtil(this)
-
         video_view.holder.addCallback(this)
         mPlayer = IjkMediaPlayer()
         mPlayer.setOnPreparedListener {
@@ -150,13 +150,6 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         audioRecordUtil.stop()
     }
 
-    private fun enableSaveLog() {
-        val sdf = SimpleDateFormat("", Locale.SIMPLIFIED_CHINESE)
-        sdf.applyPattern("yyyy-MM-dd-HH-mm-ss")
-        val filePath: String = this.externalCacheDir!!.absolutePath + "/logcat-${sdf.format(System.currentTimeMillis())}.txt"
-        Runtime.getRuntime().exec(arrayOf("logcat", "-f", filePath, "XP2P-LOG:V", "*:S"))
-    }
-
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) { }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) { }
@@ -170,6 +163,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         mPlayer.release()
         XP2P.stopService()
         audioRecordUtil.release()
+        LogcatHelper.getInstance(this).stop()
     }
 
     override fun commandRequest(msg: String?, len: Int) {
