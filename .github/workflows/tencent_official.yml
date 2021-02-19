@@ -11,6 +11,7 @@ env:
   GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
   IOT_GPG_KEYNAME: ${{ secrets.IOT_GPG_KEYNAME }}
   IOT_GPG_PASSPHRASE: ${{ secrets.IOT_GPG_PASSPHRASE }}
+  IOT_GITHUB_ACCESS_TOKEN: ${{ secrets.IOT_GITHUB_ACCESS_TOKEN }}
 
 jobs:
   build:
@@ -52,7 +53,7 @@ jobs:
           sh .github/scripts/updateValuesForSign.sh
       - name: Update VersionCode
         run: |
-          sh .github/scripts/updateVersionCodeForRelease.sh
+          sh .github/scripts/updateVersionCode.sh
       - name: Adapt build.gradle from debug to release
         run: |
           sed -i 's#opensource_keystore#tencent_official_keystore#g' app/build.gradle
@@ -68,6 +69,8 @@ jobs:
         run: ./gradlew assembleTencentOfficial
       - name: Publish aar to Maven
         run: ./gradlew publish
+      - name: Update iot-version-android.txt in iot-version repo
+        run: sh .github/scripts/updateVersionInIotVersionRepo.sh
       - name: Encrypt Apk
         run: |
           gpg --batch --passphrase "$GPG_DECRYPT_PASSPHRASE" -c app/build/outputs/apk/tencentOfficial/debug/*.apk
