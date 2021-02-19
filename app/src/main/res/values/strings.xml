@@ -133,6 +133,7 @@
     <string name="register_agree_2">用户协议</string>
     <string name="register_agree_3">及</string>
     <string name="register_agree_4">隐私政策</string>
+    <string name="register_agree_4_low">隐私政策</string>
     <string name="register_agree_5">开源软件信息</string>
     <string name="register_get_code">获取验证码</string>
     <string name="get_mobile_code_sent">验证码已经发送到您的手机:</string>
@@ -329,7 +330,7 @@
     <string name="smart_lost_device">当前智能设备丢失，请重新设置动作</string>
     <string name="bind_now">立即绑定</string>
     <string name="bind_dev">绑定设备</string>
-    <string name="share_dev_tip_content">通过将设备名称与腾讯连连连接，即表示您同意与设备名称共享有关您的设备和设备日志的信息，第三方可以根据其条款和政策使用该设备。\n有关更多信息，请阅读我们的 %s。</string>
+    <string name="share_dev_tip_content">通过将设备与腾讯连连连接，即表示您同意共享有关您设备和设备日志的信息，第三方可以根据其条款和政策使用该设备。有关更多信息，请阅读我们的 %s。</string>
     <string name="share_dev_more_info">有关更多信息，请阅读我们的</string>
 
     <!--云端定时-->
