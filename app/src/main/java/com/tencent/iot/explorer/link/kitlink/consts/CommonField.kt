@@ -84,6 +84,8 @@ object CommonField {
     const val USA_USER_REG_TIME_INFO_DAY = "RegTimeInfoDay"
     const val COUNTRY_INFO = "CountryInfo"
     const val COUNTRY_CODE = "CountryCode"
+    const val AGREE_TAG = "agreeTag"
+    const val AGREED_TAG = "agreed"
     const val REGION_ID = "RegionID"
     const val PHONE_NUMBER = "PhoneNumber"
     const val VERIFY_CODE = "VerificationCode"
