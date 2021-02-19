@@ -39,8 +39,8 @@ public class TipShareDevDialog extends IosCenterStyleDialog implements View.OnCl
         moreInfo = view.findViewById(R.id.tv_content);
 
         String str = getContext().getResources().getString(R.string.share_dev_tip_content,
-                getContext().getResources().getString(R.string.register_agree_4));
-        String lastPart = getContext().getResources().getString(R.string.register_agree_4);
+                getContext().getResources().getString(R.string.register_agree_4_low));
+        String lastPart = getContext().getResources().getString(R.string.register_agree_4_low);
         SpannableStringBuilder spannable = new SpannableStringBuilder(str);
         spannable.setSpan(new TextClick(), str.length() - lastPart.length() - 1,
                 str.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

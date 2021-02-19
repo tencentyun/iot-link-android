@@ -193,12 +193,16 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
 
         var json = JSONObject.parseObject(jsonStr)
         if (json != null && json.containsKey(CommonField.COUNTRY_CODE) && json.getString(CommonField.COUNTRY_CODE) == "1") {
-            var dlg = TipShareDevDialog(this@HomeFragment.context)
-            dlg.show()
-            dlg.setOnDismisListener {
-                jumpActivity(DeviceCategoryActivity::class.java)
+            var agreeStr = Utils.getStringValueFromXml(T.getContext(), CommonField.AGREE_TAG, CommonField.AGREE_TAG)
+            if (TextUtils.isEmpty(agreeStr) || !agreeStr.equals(CommonField.AGREED_TAG)) {
+                var dlg = TipShareDevDialog(this@HomeFragment.context)
+                dlg.show()
+                dlg.setOnDismisListener {
+                    Utils.setXmlStringValue(T.getContext(), CommonField.AGREE_TAG, CommonField.AGREE_TAG, CommonField.AGREED_TAG)
+                    jumpActivity(DeviceCategoryActivity::class.java)
+                }
+                return
             }
-            return
         }
 
         jumpActivity(DeviceCategoryActivity::class.java)
