@@ -18,10 +18,11 @@ open class ConfigService {
     val maxTimes2Try = 10
 
     @Throws(JSONException::class)
-    fun genSoftApLinkString(ssid: String, password: String, token: String, region: String): String {
+    fun genSoftApLinkString(ssid: String, bssid: String, password: String, token: String, region: String): String {
         val jsonObject = JSONObject()
         jsonObject.put("cmdType", 1)
         jsonObject.put("ssid", ssid)
+        jsonObject.put("bssid", bssid)
         jsonObject.put("password", password)
         jsonObject.put("token", token)
         jsonObject.put("region", region)
