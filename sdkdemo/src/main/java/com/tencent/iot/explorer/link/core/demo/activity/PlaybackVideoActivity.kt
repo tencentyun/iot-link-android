@@ -169,7 +169,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
         LogcatHelper.getInstance(this).stop()
     }
 
-    override fun commandRequest(msg: String?, len: Int) {
+    override fun commandRequest(msg: String?) {
         runOnUiThread {
             Toast.makeText(this, "$msg", Toast.LENGTH_LONG).show()
         }
