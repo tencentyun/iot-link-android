@@ -4,9 +4,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Html
 import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.TextView
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
@@ -43,6 +41,35 @@ class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
         intent.getStringExtra(CommonField.EXTRA_TEXT)?.let {
             getOpensourceLicense(it)
         }
+
+        wv_web.settings.javaScriptEnabled = true
+        wv_web.settings.domStorageEnabled = true
+        wv_web.settings.useWideViewPort = true
+        wv_web.settings.loadWithOverviewMode = true
+        wv_web.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
+
+        val mWebViewClient = object : WebViewClient(){
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                if (request?.url.toString() == CommonField.OPENSOURCE_LICENSE_URL) { //开源软件信息
+                    getOpensourceLicense(CommonField.OPENSOURCE_LICENSE_URL)
+                    return false
+                } else if (request?.url.toString() == CommonField.PRIVACY_POLICY_URL) { //隐私政策
+                    getOpensourceLicense(CommonField.PRIVACY_POLICY_URL)
+                    return false
+                } else if (request?.url.toString() == CommonField.SERVICE_AGREEMENT_URL) { //用户协议
+                    getOpensourceLicense(CommonField.SERVICE_AGREEMENT_URL)
+                    return false
+                } else {
+                    return super.shouldOverrideUrlLoading(view, request)
+                }
+            }
+        }
+        wv_web.webViewClient = mWebViewClient
+        wv_web.webChromeClient = WebChromeClient()
+        wv_web.visibility = View.VISIBLE
     }
 
     override fun setListener() {
@@ -70,14 +97,6 @@ class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
         val jsonObject = JSON.parse(opensourceLicenseJson) as JSONObject
         if (jsonObject.containsKey("filecontent")) {
             val fileContentJson = jsonObject.getString("filecontent")
-            wv_web.settings.javaScriptEnabled = true
-            wv_web.settings.domStorageEnabled = true
-            wv_web.settings.useWideViewPort = true
-            wv_web.settings.loadWithOverviewMode = true
-            wv_web.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
-            wv_web.webViewClient = WebViewClient()
-            wv_web.webChromeClient = WebChromeClient()
-            wv_web.visibility = View.VISIBLE
             wv_web.loadData(fileContentJson, "text/html",  "utf-8")
         }
     }
