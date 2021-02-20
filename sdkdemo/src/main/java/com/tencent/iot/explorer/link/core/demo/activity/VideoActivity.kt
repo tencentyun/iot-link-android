@@ -166,7 +166,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         LogcatHelper.getInstance(this).stop()
     }
 
-    override fun commandRequest(msg: String?, len: Int) {
+    override fun commandRequest(msg: String?) {
     }
 
     override fun fail(msg: String?, errorCode: Int) {
