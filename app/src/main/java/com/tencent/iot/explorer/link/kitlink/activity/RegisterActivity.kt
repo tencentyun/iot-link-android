@@ -1,21 +1,26 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
+import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.InputBirthdayDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
-import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.RegisterPresenter
 import com.tencent.iot.explorer.link.mvp.view.RegisterView
-import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
-import com.tencent.iot.explorer.link.customview.dialog.InputBirthdayDialog
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.layout_email_register.view.*
 import kotlinx.android.synthetic.main.layout_phone_register.view.*
@@ -87,6 +92,57 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
 
         loadLastCountryInfo()
         showBirthDayDlg()
+        formatTipText()
+    }
+
+    private fun formatTipText() {
+        val str = resources.getString(R.string.register_agree_1)
+        val partStr1 = resources.getString(R.string.register_agree_2)
+        val partStr2 = resources.getString(R.string.register_agree_3)
+        val partStr3 = resources.getString(R.string.register_agree_4)
+        var showStr = str + partStr1 + partStr2 + partStr3
+        val spannable = SpannableStringBuilder(showStr)
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(this@RegisterActivity, WebActivity::class.java)
+                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
+                var url = CommonField.POLICY_PREFIX
+                url += "?uin=$ANDROID_ID"
+                url += CommonField.SERVICE_POLICY_SUFFIX
+                intent.putExtra(CommonField.EXTRA_TEXT, url)
+                startActivity(intent)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+        },
+            str.length, str.length + partStr1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(this@RegisterActivity, WebActivity::class.java)
+                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
+                var url = CommonField.POLICY_PREFIX
+                url += "?uin=$ANDROID_ID"
+                url += CommonField.PRIVACY_POLICY_SUFFIX
+                intent.putExtra(CommonField.EXTRA_TEXT, url)
+                startActivity(intent)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+
+        },
+            showStr.length - partStr1.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        tv_register_tip.setMovementMethod(LinkMovementMethod.getInstance())
+        tv_register_tip.setText(spannable)
     }
 
     private fun initViewPager() {
@@ -117,8 +173,6 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         emailView.iv_register_to_country_email.setOnClickListener(this)
 
         iv_register_agreement.setOnClickListener(this)
-        tv_register_user_agreement.setOnClickListener(this)
-        tv_register_privacy_policy.setOnClickListener(this)
         btn_register_get_code.setOnClickListener(this)
     }
 
@@ -146,24 +200,6 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             }
             iv_register_agreement -> {//同意或不同意协议
                 presenter.agreement()
-            }
-            tv_register_user_agreement -> {//用户协议
-                val intent = Intent(this, WebActivity::class.java)
-                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
-                var url = CommonField.POLICY_PREFIX
-                url += "?uin=$ANDROID_ID"
-                url += CommonField.SERVICE_POLICY_SUFFIX
-                intent.putExtra(CommonField.EXTRA_TEXT, url)
-                startActivity(intent)
-            }
-            tv_register_privacy_policy -> {//隐私政策
-                val intent = Intent(this, WebActivity::class.java)
-                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
-                var url = CommonField.POLICY_PREFIX
-                url += "?uin=$ANDROID_ID"
-                url += CommonField.PRIVACY_POLICY_SUFFIX
-                intent.putExtra(CommonField.EXTRA_TEXT, url)
-                startActivity(intent)
             }
             phoneView.tv_register_to_country, phoneView.iv_register_to_country -> {
                 startActivityForResult(Intent(this, RegionActivity::class.java), 100)
