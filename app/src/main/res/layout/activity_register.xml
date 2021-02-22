@@ -26,74 +26,69 @@
             android:layout_marginTop="30dp"
             app:layout_constraintTop_toBottomOf="@+id/sbhv_register"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ll_register_agreement"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="31dp"
-            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
             app:layout_constraintLeft_toLeftOf="@id/btn_register_get_code"
             app:layout_constraintTop_toBottomOf="@+id/vp_register">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/select_tag_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_space"
+            app:layout_constraintBottom_toBottomOf="@id/tv_space"
+            app:layout_constraintDimensionRatio="h, 1:1"
             >
+
             <ImageView
                 android:id="@+id/iv_register_agreement"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:padding="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/readed" />
 
             <ImageView
                 android:id="@+id/iv_register_agreement_status"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:padding="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/success" />
         </RelativeLayout>
 
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:gravity="center_vertical"
-                android:text="@string/register_agree_1"
+            android:id="@+id/tv_space"
+            android:layout_width="9dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/ts_14"
+            android:visibility="invisible"
+            android:text="1"
+            app:layout_constraintStart_toEndOf="@id/select_tag_layout"
+            />
+
+        <TextView
+                android:id="@+id/tv_register_tip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_space"
+                app:layout_constraintTop_toTopOf="@id/tv_space"
                 android:textColor="@color/black_333333"
+                android:lineSpacingExtra="5dp"
                 android:textSize="@dimen/ts_14" />
 
-        <TextView
-                android:id="@+id/tv_register_user_agreement"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:gravity="center_vertical"
-                android:paddingStart="2dp"
-                android:paddingEnd="2dp"
-                android:text="@string/register_agree_2"
-                android:textColor="@color/blue_0066FF"
-                android:textSize="@dimen/ts_14" />
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:gravity="center_vertical"
-                android:text="@string/register_agree_3"
-                android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_14" />
-
-        <TextView
-                android:id="@+id/tv_register_privacy_policy"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:gravity="center_vertical"
-                android:paddingStart="2dp"
-                android:text="@string/register_agree_4"
-                android:textColor="@color/blue_0066FF"
-                android:textSize="@dimen/ts_14" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.tencent.iot.explorer.link.customview.check.ClickButton
             android:id="@+id/btn_register_get_code"
