@@ -129,9 +129,9 @@
     <string name="mobile_phone_number_to_register">Signup with mobile number</string>
     <string name="mobile_phone_register">Signup with mobile number</string>
     <string name="email_register">Signup with email</string>
-    <string name="register_agree_1">I agree to comply with Tencent Cloud</string>
+    <string name="register_agree_1">I agree to comply with Tencent Cloud&#160;</string>
     <string name="register_agree_2">User Agreement</string>
-    <string name="register_agree_3">and</string>
+    <string name="register_agree_3">&#160;and&#160;</string>
     <string name="register_agree_4">Privacy Policy</string>
     <string name="register_agree_4_low">privacy policy</string>
     <string name="register_agree_5">开源软件信息</string>
