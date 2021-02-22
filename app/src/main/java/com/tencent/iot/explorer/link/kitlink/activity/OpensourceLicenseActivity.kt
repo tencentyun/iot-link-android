@@ -97,7 +97,7 @@ class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
         val jsonObject = JSON.parse(opensourceLicenseJson) as JSONObject
         if (jsonObject.containsKey("filecontent")) {
             val fileContentJson = jsonObject.getString("filecontent")
-            wv_web.loadData(fileContentJson, "text/html",  "utf-8")
+            wv_web.loadData(fileContentJson, "text/html;charset=UTF-8",  null)
         }
     }
 }
