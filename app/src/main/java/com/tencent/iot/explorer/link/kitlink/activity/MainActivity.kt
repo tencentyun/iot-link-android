@@ -43,6 +43,8 @@ import com.tencent.iot.explorer.link.kitlink.fragment.SmartFragment
 import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.kitlink.util.LogcatHelper
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.tpns.baseapi.XGApiConfig
 import kotlinx.android.synthetic.main.activity_main.*
@@ -145,6 +147,7 @@ class MainActivity : PActivity(), MyCallback {
         openXGPush()
         home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
         requestPermission(permissions)
+        LogcatHelper.getInstance(this).start()
         home_bottom_view.addMenu(
             BottomItemEntity(
                 getString(R.string.main_tab_1),
@@ -380,6 +383,7 @@ class MainActivity : PActivity(), MyCallback {
     override fun onDestroy() {
         unbindXG()
         super.onDestroy()
+        LogcatHelper.getInstance(this).stop()
     }
 
     private var timestamp = 0L

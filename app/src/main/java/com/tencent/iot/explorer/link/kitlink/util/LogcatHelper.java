@@ -1,8 +1,5 @@
-package com.tencent.iot.explorer.link.core.demo.util;
+package com.tencent.iot.explorer.link.kitlink.util;
 
-import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,29 +9,32 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
 
 public class LogcatHelper {
     private static final String TAG = LogcatHelper.class.getName();
     private static LogcatHelper INSTANCE = null;
     private static String PATH_LOGCAT;
     private LogDumper mLogDumper = null;
+    private final int mPId;
 
-    private void init(Context context) {
+    public void init(Context context) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {// 优先保存到SD卡中
             PATH_LOGCAT = Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + File.separator + "p2p_logs";
+                    .getAbsolutePath() + File.separator + "link_logs";
         } else {// 如果SD卡不存在，就保存到本应用的目录下
-            PATH_LOGCAT = context.getFilesDir().getAbsolutePath() + File.separator + "p2p_logs";
+            PATH_LOGCAT = context.getFilesDir().getAbsolutePath() + File.separator + "link_logs";
         }
         File file = new File(PATH_LOGCAT);
         if (!file.exists()) {
             if (file.mkdirs()) {
-                Log.e(TAG, "创建P2P日志目录成功");
+                Log.e(TAG, "创建日志目录成功");
             } else {
-                Log.e(TAG, "创建P2P日志目录失败");
+                Log.e(TAG, "创建日志目录失败");
             }
         }
-        Log.e(TAG, PATH_LOGCAT);
     }
 
     public static LogcatHelper getInstance(Context context) {
@@ -46,11 +46,13 @@ public class LogcatHelper {
 
     private LogcatHelper(Context context) {
         init(context);
+        mPId = android.os.Process.myPid();
     }
 
     public void start() {
-        if (mLogDumper == null)
-            mLogDumper = new LogDumper(PATH_LOGCAT);
+        if (mLogDumper == null) {
+            mLogDumper = new LogDumper(String.valueOf(mPId), PATH_LOGCAT);
+        }
         mLogDumper.start();
     }
 
@@ -61,36 +63,45 @@ public class LogcatHelper {
         }
     }
 
-    private class LogDumper extends Thread {
+    private static class LogDumper extends Thread {
+
         private Process logcatProc;
         private BufferedReader mReader = null;
         private boolean mRunning = true;
-        private String[] cmds;
+        private final String cmds;
+        private final String mPID;
         private FileOutputStream out = null;
 
-        public LogDumper(String dir) {
+        public LogDumper(String pid, String dir) {
+            mPID = pid;
             try {
                 out = new FileOutputStream(new File(dir, "log_" + getFileName() + ".log"),
                         true);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            cmds = new String[] { "logcat", "IOT-XP2P:V", "*:S" };
+            cmds = "logcat | grep \"(" + mPID + ")\"";
         }
 
-        public void stopLogs() { mRunning = false; }
+        public void stopLogs() {
+            mRunning = false;
+        }
 
         @Override
         public void run() {
             try {
                 logcatProc = Runtime.getRuntime().exec(cmds);
-                mReader = new BufferedReader(new InputStreamReader(
-                        logcatProc.getInputStream()), 1024);
+                mReader = new BufferedReader(new InputStreamReader(logcatProc.getInputStream()), 1024);
                 String line;
                 while (mRunning && (line = mReader.readLine()) != null) {
                     if (!mRunning) break;
                     if (line.length() == 0) continue;
-                    if (out != null) {
+                    if (out != null && line.contains(mPID) && !line.contains("FA  ")
+                            && !line.contains("Firebase") && !line.contains("zygote")
+                            && !line.contains("libEGL") && !line.contains("TPush")
+                            && !line.contains("Hw") && !line.contains("OpenGL")
+                            && !line.contains("CubicBezier") && !line.contains("PressGestureDetector")
+                            && !line.contains("AppCompatDelegate") && !line.contains("VideoCapabilities")) {
                         out.write((line + "\n").getBytes());
                     }
                 }
@@ -119,10 +130,9 @@ public class LogcatHelper {
                 }
             }
         }
-    }
-
-    private String getFileName() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(new Date(System.currentTimeMillis()));
+        private String getFileName() {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            return format.format(new Date(System.currentTimeMillis()));
+        }
     }
 }
