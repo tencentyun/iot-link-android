@@ -454,6 +454,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                     Utils.setXmlStringValue(T.getContext(), CommonField.COUNTRY_INFO, CommonField.COUNTRY_INFO, this)
                 }
             }
+            enableTextView(verifyCodeLoginView.tv_get_verify_code,
+                isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode))
         }
     }
 }
