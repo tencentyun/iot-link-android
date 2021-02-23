@@ -117,6 +117,19 @@
     <string name="share_dev_tip">设备共享</string>
     <string name="switch_time_zone_tip">确定切换时区吗</string>
     <string name="switch_time_zone_content">您切换时区将会同步更改您为家里的智能设备设置的定时、场景等任务时区，请知悉！</string>
+    <string name="add_option_add_dev">添加设备</string>
+    <string name="add_option_scan_dev">扫描设备</string>
+    <string name="add_option_add_task">添加智能</string>
+    <string name="outside_humidity">相对湿度 %s</string>
+    <string name="outside_wind_dir">实况风向 %s</string>
+    <string name="temp_unit">°</string>
+    <string name="sunny_tag">晴</string>
+    <string name="cloud_tag">阴</string>
+    <string name="rainy_tag">雨</string>
+    <string name="snow_tag">雪</string>
+    <string name="dry_tag">干燥</string>
+    <string name="comfortable_tag">舒适</string>
+    <string name="damp_tag">潮湿</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -431,6 +444,9 @@
     <string name="scanning_retry">重试</string>
     <string name="connect">连接</string>
     <string name="all_device">全部</string>
+    <string name="all_dev_num">所有设备（%s）</string>
+    <string name="all_share_dev_num">共享设备（%s）</string>
+    <string name="no_dev_to_show_add_now">当前暂无设备，请添加设备</string>
     <string name="living_room">客厅</string>
     <string name="bedroom">卧室</string>
     <string name="kitchen">厨房</string>
@@ -604,6 +620,7 @@
     <string name="connect_failed_check_password">网络连接失败，请检查密码是否正确</string>
     <string name="connect_ssid_failed_handle">连接到网络：%s 失败，请手动连接</string>
     <string name="all_devices">全部设备</string>
+    <string name="all_dev">全部</string>
     <string name="num_devices">%s个设备</string>
     <string name="ensure_import_wechat_login_with_offical_doc">请确保已按官网文档接入微信登录</string>
     <string name="server_error">服务器出错</string>

@@ -1,10 +1,12 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.content.Context
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
 import com.tencent.iot.explorer.link.core.utils.LocationUtil
+import com.tencent.iot.explorer.link.kitlink.entity.CityInfo
 import com.tencent.map.geolocation.TencentLocation
 import com.tencent.map.geolocation.TencentLocationListener
 import okhttp3.*
@@ -14,22 +16,52 @@ object WeatherUtils {
 
     private var key = BuildConfig.WeatherKey
     private val okHttpClient = OkHttpClient()
-    private var defaultLang = "zh"
+    var defaultLang = "zh"
 
-    // 默认中文获取天气
-    fun getWeatherInfo(lat: Double, lon: Double, callback: Callback) {
-        getWeatherInfo(lat, lon, defaultLang, callback)
+    fun getWeatherInfo(cityInfo: CityInfo, listener: OnWeatherListener) {
+        var url = "https://api.heweather.net/v7/weather/now?location=${cityInfo.lon},${cityInfo.lat}&key=$key&lang=$defaultLang"
+        val request = Request.Builder().url(url).get().build() //添加头部信息
+        okHttpClient.newCall(request).enqueue(object : Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                if (listener != null) {
+                    listener.onWeatherFailed(5)
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.body() != null) {
+                    var respStr = response.body()!!.string()
+                    Log.e("XXX", "respStr " + respStr)
+                    var json = JSON.parseObject(respStr)
+                    if (json.containsKey("now")) {
+                        var nowWeatherInfo = json.getString("now")
+                        var weatherInfo = JSON.parseObject(nowWeatherInfo, WeatherInfo::class.java)
+                        if (weatherInfo != null && listener != null) {
+                            weatherInfo.cityInfo = cityInfo
+                            listener.onWeatherSuccess(weatherInfo)
+                            return
+                        }
+                    }
+                }
+
+
+                if (listener != null) {
+                    listener.onWeatherFailed(6)
+                }
+            }
+
+        })
     }
 
-    // 根据语言获取天气
-    fun getWeatherInfo(lat: Double, lon: Double, lang: String, callback: Callback) {
-
-        var url = "https://api.heweather.net/v7/weather/now?location=${lon},${lat}&key=$key&lang=$lang"
+    // 根据经纬度获取城市信息
+    fun getCityInfoByLoacation(lat: Double, lon: Double, callback: Callback) {
+        var url = "https://geoapi.qweather.com/v2/city/lookup?location=${lon},${lat}&key=$key&lang=$defaultLang"
+        Log.e("XXX", "url " + url)
         val request = Request.Builder().url(url).get().build() //添加头部信息
         okHttpClient.newCall(request).enqueue(callback)
     }
 
-    fun getLocalCurrentWeatherInfo(context: Context, lang: String, listener: OnWeatherListener) {
+    fun getLocalCurrentWeatherInfo(context: Context, listener: OnWeatherListener) {
         LocationUtil.getCurrentLocation(context, object : TencentLocationListener {
             override fun onStatusUpdate(p0: String?, p1: Int, p2: String?) {}
 
@@ -40,42 +72,44 @@ object WeatherUtils {
                     }
                     return
                 }
-                getWeatherInfo(p0!!.latitude, p0!!.longitude, lang, object : Callback{
-                    override fun onFailure(call: Call, e: IOException) {
-                        if (listener != null) {
-                            listener.onWeatherFailed(5)
-                        }
-                    }
 
-                    override fun onResponse(call: Call, response: Response) {
-                        if (response.body() != null) {
-                            var respStr = response.body()!!.string()
-                            var json = JSON.parseObject(respStr)
-                            if (json.containsKey("now")) {
-                                var nowWeatherInfo = json.getString("now")
-                                var weatherInfo = JSON.parseObject(nowWeatherInfo, WeatherInfo::class.java)
-                                if (weatherInfo != null && listener != null) {
-                                    listener.onWeatherSuccess(weatherInfo)
-                                    return
-                                }
-                            }
-                        }
-
-
-                        if (listener != null) {
-                            listener.onWeatherFailed(6)
-                        }
-                    }
-
-                })
+                var cityInfo = CityInfo()
+                cityInfo.lat = p0.latitude.toString()
+                cityInfo.lon = p0.longitude.toString()
+                cityInfo.name = p0.district
+                getWeatherInfo(cityInfo, listener)
             }
 
         })
     }
 
+    fun getWeatherInfoByLocation(lat: Double, lon: Double, listener: OnWeatherListener) {
+        getCityInfoByLoacation(lat, lon, object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                if (listener != null) {
+                    listener.onWeatherFailed(1)
+                }
+            }
 
-    fun getLocalCurrentWeatherInfo(context: Context, listener: OnWeatherListener) {
-        getLocalCurrentWeatherInfo(context, defaultLang, listener)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.body() != null) {
+                    var respStr = response.body()!!.string()
+                    var json = JSON.parseObject(respStr)
+                    Log.e("XXX", "json " + json.toJSONString())
+                    if (json.containsKey("location")) {
+                        var jsonArr = json.getJSONArray("location")
+                        if (jsonArr != null && jsonArr.size > 0) {
+                            var cityInfoJson = jsonArr.get(0).toString()
+                            var cityInfo = JSON.parseObject(cityInfoJson, CityInfo::class.java)
+                            getWeatherInfo(cityInfo, listener)
+                            return
+                        }
+                    }
+                }
+
+                listener.onWeatherFailed(6)
+            }
+        })
     }
 
 }

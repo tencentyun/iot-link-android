@@ -3,28 +3,37 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSONObject
+import com.example.qrcode.Constant
+import com.example.qrcode.ScannerActivity
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.R
 import com.tencent.android.tpush.XGIOperateCallback
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.android.tpush.XGPushManager
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
-import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
-import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
-import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
-import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.FileUtils
-import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
+import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.*
 import com.tencent.iot.explorer.link.customview.home.BottomItemEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.fragment.CommentFragment
@@ -34,7 +43,6 @@ import com.tencent.iot.explorer.link.kitlink.fragment.SmartFragment
 import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.tpns.baseapi.XGApiConfig
 import kotlinx.android.synthetic.main.activity_main.*
@@ -50,7 +58,6 @@ class MainActivity : PActivity(), MyCallback {
     private val fragments = arrayListOf<Fragment>()
 
     private var familyPopup: FamilyListPopup? = null
-//    private var addDialog: ListOptionsDialog? = null
 
     private var isForceUpgrade = true
 
@@ -59,6 +66,14 @@ class MainActivity : PActivity(), MyCallback {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.RECORD_AUDIO
+    )
+
+    private var scanPermissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.CHANGE_WIFI_STATE,
+            Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
+            Manifest.permission.ACCESS_FINE_LOCATION
     )
 
     override fun getContentView(): Int {
@@ -128,6 +143,7 @@ class MainActivity : PActivity(), MyCallback {
         FirebaseCrashlytics.getInstance().setUserId(userId)
         FirebaseAnalytics.getInstance(this).setUserId(userId)
         openXGPush()
+        home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
         requestPermission(permissions)
         home_bottom_view.addMenu(
             BottomItemEntity(
@@ -142,6 +158,13 @@ class MainActivity : PActivity(), MyCallback {
                     getString(R.string.main_tab_5),
                     resources.getColor(R.color.main_tab_normal), resources.getColor(R.color.main_tab_hover),
                     R.mipmap.smart_unpressed, R.mipmap.smart_pressed
+                )
+            )
+            .addMenu(
+                BottomItemEntity(
+                    "",
+                    resources.getColor(R.color.translucent), resources.getColor(R.color.translucent),
+                    R.color.translucent, R.color.translucent
                 )
             )
             .addMenu(
@@ -168,13 +191,78 @@ class MainActivity : PActivity(), MyCallback {
             .add(R.id.main_container, fragments[0])
             .show(fragments[0])
             .commit()
+
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
     }
 
     override fun setListener() {
-        iv_main_add.setOnClickListener{}
+        iv_main_add.setOnClickListener{
+            var dlg = AddOptionsDialog(this@MainActivity)
+            dlg.show()
+
+            // 恢复动画
+            val rotate = RotateAnimation(45f, 0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f)
+            val lin = LinearInterpolator()
+            rotate.interpolator = lin
+            rotate.duration = 200 //设置动画持续周期
+            rotate.fillAfter = true //动画执行完后是否停留在执行完的状态
+
+            dlg.setOnDismisListener(object : AddOptionsDialog.OnDismisListener {
+                override fun onDismissed() {
+                    iv_main_add.startAnimation(rotate)
+                }
+
+                override fun onItemClicked(pos: Int) {
+                    iv_main_add.startAnimation(rotate)
+                    if (pos == 2) {
+                        var options = ArrayList<String>()
+                        options.add(getString(R.string.smart_option_1))
+                        options.add(getString(R.string.smart_option_2))
+                        var addDialog = ListOptionsDialog(this@MainActivity, options)
+                        addDialog.setOnDismisListener(onItemClickedListener)
+                        addDialog.show()
+                    } else if (pos == 0) {
+                        jumpAddDevActivity()
+                    } else if (pos == 1) {
+                        if (checkPermissions(scanPermissions)) {
+                            var intent = Intent(this@MainActivity, ScannerActivity::class.java)
+                            intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC, true)
+                            startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
+                        } else {
+                            requestPermission(scanPermissions)
+                        }
+                    }
+                }
+            })
+
+            val animationSet = AnimationSet(true)
+            val rotateAnimation = RotateAnimation(0f, 45f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+            animationSet.addAnimation(rotateAnimation)
+            animationSet.fillAfter = true
+            iv_main_add.startAnimation(animationSet)
+        }
 
         home_bottom_view.setOnItemClickListener { _, position, previewPosition ->
-            showFragment(position)
+            if (position == 2) {
+                return@setOnItemClickListener
+            }
+
+            var tagPos = position
+            if (tagPos > 2) {
+                tagPos = tagPos - 1
+            }
+            showFragment(tagPos)
+            if (tagPos == 0) {
+                window.decorView.systemUiVisibility =
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            } else {
+                window.decorView.systemUiVisibility =
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            }
         }
 
         if (fragments != null && fragments.size > 0) {
@@ -185,6 +273,25 @@ class MainActivity : PActivity(), MyCallback {
                     }
                 }
             }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 102) {
+            if (permissions.contentEquals(scanPermissions)) {
+                var intent = Intent(Intent(this, ScannerActivity::class.java))
+                intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
+                startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
+            }
+        }
+    }
+
+    private var onItemClickedListener = ListOptionsDialog.OnDismisListener {
+        if (it == 0) {
+            jumpActivity(AddManualTaskActivity::class.java)
+        } else if (it == 1) {
+            jumpActivity(AddAutoicTaskActivity::class.java)
         }
     }
 
@@ -254,7 +361,6 @@ class MainActivity : PActivity(), MyCallback {
             familyPopup = FamilyListPopup(this)
             familyPopup?.setList(familyList)
         }
-        familyPopup?.setBg(main_bg)
         familyPopup?.show(main)
         familyPopup?.onItemClickListener = object : FamilyListPopup.OnItemClickListener {
             override fun onItemClick(popupWindow: FamilyListPopup, position: Int) {

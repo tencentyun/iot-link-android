@@ -1,61 +1,61 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
-import android.graphics.Rect
+import android.os.Handler
 import android.text.TextUtils
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONObject
-import com.tencent.iot.explorer.link.App
-import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
-import com.tencent.iot.explorer.link.kitlink.activity.DeviceCategoryActivity
-import com.tencent.iot.explorer.link.kitlink.holder.*
-import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.mvp.presenter.HomeFragmentPresenter
-import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
+import com.google.android.material.appbar.AppBarLayout
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
+import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerDivider
-import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
+import com.tencent.iot.explorer.link.kitlink.activity.MainActivity
+import com.tencent.iot.explorer.link.kitlink.adapter.RoomDevAdapter
+import com.tencent.iot.explorer.link.kitlink.adapter.RoomsAdapter
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.utils.Utils
-import com.tencent.iot.explorer.link.customview.dialog.TipShareDevDialog
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.util.*
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.HomeFragmentPresenter
+import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.head_home.*
+import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.header.*
+import kotlinx.android.synthetic.main.inside_fixed_bar.*
+import kotlinx.android.synthetic.main.title_with_family.*
 
-/**
- * 设备界面
- */
-class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerItemView, MyCallback {
+
+class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
 
     private lateinit var presenter: HomeFragmentPresenter
-
-    private lateinit var header1: HomeHeadViewHolder1
-    private lateinit var header2: HomeHeadViewHolder2
-    private lateinit var header3: HomeHeadViewHolder3
     var popupListener: PopupListener? = null
-
-    private var mScrollY = 0
+    private var devList: ArrayList<DeviceEntity> = ArrayList()
+    private var roomDevAdapter: RoomDevAdapter? = null
+    private var shareDevList: ArrayList<DeviceEntity> = ArrayList()
+    private var roomShareDevAdapter: RoomDevAdapter? = null
+    private var roomList: ArrayList<RoomEntity> = ArrayList()
+    private var roomsAdapter: RoomsAdapter? = null
+    private var handler = Handler()
 
     override fun getContentView(): Int {
-        return R.layout.fragment_home
+        return R.layout.fragment_main
     }
 
     override fun getPresenter(): IPresenter? {
@@ -66,31 +66,14 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
         presenter = HomeFragmentPresenter(this)
         initView()
         setListener()
-        //请求数据
-//        requestData()
     }
 
     override fun onResume() {
         super.onResume()
-        if (App.data.refresh) {//更新数据
+        if (App.data.refresh) { //更新数据
             requestData()
-        } else {//更新界面
+        } else {    //更新界面
             showData()
-        }
-    }
-
-    /**
-     * fragment可见状态(首次创建时不调用)
-     */
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        when (hidden) {
-            true -> {//隐藏
-
-            }
-            else -> {//显示
-
-            }
         }
     }
 
@@ -105,6 +88,61 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
         }
         //级别降为设备刷新
         App.data.resetRefreshLevel()
+        WeatherUtils.getWeatherInfoByLocation(39.1, 116.4, weatherListener)
+    }
+
+    private fun formateWeather(weatherText: String): String {
+        var testTag = weatherText.toLowerCase()
+        if (testTag.contains(getString(R.string.sunny_tag)) ||
+            testTag.contains("clear")) {
+            return "sunny"
+        } else if (testTag.contains(getString(R.string.cloud_tag))) {
+            return "cloud"
+        } else if (testTag.contains(getString(R.string.rainy_tag))) {
+            return "rainy"
+        } else if (testTag.contains(getString(R.string.snow_tag))) {
+            return "snow"
+        }
+        return ""
+    }
+
+    private fun formateHumidity(humidity: String): String {
+        var humidityInt = humidity.toIntOrNull()
+
+        if (humidityInt == null) {
+            return ""
+        }
+
+        if (humidityInt <= 40) {
+            return getString(R.string.dry_tag)
+        } else if (humidityInt > 40 && humidityInt <= 70) {
+            return getString(R.string.comfortable_tag)
+        } else {
+            return getString(R.string.damp_tag)
+        }
+    }
+
+    private var weatherListener = object : OnWeatherListener {
+        override fun onWeatherSuccess(weatherInfo: WeatherInfo) {
+            handler.post {
+                tv_temperature.text = weatherInfo.temp
+                tv_outside_humidity.text = getString(R.string.outside_humidity,
+                    formateHumidity(weatherInfo.humidity))
+                tv_outside_wind_dir.text = getString(R.string.outside_wind_dir, weatherInfo.windDir)
+                tv_text.text = weatherInfo.text
+                tv_location.text = weatherInfo.cityInfo?.name
+                var tag = formateWeather(weatherInfo.text)
+                if (!TextUtils.isEmpty(tag)) {
+                    weather_iv.imageAssetsFolder = "lottie/" + tag
+                    weather_iv.setAnimation("lottie/${tag}/${tag}.json")
+                    weather_iv.playAnimation()
+                }
+            }
+        }
+
+        override fun onWeatherFailed(reason: Int) {
+
+        }
     }
 
     /**
@@ -116,143 +154,56 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
             showRoomList()
             showDeviceList(App.data.deviceList.size, roomId, deviceListEnd, shareDeviceListEnd)
         }
+        WeatherUtils.getWeatherInfoByLocation(39.1, 116.4, weatherListener)
     }
 
     private fun initView() {
-        crv_home_fragment.layoutManager = LinearLayoutManager(context)
-        val myDivider = CRecyclerDivider(dp2px(16), dp2px(16), dp2px(16))
-        myDivider.linearItemOffsetsListener = object : CRecyclerDivider.LinearItemOffsetsListener {
-            override fun setItemOffsets(position: Int, viewType: Int): Boolean {
-                //头部时自定义
-                return (viewType >= CRecyclerView.HEAD_VIEW_TYPE)
-            }
+        var devGridLayoutManager = GridLayoutManager(context, 2)
+        roomDevAdapter = RoomDevAdapter(devList)
+        grid_devs.setLayoutManager(devGridLayoutManager)
+        grid_devs.setNestedScrollingEnabled(false)
+        grid_devs.setAdapter(roomDevAdapter)
 
-            override fun itemOffsets(position: Int, viewType: Int): Rect {
-                return Rect(0, 0, 0, 0)
-            }
-        }
-        crv_home_fragment.addItemDecoration(myDivider)
-        crv_home_fragment.setList(App.data.deviceList)
-        crv_home_fragment.addRecyclerItemView(this)
-        header1 = HomeHeadViewHolder1(
-            LayoutInflater.from(context).inflate(
-                R.layout.head_home1,
-                crv_home_fragment, false
-            )
-        )
-        header2 = HomeHeadViewHolder2(
-            LayoutInflater.from(context).inflate(
-                R.layout.head_home2,
-                crv_home_fragment, false
-            )
-        )
-        header3 = HomeHeadViewHolder3(context!!, this, crv_home_fragment, R.layout.head_home3)
-        header3.setRoomList(App.data.roomList)
-        crv_home_fragment.addHeader(header2)
-        addHomeHead()
-    }
+        var shareGridLayoutManager = GridLayoutManager(context, 2)
+        roomShareDevAdapter = RoomDevAdapter(shareDevList)
+        grid_share_devs.setLayoutManager(shareGridLayoutManager)
+        grid_share_devs.setNestedScrollingEnabled(false)
+        grid_share_devs.setAdapter(roomShareDevAdapter)
 
-    /**
-     * 显示滑动头部
-     */
-    private fun addHomeHead() {
-        crv_head_home_room.layoutManager =
-            LinearLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
-        crv_head_home_room.setList(App.data.roomList)
-        crv_head_home_room.addRecyclerItemView(object : CRecyclerView.RecyclerItemView {
-            override fun doAction(
-                viewHolder: CRecyclerView.CViewHolder<*>,
-                clickView: View,
-                position: Int
-            ) {
-                crv_head_home_room.addSingleSelect(position)
-                presenter.tabRoom(position)
-                showRoomList()
-            }
+        var roomLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        roomsAdapter = RoomsAdapter(roomList)
+        lv_rooms.setLayoutManager(roomLayoutManager)
+        lv_rooms.setAdapter(roomsAdapter)
 
-            override fun getViewHolder(
-                parent: ViewGroup,
-                viewType: Int
-            ): CRecyclerView.CViewHolder<*> {
-                return HomeRoomViewHolder(context!!, parent, R.layout.item_home_room)
-            }
-
-            override fun getViewType(position: Int): Int {
-                return 0
-            }
-        })
-    }
-
-    private fun jumpAddDevActivity() {
-        var jsonStr = Utils.getStringValueFromXml(T.getContext(), CommonField.COUNTRY_CODE,
-            CommonField.COUNTRY_CODE)
-        if (TextUtils.isEmpty(jsonStr) || jsonStr == "{}") {
-            jumpActivity(DeviceCategoryActivity::class.java)
-            return
-        }
-
-        var json = JSONObject.parseObject(jsonStr)
-        if (json != null && json.containsKey(CommonField.COUNTRY_CODE) && json.getString(CommonField.COUNTRY_CODE) == "1") {
-            var agreeStr = Utils.getStringValueFromXml(T.getContext(), CommonField.AGREE_TAG, CommonField.AGREE_TAG)
-            if (TextUtils.isEmpty(agreeStr) || !agreeStr.equals(CommonField.AGREED_TAG)) {
-                var dlg = TipShareDevDialog(this@HomeFragment.context)
-                dlg.show()
-                dlg.setOnDismisListener {
-                    Utils.setXmlStringValue(T.getContext(), CommonField.AGREE_TAG, CommonField.AGREE_TAG, CommonField.AGREED_TAG)
-                    jumpActivity(DeviceCategoryActivity::class.java)
-                }
-                return
-            }
-        }
-
-        jumpActivity(DeviceCategoryActivity::class.java)
+        smart_refreshLayout.setEnableRefresh(true)
+        smart_refreshLayout.setRefreshHeader(ClassicsHeader(context))
+        smart_refreshLayout.setEnableLoadMore(false)
+        smart_refreshLayout.setRefreshFooter(ClassicsFooter(context))
     }
 
     private fun setListener() {
-        header1.headListener = object : CRecyclerView.HeadListener {
-            override fun doAction(
-                holder: CRecyclerView.HeadViewHolder<*>,
-                clickView: View,
-                position: Int
-            ) {
-                when (position) {
-//                    0 -> jumpActivity(AddDeviceActivity::class.java)
-                    0 -> jumpAddDevActivity()
-                    1 -> {
-                    }
-                    2 -> {
-                        popupListener?.onPopupListener(App.data.familyList)
-                    }
-                }
-            }
-        }
-        header2.headListener = object : CRecyclerView.HeadListener {
-            override fun doAction(
-                holder: CRecyclerView.HeadViewHolder<*>,
-                clickView: View,
-                position: Int
-            ) {
-                when (position) {
-//                    0 -> jumpActivity(AddDeviceActivity::class.java)
-                    0 -> jumpAddDevActivity()
-                    1 -> {
-                    }
-                    2 -> {
-                        popupListener?.onPopupListener(App.data.familyList)
-                    }
-                }
-            }
-        }
-        crv_home_fragment.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                mScrollY += dy
-                if (mScrollY < 0) {
-                    mScrollY = 0
-                }
-                isShowHeadHome()
+        app_bar.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
+            override fun onStateChanged(appBarLayout: AppBarLayout, state: State, percent: Float) {
+                weather_iv.alpha = percent
             }
         })
-        srl_home_fragment.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+        tv_add_dev.setOnClickListener {
+            var start = this.context as MainActivity
+            start.jumpAddDevActivity()
+        }
+        left_layout.setOnClickListener {
+            popupListener?.onPopupListener(App.data.familyList)
+        }
+        roomDevAdapter?.setOnItemClicked(onItemClickedListener)
+        roomShareDevAdapter?.setOnItemClicked(onItemClickedListener)
+        roomsAdapter?.setOnItemClicked(object: RoomsAdapter.OnItemClicked {
+            override fun onItemClicked(pos: Int, dev: RoomEntity) {
+                roomsAdapter?.selectPos = pos
+                roomsAdapter?.notifyDataSetChanged()
+                tabRoom(pos)
+            }
+        })
+        smart_refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 refreshLayout.finishLoadMore()
                 presenter.loadDeviceList()
@@ -265,72 +216,93 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
         })
     }
 
-    /**
-     * 切换家庭
-     */
-    fun tabFamily(position: Int) {
-        presenter.tabFamily(position)
+    var onItemClickedListener = object: RoomDevAdapter.OnItemClicked {
+        override fun onItemClicked(pos: Int, dev: DeviceEntity) {
+            put("device", dev)
+            val productList  = arrayListOf<String>()
+            productList.add(dev.ProductId)
+            HttpRequest.instance.getProductsConfig(productList, this@HomeFragment)
+        }
     }
 
+    // 切换家庭
+    fun tabFamily(position: Int) {
+        presenter.tabFamily(position)
+        showFamily()
+    }
+
+    // 切换房间
     fun tabRoom(position: Int) {
         presenter.tabRoom(position)
     }
 
-    /**
-     * 显示家庭名称
-     */
+    // 显示家庭名称
     override fun showFamily() {
-        header1.show()
-        header2.show()
-        L.e("显示家庭名称")
-        crv_home_fragment.notifyDataChanged()
+        App.data.getCurrentFamily()?.let {
+            tv_home_name.text = it.FamilyName
+        }
     }
 
-    /**
-     * 显示房间
-     */
+    // 显示房间列表
     override fun showRoomList() {
-        crv_head_home_room.notifyDataChanged()
-        header3.show()
-    }
+        roomList.clear()
+        roomList.addAll(App.data.roomList)
+        if (roomList == null) return
 
-    private fun isShowHeadHome() {
-        if (mScrollY >= dp2px(104)) {
-            head_home.visibility = View.VISIBLE
-        } else {
-            head_home.visibility = View.GONE
+        for (i in 0 .. roomList.size - 1) {
+            if (TextUtils.isEmpty(roomList.get(i).RoomName)) {
+                roomList[i].RoomName = getString(R.string.all_dev)
+            }
         }
+        roomsAdapter?.notifyDataSetChanged()
     }
 
-    /**
-     * 显示设备列表
-     */
-    override fun showDeviceList(
-        deviceSize: Int,
-        roomId: String,
-        deviceListEnd: Boolean,
-        shareDeviceListEnd: Boolean
-    ) {
+    // 显示设备列表
+    override fun showDeviceList(deviceSize: Int, roomId: String, deviceListEnd: Boolean, shareDeviceListEnd: Boolean) {
+        devList.clear()
+        shareDevList.clear()
         if (deviceSize > 0) {
-            crv_home_fragment.removeHeader(header2)
-            crv_home_fragment.addHeader(header1)
-            crv_home_fragment.addHeader(header3)
-        } else if (roomId == "") {//默认房间时,没有设备，则家庭都没有设备
-            crv_home_fragment.removeHeader(header1)
-            crv_home_fragment.removeHeader(header3)
-            crv_home_fragment.addHeader(header2)
-        } else {
+            devList.addAll(presenter.getIModel(this).deviceList)
+            devList.removeAll(presenter.getIModel(this).shareDeviceList)
+            shareDevList.addAll(presenter.getIModel(this).shareDeviceList)
+        }
 
+        roomDevAdapter?.notifyDataSetChanged()
+        roomShareDevAdapter?.notifyDataSetChanged()
+        tv_dev_title.setText(resources.getString(R.string.all_dev_num, devList.size.toString()))
+        tv_share_dev_title.setText(resources.getString(R.string.all_share_dev_num, shareDevList.size.toString()))
+
+        if (shareDevList.size <= 0) {
+            layout_share_dev_title.visibility = View.GONE
+        } else {
+            layout_share_dev_title.visibility = View.VISIBLE
         }
-        if (deviceSize <= 0 && head_home.visibility == View.VISIBLE) {
-            mScrollY = 0
-            isShowHeadHome()
+
+        if (devList.size <= 0) {
+            layout_dev_title.visibility = View.GONE
+        } else {
+            layout_dev_title.visibility = View.VISIBLE
         }
-        crv_home_fragment.notifyDataChanged()
+
+        if (shareDevList.size <= 0 && devList.size <= 0) {
+            layout_no_dev_2_show.visibility = View.VISIBLE
+        } else {
+            layout_no_dev_2_show.visibility = View.GONE
+        }
     }
 
     override fun showDeviceOnline() {
-        crv_home_fragment.notifyDataChanged()
+        for (i in 0 until devList.size) {
+            devList.get(i).online = presenter.getIModel(this).deviceList.get(i).online
+        }
+        for (i in 0 until shareDevList.size) {
+            if (i + devList.size >= presenter.getIModel(this).deviceList.size) {
+                continue
+            }
+            shareDevList.get(i).online = presenter.getIModel(this).deviceList.get(i + devList.size).online
+        }
+        roomDevAdapter?.notifyDataSetChanged()
+        roomShareDevAdapter?.notifyDataSetChanged()
     }
 
     /**
@@ -344,43 +316,6 @@ class HomeFragment : BaseFragment(), HomeFragmentView, CRecyclerView.RecyclerIte
 //                TRTCAudioCallActivity.startBeingCall(this.activity, room, deviceId)
 //            }
 //        }
-    }
-
-    override fun getViewType(position: Int): Int {
-        return when (presenter.getDeviceEntity(position).shareDevice) {
-            true -> if (presenter.getDeviceEntity(position).DeviceId == "title") 2 else 1 //共享的设备
-            false -> 0
-        }
-    }
-
-    override fun getViewHolder(parent: ViewGroup, viewType: Int): CRecyclerView.CViewHolder<*> {
-        return when (viewType) {
-            2 -> object : CRecyclerView.CViewHolder<DeviceEntity>(
-                context!!,
-                parent,
-                R.layout.item_share_device_title
-            ) {
-                override fun show(position: Int) {
-                }
-            }
-            1 -> ShareDeviceViewHolder(context!!, parent, R.layout.item_share_device)
-            else -> DeviceViewHolder(context!!, parent, R.layout.item_device)
-        }
-    }
-
-    /**
-     * 点击跳转
-     */
-    override fun doAction(
-        viewHolder: CRecyclerView.CViewHolder<*>,
-        clickView: View,
-        position: Int
-    ) {
-        val device = presenter.getDeviceEntity(position)
-        put("device", device)
-        val productList  = arrayListOf<String>()
-        productList.add(device.ProductId)
-        HttpRequest.instance.getProductsConfig(productList, this)
     }
 
     interface PopupListener {
