@@ -10,6 +10,7 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.DataHolder
@@ -17,6 +18,8 @@ import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.User
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.TipShareDevDialog
 import com.tencent.iot.explorer.link.customview.status.StatusBarUtil
 import java.util.*
 
@@ -295,5 +298,30 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun dp2px(dp: Int): Int {
         return (resources.displayMetrics.density * dp + 0.5).toInt()
+    }
+
+    fun jumpAddDevActivity() {
+        var jsonStr = Utils.getStringValueFromXml(T.getContext(), CommonField.COUNTRY_CODE,
+            CommonField.COUNTRY_CODE)
+        if (TextUtils.isEmpty(jsonStr) || jsonStr == "{}") {
+            jumpActivity(DeviceCategoryActivity::class.java)
+            return
+        }
+
+        var json = JSONObject.parseObject(jsonStr)
+        if (json != null && json.containsKey(CommonField.COUNTRY_CODE) && json.getString(CommonField.COUNTRY_CODE) == "1") {
+            var agreeStr = Utils.getStringValueFromXml(T.getContext(), CommonField.AGREE_TAG, CommonField.AGREE_TAG)
+            if (TextUtils.isEmpty(agreeStr) || !agreeStr.equals(CommonField.AGREED_TAG)) {
+                var dlg = TipShareDevDialog(this)
+                dlg.show()
+                dlg.setOnDismisListener {
+                    Utils.setXmlStringValue(T.getContext(), CommonField.AGREE_TAG, CommonField.AGREE_TAG, CommonField.AGREED_TAG)
+                    jumpActivity(DeviceCategoryActivity::class.java)
+                }
+                return
+            }
+        }
+
+        jumpActivity(DeviceCategoryActivity::class.java)
     }
 }

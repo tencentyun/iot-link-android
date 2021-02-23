@@ -29,6 +29,7 @@ import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.activity.GuideActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.WeatherUtils
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
@@ -143,6 +144,10 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         data.appLifeCircleId = UUID.randomUUID().toString()
         registerActivityLifecycleCallbacks(this)
         IoTAuth.addEnterRoomCallback(this)
+
+        var lang = Utils.getLang()
+        lang = lang.substring(0,2)
+        WeatherUtils.defaultLang = lang
     }
 
     /**
