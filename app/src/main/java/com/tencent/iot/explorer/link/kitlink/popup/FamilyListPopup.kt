@@ -10,9 +10,6 @@ import com.tencent.iot.explorer.link.kitlink.holder.PopupFamilyListHolder
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import kotlinx.android.synthetic.main.popup_family.view.*
 
-/**
- * 家庭列表弹框
- */
 class FamilyListPopup(context: Context) : ParentPopupWindow(context),
     CRecyclerView.RecyclerItemView {
 
@@ -28,7 +25,9 @@ class FamilyListPopup(context: Context) : ParentPopupWindow(context),
 
     override fun initView() {
         this.width = ViewGroup.LayoutParams.MATCH_PARENT
-        this.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        this.height = ViewGroup.LayoutParams.MATCH_PARENT
+        contentView.outside_layout.setOnClickListener { dismiss() }
+        contentView.inside_layout.setOnClickListener { return@setOnClickListener }
     }
 
     fun setList(list: List<FamilyEntity>) {
@@ -41,7 +40,6 @@ class FamilyListPopup(context: Context) : ParentPopupWindow(context),
     }
 
     override fun show(parentView: View) {
-        super.show(parentView)
         super.showAtLocation(parentView, Gravity.TOP, 0, 0)
         contentView.crv_popup_family_list.notifyDataChanged()
     }
