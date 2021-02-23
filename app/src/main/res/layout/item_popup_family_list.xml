@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
+    android:layout_width="match_parent"
+    android:background="@drawable/background_failed_cell"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_height="52dp">
 
     <TextView
             android:id="@+id/tv_popup_family_name"
@@ -15,21 +20,26 @@
             android:paddingEnd="0dp"
             android:text="@string/family_name"
             android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_18" />
+            android:textSize="@dimen/ts_14" />
 
     <ImageView
-            android:id="@+id/iv_popup_family_list"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
-            android:src="@mipmap/icon_checked" />
+        android:id="@+id/iv_popup_family_list"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="18dp"
+        android:src="@mipmap/readed"/>
 
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/gray_F2F2F2" />
+    <ImageView
+        android:id="@+id/iv_popup_family_list_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:layout_alignTop="@id/iv_popup_family_list"
+        android:layout_alignBottom="@id/iv_popup_family_list"
+        android:layout_alignLeft="@id/iv_popup_family_list"
+        android:layout_alignRight="@id/iv_popup_family_list"
+        android:src="@mipmap/success" />
 
 </RelativeLayout>
