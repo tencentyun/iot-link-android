@@ -4,12 +4,10 @@ import android.Manifest
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.ContextMenu
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
-import com.tencent.iot.explorer.link.core.demo.log.L
 import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
@@ -18,8 +16,6 @@ import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
-import java.text.SimpleDateFormat
-import java.util.*
 
 class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callback, XP2PCallback {
 
@@ -135,13 +131,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         XP2P.setQcloudApiCred(secretId, secretKey)
         XP2P.setXp2pInfoAttributes("_sys_xp2p_info")
         XP2P.setCallback(this)
-        val ret = XP2P.startServiceWithXp2pInfo("")
-        return if (ret == 0) {
-            Thread.sleep(1000)
-            ret
-        } else {
-            ret
-        }
+        return XP2P.startServiceWithXp2pInfo("")
     }
 
     private fun startSpeak() {
