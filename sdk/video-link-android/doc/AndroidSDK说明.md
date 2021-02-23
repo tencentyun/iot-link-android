@@ -11,6 +11,11 @@ public static void startServiceWithXp2pInfo(String xp2p_info);
 * 说明:
     * 该版本暂时传入空即可
 
+static native String delegateHttpFlv();
+* 函数说明:获取本地请求数据的标准http url,可使用该url请求设备端数据
+* 参数说明:无参数
+* 返回值:本地代理的url
+
 public static void stopService();
 * 函数说明:退出xp2p并释放对应的资源
 * 参数说明:⽆参数
@@ -80,6 +85,7 @@ public static void startAvRecvService(String cmd);
 * 参数说明:
     * cmd:直播`action=live`或回放参数`action=playback`
 * 返回值:无返回值
+* 说明:调用该接口需要在其回调函数中处理接收的数据,且该接口与接口`delegateHttpFlv()`的使用互斥,不可同时使用二者
 
 public static int stopAvRecvService(byte[] data);
 * 函数说明:停止接收数据服务
