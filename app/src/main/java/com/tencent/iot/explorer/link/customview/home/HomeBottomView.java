@@ -26,6 +26,13 @@ public class HomeBottomView extends LinearLayout {
     private int currentPosition = 0, previewPosition = -1;
     private List<Integer> unclickAbleItems = new ArrayList();
 
+    public boolean performClickAtItem(int pos) {
+        if (bottomViews != null && bottomViews.get(pos) != null) {
+            return bottomViews.get(pos).performClick();
+        }
+        return false;
+    }
+
     public void addUnclickAbleItem(int pos) {
         unclickAbleItems.add(pos);
     }

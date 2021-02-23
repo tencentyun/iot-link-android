@@ -12,4 +12,5 @@ class WeatherInfo {
     var humidity = "" // 湿度
     var precip = ""
     var pressure = ""
+    var cityInfo: CityInfo? = null;
 }

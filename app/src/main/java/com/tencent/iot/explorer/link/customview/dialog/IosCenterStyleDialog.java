@@ -21,27 +21,35 @@ public class IosCenterStyleDialog extends Dialog {
     protected View view;
     private Context mContext;
     private int layoutId;
+    private boolean showAnimation;
 
     public IosCenterStyleDialog(Context context, int layoutId) {
+        this(context, layoutId, true);
+    }
+
+    public IosCenterStyleDialog(Context context, int layoutId, boolean showAnimation) {
         super(context, R.style.iOSDialog);
         mContext = context;
         displayMetrics = context.getResources().getDisplayMetrics();
         this.layoutId = layoutId;
+        this.showAnimation = showAnimation;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //设置view 弹出的平移动画，从底部-100% 平移到自身位置
-        TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,
-                0f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
-        animation.setInterpolator(new DecelerateInterpolator());
-        animation.setDuration(350);
-        animation.setStartOffset(150);
-
         view = View.inflate(mContext, this.layoutId, null);
-        view.setAnimation(animation);//设置动画
+        //设置view 弹出的平移动画，从底部-100% 平移到自身位置
+        if (showAnimation) {
+            TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,
+                    0f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+            animation.setInterpolator(new DecelerateInterpolator());
+            animation.setDuration(350);
+            animation.setStartOffset(150);
+            view.setAnimation(animation);//设置动画
+        }
+
         initView();
     }
 
