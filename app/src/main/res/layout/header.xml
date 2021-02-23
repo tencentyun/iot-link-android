@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="151dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="44dp">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/tv_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/white"
+                android:textSize="43sp"
+                android:layout_marginLeft="25dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_temp_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="@string/temp_unit"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="@dimen/ts_36"
+                app:layout_constraintTop_toTopOf="@id/tv_temperature"
+                app:layout_constraintBottom_toTopOf="@id/tv_text"
+                app:layout_constraintStart_toEndOf="@id/tv_temperature"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tv_temperature"
+                app:layout_constraintStart_toEndOf="@id/tv_temperature"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_12"
+                android:id="@+id/tv_text"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="8dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tv_text"
+                app:layout_constraintStart_toEndOf="@id/tv_text"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_12"
+                android:id="@+id/tv_location"
+                android:layout_marginLeft="5dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_outside_humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_temperature"
+                app:layout_constraintStart_toStartOf="@id/tv_temperature"
+                android:textSize="@dimen/ts_12"
+                android:textColor="@color/blue_BFD2FF"
+                />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="12dp"
+                app:layout_constraintStart_toEndOf="@id/tv_outside_humidity"
+                app:layout_constraintTop_toTopOf="@id/tv_outside_humidity"
+                app:layout_constraintBottom_toBottomOf="@id/tv_outside_humidity"
+                android:background="@color/blue_BFD2FF"
+                android:layout_marginLeft="12dp"
+                android:id="@+id/v_space"
+                />
+
+            <TextView
+                android:id="@+id/tv_outside_wind_dir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/ts_12"
+                android:textColor="@color/blue_BFD2FF"
+                app:layout_constraintTop_toTopOf="@id/tv_outside_humidity"
+                app:layout_constraintStart_toEndOf="@id/v_space"
+                android:layout_marginLeft="12dp"
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

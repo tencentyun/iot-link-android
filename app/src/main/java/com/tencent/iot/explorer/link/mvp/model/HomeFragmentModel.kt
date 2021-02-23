@@ -36,8 +36,8 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
 
     private val familyList = App.data.familyList
     private val roomList = App.data.roomList
-    private val deviceList = App.data.deviceList
-    private val shareDeviceList = App.data.shareDeviceList
+    val deviceList = App.data.deviceList
+    val shareDeviceList = App.data.shareDeviceList
 
     var roomId = ""
     var deviceListEnd = false
@@ -307,12 +307,6 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         if (Total >= 0) {
                             shareDeviceTotal = Total
                             shareDeviceListEnd = shareDeviceList.size >= Total
-                        }
-                        if (shareDeviceList.isEmpty() && !ShareDevices.isNullOrEmpty()) {
-                            val title = ShareDeviceEntity()
-                            title.DeviceId = "title"
-                            shareDeviceList.add(title)
-                            deviceList.add(title)
                         }
                         shareDeviceList.addAll(ShareDevices)
                         deviceList.addAll(ShareDevices)

@@ -35,6 +35,11 @@
     <string name="copyed">已复制到剪切板</string>
     <string name="switch_time_zone_tip">Are you sure you want to switch the time zone?</string>
     <string name="switch_time_zone_content">If you switch the time zone, you will change the time zone for tasks such as timing and scenes that you set for the smart device at home. Please be aware!</string>
+    <string name="sunny_tag">sun</string>
+    <string name="cloud_tag">cloud</string>
+    <string name="rainy_tag">rain</string>
+    <string name="snow_tag">snow</string>
+
     <string name="open_WIFI">Please enable Wi-Fi</string>
     <string name="download_success">Downloaded successfully</string>
     <string name="download_failed">Failed to download</string>
@@ -431,6 +436,9 @@
     <string name="scanning_retry">Retry</string>
     <string name="connect">Connect</string>
     <string name="all_device">All</string>
+    <string name="all_dev_num">所有设备（%s）</string>
+    <string name="all_share_dev_num">共享设备（%s）</string>
+    <string name="no_dev_to_show_add_now">当前暂无设备，请添加设备</string>
     <string name="living_room">Living room</string>
     <string name="bedroom">Bedroom</string>
     <string name="kitchen">Kitchen</string>
@@ -604,6 +612,7 @@
     <string name="connect_failed_check_password">Network connection failed. Please check whether the password is correct</string>
     <string name="connect_ssid_failed_handle">Failed to connect to the network %s. Please connect manually</string>
     <string name="all_devices">All devices</string>
+    <string name="all_dev">All</string>
     <string name="num_devices">%s device(s)</string>
     <string name="ensure_import_wechat_login_with_offical_doc">Please make sure that you have integrated WeChat login as instructed in the official documentation</string>
     <string name="server_error">Server error</string>

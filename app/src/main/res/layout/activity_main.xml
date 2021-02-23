@@ -42,13 +42,11 @@
 
     <ImageView
         android:id="@+id/iv_main_add"
-        android:layout_width="47dp"
-        android:layout_height="47dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:src="@mipmap/main_add"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:visibility="gone"
         />
 
     <View
