@@ -8,4 +8,5 @@ object VideoConst {
     const val VIDEO_PRODUCT_ID = "VideoProductId"
     const val VIDEO_DEVICE_NAME = "VideoDeviceName"
     const val VIDEO_PLAYBACK= "VideoPlayback"
+    const val VIDEO_SAVE_RAW_AV= "SaveRawAV"
 }

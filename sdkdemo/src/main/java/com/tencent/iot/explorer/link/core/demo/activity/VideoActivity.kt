@@ -1,14 +1,17 @@
 package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.Manifest
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.view.ContextMenu
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.log.L
 import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
@@ -42,6 +45,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
 
     override fun initView() {
         requestPermission(permissions)
+        getSwitchState(this)
         LogcatHelper.getInstance(this).start()
         val bundle = this.intent.extras
         secretId = bundle?.get(VideoConst.VIDEO_SECRET_ID) as String
@@ -176,5 +180,15 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     }
 
     override fun avDataCloseHandle(msg: String?, errorCode: Int) {
+    }
+
+    companion object {
+        var saveData = false
+        fun getSwitchState(context: Context) {
+            saveData = SharePreferenceUtil.getString(context, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_SAVE_RAW_AV) == "true"
+        }
+        @JvmStatic fun isSaveAVData() : Boolean {
+            return saveData
+        }
     }
 }
