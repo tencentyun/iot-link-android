@@ -69,18 +69,24 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
-                val url = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 0)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", 1)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100L)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10240L)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1L)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1L)
+                if (isSaveAVData()) {
+                    tv_writting_raw_data.visibility = View.VISIBLE
+                    XP2P.startAvRecvService("action=live")
+                } else {
+                    tv_writting_raw_data.visibility = View.INVISIBLE
+                    val url = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 0)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", 1)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100L)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10240L)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1L)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1L)
 
-                mPlayer.dataSource = url
-                mPlayer.prepareAsync()
-                mPlayer.start()
+                    mPlayer.dataSource = url
+                    mPlayer.prepareAsync()
+                    mPlayer.start()
+                }
             } else {
                 isP2PChannelAvailable = false
                 speak.visibility = View.GONE
