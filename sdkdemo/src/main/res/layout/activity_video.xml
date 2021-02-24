@@ -6,10 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".activity.VideoActivity"
     android:orientation="vertical">
-    <SurfaceView
-        android:id="@+id/video_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="wrap_content">
+        <SurfaceView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+        <TextView
+            android:id="@+id/tv_writting_raw_data"
+            android:layout_gravity="center"
+            android:text="正在将裸流写入文件..."
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
