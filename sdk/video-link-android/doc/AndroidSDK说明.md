@@ -129,3 +129,13 @@ override fun commandRequest(msg: String?, len: Int);
     * dataSend:如果没有发送需求可不调用该接口
     * stopSendService:该接口暂时不用调用
     * stopService
+
+
+### APP接入SDK说明
+第三方App在接入Video SDK时，建议将`secretId`和`secretKey`保存到自建后台，不推荐将这两个信息保存至App端，而SDK需要的xp2p info需要App侧从自己的业务后台获取；获取到xp2p info后，可以通过上述的`startServiceWithXp2pInfo`接口将该info传给SDK，示例代码如下：
+```
+...
+String xp2p_info = getXP2PInfo(...) // 从自建后台获取xp2p info
+XP2P.setCallback(this)
+XP2P.startServiceWithXp2pInfo(xp2p_info)
+```
