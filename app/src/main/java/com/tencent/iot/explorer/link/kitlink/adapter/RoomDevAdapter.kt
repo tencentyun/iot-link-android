@@ -60,6 +60,9 @@ class RoomDevAdapter(list: MutableList<DeviceEntity>) : RecyclerView.Adapter<Roo
         } else {
             holder.backgroundLayout.visibility = View.VISIBLE
         }
+
+        holder.status.visibility = View.INVISIBLE
+        holder.more.visibility = View.INVISIBLE
     }
 
     override fun getItemCount(): Int {
