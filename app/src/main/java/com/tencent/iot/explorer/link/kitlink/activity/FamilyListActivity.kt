@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.App
@@ -35,7 +36,7 @@ class FamilyListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerIte
 
     override fun initView() {
         tv_title.text = getString(R.string.family_manager)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         crv_family_list.setList(App.data.familyList)
         crv_family_list.addRecyclerItemView(this)
         addFooter()

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONException
 import com.google.android.material.appbar.AppBarLayout
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -21,10 +22,12 @@ import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.FamilyInfoResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
+import com.tencent.iot.explorer.link.kitlink.activity.FamilyActivity
 import com.tencent.iot.explorer.link.kitlink.activity.MainActivity
 import com.tencent.iot.explorer.link.kitlink.adapter.RoomDevAdapter
 import com.tencent.iot.explorer.link.kitlink.adapter.RoomsAdapter
@@ -88,7 +91,11 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
         }
         //级别降为设备刷新
         App.data.resetRefreshLevel()
-        WeatherUtils.getWeatherInfoByLocation(39.1, 116.4, weatherListener)
+        loadCurrentWeather()
+    }
+
+    private fun loadCurrentWeather() {
+        HttpRequest.instance.familyInfo(App.data.getCurrentFamily().FamilyId, this)
     }
 
     private fun formateWeather(weatherText: String): String {
@@ -137,11 +144,26 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
                     weather_iv.setAnimation("lottie/${tag}/${tag}.json")
                     weather_iv.playAnimation()
                 }
+                showWeather(true)
             }
         }
 
         override fun onWeatherFailed(reason: Int) {
+            handler.post {
+                showWeather(false)
+            }
+        }
+    }
 
+    private fun showWeather(show: Boolean) {
+        if (show) {
+            layout_space.visibility = View.VISIBLE
+            layout_2_set_location.visibility = View.GONE
+            weather_iv.visibility = View.VISIBLE
+        } else {
+            layout_space.visibility = View.INVISIBLE
+            layout_2_set_location.visibility = View.VISIBLE
+            weather_iv.visibility = View.GONE
         }
     }
 
@@ -153,8 +175,8 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
             showFamily()
             showRoomList()
             showDeviceList(App.data.deviceList.size, roomId, deviceListEnd, shareDeviceListEnd)
+            loadCurrentWeather()
         }
-        WeatherUtils.getWeatherInfoByLocation(39.1, 116.4, weatherListener)
     }
 
     private fun initView() {
@@ -214,6 +236,10 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
                 presenter.refreshFamilyList()
             }
         })
+        layout_2_set_location.setOnClickListener {
+            put("family", App.data.getCurrentFamily())
+            jumpActivity(FamilyActivity::class.java)
+        }
     }
 
     var onItemClickedListener = object: RoomDevAdapter.OnItemClicked {
@@ -255,6 +281,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
             }
         }
         roomsAdapter?.notifyDataSetChanged()
+        loadCurrentWeather()
     }
 
     // 显示设备列表
@@ -324,6 +351,11 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
 
     override fun fail(msg: String?, reqCode: Int) {
         msg?.let { L.e(it) }
+        when (reqCode) {
+            RequestCode.family_info -> {
+                showWeather(false)
+            }
+        }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
@@ -348,6 +380,26 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
                     }
                 } else {
                     T.show(response.msg)
+                }
+            }
+
+            RequestCode.family_info -> {
+                if (response.isSuccess()) {
+                    response.parse(FamilyInfoResponse::class.java)?.Data?.run {
+                        var address: com.tencent.iot.explorer.link.kitlink.entity.Address? = null
+                        try {
+                            address = JSON.parseObject(Address, com.tencent.iot.explorer.link.kitlink.entity.Address::class.java)
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                        if (address != null) {
+                            WeatherUtils.getWeatherInfoByLocation(address.latitude.toDouble(), address.longitude.toDouble(), weatherListener)
+                        } else {
+                            showWeather(false)
+                        }
+                    }
+                } else {
+                    showWeather(false)
                 }
             }
         }

@@ -749,7 +749,7 @@ class HttpRequest private constructor() {
         val param = tokenParams("AppGetRoomList")
         param["FamilyId"] = familyId
         param["Offset"] = offset
-        param["Limit"] = 20
+        param["Limit"] = 999
         tokenPost(param, callback, RequestCode.room_list)
     }
 

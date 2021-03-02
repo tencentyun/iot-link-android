@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_bule_gradient"
-                    android:orientation="vertical"
+                    app:elevation="0dp"
                     android:clipChildren="false"
                     >
 

@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,9 @@ import com.tencent.iot.explorer.link.mvp.view.FamilyView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
+import com.tencent.iot.explorer.link.kitlink.entity.Postion
+import com.tencent.qcloud.core.http.HttpRequest
+import kotlinx.android.synthetic.main.activity_add_family.*
 import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.foot_family.view.*
 import kotlinx.android.synthetic.main.head_family.view.*
@@ -55,6 +59,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
     override fun onResume() {
         model.getFamilyInfo()
         model.refreshMemberList()
+        model.getFamilyRooms()
         super.onResume()
     }
 
@@ -89,13 +94,22 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
                 when (position) {
                     0 ->  {
                         if (familyEntity?.Role == 1) {
-                            showModifyFamilyNamePopup()
+                            modifyFamilyName()
                         }
                     }
                     1 -> {
                         jumpActivity(RoomListActivity::class.java)
                     }
                     2 -> {
+                        val intent = Intent(this@FamilyActivity, FamilyAddressActivity::class.java)
+                        var bundle = Bundle()
+                        bundle.putString(CommonField.ADDRESS, headerHolder.data?.Address)
+                        bundle.putString(CommonField.FAMILY_ID, familyEntity?.FamilyId)
+                        bundle.putString(CommonField.FAMILY_NAME, familyEntity?.FamilyName)
+                        intent.putExtra(CommonField.ADDRESS, bundle)
+                        startActivityForResult(intent, CommonField.MAP_LOCATION_REQ_CODE)
+                    }
+                    3 -> {
                         jumpActivity(InviteMemberActivity::class.java)
                     }
                 }
@@ -145,6 +159,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
      */
     override fun showFamilyInfo() {
         editPopupWindow?.dismiss()
+        headerHolder.data?.Address = model.familyInfoEntity.Address
         crv_member_list.notifyDataChanged()
     }
 
@@ -168,6 +183,12 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
         finish()
     }
 
+    override fun showFamilyRoomsInfo() {
+        var num = model.roomList.size
+        headerHolder.data?.RoomsNum = getString(R.string.num_rooms, num.toString())
+        crv_member_list.notifyDataChanged()
+    }
+
     override fun doAction(
         viewHolder: CRecyclerView.CViewHolder<*>,
         clickView: View,
@@ -187,26 +208,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
         return 0
     }
 
-    /**
-     * 显示修改弹框
-     */
-    private fun showModifyFamilyNamePopup() {
-//        if (editPopupWindow == null) {
-//            editPopupWindow = EditPopupWindow(this)
-//            editPopupWindow?.setShowData(
-//                getString(R.string.family_name),
-//                familyEntity?.FamilyName ?: ""
-//            )
-//        }
-//        editPopupWindow?.setBg(family_bg)
-//        editPopupWindow?.show(family)
-//        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
-//            override fun onVerify(text: String) {
-//                if (!TextUtils.isEmpty(text)) {
-//                    model.modifyFamilyName(text)
-//                }
-//            }
-//        }
+    private fun modifyFamilyName() {
         var intent = Intent(this@FamilyActivity, EditNameActivity::class.java)
         var editNameValue = EditNameValue()
         editNameValue.name = familyEntity?.FamilyName ?: ""
@@ -224,6 +226,13 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
             resultCode == Activity.RESULT_OK && data != null) {
             var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
             model.modifyFamilyName(extraInfo)
+        } else if (requestCode == CommonField.MAP_LOCATION_REQ_CODE && resultCode == RESULT_OK) {
+            var ret = data?.getStringExtra(CommonField.ADDRESS) ?: ""
+            var familyPostion = JSON.parseObject(ret, Postion::class.java)
+            if (familyPostion == null)  return
+
+            headerHolder.data?.Address = familyPostion.address
+            crv_member_list.notifyDataChanged()
         }
     }
 
