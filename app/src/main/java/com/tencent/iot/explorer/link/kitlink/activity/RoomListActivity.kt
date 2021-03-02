@@ -145,23 +145,17 @@ class RoomListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerItemV
     }
 
     private fun showRoomList() {
-//        if (roomList.size > 0) {
-//            //已经作限制，可以重复调用，已经添加时不会再添加
-            crv_room_list.addFooter(roomListFootHolder)
-            crv_room_list.notifyDataChanged()
-            cl_no_room.visibility = View.GONE
-            crv_room_list.visibility = View.VISIBLE
-//        } else {
-//            cl_no_room.visibility = View.VISIBLE
-//            crv_room_list.visibility = View.GONE
-//        }
-            if (familyEntity?.Role == 1) {
-                roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.complete_progress))
-                roomListFootHolder.itemView.tv_add_room.setBackgroundResource(R.drawable.background_white_btn_cell)
-            } else {
-                roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.white))
-                roomListFootHolder.itemView.tv_add_room.setBackgroundResource(R.drawable.background_grey_dark_cell)
-                roomListFootHolder.itemView.tv_add_room.visibility = View.GONE
-            }
+        crv_room_list.addFooter(roomListFootHolder)
+        crv_room_list.notifyDataChanged()
+        cl_no_room.visibility = View.GONE
+        crv_room_list.visibility = View.VISIBLE
+        if (familyEntity?.Role == 1) {
+            roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.complete_progress))
+            roomListFootHolder.itemView.tv_add_room.setBackgroundResource(R.drawable.background_white_btn_cell)
+        } else {
+            roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.white))
+            roomListFootHolder.itemView.tv_add_room.setBackgroundResource(R.drawable.background_grey_dark_cell)
+            roomListFootHolder.itemView.tv_add_room.visibility = View.GONE
+        }
     }
 }

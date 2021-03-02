@@ -36,28 +36,41 @@
             android:id="@+id/tv_family_name"
             android:textColor="@color/black"
             android:gravity="center"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginRight="20dp"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             />
 
-    <EditText
+    <TextView
             android:id="@+id/et_family_name"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:background="@color/white"
             app:layout_constraintStart_toEndOf="@id/tv_family_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textCursorDrawable="@drawable/edit_blue_cursor"
+            app:layout_constraintEnd_toStartOf="@id/iv_set_family_name"
             android:hint="@string/fill_family_name"
             android:maxLength="20"
             android:maxLines="1"
             android:paddingStart="40dp"
-            android:paddingEnd="20dp"
-            android:textColor="@color/black_333333"
-            android:textColorHint="@color/gray_cccccc"
-            android:textSize="@dimen/ts_16"
+            android:gravity="center_vertical|right"
+            android:textColor="@color/gray_6C7078"
+            android:textColorHint="@color/gray_A1A7B2"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintBottom_toBottomOf="@+id/line_add_family1" />
+
+        <ImageView
+            android:id="@+id/iv_set_family_name"
+            android:layout_width="32dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:src="@mipmap/dev_more_oper"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:rotation="-90"
+            app:tint="@color/gray_A1A7B2"
+            app:layout_constraintBottom_toBottomOf="@+id/et_family_name"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/et_family_name" />
 
     <View
             android:id="@+id/line_add_family1"
@@ -73,29 +86,30 @@
             android:id="@+id/tv_family_address"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="16dp"
             android:gravity="center"
             android:text="@string/family_address"
             android:textColor="@color/black"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintBottom_toBottomOf="@id/et_family_address"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/et_family_address" />
 
-        <EditText
+        <TextView
             android:id="@+id/et_family_address"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:background="@color/white"
-            android:hint="@string/family_address"
+            android:hint="@string/set_location"
             android:maxLength="20"
             android:maxLines="1"
             android:paddingStart="40dp"
-            android:paddingEnd="20dp"
-            android:textCursorDrawable="@drawable/edit_blue_cursor"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
+            android:textColorHint="@color/gray_A1A7B2"
+            android:textColor="@color/gray_6C7078"
+            android:gravity="right|center_vertical"
             app:layout_constraintBottom_toBottomOf="@id/line_add_family2"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_set_location"
             app:layout_constraintStart_toStartOf="@id/et_family_name"/>
 
   <!--  <TextView
@@ -112,43 +126,46 @@
             android:textColor="@color/black_333333"
             android:textSize="@dimen/ts_18"
             app:layout_constraintBottom_toTopOf="@+id/line_add_family2"
-            app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />
+            app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />-->
 
     <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginEnd="20dp"
-            android:src="@mipmap/icon_right_arrow"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_family_address"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_family_address" />-->
-    <View
-            android:id="@+id/line_add_family2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:background="@color/gray_F5F5F5"
-            android:visibility="invisible"
-            android:layout_marginTop="49dp"
-            app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />
+        android:id="@+id/iv_set_location"
+        android:layout_width="32dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:src="@mipmap/dev_more_oper"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:rotation="-90"
+        app:tint="@color/gray_A1A7B2"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_family_address"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_family_address" />
 
+    <View
+        android:id="@+id/line_add_family2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:background="@color/gray_F5F5F5"
+        android:visibility="invisible"
+        android:layout_marginTop="49dp"
+        app:layout_constraintTop_toBottomOf="@+id/line_add_family1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
             android:id="@+id/btn_add_family"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
             android:gravity="center"
             android:text="@string/confirm"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_18"
-            android:background="@drawable/background_grey_dark_cell"
+            android:textColor="@color/blue_0066FF"
+            android:textSize="@dimen/ts_16"
+            android:background="@drawable/background_white_btn_cell"
             app:layout_constraintTop_toBottomOf="@+id/input_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

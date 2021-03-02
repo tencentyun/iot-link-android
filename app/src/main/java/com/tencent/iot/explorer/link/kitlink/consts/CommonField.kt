@@ -65,15 +65,15 @@ object CommonField {
     const val EXTRA_REFRESH = "refreshTag"
     const val EXTRA_TIME_ZONE_INFO = "timeZoneInfo"
     const val EXTRA_TIME_ZONE_BUNDLE_TAG = "timeZoneBundleTag"
-
-
+    const val ADDRESS = "address"
+    const val FAMILY_ID = "familyId"
+    const val FAMILY_NAME = "familyName"
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
     const val COS_CONFIG = "cosConfig"
     const val REGION = "region"
     const val BUCKET = "bucket"
-
 
     /*************** 注册 ****************/
     const val TYPE = "Type"
@@ -168,7 +168,8 @@ object CommonField {
     const val EDIT_TIMER_REQ_CODE = 0x1108
     const val EDIT_MANUAL_TASK_REQ_CODE = 0x1109
     const val EDIT_NAME_REQ_CODE = 0x1110
-
+    const val FILL_CONTENT_REQ_CODE = 0x1111
+    const val MAP_LOCATION_REQ_CODE = 0x1112
 
     const val SSID_UNKNOWN = "<unknown ssid>"
     const val EXTRA_TITLE = "title"
