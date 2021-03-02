@@ -21,6 +21,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.FamilyInfoResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
@@ -88,6 +89,11 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
         }
         //级别降为设备刷新
         App.data.resetRefreshLevel()
+        loadCurrentWeather()
+    }
+
+    private fun loadCurrentWeather() {
+        HttpRequest.instance.familyInfo(App.data.getCurrentFamily().FamilyId, this)
         WeatherUtils.getWeatherInfoByLocation(39.1, 116.4, weatherListener)
     }
 
@@ -154,7 +160,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
             showRoomList()
             showDeviceList(App.data.deviceList.size, roomId, deviceListEnd, shareDeviceListEnd)
         }
-        WeatherUtils.getWeatherInfoByLocation(39.1, 116.4, weatherListener)
+        loadCurrentWeather()
     }
 
     private fun initView() {
@@ -348,6 +354,14 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
                     }
                 } else {
                     T.show(response.msg)
+                }
+            }
+
+            RequestCode.family_info -> {
+                if (response.isSuccess()) {
+                    response.parse(FamilyInfoResponse::class.java)?.Data?.run {
+
+                    }
                 }
             }
         }
