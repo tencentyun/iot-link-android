@@ -6,8 +6,6 @@ import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.entity.ShareDeviceEntity
-import com.tencent.iot.explorer.link.kitlink.entity.WeatherEntity
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
@@ -46,8 +44,6 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
     private var roomListEnd = false
 
     private var isTabFamily = false
-
-    val weatherEntity = WeatherEntity()
 
     fun getDeviceEntity(position: Int): DeviceEntity {
         return deviceList[position]
