@@ -8,35 +8,168 @@
 
     <include
             android:id="@+id/menu_family_address"
-            layout="@layout/menu_cancel_layout" />
+            layout="@layout/menu_back_layout" />
 
-    <com.tencent.tencentmap.mapsdk.map.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/menu_family_address" />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/menu_family_address"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <View
-            android:id="@+id/family_address_bg"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:alpha="0.9"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_height="wrap_content"
+            app:layout_collapseMode="pin"
+            app:contentInsetStart="0dp"
+            app:contentInsetEnd="0dp"
+            android:minHeight="270dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <com.tencent.tencentmap.mapsdk.map.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_reset_loaction"
+                    android:layout_width="40dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@mipmap/dev_mode_sel"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="56dp"
+            >
+
+            <com.scwang.smart.refresh.layout.SmartRefreshLayout
+                android:id="@+id/smart_refreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_seach"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/gray_D6D8DC"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:id="@+id/iv_seach"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/ev_search"
+                    app:layout_constraintBottom_toBottomOf="@id/ev_search"
+                    android:src="@mipmap/dev_mode_sel"
+                    />
+
+                <EditText
+                    android:id="@+id/ev_search"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_seach"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:hint="@string/seach_postion"
+                    android:background="@null"
+                    android:textColorHint="@color/red"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lv_pos"
+                app:layout_constraintTop_toBottomOf="@id/layout_seach"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/family_address_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent" >
 
     <TextView
-            android:id="@+id/btn_add_family"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/btn_bg"
-            android:gravity="center"
-            android:text="@string/confirm"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_20"
-            app:layout_constraintBottom_toBottomOf="@+id/family_address_bg"
-            app:layout_constraintTop_toTopOf="@+id/family_address_bg" />
+        android:id="@+id/btn_add_family"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/background_circle_bule_gradient"
+        android:gravity="center"
+        android:text="@string/confirm"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_16"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/family_address_bg"
+        app:layout_constraintTop_toTopOf="@+id/family_address_bg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
