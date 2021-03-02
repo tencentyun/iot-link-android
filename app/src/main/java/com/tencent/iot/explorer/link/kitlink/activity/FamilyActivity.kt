@@ -22,6 +22,7 @@ import com.tencent.iot.explorer.link.mvp.view.FamilyView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
+import com.tencent.qcloud.core.http.HttpRequest
 import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.foot_family.view.*
 import kotlinx.android.synthetic.main.head_family.view.*
@@ -55,6 +56,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
     override fun onResume() {
         model.getFamilyInfo()
         model.refreshMemberList()
+        model.getFamilyRooms()
         super.onResume()
     }
 
@@ -89,13 +91,17 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
                 when (position) {
                     0 ->  {
                         if (familyEntity?.Role == 1) {
-                            showModifyFamilyNamePopup()
+                            modifyFamilyName()
                         }
                     }
                     1 -> {
                         jumpActivity(RoomListActivity::class.java)
                     }
                     2 -> {
+                        val intent = Intent(this@FamilyActivity, FamilyAddressActivity::class.java)
+                        startActivityForResult(intent, CommonField.MAP_LOCATION_REQ_CODE)
+                    }
+                    3 -> {
                         jumpActivity(InviteMemberActivity::class.java)
                     }
                 }
@@ -145,6 +151,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
      */
     override fun showFamilyInfo() {
         editPopupWindow?.dismiss()
+        headerHolder.data?.Address = model.familyInfoEntity.Address
         crv_member_list.notifyDataChanged()
     }
 
@@ -168,6 +175,12 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
         finish()
     }
 
+    override fun showFamilyRoomsInfo() {
+        var num = model.roomList.size
+        headerHolder.data?.RoomsNum = getString(R.string.num_rooms, num.toString())
+        crv_member_list.notifyDataChanged()
+    }
+
     override fun doAction(
         viewHolder: CRecyclerView.CViewHolder<*>,
         clickView: View,
@@ -187,26 +200,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
         return 0
     }
 
-    /**
-     * 显示修改弹框
-     */
-    private fun showModifyFamilyNamePopup() {
-//        if (editPopupWindow == null) {
-//            editPopupWindow = EditPopupWindow(this)
-//            editPopupWindow?.setShowData(
-//                getString(R.string.family_name),
-//                familyEntity?.FamilyName ?: ""
-//            )
-//        }
-//        editPopupWindow?.setBg(family_bg)
-//        editPopupWindow?.show(family)
-//        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
-//            override fun onVerify(text: String) {
-//                if (!TextUtils.isEmpty(text)) {
-//                    model.modifyFamilyName(text)
-//                }
-//            }
-//        }
+    private fun modifyFamilyName() {
         var intent = Intent(this@FamilyActivity, EditNameActivity::class.java)
         var editNameValue = EditNameValue()
         editNameValue.name = familyEntity?.FamilyName ?: ""

@@ -7,18 +7,16 @@
     <TextView
             android:id="@+id/tv_add_family"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="@string/add_family"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/background_white_btn_cell"
             android:gravity="center"
             android:textColor="@color/complete_progress"
-            android:textSize="@dimen/ts_18" />
+            android:textSize="@dimen/ts_16" />
 
     <View
             android:id="@+id/item_share_user_line3"
