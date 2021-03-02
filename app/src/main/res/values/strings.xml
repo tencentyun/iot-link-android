@@ -130,6 +130,7 @@
     <string name="dry_tag">干燥</string>
     <string name="comfortable_tag">舒适</string>
     <string name="damp_tag">潮湿</string>
+    <string name="seach_postion">搜索地点</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -345,6 +346,7 @@
     <string name="bind_dev">绑定设备</string>
     <string name="share_dev_tip_content">通过将设备与腾讯连连连接，即表示您同意共享有关您设备和设备日志的信息，第三方可以根据其条款和政策使用该设备。有关更多信息，请阅读我们的 %s。</string>
     <string name="share_dev_more_info">有关更多信息，请阅读我们的</string>
+    <string name="set_location">设定位置</string>
 
     <!--云端定时-->
     <string name="cloud_timing">云端定时</string>

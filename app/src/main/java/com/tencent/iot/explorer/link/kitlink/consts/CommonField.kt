@@ -65,7 +65,13 @@ object CommonField {
     const val EXTRA_REFRESH = "refreshTag"
     const val EXTRA_TIME_ZONE_INFO = "timeZoneInfo"
     const val EXTRA_TIME_ZONE_BUNDLE_TAG = "timeZoneBundleTag"
-
+    const val PAGE_CONFIG = "pageConfig"
+    const val TITLE_NAME = "titleName"
+    const val CONTENT_TIP_NAME = "contentTipName"
+    const val ILLEAGAL_TIP_CONTENT = "illeagalTipContent"
+    const val HINT_TEXT = "hintText"
+    const val OK_TEXT = "okText"
+    const val RETURN_TEXT = "returnText"
 
 
     /*******上传文件********/
@@ -168,7 +174,8 @@ object CommonField {
     const val EDIT_TIMER_REQ_CODE = 0x1108
     const val EDIT_MANUAL_TASK_REQ_CODE = 0x1109
     const val EDIT_NAME_REQ_CODE = 0x1110
-
+    const val FILL_CONTENT_REQ_CODE = 0x1111
+    const val MAP_LOCATION_REQ_CODE = 0x1112
 
     const val SSID_UNKNOWN = "<unknown ssid>"
     const val EXTRA_TITLE = "title"
