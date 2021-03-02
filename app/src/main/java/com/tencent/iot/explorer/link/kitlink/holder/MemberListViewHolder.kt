@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.link.entity.MemberEntity
@@ -26,6 +27,11 @@ class MemberListViewHolder : CRecyclerView.CViewHolder<MemberEntity> {
             )
             itemView.tv_member_item_role.text = if (Role == 1)
                 getString(R.string.role_owner) else getString(R.string.role_member)
+            if (position == 0) {
+                itemView.v_bottom_line.visibility = View.GONE
+            } else {
+                itemView.v_bottom_line.visibility = View.VISIBLE
+            }
         }
         itemView.setOnClickListener { recyclerItemView?.doAction(this, itemView, position) }
     }

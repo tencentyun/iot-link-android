@@ -6,4 +6,5 @@ class EditNameValue {
     var name = ""
     var btn = ""
     var errorTip = ""
+    var hintText = ""
 }

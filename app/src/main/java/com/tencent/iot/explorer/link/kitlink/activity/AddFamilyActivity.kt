@@ -1,26 +1,27 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.Address
+import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
+import com.tencent.iot.explorer.link.kitlink.entity.Postion
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import kotlinx.android.synthetic.main.activity_add_family.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import kotlinx.android.synthetic.main.menu_cancel_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
 
-/**
- * 新增家庭
- */
 class AddFamilyActivity : BaseActivity(), MyCallback {
+
+    var familyPostion: Postion? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_add_family
@@ -32,43 +33,53 @@ class AddFamilyActivity : BaseActivity(), MyCallback {
 
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
-        /*tv_family_address.setOnClickListener {
+        iv_set_location.setOnClickListener {
             val intent = Intent(this, FamilyAddressActivity::class.java)
-            startActivityForResult(intent, 105)
-        }*/
+            startActivityForResult(intent, CommonField.MAP_LOCATION_REQ_CODE)
+        }
+        et_family_address.setOnClickListener {
+            val intent = Intent(this, FamilyAddressActivity::class.java)
+            startActivityForResult(intent, CommonField.MAP_LOCATION_REQ_CODE)
+        }
         btn_add_family.setOnClickListener { addFamily() }
-        et_family_name.addTextChangedListener(textWatcher)
-        et_family_address.addTextChangedListener(textWatcher)
-        et_family_name.setText("")
+        iv_set_family_name.setOnClickListener {
+            startLoadContentActivity()
+        }
+        et_family_name.setOnClickListener {
+            startLoadContentActivity()
+        }
     }
 
-    private var textWatcher = object : TextWatcher{
-        override fun afterTextChanged(s: Editable?) {
-            if (!TextUtils.isEmpty(et_family_name.text.toString().trim()) &&
-                !TextUtils.isEmpty(et_family_address.text.toString().trim())) {
-                btn_add_family.isClickable = true
-                btn_add_family.setBackgroundResource(R.drawable.background_circle_bule_gradient)
-            } else {
-                btn_add_family.isClickable = false
-                btn_add_family.setBackgroundResource(R.drawable.background_grey_dark_cell)
-            }
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
+    private fun startLoadContentActivity() {
+        var intent = Intent(this, EditNameActivity::class.java)
+        var editNameValue = EditNameValue()
+        editNameValue.name = ""
+        editNameValue.title = getString(R.string.family_setting)
+        editNameValue.tipName = getString(R.string.family_name)
+        editNameValue.btn = getString(R.string.save)
+        editNameValue.hintText = getString(R.string.fill_family_name)
+        editNameValue.errorTip = ""
+        intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(editNameValue))
+        startActivityForResult(intent, CommonField.EDIT_NAME_REQ_CODE)
     }
 
     private fun addFamily() {
         val familyName = et_family_name.text.toString().trim()
-//        val familyAddress = tv_family_address.text.toString().trim()
         val familyAddress = et_family_address.text.toString().trim()
         if (TextUtils.isEmpty(familyName)) {
             T.show(getString(R.string.empty_family))
             return
         }
-        HttpRequest.instance.createFamily(familyName, familyAddress, this)
+
+        var address = Address()
+        if (familyPostion != null) {
+            address.name = familyPostion!!.title
+            address.address = familyPostion!!.address
+            address.latitude = familyPostion!!.location!!.lat
+            address.longitude = familyPostion!!.location!!.lng
+            address.city = familyPostion!!.ad_info!!.city
+        }
+        HttpRequest.instance.createFamily(familyName, JSON.toJSONString(address), this)
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -88,8 +99,13 @@ class AddFamilyActivity : BaseActivity(), MyCallback {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 105 && resultCode == 200) {
-//            tv_family_address.text = data?.getStringExtra("address") ?: ""
+        if (requestCode == CommonField.MAP_LOCATION_REQ_CODE && resultCode == RESULT_OK) {
+            var ret = data?.getStringExtra(CommonField.ADDRESS) ?: ""
+            familyPostion = JSON.parseObject(ret, Postion::class.java)
+            et_family_address.text = familyPostion?.title
+
+        } else if (requestCode == CommonField.EDIT_NAME_REQ_CODE && resultCode == RESULT_OK) {
+            et_family_name.text = data?.getStringExtra(CommonField.EXTRA_TEXT) ?: ""
         }
     }
 }
