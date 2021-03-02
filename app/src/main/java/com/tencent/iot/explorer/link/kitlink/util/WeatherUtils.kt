@@ -31,7 +31,6 @@ object WeatherUtils {
             override fun onResponse(call: Call, response: Response) {
                 if (response.body() != null) {
                     var respStr = response.body()!!.string()
-                    Log.e("XXX", "respStr " + respStr)
                     var json = JSON.parseObject(respStr)
                     if (json.containsKey("now")) {
                         var nowWeatherInfo = json.getString("now")
@@ -56,7 +55,6 @@ object WeatherUtils {
     // 根据经纬度获取城市信息
     fun getCityInfoByLoacation(lat: Double, lon: Double, callback: Callback) {
         var url = "https://geoapi.qweather.com/v2/city/lookup?location=${lon},${lat}&key=$key&lang=$defaultLang"
-        Log.e("XXX", "url " + url)
         val request = Request.Builder().url(url).get().build() //添加头部信息
         okHttpClient.newCall(request).enqueue(callback)
     }
@@ -95,7 +93,6 @@ object WeatherUtils {
                 if (response.body() != null) {
                     var respStr = response.body()!!.string()
                     var json = JSON.parseObject(respStr)
-                    Log.e("XXX", "json " + json.toJSONString())
                     if (json.containsKey("location")) {
                         var jsonArr = json.getJSONArray("location")
                         if (jsonArr != null && jsonArr.size > 0) {
