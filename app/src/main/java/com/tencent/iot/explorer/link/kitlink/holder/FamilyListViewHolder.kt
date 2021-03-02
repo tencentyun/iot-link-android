@@ -18,7 +18,7 @@ class FamilyListViewHolder : CRecyclerView.CViewHolder<FamilyEntity> {
         entity?.run {
             itemView.tv_family_name.text = FamilyName
             itemView.family_list_top_space.visibility =
-                if (position == 0) View.VISIBLE else View.GONE
+                if (position == 0) View.GONE else View.VISIBLE
         }
         itemView.setOnClickListener { recyclerItemView?.doAction(this, itemView, position) }
     }
