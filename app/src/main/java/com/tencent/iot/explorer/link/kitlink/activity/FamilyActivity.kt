@@ -191,22 +191,6 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
      * 显示修改弹框
      */
     private fun showModifyFamilyNamePopup() {
-//        if (editPopupWindow == null) {
-//            editPopupWindow = EditPopupWindow(this)
-//            editPopupWindow?.setShowData(
-//                getString(R.string.family_name),
-//                familyEntity?.FamilyName ?: ""
-//            )
-//        }
-//        editPopupWindow?.setBg(family_bg)
-//        editPopupWindow?.show(family)
-//        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
-//            override fun onVerify(text: String) {
-//                if (!TextUtils.isEmpty(text)) {
-//                    model.modifyFamilyName(text)
-//                }
-//            }
-//        }
         var intent = Intent(this@FamilyActivity, EditNameActivity::class.java)
         var editNameValue = EditNameValue()
         editNameValue.name = familyEntity?.FamilyName ?: ""
