@@ -1,21 +1,12 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.app.Activity
 import android.content.Intent
-import android.text.TextUtils
-import android.view.View
-import com.alibaba.fastjson.JSON
-import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import kotlinx.android.synthetic.main.activity_add_task_name.*
-import kotlinx.android.synthetic.main.activity_complete_task_info.*
 import kotlinx.android.synthetic.main.activity_complete_task_info.tv_ok
 import kotlinx.android.synthetic.main.menu_back_layout.*
-
 
 class AddTaskNameActivity : BaseActivity() {
 

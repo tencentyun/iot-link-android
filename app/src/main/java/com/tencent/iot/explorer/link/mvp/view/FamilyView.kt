@@ -8,9 +8,7 @@ interface FamilyView:ParentView {
 
     fun showMemberList()
 
-    /**
-     * 删除家庭或离开家庭成功
-     */
     fun deleteFamilySuccess()
 
+    fun showFamilyRoomsInfo()
 }

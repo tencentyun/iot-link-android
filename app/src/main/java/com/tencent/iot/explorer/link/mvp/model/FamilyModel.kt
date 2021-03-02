@@ -12,7 +12,9 @@ import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.FamilyView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
+import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.RoomListResponse
 
 /**
  * 家庭详情业务
@@ -23,6 +25,13 @@ class FamilyModel(view: FamilyView) : ParentModel<FamilyView>(view), MyCallback 
     private var total = 0
     val familyInfoEntity = FamilyInfoEntity()
     var familyEntity: FamilyEntity? = null
+    val roomList = arrayListOf<RoomEntity>()
+
+    fun getFamilyRooms() {
+        familyEntity?.let {
+            HttpRequest.instance.roomList(it.FamilyId, 0, this)
+        }
+    }
 
     /**
      * 家庭详情信息
@@ -92,6 +101,16 @@ class FamilyModel(view: FamilyView) : ParentModel<FamilyView>(view), MyCallback 
 
     override fun success(response: BaseResponse, reqCode: Int) {
         when (reqCode) {
+            RequestCode.room_list -> {
+                if (response.isSuccess()) {
+                    response.parse(RoomListResponse::class.java)?.let {
+                        it.Roomlist?.run {
+                            roomList.addAll(this)
+                        }
+                        view?.showFamilyRoomsInfo()
+                    }
+                }
+            }
             RequestCode.family_info -> {
                 if (response.isSuccess()) {
                     response.parse(FamilyInfoResponse::class.java)?.Data?.run {
