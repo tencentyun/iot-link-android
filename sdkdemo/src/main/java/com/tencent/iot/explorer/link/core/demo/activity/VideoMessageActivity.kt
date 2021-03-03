@@ -100,7 +100,7 @@ class VideoMessageActivity : BaseActivity() {
     }
 
     private fun loadMoreVideoMessageList() {
-        VideoBaseService(secretId, secretKey).getDeviceList(productId, offset, PAGE_SIZE,
+        VideoBaseService(secretId, secretKey).getDeviceList(productId, 0, 99,
             object: VideoCallback {
                 override fun fail(msg: String?, reqCode: Int) {
                     Toast.makeText(this@VideoMessageActivity, msg, Toast.LENGTH_SHORT).show()
