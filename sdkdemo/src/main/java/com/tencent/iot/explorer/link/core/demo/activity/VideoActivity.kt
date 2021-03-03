@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.SurfaceHolder
 import android.view.View
+import android.webkit.WebSettings
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
@@ -43,6 +44,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         requestPermission(permissions)
         getSwitchState(this)
         LogcatHelper.getInstance(this).start()
+        loadTimestamp()
         val bundle = this.intent.extras
         secretId = bundle?.get(VideoConst.VIDEO_SECRET_ID) as String
         secretKey = bundle.get(VideoConst.VIDEO_SECRET_KEY) as String
@@ -186,5 +188,15 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         @JvmStatic fun isSaveAVData() : Boolean {
             return saveData
         }
+    }
+
+    private fun loadTimestamp() {
+        wv_timestamp.run {
+            loadUrl("http://www.daojishiqi.com/bjtime.asp")
+            settings.javaScriptEnabled = true
+            settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN //自适应手机屏幕
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
+        };
     }
 }
