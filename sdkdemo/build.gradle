@@ -123,6 +123,6 @@ dependencies {
         api project(path: ':sdk:video-link-android')
     }
 
-    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-java:1.0.0-SNAPSHOT'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-armv7a:1.0.0-SNAPSHOT'
 }
