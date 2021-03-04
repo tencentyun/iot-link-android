@@ -6,6 +6,6 @@ cd iot-version
 
 git add .
 git commit -m "repositories@$rc"
-git push https://$IOT_GITHUB_ACCESS_TOKEN@github.com/tonychanchen/iot-version.git
+git push
 
 cd ../
