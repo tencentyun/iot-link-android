@@ -62,7 +62,7 @@ jobs:
           sed -i "s#'111222'#System.getenv(\"IOT_RELEASE_KEYSTORE_PASSWORD\")#g" app/build.gradle
           sed -i 's#-SNAPSHOT##g' sdk/explorer-link-android/build.gradle
           sed -i 's#-SNAPSHOT##g' sdk/explorer-link-rtc/build.gradle
-          sed -i 's#-SNAPSHOT##g' sdk/video-link-android/build.gradle
+          sed -i '60,$s#-SNAPSHOT##g' sdk/video-link-android/build.gradle
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
