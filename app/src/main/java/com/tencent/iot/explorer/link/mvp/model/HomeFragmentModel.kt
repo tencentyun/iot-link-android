@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.mvp.model
 
 import android.text.TextUtils
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
@@ -14,18 +15,23 @@ import com.tencent.iot.explorer.link.mvp.view.HomeFragmentView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.auth.entity.ProductUIDevShortCutConfig
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.*
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField.DATA
+import com.tencent.iot.explorer.link.kitlink.entity.DataTemplate
+import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
+import com.tencent.iot.explorer.link.kitlink.entity.ProductEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductsEntity
 import com.tencent.iot.explorer.link.kitlink.response.ShareDeviceListResponse
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
+import java.util.concurrent.ConcurrentHashMap
 
 class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(view), MyCallback {
-
 
     private var shareDeviceTotal = 0
     private var deviceTotal = 0
@@ -36,6 +42,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
     private val roomList = App.data.roomList
     val deviceList = App.data.deviceList
     val shareDeviceList = App.data.shareDeviceList
+    val shortCuts: MutableMap<String, ProductUIDevShortCutConfig> = ConcurrentHashMap()
 
     var roomId = ""
     var deviceListEnd = false
@@ -84,6 +91,71 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
     private fun loadFamilyList() {
         if (familyListEnd) return
         HttpRequest.instance.familyList(familyList.size, this)
+    }
+
+    fun loadDevData(device: DeviceEntity) {
+        if (device == null) return
+        HttpRequest.instance.deviceData(device.ProductId, device.DeviceName, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                T.show(msg?:"")
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (!response.isSuccess()) return
+                response.parse(DeviceDataResponse::class.java)?.run {
+                    if (device.deviceDataList == null) {
+                        device.deviceDataList = ArrayList()
+                    }
+                    device.deviceDataList.clear()
+                    device.deviceDataList.addAll(parseList())
+                }
+                var productIdList = ArrayList<String>()
+                productIdList.add(device.ProductId)
+                getShortCutByProductsConfig(productIdList)
+            }
+        })
+    }
+
+    private fun loadDataMode(productIds: ArrayList<String>) {
+        HttpRequest.instance.deviceProducts(productIds, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {}
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+
+                    var dataTemplate: DataTemplate? = null
+                    if (!TextUtils.isEmpty(response.data.toString())) {
+                        var products = JSON.parseObject(response.data.toString(), ProductsEntity::class.java)
+                        if (products == null || products.Products == null) return
+
+                        for (i in 0 until products!!.Products!!.size) {
+                            var productEntity = JSON.parseObject(products!!.Products!!.getString(i), ProductEntity::class.java)
+
+                            if (productEntity.DataTemplate != null) {
+                                dataTemplate = JSON.parseObject(productEntity.DataTemplate.toString(), DataTemplate::class.java)
+                            }
+                        }
+                    }
+
+                    if (dataTemplate == null || dataTemplate.properties == null || dataTemplate.properties!!.size == 0) {
+                        return
+                    }
+
+                    var devModes = ArrayList<DevModeInfo>()
+                    for (i in 0 until dataTemplate.properties!!.size) {
+                        var devModeInfo = JSON.parseObject(dataTemplate.properties!!.get(i).toString(), DevModeInfo::class.java)
+                        devModes.add(devModeInfo)
+                    }
+                    // 实际只有一条数据
+                    for (productId in productIds) {
+                        if (shortCuts.get(productId) != null) {
+                            shortCuts.get(productId)?.devModeInfos = devModes
+                        }
+                    }
+                    view?.showDeviceShortCut(shortCuts)
+                }
+            }
+        })
     }
 
     /**
@@ -282,9 +354,9 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         )
 
                         val productIdList = ArrayList<String>()
-                        // TRTC: 轮询在线的trtc设备的call_status
                         for (device in deviceList) {
                             productIdList.add(device.ProductId)
+                            loadDevData(device)
                         }
                         getProductsConfig(productIdList, deviceList)
 
@@ -311,6 +383,12 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         for (device in shareDeviceList) {
                             deviceIdList.addValue(device.DeviceId)
                         }
+
+                        val productIdList = ArrayList<String>()
+                        for (device in shareDeviceList) {
+                            productIdList.add(device.ProductId)
+                            loadDevData(device)
+                        }
                         // TRTC: trtc设备注册websocket监听
                         IoTAuth.registerActivePush(deviceIdList, null)
 
@@ -329,6 +407,28 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                 }
             }
         }
+    }
+
+    // 获取设备产品配置的快捷入口
+    private fun getShortCutByProductsConfig(productIds: ArrayList<String>) {
+        HttpRequest.instance.getProductsConfig(productIds, object:MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    response.parse(ControlPanelResponse::class.java)?.Data?.let {
+                        it.forEach{
+                            it.parse().run {
+                                shortCuts.put(this.ProductId, this.configEntity.ShortCut)
+                                loadDataMode(productIds)
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 
     /**
