@@ -47,7 +47,7 @@ class ConfigEntity {
     var profile = Profile()
     var Global = Global()
     var Panel = PanelEntity()
-    var ShortCut = Any()
+    var ShortCut = ProductUIDevShortCutConfig()
     var WifiSoftAP = Any()
     var DeviceInfo = Any()
 }
