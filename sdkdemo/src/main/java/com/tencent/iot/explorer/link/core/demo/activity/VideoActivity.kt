@@ -76,8 +76,8 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                     tv_writting_raw_data.visibility = View.INVISIBLE
                     val url = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
 
-                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 10 * 1000)
-                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10 * 1024)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
