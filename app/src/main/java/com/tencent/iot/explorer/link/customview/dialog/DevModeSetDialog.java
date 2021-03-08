@@ -1,13 +1,9 @@
 package com.tencent.iot.explorer.link.customview.dialog;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -15,18 +11,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alibaba.fastjson.JSON;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.tencent.iot.explorer.link.R;
-import com.tencent.iot.explorer.link.customview.HorizontalProgressBarWithNumber;
 import com.tencent.iot.explorer.link.customview.dialog.adapter.DevModeOptionsAdapter;
-import com.tencent.iot.explorer.link.customview.dialog.adapter.ListOptionsAdapter;
-import com.tencent.iot.explorer.link.kitlink.entity.DevModeInfo;
 import com.tencent.iot.explorer.link.kitlink.entity.ModeInt;
-import com.tencent.iot.explorer.link.kitlink.entity.OpValue;
-
-import org.json.JSONObject;
+import com.tencent.iot.explorer.link.core.auth.entity.OpValue;
 
 import java.util.ArrayList;
 import java.util.List;

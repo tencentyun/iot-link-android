@@ -17,6 +17,7 @@ open class DeviceEntity {
     var CreateTime = 0L
     var UpdateTIme = 0L
     var FromUserID = ""
+    var deviceDataList = arrayListOf<DeviceDataEntity>()
 
     //在线状态
     var online = 0

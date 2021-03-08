@@ -18,19 +18,21 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
-import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
-import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
+import com.tencent.iot.explorer.link.core.auth.entity.*
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.DeviceDataResponse
 import com.tencent.iot.explorer.link.core.auth.response.FamilyInfoResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.FamilyActivity
 import com.tencent.iot.explorer.link.kitlink.activity.MainActivity
 import com.tencent.iot.explorer.link.kitlink.adapter.RoomDevAdapter
 import com.tencent.iot.explorer.link.kitlink.adapter.RoomsAdapter
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
@@ -249,6 +251,53 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
             productList.add(dev.ProductId)
             HttpRequest.instance.getProductsConfig(productList, this@HomeFragment)
         }
+
+        override fun onSwitchClicked(pos: Int, dev: DeviceEntity, shortCut: ProductUIDevShortCutConfig?) {
+            if (dev == null || shortCut == null) {
+                return
+            }
+            for (devDataEntity in dev.deviceDataList) {
+                if (devDataEntity.id == shortCut.powerSwitch) {
+                    switchStatus(dev, shortCut.powerSwitch, devDataEntity.value)
+                    return
+                }
+            }
+        }
+
+        override fun onMoreClicked(pos: Int, dev: DeviceEntity) {
+
+        }
+    }
+
+    fun switchStatus(dev: DeviceEntity, id: String, currentStaus: String) {
+        L.d("上报数据:id=$id value=$currentStaus")
+        var status = ""
+        if (currentStaus == "1") {
+            status = "0"
+        } else {
+            status = "1"
+        }
+        var data = "{\"$id\":\"$status\"}"
+        HttpRequest.instance.controlDevice(dev.ProductId, dev.DeviceName, data, object : MyCallback{
+            override fun fail(msg: String?, reqCode: Int) {
+                T.show(msg?:"")
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    for (devDataEntity in dev.deviceDataList) {
+                        if (devDataEntity.id == id) {
+                            devDataEntity.value = status
+                            break
+                        }
+                    }
+                    roomDevAdapter?.notifyDataSetChanged()
+                    roomShareDevAdapter?.notifyDataSetChanged()
+                } else {
+                    T.show(response.msg)
+                }
+            }
+        })
     }
 
     // 切换家庭
@@ -343,6 +392,13 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
 //                TRTCAudioCallActivity.startBeingCall(this.activity, room, deviceId)
 //            }
 //        }
+    }
+
+    override fun showDeviceShortCut(productConfigs: MutableMap<String, ProductUIDevShortCutConfig>) {
+        roomDevAdapter?.shortCuts = productConfigs
+        roomShareDevAdapter?.shortCuts = productConfigs
+        roomDevAdapter?.notifyDataSetChanged()
+        roomShareDevAdapter?.notifyDataSetChanged()
     }
 
     interface PopupListener {

@@ -60,6 +60,8 @@ object Utils {
     }
 
     fun getLang(): String {
+        return "zh-CN"
+
         val local = Locale.getDefault().toString()
         if (TextUtils.isEmpty(local)) {
             L.d("getLang return default lang(zh-CN)")
