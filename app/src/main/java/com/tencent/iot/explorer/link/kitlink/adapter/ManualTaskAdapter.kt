@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.adapter
 
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,7 @@ import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
-import com.tencent.iot.explorer.link.kitlink.entity.OpValue
-import kotlinx.android.synthetic.main.activity_timer.*
+import com.tencent.iot.explorer.link.core.auth.entity.OpValue
 import java.util.*
 
 class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<ManualTaskAdapter.ViewHolder>() {
