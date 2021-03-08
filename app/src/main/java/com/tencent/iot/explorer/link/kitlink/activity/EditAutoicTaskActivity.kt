@@ -3,10 +3,8 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.core.text.isDigitsOnly
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
@@ -25,12 +23,10 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
 import com.tencent.iot.explorer.link.core.auth.response.DeviceListResponse
-import com.tencent.iot.explorer.link.kitlink.adapter.DeviceAdapter
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.kitlink.util.Utils
-import kotlinx.android.synthetic.main.activity_add_autoic_task.*
-import kotlinx.android.synthetic.main.activity_complete_task_info.*
 import kotlinx.android.synthetic.main.activity_complete_task_info.iv_smart_background
 import kotlinx.android.synthetic.main.activity_complete_task_info.layout_smart_name
 import kotlinx.android.synthetic.main.activity_complete_task_info.layout_smart_pic
@@ -48,7 +44,6 @@ import kotlinx.android.synthetic.main.activity_edit_automic_task.tv_next
 import kotlinx.android.synthetic.main.activity_edit_automic_task.tv_tip_title
 import kotlinx.android.synthetic.main.activity_edit_automic_task.tv_working_time_value
 import kotlinx.android.synthetic.main.activity_edit_automic_task.working_time_layout
-import kotlinx.android.synthetic.main.add_new_item_layout.*
 import kotlinx.android.synthetic.main.add_new_item_layout.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
