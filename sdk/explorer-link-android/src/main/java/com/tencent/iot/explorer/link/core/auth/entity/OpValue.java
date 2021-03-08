@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.kitlink.entity;
+package com.tencent.iot.explorer.link.core.auth.entity;
 
 public class OpValue {
     public static String OP_GR = "gt";
