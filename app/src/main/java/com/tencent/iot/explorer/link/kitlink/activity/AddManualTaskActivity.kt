@@ -3,11 +3,9 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
@@ -15,7 +13,7 @@ import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.kitlink.adapter.ManualTaskAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DelayTimeExtra
-import com.tencent.iot.explorer.link.kitlink.entity.DevModeInfo
+import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import kotlinx.android.synthetic.main.activity_add_manual_task.*
