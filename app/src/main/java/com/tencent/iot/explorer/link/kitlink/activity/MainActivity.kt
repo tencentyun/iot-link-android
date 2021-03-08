@@ -1,11 +1,11 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Handler
+import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -14,6 +14,7 @@ import android.view.animation.AnimationSet
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
+import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.example.qrcode.Constant
 import com.example.qrcode.ScannerActivity
@@ -43,7 +44,14 @@ import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
+import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
+import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.LogcatHelper
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.tpns.baseapi.XGApiConfig
 import kotlinx.android.synthetic.main.activity_main.*
@@ -344,6 +352,18 @@ class MainActivity : PActivity(), MyCallback {
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
+        when (reqCode) {
+            RequestCode.scan_bind_device, RequestCode.sig_bind_device -> {
+                if (response.isSuccess()) {
+                    T.show(getString(R.string.add_sucess)) //添加成功
+                    App.data.refresh = true
+                    App.data.setRefreshLevel(2)
+                    com.tencent.iot.explorer.link.kitlink.util.Utils.sendRefreshBroadcast(this@MainActivity)
+                } else {
+                    T.show(response.msg)
+                }
+            }
+        }
     }
 
     private fun showFragment(position: Int) {
@@ -415,5 +435,111 @@ class MainActivity : PActivity(), MyCallback {
                 })
         builder.create()
         builder.show()
+    }
+
+    private fun bindDevice(signature: String) {
+        HttpRequest.instance.scanBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId, signature, this)
+    }
+
+    private fun bleSigBindDevice(deviceInfo: TrtcDeviceInfo, bindType: String) {
+        HttpRequest.instance.sigBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId,
+                deviceInfo, bindType, this)
+    }
+
+    private var patchProductListener =  object :MyCallback{
+        override fun fail(msg: String?, reqCode: Int) {
+            T.show(msg)
+        }
+
+        override fun success(response: BaseResponse, reqCode: Int) {
+            if (response.isSuccess() && reqCode == RequestCode.get_products_config) {
+                response.parse(ProductsConfigResponse::class.java)?.run {
+                    val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
+                    val wifiConfigTypeList = config.WifiConfTypeList
+                    var productId = ""
+                    if (!TextUtils.isEmpty(config.profile)) {
+                        var jsonProFile = JSON.parseObject(config.profile)
+                        if (jsonProFile != null && jsonProFile.containsKey("ProductId") &&
+                                !TextUtils.isEmpty(jsonProFile.getString("ProductId"))) {
+                            productId = jsonProFile.getString("ProductId")
+                        }
+                    }
+
+                    if (config != null && !TextUtils.isEmpty(config.Global) && ProductGlobal.isProductGlobalLegal(config.Global)) {
+                        var intent = Intent(this@MainActivity, ProductIntroduceActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_INFO, productId)
+                        startActivity(intent)
+                        return@run
+                    }
+
+                    if (wifiConfigTypeList.equals("{}") || TextUtils.isEmpty(wifiConfigTypeList)) {
+                        SmartConfigStepActivity.startActivityWithExtra(this@MainActivity, productId)
+
+                    } else if (wifiConfigTypeList.contains("[")) {
+                        val typeList = JsonManager.parseArray(wifiConfigTypeList)
+                        if (typeList.size > 0 && typeList[0] == "softap") {
+                            SoftApStepActivity.startActivityWithExtra(this@MainActivity, productId)
+                        } else {
+                            SmartConfigStepActivity.startActivityWithExtra(this@MainActivity, productId)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        data?.let {
+            if (resultCode == Activity.RESULT_OK) {
+                val type = it.getStringExtra(Constant.EXTRA_RESULT_CODE_TYPE)
+                it.getStringExtra(Constant.EXTRA_RESULT_CONTENT)?.run {
+                    L.d("type=$type,content=$this")
+
+                    when {
+                        contains("signature=") -> {//虚拟设备
+                            bindDevice(this.substringAfterLast("signature="))
+                        }
+                        contains("\"DeviceName\"") and contains("\"Signature\"") -> {//真实设备
+                            val deviceInfo = DeviceInfo(this)
+                            if (!TextUtils.isEmpty(deviceInfo.productId)) {
+                                bindDevice(deviceInfo.signature)
+                            }
+                        }
+                        contains("page=softap") -> {
+                            var uri = Uri.parse(this)
+                            var productId = uri.getQueryParameter(CommonField.EXTRA_PRODUCT_ID)
+                            SoftApStepActivity.startActivityWithExtra(this@MainActivity, productId)
+                        }
+                        contains("page=smartconfig") -> {
+                            var uri = Uri.parse(this)
+                            var productId = uri.getQueryParameter(CommonField.EXTRA_PRODUCT_ID)
+                            SmartConfigStepActivity.startActivityWithExtra(this@MainActivity, productId)
+                        }
+                        contains("page=adddevice") && contains("productId") -> {
+                            var productid = Utils.getUrlParamValue(this, "productId")
+                            val productsList = arrayListOf<String>()
+                            productsList.add(productid!!)
+                            if (contains("preview=1")) {
+                                var intent = Intent(this@MainActivity, ProductIntroduceActivity::class.java)
+                                intent.putExtra(CommonField.EXTRA_INFO, productid)
+                                startActivity(intent)
+                            } else {
+                                HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
+                            }
+
+                        }
+                        contains("hmacsha") && contains(";") -> { //蓝牙签名绑定 的设备
+                            // ${product_id};${device_name};${random};${timestamp};hmacsha256;sign
+                            val deviceInfo = TrtcDeviceInfo(this)
+                            bleSigBindDevice(deviceInfo, "bluetooth_sign")
+                        }
+                        else -> {//之前旧版本虚拟设备二维码只有签名
+                            bindDevice(this)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
