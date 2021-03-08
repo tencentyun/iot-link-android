@@ -1,9 +1,14 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,20 +23,29 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
-import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
-import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
+import com.tencent.iot.explorer.link.core.auth.entity.*
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.response.DeviceDataResponse
 import com.tencent.iot.explorer.link.core.auth.response.FamilyInfoResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
+import com.tencent.iot.explorer.link.customview.dialog.DevModeSetDialog
+import com.tencent.iot.explorer.link.customview.dialog.KeyBooleanValue
+import com.tencent.iot.explorer.link.customview.dialog.MoreOptionDialog
+import com.tencent.iot.explorer.link.customview.dialog.entity.DevOption
+import com.tencent.iot.explorer.link.customview.dialog.entity.OptionMore
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.DevicePanelActivity
 import com.tencent.iot.explorer.link.kitlink.activity.FamilyActivity
 import com.tencent.iot.explorer.link.kitlink.activity.MainActivity
 import com.tencent.iot.explorer.link.kitlink.adapter.RoomDevAdapter
 import com.tencent.iot.explorer.link.kitlink.adapter.RoomsAdapter
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.ModeInt
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
@@ -43,7 +57,6 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.header.*
 import kotlinx.android.synthetic.main.inside_fixed_bar.*
 import kotlinx.android.synthetic.main.title_with_family.*
-
 
 class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
 
@@ -69,6 +82,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
         presenter = HomeFragmentPresenter(this)
         initView()
         setListener()
+        registBrodcast()
     }
 
     override fun onResume() {
@@ -78,6 +92,23 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
         } else {    //更新界面
             showData()
         }
+    }
+
+    private fun registBrodcast() {
+        var broadcastManager = LocalBroadcastManager.getInstance(context!!)
+        var intentFilter = IntentFilter()
+        intentFilter.addAction("android.intent.action.CART_BROADCAST")
+        var recevier = object: BroadcastReceiver(){
+            override fun onReceive(context: Context?, intent: Intent?) {
+                var refreshTag = intent?.getIntExtra(CommonField.EXTRA_REFRESH, 0);
+                if (refreshTag != 0){
+                    if (App.data.refresh) { //更新数据
+                        requestData()
+                    }
+                }
+            }
+        }
+        broadcastManager.registerReceiver(recevier, intentFilter);
     }
 
     /**
@@ -233,7 +264,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 refreshLayout.finishRefresh()
-                presenter.refreshFamilyList()
+                requestData()
             }
         })
         layout_2_set_location.setOnClickListener {
@@ -249,6 +280,239 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
             productList.add(dev.ProductId)
             HttpRequest.instance.getProductsConfig(productList, this@HomeFragment)
         }
+
+        override fun onSwitchClicked(pos: Int, dev: DeviceEntity, shortCut: ProductUIDevShortCutConfig?) {
+            if (dev == null || shortCut == null) return
+
+            // 存在数据内容的
+            for (devDataEntity in dev.deviceDataList) {
+                if (devDataEntity.id == shortCut.powerSwitch) {
+                    switchStatus(dev, shortCut.powerSwitch, devDataEntity.value)
+                    return
+                }
+            }
+
+            var devData = DeviceDataEntity()
+            devData.id = shortCut.powerSwitch
+            devData.value = "0"
+            dev.deviceDataList.add(devData)
+            switchStatus(dev, shortCut.powerSwitch, devData.value)
+
+        }
+
+        override fun onMoreClicked(pos: Int, dev: DeviceEntity, shortCut: ProductUIDevShortCutConfig?) {
+            if (dev == null || shortCut == null || shortCut.devModeInfos == null ||
+                    shortCut.devModeInfos.size <= 0) {
+                return
+            }
+
+            var optionMore = convertOptionMore(dev, shortCut)
+            var moreOptionDialog = MoreOptionDialog(this@HomeFragment.context, optionMore)
+            moreOptionDialog.show()
+            moreOptionDialog.setOnDismisListener(object: MoreOptionDialog.OnDismisListener {
+                override fun onDismissed() {}
+                override fun onItemClicked(pos: Int, devOption: DevOption?) {
+                    if (devOption == null) return
+                    if (devOption.type == DevOption.TYPE_BAR) {
+                        showNumDialog(dev, devOption)
+                    } else if (devOption.type == DevOption.TYPE_LIST) {
+                        showMapDialog(dev, devOption)
+                    }
+                }
+
+                override fun onGoClicked() {
+                    put("device", dev)
+                    val productList  = arrayListOf<String>()
+                    productList.add(dev.ProductId)
+                    HttpRequest.instance.getProductsConfig(productList, this@HomeFragment)
+                }
+            })
+        }
+    }
+
+    private fun showMapDialog(dev: DeviceEntity, devOption: DevOption) {
+        if (devOption == null || devOption.mapJson == null) return
+        var keyBooleanValues = ArrayList<KeyBooleanValue>()
+        var mapJson = devOption.mapJson
+
+        var startIndex = -1
+        var i = 0
+        for (key in mapJson!!.keys) {
+            var keyBooleanValue = KeyBooleanValue()
+            keyBooleanValue.key = key
+            keyBooleanValue.value = mapJson[key].toString()
+            keyBooleanValues.add(keyBooleanValue)
+            if (devOption.key == keyBooleanValue.key) {  // 当对应界面存在进度值时候，使用存在的进度值做数据
+                startIndex = i
+            }
+            i++
+        }
+        var dialog = DevModeSetDialog(this@HomeFragment.context, keyBooleanValues, devOption.optionName, startIndex)
+        dialog.show()
+        dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
+            override fun onSaveClicked() {
+                if (dialog.currentIndex >= 0) {
+                    var value = keyBooleanValues.get(dialog.currentIndex).key
+                    updateDev(dev, devOption, value)
+                }
+            }
+
+            override fun onCancelClicked() {}
+        })
+    }
+
+    private fun updateDev(dev: DeviceEntity, devOption: DevOption, value: String) {
+        var data = "{\"${devOption.id}\":\"$value\"}"
+        HttpRequest.instance.controlDevice(dev.ProductId, dev.DeviceName, data, object: MyCallback{
+            override fun fail(msg: String?, reqCode: Int) {
+                T.show(msg?:"")
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    for (devData in dev.deviceDataList) {
+                        if (devData.id == devOption.id) {
+                            devData.value = value
+                            roomDevAdapter?.notifyDataSetChanged()
+                            roomShareDevAdapter?.notifyDataSetChanged()
+                            break
+                        }
+                    }
+                } else {
+                    T.show(response.msg)
+                }
+            }
+        })
+    }
+
+    private fun showNumDialog(dev: DeviceEntity, devOption: DevOption) {
+        if (devOption == null || devOption.modeInt == null) return
+
+        Log.e("XXX", "devOption " + JSON.toJSONString(devOption))
+        var dialog = DevModeSetDialog(this@HomeFragment.context, devOption.optionName, devOption.modeInt)
+        dialog.show()
+        dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
+            override fun onSaveClicked() {
+                var value = ""
+                if (!devOption.modeInt!!.ifInteger) {
+                    value = String.format("%.1f", dialog.progress)
+                } else {
+                    value = dialog.progress.toInt().toString()
+                }
+                updateDev(dev, devOption, value)
+            }
+
+            override fun onCancelClicked() {}
+        })
+    }
+
+    private fun convertOptionMore(dev: DeviceEntity, shortCut: ProductUIDevShortCutConfig) : OptionMore {
+        var optionMore = OptionMore()
+        optionMore.title = dev.getAlias()
+        for (devModeInfo in shortCut.devModeInfos) {
+            var showFlag = false
+            var res = ""
+            for (resConfig in shortCut.shortcut) {
+                if (devModeInfo.id == resConfig.id) {
+                    if (resConfig.ui != null && resConfig.ui!!.visible) {
+                        res = resConfig.ui!!.icon
+                    }
+                    showFlag = true
+                    break
+                }
+            }
+
+            if(!showFlag) continue
+
+            var devOption = DevOption()
+            devOption.id = devModeInfo.id
+            devOption.res = res
+            var type = devModeInfo.define!!.get("type")
+            if (type == "bool" || type == "enum") {
+                var mapJson = devModeInfo.define!!.getJSONObject("mapping")
+                devOption.mapJson = mapJson
+                devOption.type = DevOption.TYPE_LIST
+            } else if (type == "int" || type == "float") {
+                var modeInt = JSON.parseObject(devModeInfo.define!!.toJSONString(), ModeInt::class.java)
+                modeInt.ifInteger = type == "int"
+                if (modeInt.start < modeInt.min) {
+                    modeInt.start = modeInt.min
+                }
+                devOption.modeInt = modeInt
+                devOption.type = DevOption.TYPE_BAR
+            }
+            devOption.optionName = devModeInfo.name
+
+            var hasValue = false
+            for (devData in dev.deviceDataList) {
+                if (devModeInfo.id == devData.id) {
+                    var type = devModeInfo.define!!.get("type")
+                    if (type == "bool" || type == "enum") {
+                        var mapJson = devModeInfo.define!!.getJSONObject("mapping")
+                        if (!TextUtils.isEmpty(devData.value)) {
+                            devOption.value = mapJson.getString(devData.value)
+                            devOption.key = devData.value
+                        }
+                    } else if (type == "int" || type == "float") {
+                        var modeInt = JSON.parseObject(devModeInfo.define!!.toJSONString(), ModeInt::class.java)
+                        if (devData.value.toDoubleOrNull() != null) {
+                            devOption.value = devData.value + modeInt.unit
+                            modeInt.start = devData.value.toFloat()
+                        }
+                        if (modeInt.start < modeInt.min) {
+                            modeInt.start = modeInt.min
+                        }
+                        devOption.modeInt = modeInt
+                    }
+                    hasValue = true
+                    break
+                }
+            }
+            if (!hasValue) {
+                var initData = DeviceDataEntity()
+                initData.id = devModeInfo.id
+                if (type == "bool" || type == "enum") {
+
+                } else if (type == "int" || type == "float") {
+
+                }
+                dev.deviceDataList.add(initData)
+            }
+
+            optionMore.options.add(devOption)
+        }
+        return optionMore
+    }
+
+    fun switchStatus(dev: DeviceEntity, id: String, currentStaus: String) {
+        L.d("上报数据:id=$id value=$currentStaus")
+        var status = ""
+        if (currentStaus == "1") {
+            status = "0"
+        } else {
+            status = "1"
+        }
+        var data = "{\"$id\":\"$status\"}"
+        HttpRequest.instance.controlDevice(dev.ProductId, dev.DeviceName, data, object : MyCallback{
+            override fun fail(msg: String?, reqCode: Int) {
+                T.show(msg?:"")
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    for (devDataEntity in dev.deviceDataList) {
+                        if (devDataEntity.id == id) {
+                            devDataEntity.value = status
+                            break
+                        }
+                    }
+                    roomDevAdapter?.notifyDataSetChanged()
+                    roomShareDevAdapter?.notifyDataSetChanged()
+                } else {
+                    T.show(response.msg)
+                }
+            }
+        })
     }
 
     // 切换家庭
@@ -343,6 +607,13 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
 //                TRTCAudioCallActivity.startBeingCall(this.activity, room, deviceId)
 //            }
 //        }
+    }
+
+    override fun showDeviceShortCut(productConfigs: MutableMap<String, ProductUIDevShortCutConfig>) {
+        roomDevAdapter?.shortCuts = productConfigs
+        roomShareDevAdapter?.shortCuts = productConfigs
+        roomDevAdapter?.notifyDataSetChanged()
+        roomShareDevAdapter?.notifyDataSetChanged()
     }
 
     interface PopupListener {
