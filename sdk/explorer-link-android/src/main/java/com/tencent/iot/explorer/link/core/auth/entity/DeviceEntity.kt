@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.auth.entity
 
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
+import java.util.concurrent.CopyOnWriteArrayList
 
 open class DeviceEntity {
 
@@ -17,6 +18,7 @@ open class DeviceEntity {
     var CreateTime = 0L
     var UpdateTIme = 0L
     var FromUserID = ""
+    var deviceDataList = CopyOnWriteArrayList<DeviceDataEntity>()
 
     //在线状态
     var online = 0

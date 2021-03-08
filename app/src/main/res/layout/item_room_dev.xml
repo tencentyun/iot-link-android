@@ -38,10 +38,23 @@
                     />
 
                 <ImageView
+                    android:id="@+id/iv_dev_status_src"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:padding="8dp"
+                    app:layout_constraintStart_toStartOf="@id/iv_dev_status"
+                    app:layout_constraintEnd_toEndOf="@id/iv_dev_status"
+                    app:layout_constraintTop_toTopOf="@id/iv_dev_status"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_dev_status"/>
+
+                <ImageView
                     android:id="@+id/iv_more"
                     android:layout_width="29dp"
-                    android:layout_height="12dp"
+                    android:layout_height="29dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     app:layout_constraintTop_toTopOf="@id/tv_dev_name"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_dev_name"
                     app:layout_constraintEnd_toEndOf="@id/iv_dev_status"
                     app:layout_constraintStart_toStartOf="@id/iv_dev_status"
                     android:src="@mipmap/dev_more_oper"
