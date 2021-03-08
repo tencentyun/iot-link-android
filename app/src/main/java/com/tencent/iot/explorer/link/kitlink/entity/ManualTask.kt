@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
 import android.text.TextUtils
+import com.tencent.iot.explorer.link.core.auth.entity.OpValue
 
 class ManualTask {
     var type = 1   // 1 延时任务  0 设备控制任务  2 通知类型  3 选择手动  4 定时任务  5 场景变化阈值

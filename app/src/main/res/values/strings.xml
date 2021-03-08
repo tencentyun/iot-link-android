@@ -135,6 +135,7 @@
     <string name="num_rooms">%s个房间</string>
     <string name="no_weather_info">暂无天气信息</string>
     <string name="set_family_first">请先设置当前家庭位置</string>
+    <string name="more_option">更多操作</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
