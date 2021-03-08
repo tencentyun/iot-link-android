@@ -3,12 +3,12 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.customview.dialog.SelectWoringTimeDialog
@@ -17,7 +17,6 @@ import com.tencent.iot.explorer.link.kitlink.adapter.ManualTaskAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
 import kotlinx.android.synthetic.main.activity_add_autoic_task.*
-import kotlinx.android.synthetic.main.add_new_item_layout.*
 import kotlinx.android.synthetic.main.add_new_item_layout.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
