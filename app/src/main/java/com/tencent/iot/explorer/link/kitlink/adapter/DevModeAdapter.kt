@@ -4,21 +4,13 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.chauthai.swipereveallayout.SwipeRevealLayout
-import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.kitlink.entity.DevModeInfo
-import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
-import com.tencent.iot.explorer.link.kitlink.entity.OpValue
+import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
+import com.tencent.iot.explorer.link.core.auth.entity.OpValue
 import com.tencent.iot.explorer.link.kitlink.entity.RouteType
-import kotlinx.android.synthetic.main.activity_complete_task_info.*
-import org.w3c.dom.Text
 import java.util.*
 
 class DevModeAdapter(list: MutableList<DevModeInfo>, type: Int) : RecyclerView.Adapter<DevModeAdapter.ViewHolder>() {
