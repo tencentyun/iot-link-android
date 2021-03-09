@@ -178,6 +178,10 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
     override fun fail(msg: String?, errorCode: Int) {
     }
 
+    override fun xp2pLinkError(msg: String?) {
+
+    }
+
     override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
     }
 
