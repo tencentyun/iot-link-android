@@ -147,8 +147,8 @@ class DateIPCActivity : BaseActivity() {
                     }
                     baseUrl = history.VideoURL
                     var allTimeBlock = history.TimeList
+                    progressItemList = ArrayList()
                     if (allTimeBlock != null && allTimeBlock.size > 0) {
-                        progressItemList = ArrayList()
                         var i = 0
                         while (i < allTimeBlock.size) {
                             var start = Date(allTimeBlock.get(i).StartTime * 1000)
@@ -173,10 +173,9 @@ class DateIPCActivity : BaseActivity() {
                             progressItemList!!.add(item)
                             i++
                         }
-
-                        seekbar.initData(progressItemList)
-                        seekbar.invalidate()
                     }
+                    seekbar.initData(progressItemList)
+                    seekbar.invalidate()
                 }
             })
         }
