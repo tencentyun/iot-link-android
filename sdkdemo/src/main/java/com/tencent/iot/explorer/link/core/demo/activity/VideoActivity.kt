@@ -8,6 +8,7 @@ import android.view.SurfaceHolder
 import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.log.L
 import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
@@ -16,6 +17,7 @@ import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
+import java.util.*
 
 class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callback, XP2PCallback {
 
@@ -26,6 +28,8 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private var isSpeaking: Boolean = false
     private var isPlaying: Boolean = true
     private var isP2PChannelAvailable: Boolean = false
+    private var isXp2pDisconnect: Boolean = false
+    private var timer: Timer? = null
 
     private lateinit var mPlayer: IjkMediaPlayer
     private lateinit var audioRecordUtil: AudioRecordUtil
@@ -66,6 +70,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         if (productId == " " || deviceName == " " || secretId == " " || secretKey == " ") {
             Toast.makeText(this, "设备信息有误，请确保配置文件中的设备信息填写正确", Toast.LENGTH_LONG).show()
         } else {
+            reStartXp2pThread()
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
@@ -132,6 +137,34 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         }
     }
 
+    private fun reStartXp2pThread() {
+        timer = Timer()
+        val task: TimerTask = object : TimerTask() {
+            override fun run() {
+                if (isXp2pDisconnect) {
+                    XP2P.stopService()
+                    Thread.sleep(500)
+                    var ret = XP2P.startServiceWithXp2pInfo("")
+                    if (ret == 0) {
+                        isXp2pDisconnect = false
+
+                        Thread.sleep(500)
+                        mPlayer.reset()
+                        mPlayer.dataSource = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+                        mPlayer.setSurface(video_view.holder.surface)
+                        mPlayer.prepareAsync()
+                        mPlayer.start()
+                    } else {
+                        runOnUiThread {
+                            Toast.makeText(getApplicationContext(), "p2p连接断开,正在尝试重新连接", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
+        timer!!.schedule(task,0,1000);
+    }
+
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setDeviceInfo(productId, deviceName)
         XP2P.setQcloudApiCred(secretId, secretKey)
@@ -161,25 +194,31 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     override fun onDestroy() {
         super.onDestroy()
         mPlayer.release()
+        timer?.cancel()
         XP2P.stopService()
         audioRecordUtil.release()
         LogcatHelper.getInstance(this).stop()
     }
 
     override fun commandRequest(msg: String?) {
+        //do some non-time-consuming processing
     }
 
     override fun fail(msg: String?, errorCode: Int) {
+        //do some non-time-consuming processing
     }
 
     override fun xp2pLinkError(msg: String?) {
-
+        isXp2pDisconnect = true
+        //do some non-time-consuming processing
     }
 
     override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
+        //do some non-time-consuming processing
     }
 
     override fun avDataCloseHandle(msg: String?, errorCode: Int) {
+        //do some non-time-consuming processing
     }
 
     companion object {
