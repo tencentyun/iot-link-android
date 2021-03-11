@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d22e0540_39340bd6",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/activity/VideoActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-11T11:42:15Z",
+      "side": 1,
+      "message": "加下private",
+      "range": {
+        "startLine": 29,
+        "startChar": 4,
+        "endLine": 29,
+        "endChar": 39
+      },
+      "revId": "f2667e15ba2696f2e6727a30b337cd7f306eed58",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c82bc59c_6bf912b3",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/activity/VideoActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-11T11:42:15Z",
+      "side": 1,
+      "message": "用timer试下",
+      "range": {
+        "startLine": 138,
+        "startChar": 8,
+        "endLine": 150,
+        "endChar": 17
+      },
+      "revId": "f2667e15ba2696f2e6727a30b337cd7f306eed58",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
