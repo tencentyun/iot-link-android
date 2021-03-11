@@ -16,6 +16,7 @@ import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
+import java.util.*
 
 class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callback, XP2PCallback {
 
@@ -26,6 +27,8 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private var isSpeaking: Boolean = false
     private var isPlaying: Boolean = true
     private var isP2PChannelAvailable: Boolean = false
+    private var gXp2pDisconnect: Boolean = false
+    private var gTimer: Timer? = null
 
     private lateinit var mPlayer: IjkMediaPlayer
     private lateinit var audioRecordUtil: AudioRecordUtil
@@ -66,6 +69,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         if (productId == " " || deviceName == " " || secretId == " " || secretKey == " ") {
             Toast.makeText(this, "设备信息有误，请确保配置文件中的设备信息填写正确", Toast.LENGTH_LONG).show()
         } else {
+            reStartXp2pThread()
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
@@ -132,6 +136,28 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         }
     }
 
+    private fun reStartXp2pThread() {
+        gTimer = Timer()
+        val task: TimerTask = object : TimerTask() {
+            override fun run() {
+                if (gXp2pDisconnect) {
+                    XP2P.stopService()
+                    Thread.sleep(500)
+                    XP2P.startServiceWithXp2pInfo("")
+                    gXp2pDisconnect = false
+
+                    Thread.sleep(500)
+                    mPlayer.reset()
+                    mPlayer.dataSource = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+                    mPlayer.setSurface(video_view.holder.surface)
+                    mPlayer.prepareAsync()
+                    mPlayer.start()
+                }
+            }
+        }
+        gTimer!!.schedule(task,0,1000);
+    }
+
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setDeviceInfo(productId, deviceName)
         XP2P.setQcloudApiCred(secretId, secretKey)
@@ -161,6 +187,9 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     override fun onDestroy() {
         super.onDestroy()
         mPlayer.release()
+        if (gTimer != null) {
+            gTimer?.cancel()
+        }
         XP2P.stopService()
         audioRecordUtil.release()
         LogcatHelper.getInstance(this).stop()
@@ -173,7 +202,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     }
 
     override fun xp2pLinkError(msg: String?) {
-
+        gXp2pDisconnect = true
     }
 
     override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
