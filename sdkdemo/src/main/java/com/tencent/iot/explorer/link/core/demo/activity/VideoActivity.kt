@@ -26,6 +26,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private var isSpeaking: Boolean = false
     private var isPlaying: Boolean = true
     private var isP2PChannelAvailable: Boolean = false
+    var xp2pDisconnect: Boolean = false
 
     private lateinit var mPlayer: IjkMediaPlayer
     private lateinit var audioRecordUtil: AudioRecordUtil
@@ -66,6 +67,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         if (productId == " " || deviceName == " " || secretId == " " || secretKey == " ") {
             Toast.makeText(this, "设备信息有误，请确保配置文件中的设备信息填写正确", Toast.LENGTH_LONG).show()
         } else {
+            reStartXp2pThread()
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
@@ -132,6 +134,22 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         }
     }
 
+    private fun reStartXp2pThread() {
+        object : Thread() {
+            override fun run() {
+                while(true) {
+                    if (xp2pDisconnect) {
+                        XP2P.stopService()
+                        Thread.sleep(500)
+                        XP2P.startServiceWithXp2pInfo("")
+                        xp2pDisconnect = false
+                    }
+                    Thread.sleep(1000)
+                }
+            }
+        }.start()
+    }
+
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setDeviceInfo(productId, deviceName)
         XP2P.setQcloudApiCred(secretId, secretKey)
@@ -173,7 +191,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     }
 
     override fun xp2pLinkError(msg: String?) {
-
+        xp2pDisconnect = true
     }
 
     override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
