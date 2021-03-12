@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efba58ff_b520ce3f",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/activity/VideoActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-12T02:08:17Z",
+      "side": 1,
+      "message": "isXp2pDisconnect\ntimer",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 37
+      },
+      "revId": "3c3d1c66c29bf4b79e1cbabeeea6b7c1c319789b",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b54e75e_b91206f4",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/activity/VideoActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-12T02:08:17Z",
+      "side": 1,
+      "message": "restart或reOpen",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 19
+      },
+      "revId": "3c3d1c66c29bf4b79e1cbabeeea6b7c1c319789b",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "552e16f0_17402768",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/activity/VideoActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-12T02:08:17Z",
+      "side": 1,
+      "message": "gTimer !\u003d null 是不是多余了\ngTimer?.cancel 意思就是gTimer不是null的话再调cancel",
+      "range": {
+        "startLine": 190,
+        "startChar": 7,
+        "endLine": 192,
+        "endChar": 9
+      },
+      "revId": "3c3d1c66c29bf4b79e1cbabeeea6b7c1c319789b",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
