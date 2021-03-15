@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest.permission
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.text.TextUtils
@@ -38,6 +39,7 @@ import com.tencent.mapsdk.raster.model.LatLng
 import com.tencent.mapsdk.raster.model.Marker
 import com.tencent.mapsdk.raster.model.MarkerOptions
 import com.tencent.tencentmap.mapsdk.map.TencentMap
+import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.activity_family_address.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
@@ -98,6 +100,10 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
     }
 
     override fun setListener() {
+        layout_seach.setOnClickListener {
+            var postionIntent = Intent(this@FamilyAddressActivity, SelectPointActivity::class.java)
+            startActivityForResult(postionIntent, CommonField.SELECT_MAP_POSTION_REQ_CODE)
+        }
         iv_reset_loaction.setOnClickListener { startLocation() }
         iv_back.setOnClickListener { finish() }
         btn_add_family.setOnClickListener {
@@ -315,5 +321,17 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
     override fun onDestroy() {
         mapView.onDestroy()
         super.onDestroy()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CommonField.SELECT_MAP_POSTION_REQ_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            var extraInfo = data?.getStringExtra(CommonField.EXTRA_INFO)
+            var selectedPostion = JSON.parseObject(extraInfo, Address::class.java)
+            val target = LatLng(selectedPostion!!.latitude.toDouble(), selectedPostion!!.longitude.toDouble())
+            tencentMap.setCenter(target)
+            maskTag(target, selectedPostion.name)
+            requestAddress(target, pageIndex)
+        }
     }
 }
