@@ -136,6 +136,10 @@
     <string name="no_weather_info">暂无天气信息</string>
     <string name="set_family_first">请先设置当前家庭位置</string>
     <string name="more_option">更多操作</string>
+    <string name="search">搜索</string>
+    <string name="no_history_tip">还没有历史记录哦~</string>
+    <string name="clear_all_history">清空历史记录</string>
+    <string name="resp_with_no_data">没有找到匹配的结果</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
