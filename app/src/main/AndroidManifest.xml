@@ -118,6 +118,7 @@
         <activity android:name=".kitlink.activity.BindMobilePhoneActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
         <activity android:name=".kitlink.activity.HelpCenterActivity" />
+        <activity android:name=".kitlink.activity.SelectPointActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
         <activity
