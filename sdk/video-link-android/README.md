@@ -12,7 +12,9 @@ implementation 'com.tencent.iot.video:video-link-android:x.x.x'
 具体版本号可参考 [video-link-android](TODO: sdk发布页url)
 
 ### SDK相关文档
-[AndroidSDK说明](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/AndroidSDK%E8%AF%B4%E6%98%8E.md)
+[VideoSDK接入说明](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/VideoSDK接入说明.md)
 
-[设备配网](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/%E8%AE%BE%E5%A4%87%E9%85%8D%E7%BD%91.md)
+[VideoSDK接口说明](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/VideoSDK接口说明.md)
+
+[设备配网](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/设备配网.md)
 
