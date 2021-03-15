@@ -85,7 +85,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:background="@drawable/background_grey_f3f3f5_cell"
                 android:layout_marginLeft="16dp"
-                android:visibility="gone"
                 android:layout_marginRight="16dp">
 
                 <ImageView
