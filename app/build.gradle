@@ -51,6 +51,7 @@ android {
         buildConfigField 'String', 'XgUSAAccessId', "\"${getValueById('XgUSAAccessId')}\""
         buildConfigField 'String', 'XgUSAAccessKey', "\"${getValueById('XgUSAAccessKey')}\""
         buildConfigField 'String', 'WeatherKey', "\"${getValueById('HEweatherKey')}\""
+        buildConfigField 'String', 'TencentMapSDKValue', "\"${getValueById('TencentMapSDKValue')}\""
         multiDexEnabled true
     }
 
