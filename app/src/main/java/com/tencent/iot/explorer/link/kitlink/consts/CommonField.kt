@@ -69,6 +69,21 @@ object CommonField {
     const val STORED_ADDRESS = "storedAddress"
     const val FAMILY_ID = "familyId"
     const val FAMILY_NAME = "familyName"
+    const val CALLBACK_ID = "callbackId"
+    const val DEV_ID = "deviceId"
+    const val UUID = "uuid"
+    const val SERVICES = "services"
+    const val DEVS = "devices"
+    const val DATA_JSON = "data"
+    const val AVAILABLE = "available"
+    const val DISCOVERING = "discovering"
+    const val NAME = "name"
+    const val PAYLOAD = "payload"
+    const val EMIT_EVENT = "emitEvent"
+    const val RSSI = "RSSI"
+    const val CONNECTED = "connected"
+    const val SERVICE_ID = "serviceId"
+    const val CHARACTERISTIC_ID = "characteristicId"
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
@@ -172,6 +187,7 @@ object CommonField {
     const val FILL_CONTENT_REQ_CODE = 0x1111
     const val MAP_LOCATION_REQ_CODE = 0x1112
     const val SELECT_MAP_POSTION_REQ_CODE = 0x1113
+    const val BULE_TOOTH_REQ_CODE = 0x1114
 
     const val SSID_UNKNOWN = "<unknown ssid>"
     const val EXTRA_TITLE = "title"

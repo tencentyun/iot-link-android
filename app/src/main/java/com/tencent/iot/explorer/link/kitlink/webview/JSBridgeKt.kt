@@ -7,12 +7,14 @@ import android.webkit.WebView
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import java.lang.reflect.Method
 
 object JSBridgeKt {
     val TAG = this.javaClass.simpleName
-
+    val OPEN_BULE_TOOTH_REQ_CODE = CommonField.BULE_TOOTH_REQ_CODE
     var exposedMethods: MutableMap<String, HashMap<String, Method>> = HashMap()
+    var onEventCallback: OnEventCallback? = null
 
     fun register(exposedName: String, clazz: Class<BridgeImpl>) {
         L.d(TAG, "register exposedMethods=" + JSON.toJSONString(exposedMethods))
