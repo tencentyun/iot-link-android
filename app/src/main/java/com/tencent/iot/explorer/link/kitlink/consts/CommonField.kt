@@ -172,6 +172,7 @@ object CommonField {
     const val FILL_CONTENT_REQ_CODE = 0x1111
     const val MAP_LOCATION_REQ_CODE = 0x1112
     const val SELECT_MAP_POSTION_REQ_CODE = 0x1113
+    const val BULE_TOOTH_REQ_CODE = 0x1114
 
     const val SSID_UNKNOWN = "<unknown ssid>"
     const val EXTRA_TITLE = "title"
