@@ -1,10 +1,12 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.webkit.*
 import com.alibaba.fastjson.JSON
@@ -22,6 +24,9 @@ import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
+import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
+import com.tencent.iot.explorer.link.kitlink.webview.OnEventCallback
 import com.tencent.iot.explorer.link.kitlink.webview.WebCallBack
 import kotlinx.android.synthetic.main.activity_device_details.*
 import kotlinx.android.synthetic.main.activity_device_panel.*
@@ -33,6 +38,7 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
     private var callback: WebCallBack? = null
     private var deviceEntity: DeviceEntity? = null
     private var editPopupWindow: EditPopupWindow? = null
+    private var onEventCallback: OnEventCallback? = null
 
     override fun getContentView(): Int {
         return  R.layout.activity_device_panel
@@ -64,6 +70,7 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
         when (reqCode) {
             RequestCode.token_ticket -> {
                 if (response.isSuccess()) {
+                    JSBridgeKt.register("help_center_bridge", BridgeImpl::class.java)
                     val ticketResponse = JSON.parse(response.data.toString()) as JSONObject
                     var url = H5_PANEL_BASE_URL +
                             "?deviceId=${deviceEntity?.DeviceId}" +
@@ -153,7 +160,18 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
         override fun onReceivedTouchIconUrl(view: WebView?, url: String?, precomposed: Boolean) { }
 
         override fun onJsPrompt(view: WebView, url: String, message: String, defaultValue: String, result: JsPromptResult): Boolean {
+            Log.e("XXX", "onJsPrompt url " + url)
+            Log.e("XXX", "onJsPrompt message " + message)
+            result.confirm(JSBridgeKt.callNative(view, message))
             return true
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.e("XXX", "onActivityResult resultCode " + resultCode)
+        if (resultCode == Activity.RESULT_OK && requestCode == JSBridgeKt.OPEN_BULE_TOOTH_REQ_CODE) {
+            onEventCallback!!.onActivityShow()
         }
     }
 
@@ -198,6 +216,13 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
                 }
                 url.contains("goFirmwareUpgradePage") -> {
                     callBackToH5(getCallbackId(url))
+                }
+                url.contains("openBluetoothAdapter") -> {
+                    JSBridgeKt.callNative(view, url)
+                    onEventCallback = JSBridgeKt.onEventCallback
+                }
+                else -> {
+                    JSBridgeKt.callNative(view, url)
                 }
             }
             return true
