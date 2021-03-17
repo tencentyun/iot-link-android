@@ -81,7 +81,6 @@ class SelectPointActivity : BaseActivity() {
     }
 
     private fun refreshHistory() {
-        Log.e("XXX", "address " + JSON.toJSONString(address))
         if (address != null && address.size > 0) {
             lv_history.visibility = View.VISIBLE
             no_history_tip_layout.visibility = View.GONE
