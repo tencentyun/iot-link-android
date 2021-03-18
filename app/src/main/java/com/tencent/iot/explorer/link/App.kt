@@ -399,8 +399,8 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 if (payloadParamsObject.has(MessageConst.METHOD)) {
                     method = payloadParamsObject.getString(MessageConst.METHOD)
                 }
-                if (method == MessageConst.CONTROL) {
-                    return; //过滤掉control消息
+                if (method != "report") {
+                    return; //过滤掉非report消息
                 }
                 var videoCallStatus = -1
                 if (payloadParamsJson.has(MessageConst.TRTC_VIDEO_CALL_STATUS)) {
@@ -409,6 +409,10 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 var audioCallStatus = -1
                 if (payloadParamsJson.has(MessageConst.TRTC_AUDIO_CALL_STATUS)) {
                     audioCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_AUDIO_CALL_STATUS)
+                }
+
+                if (videoCallStatus == -1 && audioCallStatus == -1) {
+                    return; //过滤掉非音视频通话的消息
                 }
 
                 var deviceId = ""
