@@ -394,6 +394,14 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
 
                 var payloadParamsObject = org.json.JSONObject(payload.payload)
                 val payloadParamsJson = payloadParamsObject.getJSONObject(MessageConst.PARAM)
+
+                var method = ""
+                if (payloadParamsObject.has(MessageConst.METHOD)) {
+                    method = payloadParamsObject.getString(MessageConst.METHOD)
+                }
+                if (method == MessageConst.CONTROL) {
+                    return; //过滤掉control消息
+                }
                 var videoCallStatus = -1
                 if (payloadParamsJson.has(MessageConst.TRTC_VIDEO_CALL_STATUS)) {
                     videoCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_VIDEO_CALL_STATUS)
