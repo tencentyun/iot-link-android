@@ -19,7 +19,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_title"
             app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintTop_toTopOf="@id/tv_title"
             android:layout_marginStart="16dp"
+            android:paddingRight="10dp"
             android:id="@+id/left_layout"
             >
 
@@ -32,9 +34,8 @@
                 android:text="@string/default_family"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_14"
-                android:textStyle="bold"
-                android:paddingRight="30dp"
                 android:ellipsize="end"
+                android:maxWidth="98dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -44,13 +45,14 @@
 
             <ImageView
                 android:id="@+id/iv_home_name"
-                android:layout_width="22dp"
+                android:layout_width="16dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
+                android:layout_marginLeft="4dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="3dp"
                 android:src="@mipmap/icon_bottom"
                 app:layout_constraintBottom_toBottomOf="@id/tv_home_name"
-                app:layout_constraintEnd_toEndOf="@id/tv_home_name"
+                app:layout_constraintStart_toEndOf="@id/tv_home_name"
                 app:layout_constraintTop_toTopOf="@id/tv_home_name"
                 app:tint="@color/white" />
 
