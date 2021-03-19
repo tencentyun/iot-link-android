@@ -40,3 +40,9 @@
 
      解决方法：修改`app/src/main/AndroidManifest.xml`中的`android:icon`和`android:label`
 
+  4、扫描二维码一键配网一直失败，但是用腾讯连连小程序可以配网成功
+
+     问题原因：在物联网开发平台设备面板页的[交互开发](https://cloud.tencent.com/document/product/1081/40457#.E6.8E.A7.E5.88.B6.E4.BA.A7.E5.93.81.E6.96.B9.E5.BC.8F)页面只配置了小程序的配网引导，未配置APP的配网引导
+
+     解决方法：在物联网开发平台设备面板页的[交互开发](https://cloud.tencent.com/document/product/1081/40457#.E6.8E.A7.E5.88.B6.E4.BA.A7.E5.93.81.E6.96.B9.E5.BC.8F)页面配置APP的配网引导，详细配置说明可参考[配网引导](https://cloud.tencent.com/document/product/1081/40457#.E9.85.8D.E7.BD.91.E5.BC.95.E5.AF.BC)
+
