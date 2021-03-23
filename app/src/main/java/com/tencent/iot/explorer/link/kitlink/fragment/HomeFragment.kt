@@ -83,6 +83,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
         initView()
         setListener()
         registBrodcast()
+        showWeather(false)
     }
 
     override fun onResume() {
