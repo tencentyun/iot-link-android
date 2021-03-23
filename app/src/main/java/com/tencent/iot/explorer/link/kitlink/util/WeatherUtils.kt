@@ -4,8 +4,10 @@ import android.content.Context
 import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.BuildConfig
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
 import com.tencent.iot.explorer.link.core.utils.LocationUtil
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.CityInfo
 import com.tencent.map.geolocation.TencentLocation
 import com.tencent.map.geolocation.TencentLocationListener
@@ -19,7 +21,11 @@ object WeatherUtils {
     var defaultLang = "zh"
 
     fun getWeatherInfo(cityInfo: CityInfo, listener: OnWeatherListener) {
-        var url = "https://api.heweather.net/v7/weather/now?location=${cityInfo.lon},${cityInfo.lat}&key=$key&lang=$defaultLang"
+        var openSourcePrefix = ""
+        if (!T.getContext().applicationInfo.packageName.equals(CommonField.PUBLISH_TAG)) {
+            openSourcePrefix = "dev"
+        }
+        var url = "https://${openSourcePrefix}api.heweather.net/v7/weather/now?location=${cityInfo.lon},${cityInfo.lat}&key=$key&lang=$defaultLang"
         val request = Request.Builder().url(url).get().build() //添加头部信息
         okHttpClient.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
