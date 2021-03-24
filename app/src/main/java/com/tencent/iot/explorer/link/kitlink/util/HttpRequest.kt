@@ -55,6 +55,7 @@ class HttpRequest private constructor() {
         const val BUSI_OPENSOURCE = "studioappOpensource"
 
         val ANDROID_ID = Utils.getAndroidID(T.getContext())
+        val PLATFORM_TAG = "android"
     }
 
     /**
@@ -67,8 +68,8 @@ class HttpRequest private constructor() {
     private fun baseParams(): HashMap<String, Any> {
         val param = HashMap<String, Any>()
         param["lang"] = Utils.getLang()
-        param["Platform"] = "android"
-        param["Agent"] = "android"
+        param["Platform"] = PLATFORM_TAG
+        param["Agent"] = PLATFORM_TAG
 //        param["AppID"] = T.getContext().applicationInfo.packageName
         return param
     }
@@ -80,7 +81,7 @@ class HttpRequest private constructor() {
         val param = baseParams()
         param["RequestId"] = UUID.randomUUID().toString()
         param["Action"] = action
-        param["Platform"] = "android"
+        param["Platform"] = PLATFORM_TAG
         param["AppKey"] = APP_KEY
         param["Timestamp"] = System.currentTimeMillis() / 1000
         param["Nonce"] = Random().nextInt(10)
@@ -95,7 +96,7 @@ class HttpRequest private constructor() {
         val param = baseParams()
         param["RequestId"] = UUID.randomUUID().toString()
         param["Action"] = action
-        param["Platform"] = "android"
+        param["Platform"] = PLATFORM_TAG
         param["AppKey"] = APP_KEY
         param["Timestamp"] = System.currentTimeMillis() / 1000
         param["Nonce"] = Random().nextInt(10)
@@ -290,7 +291,7 @@ class HttpRequest private constructor() {
     fun getLastVersion(callback: MyCallback) {
         val param = commonParams("AppGetLatestVersion")
         param["ClientVersion"] = BuildConfig.VERSION_NAME
-        param["AppPlatform"] = "android"
+        param["AppPlatform"] = PLATFORM_TAG
         param["Channel"] = 0
         postJson(param, callback, RequestCode.get_last_version)
     }

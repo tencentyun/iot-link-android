@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat
 import com.alibaba.fastjson.JSON
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
@@ -30,13 +32,22 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.activity.BuleToothActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConfigStepActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SoftApStepActivity
+import com.tencent.iot.explorer.link.mvp.presenter.BleToGoPresenter
+import com.tencent.iot.explorer.link.mvp.view.BleToGoView
 import kotlinx.android.synthetic.main.fragment_devices.*
 
 
 class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickListener{
 
+    companion object {
+        const val NOT_NEED_CHECK_H5_CONDITION = 0
+        const val CHECK_H5_CONDITION = 1
+    }
+
+    private var goBleH5Presenter: BleToGoPresenter? = null
     private var mContext : Context? = null
     private var devicesGridView : FullGridView? = null
     private var recommendDevicesGridView : FullGridView? = null
@@ -44,6 +55,9 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
     private var isRecommDeviceClicked = false
     @Volatile
     private var recommDeviceIndex = 0
+    private var checkH5Type = 0  // 0 不进行 H5 页面的调用，用于智能联动页面额设备显示； 1 扫码、添加设备页面进入 H5 页面的条件检查
+    @Volatile
+    private var conditionPrefix = false
 
     private var permissions = arrayOf(
         Manifest.permission.ACCESS_WIFI_STATE,
@@ -60,6 +74,10 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
         mContext = c
     }
 
+    constructor(c: Context, checkType: Int): this(c){
+        checkH5Type = checkType
+    }
+
     override fun getPresenter(): IPresenter? {
         return null
     }
@@ -69,11 +87,43 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
     }
 
     override fun startHere(view: View) {
+        if (checkH5Type == 1) {
+            goBleH5Presenter = BleToGoPresenter(bleToGoView)
+        }
         val categoryKey = arguments!!.getString("CategoryKey", "CategoryKey")
         devicesGridView = view.findViewById(R.id.gv_devices)
         recommendDevicesGridView = view.findViewById(R.id.gv_recommend_devices)
         setListener()
         HttpRequest.instance.getRecommList(categoryKey, this)
+    }
+
+    var bleToGoView = object : BleToGoView {
+        override fun onGoH5Ble(productId: String) {
+            var bundle = Bundle()
+            bundle.putString(CommonField.EXTRA_INFO, productId)
+            var intent = Intent(this@DeviceFragment.context, BuleToothActivity::class.java)
+            intent.putExtra(CommonField.EXTRA_INFO, bundle)
+            startActivity(intent)
+            return
+        }
+
+        override fun onNeedCheckProductConfig(productId: String) {
+            conditionPrefix = true
+            val productsList  = arrayListOf<String>()
+            productsList.add(productId)
+            HttpRequest.instance.getProductsConfig(productsList, this@DeviceFragment)
+        }
+
+        override fun onGoNormalPage(productId: String) {
+            val productsList  = arrayListOf<String>()
+            productsList.add(productId)
+            HttpRequest.instance.getProductsConfig(productsList, this@DeviceFragment)
+        }
+
+        override fun onRequestFailed(msg: String?) {
+            T.show(msg)
+        }
+
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -117,6 +167,16 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                                 !TextUtils.isEmpty(jsonProFile.getString("ProductId"))) {
                                 productId = jsonProFile.getString("ProductId")
                             }
+                        }
+
+                        if (checkH5Type == CHECK_H5_CONDITION && conditionPrefix &&
+                            config.bleConfig != null && config.bleConfig!!.protocolType == "custom") {
+                            var bundle = Bundle()
+                            bundle.putString(CommonField.EXTRA_INFO, productId)
+                            var intent = Intent(this@DeviceFragment.context, BuleToothActivity::class.java)
+                            intent.putExtra(CommonField.EXTRA_INFO, bundle)
+                            startActivity(intent)
+                            return
                         }
 
                         if (wifiConfigTypeList == "{}" || TextUtils.isEmpty(wifiConfigTypeList)) {
@@ -163,7 +223,12 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                     R.id.gv_recommend_devices->{ // 根据推荐设备的配网方式，跳转到SmartConfig或者SoftAp配网界面
                         val productsList  = arrayListOf<String>()
                         productsList.add(productList[position].ProductId)
-                        HttpRequest.instance.getProductsConfig(productsList, this)
+                        if (goBleH5Presenter != null) {
+                            conditionPrefix = false
+                            goBleH5Presenter!!.checkProductConfig(productList[position].ProductId)
+                        } else {
+                            HttpRequest.instance.getProductsConfig(productsList, this)
+                        }
                     }
                     R.id.gv_devices->{
                         startActivityWithExtra(SmartConfigStepActivity::class.java, "")
@@ -183,7 +248,12 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
             if (isRecommDeviceClicked) {
                 val productsList  = arrayListOf<String>()
                 productsList.add(productList[recommDeviceIndex].ProductId)
-                HttpRequest.instance.getProductsConfig(productsList, this)
+                if (goBleH5Presenter != null) {
+                    conditionPrefix = false
+                    goBleH5Presenter!!.checkProductConfig(productList[recommDeviceIndex].ProductId)
+                } else {
+                    HttpRequest.instance.getProductsConfig(productsList, this)
+                }
             } else {
                 jumpActivity(SmartConfigStepActivity::class.java)
             }
