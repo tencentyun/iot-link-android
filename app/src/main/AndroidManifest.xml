@@ -83,6 +83,7 @@
         <activity android:name=".kitlink.activity.AddFamilyActivity" />
         <activity android:name=".kitlink.activity.CommentDetailsActivity" />
         <activity android:name=".kitlink.activity.DelayTimeActivity" />
+        <activity android:name=".kitlink.activity.BuleToothActivity"/>
         <activity android:name=".kitlink.activity.CloudTimingActivity" /> <!-- 信鸽Android P -->
         <uses-library
             android:name="org.apache.http.legacy"
