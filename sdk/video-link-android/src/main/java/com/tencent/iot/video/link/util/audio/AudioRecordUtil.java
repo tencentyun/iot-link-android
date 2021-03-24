@@ -72,7 +72,8 @@ public class AudioRecordUtil implements EncoderListener {
     @Override
     public void encodeAAC(byte[] data, long time) {
         byte[] flvData = flvPacker.getFLV(data);
-        XP2P.dataSend(flvData, flvData.length);
+        String deviceID = "AQTV2839QJ/sp01_32820237_6";
+        XP2P.dataSend(deviceID, flvData, flvData.length);
     }
 
     @Override
