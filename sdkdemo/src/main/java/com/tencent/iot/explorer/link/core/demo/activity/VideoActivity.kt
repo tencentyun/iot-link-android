@@ -18,12 +18,13 @@ import kotlinx.android.synthetic.main.activity_video.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 
-class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callback, XP2PCallback {
+class VideoActivity : BaseActivity(), View.OnClickListener, XP2PCallback {
 
     private lateinit var secretId: String
     private lateinit var secretKey: String
     private lateinit var productId: String
     private lateinit var deviceName: String
+    private lateinit var deviceName2: String
     private var isSpeaking: Boolean = false
     private var isPlaying: Boolean = true
     private var isP2PChannelAvailable: Boolean = false
@@ -31,6 +32,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private var timer: Timer? = null
 
     private lateinit var mPlayer: IjkMediaPlayer
+    private lateinit var mPlayer2: IjkMediaPlayer
     private lateinit var audioRecordUtil: AudioRecordUtil
     private val mHandler = Handler(Looper.getMainLooper())
 
@@ -51,9 +53,35 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         secretKey = bundle.get(VideoConst.VIDEO_SECRET_KEY) as String
         productId = bundle.get(VideoConst.VIDEO_PRODUCT_ID) as String
         deviceName = bundle.get(VideoConst.VIDEO_DEVICE_NAME) as String
+        deviceName2 = "deviceName"
 
         audioRecordUtil = AudioRecordUtil(this, "$productId/$deviceName")
-        video_view.holder.addCallback(this)
+        video_view.holder.addCallback(object: SurfaceHolder.Callback {
+            override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) { }
+            override fun surfaceDestroyed(holder: SurfaceHolder?) { }
+            override fun surfaceCreated(holder: SurfaceHolder?) {
+                mPlayer.setDisplay(holder)
+            }
+        })
+        video_view2.holder.addCallback(object: SurfaceHolder.Callback {
+            override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) { }
+            override fun surfaceDestroyed(holder: SurfaceHolder?) { }
+            override fun surfaceCreated(holder: SurfaceHolder?) {
+                mPlayer2.setDisplay(holder)
+            }
+        })
+        mPlayer2 = IjkMediaPlayer()
+        mPlayer2.setOnPreparedListener {
+            mHandler.post {
+                val viewWidth = video_view.width
+                val videoWidth = mPlayer2.videoWidth
+                val videoHeight = mPlayer2.videoHeight
+                val lp = video_view.layoutParams
+                lp.width = viewWidth
+                lp.height = (videoHeight.toFloat() * viewWidth.toFloat() / videoWidth.toFloat()).toInt()
+                video_view.layoutParams = lp
+            }
+        }
         mPlayer = IjkMediaPlayer()
         mPlayer.setOnPreparedListener {
             mHandler.post {
@@ -69,7 +97,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         if (productId == " " || deviceName == " " || secretId == " " || secretKey == " ") {
             Toast.makeText(this, "设备信息有误，请确保配置文件中的设备信息填写正确", Toast.LENGTH_LONG).show()
         } else {
-            reStartXp2pThread()
+//            reStartXp2pThread()
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
@@ -90,6 +118,34 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                     mPlayer.dataSource = url
                     mPlayer.prepareAsync()
                     mPlayer.start()
+                }
+            } else {
+                isP2PChannelAvailable = false
+                speak.visibility = View.GONE
+                watch_monitor.visibility = View.GONE
+                Toast.makeText(this, "P2P通道建立失败，请检查设备是否上线", Toast.LENGTH_LONG).show()
+            }
+
+            val ret2 = openP2PChannel(productId, deviceName2, secretId, secretKey)
+            if (ret2 == 0) {
+                isP2PChannelAvailable = true
+                if (isSaveAVData()) {
+                    tv_writting_raw_data.visibility = View.VISIBLE
+                    XP2P.startAvRecvService("$productId/$deviceName2", "action=live")
+                } else {
+                    tv_writting_raw_data.visibility = View.INVISIBLE
+                    val url = XP2P.delegateHttpFlv("$productId/$deviceName2") + "ipc.flv?action=live"
+
+                    mPlayer2.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+                    mPlayer2.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+                    mPlayer2.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+                    mPlayer2.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+                    mPlayer2.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+                    mPlayer2.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+
+                    mPlayer2.dataSource = url
+                    mPlayer2.prepareAsync()
+                    mPlayer2.start()
                 }
             } else {
                 isP2PChannelAvailable = false
@@ -180,19 +236,12 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         audioRecordUtil.stop()
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) { }
-
-    override fun surfaceDestroyed(holder: SurfaceHolder?) { }
-
-    override fun surfaceCreated(holder: SurfaceHolder?) {
-        mPlayer.setDisplay(holder)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         mPlayer.release()
         timer?.cancel()
         XP2P.stopService("$productId/$deviceName")
+        XP2P.stopService("$productId/$deviceName2")
         audioRecordUtil.release()
         LogcatHelper.getInstance(this).stop()
     }
