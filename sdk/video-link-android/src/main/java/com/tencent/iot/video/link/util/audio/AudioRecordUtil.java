@@ -22,9 +22,11 @@ public class AudioRecordUtil implements EncoderListener {
     private PCMEncoder pcmEncoder;
     private FLVPacker flvPacker;
     private Context context;
+    private String deviceId; // "productId/deviceName"
 
-    public AudioRecordUtil(Context ctx) {
+    public AudioRecordUtil(Context ctx, String id) {
         context = ctx;
+        deviceId = id;
         init(sampleRateInHz, channelConfig, audioFormat);
     }
     public AudioRecordUtil(Context ctx, int sampleRate, int channel, int bitDepth) {
@@ -72,7 +74,7 @@ public class AudioRecordUtil implements EncoderListener {
     @Override
     public void encodeAAC(byte[] data, long time) {
         byte[] flvData = flvPacker.getFLV(data);
-        XP2P.dataSend(flvData, flvData.length);
+        XP2P.dataSend(deviceId, flvData, flvData.length);
     }
 
     @Override
