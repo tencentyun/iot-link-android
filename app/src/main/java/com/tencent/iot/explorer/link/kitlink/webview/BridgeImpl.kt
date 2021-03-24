@@ -9,7 +9,6 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.os.ParcelUuid
 import android.text.TextUtils
 import android.util.Log
@@ -23,6 +22,7 @@ import com.tencent.iot.explorer.link.AppData
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.activity.HelpWebViewActivity
 import com.tencent.iot.explorer.link.kitlink.activity.LoginActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -33,6 +33,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
+import kotlin.experimental.and
 
 
 object BridgeImpl {
@@ -309,9 +310,9 @@ object BridgeImpl {
                 duleToothDev.RSSI = result.rssi
 
                 if (result.device != null) {
-                    if(result.device.name != null) {
+                    if (result.device.name != null) {
                         duleToothDev.name = result.device.name
-                        duleToothDev.localName = result.device.name
+                        duleToothDev.localName = duleToothDev.name
                     }
                     duleToothDev.deviceId = result.device.address
                 }
@@ -320,7 +321,7 @@ object BridgeImpl {
                     if (result.scanRecord!!.serviceUuids != null) {
                         var uuidsArr = JSONArray()
                         for (ele in result.scanRecord!!.serviceUuids) {
-                            uuidsArr.add(ele.uuid.toString())
+                            uuidsArr.add(ele.uuid.toString().toUpperCase())
                         }
                         duleToothDev.advertisServiceUUIDs = uuidsArr
                     }
@@ -328,40 +329,51 @@ object BridgeImpl {
                     if (result.scanRecord!!.serviceData != null) {
                         var json = JSONObject()
                         for (item in result.scanRecord!!.serviceData.entries) {
-                            json.put(item.key.toString(), Arrays.toString(item.value))
+                            json.put(item.key.toString().toUpperCase(), Arrays.toString(item.value))
                         }
                         duleToothDev.serviceData = json
                     }
 
                     if (result.scanRecord!!.manufacturerSpecificData != null) {
                         var arr = JSONArray()
-                        for (i in 0 .. result.scanRecord!!.manufacturerSpecificData.size()) {
+                        for (i in 0 until result.scanRecord!!.manufacturerSpecificData.size()) {
                             var index = result.scanRecord!!.manufacturerSpecificData.keyAt(i)
                             var value = result.scanRecord!!.manufacturerSpecificData.get(index)
+                            if (value != null) {
 
-                            var tmp = JSONArray.parseArray(Arrays.toString(value))
-                            if (TextUtils.isEmpty(Arrays.toString(value)) || tmp == null) {
-                                continue
-                            }
-
-                            for (k in tmp) {
-                                arr.add(k.toString())
+                                if (value.size < 8) {  // 少于8位作补位处理
+                                    for (index in 0 .. (8 - value.size - 1)) {
+                                        arr.add("00")
+                                    }
+                                }
+                                for (byteEle in value) {
+                                    val hex = Integer.toHexString(0xFF and byteEle.toInt())
+                                    if (hex.length < 2) {
+                                        arr.add(("0" + hex).toUpperCase())
+                                    } else {
+                                        arr.add(hex.toUpperCase())
+                                    }
+                                }
+                                break
                             }
                         }
                         duleToothDev.advertisData = arr
                     }
                 }
                 duleToothDev.dev = result.device
-                if (TextUtils.isEmpty(duleToothDev.deviceId)) {
-                    return
-                }
+                if (TextUtils.isEmpty(duleToothDev.deviceId)) return
                 // 发现已包含该设备，不添加，不回调
-                if (!allowDuplicatesKey && buleToothDevSet.contains(duleToothDev.deviceId)) {
+                if (!allowDuplicatesKey && buleToothDevSet.contains(duleToothDev.deviceId)) return
+                if (TextUtils.isEmpty(duleToothDev.name)) return
+
+                if (!duleToothDev.name.equals("MyLamp")) {
                     return
                 }
+
                 bluetoothDeviceFound(webView)
                 buleToothDevSet.add(duleToothDev.deviceId)
                 buleToothDevs.add(duleToothDev)
+                Log.e("XXX", "---" + JSON.toJSONString(buleToothDevs))
             }
         }
     }
@@ -392,6 +404,9 @@ object BridgeImpl {
     fun bluetoothDeviceFound(webView: WebView) {
         var dataDataJson = JSONObject()
         var devsJsonArr = JSONArray()
+        for (dev in buleToothDevs) {
+            devsJsonArr.add(dev)
+        }
         dataDataJson.put(CommonField.DEVS, devsJsonArr)
 
         var callback = WebCallBack(webView)
@@ -401,6 +416,7 @@ object BridgeImpl {
         var ret = JSONObject()
         ret.put(CommonField.HANDLER_NAME, CommonField.EMIT_EVENT)
         ret.put(CommonField.DATA_JSON, jsObject)
+        Log.e("XXX", "json " + ret.toJSONString())
         callback.apply(ret)
     }
 
@@ -433,6 +449,7 @@ object BridgeImpl {
         dataDataJson.put(CommonField.DEVS, devsJsonArr)
         var callbackId = param.getString(CommonField.CALLBACK_ID)
         var jsObject = generateSuccessedData(callbackId, dataDataJson)
+        Log.e("XXX", "js " + jsObject.toJSONString())
         callback.apply(jsObject)
     }
 
@@ -566,17 +583,22 @@ object BridgeImpl {
         dataDataJson.put(CommonField.DEV_ID, gatt.device.address)
         for (service in gatt.services) {
             if (service.getCharacteristic(characteristic.uuid) != null) {
-                dataDataJson.put(CommonField.SERVICE_ID, service.uuid.toString())
+                dataDataJson.put(CommonField.SERVICE_ID, service.uuid.toString().toUpperCase())
                 break
             }
         }
 
-        dataDataJson.put(CommonField.CHARACTERISTIC_ID, characteristic.uuid.toString())
-        var valueArr = JSONArray.parseArray(Arrays.toString(characteristic.value))
-        if (valueArr != null) {
+        dataDataJson.put(CommonField.CHARACTERISTIC_ID, characteristic.uuid.toString().toUpperCase())
+
+        if (characteristic.value != null) {
             var values = JSONArray()
-            for (j in 0 until  valueArr.size) {
-                values.add(Integer.toHexString(valueArr.getBigInteger(j).toInt()))
+            for (byteEle in characteristic.value) {
+                val hex = Integer.toHexString(0xFF and byteEle.toInt())
+                if (hex.length < 2) {
+                    values.add(("0" + hex).toUpperCase())
+                } else {
+                    values.add(hex.toUpperCase())
+                }
             }
             dataDataJson.put("value", values)
         }
@@ -637,7 +659,7 @@ object BridgeImpl {
         if (gatt.services != null) {
             for (service in gatt.services) {
                 var eleJson = JSONObject()
-                eleJson.put(CommonField.UUID, service.uuid?.toString())
+                eleJson.put(CommonField.UUID, service.uuid?.toString()?.toUpperCase())
                 eleJson.put("isPrimary", service.type == BluetoothGattService.SERVICE_TYPE_PRIMARY)
                 jsonArr.add(eleJson)
             }
@@ -666,7 +688,7 @@ object BridgeImpl {
         if (gatt.services != null) {
             var serviceTmp: BluetoothGattService? = null
             for (service in gatt.services) {
-                if (service.uuid.toString() == serviceId) {
+                if (service.uuid.toString().toUpperCase() == serviceId) {
                     serviceTmp = service
                     break
                 }
@@ -675,7 +697,7 @@ object BridgeImpl {
             if (serviceTmp != null && serviceTmp.characteristics != null) {
                 for (char in serviceTmp.characteristics) {
                     var item = JSONObject()
-                    item.put(CommonField.UUID, char.uuid.toString())
+                    item.put(CommonField.UUID, char.uuid.toString().toUpperCase())
                     var propertiesJson = JSONObject()
                     propertiesJson.put("notify", (char.properties and
                             BluetoothGattCharacteristic.PROPERTY_NOTIFY == BluetoothGattCharacteristic.PROPERTY_NOTIFY))
@@ -804,10 +826,9 @@ object BridgeImpl {
                     } else {
                         descriptor.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
                     }
-                    var flag = gatt.writeDescriptor(descriptor)
+                    gatt.writeDescriptor(descriptor)
                 }
             }
-            val properties = charact.getProperties() //16
             ret = generateSuccessedData(callbackId)
             callback.apply(ret)
         } else {
