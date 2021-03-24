@@ -10,4 +10,5 @@ class ProdConfigDetailEntity {
     var WifiSmartConfig = ""
     var WifiConfTypeList = ""
     var AppAutomation: AppAutomation? = null
+    var bleConfig: BleConfig? = null
 }
