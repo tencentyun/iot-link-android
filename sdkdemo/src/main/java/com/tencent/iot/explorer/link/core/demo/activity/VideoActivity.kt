@@ -52,7 +52,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         productId = bundle.get(VideoConst.VIDEO_PRODUCT_ID) as String
         deviceName = bundle.get(VideoConst.VIDEO_DEVICE_NAME) as String
 
-        audioRecordUtil = AudioRecordUtil(this)
+        audioRecordUtil = AudioRecordUtil(this, "$productId/$deviceName")
         video_view.holder.addCallback(this)
         mPlayer = IjkMediaPlayer()
         mPlayer.setOnPreparedListener {
@@ -75,10 +75,10 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                 isP2PChannelAvailable = true
                 if (isSaveAVData()) {
                     tv_writting_raw_data.visibility = View.VISIBLE
-                    XP2P.startAvRecvService("action=live")
+                    XP2P.startAvRecvService("$productId/$deviceName", "action=live")
                 } else {
                     tv_writting_raw_data.visibility = View.INVISIBLE
-                    val url = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+                    val url = XP2P.delegateHttpFlv("$productId/$deviceName") + "ipc.flv?action=live"
 
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
@@ -141,15 +141,15 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         val task: TimerTask = object : TimerTask() {
             override fun run() {
                 if (isXp2pDisconnect) {
-                    XP2P.stopService()
+                    XP2P.stopService("$productId/$deviceName")
                     Thread.sleep(500)
-                    var ret = XP2P.startServiceWithXp2pInfo("")
+                    val ret = XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "_sys_xp2p_info", "")
                     if (ret == 0) {
                         isXp2pDisconnect = false
 
                         Thread.sleep(500)
                         mPlayer.reset()
-                        mPlayer.dataSource = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+                        mPlayer.dataSource = XP2P.delegateHttpFlv("$productId/$deviceName") + "ipc.flv?action=live"
                         mPlayer.setSurface(video_view.holder.surface)
                         mPlayer.prepareAsync()
                         mPlayer.start()
@@ -165,15 +165,13 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     }
 
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
-        XP2P.setDeviceInfo(productId, deviceName)
         XP2P.setQcloudApiCred(secretId, secretKey)
-        XP2P.setXp2pInfoAttributes("_sys_xp2p_info")
-        XP2P.setCallback(this)
-        return XP2P.startServiceWithXp2pInfo("")
+        XP2P.setCallback("$productId/$deviceName", this)
+        return XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "_sys_xp2p_info", "")
     }
 
     private fun startSpeak() {
-        XP2P.runSendService()
+        XP2P.runSendService("$productId/$deviceName")
         Thread.sleep(500)
         audioRecordUtil.start()
     }
@@ -194,12 +192,12 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         super.onDestroy()
         mPlayer.release()
         timer?.cancel()
-        XP2P.stopService()
+        XP2P.stopService("$productId/$deviceName")
         audioRecordUtil.release()
         LogcatHelper.getInstance(this).stop()
     }
 
-    override fun commandRequest(msg: String?) {
+    override fun commandRequest(id: String?, msg: String?) {
         //do some non-time-consuming processing
     }
 
@@ -207,16 +205,16 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         //do some non-time-consuming processing
     }
 
-    override fun xp2pLinkError(msg: String?) {
+    override fun xp2pLinkError(id: String?, msg: String?) {
         isXp2pDisconnect = true
         //do some non-time-consuming processing
     }
 
-    override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
+    override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) { // 音视频数据回调接口
         //do some non-time-consuming processing
     }
 
-    override fun avDataCloseHandle(msg: String?, errorCode: Int) {
+    override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {
         //do some non-time-consuming processing
     }
 
