@@ -8,6 +8,7 @@ import android.view.SurfaceHolder
 import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.log.L
 import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
@@ -17,6 +18,7 @@ import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
+
 
 class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callback, XP2PCallback {
 
@@ -29,10 +31,14 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private var isP2PChannelAvailable: Boolean = false
     private var isXp2pDisconnect: Boolean = false
     private var timer: Timer? = null
+    private lateinit var deviceID: String
 
     private lateinit var mPlayer: IjkMediaPlayer
     private lateinit var audioRecordUtil: AudioRecordUtil
     private val mHandler = Handler(Looper.getMainLooper())
+
+    private lateinit var mPlayer1: IjkMediaPlayer
+    private val mHandler1 = Handler(Looper.getMainLooper())
 
     private var permissions = arrayOf(
         Manifest.permission.RECORD_AUDIO
@@ -52,8 +58,11 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         productId = bundle.get(VideoConst.VIDEO_PRODUCT_ID) as String
         deviceName = bundle.get(VideoConst.VIDEO_DEVICE_NAME) as String
 
+        deviceID = productId + "/" + deviceName
+
         audioRecordUtil = AudioRecordUtil(this)
         video_view.holder.addCallback(this)
+        video_view1.holder.addCallback(this)
         mPlayer = IjkMediaPlayer()
         mPlayer.setOnPreparedListener {
             mHandler.post {
@@ -66,19 +75,38 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                 video_view.layoutParams = lp
             }
         }
+
+        mPlayer1 = IjkMediaPlayer()
+        mPlayer1.setOnPreparedListener {
+            mHandler1.post {
+                val viewWidth = video_view1.width
+                val videoWidth = mPlayer1.videoWidth
+                val videoHeight = mPlayer1.videoHeight
+                val lp = video_view1.layoutParams
+                lp.width = viewWidth
+                lp.height = (videoHeight.toFloat() * viewWidth.toFloat() / videoWidth.toFloat()).toInt()
+                video_view1.layoutParams = lp
+            }
+        }
+
         if (productId == " " || deviceName == " " || secretId == " " || secretKey == " ") {
             Toast.makeText(this, "设备信息有误，请确保配置文件中的设备信息填写正确", Toast.LENGTH_LONG).show()
         } else {
-            reStartXp2pThread()
+            //reStartXp2pThread()
+            openP2PChannel(productId, "sp01_32820237_9", secretId, secretKey)
+            Thread.sleep(1000)
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
                 if (isSaveAVData()) {
-                    tv_writting_raw_data.visibility = View.VISIBLE
-                    XP2P.startAvRecvService("action=live")
+//                    tv_writting_raw_data.visibility = View.VISIBLE
+//                    XP2P.startAvRecvService("action=live")
                 } else {
                     tv_writting_raw_data.visibility = View.INVISIBLE
-                    val url = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+//                    val url = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+                    val url = XP2P.delegateHttpFlv(deviceID) + "ipc.flv?action=live"
+                    val url1 = XP2P.delegateHttpFlv("AQTV2839QJ/sp01_32820237_9") + "ipc.flv?action=live"
+                    L.d("==============url $url $url1");
 
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
@@ -87,9 +115,20 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
                     mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
 
+                    mPlayer1.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+                    mPlayer1.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+                    mPlayer1.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+                    mPlayer1.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+                    mPlayer1.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+                    mPlayer1.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+
                     mPlayer.dataSource = url
                     mPlayer.prepareAsync()
                     mPlayer.start()
+
+                    mPlayer1.dataSource = url
+                    mPlayer1.prepareAsync()
+                    mPlayer1.start()
                 }
             } else {
                 isP2PChannelAvailable = false
@@ -141,15 +180,15 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         val task: TimerTask = object : TimerTask() {
             override fun run() {
                 if (isXp2pDisconnect) {
-                    XP2P.stopService()
+                    XP2P.stopService(deviceID)
                     Thread.sleep(500)
-                    var ret = XP2P.startServiceWithXp2pInfo("")
+                    var ret = XP2P.startServiceWithXp2pInfo(deviceID, productId, deviceName, "_sys_xp2p_info", "")
                     if (ret == 0) {
                         isXp2pDisconnect = false
 
                         Thread.sleep(500)
                         mPlayer.reset()
-                        mPlayer.dataSource = XP2P.delegateHttpFlv() + "ipc.flv?action=live"
+                        mPlayer.dataSource = XP2P.delegateHttpFlv(deviceID) + "ipc.flv?action=live"
                         mPlayer.setSurface(video_view.holder.surface)
                         mPlayer.prepareAsync()
                         mPlayer.start()
@@ -165,15 +204,19 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     }
 
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
-        XP2P.setDeviceInfo(productId, deviceName)
+        //XP2P.setDeviceInfo(productId, deviceName)
         XP2P.setQcloudApiCred(secretId, secretKey)
-        XP2P.setXp2pInfoAttributes("_sys_xp2p_info")
-        XP2P.setCallback(this)
-        return XP2P.startServiceWithXp2pInfo("")
+        //XP2P.setXp2pInfoAttributes("_sys_xp2p_info")
+
+        val devID = productId + "/" + deviceName
+        XP2P.setCallback(devID, this)
+
+        val ret = XP2P.startServiceWithXp2pInfo(devID, productId, deviceName, "_sys_xp2p_info", "")
+        return ret
     }
 
     private fun startSpeak() {
-        XP2P.runSendService()
+        XP2P.runSendService(deviceID)
         Thread.sleep(500)
         audioRecordUtil.start()
     }
@@ -194,30 +237,30 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         super.onDestroy()
         mPlayer.release()
         timer?.cancel()
-        XP2P.stopService()
+        XP2P.stopService(deviceID)
+        XP2P.stopService("AQTV2839QJ/sp01_32820237_9")
         audioRecordUtil.release()
         LogcatHelper.getInstance(this).stop()
     }
 
-    override fun commandRequest(msg: String?) {
-        //do some non-time-consuming processing
+    override fun commandRequest(p0: String?, p1: String?) {
+
+    }
+
+    override fun xp2pLinkError(p0: String?, p1: String?) {
+        isXp2pDisconnect = true
     }
 
     override fun fail(msg: String?, errorCode: Int) {
         //do some non-time-consuming processing
     }
 
-    override fun xp2pLinkError(msg: String?) {
-        isXp2pDisconnect = true
-        //do some non-time-consuming processing
+    override fun avDataRecvHandle(p0: String?, p1: ByteArray?, p2: Int) {
+
     }
 
-    override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
-        //do some non-time-consuming processing
-    }
+    override fun avDataCloseHandle(p0: String?, p1: String?, p2: Int) {
 
-    override fun avDataCloseHandle(msg: String?, errorCode: Int) {
-        //do some non-time-consuming processing
     }
 
     companion object {
