@@ -13,6 +13,10 @@
             android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
+        <SurfaceView
+            android:id="@+id/video_view1"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
         <TextView
             android:id="@+id/tv_writting_raw_data"
             android:layout_gravity="center"
