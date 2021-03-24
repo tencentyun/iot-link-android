@@ -33,6 +33,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
     private lateinit var deviceName: String
     private var isPlaying: Boolean = true
     private var isP2PChannelAvailable: Boolean = false
+    private lateinit var deviceID: String
 
     private var videoList = arrayListOf<PlaybackVideoEntity>()
     private lateinit var adapter: VideoListAdapter
@@ -57,6 +58,8 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
         productId = bundle.get(VideoConst.VIDEO_PRODUCT_ID) as String
         deviceName = bundle.get(VideoConst.VIDEO_DEVICE_NAME) as String
 
+        deviceID = productId + "/" + deviceName
+
         playback_video_view.holder.addCallback(this)
         mPlayer = IjkMediaPlayer()
         mPlayer.setOnPreparedListener {
@@ -76,7 +79,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
-                val jsonArray = XP2P.getComandRequestWithSync("action=inner_define&cmd=get_record_index", 2*1000*1000)
+                val jsonArray = XP2P.getCommandRequestWithSync(deviceID, "action=inner_define&cmd=get_record_index", 2*1000*1000)
                 if (!TextUtils.isEmpty(jsonArray)) {
                     val list = JsonManager.parseJsonArray(jsonArray, PlaybackVideoEntity::class.java)
                     videoList.addAll(list)
@@ -104,7 +107,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
                 val videoEntity = videoList[position]
                 val startTime = date2TimeStamp(videoEntity.start_time, "yyyy-MM-dd_HH-mm-ss")
                 val endTime = date2TimeStamp(videoEntity.end_time, "yyyy-MM-dd_HH-mm-ss")
-                val url = XP2P.delegateHttpFlv() + "ipc.flv?action=playback&start_time=${startTime}&end_time=${endTime}"
+                val url = XP2P.delegateHttpFlv(deviceID) + "ipc.flv?action=playback&start_time=${startTime}&end_time=${endTime}"
                 if (mPlayer != null) {
                     resetWatchState()
                     mPlayer.reset()
@@ -131,7 +134,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
             }
             user_define_test -> {
                 if (isP2PChannelAvailable) {
-                    XP2P.getCommandRequestWithAsync("action=user_define&cmd=custom_cmd")
+                    XP2P.getCommandRequestWithAsync(deviceID, "action=user_define&cmd=custom_cmd")
                 } else {
                     Toast.makeText(this, "P2P通道未开启", Toast.LENGTH_LONG).show()
                 }
@@ -140,11 +143,11 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
     }
 
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
-        XP2P.setDeviceInfo(productId, deviceName)
+        //XP2P.setDeviceInfo(productId, deviceName)
         XP2P.setQcloudApiCred(secretId, secretKey)
-        XP2P.setXp2pInfoAttributes("_sys_xp2p_info")
-        XP2P.setCallback(this)
-        val ret = XP2P.startServiceWithXp2pInfo("")
+        //XP2P.setXp2pInfoAttributes("_sys_xp2p_info")
+        XP2P.setCallback(deviceID, this)
+        val ret = XP2P.startServiceWithXp2pInfo(deviceID, productId, deviceName, "_sys_xp2p_info", "")
         return if (ret == 0) {
             Thread.sleep(1000)
             ret
@@ -165,28 +168,31 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
     override fun onDestroy() {
         super.onDestroy()
         mPlayer.release()
-        XP2P.stopService()
+        XP2P.stopService(deviceID)
         LogcatHelper.getInstance(this).stop()
     }
 
-    override fun commandRequest(msg: String?) {
+    override fun commandRequest(p0: String?, p1: String?) {
         runOnUiThread {
-            Toast.makeText(this, "$msg", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "$p1", Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun xp2pLinkError(p0: String?, p1: String?) {
+
     }
 
     override fun fail(msg: String?, errorCode: Int) {
     }
 
-    override fun xp2pLinkError(msg: String?) {
+    override fun avDataRecvHandle(p0: String?, p1: ByteArray?, p2: Int) {
 
     }
 
-    override fun avDataRecvHandle(data: ByteArray?, len: Int) { // 音视频数据回调接口
+    override fun avDataCloseHandle(p0: String?, p1: String?, p2: Int) {
+
     }
 
-    override fun avDataCloseHandle(msg: String?, errorCode: Int) {
-    }
 
     private fun date2TimeStamp(dateString: String?, format: String?): Long {
         val sdf = SimpleDateFormat(format)
