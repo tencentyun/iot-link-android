@@ -15,7 +15,7 @@
         android:id="@+id/rv_video_message"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_load_more"
+        app:layout_constraintBottom_toTopOf="@id/btn_multi_video"
         app:layout_constraintTop_toBottomOf="@+id/video_message_menu" />
 
     <Button
@@ -26,5 +26,11 @@
         android:text="加载更多"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-
+    <Button
+        android:id="@+id/btn_multi_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="观看多路直播"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
