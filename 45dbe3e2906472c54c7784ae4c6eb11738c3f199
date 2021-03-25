@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d09982c4_134b045e",
+        "filename": "sdk/video-link-android/doc/VideoSDK接口说明.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-25T09:12:56Z",
+      "side": 1,
+      "message": "这块不需要$符号，这个是kotlin的语法，直接写 product_id/device_name",
+      "range": {
+        "startLine": 9,
+        "startChar": 49,
+        "endLine": 9,
+        "endChar": 70
+      },
+      "revId": "45dbe3e2906472c54c7784ae4c6eb11738c3f199",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
