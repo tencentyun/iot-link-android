@@ -1,12 +1,14 @@
 package com.tencent.iot.explorer.link.core.demo.adapter
 
 import android.content.Context
+import android.util.SparseBooleanArray
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.entity.VideoMessageEntity
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
 import com.tencent.iot.explorer.link.core.demo.holder.VideoMessageHolder
+import com.tencent.iot.explorer.link.core.demo.log.L
 
 class VideoMessageAdapter(context: Context, list: List<VideoMessageEntity>) : BaseAdapter(context, list) {
 
@@ -37,6 +39,9 @@ class VideoMessageAdapter(context: Context, list: List<VideoMessageEntity>) : Ba
             2 -> {
                 mButtonInterface?.onCloudSaveButtonClick(holder, clickView, position)
             }
+            3 -> {
+                mButtonInterface?.onSelectButtonClick(holder, clickView, position)
+            }
         }
     }
 
@@ -46,4 +51,5 @@ interface ButtonInterface {
     fun onRealtimeMonitorButtonClick(holder: BaseHolder<*>, clickView: View, position: Int)
     fun onLocalPlaybackButtonClick(holder: BaseHolder<*>, clickView: View, position: Int)
     fun onCloudSaveButtonClick(holder: BaseHolder<*>, clickView: View, position: Int)
+    fun onSelectButtonClick(holder: BaseHolder<*>, clickView: View, position: Int)
 }
