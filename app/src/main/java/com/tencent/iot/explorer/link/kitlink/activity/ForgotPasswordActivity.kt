@@ -1,6 +1,11 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import com.tencent.iot.explorer.link.R
@@ -12,7 +17,11 @@ import com.tencent.iot.explorer.link.mvp.presenter.ForgotPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.ForgotPasswordView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
+import com.tencent.iot.explorer.link.core.utils.Utils
 import kotlinx.android.synthetic.main.activity_forgot_password.*
+import kotlinx.android.synthetic.main.activity_forgot_password.iv_register_agreement
+import kotlinx.android.synthetic.main.activity_forgot_password.iv_register_agreement_status
+import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.layout_email_forgot_pwd.view.*
 import kotlinx.android.synthetic.main.layout_phone_forgot_pwd.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -22,8 +31,8 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickListener {
 
+    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
     private lateinit var presenter: ForgotPasswordPresenter
-    //
     private var forgotType = true
 
     private lateinit var phoneView: View
@@ -53,6 +62,8 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
                 false -> showEmailForgot()
             }
         }
+
+        formatTipText()
     }
 
     private fun initViewPager() {
@@ -71,13 +82,61 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
         phoneView.tv_forgot_to_country.setOnClickListener(this)
         phoneView.iv_forgot_to_country.setOnClickListener(this)
 
-        iv_forgot_agreement.setOnClickListener(this)
-        tv_forgot_user_agreement.setOnClickListener(this)
-        tv_forgot_privacy_policy.setOnClickListener(this)
+        select_tag_relativelayout.setOnClickListener(this)
         btn_forgot_get_code.setOnClickListener(this)
 
         phoneView.tv_forgot_to_email.setOnClickListener(this)
         emailView.tv_forgot_to_phone.setOnClickListener(this)
+    }
+
+    private fun formatTipText() {
+        val str = resources.getString(R.string.register_agree_1)
+        val partStr1 = resources.getString(R.string.register_agree_2)
+        val partStr2 = resources.getString(R.string.register_agree_3)
+        val partStr3 = resources.getString(R.string.register_agree_4)
+        var showStr = str + partStr1 + partStr2 + partStr3
+        val spannable = SpannableStringBuilder(showStr)
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(this@ForgotPasswordActivity, WebActivity::class.java)
+                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
+                var url = CommonField.POLICY_PREFIX
+                url += "?uin=$ANDROID_ID"
+                url += CommonField.SERVICE_POLICY_SUFFIX
+                intent.putExtra(CommonField.EXTRA_TEXT, url)
+                startActivity(intent)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+        },
+            str.length, str.length + partStr1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(this@ForgotPasswordActivity, WebActivity::class.java)
+                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
+                var url = CommonField.POLICY_PREFIX
+                url += "?uin=$ANDROID_ID"
+                url += CommonField.PRIVACY_POLICY_SUFFIX
+                intent.putExtra(CommonField.EXTRA_TEXT, url)
+                startActivity(intent)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+
+        },
+            showStr.length - partStr1.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        tv_register_tip_click.setMovementMethod(LinkMovementMethod.getInstance())
+        tv_register_tip_click.setText(spannable)
     }
 
     override fun onClick(v: View?) {
@@ -85,7 +144,7 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
             phoneView.tv_forgot_to_country, phoneView.iv_forgot_to_country -> {
                 startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
             }
-            iv_forgot_agreement -> {
+            select_tag_relativelayout -> {
                 presenter.setAgreement()
             }
             btn_forgot_get_code -> {
@@ -107,19 +166,6 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
             emailView.tv_forgot_to_phone -> {
                 forgotType = true
                 showPhoneForgot()
-            }
-            tv_forgot_user_agreement -> {
-                val intent = Intent(this, WebActivity::class.java)
-                intent.putExtra("title", getString(R.string.register_agree_2))
-//                intent.putExtra("text", "user_agreementV1.0.htm")
-                intent.putExtra("text", "https://docs.qq.com/doc/DY3ducUxmYkRUd2x2?pub=1&dver=2.1.0")
-                startActivity(intent)
-            }
-            tv_forgot_privacy_policy -> {
-                val intent = Intent(this, WebActivity::class.java)
-                intent.putExtra("title", getString(R.string.register_agree_4))
-                intent.putExtra("text", "https://privacy.qq.com")
-                startActivity(intent)
             }
         }
     }
@@ -145,13 +191,19 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
     }
 
     override fun agreement(isAgree: Boolean) {
-        iv_forgot_agreement.setImageResource(
+        iv_register_agreement.setImageResource(
             if (isAgree) {
-                R.mipmap.icon_selected
+                R.mipmap.readed
             } else {
                 R.mipmap.icon_unselected
             }
         )
+        if (isAgree) {
+            iv_register_agreement_status.visibility = View.VISIBLE
+        } else {
+            iv_register_agreement_status.visibility = View.GONE
+        }
+
         btn_forgot_get_code.checkStatus()
     }
 
