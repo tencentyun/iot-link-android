@@ -76,7 +76,8 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
-                val jsonArray = XP2P.getCommandRequestWithSync("$productId/$deviceName", "action=inner_define&cmd=get_record_index", 2*1000*1000)
+                val cmd = "action=inner_define&cmd=get_record_index".toByteArray()
+                val jsonArray = XP2P.postCommandRequestSync("$productId/$deviceName", cmd, cmd.size.toLong(), 2*1000*1000)
                 if (!TextUtils.isEmpty(jsonArray)) {
                     val list = JsonManager.parseJsonArray(jsonArray, PlaybackVideoEntity::class.java)
                     videoList.addAll(list)
@@ -131,7 +132,8 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
             }
             user_define_test -> {
                 if (isP2PChannelAvailable) {
-                    XP2P.getCommandRequestWithAsync("$productId/$deviceName", "action=user_define&cmd=custom_cmd")
+                    val cmd = "action=user_define&cmd=custom_cmd".toByteArray()
+                    XP2P.postCommandRequestWithAsync("$productId/$deviceName", cmd, cmd.size.toLong())
                 } else {
                     Toast.makeText(this, "P2P通道未开启", Toast.LENGTH_LONG).show()
                 }
@@ -141,7 +143,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
 
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setQcloudApiCred(secretId, secretKey)
-        XP2P.setCallback("$productId/$deviceName", this)
+        XP2P.setCallback(this)
         val ret = XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "_sys_xp2p_info", "")
         return if (ret == 0) {
             Thread.sleep(1000)
