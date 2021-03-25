@@ -13,15 +13,17 @@ import com.tencent.iot.explorer.link.core.demo.adapter.ButtonInterface
 import com.tencent.iot.explorer.link.core.demo.adapter.VideoMessageAdapter
 import com.tencent.iot.explorer.link.core.demo.entity.VideoMessageEntity
 import com.tencent.iot.explorer.link.core.demo.holder.BaseHolder
+import com.tencent.iot.explorer.link.core.demo.holder.VideoMessageHolder
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.service.VideoBaseService
 import com.tencent.xnet.XP2P
 import kotlinx.android.synthetic.main.activity_video_message.*
+import kotlinx.android.synthetic.main.item_video_message.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
-class VideoMessageActivity : BaseActivity() {
+class VideoMessageActivity : BaseActivity(), View.OnClickListener {
 
     private var PAGE_SIZE = 10
 
@@ -30,6 +32,7 @@ class VideoMessageActivity : BaseActivity() {
     private var secretId = ""
     private var secretKey = ""
     private var productId = ""
+    private var selectedArray: IntArray? = null
 
     private val videoMessageList by lazy {
         arrayListOf<VideoMessageEntity>()
@@ -49,6 +52,7 @@ class VideoMessageActivity : BaseActivity() {
         adapter = VideoMessageAdapter(this, videoMessageList)
         rv_video_message.adapter = adapter
         refreshVideoMessageList()
+        btn_multi_video.setOnClickListener(this)
     }
 
     override fun setListener() {
@@ -90,6 +94,16 @@ class VideoMessageActivity : BaseActivity() {
                 startActivity(intent)
             }
 
+            override fun onSelectButtonClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+                val item = holder as VideoMessageHolder
+                if (selectedArray!![position] == 0) {
+                    selectedArray!![position] = 1
+                    item.itemView.btn_select.text = "已选"
+                } else if(selectedArray!![position] == 1) {
+                    selectedArray!![position] = 0
+                    item.itemView.btn_select.text = "未选"
+                }
+            }
         })
     }
 
@@ -115,6 +129,7 @@ class VideoMessageActivity : BaseActivity() {
 
                     if (jsonResponset.containsKey("Devices")) {
                         val dataArray: JSONArray = jsonResponset.getJSONArray("Devices")
+                        selectedArray = IntArray(dataArray.size)
                         for (i in 0 until dataArray.size) {
                             var device = dataArray.get(i) as JSONObject
                             val entity = VideoMessageEntity()
@@ -132,4 +147,25 @@ class VideoMessageActivity : BaseActivity() {
             })
     }
 
+    override fun onClick(v: View?) {
+        var selectedCount = 0
+        val deviceArray = ArrayList<VideoMessageEntity>()
+        for (i in selectedArray!!.indices) {
+            if (selectedArray!![i] == 1) {
+                selectedCount++
+                deviceArray.add(videoMessageList[i])
+            }
+        }
+        if (selectedCount == 2) {
+            val intent = Intent(this@VideoMessageActivity, MultiVideoActivity::class.java)
+            intent.putExtra(VideoConst.MULTI_VIDEO_PROD_ID, productId)
+            intent.putExtra(VideoConst.MULTI_VIDEO_SECRET_KEY, secretKey)
+            intent.putExtra(VideoConst.MULTI_VIDEO_SECRET_ID, secretId)
+            intent.putExtra(VideoConst.MULTI_VIDEO_DEVICE_NAME01, deviceArray[0].deviceName)
+            intent.putExtra(VideoConst.MULTI_VIDEO_DEVICE_NAME02, deviceArray[1].deviceName)
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, "请选择两个设备观看多路直播", Toast.LENGTH_LONG).show()
+        }
+    }
 }

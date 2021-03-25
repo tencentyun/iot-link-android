@@ -37,6 +37,9 @@ class VideoMessageAdapter(context: Context, list: List<VideoMessageEntity>) : Ba
             2 -> {
                 mButtonInterface?.onCloudSaveButtonClick(holder, clickView, position)
             }
+            3 -> {
+                mButtonInterface?.onSelectButtonClick(holder, clickView, position)
+            }
         }
     }
 
@@ -46,4 +49,5 @@ interface ButtonInterface {
     fun onRealtimeMonitorButtonClick(holder: BaseHolder<*>, clickView: View, position: Int)
     fun onLocalPlaybackButtonClick(holder: BaseHolder<*>, clickView: View, position: Int)
     fun onCloudSaveButtonClick(holder: BaseHolder<*>, clickView: View, position: Int)
+    fun onSelectButtonClick(holder: BaseHolder<*>, clickView: View, position: Int)
 }
