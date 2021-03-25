@@ -75,7 +75,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                 isP2PChannelAvailable = true
                 if (isSaveAVData()) {
                     tv_writting_raw_data.visibility = View.VISIBLE
-                    XP2P.startAvRecvService("$productId/$deviceName", "action=live")
+                    XP2P.startAvRecvService("$productId/$deviceName", "action=live", true)
                 } else {
                     tv_writting_raw_data.visibility = View.INVISIBLE
                     val url = XP2P.delegateHttpFlv("$productId/$deviceName") + "ipc.flv?action=live"
@@ -161,17 +161,17 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                 }
             }
         }
-        timer!!.schedule(task,0,1000);
+        timer!!.schedule(task,0,1000)
     }
 
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setQcloudApiCred(secretId, secretKey)
-        XP2P.setCallback("$productId/$deviceName", this)
+        XP2P.setCallback(this)
         return XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "_sys_xp2p_info", "")
     }
 
     private fun startSpeak() {
-        XP2P.runSendService("$productId/$deviceName")
+        XP2P.runSendService("$productId/$deviceName", "", true)
         Thread.sleep(500)
         audioRecordUtil.start()
     }
