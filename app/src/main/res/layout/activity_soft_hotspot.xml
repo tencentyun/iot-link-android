@@ -48,20 +48,12 @@
 
     </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
 
-    <com.tencent.iot.explorer.link.customview.progress.HorizontalStepView
-        android:id="@+id/softap_step_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/sbhv_soft_ap"
-        tools:layout_editor_absoluteX="0dp"
-        />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/softap_step_progress">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/sbhv_soft_ap">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -71,6 +63,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <com.tencent.iot.explorer.link.customview.progress.HorizontalStepView
+                    android:id="@+id/softap_step_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
                 <TextView
                     android:id="@+id/tip_title"
@@ -83,7 +84,7 @@
                     android:textSize="@dimen/ts_20"
                     android:textStyle="bold"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/softap_step_progress" />
 
                 <ImageView
                     android:id="@+id/iv_soft_hotspot"
