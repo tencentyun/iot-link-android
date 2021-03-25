@@ -49,14 +49,23 @@
 
     </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sbhv_soft_ap">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
     <com.tencent.iot.explorer.link.customview.progress.HorizontalStepView
         android:id="@+id/softap_step_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/sbhv_soft_ap"
-        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
     <ImageView
@@ -83,53 +92,54 @@
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         >
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            >
+            android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/iv_phone_connect_device"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/loading"
-                android:layout_centerVertical="true"
-                android:layout_alignTop="@id/tv_phone_connect_device"
-                android:layout_alignBottom="@id/tv_phone_connect_device"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 />
             <TextView
                 android:id="@+id/tv_phone_connect_device"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_phone_connect_device"
+                app:layout_constraintStart_toEndOf="@id/iv_phone_connect_device"
                 android:textSize="@dimen/ts_16"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:paddingLeft="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:text="@string/phone_connect_device"
                 />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            >
+            android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/iv_phone_send_device"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/loading"
-                android:layout_centerVertical="true"
-                android:layout_alignTop="@id/tv_phone_send_device"
-                android:layout_alignBottom="@id/tv_phone_send_device"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 />
             <TextView
                 android:id="@+id/tv_phone_send_device"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_phone_send_device"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_phone_send_device"
                 android:textSize="@dimen/ts_16"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -137,27 +147,28 @@
                 android:text="@string/phone_send_device"
                 />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            >
+            android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/iv_device_connect_cloud"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/loading"
-                android:layout_centerVertical="true"
-                android:layout_alignTop="@id/tv_device_connect_cloud"
-                android:layout_alignBottom="@id/tv_device_connect_cloud"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 />
             <TextView
                 android:id="@+id/tv_device_connect_cloud"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_device_connect_cloud"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_device_connect_cloud"
                 android:textSize="@dimen/ts_16"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -165,27 +176,29 @@
                 android:text="@string/device_connect_cloud"
                 />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            >
+            android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/iv_init_success"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/loading"
-                android:layout_centerVertical="true"
-                android:layout_alignTop="@id/tv_init_success"
-                android:layout_alignBottom="@id/tv_init_success"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 />
+
             <TextView
                 android:id="@+id/tv_init_success"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_init_success"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_init_success"
                 android:textSize="@dimen/ts_16"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -193,9 +206,12 @@
                 android:text="@string/init_success"
                 />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <View
         android:id="@+id/soft_ap_bg"
