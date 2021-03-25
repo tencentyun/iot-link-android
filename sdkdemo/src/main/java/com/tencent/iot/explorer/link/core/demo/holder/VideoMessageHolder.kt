@@ -23,6 +23,9 @@ class VideoMessageHolder : BaseHolder<VideoMessageEntity> {
             itemView.btn_cloud_save.setOnClickListener {
                 clickButton(this@VideoMessageHolder, it, position, 2)
             }
+            itemView.btn_select.setOnClickListener {
+                clickButton(this@VideoMessageHolder, it, position, 3)
+            }
         }
     }
 
