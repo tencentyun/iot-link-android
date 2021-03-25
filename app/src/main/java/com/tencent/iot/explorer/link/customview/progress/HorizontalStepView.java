@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class HorizontalStepView extends LinearLayout implements HorizontalStepsV
     private int mComplectingPosition = 0;
     private int mUnComplectedTextColor = getResources().getColor(R.color.uncomplete_progress);//定义默认未完成文字的颜色;
     private int mComplectedTextColor = getResources().getColor(R.color.complete_progress);//定义默认完成文字的颜色;
-    private int mTextSize = 14; //默认文字尺寸
+    private int mTextSize = 13; //默认文字尺寸
 
     public int getCurrentStep() {
         if (mStepsViewIndicator == null) {
@@ -117,6 +118,8 @@ public class HorizontalStepView extends LinearLayout implements HorizontalStepsV
                     TextView text = showTxts.get(i);
                     if (text == null) {
                         text = new TextView(getContext());
+                        text.setSingleLine(false);
+                        text.setGravity(Gravity.CENTER_HORIZONTAL);
                     } else {
                         mTextContainer.removeView(text);
                     }
@@ -124,13 +127,11 @@ public class HorizontalStepView extends LinearLayout implements HorizontalStepsV
                     // 设置尺寸，显示位置
                     text.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextSize);
                     text.setText(mStepBeanList.get(i).getName());
-                    int spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-                    text.measure(spec, spec);
                     text.setPadding(0,10,0,0);
-                    int measuredWidth = text.getMeasuredWidth();
+                    int measuredWidth = (int) (complectedXPosition.get(0) * 2);
                     text.setX(complectedXPosition.get(i) - measuredWidth / 2);
                     text.setLayoutParams(new ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            measuredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                     // 设置字体颜色
                     if (i < getCurrentStep()) {
