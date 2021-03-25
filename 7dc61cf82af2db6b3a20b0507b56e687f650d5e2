@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe5edba5_86a195b2",
+        "filename": "sdk/video-link-android/doc/VideoSDK接入说明.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-25T09:13:52Z",
+      "side": 1,
+      "message": "这种$也不需要",
+      "range": {
+        "startLine": 226,
+        "startChar": 32,
+        "endLine": 226,
+        "endChar": 62
+      },
+      "revId": "7dc61cf82af2db6b3a20b0507b56e687f650d5e2",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
