@@ -72,14 +72,14 @@ dependencies {
   函数声明:
 
   ```
-  int startServiceWithXp2pInfo(const char* xp2p_info);
+  int startServiceWithXp2pInfo(const char* id, const char *product_id, const char *device_name, const char *xp2p_info_attr,  const char* xp2p_info);
   ```
 
   代码示例:
   ```
   const char* xp2p_info = getXP2PInfo(...); // 从自建后台获取xp2p info
   setUserCallbackToXp2p(_av_data_recv, _msg_notify);  //设置回调函数
-  startServiceWithXp2pInfo(xp2p_info);
+  startServiceWithXp2pInfo($id, $product_id, $device_name, NULL, xp2p_info);
   ```
 2.1.2 P2P通道传输音视频流
 
@@ -87,26 +87,26 @@ dependencies {
 
   函数声明:
   ```
-  void *startAvRecvService(const char *params); //启动接收数据服务, 使用该方法首先需调用setUserCallbackToXp2p()注册回调
-  void _av_data_recv(uint8_t *data, size_t len);  //裸数据回调接口(具体以自己设置的为准)
+  void *startAvRecvService(const char *id, const char *params, bool crypto); //启动接收数据服务, 使用该方法首先需调用setUserCallbackToXp2p()注册回调
+  void _av_data_recv(const char *id, uint8_t *data, size_t len);  //裸数据回调接口(具体以自己设置的为准)
   ```
 
   代码示例:
   ```
   ...
   setUserCallbackToXp2p(_av_data_recv, _msg_notify);
-  startAvRecvService("action=live");
-  void _av_data_recv(uint8_t *data, size_t len) {
+  void *req = startAvRecvService($id, "action=live", true);
+  void _av_data_recv(const char *id, uint8_t *data, size_t len) {
       //具体数据处理
   }
-  stopAvRecvService(NULL);
+  stopAvRecvService(id, req);
   ```
 
 2.1.2.2 接收FLV音视频流，使用ijkplayer播放
 
   函数声明:
   ```
-  const char *delegateHttpFlv(); // 获取本地请求数据的标准http url,可使用该url请求设备端数据
+  const char *delegateHttpFlv(const char *id); // 获取本地请求数据的标准http url,可使用该url请求设备端数据
   ```
   播放器调用示例:
   ```
@@ -117,18 +117,18 @@ dependencies {
 
   函数声明:
   ```
-  void *runSendService(); //启动p2p数据发送服务
-  int dataSend(uint8_t *data, size_t len);  //语音数据发送接口
+  void *runSendService(const char *id, const char *params, bool crypto); //启动p2p数据发送服务
+  int dataSend(const char *id, uint8_t *data, size_t len);  //语音数据发送接口
   ```
 
   代码示例:
   ```
-  runSendService();
+  void *req = runSendService($id, NULL, true);
   while (1) {
-      dataSend(audio_data, data_len);
+      dataSend($id, audio_data, data_len);
       usleep(100 * 1000);
   }
-  stopSendService(NULL);  //停止发送服务
+  stopSendService(id, req);  //停止发送服务
   ```
 2.1.3 P2P通道传输自定义数据
 
@@ -136,29 +136,36 @@ dependencies {
 
   函数声明:
   ```
-  int getCommandRequestWithSync(const char *params, char **buf, size_t *len, uint64_t timeout_us);  //同步发送
-  int getCommandRequestWithAsync(const char *params);  //异步发送
+  int postCommandRequestSync(const char *id, const unsigned char *command, size_t cmd_len, unsigned char **recv_buf, size_t *recv_len, uint64_t timeout_us);  //同步发送
+  int postCommandRequestWithAsync(const char *id, const unsigned char *command, size_t cmd_len);  //异步发送
   ```
   代码示例:
   ```
   异步方式:
   setUserCallbackToXp2p(_av_data_recv, _msg_notify);  //设置回调
-  getCommandRequestWithAsync("action=user_define&cmd=custom_cmd");
+  int rc = postCommandRequestWithAsync($id, "action=user_define&cmd=xxx", sizeof(action=user_define&cmd=custom_cmd));
+  if (rc != 0) {
+    printf("post command request with sync failed:%d\n", rc);
+  }
   同步方式:
   char *buf = NULL;
   int len = 0;
-  getCommandRequestWithSync("action=user_define&cmd=custom_cmd", &buf, &len, 2*1000*1000);  //接收的数据填充在buf中
+  int rc = postCommandRequestSync($id, "action=user_define&cmd=xxx", sizeof(action=user_define&cmd=custom_cmd), &buf, &len, 2*1000*1000);  //接收的数据填充在buf中
+  if (rc != 0) {
+    printf("post command request with async failed:%d\n", rc);
+  }
   ```
+
 2.1.3.2 接收自定义数据
 
   函数声明:
   ```
-  char* _msg_notify(int type, const char* msg);  //只有异步发送的才会在该回调返回接收的数据
+  char* _msg_notify(const char *id, XP2PType type, const char* msg);  //只有异步发送的才会在该回调返回接收的数据
   ```
   代码示例:
   ```
-  char* _msg_notify(int type, const char* msg) {
-      if (type == 2) {
+  char* _msg_notify(const char *id, XP2PType type, const char* msg) {
+      if (type == XP2PTypeCmd) {
           // 处理返回结果
       }
   }
@@ -167,22 +174,22 @@ dependencies {
 
   函数声明:
   ```
-  void stopService();
+  void stopService(const char *id);
   ```
   代码示例:
   ```
-  stopService();
+  stopService(id);
   ```
 2.1.5 P2P通道关闭回调
 
   函数声明:
   ```
-  char* _msg_notify(int type, const char* msg);
+  char* _msg_notify(const char *id, XP2PType type, const char* msg);
   ```
   代码示例:
   ```
-  char* _msg_notify(int type, const char* msg) {
-      if (type == 0) {
+  char* _msg_notify(const char *id, XP2PType type, const char* msg) {
+      if (type == XP2PTypeClose) {
           //p2p通道正常关闭
       }
   }
@@ -191,12 +198,12 @@ dependencies {
 
   函数声明:
   ```
-  char* _msg_notify(int type, const char* msg);
+  char* _msg_notify(const char *id, XP2PType type, const char* msg);
   ```
   代码示例:
   ```
-  char* _msg_notify(int type, const char* msg) {
-      if (type == 5) {
+  char* _msg_notify(const char *id, XP2PType type, const char* msg) {
+      if (type == XP2PTypeDisconnect) {
           //p2p通道错误断开
       }
   }
@@ -210,13 +217,13 @@ dependencies {
 
   函数声明：
   ```
-  public static void startServiceWithXp2pInfo(String xp2p_info)
+  public static void startServiceWithXp2pInfo(String id, String product_id, String device_name, String xp2p_info_attr, String xp2p_info)
   ```
   代码示例：
   ```
   String xp2p_info = getXP2PInfo(...) // 从自建后台获取xp2p info
   XP2P.setCallback(this)
-  XP2P.startServiceWithXp2pInfo(xp2p_info)
+  XP2P.startServiceWithXp2pInfo($id, $product_id, $device_name, "", xp2p_info)
   ```
 
 2.2.2 P2P通道传输音视频流
@@ -225,15 +232,15 @@ dependencies {
 
   函数声明：
   ```
-  public static void startAvRecvService(String cmd); // 启动接收数据服务, 使用该方法首先需调用setCallback()注册回调
-  override fun avDataRecvHandle(data: ByteArray?, len: Int); //裸数据回调接口
+  public static void startAvRecvService(String id, String params, boolean crypto) // 启动接收数据服务, 使用该方法首先需调用setCallback()注册回调
+  override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) //裸数据回调接口
   ```
   代码示例：
   ```
   ...
   XP2P.setCallback(this)
-  XP2P.startAvRecvService("action=live")
-  override fun avDataRecvHandle(data: ByteArray?, len: Int) {
+  XP2P.startAvRecvService($id, "action=live", true)
+  override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {
       // 裸流数据处理操作可以放在这里
   }
   ```
@@ -241,11 +248,12 @@ dependencies {
 
   函数声明：
   ```
-  String delegateHttpFlv() // 获取本地请求数据的标准http url,可使用该url请求设备端数据
+  static native String delegateHttpFlv(String id) // 获取本地请求数据的标准http url,可使用该url请求设备端数据
   ```
   播放器调用示例:
   ```
-  val url = XP2P.delegateHttpFlv() + "ipc.flv?action=live" //观看直播(action=live)，回放(action=playback)
+  val url = XP2P.delegateHttpFlv($id) + "ipc.flv?action=live" //加密方式观看直播(action=live)，回放(action=playback)
+  val url = XP2P.delegateHttpFlv($id) + "ipc.flv?action=live&crypto=false" //非加密方式观看直播(action=live)，回放(action=playback)
   mPlayer.dataSource = url
   mPlayer.prepareAsync()
   mPlayer.start()
@@ -254,13 +262,14 @@ dependencies {
 
   函数声明:
   ```
-  void runSendService() //启动p2p数据发送服务
-  void dataSend(byte[] data, int len)
+  public static void runSendService(String id, String cmd, boolean crypto) //启动p2p数据发送服务
+  public static void dataSend(String id, byte[] data, int len)
   ```
   代码示例:
   ```
-  XP2P.runSendService()
+  XP2P.runSendService($id, "", true)
   audioRecordUtil.start() // 采集音频并发送，内部调用了dataSend接口
+  XP2P.dataSend($id, flvData, flvData.length);
   ```
 2.2.3 P2P通道传输自定义数据
 
@@ -268,22 +277,23 @@ dependencies {
 
   函数声明:
   ```
-  void getCommandRequestWithAsync(String cmd) // 异步
-  String getComandRequestWithSync(String cmd, long timeout) //同步
+  public static int postCommandRequestWithAsync(String id, byte[] command, long cmd_len) // 异步
+  public static String postCommandRequestSync(String id, byte[] command, long cmd_len, long timeout_us) //同步
   ```
   代码示例:
   ```
-  XP2P.getCommandRequestWithAsync("action=user_define&cmd=custom_cmd")
+  XP2P.postCommandRequestWithAsync($id, "action=user_define&cmd=xxx", sizeof("action=user_define&cmd=xxx"))  //异步
+  XP2P.postCommandRequestSync($id, "action=user_define&cmd=xxx", sizeof("action=user_define&cmd=xxx"), 2000 * 1000)  //同步
   ```
 2.2.3.2 接收自定义数据
 
   函数声明:
   ```
-  override fun commandRequest(msg: String?) // 设备端回调App
+  override fun commandRequest(id: String?, msg: String?, len: Int) // 设备端回调App
   ```
   代码示例:
   ```
-  override fun commandRequest(msg: String?) {
+  override fun commandRequest(id: String?, msg: String?, len: Int) {
       Log.d(msg) //接收到的自定义数据后，添加业务逻辑
   }
   ```
@@ -291,25 +301,25 @@ dependencies {
 
   函数声明:
   ```
-  void stopService()
+  void stopService(String id)
   ```
   代码示例:
   ```
   override fun onDestroy() {
       super.onDestroy()
       mPlayer.release()
-      XP2P.stopService()
+      XP2P.stopService($id)
   }
   ```
 2.2.5 P2P通道关闭回调'
 
   函数声明:
   ```
-  override fun avDataCloseHandle(msg: String?, errorCode: Int)  //通道关闭后回调
+  override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int)  //通道关闭后回调
   ```
   代码示例:
   ```
-  override fun avDataCloseHandle(msg: String?, errorCode: Int) {
+  override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {
   	//处理通道关闭后的事务
   }
   ```
@@ -317,11 +327,11 @@ dependencies {
 
   函数声明:
   ```
-  override fun xp2pLinkError(msg: String?)  //通道错误断开后回调
+  override fun xp2pLinkError(id: String?, msg: String?)  //通道错误断开后回调
   ```
   代码示例:
   ```
-  override fun xp2pLinkError(msg: String?) {
+  override fun xp2pLinkError(id: String?, msg: String?) {
   	//处理通道错误断开后的事务
   }
   ```
@@ -333,5 +343,5 @@ dependencies {
 ...
 String xp2p_info = getXP2PInfo(...) // 从自建后台获取xp2p info
 XP2P.setCallback(this)
-XP2P.startServiceWithXp2pInfo(xp2p_info)
+XP2P.startServiceWithXp2pInfo(id, product_id, device_name, "", xp2p_info)
 ```
