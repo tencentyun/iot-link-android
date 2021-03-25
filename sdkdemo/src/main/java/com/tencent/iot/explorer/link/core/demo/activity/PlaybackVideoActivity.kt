@@ -141,7 +141,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
 
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setQcloudApiCred(secretId, secretKey)
-        XP2P.setCallback("$productId/$deviceName", this)
+        XP2P.setCallback(this)
         val ret = XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "_sys_xp2p_info", "")
         return if (ret == 0) {
             Thread.sleep(1000)
