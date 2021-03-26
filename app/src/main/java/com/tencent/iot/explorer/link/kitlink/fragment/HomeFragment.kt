@@ -687,11 +687,13 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
                 presenter.updateDeviceStatus(deviceId, 1)
                 handler.post {
                     roomDevAdapter?.notifyDataSetChanged()
+                    roomShareDevAdapter?.notifyDataSetChanged()
                 }
             } else if (subType == MessageConst.OFFLINE) {
                 presenter.updateDeviceStatus(deviceId, 0)
                 handler.post {
                     roomDevAdapter?.notifyDataSetChanged()
+                    roomShareDevAdapter?.notifyDataSetChanged()
                 }
             }
         }
