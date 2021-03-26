@@ -49,6 +49,9 @@ internal class WSClientManager private constructor() {
     //enterRoom监听
     private var payloadMessageCallback: PayloadMessageCallback? = null
 
+    //首页设备上下线监听
+    private var deviceStatusCallback: PayloadMessageCallback? = null
+
     //保活相关参数
     private var isKeep = false
     private val delayMills = 10 * 1000L
@@ -142,6 +145,7 @@ internal class WSClientManager private constructor() {
             if (payloadMessageCallback != null && enablePayloadMessageCallback) {
                 payloadMessageCallback!!.payloadMessage(payload)
             }
+            deviceStatusCallback?.payloadMessage(payload)
             activePushCallbacks.forEach {
                 it.success(payload)
             }
@@ -284,6 +288,13 @@ internal class WSClientManager private constructor() {
      */
     fun addPayloadMessageCallback(callback: PayloadMessageCallback) {
         payloadMessageCallback = callback
+    }
+
+    /**
+     * 添加首页设备状态更新监听
+     */
+    fun addDeviceStatusCallback(callback: PayloadMessageCallback) {
+        deviceStatusCallback = callback
     }
 
     /**
