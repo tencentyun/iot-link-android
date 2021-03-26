@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f7d55e0_8cde475d",
+        "filename": "sdk/explorer-link-android/src/main/java/com/tencent/iot/explorer/link/core/auth/socket/WSClientManager.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2021-03-26T09:21:12Z",
+      "side": 1,
+      "message": "？ 调用是否会更好",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 13
+      },
+      "revId": "2fcd067ee26992558e949ae4e97f917765008cf1",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
