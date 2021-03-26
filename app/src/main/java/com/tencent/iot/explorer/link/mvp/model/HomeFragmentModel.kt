@@ -534,4 +534,19 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
             }
         })
     }
+
+    fun updateDeviceStatus(deviceId: String, status: Int) {
+        for (deviceEntity in deviceList) {
+            if (deviceEntity.DeviceId == deviceId) {
+                deviceEntity.online = status
+                return
+            }
+        }
+        for (deviceEntity in shareDeviceList) {
+            if (deviceEntity.DeviceId == deviceId) {
+                deviceEntity.online = status
+                return
+            }
+        }
+    }
 }
