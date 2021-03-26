@@ -22,6 +22,30 @@
       "revId": "2fcd067ee26992558e949ae4e97f917765008cf1",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e63a679_b6d41f59",
+        "filename": "sdk/explorer-link-android/src/main/java/com/tencent/iot/explorer/link/core/auth/socket/WSClientManager.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-26T09:23:47Z",
+      "side": 1,
+      "message": "已修改",
+      "parentUuid": "2f7d55e0_8cde475d",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 13
+      },
+      "revId": "2fcd067ee26992558e949ae4e97f917765008cf1",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
     }
   ]
 }
