@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,15 +21,16 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.*
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
-import com.tencent.iot.explorer.link.core.auth.response.DeviceDataResponse
 import com.tencent.iot.explorer.link.core.auth.response.FamilyInfoResponse
+import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.customview.dialog.DevModeSetDialog
 import com.tencent.iot.explorer.link.customview.dialog.KeyBooleanValue
 import com.tencent.iot.explorer.link.customview.dialog.MoreOptionDialog
@@ -45,7 +45,6 @@ import com.tencent.iot.explorer.link.kitlink.adapter.RoomsAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.ModeInt
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
-import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
@@ -58,7 +57,7 @@ import kotlinx.android.synthetic.main.header.*
 import kotlinx.android.synthetic.main.inside_fixed_bar.*
 import kotlinx.android.synthetic.main.title_with_family.*
 
-class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
+class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessageCallback {
 
     private lateinit var presenter: HomeFragmentPresenter
     var popupListener: PopupListener? = null
@@ -88,6 +87,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
 
     override fun onResume() {
         super.onResume()
+        IoTAuth.addDeviceStatusCallback(this)
         if (App.data.refresh) { //更新数据
             requestData()
         } else {    //更新界面
@@ -671,6 +671,27 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback {
                     }
                 } else {
                     showWeather(false)
+                }
+            }
+        }
+    }
+
+    override fun payloadMessage(payload: Payload) {
+        val jsonObject = org.json.JSONObject(payload.json)
+        val action = jsonObject.getString(MessageConst.MODULE_ACTION)
+        if (action == MessageConst.DEVICE_CHANGE) { //设备状态发生改变
+            val paramsObject = jsonObject.getJSONObject(MessageConst.PARAM) as org.json.JSONObject
+            val subType = paramsObject.getString(MessageConst.SUB_TYPE)
+            val deviceId = paramsObject.getString(MessageConst.DEVICE_ID)
+            if (subType == MessageConst.ONLINE) {
+                presenter.updateDeviceStatus(deviceId, 1)
+                activity!!.runOnUiThread {
+                    roomDevAdapter?.notifyDataSetChanged()
+                }
+            } else if (subType == MessageConst.OFFLINE) {
+                presenter.updateDeviceStatus(deviceId, 0)
+                activity!!.runOnUiThread {
+                    roomDevAdapter?.notifyDataSetChanged()
                 }
             }
         }
