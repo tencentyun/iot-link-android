@@ -83,4 +83,10 @@ class HomeFragmentPresenter(view: HomeFragmentView) :
         model?.tabRoom(position)
     }
 
+    /**
+     * 更新设备在线状态
+     */
+    fun updateDeviceStatus(deviceId: String, status: Int) {
+        model?.updateDeviceStatus(deviceId, status)
+    }
 }
