@@ -246,6 +246,13 @@ object IoTAuth {
     }
 
     /**
+     * 添加首页设备状态更新监听
+     */
+    fun addDeviceStatusCallback(callback: PayloadMessageCallback) {
+        WSClientManager.instance.addDeviceStatusCallback(callback)
+    }
+
+    /**
      * 移除监听器
      */
     fun removeActivePushCallback(deviceIds: ArrayString, callback: ActivePushCallback) {
