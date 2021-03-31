@@ -257,6 +257,7 @@
     <string name="no_room">没有可选的房间</string>
     <string name="no_device_and_add">当前暂无设备，点击按钮进行添加</string>
     <string name="no_add_permission">无添加权限</string>
+    <string name="no_add_room_permission">您不是房间所有者，没有此权限</string>
     <string name="smart_config_first">将设备设置为一键配网模式</string>
     <string name="smart_config_first_hint">若指示灯已经在快闪，可跳过该步骤。</string>
     <string name="smart_config_first_hint2">1.接通设备电源；\n2.长按复位键（开关），切换设备配网模式到一键配网（不同设备操作方式有所不同）；\n3.指示灯快闪即进入一键配网模式。</string>
