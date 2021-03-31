@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -57,12 +58,12 @@ public class MySideBarView extends View {
         int singleHeight = height / str.length;
 
         for (int i = 0; i < str.length; i++) {
-            paint.setColor(context.getResources().getColor(R.color.complete_progress));//Color.BLACK);
+            paint.setColor(context.getResources().getColor(R.color.blue_0066FF));//Color.BLACK);
             paint.setAntiAlias(true);
-            paint.setTextSize(super.getHeight() / 42);
+            paint.setTextSize(sp2px(12));
 
             if (i == srcChoose) {
-                paint.setColor(Color.RED);
+                paint.setColor(context.getResources().getColor(R.color.blue_0066FF));
                 paint.setFakeBoldText(true);
             }
             float xPos = (width - paint.measureText(str[i])) / 2;
@@ -136,6 +137,10 @@ public class MySideBarView extends View {
 
     public String[] getAtoZAlpha() {
         return str;
+    }
+
+    protected int sp2px(int spVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spVal, getResources().getDisplayMetrics());
     }
 
 }
