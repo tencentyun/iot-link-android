@@ -28,6 +28,10 @@ class CommonPopupWindow(context: Context) : ParentPopupWindow(context) {
         }
     }
 
+    fun setRightBtnColor(color: Int) {
+        this.contentView.tv_common_popup_confirm.setTextColor(color)
+    }
+
     fun setMenuText(cancel: String, confirm: String) {
         contentView.let {
             if (!TextUtils.isEmpty(cancel))
