@@ -78,6 +78,7 @@ class MemberActivity : BaseActivity(), MyCallback {
                 getString(R.string.toast_delete_member_title),
                 getString(R.string.toast_delete_member_content)
             )
+            deleteMemberPopup!!.setRightBtnColor(this.resources.getColor(R.color.blue_0066FF))
         }
         deleteMemberPopup?.setBg(member_bg)
         deleteMemberPopup?.show(member)
