@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="44dp"
     android:background="@color/white">
 
     <TextView
@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="20dp"
-        android:textColor="@color/black_333333"
-        android:textSize="18sp" />
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_16" />
 
     <TextView
         android:id="@+id/tv_tz"
@@ -19,16 +19,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="20dp"
         android:textColor="@color/black"
         android:textSize="@dimen/ts_16" />
 
     <View
+        android:id="@+id/v_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/margin_start_20"
-        android:layout_marginEnd="@dimen/margin_end_20"
-        android:background="@color/gray_F2F4F5" />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/gray_E7E8EB" />
 
 </RelativeLayout>

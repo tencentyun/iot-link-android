@@ -2,14 +2,12 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tv_key"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
-    android:background="@color/gray_d7d7d7"
+    android:layout_height="28dp"
+    android:background="@color/gray_29787880"
     android:gravity="center_vertical"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    android:textColor="@color/black_333333"
+    android:textColor="@color/black"
     android:textSize="@dimen/ts_16"
     android:textStyle="bold">
 
