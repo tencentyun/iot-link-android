@@ -243,6 +243,7 @@
     <string name="room_name">家庭名称</string>
     <string name="member_setting">成员设置</string>
     <string name="member_name">成员名称</string>
+    <string name="member_name_lit">名称</string>
     <string name="member_role">角色</string>
     <string name="member_account">关联账号</string>
     <string name="role_owner">所有者</string>
