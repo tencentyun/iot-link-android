@@ -24,6 +24,7 @@ class RoomListViewHolder : CRecyclerView.CViewHolder<RoomEntity> {
             itemView.tv_room_name.text = RoomName
             itemView.tv_room_device_count.text = T.getContext().getString(R.string.num_devices, "" + DeviceNum)//"${DeviceNum}个设备"
             itemView.room_list_top_space.visibility = if (position == 0) View.VISIBLE else View.GONE
+            itemView.v_item_line.visibility = if (position == 0) View.GONE else View.VISIBLE
         }
         itemView.iv_go.visibility = if (showFlag) View.VISIBLE else View.GONE
         itemView.setOnClickListener { recyclerItemView?.doAction(this, itemView, position) }
