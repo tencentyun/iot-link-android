@@ -33,6 +33,7 @@ class AddRoomActivity : BaseActivity(), MyCallback {
     override fun initView() {
         tv_title.text = getString(R.string.add_room)
         familyEntity = get("family")
+        btn_add_room.setText("+   " + getString(R.string.add_room))
     }
 
     override fun setListener() {
@@ -46,10 +47,10 @@ class AddRoomActivity : BaseActivity(), MyCallback {
         override fun afterTextChanged(s: Editable?) {
             if (TextUtils.isEmpty(et_room_name.text.trim())) {
                 btn_add_room.isClickable = false
-                btn_add_room.setBackgroundResource(R.drawable.background_grey_dark_cell)
+                btn_add_room.setTextColor(this@AddRoomActivity.resources.getColor(R.color.gray_c2c5cc))
             } else {
                 btn_add_room.isClickable = true
-                btn_add_room.setBackgroundResource(R.drawable.background_circle_bule_gradient)
+                btn_add_room.setTextColor(this@AddRoomActivity.resources.getColor(R.color.blue_0066FF))
             }
         }
 
