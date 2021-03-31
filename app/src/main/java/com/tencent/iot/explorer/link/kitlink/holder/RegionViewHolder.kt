@@ -16,6 +16,12 @@ class RegionViewHolder : CRecyclerView.CViewHolder<RegionEntity> {
             itemView.setOnClickListener {
                 recyclerItemView?.doAction(this@RegionViewHolder, it, position)
             }
+
+            if (position == size - 1) {
+                itemView.v_line.visibility = View.GONE
+            } else {
+                itemView.v_line.visibility = View.VISIBLE
+            }
         }
     }
 }
