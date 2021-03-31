@@ -49,6 +49,7 @@ class RoomListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerItemV
 
     private fun addFooter() {
         roomListFootHolder = RoomListFootHolder(this, crv_room_list, R.layout.foot_room_list)
+        roomListFootHolder.itemView.tv_add_room.setText("+   " + getString(R.string.add_room))
         roomListFootHolder.footListener = object : CRecyclerView.FootListener {
             override fun doAction(
                 holder: CRecyclerView.FootViewHolder<*>,
@@ -75,7 +76,7 @@ class RoomListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerItemV
             if (Role == 1) {
                 jumpActivity(AddRoomActivity::class.java)
             } else {
-                show(getString(R.string.no_add_permission))
+                show(getString(R.string.no_add_room_permission))
             }
         }
     }
@@ -150,12 +151,9 @@ class RoomListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerItemV
         cl_no_room.visibility = View.GONE
         crv_room_list.visibility = View.VISIBLE
         if (familyEntity?.Role == 1) {
-            roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.complete_progress))
-            roomListFootHolder.itemView.tv_add_room.setBackgroundResource(R.drawable.background_white_btn_cell)
+            roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.blue_0066FF))
         } else {
-            roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.white))
-            roomListFootHolder.itemView.tv_add_room.setBackgroundResource(R.drawable.background_grey_dark_cell)
-            roomListFootHolder.itemView.tv_add_room.visibility = View.GONE
+            roomListFootHolder.itemView.tv_add_room.setTextColor(resources.getColor(R.color.gray_c2c5cc))
         }
     }
 }
