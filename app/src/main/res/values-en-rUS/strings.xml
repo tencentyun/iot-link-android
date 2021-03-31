@@ -386,6 +386,7 @@
     <string name="family_setting">家庭设置</string>
     <string name="member_setting">Member settings</string>
     <string name="member_name">Member name</string>
+    <string name="member_name_lit">name</string>
     <string name="member_role">Role</string>
     <string name="member_account">Link account</string>
     <string name="role_owner">Owner</string>
