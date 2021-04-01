@@ -69,7 +69,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         if (productId == " " || deviceName == " " || secretId == " " || secretKey == " ") {
             Toast.makeText(this, "设备信息有误，请确保配置文件中的设备信息填写正确", Toast.LENGTH_LONG).show()
         } else {
-            reStartXp2pThread()
+            //reStartXp2pThread()
             val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
             if (ret == 0) {
                 isP2PChannelAvailable = true
@@ -143,7 +143,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                 if (isXp2pDisconnect) {
                     XP2P.stopService("$productId/$deviceName")
                     Thread.sleep(500)
-                    val ret = XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "_sys_xp2p_info", "")
+                    val ret = XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "")
                     if (ret == 0) {
                         isXp2pDisconnect = false
 
@@ -167,7 +167,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setQcloudApiCred(secretId, secretKey)
         XP2P.setCallback(this)
-        return XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "_sys_xp2p_info", "")
+        return XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "")
     }
 
     private fun startSpeak() {
