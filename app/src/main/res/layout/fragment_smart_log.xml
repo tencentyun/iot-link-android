@@ -55,7 +55,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_no_log"
             android:text="@string/no_log_info"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             android:layout_marginTop="15dp"
             />
 
