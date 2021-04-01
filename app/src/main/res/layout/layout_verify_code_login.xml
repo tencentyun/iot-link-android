@@ -12,7 +12,7 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_login_to_country_byverifycode"
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/country_or_place"
-        android:textColor="@color/black"
+        android:textColor="@color/black_15161A"
         android:layout_marginStart="20dp"
         android:textSize="@dimen/ts_14"
         android:gravity="center"
@@ -27,7 +27,7 @@
         android:paddingBottom="5dp"
         android:text="@string/default_country"
         android:gravity="center_vertical"
-        android:textColor="@color/black_888888"
+        android:textColor="@color/gray_6C7078"
         android:textSize="@dimen/ts_14"
         android:layout_marginStart="24dp"
         app:layout_constraintEnd_toStartOf="@+id/iv_login_to_country_byverifycode"
@@ -41,7 +41,8 @@
         android:padding="3dp"
         android:src="@mipmap/icon_arrow"
         android:rotation="180"
-        android:layout_marginRight="15dp"
+        app:tint="@color/gray_6C7078"
+        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_login_to_country_byverifycode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_login_to_country_byverifycode" />
@@ -51,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:background="@color/gray_dddddd"
+        android:background="@color/gray_E7E8EB"
         app:layout_constraintBottom_toBottomOf="@id/tv_login_to_country_byverifycode" />
 
     <TextView
@@ -61,7 +62,7 @@
         app:layout_constraintBottom_toBottomOf="@id/et_login_phone_or_email_byverifycode"
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/account"
-        android:textColor="@color/black"
+        android:textColor="@color/black_15161A"
         android:layout_marginStart="20dp"
         android:textSize="@dimen/ts_14"
         android:gravity="center"
@@ -75,8 +76,8 @@
         android:background="@color/white"
         android:hint="@string/mobile_or_email"
         android:inputType="textWebEmailAddress"
-        android:textColor="@color/black_333333"
-        android:textColorHint="@color/gray_cccccc"
+        android:textColor="@color/black_15161A"
+        android:textColorHint="@color/gray_A1A7B2"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_14"
         app:layout_constraintEnd_toStartOf="@+id/iv_login_phone_or_email_clear_byverifycode"
@@ -102,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:background="@color/gray_dddddd"
+        android:background="@color/gray_E7E8EB"
         app:layout_constraintBottom_toBottomOf="@id/et_login_phone_or_email_byverifycode" />
 
     <TextView
@@ -112,7 +113,7 @@
         app:layout_constraintBottom_toBottomOf="@id/et_login_phone_or_email_verifycode"
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/verification_code"
-        android:textColor="@color/black"
+        android:textColor="@color/black_15161A"
         android:layout_marginStart="20dp"
         android:textSize="@dimen/ts_14"
         android:gravity="center"
@@ -126,8 +127,8 @@
         android:background="@color/white"
         android:hint="@string/verification_code"
         android:inputType="number"
-        android:textColor="@color/black_333333"
-        android:textColorHint="@color/gray_cccccc"
+        android:textColor="@color/black_15161A"
+        android:textColorHint="@color/gray_A1A7B2"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_14"
         app:layout_constraintBottom_toTopOf="@+id/line_two"
@@ -140,7 +141,7 @@
         android:id="@+id/tv_get_verify_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="20dp"
         android:padding="3dp"
         android:text="@string/register_get_code"
         android:textColor="@color/blue_0066FF"
@@ -155,7 +156,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="49dp"
         android:layout_marginStart="20dp"
-        android:background="@color/gray_dddddd"
+        android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toTopOf="@+id/line_one" />
 
     <Button
