@@ -10,7 +10,8 @@
         android:id="@+id/tv_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/ts_14"
+        android:textSize="@dimen/ts_12"
+        android:textColor="@color/gray_6C7078"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tv_desc"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="@dimen/ts_14"
+        android:textSize="@dimen/ts_12"
         android:textColor="@color/red_FA5151"
         />
 
