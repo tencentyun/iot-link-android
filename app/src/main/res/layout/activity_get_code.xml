@@ -15,47 +15,50 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         app:layout_constraintTop_toBottomOf="@id/sbhv_get_code"
-        android:background="@color/gray_F5F5F5"
+        android:background="@color/gray_E7E8EB"
         />
 
     <com.tencent.iot.explorer.link.customview.check.VerifyCodeView
             android:id="@+id/vcv_get_code"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="70dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="30dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintTop_toBottomOf="@+id/sbhv_get_code"
             app:length="6"
             app:selected_background="@drawable/verify_code_bg"
             app:text_bold="true"
-            app:text_color="@color/black_333333"
-            app:text_size="@dimen/ts_34"
-            app:verify_height="40dp"
-            app:verify_width="30dp" />
+            app:text_color="@color/black_15161A"
+            app:text_size="@dimen/ts_24"
+            app:verify_height="47dp"
+            app:verify_width="50dp" />
 
     <TextView
-            android:id="@+id/tv_get_code_show_account"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/get_mobile_code_sent"
-            android:textColor="@color/black_888888"
-            android:textSize="@dimen/ts_12"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vcv_get_code" />
+        android:id="@+id/tv_get_code_show_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="46dp"
+        android:layout_marginRight="46dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/get_mobile_code_sent"
+        android:textColor="@color/gray_6C7078"
+        android:textSize="@dimen/ts_14"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vcv_get_code" />
 
     <TextView
-            android:id="@+id/tv_get_code_resend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/resend"
-            android:textColor="@color/black_888888"
-            android:textSize="@dimen/ts_12"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_get_code_show_account" />
+        android:id="@+id/tv_get_code_resend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/resend"
+        android:textColor="@color/gray_6C7078"
+        android:textSize="@dimen/ts_14"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_get_code_show_account" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
