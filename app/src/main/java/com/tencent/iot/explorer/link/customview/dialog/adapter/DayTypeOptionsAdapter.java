@@ -103,7 +103,7 @@ public class DayTypeOptionsAdapter extends RecyclerView.Adapter<DayTypeOptionsAd
             holder.option.setBackgroundResource(R.drawable.background_bule_rounded_cell);
             holder.option.setTextColor(T.getContext().getResources().getColor(R.color.complete_progress));
         } else {
-            holder.option.setBackgroundResource(R.drawable.background_grey_rounded_bg);
+            holder.option.setBackgroundResource(R.drawable.background_grey_rounded_cell);
             holder.option.setTextColor(T.getContext().getResources().getColor(R.color.black));
         }
     }

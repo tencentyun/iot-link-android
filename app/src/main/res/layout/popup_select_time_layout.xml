@@ -20,7 +20,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="6dp"
+            android:layout_height="8dp"
             android:background="@color/gray_F5F5F5"
             app:layout_constraintBottom_toTopOf="@id/layout_btn"
             android:id="@+id/v_space_2"
@@ -31,10 +31,10 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/layout_btn"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="@color/white"
             >
 
@@ -51,15 +51,13 @@
             <TextView
                 android:id="@+id/tv_ok"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="16dp"
                 android:background="@drawable/background_circle_bule_gradient"
                 android:gravity="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
                 android:text="@string/save"
                 android:textColor="@color/white"
-                android:textSize="@dimen/ts_18"
+                android:textSize="@dimen/ts_16"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/v_center"
@@ -68,13 +66,11 @@
             <TextView
                 android:id="@+id/tv_cancel"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="@string/cancel"
                 android:gravity="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:textSize="@dimen/ts_18"
-                android:layout_marginRight="20dp"
+                android:textSize="@dimen/ts_16"
+                android:layout_marginRight="16dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/v_center"
@@ -93,40 +89,39 @@
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/v_space_2">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/lv_day_options_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lv_day_options_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="9dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="9dp"
+                app:layout_constraintBottom_toBottomOf="parent" />
         
         <View
             android:id="@+id/v_space_1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_F5F5F5"
+            android:background="@color/gray_E7E8EB"
             app:layout_constraintBottom_toTopOf="@id/lv_day_options_type"
             />
 
         <TextView
             android:id="@+id/tv_repeat_tip"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             app:layout_constraintBottom_toTopOf="@id/v_space_1"
+            android:textColor="@color/gray_6C7078"
             android:text="@string/repeat_days"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:textSize="@dimen/ts_16"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="24dp"
+            android:textSize="@dimen/ts_14"
             />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="6dp"
+            android:layout_height="8dp"
             android:background="@color/gray_F5F5F5"
             app:layout_constraintBottom_toTopOf="@id/tv_repeat_tip"
             android:id="@+id/v_space_3"
@@ -143,13 +138,12 @@
         <TextView
             android:id="@+id/tv_defination_by_user"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:layout_height="48dp"
             android:text="@string/defination_by_user"
             android:textColor="@color/black"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             android:singleLine="true"
+            android:gravity="center_vertical"
             app:layout_constraintBottom_toTopOf="@id/v_space_3"
             app:layout_constraintEnd_toStartOf="@+id/iv_status_defination_by_user"
             app:layout_constraintStart_toStartOf="@id/tv_repeat_tip" />
@@ -178,7 +172,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_F5F5F5"
+            android:background="@color/gray_E7E8EB"
             app:layout_constraintBottom_toTopOf="@id/tv_defination_by_user"
             android:id="@+id/v_space_4"
             />
@@ -200,8 +194,8 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:text="@string/work_time_all_day"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
+            android:textSize="@dimen/ts_14"
             android:singleLine="true"
             app:layout_constraintBottom_toTopOf="@id/v_space_4"
             app:layout_constraintEnd_toStartOf="@+id/iv_status_defination_default"
@@ -232,7 +226,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_F5F5F5"
+            android:background="@color/gray_E7E8EB"
             app:layout_constraintBottom_toTopOf="@id/tv_defination_default"
             android:id="@+id/v_space_5"
             />
@@ -240,12 +234,12 @@
         <TextView
             android:id="@+id/tv_defination_tip"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:layout_height="48dp"
             android:text="@string/working_time_tip"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             android:singleLine="true"
+            android:textColor="@color/gray_6C7078"
+            android:gravity="center_vertical"
             app:layout_constraintBottom_toTopOf="@id/v_space_5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_repeat_tip" />
@@ -253,7 +247,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_F5F5F5"
+            android:background="@color/gray_E7E8EB"
             app:layout_constraintBottom_toTopOf="@id/tv_defination_tip"
             android:id="@+id/v_space_6"
             />
@@ -261,14 +255,12 @@
         <TextView
             android:id="@+id/tv_dialog_tip"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:layout_height="48dp"
             android:text="@string/working_time"
             android:textSize="@dimen/ts_16"
             android:singleLine="true"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/black_15161A"
             app:layout_constraintBottom_toTopOf="@id/v_space_6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -297,7 +289,7 @@
                 android:id="@+id/v_space_7"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray_F5F5F5"
+                android:background="@color/gray_E7E8EB"
                 app:layout_constraintBottom_toTopOf="@id/gv_time_options"
                 />
 
@@ -312,7 +304,7 @@
                 android:singleLine="true"
                 android:textSize="@dimen/ts_16"
                 android:gravity="center"
-                android:textColor="@color/black"
+                android:textColor="@color/black_15161A"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 />
@@ -355,7 +347,8 @@
                     app:wheel_indicator_size="1dp"
                     app:wheel_indicator_color="@color/grey_e5e5e5"
                     android:layout_weight="0.33"
-                    app:wheel_selected_item_text_color="@color/black"
+                    app:wheel_item_space="30dp"
+                    app:wheel_selected_item_text_color="@color/black_15161A"
                     />
 
                 <com.aigestudio.wheelpicker.WheelPicker
@@ -366,7 +359,8 @@
                     app:wheel_indicator_size="1dp"
                     app:wheel_indicator_color="@color/grey_e5e5e5"
                     android:layout_weight="0.33"
-                    app:wheel_selected_item_text_color="@color/black"
+                    app:wheel_item_space="30dp"
+                    app:wheel_selected_item_text_color="@color/black_15161A"
                     />
 
                 <com.aigestudio.wheelpicker.WheelPicker
@@ -377,7 +371,8 @@
                     app:wheel_indicator_size="1dp"
                     app:wheel_indicator_color="@color/grey_e5e5e5"
                     android:layout_weight="0.4"
-                    app:wheel_selected_item_text_color="@color/black"
+                    app:wheel_item_space="30dp"
+                    app:wheel_selected_item_text_color="@color/black_15161A"
                     />
 
                 <com.aigestudio.wheelpicker.WheelPicker
@@ -388,7 +383,8 @@
                     app:wheel_indicator_size="1dp"
                     app:wheel_indicator_color="@color/grey_e5e5e5"
                     android:layout_weight="0.33"
-                    app:wheel_selected_item_text_color="@color/black"
+                    app:wheel_item_space="30dp"
+                    app:wheel_selected_item_text_color="@color/black_15161A"
                     />
 
                 <com.aigestudio.wheelpicker.WheelPicker
@@ -399,7 +395,8 @@
                     app:wheel_indicator_size="1dp"
                     app:wheel_indicator_color="@color/grey_e5e5e5"
                     android:layout_weight="0.33"
-                    app:wheel_selected_item_text_color="@color/black"
+                    app:wheel_item_space="30dp"
+                    app:wheel_selected_item_text_color="@color/black_15161A"
                     />
 
             </LinearLayout>
@@ -408,7 +405,7 @@
                 android:id="@+id/v_space_8"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray_F5F5F5"
+                android:background="@color/gray_E7E8EB"
                 app:layout_constraintBottom_toTopOf="@id/layout_time"
                 />
 
@@ -423,7 +420,7 @@
                 android:singleLine="true"
                 android:textSize="@dimen/ts_16"
                 android:gravity="center"
-                android:textColor="@color/black"
+                android:textColor="@color/black_15161A"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 />
