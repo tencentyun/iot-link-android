@@ -9,27 +9,32 @@
             android:id="@+id/shbv_select_pic"
             layout="@layout/menu_back_layout" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_E7E8EB"
+        android:layout_below="@id/shbv_select_pic"
+        />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:id="@+id/layout_btn"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="7dp"
-        android:paddingBottom="7dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         >
 
         <TextView
             android:id="@+id/tv_save"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="@string/save"
             android:gravity="center"
             android:textColor="@color/white"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:textSize="@dimen/ts_18"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/background_circle_bule_gradient"
@@ -46,6 +51,7 @@
                 android:layout_above="@id/layout_btn"
                 android:layout_below="@+id/shbv_select_pic"
                 android:padding="5dp"
+                android:layout_marginTop="1dp"
                 />
 
 </RelativeLayout>

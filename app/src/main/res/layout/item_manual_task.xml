@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="3dp"
-    android:paddingBottom="3dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,18 +22,17 @@
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/tv_tip_title"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp"
+        android:paddingTop="11dp"
         android:text="@string/run_all_task"
-        android:textColor="@color/black"
-        android:textSize="@dimen/ts_16"
+        android:textColor="@color/black_15161A"
+        android:textSize="@dimen/ts_14"
         />
 
     <ImageView
         android:id="@+id/iv_add_task"
-        android:layout_width="0dp"
+        android:layout_width="22dp"
         android:layout_height="0dp"
         android:src="@mipmap/add_task"
-        android:padding="10dp"
         app:layout_constraintDimensionRatio="h, 1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_tip_title"
@@ -90,7 +89,7 @@
         android:id="@+id/item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="16dp"
         android:layout_marginTop="0dp"
         android:background="@drawable/background_failed_cell"
         >
@@ -120,15 +119,14 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintStart_toEndOf="@id/iv_type"
             app:layout_constraintEnd_toStartOf="@id/iv_go"
             app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/tv_dev_name"
             android:singleLine="true"
             android:paddingLeft="15dp"
-            android:text=""
             />
 
         <TextView
@@ -137,21 +135,24 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_dev_name"
             app:layout_constraintStart_toStartOf="@id/tv_dev_name"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             android:singleLine="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:paddingLeft="15dp"
             android:text=""
+            android:textColor="@color/gray_A1A7B2"
             />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:id="@+id/tv_task_desc"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintTop_toTopOf="@id/tv_task_tip"
             app:layout_constraintEnd_toEndOf="@id/tv_dev_name"
             app:layout_constraintStart_toEndOf="@id/tv_task_tip"
-            app:layout_constraintTop_toBottomOf="@id/tv_dev_name"
+            app:layout_constraintBottom_toBottomOf="@id/tv_task_tip"
+            android:textColor="@color/gray_A1A7B2"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
