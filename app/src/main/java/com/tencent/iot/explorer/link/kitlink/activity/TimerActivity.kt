@@ -84,6 +84,7 @@ class TimerActivity : BaseActivity() {
 
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
+        tv_cancel.setOnClickListener { finish() }
         tv_ok.setOnClickListener {
             val intent = Intent()
             var manualTask = ManualTask()
