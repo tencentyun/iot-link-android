@@ -89,6 +89,7 @@
         android:hint="@string/smart_config_second_hint"
         android:imeOptions="actionNone"
         android:inputType="textPassword"
+        android:fontFamily="sans-serif"
         android:maxLines="1"
         android:singleLine="true"
         android:textColorHint="#BABABA"

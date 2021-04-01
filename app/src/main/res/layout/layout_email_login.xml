@@ -62,6 +62,7 @@
             android:hint="@string/password"
             android:maxLines="1"
             android:inputType="textPassword"
+            android:fontFamily="sans-serif"
             android:maxLength="@integer/password_max_length"
             android:textColor="@color/black_333333"
             android:textSize="@dimen/ts_16"
