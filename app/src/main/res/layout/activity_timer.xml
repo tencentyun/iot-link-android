@@ -14,10 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:id="@+id/layout_btn"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="7dp"
-        android:paddingBottom="7dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:background="@color/white"
         >
 
@@ -34,15 +34,13 @@
         <TextView
             android:id="@+id/tv_ok"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="16dp"
             android:background="@drawable/background_circle_bule_gradient"
             android:gravity="center"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
             android:text="@string/save"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts_18"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/v_center_0"
@@ -51,13 +49,11 @@
         <TextView
             android:id="@+id/tv_cancel"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="@string/cancel"
             android:gravity="center"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:textSize="@dimen/ts_18"
-            android:layout_marginRight="20dp"
+            android:textSize="@dimen/ts_16"
+            android:layout_marginRight="16dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/v_center_0"
@@ -110,6 +106,7 @@
                     app:layout_constraintEnd_toEndOf="@id/v_center"
                     app:layout_constraintTop_toTopOf="parent"
                     app:wheel_indicator_size="1dp"
+                    app:wheel_item_space="30dp"
                     app:wheel_indicator_color="@color/grey_e5e5e5"
                     app:wheel_selected_item_text_color="@color/black"
                     />
@@ -131,7 +128,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_width="match_parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -149,11 +146,9 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:text="@string/repeat"
-                    android:textSize="@dimen/ts_16"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginLeft="20dp"
+                    android:textSize="@dimen/ts_14"
+                    android:textColor="@color/black_15161A"
+                    android:layout_marginLeft="16dp"
                     />
 
                 <ImageView
@@ -166,7 +161,8 @@
                     app:layout_constraintDimensionRatio="h,1:1"
                     android:rotation="180"
                     android:id="@+id/iv_go_1"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="16dp"
+                    app:tint="@color/gray_A1A7B2"
                     />
 
                 <TextView
@@ -176,7 +172,7 @@
                     android:layout_marginRight="15dp"
                     android:singleLine="true"
                     android:textColor="@color/gray_A1A7B2"
-                    android:textSize="@dimen/ts_16"
+                    android:textSize="@dimen/ts_14"
                     android:gravity="right"
                     app:layout_constraintBottom_toBottomOf="@id/tv_tip_1"
                     app:layout_constraintEnd_toStartOf="@id/iv_go_1"
