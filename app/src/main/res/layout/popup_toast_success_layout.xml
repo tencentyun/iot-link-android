@@ -15,14 +15,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/background_cell"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
+        android:paddingTop="23dp"
+        android:paddingBottom="22dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
         >
 
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="36dp"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,8 +40,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/add_sucess"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts_16"
-            android:layout_marginTop="10dp"
+            android:textSize="@dimen/ts_14"
+            android:layout_marginTop="19dp"
             />
 
 

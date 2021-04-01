@@ -17,20 +17,22 @@
         android:id="@+id/tv_day"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="15dp"
-        android:textColor="@color/black"
+        android:layout_marginLeft="16dp"
+        android:textColor="@color/black_15161A"
         android:textStyle="bold"
-        android:textSize="@dimen/ts_24"
+        android:textSize="30sp"
         />
 
     <TextView
         android:id="@+id/tv_mouth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/ts_14"
+        android:textSize="@dimen/ts_12"
         app:layout_constraintBottom_toBottomOf="@id/tv_day"
         app:layout_constraintStart_toEndOf="@id/tv_day"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginBottom="4dp"
+        android:textColor="@color/gray_6C7078"
         />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,9 +53,9 @@
 
         <ImageView
             android:id="@+id/iv_status"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="20dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="36dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_task_name"
             app:layout_constraintBottom_toBottomOf="@id/tv_task_name"
@@ -64,7 +66,7 @@
             android:id="@+id/iv_more"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="40dp"
             android:rotation="-90"
             android:src="@mipmap/icon_arrow"
             app:layout_constraintBottom_toBottomOf="@id/iv_status"
@@ -78,10 +80,10 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/iv_more"
             app:layout_constraintStart_toEndOf="@id/iv_status"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="20dp"
-            android:textSize="@dimen/ts_18"
-            android:textColor="@color/black"
+            android:layout_marginTop="19dp"
+            android:layout_marginLeft="24dp"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -90,10 +92,11 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@id/tv_task_name"
             app:layout_constraintTop_toBottomOf="@id/tv_task_name"
-            android:textSize="@dimen/ts_14"
+            android:textSize="@dimen/ts_12"
             app:layout_constraintEnd_toStartOf="@+id/iv_more"
             android:id="@+id/tv_run_desc"
-            android:layout_marginTop="5dp"
+            android:textColor="@color/gray_6C7078"
+            android:layout_marginTop="2dp"
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
