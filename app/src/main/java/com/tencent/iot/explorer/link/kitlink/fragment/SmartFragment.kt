@@ -1,8 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
-import android.app.Activity
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
@@ -12,11 +10,10 @@ import com.tencent.iot.explorer.link.customview.PageAdapter
 import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.kitlink.activity.AddAutoicTaskActivity
 import com.tencent.iot.explorer.link.kitlink.activity.AddManualTaskActivity
-import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.fragment_smart.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import java.util.ArrayList
+import java.util.*
 
 /**
  *  智能联动界面

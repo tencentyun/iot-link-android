@@ -17,12 +17,14 @@ public class ListOptionsAdapter extends RecyclerView.Adapter<ListOptionsAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         View layout;
+        View line;
         TextView option;
 
         ViewHolder(View view) {
             super(view);
             layout = view;
             option = view.findViewById(R.id.tv_option);
+            line = view.findViewById(R.id.v_line);
         }
 
     }
@@ -52,6 +54,11 @@ public class ListOptionsAdapter extends RecyclerView.Adapter<ListOptionsAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.option.setText(options.get(position));
+        if (position == options.size() - 1) {
+            holder.line.setVisibility(View.GONE);
+        } else {
+            holder.line.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

@@ -131,11 +131,11 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
 
     private void resetStartEqBtnStatus() {
         tvGr.setBackground(null);
-        tvGr.setTextColor(getContext().getResources().getColor(R.color.black));
+        tvGr.setTextColor(getContext().getResources().getColor(R.color.black_15161A));
         tvEq.setBackground(null);
-        tvEq.setTextColor(getContext().getResources().getColor(R.color.black));
+        tvEq.setTextColor(getContext().getResources().getColor(R.color.black_15161A));
         tvLt.setBackground(null);
-        tvLt.setTextColor(getContext().getResources().getColor(R.color.black));
+        tvLt.setTextColor(getContext().getResources().getColor(R.color.black_15161A));
 
         if (modeInt.getOp().equals(OpValue.OP_GR)) {
             tvGr.setBackgroundResource(R.drawable.background_circle_bule);
