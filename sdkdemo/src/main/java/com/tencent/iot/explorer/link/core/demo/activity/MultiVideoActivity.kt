@@ -82,7 +82,7 @@ class MultiVideoActivity : BaseActivity(), XP2PCallback {
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setQcloudApiCred(secretId, secretKey)
         XP2P.setCallback(this)
-        return XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "_sys_xp2p_info", "")
+        return XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "")
     }
 
     private fun startPlay(player: IjkMediaPlayer, deviceName: String) {
