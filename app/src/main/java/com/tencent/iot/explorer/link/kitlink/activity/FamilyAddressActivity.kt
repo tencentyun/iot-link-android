@@ -25,6 +25,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.adapter.PostionsAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.Address
+import com.tencent.iot.explorer.link.kitlink.entity.Location
 import com.tencent.iot.explorer.link.kitlink.entity.LocationResp
 import com.tencent.iot.explorer.link.kitlink.entity.Postion
 import com.tencent.iot.explorer.link.kitlink.util.AppBarStateChangeListener
@@ -34,15 +35,13 @@ import com.tencent.map.geolocation.TencentLocation
 import com.tencent.map.geolocation.TencentLocationListener
 import com.tencent.map.geolocation.TencentLocationManager
 import com.tencent.map.geolocation.TencentLocationRequest
-import com.tencent.mapsdk.raster.model.BitmapDescriptorFactory
-import com.tencent.mapsdk.raster.model.LatLng
-import com.tencent.mapsdk.raster.model.Marker
-import com.tencent.mapsdk.raster.model.MarkerOptions
+import com.tencent.mapsdk.raster.model.*
 import com.tencent.tencentmap.mapsdk.map.TencentMap
 import kotlinx.android.synthetic.main.activity_family.*
 import kotlinx.android.synthetic.main.activity_family_address.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
+import java.util.concurrent.CopyOnWriteArrayList
 
 class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
 
@@ -51,13 +50,16 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
     private lateinit var tencentMap: TencentMap
     private var marker: Marker? = null
     private var tencentMapKey = ""
-    private var postions: MutableList<Postion> = ArrayList()
+    private var postions: MutableList<Postion> = CopyOnWriteArrayList()
     private var adapter: PostionsAdapter? = null
     private var pageIndex = 1
     private var latLng: LatLng? = null
     private var defaultAddress = ""
     private var familyId = ""
     private var familyName = ""
+    @Volatile
+    private var requestFlag = true
+    private var linearLayoutManager: LinearLayoutManager? = null
 
     var permissions = arrayOf(
         permission.ACCESS_COARSE_LOCATION,
@@ -71,7 +73,7 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
 
     override fun initView() {
         tv_title.text = getString(R.string.map_select_postion)
-        var linearLayoutManager = LinearLayoutManager(this@FamilyAddressActivity)
+        linearLayoutManager = LinearLayoutManager(this@FamilyAddressActivity)
         adapter = PostionsAdapter(postions)
         lv_pos.layoutManager = linearLayoutManager
         lv_pos.adapter = adapter
@@ -176,15 +178,32 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
             override fun onItemClicked(pos: Int) {
                 adapter?.selectPos = pos
                 adapter?.notifyDataSetChanged()
+                val target = LatLng(adapter!!.selectPostion!!.location!!.lat.toDouble(), adapter!!.selectPostion!!.location!!.lng.toDouble())
+                tencentMap.setCenter(target)
+                justMaskTag(target, "")
+                requestFlag = false
             }
         })
-        tencentMap.setOnMapClickListener(object: TencentMap.OnMapClickListener {
-            override fun onMapClick(p0: LatLng?) {
-                if (p0 == null) return
-                maskTag(p0, "")
-                requestAddress(p0, pageIndex)
+        tencentMap.setOnMapCameraChangeListener(OnMapCameraChangeListener)
+    }
+
+    private var OnMapCameraChangeListener = object : TencentMap.OnMapCameraChangeListener {
+        override fun onCameraChangeFinish(cp: CameraPosition) {
+            L.e("onCameraChangeFinish=${cp.target.latitude},${cp.target.longitude}")
+
+            if (!requestFlag) {
+                justMaskTag(cp.target, "")
+            } else {
+                var target = LatLng(cp.target.latitude, cp.target.longitude)
+                maskTag(target, "")
+                requestAddress(target, pageIndex)
             }
-        })
+            requestFlag = true
+        }
+
+        override fun onCameraChange(cp: CameraPosition) {
+            justMaskTag(cp.target, "")
+        }
     }
 
     private fun initMap() {
@@ -220,6 +239,7 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
             TencentLocation.ERROR_OK -> { L.e("定位成功") }
             else -> {
                 L.e("定位失败")
+                T.show(getString(R.string.location_failed))
                 locationManager.removeUpdates(this)
             }
         }
@@ -237,6 +257,9 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
             tencentMap.setCenter(target)
             maskTag(target, location.name ?: "")
             requestAddress(target, pageIndex)
+            locationManager.removeUpdates(this)
+        } else {
+            T.show(desc)
             locationManager.removeUpdates(this)
         }
     }
@@ -277,8 +300,27 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
     private fun maskTag(latLng: LatLng, title: String) {
         postions.clear()
         pageIndex = 1
+        adapter?.selectPos = 0
         this@FamilyAddressActivity.latLng = latLng
+        linearLayoutManager?.scrollToPosition(0)
 
+        runOnUiThread {
+            if (tencentMap.zoomLevel < tencentMap.maxZoomLevel) {
+                tencentMap.setZoom(tencentMap.maxZoomLevel)
+            }
+            marker?.remove()
+            marker = tencentMap.addMarker(
+                MarkerOptions().position(latLng)
+                    .title(title)
+                    .anchor(0.5f, 0.5f)
+                    .icon(BitmapDescriptorFactory.defaultMarker())
+                    .draggable(false)
+            )
+            marker?.showInfoWindow()
+        }
+    }
+
+    private fun justMaskTag(latLng: LatLng, title: String) {
         runOnUiThread {
             if (tencentMap.zoomLevel < tencentMap.maxZoomLevel) {
                 tencentMap.setZoom(tencentMap.maxZoomLevel)

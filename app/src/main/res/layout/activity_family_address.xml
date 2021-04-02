@@ -57,13 +57,13 @@
 
                 <ImageView
                     android:id="@+id/iv_reset_loaction"
-                    android:layout_width="39dp"
+                    android:layout_width="56dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintDimensionRatio="h,1:1"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginRight="6dp"
                     android:src="@mipmap/relocate"
                     />
 
