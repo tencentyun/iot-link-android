@@ -5,7 +5,9 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
@@ -132,9 +134,24 @@ class SelectPointActivity : BaseActivity() {
         })
     }
 
+    private fun startRequestPage() {
+        postions.clear()
+        pageIndex = 1
+        tip_layout.visibility = View.GONE
+        smart_refreshLayout.visibility = View.VISIBLE
+        requestMorePostion("", ev_search.text.toString())
+    }
+
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         iv_clear.setOnClickListener { ev_search.setText("") }
+        ev_search.setOnEditorActionListener(object: TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                startRequestPage()
+                KeyBoardUtils.hideKeyBoard(this@SelectPointActivity, tv_search)
+                return false
+            }
+        })
         ev_search.addTextChangedListener(object :TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -142,8 +159,11 @@ class SelectPointActivity : BaseActivity() {
                 if (s == null) return
                 if (s!!.length > 0) {
                     iv_clear.visibility = View.VISIBLE
+                    startRequestPage()
                 } else {
                     iv_clear.visibility = View.GONE
+                    tip_layout.visibility = View.VISIBLE
+                    smart_refreshLayout.visibility = View.GONE
                 }
             }
         })
@@ -151,11 +171,7 @@ class SelectPointActivity : BaseActivity() {
             if (TextUtils.isEmpty(ev_search.text.toString())) {
                 return@setOnClickListener
             }
-            postions.clear()
-            pageIndex = 1
-            tip_layout.visibility = View.GONE
-            smart_refreshLayout.visibility = View.VISIBLE
-            requestMorePostion("", ev_search.text.toString())
+            startRequestPage()
             KeyBoardUtils.hideKeyBoard(this@SelectPointActivity, tv_search)
         }
         adapter?.setOnItemClicked(adapterListener)
