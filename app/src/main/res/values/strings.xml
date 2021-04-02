@@ -166,6 +166,7 @@
     <string name="cancel_wechat">取消授权</string>
     <string name="input_birthday_for_better_react">出生日期</string>
     <string name="too_young_to_use">很遗憾，我们目前无法向您提供腾讯连连</string>
+    <string name="location_failed">定位失败</string>
 
     <string name="login">登录</string>
     <string name="logout">退出登录</string>
