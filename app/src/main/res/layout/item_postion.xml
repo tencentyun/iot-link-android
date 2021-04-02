@@ -7,9 +7,10 @@
 
         <ImageView
             android:id="@+id/iv_select_status"
-            android:layout_width="17dp"
+            android:layout_width="19dp"
             android:layout_height="0dp"
             android:src="@mipmap/postion_selected"
+            app:tint="@color/bule_0066ff"
             android:layout_marginRight="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/layout_pos_content"
