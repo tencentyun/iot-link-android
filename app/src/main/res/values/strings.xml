@@ -125,6 +125,7 @@
     <string name="temp_unit">°</string>
     <string name="sunny_tag">晴</string>
     <string name="cloud_tag">阴</string>
+    <string name="cloud_b_tag">云</string>
     <string name="rainy_tag">雨</string>
     <string name="snow_tag">雪</string>
     <string name="dry_tag">干燥</string>
