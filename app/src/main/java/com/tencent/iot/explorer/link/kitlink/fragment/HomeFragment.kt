@@ -135,7 +135,8 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         if (testTag.contains(getString(R.string.sunny_tag)) ||
             testTag.contains("clear")) {
             return "sunny"
-        } else if (testTag.contains(getString(R.string.cloud_tag))) {
+        } else if (testTag.contains(getString(R.string.cloud_tag))
+                || testTag.contains(getString(R.string.cloud_b_tag))) {
             return "cloud"
         } else if (testTag.contains(getString(R.string.rainy_tag))) {
             return "rainy"
