@@ -17,8 +17,11 @@
             android:layout_height="40dp"
             app:layout_constraintTop_toBottomOf="@+id/menu_message"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/blue_0052d9"
+            app:tabTextColor="@color/gray_6C7078"
+            app:tabSelectedTextColor="@color/bule_0066ff"
+            app:tabIndicatorColor="@color/bule_0066ff"
             app:tabIndicatorFullWidth="false"
+            app:tabIndicator="@drawable/my_indictor"
             app:tabMaxWidth="0dp"
             app:tabMode="fixed">
 
