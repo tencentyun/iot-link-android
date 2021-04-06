@@ -316,6 +316,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
                 override fun onItemClicked(pos: Int, devOption: DevOption?) {
                     if (devOption == null) return
                     if (devOption.type == DevOption.TYPE_BAR) {
+                        devOption.modeInt!!.ifInteger = devOption.modeInt!!.type == "int"
                         showNumDialog(dev, devOption)
                     } else if (devOption.type == DevOption.TYPE_LIST) {
                         showMapDialog(dev, devOption)
@@ -389,7 +390,6 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
 
     private fun showNumDialog(dev: DeviceEntity, devOption: DevOption) {
         if (devOption == null || devOption.modeInt == null) return
-
         var dialog = DevModeSetDialog(this@HomeFragment.context, devOption.optionName, devOption.modeInt)
         dialog.show()
         dialog.setOnDismisListener(object : DevModeSetDialog.OnDismisListener{
