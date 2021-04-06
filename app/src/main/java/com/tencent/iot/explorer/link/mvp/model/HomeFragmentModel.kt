@@ -135,6 +135,20 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                             if (productEntity.DataTemplate != null) {
                                 dataTemplate = JSON.parseObject(productEntity.DataTemplate.toString(), DataTemplate::class.java)
                             }
+
+                            if (!TextUtils.isEmpty(productEntity.Name) && !TextUtils.isEmpty(productEntity.ProductId)) {
+                                for (devEls in deviceList) {
+                                    if (devEls.ProductId == productEntity.ProductId) {
+                                        devEls.AliasName = productEntity.Name
+                                    }
+                                }
+
+                                for (devEls in shareDeviceList) {
+                                    if (devEls.ProductId == productEntity.ProductId) {
+                                        devEls.AliasName = productEntity.Name
+                                    }
+                                }
+                            }
                         }
                     }
 
