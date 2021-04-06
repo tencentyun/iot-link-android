@@ -24,13 +24,13 @@
     <TextView
             android:id="@+id/tv_device_alias_title"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/device_name"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,8 +43,8 @@
             android:ellipsize="end"
             android:gravity="end"
             android:maxLines="1"
-            android:textColor="@color/gray_cccccc"
-            android:textSize="@dimen/ts_16"
+            android:textColor="@color/gray_6C7078"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintBottom_toBottomOf="@+id/tv_device_alias_title"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -70,13 +70,13 @@
     <TextView
             android:id="@+id/tv_device_info_title"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/device_info"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintTop_toBottomOf="@+id/tv_device_alias_title" />
 
 
@@ -101,13 +101,13 @@
     <TextView
             android:id="@+id/tv_device_room_setting"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/room_setting"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintTop_toBottomOf="@+id/tv_device_info_title" />
 
 
@@ -131,13 +131,13 @@
     <TextView
             android:id="@+id/tv_device_share"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/device_share"
-            android:textColor="@color/black_333333"
-            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintTop_toBottomOf="@+id/tv_device_room_setting" />
 
 
@@ -156,17 +156,15 @@
     <TextView
             android:id="@+id/tv_device_delete"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="35dp"
-            android:layout_marginEnd="20dp"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/background_white_btn_cell"
             android:gravity="center"
             android:text="@string/delete_dev"
             android:textColor="@color/red_E65A59"
-            android:textSize="@dimen/ts_18"
+            android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toBottomOf="@+id/layout_dev_detail" />
 
     <View
