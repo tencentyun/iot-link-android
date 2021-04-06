@@ -24,8 +24,11 @@ import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField.DATA
 import com.tencent.iot.explorer.link.kitlink.entity.DataTemplate
 import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProductEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProductsEntity
+import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.response.ShareDeviceListResponse
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
@@ -222,11 +225,15 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
      */
     private fun getDeviceOnlineStatus(index: Int, size: Int) {
         var productId = ""
+        var productIds = arrayListOf<String>()
         val deviceIds = arrayListOf<String>()
         for (i in index until size) {
             App.data.deviceList[i].let {
                 if (TextUtils.isEmpty(productId)) {
                     productId = it.ProductId
+                }
+                if (!productIds.contains(it.ProductId)) {
+                    productIds.add(it.ProductId)
                 }
                 deviceIds.add(it.DeviceId)
             }
@@ -253,6 +260,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                                         }
                                     }
                                 }
+                                excludeBleProduct(productIds)
                                 view?.showDeviceOnline()
                             }
                         }
@@ -260,6 +268,36 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                 }
             })
         }
+    }
+
+    // 获取设备产品配置的快捷入口
+    private fun excludeBleProduct(productIds: ArrayList<String>) {
+        HttpRequest.instance.getProductsConfig(productIds, object:MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                if (msg != null) L.e(msg)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    response.parse(ProductsConfigResponse::class.java)?.run {
+
+                        for (data in Data) {
+                            var config = JsonManager.parseJson(data.Config, ProdConfigDetailEntity::class.java)
+                            if (config != null && config.bleConfig != null && !TextUtils.isEmpty(config.bleConfig!!.protocolType)) {
+                                for (dev in deviceList) {
+                                    if (dev.ProductId == data.ProductId) {
+                                        dev.online = 1
+                                    }
+                                }
+
+                            }
+                        }
+
+                        view?.showDeviceOnline()
+                    }
+                }
+            }
+        })
     }
 
     /**
