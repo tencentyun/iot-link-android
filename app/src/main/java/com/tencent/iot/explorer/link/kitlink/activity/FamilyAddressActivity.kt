@@ -24,10 +24,7 @@ import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.adapter.PostionsAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.entity.Address
-import com.tencent.iot.explorer.link.kitlink.entity.Location
-import com.tencent.iot.explorer.link.kitlink.entity.LocationResp
-import com.tencent.iot.explorer.link.kitlink.entity.Postion
+import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.util.AppBarStateChangeListener
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
@@ -86,19 +83,30 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
         }
 
         initMap()
-        if (checkPermissions(permissions)) {
-            if (TextUtils.isEmpty(defaultAddress)) {
-                startLocation()
-            } else {
-                tagPostionByAddress(defaultAddress)
-            }
-        } else {
-            requestPermission(permissions)
-        }
 
         smart_refreshLayout.setEnableRefresh(false)
         smart_refreshLayout.setEnableLoadMore(true)
         smart_refreshLayout.setRefreshFooter(ClassicsFooter(this@FamilyAddressActivity))
+    }
+
+    override fun startHere() {
+        super.startHere()
+
+        Thread {
+            Thread.sleep(1000)
+            runOnUiThread {
+                tencentMap.setOnMapCameraChangeListener(OnMapCameraChangeListener)
+                if (checkPermissions(permissions)) {
+                    if (TextUtils.isEmpty(defaultAddress)) {
+                        startLocation()
+                    } else {
+                        tagPostionByAddress(defaultAddress)
+                    }
+                } else {
+                    requestPermission(permissions)
+                }
+            }
+        }.start()
     }
 
     override fun setListener() {
@@ -181,19 +189,14 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
                 val target = LatLng(adapter!!.selectPostion!!.location!!.lat.toDouble(), adapter!!.selectPostion!!.location!!.lng.toDouble())
                 tencentMap.setCenter(target)
                 justMaskTag(target, "")
-                requestFlag = false
             }
         })
-        tencentMap.setOnMapCameraChangeListener(OnMapCameraChangeListener)
     }
 
     private var OnMapCameraChangeListener = object : TencentMap.OnMapCameraChangeListener {
         override fun onCameraChangeFinish(cp: CameraPosition) {
             L.e("onCameraChangeFinish=${cp.target.latitude},${cp.target.longitude}")
-
-            if (!requestFlag) {
-                justMaskTag(cp.target, "")
-            } else {
+            if (requestFlag) {
                 var target = LatLng(cp.target.latitude, cp.target.longitude)
                 maskTag(target, "")
                 requestAddress(target, pageIndex)
@@ -201,9 +204,7 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
             requestFlag = true
         }
 
-        override fun onCameraChange(cp: CameraPosition) {
-            justMaskTag(cp.target, "")
-        }
+        override fun onCameraChange(cp: CameraPosition) {}
     }
 
     private fun initMap() {
@@ -211,6 +212,9 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
         tencentMap = mapView.map
         tencentMapKey = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
             .metaData.getString("TencentMapSDK") ?: ""
+        if (tencentMap.zoomLevel < tencentMap.maxZoomLevel) {
+            tencentMap.setZoom(tencentMap.maxZoomLevel)
+        }
     }
 
     private fun tagPostionByAddress(address: String) {
@@ -222,8 +226,6 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
             }
             val target = LatLng(loc.latitude.toDouble(), loc.longitude.toDouble())
             tencentMap.setCenter(target)
-            maskTag(target, "")
-            requestAddress(target, pageIndex)
         } catch (e: JSONException) {
             e.printStackTrace()
             startLocation()
@@ -305,9 +307,6 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
         linearLayoutManager?.scrollToPosition(0)
 
         runOnUiThread {
-            if (tencentMap.zoomLevel < tencentMap.maxZoomLevel) {
-                tencentMap.setZoom(tencentMap.maxZoomLevel)
-            }
             marker?.remove()
             marker = tencentMap.addMarker(
                 MarkerOptions().position(latLng)
@@ -317,6 +316,7 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
                     .draggable(false)
             )
             marker?.showInfoWindow()
+            requestFlag = true
         }
     }
 
@@ -334,6 +334,7 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
                     .draggable(false)
             )
             marker?.showInfoWindow()
+            requestFlag = false
         }
     }
 
@@ -371,9 +372,68 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
             var extraInfo = data?.getStringExtra(CommonField.EXTRA_INFO)
             var selectedPostion = JSON.parseObject(extraInfo, Address::class.java)
             val target = LatLng(selectedPostion!!.latitude.toDouble(), selectedPostion!!.longitude.toDouble())
+            justMaskTag(target, "")
             tencentMap.setCenter(target)
-            maskTag(target, selectedPostion.name)
-            requestAddress(target, pageIndex)
+            postions.clear()
+            pageIndex = 1
+            adapter?.selectPos = 0
+            this@FamilyAddressActivity.latLng = latLng
+            linearLayoutManager?.scrollToPosition(0)
+            requestAddress(target, selectedPostion)
         }
+    }
+
+    private fun requestAddress(latLng: LatLng, firstItem: Address) {
+        val sb = StringBuilder("https://apis.map.qq.com/ws/geocoder/v1/?location=")
+        sb.append(latLng.latitude).append(",").append(latLng.longitude).append("&key=").append(tencentMapKey)
+        sb.append("&get_poi=1").append("&poi_options=page_size=${PAGE_SIZE};page_index=1")
+        HttpUtil.get(sb.toString(), object : HttpCallBack {
+            override fun onSuccess(response: String) {
+                L.e("地址解析", "response=$response")
+                var locationResp = JSONObject.parseObject(response, LocationResp::class.java)
+                if (locationResp != null && locationResp.status == 0) {
+
+                    // 查询到数据，且获取到的数据量少于总数据量
+                    if (locationResp.result.pois.size > 0 &&
+                        (postions.size + locationResp.result.pois.size) < locationResp.result.poi_count) {
+                        pageIndex++
+                        initFirstItem(locationResp.result.pois, firstItem)
+                        postions.addAll(locationResp.result.pois)
+                    }
+                    adapter?.notifyDataSetChanged()
+                }
+
+                if (smart_refreshLayout.isLoading) {
+                    smart_refreshLayout.finishLoadMore()
+                }
+            }
+
+            override fun onError(error: String) {
+                if (smart_refreshLayout.isLoading) {
+                    smart_refreshLayout.finishLoadMore()
+                }
+            }
+        })
+    }
+
+    private fun initFirstItem(all: MutableList<Postion>, selectedPostion: Address) {
+
+        var firstItem = Postion()
+        firstItem.title = selectedPostion.name
+        firstItem.address = selectedPostion.address
+        firstItem.location = Location()
+        firstItem.location!!.lat = selectedPostion.latitude
+        firstItem.location!!.lng = selectedPostion.longitude
+        firstItem.ad_info = AdInfo()
+        firstItem.ad_info!!.city = selectedPostion.city
+        firstItem.id = selectedPostion.id
+
+        for (i in 1 until all.size) {
+            if (all.get(i).id == firstItem.id) {
+                all.set(i, all.get(0))
+                break;
+            }
+        }
+        all.set(0, firstItem)
     }
 }
