@@ -437,8 +437,8 @@
     <string name="scanning_retry">Retry</string>
     <string name="connect">Connect</string>
     <string name="all_device">All</string>
-    <string name="all_dev_num">所有设备（%s）</string>
-    <string name="all_share_dev_num">共享设备（%s）</string>
+    <string name="all_dev_num">所有设备(%s)</string>
+    <string name="all_share_dev_num">共享设备(%s)</string>
     <string name="no_dev_to_show_add_now">当前暂无设备，请添加设备</string>
     <string name="living_room">Living room</string>
     <string name="bedroom">Bedroom</string>

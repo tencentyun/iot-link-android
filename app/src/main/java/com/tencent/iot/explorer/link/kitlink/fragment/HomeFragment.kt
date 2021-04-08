@@ -396,7 +396,8 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
             override fun onSaveClicked() {
                 var value = ""
                 if (!devOption.modeInt!!.ifInteger) {
-                    value = String.format("%.1f", dialog.progress)
+                    var len = Utils.length(devOption!!.modeInt!!.step)
+                    value = String.format("%.${len}f", dialog.progress)
                 } else {
                     value = dialog.progress.toInt().toString()
                 }
