@@ -10,8 +10,8 @@
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
         android:text="@string/country_or_place"
-        android:textColor="@color/black"
-        android:textSize="@dimen/ts_16"
+        android:textColor="@color/black_15161A"
+        android:textSize="@dimen/ts_14"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="@id/tv_forgot_to_country"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,8 +26,8 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="@string/default_country"
-        android:textColor="@color/black_333333"
-        android:textSize="@dimen/ts_16"
+        android:textColor="@color/black_15161A"
+        android:textSize="@dimen/ts_14"
         android:layout_marginStart="24dp"
         app:layout_constraintEnd_toStartOf="@+id/iv_forgot_to_country"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -52,7 +52,7 @@
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="134dp"
-        android:background="@color/gray_dddddd"
+        android:background="@color/gray_E7E8EB"
         app:layout_constraintBottom_toBottomOf="@id/tv_forgot_to_country" />
 
     <TextView
@@ -61,8 +61,8 @@
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
         android:text="@string/mobile_num"
-        android:textColor="@color/black"
-        android:textSize="@dimen/ts_16"
+        android:textColor="@color/black_15161A"
+        android:textSize="@dimen/ts_14"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="@id/et_forgot_phone"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,9 +76,9 @@
         android:background="@color/white"
         android:hint="@string/mobile_number"
         android:inputType="phone"
-        android:textColor="@color/black_333333"
+        android:textColor="@color/black_15161A"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
-        android:textSize="@dimen/ts_16"
+        android:textSize="@dimen/ts_14"
         app:layout_constraintBottom_toBottomOf="@+id/line_forgot_phone"
         app:layout_constraintEnd_toStartOf="@+id/iv_forgot_phone_clear"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -103,7 +103,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="49dp"
-            android:background="@color/gray_dddddd"
+            android:background="@color/gray_E7E8EB"
             app:layout_constraintTop_toBottomOf="@id/line_forgot_to_country" />
 
     <TextView
