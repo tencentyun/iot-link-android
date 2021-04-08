@@ -2,13 +2,13 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/tv_country_code_key"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/gray_F7F9FA"
+        android:layout_height="28dp"
+        android:background="@color/gray_29787880"
         android:gravity="center_vertical"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:textColor="@color/black_333333"
-        android:textSize="18sp"
+        android:textColor="@color/black_15161A"
+        android:textSize="@dimen/ts_16"
         android:textStyle="bold">
 
 </TextView>
