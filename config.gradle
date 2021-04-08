@@ -1,6 +1,6 @@
 def gitCommitShortHash = 'git log -1 --pretty=%h'.execute([], project.rootDir).text.trim()
 def versionNamePrefix = "1.1.0"
-def versionAppName = "1.1.0"
+def versionAppName = "local"
 def sdkVersion = "1.4.0"
 
 ext {
