@@ -17,6 +17,7 @@ import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.customview.dialog.adapter.DevModeOptionsAdapter;
 import com.tencent.iot.explorer.link.kitlink.entity.ModeInt;
 import com.tencent.iot.explorer.link.core.auth.entity.OpValue;
+import com.tencent.iot.explorer.link.kitlink.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,9 +155,10 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         @Override
         public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
             progress = leftValue;
-//            String.format("%.2f", leftValue)
             if (!modeInt.getIfInteger()) {
-                view.getLeftSeekBar().setIndicatorText(String.format("%.1f", leftValue) + modeInt.getUnit());
+
+                int len = Utils.Companion.length(modeInt.getStep());
+                view.getLeftSeekBar().setIndicatorText(String.format("%." + len + "f", leftValue) + modeInt.getUnit());
             } else {
                 view.getLeftSeekBar().setIndicatorText((int)leftValue + modeInt.getUnit());
             }
