@@ -89,26 +89,6 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
         smart_refreshLayout.setRefreshFooter(ClassicsFooter(this@FamilyAddressActivity))
     }
 
-    override fun startHere() {
-        super.startHere()
-
-        Thread {
-            Thread.sleep(1000)
-            runOnUiThread {
-                tencentMap.setOnMapCameraChangeListener(OnMapCameraChangeListener)
-                if (checkPermissions(permissions)) {
-                    if (TextUtils.isEmpty(defaultAddress)) {
-                        startLocation()
-                    } else {
-                        tagPostionByAddress(defaultAddress)
-                    }
-                } else {
-                    requestPermission(permissions)
-                }
-            }
-        }.start()
-    }
-
     override fun setListener() {
         layout_seach.setOnClickListener {
             var postionIntent = Intent(this@FamilyAddressActivity, SelectPointActivity::class.java)
@@ -191,9 +171,10 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
                 justMaskTag(target, "")
             }
         })
+        tencentMap.setOnMapCameraChangeListener(initOnMapCameraChangeListener)
     }
 
-    private var OnMapCameraChangeListener = object : TencentMap.OnMapCameraChangeListener {
+    private var onMapCameraChangeListener = object : TencentMap.OnMapCameraChangeListener {
         override fun onCameraChangeFinish(cp: CameraPosition) {
             L.e("onCameraChangeFinish=${cp.target.latitude},${cp.target.longitude}")
             if (requestFlag) {
@@ -202,6 +183,23 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
                 requestAddress(target, pageIndex)
             }
             requestFlag = true
+        }
+
+        override fun onCameraChange(cp: CameraPosition) {}
+    }
+
+    private var initOnMapCameraChangeListener = object : TencentMap.OnMapCameraChangeListener {
+        override fun onCameraChangeFinish(cp: CameraPosition) {
+            tencentMap.setOnMapCameraChangeListener(onMapCameraChangeListener)
+            if (checkPermissions(permissions)) {
+                if (TextUtils.isEmpty(defaultAddress)) {
+                    startLocation()
+                } else {
+                    tagPostionByAddress(defaultAddress)
+                }
+            } else {
+                requestPermission(permissions)
+            }
         }
 
         override fun onCameraChange(cp: CameraPosition) {}
