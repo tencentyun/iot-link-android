@@ -12,7 +12,7 @@ class LoginPresenter : ParentPresenter<LoginModel, LoginView> {
     }
 
     fun getCountryCode(): String {
-        return model!!.getCountryCode()
+        return model?.getCountryCode().toString()
     }
 
     fun setCountry(country: String) {
