@@ -49,8 +49,6 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
     val shortCuts: MutableMap<String, ProductUIDevShortCutConfig> = ConcurrentHashMap()
 
     var roomId = ""
-    var deviceListEnd = false
-    var shareDeviceListEnd = false
     private var familyListEnd = false
     private var roomListEnd = false
 
@@ -83,8 +81,6 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
     fun refreshFamilyList() {
         familyListEnd = false
         roomListEnd = false
-        deviceListEnd = false
-        shareDeviceListEnd = false
         familyList.clear()
         loadFamilyList()
     }
@@ -182,8 +178,6 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
     fun refreshRoomList() {
         isTabFamily = true
         roomListEnd = false
-        deviceListEnd = false
-        shareDeviceListEnd = false
         roomList.clear()
         loadRoomList()
     }
@@ -200,9 +194,10 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
      * 请求获取设备列表
      */
     fun refreshDeviceList() {
-        deviceListEnd = false
-        shareDeviceListEnd = false
-        deviceList.clear()
+//        deviceList.clear()
+//        shareDeviceList.clear()
+//        view?.showDeviceList(0, roomId, false, true)
+//        view?.showDeviceList(0, roomId, true, false)
         loadDeviceList()
     }
 
@@ -211,24 +206,18 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
      */
     fun loadDeviceList() {
         if (TextUtils.isEmpty(App.data.getCurrentFamily().FamilyId)) return
-        if (deviceListEnd) return
-        HttpRequest.instance.deviceList(
-            App.data.getCurrentFamily().FamilyId,
-            roomId,
-            deviceList.size,
-            this
-        )
+        HttpRequest.instance.deviceList(App.data.getCurrentFamily().FamilyId, roomId, 0, this)
     }
 
     /**
      * 获取设备在线状态
      */
-    private fun getDeviceOnlineStatus(index: Int, size: Int) {
+    private fun getDeviceOnlineStatus(deviceList: ArrayList<DeviceEntity>) {
         var productId = ""
         var productIds = arrayListOf<String>()
         val deviceIds = arrayListOf<String>()
-        for (i in index until size) {
-            App.data.deviceList[i].let {
+        for (i in 0 until deviceList.size) {
+            deviceList[i].let {
                 if (TextUtils.isEmpty(productId)) {
                     productId = it.ProductId
                 }
@@ -248,7 +237,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                     if (response.isSuccess()) {
                         response.parse(DeviceOnlineResponse::class.java)?.run {
                             if (!DeviceStatuses.isNullOrEmpty()) {
-                                for (i in index until size) {
+                                for (i in 0 until deviceList.size) {
                                     deviceList[i].run {
                                         run check@{
                                             DeviceStatuses!!.forEach {
@@ -272,7 +261,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
 
     // 获取设备产品配置的快捷入口
     private fun excludeBleProduct(productIds: ArrayList<String>) {
-        HttpRequest.instance.getProductsConfig(productIds, object:MyCallback {
+        HttpRequest.instance.getProductsConfig(productIds, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
             }
@@ -285,6 +274,12 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                             var config = JsonManager.parseJson(data.Config, ProdConfigDetailEntity::class.java)
                             if (config != null && config.bleConfig != null && !TextUtils.isEmpty(config.bleConfig!!.protocolType)) {
                                 for (dev in deviceList) {
+                                    if (dev.ProductId == data.ProductId) {
+                                        dev.online = 1
+                                    }
+                                }
+
+                                for (dev in shareDeviceList) {
                                     if (dev.ProductId == data.ProductId) {
                                         dev.online = 1
                                     }
@@ -304,7 +299,6 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
      * 获取共享的设备
      */
     private fun refreshShareDeviceList() {
-        shareDeviceList.clear()
         loadShareDeviceList()
     }
 
@@ -312,9 +306,8 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
      * 获取共享的设备
      */
     fun loadShareDeviceList() {
-        if (shareDeviceListEnd) return
         if (roomId != "") return
-        HttpRequest.instance.shareDeviceList(shareDeviceList.size, this)
+        HttpRequest.instance.shareDeviceList(0, this)
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -385,26 +378,18 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
             RequestCode.device_list -> {
                 if (response.isSuccess()) {
                     response.parse(DeviceListResponse::class.java)?.run {
+                        deviceList.clear()
                         deviceList.addAll(DeviceList)
-                        if (Total >= 0) {
-                            deviceTotal = Total
-                            deviceListEnd = deviceList.size >= Total
-                        }
-                        view?.showDeviceList(
-                            deviceList.size,
-                            roomId,
-                            deviceListEnd,
-                            shareDeviceListEnd
-                        )
-                        if (deviceListEnd && roomId == "") {
-                            //到底时开始加载共享的设备列表,并且是在全部设备这个房间时
+                        view?.showDeviceList(deviceList.size, roomId, true, false)
+                        //到底时开始加载共享的设备列表,并且是在全部设备这个房间时
+                        if (roomId == "") {
                             refreshShareDeviceList()
+                        } else {
+                            shareDeviceList.clear()
+                            view?.showDeviceList(shareDeviceList.size, roomId, false, true)
                         }
                         //在线状态
-                        getDeviceOnlineStatus(
-                                deviceList.size - DeviceList.size,
-                                deviceList.size
-                        )
+                        getDeviceOnlineStatus(deviceList)
 
                         val productIdList = ArrayList<String>()
                         for (device in deviceList) {
@@ -425,12 +410,8 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
             RequestCode.share_device_list -> {
                 if (response.isSuccess()) {
                     response.parse(ShareDeviceListResponse::class.java)?.run {
-                        if (Total >= 0) {
-                            shareDeviceTotal = Total
-                            shareDeviceListEnd = shareDeviceList.size >= Total
-                        }
+                        shareDeviceList.clear()
                         shareDeviceList.addAll(ShareDevices)
-                        deviceList.addAll(ShareDevices)
 
                         val deviceIdList = ArrayString()
                         for (device in shareDeviceList) {
@@ -445,17 +426,9 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         // TRTC: trtc设备注册websocket监听
                         IoTAuth.registerActivePush(deviceIdList, null)
 
-                        view?.showDeviceList(
-                            deviceList.size,
-                            roomId,
-                            deviceListEnd,
-                            shareDeviceListEnd
-                        )
+                        view?.showDeviceList(shareDeviceList.size, roomId, false, true)
                         //在线状态
-                        getDeviceOnlineStatus(
-                            deviceList.size - ShareDevices.size,
-                            deviceList.size
-                        )
+                        getDeviceOnlineStatus(shareDeviceList)
                     }
                 }
             }
