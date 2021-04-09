@@ -897,7 +897,7 @@ class HttpRequest private constructor() {
         param["FamilyId"] = familyId
         param["RoomId"] = roomId
         param["Offset"] = offset
-        param["Limit"] = 20
+        param["Limit"] = 999
         tokenPost(param, callback, RequestCode.device_list)
     }
 
@@ -1099,6 +1099,32 @@ class HttpRequest private constructor() {
         tokenPost(param, callback, RequestCode.check_device_bind_token_state)
     }
 
+    fun gatwaySubDevList(productId: String, davName: String, callback: MyCallback) {
+        val param = baseParams()
+        param["RequestId"] = UUID.randomUUID().toString()
+        param["Action"] = "AppGetGatewayBindDeviceList"
+        param["AccessToken"] = App.data.getToken()
+        param["RegionId"] = App.data.regionId
+        param["Limit"] = 100
+        param["Offset"] = 0
+        param["GatewayDeviceName"] = davName
+        param["GatewayProductId"] = productId
+        tokenPost(param, callback, RequestCode.gateway_sub_device_list)
+    }
+
+    fun bindGatwaySubDev(productId: String, davName: String, subProductId: String, subDevName: String, callback: MyCallback) {
+        val param = baseParams()
+        param["RequestId"] = UUID.randomUUID().toString()
+        param["Action"] = "AppBindSubDeviceInFamily"
+        param["AccessToken"] = App.data.getToken()
+        param["RegionId"] = App.data.regionId
+        param["GatewayDeviceName"] = davName
+        param["GatewayProductId"] = productId
+        param["ProductId"] = subProductId
+        param["DeviceName"] = subDevName
+        tokenPost(param, callback, RequestCode.bind_gateway_sub_device)
+    }
+
     /**
      * 手机请求加入房间
      */
@@ -1227,7 +1253,7 @@ class HttpRequest private constructor() {
     fun shareDeviceList(offset: Int, callback: MyCallback) {
         val param = tokenParams("AppListUserShareDevices")
         param["Offset"] = offset
-        param["Limit"] = 50
+        param["Limit"] = 999
         tokenPost(param, callback, RequestCode.share_device_list)
     }
 
