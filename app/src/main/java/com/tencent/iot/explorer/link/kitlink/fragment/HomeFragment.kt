@@ -207,7 +207,6 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         presenter.model!!.run {
             showFamily()
             showRoomList()
-            showDeviceList(App.data.deviceList.size, roomId, deviceListEnd, shareDeviceListEnd)
             loadCurrentWeather()
         }
     }
@@ -551,11 +550,13 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
 
     // 显示设备列表
     override fun showDeviceList(deviceSize: Int, roomId: String, deviceListEnd: Boolean, shareDeviceListEnd: Boolean) {
-        devList.clear()
-        shareDevList.clear()
-        if (deviceSize > 0) {
+        if (deviceListEnd) {
+            devList.clear()
             devList.addAll(presenter.getIModel(this).deviceList)
-            devList.removeAll(presenter.getIModel(this).shareDeviceList)
+        }
+
+        if (shareDeviceListEnd) {
+            shareDevList.clear()
             shareDevList.addAll(presenter.getIModel(this).shareDeviceList)
         }
 
@@ -585,13 +586,16 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
 
     override fun showDeviceOnline() {
         for (i in 0 until devList.size) {
+            if (i >= presenter.getIModel(this).deviceList.size) {
+                continue
+            }
             devList.get(i).online = presenter.getIModel(this).deviceList.get(i).online
         }
         for (i in 0 until shareDevList.size) {
-            if (i + devList.size >= presenter.getIModel(this).deviceList.size) {
+            if (i >= presenter.getIModel(this).shareDeviceList.size) {
                 continue
             }
-            shareDevList.get(i).online = presenter.getIModel(this).deviceList.get(i + devList.size).online
+            shareDevList.get(i).online = presenter.getIModel(this).shareDeviceList.get(i).online
         }
         roomDevAdapter?.notifyDataSetChanged()
         roomShareDevAdapter?.notifyDataSetChanged()
