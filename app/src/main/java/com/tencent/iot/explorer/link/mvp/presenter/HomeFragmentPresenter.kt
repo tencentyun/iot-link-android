@@ -29,11 +29,7 @@ class HomeFragmentPresenter(view: HomeFragmentView) :
      */
     fun loadDeviceList() {
         model?.run {
-            if (deviceListEnd){
-                loadShareDeviceList()
-            }else{
-                loadDeviceList()
-            }
+            loadDeviceList()
         }
     }
 

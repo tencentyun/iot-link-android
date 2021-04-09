@@ -82,6 +82,8 @@ object RequestCode {
     const val sig_bind_device = 3014
     const val trtc_call_device = 3015
     const val device_product_info = 3016
+    const val gateway_sub_device_list = 3017
+    const val bind_gateway_sub_device = 3018
 
     /*************设备接口结束**************/
 
