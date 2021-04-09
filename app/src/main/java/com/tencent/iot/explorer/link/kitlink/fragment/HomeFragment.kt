@@ -56,14 +56,16 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.header.*
 import kotlinx.android.synthetic.main.inside_fixed_bar.*
 import kotlinx.android.synthetic.main.title_with_family.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessageCallback {
 
     private lateinit var presenter: HomeFragmentPresenter
     var popupListener: PopupListener? = null
-    private var devList: ArrayList<DeviceEntity> = ArrayList()
+    private var devList: List<DeviceEntity> = Collections.synchronizedList(ArrayList<DeviceEntity>())
     private var roomDevAdapter: RoomDevAdapter? = null
-    private var shareDevList: ArrayList<DeviceEntity> = ArrayList()
+    private var shareDevList: List<DeviceEntity> = Collections.synchronizedList(ArrayList<DeviceEntity>())
     private var roomShareDevAdapter: RoomDevAdapter? = null
     private var roomList: ArrayList<RoomEntity> = ArrayList()
     private var roomsAdapter: RoomsAdapter? = null
