@@ -44,9 +44,12 @@ import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
+import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
+import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
@@ -359,9 +362,52 @@ class MainActivity : PActivity(), MyCallback {
                     App.data.refresh = true
                     App.data.setRefreshLevel(2)
                     com.tencent.iot.explorer.link.kitlink.util.Utils.sendRefreshBroadcast(this@MainActivity)
+
+                    var resData = JSON.parseObject(response.data.toString(), BindDevResponse::class.java)
+                    bindSubDev(resData)
                 } else {
                     T.show(response.msg)
                 }
+            }
+
+            RequestCode.bind_gateway_sub_device -> {
+                if (response.isSuccess()) {
+                    App.data.refresh = true
+                    App.data.setRefreshLevel(2)
+                    com.tencent.iot.explorer.link.kitlink.util.Utils.sendRefreshBroadcast(this@MainActivity)
+                } else {
+                    T.show(response.msg)
+                }
+            }
+        }
+    }
+
+    private fun bindSubDev(gatwayDev: BindDevResponse) {
+        if (gatwayDev != null && gatwayDev.Data != null && gatwayDev.Data!!.AppDeviceInfo != null) {
+            var dev = gatwayDev.Data!!.AppDeviceInfo
+            if (dev == null) return
+
+            if (dev.DeviceType == "1") {
+                HttpRequest.instance.gatwaySubDevList(dev.ProductId, dev.DeviceName, object: MyCallback{
+                    override fun fail(msg: String?, reqCode: Int) {
+                        T.show(msg?:"")
+                    }
+
+                    override fun success(response: BaseResponse, reqCode: Int) {
+                        if (response.isSuccess()) {
+                            var gatewaySubDevsResp = JSON.parseObject(response.data.toString(), GatewaySubDevsResp::class.java)
+                            if (gatewaySubDevsResp != null && gatewaySubDevsResp.DeviceList != null && gatewaySubDevsResp.DeviceList.size > 0) {
+                                for (subDev in gatewaySubDevsResp.DeviceList) {
+                                    if (subDev.BindStatus == 0) {
+                                        HttpRequest.instance.bindGatwaySubDev(dev.ProductId, dev.DeviceName, subDev.ProductId, subDev.DeviceName, this@MainActivity)
+                                    }
+                                }
+                            }
+                        } else {
+                            T.show(response.msg)
+                        }
+                    }
+                })
             }
         }
     }
