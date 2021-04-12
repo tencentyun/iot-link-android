@@ -447,7 +447,7 @@ class HttpRequest private constructor() {
      * 邮箱重置密码
      */
     fun resetEmailPassword(email: String, code: String, pwd: String, callback: MyCallback) {
-        val param = tokenParams("AppResetPasswordByEmail")
+        val param = commonParams("AppResetPasswordByEmail")
         param["Email"] = email
         param["VerificationCode"] = code
         param["Password"] = pwd
@@ -464,7 +464,7 @@ class HttpRequest private constructor() {
         pwd: String,
         callback: MyCallback
     ) {
-        val param = tokenParams("AppResetPasswordByCellphone")
+        val param = commonParams("AppResetPasswordByCellphone")
         param["CountryCode"] = countryCode
         param["PhoneNumber"] = phone
         param["VerificationCode"] = code
