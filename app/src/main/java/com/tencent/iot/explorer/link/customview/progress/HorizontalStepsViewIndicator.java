@@ -24,8 +24,9 @@ import java.util.List;
 public class HorizontalStepsViewIndicator extends View {
     //定义默认的高度
     private int defaultStepIndicatorNum = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
+    private int defaultLineHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
     private float mCompletedLineHeight; //完成线的高度
-    private float mCircleRadius;    //圆的半径
+    private float mCircleRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 11, getResources().getDisplayMetrics());
 
     private Drawable mCompleteIcon; //完成的默认图片
     private Drawable mDefaultIcon;  //默认的背景图
@@ -41,8 +42,8 @@ public class HorizontalStepsViewIndicator extends View {
     private List<Float> mCircleCenterPointPositionList; //定义所有圆的圆心点位置的集合
     private Paint mUnCompletedPaint;    //未完成Paint
     private Paint mCompletedPaint;  //完成paint
-    private int mUnCompletedLineColor = getResources().getColor(R.color.uncomplete_progress); //定义默认未完成线的颜色
-    private int mCompletedLineColor = getResources().getColor(R.color.complete_progress);  //定义默认完成线的颜色
+    private int mUnCompletedLineColor = getResources().getColor(R.color.gray_E7E8EB); //定义默认未完成线的颜色
+    private int mCompletedLineColor = getResources().getColor(R.color.blue_end_color);  //定义默认完成线的颜色
     private int mComplectingPosition; //正在进行的位置
 
     private OnDrawIndicatorListener mOnDrawListener;
@@ -94,8 +95,7 @@ public class HorizontalStepsViewIndicator extends View {
         mUnCompletedPaint = createPaint(mUnCompletedLineColor);
         mCompletedPaint = createPaint(mCompletedLineColor);
 
-        mCompletedLineHeight = 0.12f * defaultStepIndicatorNum; //已经完成线的宽高
-        mCircleRadius = 0.4f * defaultStepIndicatorNum;    //圆的半径
+        mCompletedLineHeight = defaultLineHeight; //已经完成线的宽高
         mCompleteIcon = ContextCompat.getDrawable(getContext(), R.drawable.circle_shape);   //已经完成的icon
         mDefaultIcon = ContextCompat.getDrawable(getContext(), R.drawable.circle_uncomplete_shape); //未完成的icon
     }

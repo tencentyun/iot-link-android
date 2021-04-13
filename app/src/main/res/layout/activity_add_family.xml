@@ -26,27 +26,50 @@
         app:layout_constraintTop_toBottomOf="@id/add_family_menu"
         >
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:id="@+id/tip_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/et_family_name"
-            app:layout_constraintBottom_toBottomOf="@id/et_family_name"
-            android:text="@string/family_name"
-            android:id="@+id/tv_family_name"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="20dp"
-            android:textSize="@dimen/ts_14"
-            />
+            >
 
-    <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/family_name"
+                android:id="@+id/tv_family_name"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="20dp"
+                android:textSize="@dimen/ts_14"
+                />
+
+            <TextView
+                android:id="@+id/tv_family_address"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="@string/family_address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_14"
+                app:layout_constraintTop_toBottomOf="@id/tv_family_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
             android:id="@+id/et_family_name"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:background="@color/white"
-            app:layout_constraintStart_toEndOf="@id/tv_family_name"
+            app:layout_constraintStart_toEndOf="@id/tip_layout"
             app:layout_constraintEnd_toStartOf="@id/iv_set_family_name"
             android:hint="@string/fill_family_name"
             android:maxLength="20"
@@ -76,24 +99,11 @@
             android:id="@+id/line_add_family1"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:background="@color/gray_F5F5F5"
+            android:layout_marginStart="16dp"
+            android:background="@color/gray_E7E8EB"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_family_name" />
-
-        <TextView
-            android:id="@+id/tv_family_address"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:gravity="center"
-            android:text="@string/family_address"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ts_14"
-            app:layout_constraintBottom_toBottomOf="@id/et_family_address"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/et_family_address" />
 
         <TextView
             android:id="@+id/et_family_address"
