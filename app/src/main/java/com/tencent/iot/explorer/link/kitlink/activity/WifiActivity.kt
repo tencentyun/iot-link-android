@@ -213,12 +213,12 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
             (et_select_wifi_pwd.text != null && (TextUtils.isEmpty(et_select_wifi_pwd.text.toString())))) {
             tv_wifi_commit.isClickable = false
             tv_wifi_commit.background =
-                AppCompatResources.getDrawable(this, R.drawable.bg_rad4_color_8bbdff)
+                AppCompatResources.getDrawable(this, R.drawable.background_grey_dark_cell)
             return
         }
 
         tv_wifi_commit.isClickable = true
-        tv_wifi_commit.background = AppCompatResources.getDrawable(this, R.drawable.btn_bg)
+        tv_wifi_commit.background = AppCompatResources.getDrawable(this, R.drawable.background_circle_bule_gradient)
     }
 
     override fun onSuccess(token: String) {

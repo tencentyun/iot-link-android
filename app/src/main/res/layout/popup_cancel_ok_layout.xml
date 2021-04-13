@@ -29,9 +29,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/dialog_tip"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:textColor="@color/black"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
             />
 
         <TextView
@@ -40,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_dialog_tip"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
@@ -56,7 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_tip_content"
-            android:background="@color/line_grey_color"
+            android:background="@color/gray_E7E8EB"
             android:layout_marginTop="20dp"
             />
 
@@ -64,7 +63,7 @@
             android:id="@+id/v_line_v"
             android:layout_width="1dp"
             android:layout_height="0dp"
-            android:background="@color/line_grey_color"
+            android:background="@color/gray_E7E8EB"
             app:layout_constraintTop_toBottomOf="@id/v_line_h"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,27 +73,23 @@
         <TextView
             android:id="@+id/tv_cancel"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             app:layout_constraintEnd_toStartOf="@+id/v_line_v"
             app:layout_constraintTop_toBottomOf="@id/v_line_h"
             app:layout_constraintBottom_toBottomOf="@id/tv_to_set"
             app:layout_constraintStart_toStartOf="parent"
-            android:textSize="@dimen/ts_18"
-            android:paddingTop="17dp"
-            android:paddingBottom="17dp"
-            android:textColor="@color/black_888888"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/gray_6C7078"
             android:gravity="center"
             android:text="@string/cancel"/>
 
         <TextView
             android:id="@+id/tv_to_set"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:textSize="@dimen/ts_18"
+            android:layout_height="48dp"
+            android:textSize="@dimen/ts_16"
             android:gravity="center"
-            android:textColor="@color/complete_progress"
-            android:paddingTop="17dp"
-            android:paddingBottom="17dp"
+            android:textColor="@color/bule_0066ff"
             android:text="@string/to_set"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/v_line_v"
