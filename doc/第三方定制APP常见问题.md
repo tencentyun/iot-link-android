@@ -46,3 +46,6 @@
 
      解决方法：在物联网开发平台设备面板页的[交互开发](https://cloud.tencent.com/document/product/1081/40457#.E6.8E.A7.E5.88.B6.E4.BA.A7.E5.93.81.E6.96.B9.E5.BC.8F)页面配置APP的配网引导，详细配置说明可参考[配网引导](https://cloud.tencent.com/document/product/1081/40457#.E9.85.8D.E7.BD.91.E5.BC.95.E5.AF.BC)
 
+  5、使用OEM版连连App，登录操作正常，但是在体验`忘记密码`功能中的`修改密码`子功能时报Signature无效
+
+     解决方法：目前该问题已在master分支修复，可以拉取最新代码体验该子功能
