@@ -137,66 +137,66 @@ class ConnectProgressActivity : PActivity(), ConnectView {
                         iv_phone_send_device.animation = rotate
                         iv_device_connect_cloud.animation = rotate
                         iv_init_success.animation = rotate
-                        tv_phone_connect_device.setTextColor(resources.getColor(R.color.uncomplete_progress))
-                        tv_phone_send_device.setTextColor(resources.getColor(R.color.uncomplete_progress))
-                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.uncomplete_progress))
-                        tv_init_success.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_phone_connect_device.setTextColor(resources.getColor(R.color.gray_A1A7B2))
+                        tv_phone_send_device.setTextColor(resources.getColor(R.color.gray_A1A7B2))
+                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.gray_A1A7B2))
+                        tv_init_success.setTextColor(resources.getColor(R.color.gray_A1A7B2))
                     }
                     ConnectProgressState.MobileAndDeviceConnectSuccess -> { //手机与设备连接成功状态
                         iv_phone_connect_device.animation = null
                         iv_phone_send_device.animation = rotate
                         iv_device_connect_cloud.animation = rotate
                         iv_init_success.animation = rotate
-                        iv_phone_connect_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_phone_connect_device.setImageResource(R.mipmap.task_selected)
                         iv_phone_send_device.setImageResource(R.mipmap.loading)
                         iv_device_connect_cloud.setImageResource(R.mipmap.loading)
                         iv_init_success.setImageResource(R.mipmap.loading)
-                        tv_phone_connect_device.setTextColor(Color.BLACK)
-                        tv_phone_send_device.setTextColor(resources.getColor(R.color.uncomplete_progress))
-                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.uncomplete_progress))
-                        tv_init_success.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_phone_connect_device.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_phone_send_device.setTextColor(resources.getColor(R.color.gray_A1A7B2))
+                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.gray_A1A7B2))
+                        tv_init_success.setTextColor(resources.getColor(R.color.gray_A1A7B2))
                     }
                     ConnectProgressState.SendMessageToDeviceSuccess -> { //手机与设备连接成功，向设备发送消息成功状态
                         iv_phone_connect_device.animation = null
                         iv_phone_send_device.animation = null
                         iv_device_connect_cloud.animation = rotate
                         iv_init_success.animation = rotate
-                        iv_phone_connect_device.setImageResource(R.mipmap.wifi_selected)
-                        iv_phone_send_device.setImageResource(R.mipmap.wifi_selected)
+                        iv_phone_connect_device.setImageResource(R.mipmap.task_selected)
+                        iv_phone_send_device.setImageResource(R.mipmap.task_selected)
                         iv_device_connect_cloud.setImageResource(R.mipmap.loading)
                         iv_init_success.setImageResource(R.mipmap.loading)
-                        tv_phone_connect_device.setTextColor(Color.BLACK)
-                        tv_phone_send_device.setTextColor(Color.BLACK)
-                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.uncomplete_progress))
-                        tv_init_success.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_phone_connect_device.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_phone_send_device.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.gray_A1A7B2))
+                        tv_init_success.setTextColor(resources.getColor(R.color.gray_A1A7B2))
                     }
                     ConnectProgressState.DeviceConnectServiceSuccess -> {//手机与设备连接成功，向设备发送消息成功，设备连接云端成功状态
                         iv_phone_connect_device.animation = null
                         iv_phone_send_device.animation = null
                         iv_device_connect_cloud.animation = null
                         iv_init_success.animation = rotate
-                        iv_phone_connect_device.setImageResource(R.mipmap.wifi_selected)
-                        iv_phone_send_device.setImageResource(R.mipmap.wifi_selected)
-                        iv_device_connect_cloud.setImageResource(R.mipmap.wifi_selected)
+                        iv_phone_connect_device.setImageResource(R.mipmap.task_selected)
+                        iv_phone_send_device.setImageResource(R.mipmap.task_selected)
+                        iv_device_connect_cloud.setImageResource(R.mipmap.task_selected)
                         iv_init_success.setImageResource(R.mipmap.loading)
-                        tv_phone_connect_device.setTextColor(Color.BLACK)
-                        tv_phone_send_device.setTextColor(Color.BLACK)
-                        tv_device_connect_cloud.setTextColor(Color.BLACK)
-                        tv_init_success.setTextColor(resources.getColor(R.color.uncomplete_progress))
+                        tv_phone_connect_device.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_phone_send_device.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_init_success.setTextColor(resources.getColor(R.color.gray_A1A7B2))
                     }
                     ConnectProgressState.InitSuccess -> {//手机与设备连接成功，向设备发送消息成功，设备连接云端成功，初始化成功状态
                         iv_phone_connect_device.animation = null
                         iv_phone_send_device.animation = null
                         iv_device_connect_cloud.animation = null
                         iv_init_success.animation = null
-                        iv_phone_connect_device.setImageResource(R.mipmap.wifi_selected)
-                        iv_phone_send_device.setImageResource(R.mipmap.wifi_selected)
-                        iv_device_connect_cloud.setImageResource(R.mipmap.wifi_selected)
-                        iv_init_success.setImageResource(R.mipmap.wifi_selected)
-                        tv_phone_connect_device.setTextColor(Color.BLACK)
-                        tv_phone_send_device.setTextColor(Color.BLACK)
-                        tv_device_connect_cloud.setTextColor(Color.BLACK)
-                        tv_init_success.setTextColor(Color.BLACK)
+                        iv_phone_connect_device.setImageResource(R.mipmap.task_selected)
+                        iv_phone_send_device.setImageResource(R.mipmap.task_selected)
+                        iv_device_connect_cloud.setImageResource(R.mipmap.task_selected)
+                        iv_init_success.setImageResource(R.mipmap.task_selected)
+                        tv_phone_connect_device.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_phone_send_device.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_device_connect_cloud.setTextColor(resources.getColor(R.color.black_15161A))
+                        tv_init_success.setTextColor(resources.getColor(R.color.black_15161A))
                         App.data.setRefreshLevel(2)
 
                         var successIntent = Intent(this, ConfigNetSuccessActivity::class.java)
