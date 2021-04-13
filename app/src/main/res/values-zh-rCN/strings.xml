@@ -4,6 +4,9 @@
     <string name="main_tab_1">首页</string>
     <string name="main_tab_2">场景</string>
     <string name="main_tab_3">我的</string>
+    <string name="main_tab_4">评测</string>
+    <string name="main_tab_5">智能</string>
+
 
     <!--常用-->
     <string name="success">成功</string>
@@ -29,11 +32,115 @@
     <string name="back_home">返回首页</string>
     <string name="q_feedback">问题反馈</string>
     <string name="copy">已复制</string>
+    <string name="copyed">已复制到剪切板</string>
     <string name="open_WIFI">请打开 WIFI</string>
     <string name="download_success">下载成功</string>
     <string name="download_failed">下载失败</string>
+    <string name="wechat_share">微信好友</string>
+    <string name="copy_link">复制链接</string>
+    <string name="my_smart">我的智能</string>
+    <string name="smart_log">执行日志</string>
+    <string name="check_smart_after_login">请先登录后，再查看或添加智能</string>
+    <string name="current_my_smart_no_data">当前暂无智能，点击添加智能</string>
+    <string name="login_now">立即登录</string>
+    <string name="add_now">立即添加</string>
+    <string name="smart_option_1">手动智能</string>
+    <string name="smart_option_2">自动智能</string>
+    <string name="add_manual_smart">添加手动智能</string>
+    <string name="edit_manual_smart">编辑手动智能</string>
+    <string name="add_automic_smart">添加自动智能</string>
+    <string name="edit_automic_smart">编辑自动智能</string>
+    <string name="automic">自动</string>
+    <string name="manual">手动</string>
+    <string name="no_manual_task">暂无手动任务</string>
+    <string name="no_log_info">当前暂无日志</string>
+    <string name="add_task">添加任务</string>
+    <string name="control_dev">设备控制</string>
+    <string name="delay_time">延时</string>
+    <string name="run_all_task">执行以下任务</string>
+    <string name="delay_time_can_not_be_last_one">延时不能设置为最后一个任务</string>
+    <string name="at_least_one_condition_2_start">至少包含一个条件</string>
+    <string name="no_task_to_add">没有任务</string>
+    <string name="complete_task_info">完善智能信息</string>
+    <string name="smart_pic">智能图片</string>
+    <string name="smart_name">智能名称</string>
+    <string name="select_smart_pic">选择智能图片</string>
+    <string name="add_smart_name">填写智能名称</string>
+    <string name="select_dev">选择设备</string>
+    <string name="current_dev_no_this_function">该设备暂无功能可作为智能任务，试试其他设备吧</string>
+    <string name="please_input_smart_pic">请设置智能图片</string>
+    <string name="please_input_smart_name">请设置智能名称</string>
+    <string name="add_task_condition">添加条件</string>
+    <string name="fit_all_condition">满足以下所有条件</string>
+    <string name="fit_one_of_all_condition">满足以下任一条件</string>
+    <string name="working_time">生效时间段</string>
+    <string name="run_this_all_tasks">执行以下任务</string>
+    <string name="dev_status_changed">设备状态发生变化</string>
+    <string name="dev_timer">定时</string>
+    <string name="sel_manual_task">选择手动</string>
+    <string name="send_notification">发送通知</string>
+    <string name="repeat_days">重复周期</string>
+    <string name="defination_by_user">自定义</string>
+    <string name="defination_by_user_with_content">自定义（%s）</string>
+    <string name="work_time_all_day">全天（24小时）</string>
+    <string name="work_time_all_day_tip">全天</string>
+    <string name="working_time_tip">时间段</string>
+    <string name="end_time_earlier_start_time">结束时间不能早于开始时间</string>
+    <string name="at_least_select_one_day">请至少选择一天</string>
+    <string name="select_notification_type">选择通知类型</string>
+    <string name="select_manual_smart">选择手动智能</string>
+    <string name="select_all">全选</string>
+    <string name="disselect_all">取消全选</string>
+    <string name="at_least_select_one_msg_type">请至少选择一种通知类型</string>
+    <string name="equals_str">等于</string>
+    <string name="run_manual_task_success">执行手动智能成功</string>
+    <string name="success_update">修改成功</string>
+    <string name="please_set_first">请先进行设置后保存</string>
+    <string name="smart_not_work">智能失效</string>
+    <string name="name_illeagal">名称不能超过20个字符</string>
+    <string name="task_can_not_more_then_20">最多添加20个任务</string>
+    <string name="condition_can_not_more_then_20">最多添加20个条件</string>
+    <string name="success_update_close">关闭自动智能成功</string>
+    <string name="success_update_open">打开自动智能成功</string>
+    <string name="unknown_device">未知设备</string>
+    <string name="please_add_task">请添加任务</string>
+    <string name="no_manual_task_please_add_first">暂无手动智能，请先添加</string>
+    <string name="please_select_other_dev">选择其他设备</string>
+    <string name="delay_time_at_least_one_min">延时时长至少为1分钟</string>
+    <string name="tag_gr">大于</string>
+    <string name="tag_eq">等于</string>
+    <string name="tag_lt">小于</string>
+    <string name="delete_dev">删除设备</string>
+    <string name="length_error">长度非法</string>
+    <string name="country_or_place">国家/地区</string>
+    <string name="default_product_name">（产品的名称）</string>
+    <string name="share_dev_tip">设备共享</string>
     <string name="switch_time_zone_tip">确定切换时区吗</string>
     <string name="switch_time_zone_content">您切换时区将会同步更改您为家里的智能设备设置的定时、场景等任务时区，请知悉！</string>
+    <string name="add_option_add_dev">添加设备</string>
+    <string name="add_option_scan_dev">扫描设备</string>
+    <string name="add_option_add_task">添加智能</string>
+    <string name="outside_humidity">相对湿度 %s</string>
+    <string name="outside_wind_dir">实况风向 %s</string>
+    <string name="temp_unit">°</string>
+    <string name="sunny_tag">晴</string>
+    <string name="cloud_tag">阴</string>
+    <string name="cloud_b_tag">云</string>
+    <string name="rainy_tag">雨</string>
+    <string name="snow_tag">雪</string>
+    <string name="dry_tag">干燥</string>
+    <string name="comfortable_tag">舒适</string>
+    <string name="damp_tag">潮湿</string>
+    <string name="seach_postion">搜索地点</string>
+    <string name="map_select_postion">地图选点</string>
+    <string name="num_rooms">%s个房间</string>
+    <string name="no_weather_info">暂无天气信息</string>
+    <string name="set_family_first">请先设置当前家庭位置</string>
+    <string name="more_option">更多操作</string>
+    <string name="search">搜索</string>
+    <string name="no_history_tip">还没有历史记录哦~</string>
+    <string name="clear_all_history">清空历史记录</string>
+    <string name="resp_with_no_data">没有找到匹配的结果</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>
@@ -50,13 +157,17 @@
     <string name="register_agree_2">用户协议</string>
     <string name="register_agree_3">及</string>
     <string name="register_agree_4">隐私政策</string>
+    <string name="register_agree_4_low">隐私政策</string>
     <string name="register_agree_5">开源软件信息</string>
     <string name="register_get_code">获取验证码</string>
     <string name="get_mobile_code_sent">验证码已经发送到您的手机:</string>
     <string name="get_email_code_sent">验证码已经发送到您的邮箱:</string>
     <string name="not_wechat_client">未安装微信客户端</string>
+    <string name="not_install_wechat_client">微信未安装，请安装后重试</string>
     <string name="cancel_wechat">取消授权</string>
-
+    <string name="input_birthday_for_better_react">出生日期</string>
+    <string name="too_young_to_use">很遗憾，我们目前无法向您提供腾讯连连</string>
+    <string name="location_failed">定位失败</string>
 
     <string name="login">登录</string>
     <string name="logout">退出登录</string>
@@ -67,8 +178,11 @@
     <string name="verification_code">验证码</string>
     <string name="input_verification_code">输入验证码</string>
     <string name="mobile_number">手机号码</string>
+    <string name="mobile_num">手机号</string>
     <string name="email_address">邮箱地址</string>
     <string name="password">密码</string>
+    <string name="new_password">新密码</string>
+    <string name="confirm_password">确认密码</string>
     <string name="new_password_equals_old">新密码不能与旧密码相同</string>
     <string name="verify_password">再次输入密码</string>
     <string name="forgot_password">忘记密码</string>
@@ -131,6 +245,7 @@
     <string name="connect_success">连接成功</string>
     <string name="connect_fail">连接失败</string>
     <string name="add_new_device">继续添加新设备</string>
+    <string name="add_other_device">继续添加其他设备</string>
     <string name="back_to_home_page">返回首页</string>
     <string name="connect_again">按步骤重试</string>
     <string name="tab_connect_way">切换配网方式</string>
@@ -144,6 +259,7 @@
     <string name="no_room">没有可选的房间</string>
     <string name="no_device_and_add">当前暂无设备，点击按钮进行添加</string>
     <string name="no_add_permission">无添加权限</string>
+    <string name="no_add_room_permission">您不是房间所有者，没有此权限</string>
     <string name="smart_config_first">将设备设置为一键配网模式</string>
     <string name="smart_config_first_hint">若指示灯已经在快闪，可跳过该步骤。</string>
     <string name="smart_config_first_hint2">1.接通设备电源；\n2.长按复位键（开关），切换设备配网模式到一键配网（不同设备操作方式有所不同）；\n3.指示灯快闪即进入一键配网模式。</string>
@@ -154,6 +270,8 @@
     <string name="smart_config_second_hint">请输入密码</string>
     <string name="smart_config_second_hint_not_required">请输入密码(非必填)</string>
     <string name="smart_config_third_connect_progress">配网进度</string>
+    <string name="smart_config_config_network">一键配网</string>
+    <string name="softap_config_network">热点配网</string>
 
     <string name="soft_ap_first_title">将设备设置为热点配网模式</string>
     <string name="soft_ap_first_toast1">若指示灯已经在慢闪，可跳过该步骤。</string>
@@ -162,9 +280,13 @@
     <string name="soft_ap_hotspot_set">将手机WIFI连接设备热点</string>
     <string name="soft_ap_hotspot_step_1">请前往手机WiFi设置页面，连接上图所示设备WiFi</string>
     <string name="soft_ap_hotspot_step_2">2.返回APP,添加设备</string>
+    <string name="soft_ap_hotspot_step">1.将手机连接到上图所示的WI-FI；\n2.或者手动去系统WI-FI设置页连接</string>
     <string name="soft_ap_connect_hotspot">连接设备热点</string>
     <string name="reconnect">重新连接</string>
     <string name="soft_ap_connect_confirm">连接正确，进入下一步</string>
+    <string name="handle_method">操作方式</string>
+    <string name="method_step">1.点击WiFi名称右侧的下拉按钮，前往手机WiFi设置界面选择设备热点后，返回APP。\n2.填写设备密码，若设备热点无密码则无需填写。\n3.点击下一步，开始配网。</string>
+    <string name="default_soft_ap_name">tcloud_XXX</string>
 
     <string name="offline">离线</string>
     <string name="online">设备在线</string>
@@ -173,6 +295,10 @@
     <string name="power_off">电源开关：关闭</string>
     <string name="on">开启</string>
     <string name="off">关闭</string>
+    <string name="dialog_tip">提示</string>
+    <string name="to_set">去开启</string>
+    <string name="please_open_wifi">手机WIFI未开启，请开启并连接WIFI</string>
+    <string name="please_open_location_service">请开启手机定位服务，以便获取附近WIFI信号</string>
 
     <string name="device_details">设备详情</string>
     <string name="remark_name">备注名称</string>
@@ -182,6 +308,7 @@
     <string name="device_info">设备信息</string>
     <string name="normal_problem">常见问题</string>
     <string name="no_device_share">暂未分享设备，点击按钮进行分享</string>
+    <string name="no_user_to_share_device">暂未分享给其他用户</string>
     <string name="add_device_share">添加分享</string>
     <string name="modify_alias_name">修改备注名称</string>
     <string name="delete_toast_title">确定要删除设备码？</string>
@@ -195,6 +322,43 @@
     <string name="mac_address">MAC地址</string>
     <string name="ip_address">IP地址</string>
     <string name="firmware_version">固件版本</string>
+    <string name="config_hardware">配置硬件</string>
+    <string name="select_wifi">选择目标WIFI</string>
+    <string name="set_target_wifi">设置目标WIFI</string>
+    <string name="start_config_network">开始配网</string>
+    <string name="input_wifi_pwd">请输入WIFI密码</string>
+    <string name="connect_dev_wifi">将手机WIFI连接设备热点</string>
+    <string name="tip_wifi">WIFI</string>
+    <string name="wifi_hz_advised">建议使用2.4G WIFI</string>
+    <string name="wifi_list_refresh">刷新</string>
+    <string name="connect_device">连接设备</string>
+    <string name="soft_config_network">热点配网</string>
+    <string name="click_get_wifi">点击获取WIFI列表</string>
+    <string name="please_open_gps">请打开手机GPS定位后获取WIFI列表。</string>
+    <string name="wifi_connect_failed">连接失败</string>
+    <string name="wifi_connect_success">连接成功，请继续</string>
+    <string name="check_wifi_pwd">请检查您的WIFI密码是否正确</string>
+    <string name="i_got_it">我知道了</string>
+    <string name="wifi_connecting">WIFI连接中...</string>
+    <string name="phone_connect_device">手机与设备连接成功</string>
+    <string name="phone_send_device">向设备发送消息成功</string>
+    <string name="device_connect_cloud">设备连接云端成功</string>
+    <string name="init_success">初始化成功</string>
+    <string name="config_net_failed">配网失败</string>
+    <string name="reson_config_net_info">1.确认设备处于一键配网模式（指示灯慢闪）\n2.核对家庭WIFI密码是否正确\n3.确认路由设备是否为2.4GWIFI频段</string>
+    <string name="softap_reson_config_net_info">1.确认设备处于热点模式（指示灯慢闪）\n2.确认是否连接到设备热点\n3.核对家庭WIFI密码是否正确\n4.确认路由设备是否为2.4GWIFI频段</string>
+    <string name="more_reason">查看更多失败原因</string>
+    <string name="switch_softap">切换到热点配网</string>
+    <string name="switch_smart_config">切换到一键配网</string>
+    <string name="add_device_success">配网完成，添加设备成功</string>
+    <string name="run_one_time">执行一次</string>
+    <string name="msg_center">消息中心</string>
+    <string name="smart_lost_device">当前智能设备丢失，请重新设置动作</string>
+    <string name="bind_now">立即绑定</string>
+    <string name="bind_dev">绑定设备</string>
+    <string name="share_dev_tip_content">通过将设备与腾讯连连连接，即表示您同意共享有关您设备和设备日志的信息，第三方可以根据其条款和政策使用该设备。有关更多信息，请阅读我们的 %s。</string>
+    <string name="share_dev_more_info">有关更多信息，请阅读我们的</string>
+    <string name="set_location">设定位置</string>
 
     <!--云端定时-->
     <string name="cloud_timing">云端定时</string>
@@ -241,6 +405,7 @@
     <string name="room_setting">房间设置</string>
     <string name="delete_room">删除房间</string>
     <string name="room_name">家庭名称</string>
+    <string name="family_setting">家庭设置</string>
     <string name="member_setting">成员设置</string>
     <string name="member_name">成员名称</string>
     <string name="member_name_lit">名称</string>
@@ -263,6 +428,7 @@
     <string name="toast_delete_member_title">您确定要删除该成员吗？</string>
     <string name="toast_delete_member_content">删除成员后，可重新邀请</string>
     <string name="toast_alias_length">昵称长度为1-20</string>
+    <string name="toast_name_length">设备名称长度为1-20</string>
     <string name="delete_success">删除成功</string>
     <string name="device_offline">设备已离线</string>
     <string name="device_offline_check">请检查：\n
@@ -293,6 +459,9 @@
     <string name="scanning_retry">重试</string>
     <string name="connect">连接</string>
     <string name="all_device">全部</string>
+    <string name="all_dev_num">所有设备(%s)</string>
+    <string name="all_share_dev_num">共享设备(%s)</string>
+    <string name="no_dev_to_show_add_now">当前暂无设备，请添加设备</string>
     <string name="living_room">客厅</string>
     <string name="bedroom">卧室</string>
     <string name="kitchen">厨房</string>
@@ -322,12 +491,13 @@
     <string name="mobile_phone_number_invalid">手机号格式不正确</string>
     <string name="email_null">请输入邮箱地址</string>
     <string name="email_invalid">邮箱地址格式不正确</string>
-    <string name="password_style">密码支持8&#8211;20位，必须包含字母和数字</string>
+    <string name="password_style">密码支持8&#8211;16位，必须包含字母和数字</string>
     <string name="toast_password_not_verify">两次输入的密码不一致</string>
     <string name="toast_login">密码修改成功，请重新登录</string>
     <!--customview end-->
 
     <string name="welcome_to_use_tencent_ll">欢迎使用腾讯连连</string>
+    <string name="welcome_to_use_product">欢迎使用</string>
     <string name="create_new_account">创建新账号</string>
     <string name="use_existed_account_to_login">使用已有账号登录</string>
     <string name="account_passwd_login">账号密码登录</string>
@@ -346,6 +516,7 @@
     <string name="please_input_verifycode">请输入验证码</string>
     <string name="please_set_passwd">请设置您的密码</string>
     <string name="please_confirm_passwd">请再次确认您的密码</string>
+    <string name="confirm_passwd">再次确认</string>
     <string name="confirm_to_bind">确认绑定</string>
     <string name="bind_phone_number">绑定手机号</string>
     <string name="bind_email_number">绑定邮箱号</string>
@@ -411,6 +582,7 @@
     <string name="unregister_failed">反注册失败</string>
     <string name="recv_msg">收到消息:</string>
     <string name="register_success">注册成功1. token：</string>
+    <string name="registe_success">注册成功</string>
     <string name="register_failed">注册失败，错误码：</string>
     <string name="notification_opened">通知被打开 :</string>
     <string name="notification_removed">通知被清除 :</string>
@@ -421,6 +593,11 @@
     <string name="unit_s">秒</string>
     <string name="unit_m">分钟</string>
     <string name="unit_h">小时</string>
+    <string name="unit_m_single">分</string>
+    <string name="unit_h_single">时</string>
+    <string name="unit_mouth">月</string>
+    <string name="unit_year">年</string>
+    <string name="unit_day">日</string>
     <string name="load_image_failed_please_reload">图片加载错误，请重新选择图片</string>
     <string name="clip_image_failed_please_reclip">图片裁剪异常，请重新选择图片</string>
     <string name="sdcard_not_detected">未检测到SD卡</string>
@@ -458,6 +635,7 @@
     <string name="connect_failed_check_password">网络连接失败，请检查密码是否正确</string>
     <string name="connect_ssid_failed_handle">连接到网络：%s 失败，请手动连接</string>
     <string name="all_devices">全部设备</string>
+    <string name="all_dev">全部</string>
     <string name="num_devices">%s个设备</string>
     <string name="ensure_import_wechat_login_with_offical_doc">请确保已按官网文档接入微信登录</string>
     <string name="server_error">服务器出错</string>
