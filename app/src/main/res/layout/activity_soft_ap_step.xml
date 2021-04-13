@@ -20,12 +20,13 @@
 
             <ImageView
                 android:id="@+id/tv_soft_ap_cancel"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:padding="5dp"
+                android:layout_width="18dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
                 android:gravity="center"
                 android:src="@mipmap/icon_arrow"
+                app:tint="@color/black_15161A"
+                android:layout_centerVertical="true"
                 />
 
             <TextView
@@ -35,15 +36,14 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="@string/soft_config_network"
-                android:textStyle="bold"
-                android:textColor="@color/black_333333"
-                android:textSize="@dimen/ts_20" />
+                android:textColor="@color/black_15161A"
+                android:textSize="@dimen/ts_17" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/gray_e6e6e6" />
+                android:background="@color/gray_E7E8EB" />
         </RelativeLayout>
 
     </com.tencent.iot.explorer.link.kitlink.util.StatusBarHeightView>
@@ -75,9 +75,8 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="30dp"
                     android:text="@string/soft_ap_first_title"
-                    android:textColor="@color/black_333333"
-                    android:textSize="@dimen/ts_18"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black_15161A"
+                    android:textSize="@dimen/ts_16"/>
 
                 <ImageView
                     android:id="@+id/iv_soft_ap"
@@ -99,24 +98,24 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/iv_soft_ap"
                     android:layout_marginStart="20dp"
-                    android:lineSpacingExtra="10dp"
+                    android:lineSpacingExtra="4dp"
                     android:layout_marginTop="40dp"
                     android:layout_marginEnd="20dp"
                     android:text="@string/soft_ap_first_toast"
-                    android:textColor="@color/black_333333"
+                    android:textColor="@color/black_15161A"
                     android:textSize="@dimen/ts_14" />
 
                 <TextView
                     android:id="@+id/tv_soft_first_commit"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@drawable/btn_rad4_color_0052d9"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/background_circle_bule_gradient"
                     android:gravity="center"
                     android:text="@string/next"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/ts_20"
+                    android:textSize="@dimen/ts_16"
                     android:layout_below="@+id/tv_soft_banner_title"
                     android:layout_marginTop="30dp"
                     android:layout_marginLeft="40dp"
