@@ -75,6 +75,7 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
         modifyPasswdUsePhoneView.tv_use_email_verify_code_to_modify.setOnClickListener(this)
         modifyPasswdUsePhoneView.tv_get_verify_code.setOnClickListener(this)
         modifyPasswdUsePhoneView.iv_country.setOnClickListener(this)
+        modifyPasswdUsePhoneView.tv_country.setOnClickListener(this)
 
         modifyPasswdUseEmailView.tv_use_phone_verify_code_to_modify.setOnClickListener(this)
         modifyPasswdUseEmailView.tv_get_verify_code.setOnClickListener(this)
@@ -152,7 +153,7 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
                 }
             }
 
-            modifyPasswdUsePhoneView.iv_country -> {
+            modifyPasswdUsePhoneView.tv_country, modifyPasswdUsePhoneView.iv_country -> {
                 startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
             }
         }

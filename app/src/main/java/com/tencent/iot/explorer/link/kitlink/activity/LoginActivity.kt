@@ -145,6 +145,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         accoutPasswdLoginView.btn_account_passwd_login.setOnClickListener(this)
         accoutPasswdLoginView.tv_account_passwd_forget_passwd.setOnClickListener(this)
         accoutPasswdLoginView.iv_login_to_country_bypsswd.setOnClickListener(this)
+        accoutPasswdLoginView.tv_login_to_country_bypsswd.setOnClickListener(this)
         accoutPasswdLoginView.et_login_phone_or_email.addTextChangedListener(accountPwdTextWatcher)
         accoutPasswdLoginView.et_login_phone_or_email_passwd.addTextChangedListener(accountPwdTextWatcher)
         accoutPasswdLoginView.et_login_phone_or_email.setText("")
@@ -154,6 +155,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         verifyCodeLoginView.btn_account_verifycode_login.setOnClickListener(this)
         verifyCodeLoginView.tv_get_verify_code.setOnClickListener(this)
         verifyCodeLoginView.iv_login_to_country_byverifycode.setOnClickListener(this)
+        verifyCodeLoginView.tv_login_to_country_byverifycode.setOnClickListener(this)
         verifyCodeLoginView.et_login_phone_or_email_byverifycode.addTextChangedListener(accountCodeTextWatcher)
         verifyCodeLoginView.et_login_phone_or_email_verifycode.addTextChangedListener(accountCodeTextWatcher)
         verifyCodeLoginView.et_login_phone_or_email_byverifycode.setText("")
@@ -190,7 +192,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     private fun enableTextView(textView: TextView, enable: Boolean) {
         if (textView == null) return
         if (!canGetCode) { // 当前处于无法获取验证码的状态时，不能设置状态
-            textView.setTextColor(resources.getColor(R.color.gray_bbbbbb))
+            textView.setTextColor(resources.getColor(R.color.gray_A1A7B2))
             textView.isEnabled = false
             return
         }
@@ -198,7 +200,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         if (enable) {
             textView.setTextColor(resources.getColor(R.color.blue_0066FF))
         } else {
-            textView.setTextColor(resources.getColor(R.color.gray_bbbbbb))
+            textView.setTextColor(resources.getColor(R.color.gray_A1A7B2))
         }
         textView.isEnabled = enable
     }
@@ -315,10 +317,10 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                     presenter.requestEmailCode()
                 }
             }
-            accoutPasswdLoginView.iv_login_to_country_bypsswd -> {// 账号密码登录时选则国家
+            accoutPasswdLoginView.tv_login_to_country_bypsswd, accoutPasswdLoginView.iv_login_to_country_bypsswd -> {// 账号密码登录时选则国家
                 startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
-            verifyCodeLoginView.iv_login_to_country_byverifycode -> {// 验证码登录时选则国家
+            verifyCodeLoginView.tv_login_to_country_byverifycode, verifyCodeLoginView.iv_login_to_country_byverifycode -> {// 验证码登录时选则国家
                 startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
         }
@@ -327,7 +329,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     var secondsCountDownCallback = object: Utils.SecondsCountDownCallback {
         override fun currentSeconds(seconds: Int) {
             handler.post(Runnable {
-                verifyCodeLoginView.tv_get_verify_code.setText(getString(R.string.resend) + "(${seconds}s)")
+                verifyCodeLoginView.tv_get_verify_code.setText(getString(R.string.to_resend, seconds.toString()))
             })
         }
 

@@ -95,6 +95,8 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
         et_verify_set_password.visibility = View.GONE
         iv_clear_verify_password.visibility = View.GONE
         line2_set_pwd.visibility = View.GONE
+        tv_set_password_hint.visibility = View.GONE
+        line_input_verifycode.visibility = View.GONE
     }
 
     override fun bindSuccess() {

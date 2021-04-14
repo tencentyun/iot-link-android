@@ -1,23 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="horizontal"
         android:gravity="center"
         android:paddingBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <ImageView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        >
+
+        <ImageView
             android:id="@+id/iv_loading_cirecle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintTop_toTopOf="@id/v_space"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/v_space"
             app:srcCompat="@drawable/svg_icon_loading"/>
 
-    <TextView
+        <TextView
+            android:id="@+id/v_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/ts_14"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_loading_cirecle"
+            />
+
+        <TextView
             android:layout_marginStart="5dp"
             android:text="@string/scanning_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="@dimen/ts_18"
+            app:layout_constraintStart_toEndOf="@id/v_space"
+            app:layout_constraintTop_toTopOf="@id/v_space"
+            android:textSize="@dimen/ts_14"
             android:textColor="@color/black"/>
-</LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

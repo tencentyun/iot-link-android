@@ -18,8 +18,9 @@
         <TextView
                 android:id="@+id/tv_recommend"
                 android:text="@string/recommend"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_A1A7B2"
                 android:layout_marginTop="13dp"
+                android:textSize="@dimen/ts_12"
                 android:paddingLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -35,11 +36,11 @@
         <View
                 android:id="@+id/split_line"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
-                android:background="@color/gray_F5F5F5" />
+                android:background="@color/gray_E7E8EB" />
         <com.tencent.iot.explorer.link.customview.FullGridView
                 android:id="@+id/gv_devices"
                 android:layout_width="match_parent"

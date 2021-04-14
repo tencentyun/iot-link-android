@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/gray_F5F5F5">
 
     <!--返回键-->
     <include
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/menu_bind_phone"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white"
         >
 
@@ -59,8 +59,8 @@
 
     <ImageView
         android:id="@+id/iv_bind_to_country"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_marginStart="7dp"
         android:padding="3dp"
         android:rotation="180"
@@ -136,6 +136,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
             android:textSize="@dimen/ts_10"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="@+id/line_bind_phone"
             app:layout_constraintStart_toStartOf="@+id/et_bind_phone"
             app:layout_constraintTop_toBottomOf="@+id/line_bind_phone" />
@@ -253,6 +254,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
+            android:visibility="gone"
             android:textSize="@dimen/ts_10"
             app:layout_constraintLeft_toLeftOf="@+id/line_set_pwd"
             app:layout_constraintStart_toStartOf="@+id/et_set_password"
@@ -297,6 +299,7 @@
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="49dp"
+        android:visibility="invisible"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
 
@@ -316,6 +319,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
+            android:visibility="gone"
             android:textSize="@dimen/ts_10"
             app:layout_constraintLeft_toLeftOf="@+id/line2_set_pwd"
             app:layout_constraintStart_toStartOf="@+id/et_verify_set_password"
@@ -329,7 +333,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
         android:background="@drawable/background_grey_dark_cell"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="@color/gray_F5F5F5"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/menu_modify_email"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white"
         android:id="@+id/layout_top"
         >
@@ -61,6 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/red_eb3d3d"
+        android:visibility="gone"
         android:textSize="@dimen/ts_10"
         app:layout_constraintLeft_toLeftOf="@+id/et_modify_email"
         app:layout_constraintTop_toBottomOf="@+id/et_modify_email" />
@@ -137,6 +138,7 @@
         android:layout_marginTop="49dp"
         android:layout_marginStart="16dp"
         android:background="@color/gray_E7E8EB"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@+id/line_modify_email" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -146,7 +148,7 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/background_grey_dark_cell"
         android:gravity="center"
