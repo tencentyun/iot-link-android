@@ -49,13 +49,14 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         iv_login_to_country.setOnClickListener(this)
+        tv_login_to_country.setOnClickListener(this)
         tv_get_verify_code.setOnClickListener(this)
         btn_confirm_to_modify.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            iv_login_to_country -> {// 选择国家
+            tv_login_to_country, iv_login_to_country -> {// 选择国家
                 startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
             }
             tv_get_verify_code -> {// 获取验证码

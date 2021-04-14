@@ -66,9 +66,10 @@
                     <ImageView
                         android:id="@+id/iv_scann"
                         android:layout_width="32dp"
+                        android:padding="5dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="2dp"
                         android:layout_toStartOf="@+id/iv_question"
                         app:srcCompat="@drawable/svg_icon_scan" />
 
@@ -78,6 +79,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:padding="5dp"
                         app:srcCompat="@drawable/svg_icon_question" />
                 </RelativeLayout>
 
