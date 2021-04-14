@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="@color/gray_F5F5F5"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,26 +21,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/menu_modify_phone"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white"
         android:id="@+id/layout_top"
         >
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/tip_layout"
+            >
+
     <TextView
         android:id="@+id/tv_forgot_to_country_tip"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="48dp"
         android:layout_marginStart="20dp"
         android:text="@string/country_or_place"
         android:textColor="@color/black_15161A"
         android:textSize="@dimen/ts_14"
         android:gravity="center_vertical"
-        app:layout_constraintBottom_toBottomOf="@id/tv_login_to_country"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_login_to_country" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/tv_modify_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/mobile_num"
+            android:textColor="@color/black_15161A"
+            android:textSize="@dimen/ts_14"
+            android:gravity="center_vertical"
+            android:layout_marginTop="1dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_forgot_to_country_tip"
+            app:layout_constraintStart_toStartOf="parent"/>
 
-    <TextView
+        <TextView
+            android:id="@+id/tv_modify_phone_verifycode"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/verification_code"
+            android:textColor="@color/black_15161A"
+            android:textSize="@dimen/ts_14"
+            android:gravity="center_vertical"
+            android:layout_marginTop="1dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_modify_phone"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
         android:id="@+id/tv_login_to_country"
         android:layout_width="0dp"
         android:layout_height="48dp"
@@ -51,14 +86,14 @@
         android:textColor="@color/gray_6C7078"
         android:textSize="@dimen/ts_14"
         android:layout_marginStart="20dp"
-        app:layout_constraintStart_toEndOf="@+id/tv_forgot_to_country_tip"
+        app:layout_constraintStart_toEndOf="@id/tip_layout"
         app:layout_constraintEnd_toStartOf="@id/iv_login_to_country"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_login_to_country"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_marginRight="16dp"
         android:padding="3dp"
         android:rotation="180"
@@ -76,19 +111,6 @@
         android:layout_marginStart="20dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@id/tv_login_to_country" />
-
-    <TextView
-        android:id="@+id/tv_modify_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:text="@string/mobile_num"
-        android:textColor="@color/black_15161A"
-        android:textSize="@dimen/ts_14"
-        android:gravity="center_vertical"
-        app:layout_constraintBottom_toBottomOf="@id/et_modify_phone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/et_modify_phone" />
 
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_modify_phone"
@@ -137,19 +159,6 @@
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@id/line_login_to_country" />
 
-    <TextView
-        android:id="@+id/tv_modify_phone_verifycode"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:text="@string/verification_code"
-        android:textColor="@color/black_15161A"
-        android:textSize="@dimen/ts_14"
-        android:gravity="center_vertical"
-        app:layout_constraintBottom_toBottomOf="@id/et_modify_phone_verifycode"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/et_modify_phone_verifycode" />
-
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_modify_phone_verifycode"
         android:layout_width="0dp"
@@ -187,6 +196,7 @@
         android:layout_marginTop="49dp"
         android:layout_marginStart="20dp"
         android:background="@color/gray_E7E8EB"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@+id/line_modify_phone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -196,7 +206,7 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/background_grey_dark_cell"
         android:gravity="center"

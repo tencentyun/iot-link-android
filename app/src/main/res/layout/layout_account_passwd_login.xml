@@ -126,7 +126,7 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:background="@color/white"
-        android:hint="@string/password"
+        android:hint="@string/please_enter_pwd"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:inputType="textPassword"
         android:fontFamily="sans-serif"

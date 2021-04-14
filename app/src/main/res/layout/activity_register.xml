@@ -99,7 +99,7 @@
             android:layout_marginEnd="16dp"
             android:gravity="center"
             android:background="@drawable/background_circle_bule_gradient"
-            android:text="@string/register_get_code"
+            android:text="@string/get_code"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_16"
             app:layout_constraintTop_toBottomOf="@+id/ll_register_agreement" />

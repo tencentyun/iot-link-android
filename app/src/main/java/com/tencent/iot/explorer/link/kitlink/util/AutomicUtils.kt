@@ -14,7 +14,7 @@ object AutomicUtils {
         if (enable) {
             textView.setTextColor(context.resources.getColor(R.color.blue_0066FF))
         } else {
-            textView.setTextColor(context.resources.getColor(R.color.gray_bbbbbb))
+            textView.setTextColor(context.resources.getColor(R.color.gray_A1A7B2))
         }
         textView.isEnabled = enable
     }
@@ -23,7 +23,7 @@ object AutomicUtils {
         var secondsCountDownCallback = object: Utils.SecondsCountDownCallback {
             override fun currentSeconds(seconds: Int) {
                 handler.post(Runnable {
-                    textView.setText(context.getString(R.string.resend) + "(${seconds}s)")
+                    textView.setText(context.getString(R.string.to_resend, seconds.toString()))
                 })
             }
 

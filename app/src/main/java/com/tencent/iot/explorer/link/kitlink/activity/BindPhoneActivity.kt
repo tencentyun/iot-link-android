@@ -62,13 +62,14 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         iv_bind_to_country.setOnClickListener(this)
+        tv_bind_to_country.setOnClickListener(this)
         tv_get_verify_code.setOnClickListener(this)
         btn_confirm_to_bind.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            iv_bind_to_country -> {// 选择国家
+            tv_bind_to_country, iv_bind_to_country -> {// 选择国家
                 startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
             }
 
@@ -144,5 +145,6 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
         et_verify_set_password.visibility = View.GONE
         iv_clear_verify_password.visibility = View.GONE
         line2_set_pwd.visibility = View.GONE
+        line_input_verifycode.visibility = View.GONE
     }
 }
