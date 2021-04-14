@@ -432,8 +432,8 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
         override fun getTitle(position: Int): ITabView.TabTitle {
             return ITabView.TabTitle.Builder().setContent(titleList[position]).setTextColor(
-                0xFF0052D9.toInt(),0xFF000000.toInt() // 蓝色:0xFF0052D9, 黑色:0xFF000000
-            ).build()
+                0xFF0066FF.toInt(),0xFF6C7078.toInt() // 蓝色:0xFF0052D9, 黑色:0xFF000000
+            ).setTextSize(12).build()
         }
 
         override fun getCount(): Int {
