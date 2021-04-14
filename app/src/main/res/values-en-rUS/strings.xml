@@ -14,6 +14,7 @@
     <string name="error">Error</string>
     <string name="next">Next</string>
     <string name="resend">Resend</string>
+    <string name="to_resend">%ss to resend</string>
     <string name="finish">Complete</string>
     <string name="cancel">Cancel</string>
     <string name="close">Turn off</string>
@@ -112,7 +113,7 @@
     <string name="tag_lt">&#060;</string>
     <string name="delete_dev">Delete Device</string>
     <string name="length_error">The length is invalid.</string>
-    <string name="country_or_place">Country/Region</string>
+    <string name="country_or_place">Country</string>
     <string name="default_product_name">(Product Name)</string>
     <string name="share_dev_tip">Share Devices</string>
     <string name="switch_time_zone_tip">Are you sure you want to switch the time zone?</string>
@@ -141,6 +142,8 @@
     <string name="no_history_tip">还没有历史记录哦~</string>
     <string name="clear_all_history">清空历史记录</string>
     <string name="resp_with_no_data">没有找到匹配的结果</string>
+    <string name="please_enter_pwd">Please enter your password</string>
+    <string name="get_code">Get verification code</string>
 
     <!--登陆注册-->
     <string name="wechat_login">Login with WeChat</string>
@@ -159,7 +162,7 @@
     <string name="register_agree_4">Privacy Policy</string>
     <string name="register_agree_4_low">privacy policy</string>
     <string name="register_agree_5">Open-Source Software Info</string>
-    <string name="register_get_code">Get verification code</string>
+    <string name="register_get_code">Send</string>
     <string name="get_mobile_code_sent">The verification code has been sent to your phone:</string>
     <string name="get_email_code_sent">The verification code has been sent to your email:</string>
     <string name="not_wechat_client">The WeChat app is not installed</string>
@@ -175,14 +178,14 @@
     <string name="register_account">Signup</string>
     <string name="account">Account</string>
     <string name="get_sms_code">SMS verification code</string>
-    <string name="verification_code">Verification code</string>
+    <string name="verification_code">Code</string>
     <string name="input_verification_code">Enter the confirmation code</string>
     <string name="mobile_number">Mobile number</string>
-    <string name="mobile_num">Mobile number</string>
-    <string name="email_address">Email address</string>
+    <string name="mobile_num">Mobile</string>
+    <string name="email_address">E-mail</string>
     <string name="password">Password</string>
-    <string name="new_password">New Password</string>
-    <string name="confirm_password">Re-enter Password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_password">Confirm</string>
     <string name="new_password_equals_old">The new password cannot be the same as the old password</string>
     <string name="verify_password">Enter the password again</string>
     <string name="forgot_password">Forgot password</string>
@@ -487,7 +490,7 @@
 
     <!--customview start-->
     <string name="digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
-    <string name="mobile_phone_number_null">Please enter your mobile number</string>
+    <string name="mobile_phone_number_null">Enter your mobile number</string>
     <string name="mobile_phone_number_invalid">The mobile number format is incorrect</string>
     <string name="email_null">Please enter your email address</string>
     <string name="email_invalid">The email address format is incorrect</string>
@@ -502,7 +505,7 @@
     <string name="use_existed_account_to_login">Login with existing account</string>
     <string name="account_passwd_login">Login with account and password</string>
     <string name="verify_code_login">Login with verification code</string>
-    <string name="mobile_or_email">Mobile number/email address</string>
+    <string name="mobile_or_email">Mobile or E-mail</string>
     <string name="other_login_way">Other login methods</string>
     <string name="wechat">WeChat</string>
     <string name="account_and_safety">Account and security</string>
@@ -511,12 +514,12 @@
     <string name="have_bind">Bound</string>
     <string name="email">Email</string>
     <string name="account_logout">Account deletion</string>
-    <string name="please_input_phonenumber">Please enter your mobile number</string>
-    <string name="please_input_email">Please enter your email address</string>
-    <string name="please_input_verifycode">Please enter the verification code</string>
+    <string name="please_input_phonenumber">Enter your mobile number</string>
+    <string name="please_input_email">Enter your email address</string>
+    <string name="please_input_verifycode">Enter code</string>
     <string name="please_set_passwd">Please set your password</string>
-    <string name="please_confirm_passwd">Please confirm your password again</string>
-    <string name="confirm_passwd">Confirm Again</string>
+    <string name="please_confirm_passwd">Please confirm your password</string>
+    <string name="confirm_passwd">Confirm</string>
     <string name="confirm_to_bind">Confirm binding</string>
     <string name="bind_phone_number">Bind mobile number</string>
     <string name="bind_email_number">Bind email address</string>
