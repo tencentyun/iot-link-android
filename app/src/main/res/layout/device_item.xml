@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="false"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:descendantFocusability="blocksDescendants">
         <ImageView
                 android:id="@+id/iv_device_icon"
@@ -13,20 +15,22 @@
                 android:layout_height="0dp"
                 android:focusable="false"
                 android:clickable="false"
-            android:padding="15dp"
+                android:padding="15dp"
                 app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintDimensionRatio="h,1:1"
             />
         <TextView
                 android:id="@+id/tv_device_name"
-                android:textColor="#444444"
+                android:textColor="@color/gray_6C7078"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:clickable="false"
                 android:gravity="center_horizontal"
+                android:textSize="@dimen/ts_12"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-            app:layout_constraintTop_toBottomOf="@id/iv_device_icon"
-            />
+                android:layout_marginTop="2dp"
+                app:layout_constraintTop_toBottomOf="@id/iv_device_icon"
+                />
 </androidx.constraintlayout.widget.ConstraintLayout>
