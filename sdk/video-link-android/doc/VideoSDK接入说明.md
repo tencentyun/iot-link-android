@@ -4,8 +4,13 @@
 ### 1.快速开始
 #### 1.1 使用动态库so
 * 下载路径
+    稳定版：
+    * (1)[so下载地址](https://search.maven.org/search?q=xp2p)
+    * (2) 路径：点击版本号(例如: 1.0.0) --> Downloads(右上角) --> aar
+    SNAPSHOT版：
     * (1) [so下载地址](https://oss.sonatype.org/#welcome)
     * (2) 路径：Repositories --> Snapshots --> 在path look up 输入框中输入com/tencent/iot/thirdparty/android --> xp2p-sdk -->版本号(例如：1.0.0-SNAPSHOT) --> 选择最新的aar右键下载
+    注：建议使用稳定版本，SNAPSHOT版仅供开发自测使用
 
 * 工程如何引用：
 (1). 解压上一步骤下载下来的aar，目录结构如下：
