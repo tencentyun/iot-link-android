@@ -16,6 +16,7 @@
     **注：建议使用稳定版本，SNAPSHOT版仅供开发自测使用**
 
 * 工程如何引用：
+
 (1). 解压上一步骤下载下来的aar，目录结构如下：
 ```
 ├── assets
@@ -27,6 +28,7 @@
 │       └── libxnet-android.so
 ```
 (2). 将头文件和so动态库放在自己工程目录下，确保CMakeList.txt可以找到对应的路径即可
+
 (3). 使用样例：
 ```
 ├── cpp
@@ -50,6 +52,19 @@ target_link_libraries( native-lib test-lib ${log-lib})
    
 #### 1.2 使用Android aar库
 * 工程如何引用：
+
+##### 1.2.1 引用稳定版：
+
+在应用模块的build.gradle中配置
+```
+dependencies {
+    implementation 'com.tencent.iot.video:video-link-android:x.x.x'
+}
+```
+具体版本号可参考[版本号列表](https://search.maven.org/search?q=video-link-android)
+
+##### 1.2.2 引用SNAPSHOT版：
+
 (1). 在工程的build.gradle中配置仓库url
 ```
 allprojects {
@@ -65,9 +80,11 @@ allprojects {
 (2). 在应用模块的build.gradle中配置
 ```
 dependencies {
-    implementation 'com.tencent.iot.video:video-link-android:1.4.0-SNAPSHOT'
+    implementation 'com.tencent.iot.video:video-link-android:x.x.x-SNAPSHOT'
 }
 ```
+
+**注：建议使用稳定版本，SNAPSHOT版仅供开发自测使用**
 
 ### 2.示例代码
 #### 2.1 使用使用动态库so
