@@ -151,7 +151,7 @@ class ClickButton : AppCompatTextView {
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.INVISIBLE
+                            textView?.visibility = View.VISIBLE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else
@@ -167,7 +167,7 @@ class ClickButton : AppCompatTextView {
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.INVISIBLE
+                            textView?.visibility = View.VISIBLE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else textView?.text =
@@ -181,7 +181,7 @@ class ClickButton : AppCompatTextView {
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.INVISIBLE
+                            textView?.visibility = View.VISIBLE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else

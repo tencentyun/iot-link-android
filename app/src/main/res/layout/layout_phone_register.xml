@@ -20,18 +20,18 @@
         />
 
     <TextView
-            android:id="@+id/tv_register_to_country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="@string/default_country"
-            android:textColor="@color/gray_6C7078"
-            android:textSize="@dimen/ts_14"
-            app:layout_constraintStart_toEndOf="@id/tv_country_tip"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/line_country"
-        />
+        android:id="@+id/tv_register_to_country"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:text="@string/default_country"
+        android:gravity="center_vertical"
+        android:textColor="@color/gray_6C7078"
+        android:textSize="@dimen/ts_14"
+        app:layout_constraintEnd_toStartOf="@id/iv_register_to_country"
+        app:layout_constraintBottom_toTopOf="@id/line_country"
+        app:layout_constraintStart_toEndOf="@id/tv_country_tip"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_register_to_country"
@@ -91,7 +91,7 @@
             android:id="@+id/iv_register_phone_clear"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="20dp"
             android:padding="3dp"
             android:src="@mipmap/icon_clear"
             android:visibility="visible"
@@ -114,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
-            android:textSize="@dimen/ts_10"
+            android:textSize="@dimen/ts_12"
             app:layout_constraintLeft_toLeftOf="@+id/et_register_phone"
             app:layout_constraintTop_toBottomOf="@+id/line_register_phone" />
 
@@ -122,15 +122,14 @@
             android:id="@+id/tv_register_to_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:paddingBottom="5dp"
+            android:layout_marginStart="20dp"
             android:text="@string/email_to_register"
             android:textColor="@color/blue_0066FF"
             android:textSize="@dimen/ts_16"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="7dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line_register_phone"
+            app:layout_constraintTop_toBottomOf="@id/tv_register_phone_hint"
             app:layout_constraintBottom_toBottomOf="parent"
         />
 
