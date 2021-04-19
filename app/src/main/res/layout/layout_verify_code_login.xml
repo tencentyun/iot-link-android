@@ -42,7 +42,7 @@
         android:src="@mipmap/icon_arrow"
         android:rotation="180"
         app:tint="@color/gray_6C7078"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_login_to_country_byverifycode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_login_to_country_byverifycode" />
@@ -90,7 +90,7 @@
         android:id="@+id/iv_login_phone_or_email_clear_byverifycode"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="20dp"
         android:padding="3dp"
         android:src="@mipmap/icon_clear"
         android:visibility="visible"
@@ -143,9 +143,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:padding="3dp"
-        android:text="@string/register_get_code"
+        android:text="@string/get_code"
         android:textColor="@color/blue_0066FF"
-        android:textSize="@dimen/ts_16"
+        android:textSize="@dimen/ts_14"
         app:layout_constraintBottom_toBottomOf="@+id/et_login_phone_or_email_verifycode"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/et_login_phone_or_email_verifycode" />
@@ -171,6 +171,7 @@
         android:text="@string/login"
         android:textColor="@color/white"
         android:textSize="@dimen/ts_16"
+        android:textAllCaps="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line_two" />
@@ -182,9 +183,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="20dp"
         android:text="@string/account_passwd_login"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_account_verifycode_login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

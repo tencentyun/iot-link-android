@@ -32,7 +32,7 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
 
     override fun initView() {
         presenter = BindEmailPresenter(this)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.bind_email_number)
         et_bind_email.addClearImage(iv_clear_bind_email)
         et_set_password.addClearImage(iv_clear_password)

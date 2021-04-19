@@ -60,10 +60,9 @@
 
     <ImageView
         android:id="@+id/iv_clear_bind_email"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="20dp"
-        android:padding="12dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="16dp"
         android:src="@mipmap/icon_clear"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/et_bind_email"
@@ -75,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="66dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,6 +113,7 @@
         android:textColorHint="@color/gray_A1A7B2"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_14"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toStartOf="@+id/tv_get_verify_code"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code"
@@ -124,11 +124,10 @@
         android:id="@+id/tv_get_verify_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:padding="3dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/register_get_code"
         android:textColor="@color/blue_0066FF"
-        android:textSize="@dimen/ts_16"
+        android:textSize="@dimen/ts_14"
         app:layout_constraintBottom_toBottomOf="@+id/et_bind_email_verifycode"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/et_bind_email_verifycode" />
@@ -181,16 +180,15 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="66dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_input_verifycode" />
 
     <ImageView
         android:id="@+id/iv_clear_password"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="20dp"
-        android:padding="12dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="16dp"
         android:src="@mipmap/icon_clear"
         app:layout_constraintBottom_toBottomOf="@+id/et_set_password"
         app:layout_constraintRight_toRightOf="parent"
@@ -201,10 +199,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
-            android:visibility="gone"
-            android:textSize="@dimen/ts_10"
-            app:layout_constraintLeft_toLeftOf="@+id/line_set_pwd"
-            app:layout_constraintStart_toStartOf="@+id/et_set_password"
+            android:textSize="@dimen/ts_12"
+            app:layout_constraintStart_toStartOf="@+id/line_set_pwd"
             app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
 
     <TextView
@@ -245,17 +241,16 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="66dp"
         android:visibility="invisible"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
 
     <ImageView
         android:id="@+id/iv_clear_verify_password"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="20dp"
-        android:padding="12dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="16dp"
         android:src="@mipmap/icon_clear"
         app:layout_constraintBottom_toBottomOf="@+id/et_verify_set_password"
         app:layout_constraintRight_toRightOf="parent"
@@ -266,10 +261,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
-            android:textSize="@dimen/ts_10"
+            android:textSize="@dimen/ts_12"
             android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="@+id/line2_set_pwd"
-            app:layout_constraintStart_toStartOf="@+id/et_verify_set_password"
+            app:layout_constraintStart_toStartOf="@+id/line2_set_pwd"
             app:layout_constraintTop_toBottomOf="@+id/line2_set_pwd" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
