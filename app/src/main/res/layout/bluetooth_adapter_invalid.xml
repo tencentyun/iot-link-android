@@ -5,27 +5,32 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_width="match_parent"
+    <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_height="wrap_content">
         <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                app:srcCompat="@drawable/icon_warning"/>
+            android:id="@+id/iv_tag_blue"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            app:srcCompat="@drawable/icon_warning"/>
 
         <TextView
-                android:text="@string/bluetooth_adapter_invalid"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_14"
-                android:layout_marginStart="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <TextView
+            android:layout_toRightOf="@id/iv_tag_blue"
+            android:id="@+id/tv_tag_blue"
+            android:text="@string/bluetooth_adapter_invalid"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_14"
+            android:lineHeight="23sp"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_below="@id/tv_tag_blue"
+            android:layout_alignLeft="@id/tv_tag_blue"
             android:id="@+id/retry_to_scann01"
             android:layout_marginTop="5dp"
             android:text="@string/scanning_retry"
@@ -33,4 +38,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/ts_12"
             android:textColor="@color/blue_006EFF"/>
+
+    </RelativeLayout>
+
 </LinearLayout>
