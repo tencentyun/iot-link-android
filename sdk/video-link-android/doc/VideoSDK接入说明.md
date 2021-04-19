@@ -161,10 +161,33 @@ void _av_data_recv(const char *id, uint8_t *data, size_t len)
 {
 	printf("this is _av_data_recv\n");
 }
+
 /* msg_handle_t回调 */
 const char* _msg_notify(const char *id, XP2PType type, const char* msg)
 {
-	printf("this is _msg_notify\n");
+    if (type == XP2PTypeClose) {  //av recv close callback
+        printf("this is close callback\n");
+    } else if (type == XP2PTypeCmd) {  //command request callback
+        printf("this is command callback\n");
+    } else if (type == XP2PTypeSaveFileOn) {//是否将音视频流保存成文件
+       printf("this is file save callback\n");
+       printf("return "1" if write data to file, else return "0"\n");
+
+       return "0";
+    } else if (type == XP2PTypeSaveFileUrl) { //文件存储路径
+        printf("this is file save callback\n");
+        printf("return file path for type XP2PTypeSaveFileOn\n");
+
+        return "/storage/emulated/0/raw_video.data";
+    } else if (type == XP2PTypeLog) {
+        //save or print(do not used LOG*) log message
+        printf("this is log save callback\n");
+        printf("id:%s, msg:%s\n", id, msg);
+
+    } else if (type == XP2PTypeDisconnect) { //p2p链路断开
+        printf("this is disconnect callback\n");
+    }
+    return "";
 }
 
 setUserCallbackToXp2p(_av_data_recv, _msg_notify);
