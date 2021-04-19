@@ -3,32 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_width="match_parent"
+    android:gravity="center_horizontal">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            app:srcCompat="@drawable/icon_warning"/>
+            android:id="@+id/iv_tag"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/icon_warning"/>
 
         <TextView
+            android:id="@+id/tv_tag"
+            android:layout_toRightOf="@id/iv_tag"
             android:text="@string/not_found_device"
             android:textColor="@color/black"
-            android:textSize="@dimen/ts_16"
-            android:layout_marginStart="5dp"
+            android:textSize="@dimen/ts_14"
+            android:layout_marginLeft="5dp"
+            android:lineHeight="23sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <TextView
-        android:id="@+id/retry_to_scann02"
-        android:layout_marginTop="5dp"
-        android:text="@string/scanning_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/ts_16"
-        android:textColor="@color/blue_006EFF"/>
+
+        <TextView
+            android:layout_below="@id/tv_tag"
+            android:layout_toRightOf="@id/iv_tag"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/retry_to_scann02"
+            android:layout_marginTop="5dp"
+            android:text="@string/scanning_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/ts_12"
+            android:textColor="@color/blue_006EFF"/>
+    </RelativeLayout>
 </LinearLayout>
