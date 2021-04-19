@@ -109,7 +109,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         iv_scann.setOnClickListener(this)
-        iv_question.setOnClickListener(this)
+//        iv_question.setOnClickListener(this)
         vtab_device_category.addOnTabSelectedListener(this)
         retry_to_scann01.setOnClickListener(this)
         retry_to_scann02.setOnClickListener(this)
@@ -246,10 +246,10 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     requestPermission(permissions)
                 }
             }
-            iv_question -> {
-//                jumpActivity(HelpCenterActivity::class.java)
-                jumpActivity(HelpWebViewActivity::class.java)
-            }
+//            iv_question -> {
+////                jumpActivity(HelpCenterActivity::class.java)
+//                jumpActivity(HelpWebViewActivity::class.java)
+//            }
             retry_to_scann01, retry_to_scann02 -> {
                 beginScanning()
             }
