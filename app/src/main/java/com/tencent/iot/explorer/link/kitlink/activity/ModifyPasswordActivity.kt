@@ -64,7 +64,7 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.modify_password)
         initViewPager()
         presenter = ModifyPasswordPresenter(this)

@@ -35,7 +35,7 @@
             android:textColor="@color/black_15161A"
             android:textSize="@dimen/ts_14"
             android:gravity="center_vertical"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="19dp"
             app:layout_constraintTop_toBottomOf="@id/tv_country_tip"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -47,7 +47,7 @@
             android:text="@string/verification_code"
             android:textColor="@color/black_15161A"
             android:textSize="@dimen/ts_14"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="19dp"
             android:gravity="center_vertical"
             app:layout_constraintTop_toBottomOf="@id/tv_modify_passwd_byphone"
             app:layout_constraintStart_toStartOf="parent" />
@@ -61,7 +61,7 @@
             android:textColor="@color/black_15161A"
             android:textSize="@dimen/ts_14"
             android:gravity="center_vertical"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="19dp"
             app:layout_constraintTop_toBottomOf="@id/tv_phone_verifycode"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -74,7 +74,7 @@
             android:textColor="@color/black_15161A"
             android:textSize="@dimen/ts_14"
             android:gravity="center_vertical"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="19dp"
             app:layout_constraintTop_toBottomOf="@id/tv_set_password"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -101,9 +101,8 @@
         android:id="@+id/iv_country"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:padding="3dp"
         android:rotation="180"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="16dp"
         android:src="@mipmap/icon_arrow"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/gray_6C7078"
@@ -137,10 +136,9 @@
 
     <ImageView
         android:id="@+id/iv_clear_phone"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="24dp"
-        android:padding="12dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="16dp"
         android:src="@mipmap/icon_clear"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/et_modify_passwd_byphone"
@@ -152,7 +150,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="66dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@id/line_country" />
 
@@ -161,8 +159,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/red_eb3d3d"
-        android:textSize="@dimen/ts_10"
-        android:visibility="gone"
+        android:textSize="@dimen/ts_12"
         app:layout_constraintLeft_toLeftOf="@+id/line_phone"
         app:layout_constraintStart_toStartOf="@+id/et_modify_passwd_byphone"
         app:layout_constraintTop_toBottomOf="@+id/line_phone" />
@@ -174,6 +171,7 @@
         android:background="@color/white"
         android:hint="@string/please_input_verifycode"
         android:inputType="text"
+        android:layout_marginTop="18dp"
         android:textColor="@color/black_15161A"
         android:textColorHint="@color/gray_A1A7B2"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
@@ -188,11 +186,10 @@
         android:id="@+id/tv_get_verify_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:padding="3dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/register_get_code"
         android:textColor="@color/blue_0066FF"
-        android:textSize="@dimen/ts_16"
+        android:textSize="@dimen/ts_14"
         app:layout_constraintBottom_toBottomOf="@+id/et_phone_verifycode"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/et_phone_verifycode" />
@@ -233,16 +230,15 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="66dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_input_verifycode" />
 
     <ImageView
         android:id="@+id/iv_clear_password"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="24dp"
-        android:padding="12dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="16dp"
         android:src="@mipmap/icon_clear"
         app:layout_constraintBottom_toBottomOf="@+id/et_set_password"
         app:layout_constraintRight_toRightOf="parent"
@@ -253,10 +249,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/red_eb3d3d"
-        android:textSize="@dimen/ts_10"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@+id/line_set_pwd"
-        app:layout_constraintStart_toStartOf="@+id/et_set_password"
+        android:textSize="@dimen/ts_12"
+        app:layout_constraintStart_toStartOf="@+id/line_set_pwd"
         app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
 
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
@@ -284,16 +278,16 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="66dp"
+        android:visibility="invisible"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
 
     <ImageView
         android:id="@+id/iv_clear_verify_password"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="24dp"
-        android:padding="12dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="16dp"
         android:src="@mipmap/icon_clear"
         app:layout_constraintBottom_toBottomOf="@+id/et_verify_set_password"
         app:layout_constraintRight_toRightOf="parent"
@@ -304,10 +298,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/red_eb3d3d"
-        android:textSize="@dimen/ts_10"
-        app:layout_constraintLeft_toLeftOf="@+id/line2_set_pwd"
-        app:layout_constraintStart_toStartOf="@+id/et_verify_set_password"
+        android:textSize="@dimen/ts_12"
+        app:layout_constraintStart_toStartOf="@+id/line2_set_pwd"
         app:layout_constraintTop_toBottomOf="@+id/line2_set_pwd" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/gray_F5F5F5"
+        app:layout_constraintTop_toBottomOf="@id/line2_set_pwd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <TextView
         android:id="@+id/tv_use_email_verify_code_to_modify"
