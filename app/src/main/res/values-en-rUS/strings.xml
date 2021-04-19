@@ -143,7 +143,7 @@
     <string name="clear_all_history">清空历史记录</string>
     <string name="resp_with_no_data">没有找到匹配的结果</string>
     <string name="please_enter_pwd">Please enter your password</string>
-    <string name="get_code">Get verification code</string>
+    <string name="get_code">Get code</string>
 
     <!--登陆注册-->
     <string name="wechat_login">Login with WeChat</string>
@@ -172,8 +172,8 @@
     <string name="too_young_to_use"> Sorry. Tencent LianLian is not available.</string>
     <string name="location_failed">定位失败</string>
 
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
+    <string name="login">Log In</string>
+    <string name="logout">Log Out</string>
     <string name="register">Signup</string>
     <string name="register_account">Signup</string>
     <string name="account">Account</string>
@@ -183,13 +183,14 @@
     <string name="mobile_number">Mobile number</string>
     <string name="mobile_num">Mobile</string>
     <string name="email_address">E-mail</string>
+    <string name="email_address_no_line">Email</string>
     <string name="password">Password</string>
     <string name="new_password">New password</string>
     <string name="confirm_password">Confirm</string>
     <string name="new_password_equals_old">The new password cannot be the same as the old password</string>
     <string name="verify_password">Enter the password again</string>
     <string name="forgot_password">Forgot password</string>
-    <string name="find_bank_the_password">Reset password</string>
+    <string name="find_bank_the_password">Retrieve password</string>
     <string name="set_password">Set password</string>
     <string name="set_password_success">Set password successfully</string>
     <string name="country_code">Select country/region</string>
@@ -491,7 +492,7 @@
     <!--customview start-->
     <string name="digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="mobile_phone_number_null">Enter your mobile number</string>
-    <string name="mobile_phone_number_invalid">The mobile number format is incorrect</string>
+    <string name="mobile_phone_number_invalid">The number is incorrect</string>
     <string name="email_null">Please enter your email address</string>
     <string name="email_invalid">The email address format is incorrect</string>
     <string name="password_style">The password must contain 8&#8211;20 letters and digits</string>
@@ -524,7 +525,7 @@
     <string name="bind_phone_number">Bind mobile number</string>
     <string name="bind_email_number">Bind email address</string>
     <string name="confirm_to_modify">Confirm change</string>
-    <string name="modify_phone">Change mobile number</string>
+    <string name="modify_phone">Modify mobile number</string>
     <string name="modify_email">Change email address</string>
     <string name="email_verify_code_modify">Change with email verification code</string>
     <string name="phone_verify_code_modify">Change with SMS verification code</string>
