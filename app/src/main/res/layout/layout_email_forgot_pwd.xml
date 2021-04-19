@@ -22,7 +22,7 @@
         android:id="@+id/et_forgot_email"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:background="@color/white"
+        android:background="@null"
         android:hint="@string/email_address"
         android:inputType="textEmailAddress"
         android:textColor="@color/black_15161A"

@@ -30,15 +30,15 @@ class ModifyEmailActivity : PActivity(), ModifyEmailView, View.OnClickListener  
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.modify_email)
         et_modify_email.addClearImage(iv_modify_email_clear)
         presenter = ModifyEmailPresenter(this)
-//        btn_confirm_to_modify.addEditText(
-//            et_modify_email,
-//            tv_modify_email_hint,
-//            "email"
-//        )
+        btn_confirm_to_modify.addEditText(
+            et_modify_email,
+            tv_modify_email_hint,
+            "email"
+        )
     }
 
     override fun setListener() {
