@@ -129,19 +129,19 @@
     <string name="cloud_b_tag">云</string>
     <string name="rainy_tag">rain</string>
     <string name="snow_tag">snow</string>
-    <string name="dry_tag">干燥</string>
-    <string name="comfortable_tag">舒适</string>
-    <string name="damp_tag">潮湿</string>
-    <string name="seach_postion">搜索地点</string>
-    <string name="map_select_postion">地图选点</string>
+    <string name="dry_tag">Dry</string>
+    <string name="comfortable_tag">Comfort</string>
+    <string name="damp_tag">Moist</string>
+    <string name="seach_postion">Search place</string>
+    <string name="map_select_postion">Map selection</string>
     <string name="num_rooms">%s Rooms</string>
-    <string name="no_weather_info">暂无天气信息</string>
-    <string name="set_family_first">请先设置当前家庭位置</string>
-    <string name="more_option">更多操作</string>
-    <string name="search">搜索</string>
-    <string name="no_history_tip">还没有历史记录哦~</string>
-    <string name="clear_all_history">清空历史记录</string>
-    <string name="resp_with_no_data">没有找到匹配的结果</string>
+    <string name="no_weather_info">No weather information</string>
+    <string name="set_family_first">Please set the current home location first</string>
+    <string name="more_option">More operation</string>
+    <string name="search">Search</string>
+    <string name="no_history_tip">No history yet</string>
+    <string name="clear_all_history">Clear history</string>
+    <string name="resp_with_no_data">No match was found</string>
     <string name="please_enter_pwd">Please enter your password</string>
     <string name="get_code">Get code</string>
 
@@ -170,7 +170,7 @@
     <string name="cancel_wechat">Deauthorize</string>
     <string name="input_birthday_for_better_react">Date of Birth</string>
     <string name="too_young_to_use"> Sorry. Tencent LianLian is not available.</string>
-    <string name="location_failed">定位失败</string>
+    <string name="location_failed">Positioning failed </string>
 
     <string name="login">Log In</string>
     <string name="logout">Log Out</string>
@@ -463,8 +463,8 @@
     <string name="scanning_retry">Retry</string>
     <string name="connect">Connect</string>
     <string name="all_device">All</string>
-    <string name="all_dev_num">所有设备(%s)</string>
-    <string name="all_share_dev_num">共享设备(%s)</string>
+    <string name="all_dev_num">All devices(%s)</string>
+    <string name="all_share_dev_num">Share device(%s)</string>
     <string name="no_dev_to_show_add_now">No devices are found. Add one.</string>
     <string name="living_room">Living room</string>
     <string name="bedroom">Bedroom</string>
