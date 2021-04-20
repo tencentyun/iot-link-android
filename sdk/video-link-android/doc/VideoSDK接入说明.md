@@ -95,14 +95,15 @@ dependencies {
 ```
 typedef void (*av_recv_handle_t)(const char *id, uint8_t* recv_buf, size_t recv_len);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输出 |
 | recv_buf | uint8_t * | 接收到的媒体流数据 | 输出 |
 | recv_len | size_t | 接收到的媒体流数据长度 | 输出 |
 
-* 返回值
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -121,14 +122,15 @@ enum XP2PType {
 };
 typedef const char* (*msg_handle_t)(const char *id, XP2PType type, const char* msg);
 ```
-* 参数说明:
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输出 |
 | type | XP2PType | 通知类型 | 输出 |
 | msg | const char * | 接收到的消息 | 输出 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | char * | 根据type不同有不同返回值 |
@@ -139,13 +141,13 @@ typedef const char* (*msg_handle_t)(const char *id, XP2PType type, const char* m
 ```
 void setUserCallbackToXp2p(av_recv_handle_t recv_handle, msg_handle_t msg_handle);
 ```
-* 参数说明:
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | recv_handle | av_recv_handle_t | 媒体流数据回调|输入 |
 | msg_handle | msg_handle_t | 控制类消息回调|输入 |
-  
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void  |- |
@@ -172,7 +174,8 @@ setUserCallbackToXp2p(_av_data_recv, _msg_notify);
 ```
 int startServiceWithXp2pInfo(const char* id, const char *product_id, const char *device_name, const char* xp2p_info);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
@@ -180,7 +183,8 @@ int startServiceWithXp2pInfo(const char* id, const char *product_id, const char 
 | device_name | const char * | 目标camera设备名称 | 输入 |
 | xp2p_info | const char * | xp2p信息 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | XP2PERRNONE | 成功 |
@@ -203,14 +207,16 @@ startServiceWithXp2pInfo($id, $product_id, $device_name, xp2p_info);
 ```
 void *startAvRecvService(const char *id, const char *params, bool crypto);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
 | params | const char * | 直播(`action=live`)或回放(`action=playback`)参数 | 输入 |
 | crypto | bool | 是否开启传输层加密 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | 服务句柄 | 成功 |
@@ -222,13 +228,15 @@ void *startAvRecvService(const char *id, const char *params, bool crypto);
 ```
 int stopAvRecvService(const char *id, void *req);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
 | req | void * | 服务句柄 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | XP2PERRNONE | 成功 |
@@ -257,12 +265,14 @@ stopAvRecvService($id, req);
 ```
 const char *delegateHttpFlv(const char *id);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | 本地代理url | 成功 |
@@ -284,14 +294,16 @@ setUrl2Player(url);
 ```
 void *runSendService(const char *id, const char *params, bool crypto);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
 | params | const char * | 请求参数采用`key1=value&key2=value2`格式，key不允许以下划线_开头，且key和value中间不能包含&/+=特殊字符 | 输入 |
 | crypto | bool | 否开启传输层加密 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | 服务句柄 | 成功 |
@@ -303,14 +315,16 @@ void *runSendService(const char *id, const char *params, bool crypto);
 ```
 int dataSend(const char *id, uint8_t *data, size_t len);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
 | data | uint8_t * | 要发送的数据内容 | 输入 |
 | len | size_t | 要发送的数据长度 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | XP2PERRNONE | 成功 |
@@ -322,13 +336,15 @@ int dataSend(const char *id, uint8_t *data, size_t len);
 ```
 int stopSendService(const char *id, void *req);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
 | req | void * | 服务句柄，可传入NULL | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | XP2PERRNONE | 成功 |
@@ -354,7 +370,8 @@ stopSendService(id, req);
 ```
 int postCommandRequestSync(const char *id, const unsigned char *command, size_t cmd_len, unsigned char **recv_buf, size_t *recv_len, uint64_t timeout_us);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
@@ -364,7 +381,8 @@ int postCommandRequestSync(const char *id, const unsigned char *command, size_t 
 | recv_len | size_t * | camera回复的数据长度 | 输出 |
 | timeout_us | uint64_t | 命令超时时间，单位为微秒，值为0时采用默认超时(7500ms左右) | 输出 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | XP2PERRNONE | 成功 |
@@ -375,7 +393,7 @@ int postCommandRequestSync(const char *id, const unsigned char *command, size_t 
 unsigned char *buf = NULL;
 size_t len = 0;
 /* 接收的数据填充在buf中，buf内存由SDK内部申请外部释放 */
-int rc = postCommandRequestSync($id, "action=user_define&cmd=xxx", 
+int rc = postCommandRequestSync($id, "action=user_define&cmd=xxx",
 sizeof(action=user_define&cmd=custom_cmd), &buf, &len, 2*1000*1000);
 if (rc != 0) {
   printf("post command request with async failed:%d\n", rc);
@@ -389,14 +407,16 @@ delete buf;
 ```
 int postCommandRequestWithAsync(const char *id, const unsigned char *command, size_t cmd_len);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
 | command | const unsigned char * | 可以为任意格式字符或二进制数据 | 输入 |
 | cmd_len | size_t | `command`参数长度 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | XP2PERRNONE | 成功 |
@@ -427,12 +447,14 @@ char* _msg_notify(const char *id, XP2PType type, const char* msg) {
 ```
 void stopService(const char *id);
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | const char * | 目标camera在app端的唯一标识符 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -447,10 +469,10 @@ void stopService(const char *id);
 * 接口描述:
 详见`2.1.0.1 控制类消息通知回调`
 
-* 参数说明:
+
 详见`2.1.0.1 控制类消息通知回调`
 
-* 返回值:
+:
 详见`2.1.0.1 控制类消息通知回调`
 
 * 代码示例:
@@ -467,10 +489,10 @@ char* _msg_notify(const char *id, XP2PType type, const char* msg) {
 * 接口描述:
 详见`2.1.0.1 控制类消息通知回调`
 
-* 参数说明:
+
 详见`2.1.0.1 控制类消息通知回调`
 
-* 返回值:
+:
 详见`2.1.0.1 控制类消息通知回调`
 
 * 代码示例:
@@ -487,10 +509,10 @@ char* _msg_notify(const char *id, XP2PType type, const char* msg) {
 * 接口描述:
 详见`2.1.0.1 控制类消息通知回调`
 
-* 参数说明:
+
 详见`2.1.0.1 控制类消息通知回调`
 
-* 返回值:
+:
 详见`2.1.0.1 控制类消息通知回调`
 
 * 代码示例:
@@ -517,14 +539,16 @@ fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int)
 	//多路p2p传输场景需根据回传的`id`判断对应的p2p通道,以做相应处理
 }
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输出 |
 | data | ByteArray | 接收到的媒体流数据 | 输出 |
 | len | Int | 接收到的媒体流数据长度 | 输出 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -540,13 +564,15 @@ fun commandRequest(id: String?, msg: String?)
 	//多路p2p传输场景需根据回传的`id`判断对应的p2p通道,以做相应处理
 }
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输出 |
 | msg | String | 接收到的消息 | 输出 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -562,13 +588,15 @@ fun xp2pLinkError(id: String?, msg: String?)
 	//多路p2p传输场景需根据回传的`id`判断对应的p2p通道,以做相应处理
 }
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输出 |
 | msg | String | 附加消息 | 输出 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -584,14 +612,16 @@ fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int)
 	//多路p2p传输场景需根据回传的`id`判断对应的p2p通道,以做相应处理
 }
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输出 |
 | msg | String | 附加消息 | 输出 |
 | errorCode | Int | 状态码 | 输出 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -602,12 +632,14 @@ fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int)
 ```
 public static void setCallback(XP2PCallback cb)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | cb | XP2PCallback | p2p回调函数类 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -627,7 +659,8 @@ class VideoActivity : XP2PCallback {
 ```
 public static void startServiceWithXp2pInfo(String id, String product_id, String device_name, String xp2p_info)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
@@ -635,7 +668,8 @@ public static void startServiceWithXp2pInfo(String id, String product_id, String
 | device_name | String | 目标camera设备名称 | 输入 |
 | xp2p_info | String | xp2p信息 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -657,14 +691,16 @@ XP2P.startServiceWithXp2pInfo($id, $product_id, $device_name, xp2p_info)
 ```
 public static void startAvRecvService(String id, String params, boolean crypto)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
 | params | String | 直播( `action=live` )或回放( `action=playback` )参数 | 输入 |
 | crypto | boolean | 是否开启传输层加密 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -675,13 +711,15 @@ public static void startAvRecvService(String id, String params, boolean crypto)
 ```
 public static int stopAvRecvService(String id, byte[] req)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
 | req | byte[] | 服务句柄，当前版本传入`null` | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | 0 | 成功 |
@@ -710,12 +748,14 @@ XP2P.stopAvRecvService($id, null)
 ```
 public static String delegateHttpFlv(String id)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | 本地代理url | 成功 |
@@ -740,14 +780,16 @@ mPlayer.start()
 ```
 public static void runSendService(String id, String params, boolean crypto)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
 | params | String | 请求参数采用 `key1=value&amp;key2=value2` 格式，key不允许以下划线_开头，且key和value中间不能包含&amp;/+=特殊字符 | 输入 |
 | crypto | boolean | 否开启传输层加密 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -758,14 +800,16 @@ public static void runSendService(String id, String params, boolean crypto)
 ```
 public static int dataSend(String id, byte[] data, int len)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
 | data | byte[] | 要发送的数据内容 | 输入 |
 | len | int | 要发送的数据长度 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
@@ -776,13 +820,15 @@ public static int dataSend(String id, byte[] data, int len)
 ```
 public static int stopSendService(String id, byte[] req)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
 | req | byte[] | 服务句柄，当前版本可传入`null` | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | 0 | 成功 |
@@ -808,7 +854,8 @@ XP2P.stopSendService($id, null)
 ```
 public static String postCommandRequestSync(String id, byte[] command, long cmd_len, long timeout_us)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
@@ -816,7 +863,8 @@ public static String postCommandRequestSync(String id, byte[] command, long cmd_
 | cmd_len | long | `command` 参数长度 | 输入 |
 | timeout_us | long | 命令超时时间，单位为微秒，值为0时采用默认超时(7500ms左右) | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | camera回复的数据 | 成功 |
@@ -835,14 +883,16 @@ L.e("--------ret:----$ret--\n")
 ```
 public static int postCommandRequestWithAsync(String id, byte[] command, long cmd_len)
 ```
-* 参数说明:
+
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
 | command | byte[] | 可以为任意格式字符或二进制数据 | 输入 |
 | cmd_len | long | `command` 参数长度 | 输入 |
 
-* 返回值
+
+
 | 返回值 | 描述 |
 |:-:|:-:|
 | 0 | 成功 |
@@ -866,12 +916,11 @@ override fun commandRequest(id: String?, msg: String?, len: Int)
 ```
 public static void stopService(String id)
 ```
-* 参数说明:
+
 | 参数 | 类型 | 描述 | 输入/输出 |
 |:-:|:-:|:-:|:-:|
 | id | String | 目标camera在app端的唯一标识符 | 输入 |
 
-* 返回值
 | 返回值 | 描述 |
 |:-:|:-:|
 | void | - |
