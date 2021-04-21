@@ -29,6 +29,10 @@ class LoginModel(view: LoginView) : ParentModel<LoginView>(view), MyCallback {
         return countryCode
     }
 
+    fun getCountry(): String {
+        return countryName
+    }
+
     fun setCountry(country: String) {
         if (!country.contains("+")) return
         country.split("+").let {

@@ -96,8 +96,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         }
         onNewIntentIn()
         if (!Utils.isChineseSystem(this)) {
-            accoutPasswdLoginView.tv_login_to_country_bypsswd.text = getString(R.string.country_china_en)
-            verifyCodeLoginView.tv_login_to_country_byverifycode.text = getString(R.string.country_china_en)
+            accoutPasswdLoginView.tv_login_to_country_bypsswd.text = getString(R.string.country_china_en) + getString(R.string.conutry_code_num, presenter.getCountryCode())
+            verifyCodeLoginView.tv_login_to_country_byverifycode.text = getString(R.string.country_china_en) + getString(R.string.conutry_code_num, presenter.getCountryCode())
         }
 
         loadLastCountryInfo()
@@ -434,8 +434,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         }
     }
     override fun showCountryCode(countryName: String, countryCode: String) {
-        accoutPasswdLoginView.tv_login_to_country_bypsswd.text = countryName
-        verifyCodeLoginView.tv_login_to_country_byverifycode.text = countryName
+        accoutPasswdLoginView.tv_login_to_country_bypsswd.text = countryName + getString(R.string.conutry_code_num, presenter.getCountryCode())
+        verifyCodeLoginView.tv_login_to_country_byverifycode.text = countryName + getString(R.string.conutry_code_num, presenter.getCountryCode())
     }
 
     override fun sendVerifyCodeSuccess() {
