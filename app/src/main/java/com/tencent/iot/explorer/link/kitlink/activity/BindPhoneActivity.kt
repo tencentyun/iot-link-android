@@ -12,7 +12,11 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.BindPhonePresenter
 import com.tencent.iot.explorer.link.mvp.view.BindPhoneView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
+import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
+import com.tencent.iot.explorer.link.mvp.view.LoginView
 import kotlinx.android.synthetic.main.activity_bind_phone.*
 import kotlinx.android.synthetic.main.activity_bind_phone.et_set_password
 import kotlinx.android.synthetic.main.activity_bind_phone.et_verify_set_password
@@ -27,6 +31,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
 
     private lateinit var presenter: BindPhonePresenter
+    private lateinit var loginPresenter: LoginPresenter
     private var hanlder = Handler()
 
     override fun getPresenter(): IPresenter? {
@@ -39,7 +44,7 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
 
     override fun onResume() {
         super.onResume()
-        btn_confirm_to_bind.addEditText(et_bind_phone, tv_bind_phone_hint, presenter.getCountryCode())
+        btn_confirm_to_bind.addEditText(et_bind_phone, tv_bind_phone_hint, loginPresenter.getCountryCode())
         if (App.data.userInfo.HasPassword != "0") {//有密码则不显示设置密码的输入框
             hidePasswordInput()
             btn_confirm_to_bind.removeEditText(et_set_password)
@@ -51,7 +56,7 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.bind_phone_number)
         et_bind_phone.addClearImage(iv_clear_bind_phone)
         et_set_password.addClearImage(iv_clear_password)
@@ -65,12 +70,25 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
         tv_bind_to_country.setOnClickListener(this)
         tv_get_verify_code.setOnClickListener(this)
         btn_confirm_to_bind.setOnClickListener(this)
+        loginPresenter = LoginPresenter(loginView)
+        tv_bind_to_country.text = loginPresenter.getCountry() + getString(R.string.conutry_code_num, loginPresenter.getCountryCode())
+    }
+
+    var loginView = object : LoginView {
+        override fun loginSuccess(user: User) {}
+        override fun loginFail(msg: String) {}
+        override fun loginFail(response: BaseResponse) {}
+        override fun sendVerifyCodeSuccess() {}
+        override fun sendVerifyCodeFail(msg: ErrorMessage) {}
+        override fun showCountryCode(countryName: String, countryCode: String) {
+            tv_bind_to_country.text = countryName + getString(R.string.conutry_code_num, countryCode)
+        }
     }
 
     override fun onClick(v: View?) {
         when (v) {
             tv_bind_to_country, iv_bind_to_country -> {// 选择国家
-                startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
+                startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
 
             tv_get_verify_code -> {// 获取验证码
@@ -110,16 +128,14 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
             data?.let {
-                it.getStringExtra(CommonField.COUNTRY_CODE)?.run {
-                    presenter.setCountryCode(this)
+                it.getStringExtra(CommonField.REGION_ID)?.run {
+                    loginPresenter.setCountry(this)
                 }
             }
         }
     }
 
-    override fun showCountryCode(code: String, name: String) {
-        tv_bind_to_country.text = name
-    }
+    override fun showCountryCode(code: String, name: String) {}
 
     override fun bindSuccess() {
         T.show(getString(R.string.bind_success))
