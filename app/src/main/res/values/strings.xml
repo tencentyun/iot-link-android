@@ -144,6 +144,7 @@
     <string name="resp_with_no_data">没有找到匹配的结果</string>
     <string name="please_enter_pwd">请输入密码</string>
     <string name="get_code">获取验证码</string>
+    <string name="conutry_code_num">&#160;(+%s)</string>
 
     <!--登陆注册-->
     <string name="wechat_login">微信登录</string>

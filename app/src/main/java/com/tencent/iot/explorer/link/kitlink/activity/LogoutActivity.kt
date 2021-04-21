@@ -38,7 +38,7 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.logout_account)
         btn_logout.setBackgroundResource(R.drawable.background_grey_dark_cell)
         tv_logout_time.text =
