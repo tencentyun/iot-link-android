@@ -11,15 +11,22 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ModifyPhonePresenter
 import com.tencent.iot.explorer.link.mvp.view.ModifyPhoneView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
+import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
+import com.tencent.iot.explorer.link.mvp.view.LoginView
 import kotlinx.android.synthetic.main.activity_modify_phone.*
 import kotlinx.android.synthetic.main.activity_modify_phone.tv_get_verify_code
+import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  {
 
     private lateinit var presenter: ModifyPhonePresenter
+    private lateinit var loginPresenter: LoginPresenter
     private var hanlder = Handler()
 
     override fun getPresenter(): IPresenter? {
@@ -35,12 +42,12 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
         btn_confirm_to_modify.addEditText(
             et_modify_phone,
             tv_modify_phone_hint,
-            presenter.getCountryCode()
+            loginPresenter.getCountryCode()
         )
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.modify_phone)
         et_modify_phone.addClearImage(iv_modify_phone_clear)
         presenter = ModifyPhonePresenter(this)
@@ -52,12 +59,25 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
         tv_login_to_country.setOnClickListener(this)
         tv_get_verify_code.setOnClickListener(this)
         btn_confirm_to_modify.setOnClickListener(this)
+        loginPresenter = LoginPresenter(loginView)
+        tv_login_to_country.text = loginPresenter.getCountry() + getString(R.string.conutry_code_num, loginPresenter.getCountryCode())
+    }
+
+    var loginView = object : LoginView {
+        override fun loginSuccess(user: User) {}
+        override fun loginFail(msg: String) {}
+        override fun loginFail(response: BaseResponse) {}
+        override fun sendVerifyCodeSuccess() {}
+        override fun sendVerifyCodeFail(msg: ErrorMessage) {}
+        override fun showCountryCode(countryName: String, countryCode: String) {
+            tv_login_to_country.text = countryName + getString(R.string.conutry_code_num, countryCode)
+        }
     }
 
     override fun onClick(v: View?) {
         when (v) {
             tv_login_to_country, iv_login_to_country -> {// 选择国家
-                startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
+                startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
             tv_get_verify_code -> {// 获取验证码
                 val account = et_modify_phone.text.trim().toString()
@@ -87,16 +107,14 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
             data?.let {
-                it.getStringExtra(CommonField.COUNTRY_CODE)?.run {
-                    presenter.setCountryCode(this)
+                it.getStringExtra(CommonField.REGION_ID)?.run {
+                    loginPresenter.setCountry(this)
                 }
             }
         }
     }
 
-    override fun showCountryCode(code: String, name: String) {
-        tv_login_to_country.text = name
-    }
+    override fun showCountryCode(code: String, name: String) {}
 
     override fun sendVerifyCodeFail(msg: ErrorMessage) {
         T.show(msg.Message)

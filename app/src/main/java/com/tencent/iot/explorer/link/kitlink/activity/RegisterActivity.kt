@@ -86,8 +86,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             iv_register_agreement_status.visibility = View.GONE
         }
         if (!Utils.isChineseSystem(this)) {
-            phoneView.tv_register_to_country.text = getString(R.string.country_china_en)
-            emailView.tv_register_to_country_email.text = getString(R.string.country_china_en)
+            phoneView.tv_register_to_country.text = getString(R.string.country_china_en) + getString(R.string.conutry_code_num, presenter.getCountryCode())
+            emailView.tv_register_to_country_email.text = getString(R.string.country_china_en) + getString(R.string.conutry_code_num, presenter.getCountryCode())
         }
 
         loadLastCountryInfo()
@@ -278,8 +278,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     }
 
     override fun showCountryCode(countryCode: String, countryName: String) {
-        phoneView.tv_register_to_country.text = countryName
-        emailView.tv_register_to_country_email.text = countryName
+        phoneView.tv_register_to_country.text = countryName + getString(R.string.conutry_code_num, countryCode)
+        emailView.tv_register_to_country_email.text = countryName + getString(R.string.conutry_code_num, countryCode)
         btn_register_get_code.changeType(phoneView.et_register_phone, presenter.getCountryCode())
     }
 
