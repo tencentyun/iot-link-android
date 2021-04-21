@@ -108,11 +108,11 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
             } else { // 修改房间地址的方式
                 if (adapter != null || adapter!!.selectPostion == null) {
                     var address = Address()
-                    address.name = adapter?.selectPostion!!.title
-                    address.address = adapter?.selectPostion!!.address
-                    address.latitude = adapter?.selectPostion!!.location!!.lat
-                    address.longitude = adapter?.selectPostion!!.location!!.lng
-                    address.city = adapter?.selectPostion!!.ad_info!!.city
+                    address.name = adapter?.selectPostion?.title.toString()
+                    address.address = adapter?.selectPostion?.address.toString()
+                    address.latitude = adapter?.selectPostion?.location?.lat!!
+                    address.longitude = adapter?.selectPostion?.location?.lng!!
+                    address.city = adapter?.selectPostion?.ad_info?.city.toString()
                     HttpRequest.instance.modifyFamily(familyId, familyName, JSON.toJSONString(address),
                     object: MyCallback {
                         override fun fail(msg: String?, reqCode: Int) {
