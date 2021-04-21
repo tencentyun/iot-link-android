@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "647da930_0e93d376",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/FamilyAddressActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2021-04-21T09:19:10Z",
+      "side": 1,
+      "message": "应该是这里的判断逻辑有问题，存在 null 还会进入后续逻辑的情况",
+      "range": {
+        "startLine": 109,
+        "startChar": 16,
+        "endLine": 109,
+        "endChar": 73
+      },
+      "revId": "5da4f6bce9addf7b91b245ca3d130bb44740e326",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
