@@ -106,7 +106,7 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
                 finish()
 
             } else { // 修改房间地址的方式
-                if (adapter != null || adapter!!.selectPostion == null) {
+                if (adapter != null && adapter!!.selectPostion != null) {
                     var address = Address()
                     address.name = adapter?.selectPostion!!.title
                     address.address = adapter?.selectPostion!!.address
