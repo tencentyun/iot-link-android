@@ -16,9 +16,15 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ModifyPasswordPresenter
 import com.tencent.iot.explorer.link.mvp.view.ModifyPasswordView
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
+import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
+import com.tencent.iot.explorer.link.mvp.view.LoginView
 import kotlinx.android.synthetic.main.activity_modify_password.*
+import kotlinx.android.synthetic.main.activity_modify_password.btn_confirm_to_modify
+import kotlinx.android.synthetic.main.activity_modify_phone.*
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.*
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_email.view.tv_get_verify_code
 import kotlinx.android.synthetic.main.layout_modify_passwd_use_phone.view.*
@@ -34,6 +40,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickListener {
 
     private lateinit var presenter: ModifyPasswordPresenter
+    private lateinit var loginPresenter: LoginPresenter
     private lateinit var modifyPasswdUsePhoneView: View
     private lateinit var modifyPasswdUseEmailView: View
     private var handler: Handler = Handler()
@@ -51,7 +58,7 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
         btn_confirm_to_modify.addEditText(
             modifyPasswdUsePhoneView.et_modify_passwd_byphone,
             modifyPasswdUsePhoneView.tv_phone_hint,
-            presenter.getCountryCode()
+            loginPresenter.getCountryCode()
         )
         btn_confirm_to_modify.addEditText(
             modifyPasswdUsePhoneView.et_set_password,
@@ -68,6 +75,19 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
         tv_title.text = getString(R.string.modify_password)
         initViewPager()
         presenter = ModifyPasswordPresenter(this)
+        loginPresenter = LoginPresenter(loginView)
+        modifyPasswdUsePhoneView.tv_country.text = loginPresenter.getCountry() + getString(R.string.conutry_code_num, loginPresenter.getCountryCode())
+    }
+
+    var loginView = object : LoginView {
+        override fun loginSuccess(user: User) {}
+        override fun loginFail(msg: String) {}
+        override fun loginFail(response: BaseResponse) {}
+        override fun sendVerifyCodeSuccess() {}
+        override fun sendVerifyCodeFail(msg: ErrorMessage) {}
+        override fun showCountryCode(countryName: String, countryCode: String) {
+            modifyPasswdUsePhoneView.tv_country.text = countryName + getString(R.string.conutry_code_num, countryCode)
+        }
     }
 
     override fun setListener() {
@@ -154,7 +174,7 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
             }
 
             modifyPasswdUsePhoneView.tv_country, modifyPasswdUsePhoneView.iv_country -> {
-                startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
+                startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
         }
     }
@@ -218,16 +238,14 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
             data?.let {
-                it.getStringExtra(CommonField.COUNTRY_CODE)?.run {
-                    presenter.setCountryCode(this)
+                it.getStringExtra(CommonField.REGION_ID)?.run {
+                    loginPresenter.setCountry(this)
                 }
             }
         }
     }
 
-    override fun showCountryCode(code: String, name: String) {
-        modifyPasswdUsePhoneView.tv_country.text = name
-    }
+    override fun showCountryCode(code: String, name: String) {}
 
     override fun modifyPasswdSuccess() {
         showModifySuccessDialog()
