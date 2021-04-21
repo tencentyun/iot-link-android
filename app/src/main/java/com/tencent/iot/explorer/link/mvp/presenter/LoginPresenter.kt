@@ -15,6 +15,10 @@ class LoginPresenter : ParentPresenter<LoginModel, LoginView> {
         return model?.getCountryCode().toString()
     }
 
+    fun getCountry(): String {
+        return model?.getCountry().toString()
+    }
+
     fun setCountry(country: String) {
         model?.setCountry(country)
     }

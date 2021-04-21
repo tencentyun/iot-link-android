@@ -144,6 +144,7 @@
     <string name="resp_with_no_data">No match was found</string>
     <string name="please_enter_pwd">Please enter your password</string>
     <string name="get_code">Get code</string>
+    <string name="conutry_code_num">&#160;(+%s)</string>
 
     <!--登陆注册-->
     <string name="wechat_login">Login with WeChat</string>
