@@ -110,9 +110,14 @@ class FamilyAddressActivity : BaseActivity(), TencentLocationListener {
                     var address = Address()
                     address.name = adapter?.selectPostion!!.title
                     address.address = adapter?.selectPostion!!.address
-                    address.latitude = adapter?.selectPostion!!.location!!.lat
-                    address.longitude = adapter?.selectPostion!!.location!!.lng
-                    address.city = adapter?.selectPostion!!.ad_info!!.city
+                    if (adapter?.selectPostion!!.location != null) {
+                        address.latitude = adapter?.selectPostion!!.location!!.lat
+                        address.longitude = adapter?.selectPostion!!.location!!.lng
+                    }
+
+                    if (adapter?.selectPostion!!.ad_info != null) {
+                        address.city = adapter?.selectPostion!!.ad_info!!.city
+                    }
                     HttpRequest.instance.modifyFamily(familyId, familyName, JSON.toJSONString(address),
                     object: MyCallback {
                         override fun fail(msg: String?, reqCode: Int) {
