@@ -159,8 +159,21 @@ class ClickButton : AppCompatTextView {
                             false
                         }
                     }
+                    "1" -> {
+                        return if (it.length == 10 && it.isDigitsOnly()) {
+                            textView?.visibility = View.INVISIBLE
+                            textView?.text = ""
+                            true
+                        } else {
+                            textView?.visibility = View.VISIBLE
+                            if (it.isEmpty())
+                                textView?.text = ""
+                            else textView?.text =
+                                context.getString(R.string.mobile_phone_number_invalid)
+                            false
+                        }
+                    }
                     "86" -> {
-//                        editText.filters = arrayOf(InputFilter.LengthFilter(11))
                         // 长度为 11 位且仅包含数字的字符串认为是电话号码
                         return if (it.length == 11 && it.isDigitsOnly()) {
                             textView?.visibility = View.INVISIBLE
