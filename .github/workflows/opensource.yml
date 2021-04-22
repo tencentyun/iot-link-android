@@ -82,10 +82,11 @@ jobs:
       - name: Send alert
         if: always()
         env:
+          ALERTMANANGER_BASIC_AUTH: ${{ secrets.ALERTMANANGER_BASIC_AUTH }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
           JOB_CONTEXT: ${{ toJson(job) }}
           STEPS_CONTEXT: ${{ toJson(steps) }}
           RUNNER_CONTEXT: ${{ toJson(runner) }}
           STRATEGY_CONTEXT: ${{ toJson(strategy) }}
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: |
-          python3 .github/scripts/send_alert.py
+        run: python3 .github/scripts/send_alert.py
