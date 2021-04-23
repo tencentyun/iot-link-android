@@ -3,9 +3,15 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="7dp"
+        android:background="@null">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/white"
-    >
+        app:layout_constraintBottom_toBottomOf="@id/line_register_email"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -115,6 +121,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
             android:textSize="@dimen/ts_12"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="@+id/et_register_email"
             app:layout_constraintTop_toBottomOf="@+id/line_register_email" />
 
@@ -125,9 +132,9 @@
             android:layout_marginStart="20dp"
             android:text="@string/mobile_phone_number_to_register"
             android:textColor="@color/blue_0066FF"
-            android:textSize="@dimen/ts_16"
+            android:textSize="@dimen/ts_14"
             android:layout_marginBottom="7dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/tv_register_email_hint"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
