@@ -55,6 +55,9 @@ class GuideActivity  : PActivity(), View.OnClickListener{
             finish()
             return
         }
+
+        var appName = getString(R.string.app_name)
+        textView.text = getString(R.string.welcome_to_use_tencent_ll, appName)
     }
 
     override fun onResume() {

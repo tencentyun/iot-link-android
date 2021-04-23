@@ -39,19 +39,19 @@ class AboutUsActivity : BaseActivity() {
     override fun initView() {
         iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.about_me)
-        tv_about_app_version.text = resources.getString(R.string.current_version) + BuildConfig.VERSION_NAME
+        tv_about_app_version.text = resources.getString(R.string.current_version, BuildConfig.VERSION_NAME)
 
         if (App.data.regionId == "1") { //国内
-            tv_title_opensource.visibility = View.INVISIBLE
-            iv_opensource_arrow.visibility = View.INVISIBLE
-            line_opensource.visibility = View.INVISIBLE
-            var constraintUtil = ConstraintUtil(about_us_constraintLayout)
-            val begin: ConstraintBegin = constraintUtil.beginWithAnim()
-            begin.clear(R.id.tv_title_version)
-            begin.TopToBottomOf(R.id.tv_title_version, R.id.line_user_agreement)
-            begin.setWidth(R.id.tv_title_version, ConstraintSet.PARENT_ID);
-            begin.setHeight(R.id.tv_title_version, 200)
-            begin.commit()
+            tv_title_opensource.visibility = View.GONE
+            iv_opensource_arrow.visibility = View.GONE
+            line_opensource.visibility = View.GONE
+//            var constraintUtil = ConstraintUtil(about_us_constraintLayout)
+//            val begin: ConstraintBegin = constraintUtil.beginWithAnim()
+//            begin.clear(R.id.tv_title_version)
+//            begin.TopToBottomOf(R.id.tv_title_version, R.id.line_user_agreement)
+//            begin.setWidth(R.id.tv_title_version, ConstraintSet.PARENT_ID);
+//            begin.setHeight(R.id.tv_title_version, 200)
+//            begin.commit()
         } else {
             tv_title_opensource.visibility = View.VISIBLE
             iv_opensource_arrow.visibility = View.VISIBLE
@@ -174,9 +174,6 @@ class AboutUsActivity : BaseActivity() {
             T.show(resources.getString(R.string.download_failed))
         }
 
-        override fun onDownloadProgress(currentProgress: Int, size: Int) {
-
-        }
-
+        override fun onDownloadProgress(currentProgress: Int, size: Int) {}
     }
 }

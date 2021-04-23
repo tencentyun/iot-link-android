@@ -6,7 +6,7 @@
     <string name="main_tab_3">我的</string>
     <string name="main_tab_4">评测</string>
     <string name="main_tab_5">智能</string>
-
+    <string name="app_logo_name">腾讯连连</string>
 
     <!--常用-->
     <string name="success">成功</string>
@@ -204,7 +204,7 @@
     <string name="help_center">帮助中心</string>
     <string name="feedback">意见反馈</string>
     <string name="about_me">关于我们</string>
-    <string name="current_version">当前版本 </string>
+    <string name="current_version">当前版本 %s</string>
 
     <string name="personal_info">个人信息</string>
     <string name="set_avatar">设置头像</string>
@@ -501,7 +501,7 @@
     <string name="toast_login">密码修改成功，请重新登录</string>
     <!--customview end-->
 
-    <string name="welcome_to_use_tencent_ll">欢迎使用腾讯连连</string>
+    <string name="welcome_to_use_tencent_ll">欢迎使用%s</string>
     <string name="welcome_to_use_product">欢迎使用</string>
     <string name="create_new_account">创建新账号</string>
     <string name="use_existed_account_to_login">使用已有账号登录</string>
