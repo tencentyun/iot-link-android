@@ -59,13 +59,13 @@ android {
     productFlavors {
         opensource {
             applicationId "com.tencent.iot.explorer.link.opensource"
-            resValue("string" , "app_name_zh", "连连开源体验")
-            resValue("string" , "app_name_en", "Lianlian")
+            resValue("string" , "app_name_zh", "腾讯连连开源版")
+            resValue("string" , "app_name_en", "Tencent LLink (OSS)")
         }
         //-tencentOfficial {
         //-    applicationId "com.tencent.iot.explorer.link"
         //-    resValue("string" , "app_name_zh","腾讯连连")
-        //-    resValue("string" , "app_name_en","Tencent Lianlian")
+        //-    resValue("string" , "app_name_en","Tencent LLink")
         //-}
     }
 
