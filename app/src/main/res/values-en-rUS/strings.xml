@@ -6,7 +6,7 @@
     <string name="main_tab_3">Me</string>
     <string name="main_tab_4">Evaluation</string>
     <string name="main_tab_5">Intelligences</string>
-
+    <string name="app_logo_name">Tencent LLink</string>
 
     <!--常用-->
     <string name="success">Success</string>
@@ -204,7 +204,7 @@
     <string name="help_center">Help center</string>
     <string name="feedback">Feedback</string>
     <string name="about_me">About us</string>
-    <string name="current_version">Current version </string>
+    <string name="current_version">Current version %s</string>
 
     <string name="personal_info">Profile</string>
     <string name="set_avatar">Set profile photo</string>
@@ -501,7 +501,7 @@
     <string name="toast_login">Changed password successfully. Please log in again</string>
     <!--customview end-->
 
-    <string name="welcome_to_use_tencent_ll">Welcome to Tencent Lianlian</string>
+    <string name="welcome_to_use_tencent_ll">Welcome to %s</string>
     <string name="welcome_to_use_product">Welcome</string>
     <string name="create_new_account">Create account</string>
     <string name="use_existed_account_to_login">Login with existing account</string>
