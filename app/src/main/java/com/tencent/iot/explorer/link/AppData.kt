@@ -37,6 +37,7 @@ class AppData private constructor() {
     var userInfo = UserInfo()
     var userSetting = UserSetting()
     var regionId = "1"
+    var conutryCode = "1"  // 当前的登录的国家码
     var region = "ap-guangzhou"
     var appLifeCircleId = "0"
     var notificationId = 0
@@ -181,6 +182,7 @@ class AppData private constructor() {
                 countryInfo.split("+").let {
                     App.data.regionId = it[1]
                     App.data.region = it[3]
+                    App.data.conutryCode = it[2]
                 }
             }
         }
