@@ -163,26 +163,44 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         iv_wechat_login.setOnClickListener(this)
     }
 
+    private fun pwd2Check() {
+        accoutPasswdLoginView.btn_account_passwd_login.isEnabled =
+            isAccountOk(accoutPasswdLoginView.et_login_phone_or_email) &&
+                    isPwdOk(accoutPasswdLoginView.et_login_phone_or_email_passwd)
+        if (!isAccountOk(accoutPasswdLoginView.et_login_phone_or_email)) {
+            accoutPasswdLoginView.btn_account_passwd_login.setBackgroundResource(R.drawable.background_grey_dark_cell)
+        } else {
+            accoutPasswdLoginView.btn_account_passwd_login.setBackgroundResource(R.drawable.background_circle_bule_gradient)
+        }
+    }
+
     private var accountPwdTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            accoutPasswdLoginView.btn_account_passwd_login.isEnabled =
-                isAccountOk(accoutPasswdLoginView.et_login_phone_or_email) &&
-                        isPwdOk(accoutPasswdLoginView.et_login_phone_or_email_passwd)
+            pwd2Check()
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
+    private fun code2Check() {
+        verifyCodeLoginView.btn_account_verifycode_login.isEnabled =
+            isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode) &&
+                    isVerifyCodeOk(verifyCodeLoginView.et_login_phone_or_email_verifycode)
+
+        //verifyCodeLoginView.tv_get_verify_code.isEnabled = isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode)
+        enableTextView(verifyCodeLoginView.tv_get_verify_code,
+            isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode))
+        if (!isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode)) {
+            verifyCodeLoginView.btn_account_verifycode_login.setBackgroundResource(R.drawable.background_grey_dark_cell)
+        } else {
+            verifyCodeLoginView.btn_account_verifycode_login.setBackgroundResource(R.drawable.background_circle_bule_gradient)
+        }
+    }
+
     private var accountCodeTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            verifyCodeLoginView.btn_account_verifycode_login.isEnabled =
-                isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode) &&
-                        isVerifyCodeOk(verifyCodeLoginView.et_login_phone_or_email_verifycode)
-
-            //verifyCodeLoginView.tv_get_verify_code.isEnabled = isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode)
-            enableTextView(verifyCodeLoginView.tv_get_verify_code,
-                isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode))
+            code2Check()
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -214,7 +232,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         if ((presenter.getCountryCode() == "86" && accountTxt.length == 11 && accountTxt.isDigitsOnly()) ||
                     accountTxt.matches(Regex("^\\w+@(\\w+\\.)+\\w+$"))) {
             return true
-        } else if ((presenter.getCountryCode() == "1" && accountTxt.isDigitsOnly()) ||
+        } else if ((presenter.getCountryCode() == "1" &&  accountTxt.length == 10 && accountTxt.isDigitsOnly()) ||
             accountTxt.matches(Regex("^\\w+@(\\w+\\.)+\\w+$"))) {
             return true
         }
@@ -445,7 +463,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     override fun sendVerifyCodeFail(msg: ErrorMessage) {
         T.show(msg.Message)
     }
-    // LoginView callback method end
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -456,8 +473,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                     Utils.setXmlStringValue(T.getContext(), CommonField.COUNTRY_INFO, CommonField.COUNTRY_INFO, this)
                 }
             }
-            enableTextView(verifyCodeLoginView.tv_get_verify_code,
-                isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode))
+            code2Check()
+            pwd2Check()
         }
     }
 }
