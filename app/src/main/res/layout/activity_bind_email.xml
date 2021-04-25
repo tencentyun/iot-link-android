@@ -74,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="48dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -113,7 +113,6 @@
         android:textColorHint="@color/gray_A1A7B2"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_14"
-        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toStartOf="@+id/tv_get_verify_code"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code"
@@ -180,7 +179,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="48dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_input_verifycode" />
 
@@ -241,7 +240,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="48dp"
         android:visibility="invisible"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />

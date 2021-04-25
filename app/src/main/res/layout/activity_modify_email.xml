@@ -81,7 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="48dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -130,7 +130,7 @@
         android:id="@+id/line_modify_email_verifycode"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="49dp"
         android:layout_marginStart="16dp"
         android:background="@color/gray_E7E8EB"
         android:visibility="invisible"
