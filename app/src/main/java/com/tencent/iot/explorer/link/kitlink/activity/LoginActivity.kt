@@ -95,10 +95,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
             return
         }
         onNewIntentIn()
-        if (!Utils.isChineseSystem(this)) {
-            accoutPasswdLoginView.tv_login_to_country_bypsswd.text = getString(R.string.country_china_en) + getString(R.string.conutry_code_num, presenter.getCountryCode())
-            verifyCodeLoginView.tv_login_to_country_byverifycode.text = getString(R.string.country_china_en) + getString(R.string.conutry_code_num, presenter.getCountryCode())
-        }
+        accoutPasswdLoginView.tv_login_to_country_bypsswd.text = getString(R.string.country_china) + getString(R.string.conutry_code_num, presenter.getCountryCode())
+        verifyCodeLoginView.tv_login_to_country_byverifycode.text = getString(R.string.country_china) + getString(R.string.conutry_code_num, presenter.getCountryCode())
 
         loadLastCountryInfo()
     }
