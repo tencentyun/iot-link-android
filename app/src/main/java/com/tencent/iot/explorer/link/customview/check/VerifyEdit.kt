@@ -73,11 +73,9 @@ class VerifyEdit : EditText {
     ) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
         if (!TextUtils.isEmpty(this.text)) {
-            clearIv?.let {
-                if (it.visibility != View.VISIBLE) {
-                    it.visibility = View.VISIBLE
-                }
-            }
+            clearIv?.visibility = View.VISIBLE
+        } else {
+            clearIv?.visibility = View.GONE
         }
     }
 

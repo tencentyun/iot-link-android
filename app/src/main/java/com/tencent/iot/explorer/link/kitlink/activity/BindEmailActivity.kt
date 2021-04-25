@@ -37,6 +37,7 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
         et_bind_email.addClearImage(iv_clear_bind_email)
         et_set_password.addClearImage(iv_clear_password)
         et_verify_set_password.addClearImage(iv_clear_verify_password)
+        btn_bind_get_code.btn2Click.add(tv_get_verify_code)
         btn_bind_get_code.addEditText(et_bind_email, tv_bind_email_hint, "email")
         if (App.data.userInfo.HasPassword != "0") {//有密码则不显示设置密码的输入框
             hidePasswordInput()
@@ -46,6 +47,7 @@ class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {
             btn_bind_get_code.addEditText(et_set_password, tv_set_password_hint)
             btn_bind_get_code.addEditText(et_verify_set_password, tv_set_verify_password_hint)
         }
+
     }
 
     override fun setListener() {
