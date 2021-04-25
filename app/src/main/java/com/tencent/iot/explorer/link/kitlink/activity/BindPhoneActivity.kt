@@ -44,6 +44,7 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
 
     override fun onResume() {
         super.onResume()
+        btn_confirm_to_bind.btn2Click.add(tv_get_verify_code)
         btn_confirm_to_bind.addEditText(et_bind_phone, tv_bind_phone_hint, loginPresenter.getCountryCode())
         if (App.data.userInfo.HasPassword != "0") {//有密码则不显示设置密码的输入框
             hidePasswordInput()

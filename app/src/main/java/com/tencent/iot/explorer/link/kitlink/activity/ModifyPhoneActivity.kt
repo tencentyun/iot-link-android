@@ -39,11 +39,8 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
 
     override fun onResume() {
         super.onResume()
-        btn_confirm_to_modify.addEditText(
-            et_modify_phone,
-            tv_modify_phone_hint,
-            loginPresenter.getCountryCode()
-        )
+        btn_confirm_to_modify.btn2Click.add(tv_get_verify_code)
+        btn_confirm_to_modify.addEditText(et_modify_phone, tv_modify_phone_hint, loginPresenter.getCountryCode())
     }
 
     override fun initView() {
