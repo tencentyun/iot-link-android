@@ -78,11 +78,12 @@ public class VerifyCodeView extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childTop, childBottom, childLeft, childRight;
         int count = this.getChildCount();
-        int distance = (this.getWidth() - this.getPaddingStart() - getPaddingEnd() - length * tvWidth) / (length + 1);
+        int distance = dp2px(7);
+        tvWidth = (getWidth() - getPaddingStart() - getPaddingEnd() - (length - 1) * distance) / length;
         for (int i = 0; i < count; i++) {
             View view = this.getChildAt(i);
             if (i < count - 1) {
-                childLeft = this.getPaddingStart() + distance * (i + 1) + tvWidth * i;
+                childLeft = this.getPaddingStart() + distance * i + tvWidth * i;
                 childRight = childLeft + tvWidth;
                 if (this.getMeasuredHeight() > tvHeight) {
                     childTop = this.getMeasuredHeight() / 2 - tvHeight / 2;
