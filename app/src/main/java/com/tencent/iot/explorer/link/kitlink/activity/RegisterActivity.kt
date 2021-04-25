@@ -85,10 +85,9 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             iv_register_agreement.setImageResource(R.mipmap.icon_unselected)
             iv_register_agreement_status.visibility = View.GONE
         }
-        if (!Utils.isChineseSystem(this)) {
-            phoneView.tv_register_to_country.text = getString(R.string.country_china_en) + getString(R.string.conutry_code_num, presenter.getCountryCode())
-            emailView.tv_register_to_country_email.text = getString(R.string.country_china_en) + getString(R.string.conutry_code_num, presenter.getCountryCode())
-        }
+
+        phoneView.tv_register_to_country.text = getString(R.string.country_china) + getString(R.string.conutry_code_num, presenter.getCountryCode())
+        emailView.tv_register_to_country_email.text = getString(R.string.country_china) + getString(R.string.conutry_code_num, presenter.getCountryCode())
 
         loadLastCountryInfo()
         showBirthDayDlg()
