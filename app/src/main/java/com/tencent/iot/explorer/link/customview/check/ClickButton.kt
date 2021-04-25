@@ -20,6 +20,9 @@ class ClickButton : AppCompatTextView {
 
     private var registerPresenter: RegisterPresenter? = null
     private var forgotPasswordPresenter: ForgotPasswordPresenter? = null
+    var enableBackgroundColor = this.resources.getColor(R.color.bule_0066ff)
+    var disableBackgroundColor = this.resources.getColor(R.color.gray_A1A7B2)
+    var btn2Click: MutableList<TextView> = ArrayList()
 
     constructor(context: Context?) : super(context!!) {
         this.isEnabled = false
@@ -117,6 +120,20 @@ class ClickButton : AppCompatTextView {
         } else {
             this.setBackgroundResource(R.drawable.background_grey_dark_cell)
         }
+        refreshBtnState(this.isEnabled)
+    }
+
+    private fun refreshBtnState(state: Boolean) {
+        if (btn2Click != null) {
+            for (btn in btn2Click) {
+                if (state) {
+                    btn.setTextColor(enableBackgroundColor)
+                } else {
+                    btn.setTextColor(disableBackgroundColor)
+                }
+                btn.isClickable = state
+            }
+        }
     }
 
     private fun isContain(editText: EditText): Boolean {
@@ -161,11 +178,11 @@ class ClickButton : AppCompatTextView {
                     }
                     "1" -> {
                         return if (it.length == 10 && it.isDigitsOnly()) {
-                            textView?.visibility = View.INVISIBLE
+                            textView?.visibility = View.GONE
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.VISIBLE
+                            textView?.visibility = View.GONE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else textView?.text =
@@ -176,11 +193,11 @@ class ClickButton : AppCompatTextView {
                     "86" -> {
                         // 长度为 11 位且仅包含数字的字符串认为是电话号码
                         return if (it.length == 11 && it.isDigitsOnly()) {
-                            textView?.visibility = View.INVISIBLE
+                            textView?.visibility = View.GONE
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.VISIBLE
+                            textView?.visibility = View.GONE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else textView?.text =
@@ -190,11 +207,11 @@ class ClickButton : AppCompatTextView {
                     }
                     "email" -> {
                         return if (it.matches(Regex("^\\w+@(\\w+\\.)+\\w+$"))) {
-                            textView?.visibility = View.INVISIBLE
+                            textView?.visibility = View.GONE
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.VISIBLE
+                            textView?.visibility = View.GONE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else
@@ -203,7 +220,7 @@ class ClickButton : AppCompatTextView {
                         }
                     }
                     else -> {
-                        textView?.visibility = View.INVISIBLE
+                        textView?.visibility = View.GONE
                         return it.isNotEmpty()
                     }
                 }
@@ -213,23 +230,15 @@ class ClickButton : AppCompatTextView {
         private fun checkPwdChar(pwd: String) {
             var hasLetter = false
             var hasNum = false
-            pwd.forEach {
-            }
+            pwd.forEach {}
         }
 
         override fun afterTextChanged(s: Editable?) {
             checkStatus()
         }
 
-        override fun beforeTextChanged(
-            s: CharSequence?,
-            start: Int,
-            count: Int,
-            after: Int
-        ) {
-        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 }

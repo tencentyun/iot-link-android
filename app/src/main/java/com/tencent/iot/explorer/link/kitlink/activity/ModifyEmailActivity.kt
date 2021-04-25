@@ -34,11 +34,8 @@ class ModifyEmailActivity : PActivity(), ModifyEmailView, View.OnClickListener  
         tv_title.text = getString(R.string.modify_email)
         et_modify_email.addClearImage(iv_modify_email_clear)
         presenter = ModifyEmailPresenter(this)
-        btn_confirm_to_modify.addEditText(
-            et_modify_email,
-            tv_modify_email_hint,
-            "email"
-        )
+        btn_confirm_to_modify.btn2Click.add(tv_get_verify_code)
+        btn_confirm_to_modify.addEditText(et_modify_email, tv_modify_email_hint, "email")
     }
 
     override fun setListener() {
