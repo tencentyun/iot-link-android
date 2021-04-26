@@ -22,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - run: |
           rm -rf sdkdemo-config.json
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdkdemo/sdkdemo-config.json.asc > sdkdemo-config.json
@@ -37,7 +39,6 @@ jobs:
         run: |
           cmake --version
 
-
       - name: install fir
         run: sudo gem install fir-cli
       - name: Fix App Version
@@ -46,6 +47,8 @@ jobs:
           rc=$(git rev-parse --short HEAD)
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i "s#xxx#$rb+git.$rc#g" config.gradle
+      - name: Update SDK Version
+        run: sh .github/scripts/updateVersionCodeForSnapshot.sh
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
