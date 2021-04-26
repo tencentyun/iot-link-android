@@ -48,7 +48,7 @@ jobs:
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i "s#xxx#$rb+git.$rc#g" config.gradle
       - name: Update SDK Version
-        run: sh .github/scripts/updateVersionCodeForSnapshot.sh
+        run: bash .github/scripts/updateVersionCodeForSnapshot.sh
       - name: Build with Gradle
         run: ./gradlew build
       - name: Package apk and aar with Gradle
