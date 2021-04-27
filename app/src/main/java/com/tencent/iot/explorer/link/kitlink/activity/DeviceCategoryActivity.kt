@@ -300,7 +300,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                         contains("hmacsha") && contains(";") -> { //蓝牙签名绑定 的设备
                             // ${product_id};${device_name};${random};${timestamp};hmacsha256;sign
                             val deviceInfo = TrtcDeviceInfo(this)
-                            bleSigBindDevice(deviceInfo, "bluetooth_sign")
+                            bleSigBindDevice(deviceInfo, "other_sign")
                         }
                         else -> {//之前旧版本虚拟设备二维码只有签名
                             bindDevice(this)
