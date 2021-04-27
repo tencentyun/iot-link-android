@@ -34,11 +34,11 @@ class AddFamilyActivity : BaseActivity(), MyCallback {
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         iv_set_location.setOnClickListener {
-            val intent = Intent(this, FamilyAddressActivity::class.java)
+            val intent = Intent(this, MarkerPaddingActivity::class.java)
             startActivityForResult(intent, CommonField.MAP_LOCATION_REQ_CODE)
         }
         et_family_address.setOnClickListener {
-            val intent = Intent(this, FamilyAddressActivity::class.java)
+            val intent = Intent(this, MarkerPaddingActivity::class.java)
             startActivityForResult(intent, CommonField.MAP_LOCATION_REQ_CODE)
         }
         btn_add_family.setOnClickListener { addFamily() }

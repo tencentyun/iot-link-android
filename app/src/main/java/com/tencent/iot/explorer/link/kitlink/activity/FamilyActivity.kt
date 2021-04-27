@@ -101,7 +101,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
                         jumpActivity(RoomListActivity::class.java)
                     }
                     2 -> {
-                        val intent = Intent(this@FamilyActivity, FamilyAddressActivity::class.java)
+                        val intent = Intent(this@FamilyActivity, MarkerPaddingActivity::class.java)
                         var bundle = Bundle()
                         bundle.putString(CommonField.ADDRESS, headerHolder.data?.Address)
                         bundle.putString(CommonField.FAMILY_ID, familyEntity?.FamilyId)
