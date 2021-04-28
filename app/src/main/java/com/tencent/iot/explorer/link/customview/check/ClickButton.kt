@@ -112,6 +112,8 @@ class ClickButton : AppCompatTextView {
                 } else {
                     able = it.check()
                 }
+            } else {
+                it.check()
             }
         }
         this.isEnabled = able
@@ -178,11 +180,11 @@ class ClickButton : AppCompatTextView {
                     }
                     "1" -> {
                         return if (it.length == 10 && it.isDigitsOnly()) {
-                            textView?.visibility = View.GONE
+                            textView?.visibility = View.INVISIBLE
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.GONE
+                            textView?.visibility = View.VISIBLE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else textView?.text =
@@ -193,11 +195,11 @@ class ClickButton : AppCompatTextView {
                     "86" -> {
                         // 长度为 11 位且仅包含数字的字符串认为是电话号码
                         return if (it.length == 11 && it.isDigitsOnly()) {
-                            textView?.visibility = View.GONE
+                            textView?.visibility = View.INVISIBLE
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.GONE
+                            textView?.visibility = View.VISIBLE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else textView?.text =
@@ -207,11 +209,11 @@ class ClickButton : AppCompatTextView {
                     }
                     "email" -> {
                         return if (it.matches(Regex("^\\w+@(\\w+\\.)+\\w+$"))) {
-                            textView?.visibility = View.GONE
+                            textView?.visibility = View.INVISIBLE
                             textView?.text = ""
                             true
                         } else {
-                            textView?.visibility = View.GONE
+                            textView?.visibility = View.VISIBLE
                             if (it.isEmpty())
                                 textView?.text = ""
                             else
@@ -220,7 +222,7 @@ class ClickButton : AppCompatTextView {
                         }
                     }
                     else -> {
-                        textView?.visibility = View.GONE
+                        textView?.visibility = View.INVISIBLE
                         return it.isNotEmpty()
                     }
                 }
