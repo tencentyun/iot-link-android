@@ -73,7 +73,6 @@
         <activity android:name=".kitlink.activity.MemberActivity" />
         <activity android:name=".kitlink.activity.RoomActivity" />
         <activity android:name=".kitlink.activity.InviteMemberActivity" />
-        <activity android:name=".kitlink.activity.FamilyAddressActivity" />
         <activity android:name=".kitlink.activity.FamilyListActivity" />
         <activity android:name=".kitlink.activity.ShareUserListActivity" />
         <activity android:name=".kitlink.activity.AddTimerActivity" />
@@ -84,6 +83,7 @@
         <activity android:name=".kitlink.activity.CommentDetailsActivity" />
         <activity android:name=".kitlink.activity.DelayTimeActivity" />
         <activity android:name=".kitlink.activity.BuleToothActivity"/>
+        <activity android:name=".kitlink.activity.MarkerPaddingActivity"/>
         <activity android:name=".kitlink.activity.CloudTimingActivity" /> <!-- 信鸽Android P -->
         <uses-library
             android:name="org.apache.http.legacy"
