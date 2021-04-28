@@ -162,14 +162,15 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     }
 
     private fun pwd2Check() {
-        accoutPasswdLoginView.btn_account_passwd_login.isEnabled =
-            isAccountOk(accoutPasswdLoginView.et_login_phone_or_email) &&
-                    isPwdOk(accoutPasswdLoginView.et_login_phone_or_email_passwd)
-        if (!isAccountOk(accoutPasswdLoginView.et_login_phone_or_email)) {
-            accoutPasswdLoginView.btn_account_passwd_login.setBackgroundResource(R.drawable.background_grey_dark_cell)
-        } else {
-            accoutPasswdLoginView.btn_account_passwd_login.setBackgroundResource(R.drawable.background_circle_bule_gradient)
-        }
+//        accoutPasswdLoginView.btn_account_passwd_login.isEnabled =
+//            isAccountOk(accoutPasswdLoginView.et_login_phone_or_email) &&
+//                    isPwdOk(accoutPasswdLoginView.et_login_phone_or_email_passwd)
+//        if (!isAccountOk(accoutPasswdLoginView.et_login_phone_or_email)) {
+//            accoutPasswdLoginView.btn_account_passwd_login.setBackgroundResource(R.drawable.background_grey_dark_cell)
+//        } else {
+//            accoutPasswdLoginView.btn_account_passwd_login.setBackgroundResource(R.drawable.background_circle_bule_gradient)
+//        }
+        accoutPasswdLoginView.btn_account_passwd_login.setBackgroundResource(R.drawable.background_circle_bule_gradient)
     }
 
     private var accountPwdTextWatcher = object : TextWatcher {
@@ -182,18 +183,20 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     }
 
     private fun code2Check() {
-        verifyCodeLoginView.btn_account_verifycode_login.isEnabled =
-            isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode) &&
-                    isVerifyCodeOk(verifyCodeLoginView.et_login_phone_or_email_verifycode)
+//        verifyCodeLoginView.btn_account_verifycode_login.isEnabled =
+//            isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode) &&
+//                    isVerifyCodeOk(verifyCodeLoginView.et_login_phone_or_email_verifycode)
 
         //verifyCodeLoginView.tv_get_verify_code.isEnabled = isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode)
         enableTextView(verifyCodeLoginView.tv_get_verify_code,
             isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode))
-        if (!isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode)) {
-            verifyCodeLoginView.btn_account_verifycode_login.setBackgroundResource(R.drawable.background_grey_dark_cell)
-        } else {
-            verifyCodeLoginView.btn_account_verifycode_login.setBackgroundResource(R.drawable.background_circle_bule_gradient)
-        }
+//        if (!isAccountOk(verifyCodeLoginView.et_login_phone_or_email_byverifycode)) {
+//            verifyCodeLoginView.btn_account_verifycode_login.setBackgroundResource(R.drawable.background_grey_dark_cell)
+//        } else {
+//            verifyCodeLoginView.btn_account_verifycode_login.setBackgroundResource(R.drawable.background_circle_bule_gradient)
+//        }
+        verifyCodeLoginView.btn_account_verifycode_login.setBackgroundResource(R.drawable.background_circle_bule_gradient)
+
     }
 
     private var accountCodeTextWatcher = object : TextWatcher {
