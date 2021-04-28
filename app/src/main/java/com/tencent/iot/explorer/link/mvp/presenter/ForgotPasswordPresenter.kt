@@ -11,6 +11,10 @@ class ForgotPasswordPresenter(view: ForgotPasswordView) :
         return ForgotPasswordModel(view)
     }
 
+    fun getCountryName(): String {
+        return model!!.getCountryName()
+    }
+
     fun getCountryCode(): String {
         return model!!.getCountryCode()
     }

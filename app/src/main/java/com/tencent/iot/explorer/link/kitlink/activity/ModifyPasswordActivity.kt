@@ -206,7 +206,8 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
         )
         btn_confirm_to_modify.addEditText(
             modifyPasswdUsePhoneView.et_set_password,
-            modifyPasswdUsePhoneView.tv_set_password_hint
+            modifyPasswdUsePhoneView.tv_set_password_hint,
+        "pwd"
         )
         btn_confirm_to_modify.addEditText(
             modifyPasswdUsePhoneView.et_verify_set_password,
@@ -226,7 +227,8 @@ class ModifyPasswordActivity : PActivity(), ModifyPasswordView, View.OnClickList
         )
         btn_confirm_to_modify.addEditText(
             modifyPasswdUseEmailView.et_set_password,
-            modifyPasswdUseEmailView.tv_set_password_hint
+            modifyPasswdUseEmailView.tv_set_password_hint,
+            "pwd"
         )
         btn_confirm_to_modify.addEditText(
             modifyPasswdUseEmailView.et_verify_set_password,

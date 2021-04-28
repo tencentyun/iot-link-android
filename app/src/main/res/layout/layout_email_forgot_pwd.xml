@@ -59,8 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
-            android:textSize="@dimen/ts_10"
-            app:layout_constraintLeft_toLeftOf="@+id/line_forgot_email"
+            android:textSize="@dimen/ts_12"
+            app:layout_constraintLeft_toLeftOf="@+id/et_forgot_email"
             app:layout_constraintTop_toBottomOf="@+id/line_forgot_email" />
 
     <TextView
