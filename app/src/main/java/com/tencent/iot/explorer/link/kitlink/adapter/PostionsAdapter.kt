@@ -13,6 +13,11 @@ import kotlin.collections.ArrayList
 class PostionsAdapter(list: MutableList<Postion>) : RecyclerView.Adapter<PostionsAdapter.ViewHolder>() {
     var list: MutableList<Postion> = ArrayList()
     var selectPos = 0
+    set(value) {
+        field = value
+        if (list == null || list.size <= 0) return
+        selectPostion = list.get(value)
+    }
     var selectPostion: Postion? = null
 
     init {
