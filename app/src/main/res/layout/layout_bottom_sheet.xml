@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_seach_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="18dp"
+        android:paddingBottom="6dp"
+        android:background="@drawable/background_white_top_radius_cell">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_seach"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/background_grey_f3f3f5_cell"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+            <ImageView
+                android:id="@+id/iv_seach"
+                android:layout_width="13dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="18dp"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ev_search"
+                app:layout_constraintBottom_toBottomOf="@id/ev_search"
+                android:src="@mipmap/map_search"
+                />
+
+            <TextView
+                android:id="@+id/ev_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_seach"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:hint="@string/seach_postion"
+                android:textSize="@dimen/ts_14"
+                android:background="@null"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:textColorHint="@color/gray_A1A7B2"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true"
+        android:paddingBottom="56dp">
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/smart_refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

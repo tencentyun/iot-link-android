@@ -94,7 +94,7 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
-            def date = new Date().format("yyyyMMddHHmmss" , TimeZone.getTimeZone("GMT+08"))
+            def date = new Date().format("yyyyMMddHH" , TimeZone.getTimeZone("GMT+08"))
             if(variant.buildType.name == 'debug') {
                 outputFileName = "iot-link-android-debug-${date}.apk"
             }
@@ -150,10 +150,9 @@ dependencies {
     api 'com.scwang.smart:refresh-header-classics:2.0.0-alpha-1'
     api 'com.scwang.smart:refresh-footer-classics:2.0.0-alpha-1'
 
-    //腾讯地图定位
-    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.4'
-    //2D地图 这里始终使用最新的稳定版本，用户也可以指定 4.0.3.2 之后的地图 sdk 版本号
-    implementation files('libs/TencentMapSDK_Raster_v_1.3.4.1.jar')
+    implementation 'com.tencent.map:tencent-map-vector-sdk:4.4.1'
+    // 地图组件库，包括小车平移、点聚合等组件功能，详见开发指南。
+    implementation 'com.tencent.map:sdk-utilities:1.0.6'
 
     //垂直TabLayout
     implementation 'q.rorbin:VerticalTabLayout:1.2.9'
