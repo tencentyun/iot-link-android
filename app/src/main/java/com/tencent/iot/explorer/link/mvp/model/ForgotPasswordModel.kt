@@ -20,6 +20,9 @@ class ForgotPasswordModel(view: ForgotPasswordView) : ParentModel<ForgotPassword
     var email = ""
     private var agree = true
 
+    fun getCountryName(): String {
+        return countryName
+    }
 
     fun getCountryCode(): String {
         return countryCode
@@ -45,7 +48,7 @@ class ForgotPasswordModel(view: ForgotPasswordView) : ParentModel<ForgotPassword
         if (!countryCode.contains("+")) return
         countryCode.split("+").let {
             this.countryName = it[0]
-            this.countryCode = it[1]
+            this.countryCode = it[2]
             view?.showCountryCode(this.countryCode, this.countryName)
         }
     }
