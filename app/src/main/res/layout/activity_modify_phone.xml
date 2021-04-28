@@ -56,7 +56,7 @@
             android:textColor="@color/black_15161A"
             android:textSize="@dimen/ts_14"
             android:gravity="center_vertical"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="19dp"
             app:layout_constraintTop_toBottomOf="@id/tv_forgot_to_country_tip"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -69,7 +69,7 @@
             android:textColor="@color/black_15161A"
             android:textSize="@dimen/ts_14"
             android:gravity="center_vertical"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="19dp"
             app:layout_constraintTop_toBottomOf="@id/tv_modify_phone"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -154,7 +154,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="66dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@id/line_login_to_country" />
 
@@ -192,7 +192,7 @@
         android:id="@+id/line_modify_phone_verifycode"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="66dp"
         android:layout_marginStart="20dp"
         android:background="@color/gray_E7E8EB"
         android:visibility="invisible"
