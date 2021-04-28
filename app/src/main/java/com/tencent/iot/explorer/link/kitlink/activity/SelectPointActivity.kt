@@ -4,7 +4,6 @@ import android.content.Intent
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
@@ -27,15 +26,10 @@ import com.tencent.iot.explorer.link.kitlink.adapter.HistoryPostionsAdapter
 import com.tencent.iot.explorer.link.kitlink.adapter.PostionsAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.Address
-import com.tencent.iot.explorer.link.kitlink.entity.LocationResp
 import com.tencent.iot.explorer.link.kitlink.entity.Postion
 import com.tencent.iot.explorer.link.kitlink.entity.PostionsResp
-import kotlinx.android.synthetic.main.activity_family_address.*
 import kotlinx.android.synthetic.main.activity_select_point.*
-import kotlinx.android.synthetic.main.activity_select_point.ev_search
-import kotlinx.android.synthetic.main.activity_select_point.smart_refreshLayout
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import kotlinx.android.synthetic.main.menu_back_layout.tv_title
 import java.util.*
 import kotlin.collections.ArrayList
 
