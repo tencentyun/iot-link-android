@@ -73,6 +73,7 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
         emailView.et_forgot_email.addClearImage(emailView.iv_forgot_email_clear)
         vp_forgot.addViewToList(phoneView)
         vp_forgot.addViewToList(emailView)
+        phoneView.tv_forgot_to_country.text = presenter.getCountryName() + getString(R.string.conutry_code_num, presenter.getCountryCode())
     }
 
     override fun setListener() {
@@ -142,7 +143,7 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
     override fun onClick(v: View?) {
         when (v) {
             phoneView.tv_forgot_to_country, phoneView.iv_forgot_to_country -> {
-                startActivityForResult(Intent(this, CountryCodeActivity::class.java), 100)
+                startActivityForResult(Intent(this, RegionActivity::class.java), 100)
             }
             select_tag_relativelayout -> {
                 presenter.setAgreement()
@@ -236,7 +237,7 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
 
     override fun showCountryCode(countryCode: String, countryName: String) {
         L.e("countryName=$countryName")
-        phoneView.tv_forgot_to_country.text = countryName
+        phoneView.tv_forgot_to_country.text = countryName + getString(R.string.conutry_code_num, countryCode)
         btn_forgot_get_code.changeType(phoneView.et_forgot_phone, countryCode)
     }
 
@@ -244,7 +245,7 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
             data?.let {
-                it.getStringExtra(CommonField.COUNTRY_CODE)?.run {
+                it.getStringExtra(CommonField.REGION_ID)?.run {
                     L.e(this)
                     presenter.setCountryCode(this)
                 }

@@ -124,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="66dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/tv_bind_to_country" />
 
@@ -156,13 +156,14 @@
         android:id="@+id/et_bind_phone_verifycode"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:background="@color/white"
+        android:background="@null"
         android:hint="@string/please_input_verifycode"
         android:inputType="text"
         android:textColor="@color/black_15161A"
         android:textColorHint="@color/gray_A1A7B2"
         android:textCursorDrawable="@drawable/edit_blue_cursor"
         android:textSize="@dimen/ts_14"
+        android:layout_marginTop="18dp"
         app:layout_constraintEnd_toStartOf="@+id/tv_get_verify_code"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/tv_get_verify_code"
@@ -205,7 +206,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/et_set_password" />
 
-
     <com.tencent.iot.explorer.link.customview.check.VerifyEdit
         android:id="@+id/et_set_password"
         android:layout_width="0dp"
@@ -232,7 +232,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="66dp"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_input_verifycode" />
 
@@ -251,10 +251,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red_eb3d3d"
-            android:visibility="gone"
             android:textSize="@dimen/ts_10"
-            app:layout_constraintLeft_toLeftOf="@+id/line_set_pwd"
-            app:layout_constraintStart_toStartOf="@+id/et_set_password"
+            app:layout_constraintStart_toStartOf="@+id/line_set_pwd"
             app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
 
     <TextView
@@ -295,7 +293,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="66dp"
         android:visibility="invisible"
         android:background="@color/gray_E7E8EB"
         app:layout_constraintTop_toBottomOf="@+id/line_set_pwd" />
