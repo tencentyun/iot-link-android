@@ -11,15 +11,14 @@ import android.text.style.ClickableSpan
 import android.view.View
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.LogoutPresenter
 import com.tencent.iot.explorer.link.mvp.view.LogoutView
-import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.core.utils.Utils
 import kotlinx.android.synthetic.main.activity_logout.*
-import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
 
@@ -55,13 +54,17 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
 
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val intent = Intent(this@LogoutActivity, WebActivity::class.java)
-                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.tencentll_account_logout_agreement2))
-                var url = CommonField.POLICY_PREFIX
-                url += "?uin=$ANDROID_ID"
-                url += CommonField.CANCEL_POLICY_SUFFIX
-                intent.putExtra(CommonField.EXTRA_TEXT, url)
-                startActivity(intent)
+                if (Utils.getLang().contains(CommonField.ZH_TAG)) { //中文
+                    val intent = Intent(this@LogoutActivity, WebActivity::class.java)
+                    intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.tencentll_account_logout_agreement2))
+                    var url = CommonField.POLICY_PREFIX
+                    url += "?uin=$ANDROID_ID"
+                    url += CommonField.CANCEL_POLICY_SUFFIX
+                    intent.putExtra(CommonField.EXTRA_TEXT, url)
+                    startActivity(intent)
+                } else {
+                    OpensourceLicenseActivity.startWebWithExtra(this@LogoutActivity, getString(R.string.tencentll_account_logout_agreement2), CommonField.DELET_ACCOUNT_POLICY_EN)
+                }
             }
 
             override fun updateDrawState(ds: TextPaint) {
