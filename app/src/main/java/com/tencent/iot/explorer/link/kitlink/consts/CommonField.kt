@@ -84,6 +84,8 @@ object CommonField {
     const val CONNECTED = "connected"
     const val SERVICE_ID = "serviceId"
     const val CHARACTERISTIC_ID = "characteristicId"
+    const val ZH_TAG = "zh"
+    const val US_TAG = "en"
 
     /*******上传文件********/
     const val CREDENTIALS = "credentials"
@@ -116,10 +118,17 @@ object CommonField {
     const val REGION_USA = "na-ashburn"
     const val REGION_LIST_URL = "https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/37/config1.js"
     const val TASK_PIC_LIST_URL = "https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/39/config2.js"
-    const val OPENSOURCE_LICENSE_URL = "https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/42/config5.js"
-    const val PRIVACY_POLICY_URL = "https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/42/config4.js"
-    const val SERVICE_AGREEMENT_URL = "https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/42/config3.js"
+    const val OPENSOURCE_LICENSE_URL = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config5.js" // 英文版开源协议//"https://imgcache.qq.com/qzone/qzactStatics/qcloud/data/42/config5.js"
+    const val OPENSOURCE_LICENSE_URL_EN = OPENSOURCE_LICENSE_URL
+    const val OPENSOURCE_LICENSE_URL_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config11.js"
 
+    const val PRIVACY_POLICY_URL_CN_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config10.js"
+    const val PRIVACY_POLICY_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config8.js"
+    const val PRIVACY_POLICY_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config4.js"
+    const val SERVICE_AGREEMENT_URL_CN_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config9.js"
+    const val SERVICE_AGREEMENT_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config7.js"
+    const val SERVICE_AGREEMENT_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config3.js"
+    const val DELET_ACCOUNT_POLICY_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config6.js"
 
     /************返回结果通用字段*************/
     const val RESPONSE = "Response"
