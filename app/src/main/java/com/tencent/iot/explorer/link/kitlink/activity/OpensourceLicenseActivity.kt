@@ -1,39 +1,47 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.graphics.Color
-import android.graphics.Typeface
-import android.text.Html
+import android.content.Context
+import android.content.Intent
 import android.view.View
 import android.webkit.*
-import android.widget.TextView
 import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.entity.OpensourceContentEntity
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.MyCustomCallBack
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import kotlinx.android.synthetic.main.activity_opensource_license.*
-import kotlinx.android.synthetic.main.activity_opensource_license.wv_web
-import kotlinx.android.synthetic.main.activity_web.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import java.net.URLEncoder
-
+import java.util.*
 
 /**
  * 开源软件信息
  */
 class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
+
     override fun getContentView(): Int {
         return R.layout.activity_opensource_license
     }
 
+    companion object {
+
+        var urlSet = Arrays.asList(CommonField.OPENSOURCE_LICENSE_URL_EN, CommonField.OPENSOURCE_LICENSE_URL_ZH,
+            CommonField.PRIVACY_POLICY_URL_CN_EN, CommonField.PRIVACY_POLICY_URL_US_ZH, CommonField.PRIVACY_POLICY_URL_US_EN,
+            CommonField.SERVICE_AGREEMENT_URL_CN_EN, CommonField.SERVICE_AGREEMENT_URL_US_ZH, CommonField.SERVICE_AGREEMENT_URL_US_EN,
+            CommonField.DELET_ACCOUNT_POLICY_EN)
+
+        fun startWebWithExtra(context: Context, title: String, url: String) {
+            val intent = Intent(context, OpensourceLicenseActivity::class.java)
+            intent.putExtra(CommonField.EXTRA_TITLE, title)
+            intent.putExtra(CommonField.EXTRA_TEXT, url)
+            context.startActivity(intent)
+        }
+    }
+
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
+        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         intent.getStringExtra(CommonField.EXTRA_TITLE)?.let {
             tv_title.text = it
         }
@@ -49,18 +57,9 @@ class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
         wv_web.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
 
         val mWebViewClient = object : WebViewClient(){
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
-                if (request?.url.toString() == CommonField.OPENSOURCE_LICENSE_URL) { //开源软件信息
-                    getOpensourceLicense(CommonField.OPENSOURCE_LICENSE_URL)
-                    return false
-                } else if (request?.url.toString() == CommonField.PRIVACY_POLICY_URL) { //隐私政策
-                    getOpensourceLicense(CommonField.PRIVACY_POLICY_URL)
-                    return false
-                } else if (request?.url.toString() == CommonField.SERVICE_AGREEMENT_URL) { //用户协议
-                    getOpensourceLicense(CommonField.SERVICE_AGREEMENT_URL)
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                if (urlSet.contains(request?.url.toString())) {
+                    getOpensourceLicense(request?.url.toString())
                     return false
                 } else {
                     return super.shouldOverrideUrlLoading(view, request)
@@ -77,7 +76,7 @@ class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
     }
 
     private fun getOpensourceLicense(url: String) {
-        HttpRequest.instance.getOpensourceLicense(url, this, RequestCode.get_opensource_license)
+        HttpRequest.instance.httpGetOpensourceLicense(url, this, RequestCode.get_opensource_license)
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -97,7 +96,7 @@ class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
         val jsonObject = JSON.parse(opensourceLicenseJson) as JSONObject
         if (jsonObject.containsKey("filecontent")) {
             val fileContentJson = jsonObject.getString("filecontent")
-            wv_web.loadData(fileContentJson, "text/html;charset=UTF-8",  null)
+            wv_web.loadDataWithBaseURL(null, fileContentJson, "text/html", "utf-8", null);
         }
     }
 }
