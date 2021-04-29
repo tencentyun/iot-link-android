@@ -6,11 +6,18 @@
 {
   "TencentIotLinkAppkey": "请输入从物联网开发平台申请的 App Key，正式发布前务必填写",
   "TencentIotLinkAppSecret": "请输入从物联网开发平台申请的 App Secret，App Secret 请保存在服务端，此处仅为演示，如有泄露概不负责",
-  "WXAccessAppId": ""
+  "WXAccessAppId": "",
+  "XgAccessId": "",
+  "XgAccessKey": "",
+  "TencentMapSDKValue": "",
+  "HEweatherKey": ""
 }
 ```
 
- - **TencentIotLinkAppkey** 和 **TencentIotLinkAppSecret** 请使用在物联网平台创建应用时生成的[ App Key 和 App Secret](https://cloud.tencent.com/document/product/1081/45901#.E8.8E.B7.E5.8F.96-app-key-.E5.92.8C-app-secret)，TencentIotLinkAppSecret 存放在用户自建后台服务器中，详情可见[应用端 API 简介](https://cloud.tencent.com/document/product/1081/40773)。          
+ - **TencentIotLinkAppkey** 和 **TencentIotLinkAppSecret** 请使用在物联网平台创建应用时生成的[ App Key 和 App Secret](https://cloud.tencent.com/document/product/1081/45901#.E8.8E.B7.E5.8F.96-app-key-.E5.92.8C-app-secret)，TencentIotLinkAppSecret 存放在用户自建后台服务器中，详情可见[应用端 API 简介](https://cloud.tencent.com/document/product/1081/40773)。
+ - **XgAccessId** 和 **XgAccessKey** 请使用在[腾讯推送平台](https://cloud.tencent.com/product/tpns)创建应用所获得的 **AccessID** 和 **AccessKey**
+ - **TencentMapSDKValue** 请使用在[腾讯位置服务平台](https://lbs.qq.com/)创建应用生成的 Key。
+ - **HEweatherKey** 请使用在[和风天气开发平台](https://www.qweather.com/)创建应用生成的 Key。
  - **WXAccessAppId** 请使用在微信开放平台申请并获得的 **AppID**；若确认使用自定义的微信授权登录，需要在 [微信开放平台](https://open.weixin.qq.com/) 注册开发者帐号，创建移动应用，审核通过后，即可获得相应的 [AppID 和 App Secret](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html)。
   使用微信授权登录还需：
   1. 将 `opensource_keystore.jks`文件替换成自己的签名文件并给应用签字。
