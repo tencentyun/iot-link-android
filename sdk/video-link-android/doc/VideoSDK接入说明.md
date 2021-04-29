@@ -113,12 +113,14 @@ typedef void (*av_recv_handle_t)(const char *id, uint8_t* recv_buf, size_t recv_
 接收控制类消息回调。用于向设备请求非媒体流数据时，SDK回调该接口向用户传输接收的设备端消息，也用于通知用户p2p连接、数据传输等状态改变。
 ```
 enum XP2PType {
-  XP2PTypeClose   = 1000, //数据传输完成
-  XP2PTypeLog     = 1001, //日志输出
-  XP2PTypeCmd     = 1002, //command json
-  XP2PTypeDisconnect  = 1003, //p2p链路断开
-  XP2PTypeSaveFileOn  = 8000, //获取保存音视频流开关状态
-  XP2PTypeSaveFileUrl = 8001 //获取音视频流保存路径
+    XP2PTypeClose   = 1000, //数据传输完成
+    XP2PTypeLog     = 1001, //日志输出
+    XP2PTypeCmd     = 1002, //command json
+    XP2PTypeDisconnect  = 1003, //p2p链路断开
+    XP2PTypeDetectReady  = 1004, //p2p链路初始化成功,该事件回调触发后才能进行后续操作(直播、语音对讲、信令等)
+    XP2PTypeDetectError  = 1005, //p2p链路初始化失败
+    XP2PTypeSaveFileOn  = 8000, //获取保存音视频流开关状态
+    XP2PTypeSaveFileUrl = 8001 //获取音视频流保存路径
 };
 
 typedef enum {
@@ -193,6 +195,11 @@ const char* _msg_notify(const char *id, XP2PType type, const char* msg)
 
     } else if (type == XP2PTypeDisconnect) { //p2p链路断开
         printf("this is disconnect callback\n");
+    } else if (type == XP2PTypeDetectError) { //p2p探测失败
+        printf("this is p2p event callback\n");
+    } else if (type == XP2PTypeDetectReady) { //p2p探测成功
+        printf("this is p2p event callback\n");
+        //该回调触发后才能进行p2p服务请求
     }
     return "";
 }
@@ -526,6 +533,117 @@ char* _msg_notify(const char *id, XP2PType type, const char* msg) {
     }
 }
 ```
+###### 2.1.7.3 P2P探测失败
+* 接口描述:
+详见`2.1.0.1 控制类消息通知回调`
+
+* 参数说明:
+详见`2.1.0.1 控制类消息通知回调`
+
+* 返回值:
+详见`2.1.0.1 控制类消息通知回调`
+
+* 代码示例:
+```
+bool p2pReady = false;
+bool p2pError = false;
+char* _msg_notify(const char *id, XP2PType type, const char* msg) {
+    if (type == XP2PTypeDetectError) {
+      //多路p2p传输场景需根据回传的`id`判断对应的p2p通道,以做相应处理
+      //该回调触发后需要对p2p服务做重置处理
+
+      p2pError = true;
+    }
+}
+
+//事务处理
+void sample() {
+    int wait_cnt = 0;
+    int ret = 0;
+
+START:
+    ret = startServiceWithXp2pInfo($id, $product_id, $device_name, $xp2p_info);
+    if (ret < 0>) {
+        printf("p2p start error\n");
+        return;
+    }
+
+    while (!p2pReady) {
+        if (p2pError || wait_cnt >= 20) {
+            printf("p2p detect error\n");
+            break;
+        }
+        wait_cnt++;
+        usleep(100 * 1000);
+        printf("waiting for p2p ready\n");
+    }
+    if (!p2pReady) {
+        stopService($id);
+        goto START;
+    }
+
+    startAvRecvService($id, $params, true);
+    ...
+    stopAvRecvService($id, NULL);
+    stopService($id);
+}
+```
+###### 2.1.7.3 P2P探测成功
+* 接口描述:
+详见`2.1.0.1 控制类消息通知回调`
+
+* 参数说明:
+详见`2.1.0.1 控制类消息通知回调`
+
+* 返回值:
+详见`2.1.0.1 控制类消息通知回调`
+
+* 代码示例:
+```
+bool p2pReady = false;
+bool p2pError = false;
+char* _msg_notify(const char *id, XP2PType type, const char* msg) {
+    if (type == XP2PTypeDetectReady) {
+      //多路p2p传输场景需根据回传的`id`判断对应的p2p通道,以做相应处理
+      //该回调触发后才能进行p2p服务请求
+
+      p2pReady = true;
+    }
+}
+
+//事务处理
+void sample() {
+    int wait_cnt = 0;
+    int ret = 0;
+
+START:
+    ret = startServiceWithXp2pInfo($id, $product_id, $device_name, $xp2p_info);
+    if (ret < 0>) {
+        printf("p2p start error\n");
+        return;
+    }
+
+    while (!p2pReady) {
+        if (p2pError || wait_cnt >= 20) {
+            printf("p2p detect error\n");
+            break;
+        }
+        wait_cnt++;
+        usleep(100 * 1000);
+        printf("waiting for p2p ready\n");
+    }
+    if (!p2pReady) {
+        stopService($id);
+        goto START;
+    }
+
+    startAvRecvService($id, $params, true);
+    ...
+    stopAvRecvService($id, NULL);
+    stopService($id);
+}
+```
+
 #### 2.2 使用Android aar库
 接口详细说明可参考：[VideoSDK接口说明](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/VideoSDK接口说明.md)
 
@@ -577,11 +695,23 @@ fun commandRequest(id: String?, msg: String?)
 * 接口描述:
 p2p通道错误断开。该回调用于通知p2p连接异常状况。
 ```
-fun xp2pLinkError(id: String?, msg: String?)
+private var isXp2pDisconnect: Boolean = false
+private var isXp2pDetectReady: Boolean = false
+private var isXp2pDetectError: Boolean = false
+
+fun xp2pEventNotify(id: String?, msg: String?, event: Int)
 {
-	//p2p通道错误断开
-	//回调中应避免耗时操作
-	//多路p2p传输场景需根据回传的`id`判断对应的p2p通道,以做相应处理
+    //p2p通道错误断开
+    //回调中应避免耗时操作
+    //多路p2p传输场景需根据回传的`id`判断对应的p2p通道,以做相应处理
+
+    if (event == 1003) {
+        isXp2pDisconnect = true
+    } else if (event == 1004) {
+        isXp2pDetectReady = true
+    } else if (event == 1005) {
+        isXp2pDetectError = true
+    }
 }
 ```
 
