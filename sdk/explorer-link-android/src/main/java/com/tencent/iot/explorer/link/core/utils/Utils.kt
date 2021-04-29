@@ -26,7 +26,6 @@ object Utils {
         return false
     }
 
-
     // 从字符串中获取第一段连续的数字
     fun getFirstSeriesNumFromStr(src: String): Int {
         if (TextUtils.isEmpty(src)) {
