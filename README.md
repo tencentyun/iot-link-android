@@ -25,7 +25,8 @@ app-config.json 需要配置的内容，如下：
   "XgAccessId": "",
   "XgAccessKey": "",
   "TencentMapSDKValue": "",
-  "TencentIotLinkSDKDemoAppkey": " "
+  "TencentIotLinkSDKDemoAppkey": " ",
+  "HEweatherKey": ""
 ````
 
 **1、物联网平台**
@@ -104,7 +105,15 @@ app-config.json 需要配置的内容，如下：
   - 将该数字签名和应用包名登记到微信开放平台，否则微信授权登录将不可用
   
   最后将配置项 **WXAccessAppId** 设置为在微信开放平台申请并获得的 **AppID**；***<u>同时请遵从官方建议自建微信接入服务器，保证 AppSecret 不被泄露</u>***。
+  
 * 若不使用微信授权登录功能，**WXAccessAppId** 设置为**长度为0的字符串**即可。
+
+**6、和风天气（可选）**
+
+连连开源体验版集成了**和风天气**，用于实现实时天气功能。
+
+* 若确认使用自定义的实时天气功能，需要前往[和风天气开发平台](https://www.qweather.com/)申请获得 **Key**。
+* 若不使用实时天气功能，**HEweatherKey** 设置为**长度为0的字符串**即可。
 
 完成上述配置后，依赖 Android studio 的构建，即可在手机上运行。
 
