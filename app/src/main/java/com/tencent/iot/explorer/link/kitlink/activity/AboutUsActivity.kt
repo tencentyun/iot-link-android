@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintSet
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
@@ -14,8 +13,6 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
-import com.tencent.iot.explorer.link.customview.ConstraintUtil
-import com.tencent.iot.explorer.link.customview.ConstraintUtil.ConstraintBegin
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
@@ -74,20 +71,25 @@ class AboutUsActivity : BaseActivity() {
                 tv_title_user_agreement -> {
 
                     if (App.data.regionId == "1") { //国内
-
-                        val intent = Intent(this@AboutUsActivity, WebActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
-                        var url = CommonField.POLICY_PREFIX
-                        url += "?uin=$ANDROID_ID"
-                        url += CommonField.SERVICE_POLICY_SUFFIX
-                        intent.putExtra(CommonField.EXTRA_TEXT, url)
-                        startActivity(intent)
+                        if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                            val intent = Intent(this@AboutUsActivity, WebActivity::class.java)
+                            intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
+                            var url = CommonField.POLICY_PREFIX
+                            url += "?uin=$ANDROID_ID"
+                            url += CommonField.SERVICE_POLICY_SUFFIX
+                            intent.putExtra(CommonField.EXTRA_TEXT, url)
+                            startActivity(intent)
+                        } else {
+                            OpensourceLicenseActivity.startWebWithExtra(this@AboutUsActivity, getString(R.string.register_agree_2), CommonField.SERVICE_AGREEMENT_URL_CN_EN)
+                        }
                     } else {
-
-                        val intent = Intent(this@AboutUsActivity, OpensourceLicenseActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
-                        intent.putExtra(CommonField.EXTRA_TEXT, CommonField.SERVICE_AGREEMENT_URL)
-                        startActivity(intent)
+                        var url = ""
+                        if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                            url = CommonField.SERVICE_AGREEMENT_URL_US_ZH
+                        } else {
+                            url = CommonField.SERVICE_AGREEMENT_URL_US_EN
+                        }
+                        OpensourceLicenseActivity.startWebWithExtra(this@AboutUsActivity, getString(R.string.register_agree_2), url)
                     }
                 }
 
@@ -95,27 +97,36 @@ class AboutUsActivity : BaseActivity() {
 
                     if (App.data.regionId == "1") { //国内
 
-                        val intent = Intent(this@AboutUsActivity, WebActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
-                        var url = CommonField.POLICY_PREFIX
-                        url += "?uin=$ANDROID_ID"
-                        url += CommonField.PRIVACY_POLICY_SUFFIX
-                        intent.putExtra(CommonField.EXTRA_TEXT, url)
-                        startActivity(intent)
+                        if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                            val intent = Intent(this@AboutUsActivity, WebActivity::class.java)
+                            intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
+                            var url = CommonField.POLICY_PREFIX
+                            url += "?uin=$ANDROID_ID"
+                            url += CommonField.PRIVACY_POLICY_SUFFIX
+                            intent.putExtra(CommonField.EXTRA_TEXT, url)
+                            startActivity(intent)
+                        } else {
+                            OpensourceLicenseActivity.startWebWithExtra(this@AboutUsActivity, getString(R.string.register_agree_4), CommonField.PRIVACY_POLICY_URL_CN_EN)
+                        }
                     } else {
-
-                        val intent = Intent(this@AboutUsActivity, OpensourceLicenseActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
-                        intent.putExtra(CommonField.EXTRA_TEXT, CommonField.PRIVACY_POLICY_URL)
-                        startActivity(intent)
+                        var url = ""
+                        if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                            url = CommonField.PRIVACY_POLICY_URL_US_ZH
+                        } else {
+                            url = CommonField.PRIVACY_POLICY_URL_US_EN
+                        }
+                        OpensourceLicenseActivity.startWebWithExtra(this@AboutUsActivity, getString(R.string.register_agree_4), url)
                     }
                 }
 
                 tv_title_opensource -> {
-                    val intent = Intent(this@AboutUsActivity, OpensourceLicenseActivity::class.java)
-                    intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_5))
-                    intent.putExtra(CommonField.EXTRA_TEXT, CommonField.OPENSOURCE_LICENSE_URL)
-                    startActivity(intent)
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.OPENSOURCE_LICENSE_URL_ZH
+                    } else {
+                        url = CommonField.OPENSOURCE_LICENSE_URL_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@AboutUsActivity, getString(R.string.register_agree_5), url)
                 }
                 
                 tv_about_app_version -> {
