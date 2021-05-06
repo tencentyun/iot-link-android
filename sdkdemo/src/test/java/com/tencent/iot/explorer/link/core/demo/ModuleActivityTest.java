@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk=29)
+//@Config(sdk=29)
 public class ModuleActivityTest {
     @Test
     public void testJump2Login() {
