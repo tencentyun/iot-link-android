@@ -140,8 +140,12 @@ class UserInfoModel(view: UserInfoView) : ParentModel<UserInfoView>(view), Uploa
     override fun uploadFail(loadPath: String, exception: CosXmlClientException?) {
         L.e("上传失败")
         exception?.let {
-            L.e(exception.errorMessage)
-            view?.uploadFail(it.errorMessage)
+            if (!TextUtils.isEmpty(exception.message)) {
+                exception.message?.let { it0 -> {
+                    L.e(it0)
+                    view?.uploadFail(it0)
+                } }
+            }
         }
     }
 
