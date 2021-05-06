@@ -107,7 +107,7 @@ dependencies {
     implementation 'com.android.support:design:+'
 
     //腾讯对象存储--文件上传
-    implementation('com.tencent.qcloud:cosxml-lite:5.4.29') {
+    implementation('com.tencent.qcloud:cosxml:5.6.1') {
         exclude group: 'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
     }
 
