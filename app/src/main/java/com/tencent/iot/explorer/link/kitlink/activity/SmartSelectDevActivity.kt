@@ -2,7 +2,6 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
@@ -18,14 +17,11 @@ import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.fragment.SelDeviceFragment
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.customview.verticaltab.TabView
+import com.tencent.iot.explorer.link.customview.verticaltab.VerticalTabLayout
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
-import kotlinx.android.synthetic.main.activity_device_category.*
-import kotlinx.android.synthetic.main.activity_smart_sel_dev.*
 import kotlinx.android.synthetic.main.activity_smart_sel_dev.vtab_device_category
 import kotlinx.android.synthetic.main.menu_back_layout.*
-import okhttp3.Route
-import q.rorbin.verticaltablayout.VerticalTabLayout
-import q.rorbin.verticaltablayout.widget.TabView
 
 
 class SmartSelectDevActivity : BaseActivity(), MyCallback, VerticalTabLayout.OnTabSelectedListener {
@@ -111,7 +107,7 @@ class SmartSelectDevActivity : BaseActivity(), MyCallback, VerticalTabLayout.OnT
                         if (!roomListEnd) {
                             loadRoomList()
                         } else {        // 没有数据了，开始加载所有房间的列表数据
-                            val adapter = DeviceCategoryActivity.MyTabAdapter()
+                            val adapter = DeviceCategoryActivity.MyTabAdapter(this@SmartSelectDevActivity)
                             for (item in roomList) {
                                 if (TextUtils.isEmpty(item.RoomId)) {
                                     adapter.titleList.add(getString(R.string.all_devices))
