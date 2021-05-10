@@ -230,6 +230,10 @@ object Utils {
         }
         return sb.toString()
     }
+
+    fun dp2px(context: Context, dp: Int): Int {
+        return (context.resources.displayMetrics.density * dp + 0.5).toInt()
+    }
 //    @JvmStatic
 //    fun main(args: Array<String>) {
 //    }
