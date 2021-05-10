@@ -24,7 +24,7 @@
         android:layout_below="@id/v_h_line"
         android:orientation="horizontal">
 
-        <q.rorbin.verticaltablayout.VerticalTabLayout
+        <com.tencent.iot.explorer.link.customview.verticaltab.VerticalTabLayout
             android:id="@+id/vtab_device_category"
             android:layout_width="100dp"
             android:layout_height="match_parent"
