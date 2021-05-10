@@ -154,9 +154,6 @@ dependencies {
     // 地图组件库，包括小车平移、点聚合等组件功能，详见开发指南。
     implementation 'com.tencent.map:sdk-utilities:1.0.6'
 
-    //垂直TabLayout
-    implementation 'q.rorbin:VerticalTabLayout:1.2.9'
-
     if (findProject(':sdk:explorer-link-android') != null) {
         implementation project(path: ':sdk:explorer-link-android')
     } else {

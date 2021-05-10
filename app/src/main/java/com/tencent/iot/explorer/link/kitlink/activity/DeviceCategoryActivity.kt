@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +37,8 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.verticaltab.*
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
 import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
@@ -52,10 +51,6 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
 import kotlinx.android.synthetic.main.not_found_device.*
 import kotlinx.android.synthetic.main.scanning.*
-import q.rorbin.verticaltablayout.VerticalTabLayout
-import q.rorbin.verticaltablayout.adapter.TabAdapter
-import q.rorbin.verticaltablayout.widget.ITabView
-import q.rorbin.verticaltablayout.widget.TabView
 
 
 class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerItemView, View.OnClickListener, VerticalTabLayout.OnTabSelectedListener{
@@ -416,14 +411,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     class MyTabAdapter : TabAdapter {
         var titleList = arrayListOf<String>()
-
-        override fun getIcon(position: Int): ITabView.TabIcon? {
-            return null
-        }
-
-        override fun getBadge(position: Int): ITabView.TabBadge? {
-            return null
-        }
 
         override fun getBackground(position: Int): Int {
             if (position == 0) return R.drawable.tab
