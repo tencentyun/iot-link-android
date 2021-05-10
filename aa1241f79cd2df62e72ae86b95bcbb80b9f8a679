@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53521943_08b94bdc",
+        "filename": "doc/APP发布前确认事项.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-10T01:11:53Z",
+      "side": 1,
+      "message": "腾讯移动推送平台",
+      "revId": "aa1241f79cd2df62e72ae86b95bcbb80b9f8a679",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
