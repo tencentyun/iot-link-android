@@ -130,4 +130,7 @@
     <color name="upgrade_color">#FFFF8C00</color>
     <color name="line_grey_color">#FFE5E5E5</color>
 
+    <color name="vtab_selected_color">#FFFF4081</color>
+    <color name="vtab_unselected_color">#FF757575</color>
+
 </resources>
