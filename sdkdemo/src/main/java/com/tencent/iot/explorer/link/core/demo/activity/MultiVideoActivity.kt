@@ -111,7 +111,7 @@ class MultiVideoActivity : BaseActivity(), XP2PCallback {
 
     override fun setListener() { }
     override fun commandRequest(id: String?, msg: String?) { }
-    override fun xp2pLinkError(id: String?, msg: String?) { }
+    override fun xp2pEventNotify(id: String?, msg: String?, event: Int) { }
     override fun fail(msg: String?, errorCode: Int) { }
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) { }
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) { }
