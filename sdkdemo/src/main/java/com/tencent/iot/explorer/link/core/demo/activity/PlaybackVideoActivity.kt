@@ -178,7 +178,7 @@ class PlaybackVideoActivity  : BaseActivity(), View.OnClickListener, SurfaceHold
     override fun fail(msg: String?, errorCode: Int) {
     }
 
-    override fun xp2pLinkError(id: String?, msg: String?) {
+    override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
 
     }
 
