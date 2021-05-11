@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.Toast
@@ -17,7 +18,9 @@ import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
+import java.util.concurrent.CyclicBarrier
 
+lateinit var barrier: CyclicBarrier
 class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callback, XP2PCallback {
 
     private lateinit var secretId: String
@@ -28,6 +31,9 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private var isPlaying: Boolean = true
     private var isP2PChannelAvailable: Boolean = false
     private var isXp2pDisconnect: Boolean = false
+    private var isXp2pDetectReady: Boolean = false
+    private var isXp2pDetectError: Boolean = false
+
     private var timer: Timer? = null
 
     private lateinit var mPlayer: IjkMediaPlayer
@@ -46,6 +52,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         requestPermission(permissions)
         getSwitchState(this)
         LogcatHelper.getInstance(this).start()
+        barrier = CyclicBarrier(2)
         val bundle = this.intent.extras
         secretId = bundle?.get(VideoConst.VIDEO_SECRET_ID) as String
         secretKey = bundle.get(VideoConst.VIDEO_SECRET_KEY) as String
@@ -69,34 +76,8 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         if (productId == " " || deviceName == " " || secretId == " " || secretKey == " ") {
             Toast.makeText(this, "设备信息有误，请确保配置文件中的设备信息填写正确", Toast.LENGTH_LONG).show()
         } else {
-            reStartXp2pThread()
-            val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
-            if (ret == 0) {
-                isP2PChannelAvailable = true
-                if (isSaveAVData()) {
-                    tv_writting_raw_data.visibility = View.VISIBLE
-                    XP2P.startAvRecvService("$productId/$deviceName", "action=live", true)
-                } else {
-                    tv_writting_raw_data.visibility = View.INVISIBLE
-                    val url = XP2P.delegateHttpFlv("$productId/$deviceName") + "ipc.flv?action=live"
-
-                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
-                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
-                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
-                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
-                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
-                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
-
-                    mPlayer.dataSource = url
-                    mPlayer.prepareAsync()
-                    mPlayer.start()
-                }
-            } else {
-                isP2PChannelAvailable = false
-                speak.visibility = View.GONE
-                watch_monitor.visibility = View.GONE
-                Toast.makeText(this, "P2P通道建立失败，请检查设备是否上线", Toast.LENGTH_LONG).show()
-            }
+            xp2pRestartDaemonThread()
+            xp2pStartAndPlayThread(this)
         }
     }
 
@@ -136,23 +117,81 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         }
     }
 
-    private fun reStartXp2pThread() {
+    private fun xp2pStartAndPlayThread(xp2p: XP2PCallback) {
+        XP2P.setCallback(xp2p)
+        object : Thread() {
+            override fun run() {
+                val ret = openP2PChannel(productId, deviceName, secretId, secretKey)
+                if (ret == 0) {
+                    isP2PChannelAvailable = true
+                    avPlay()
+                } else {
+                    isP2PChannelAvailable = false
+                    speak.visibility = View.GONE
+                    watch_monitor.visibility = View.GONE
+                    runOnUiThread {
+                        Toast.makeText(getApplicationContext(), "P2P通道建立失败，请检查设备是否上线", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }.start()
+    }
+
+    private fun avPlay() {
+        barrier.await()
+        if (isXp2pDetectReady) {
+            isXp2pDetectReady = false
+            if (isSaveAVData()) {
+                tv_writting_raw_data.visibility = View.VISIBLE
+                XP2P.startAvRecvService("$productId/$deviceName", "action=live", true)
+            } else {
+                tv_writting_raw_data.visibility = View.INVISIBLE
+                val url = XP2P.delegateHttpFlv("$productId/$deviceName") + "ipc.flv?action=live"
+
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+
+                mPlayer.dataSource = url
+                mPlayer.prepareAsync()
+                mPlayer.start()
+            }
+        } else {
+            runOnUiThread {
+                Toast.makeText(getApplicationContext(), "P2P探测失败，请检查当前网络环境", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun xp2pRestartDaemonThread() {
         timer = Timer()
         val task: TimerTask = object : TimerTask() {
             override fun run() {
                 if (isXp2pDisconnect) {
                     XP2P.stopService("$productId/$deviceName")
-                    Thread.sleep(500)
                     val ret = XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "")
                     if (ret == 0) {
                         isXp2pDisconnect = false
-
-                        Thread.sleep(500)
-                        mPlayer.reset()
-                        mPlayer.dataSource = XP2P.delegateHttpFlv("$productId/$deviceName") + "ipc.flv?action=live"
-                        mPlayer.setSurface(video_view.holder.surface)
-                        mPlayer.prepareAsync()
-                        mPlayer.start()
+                        barrier.await()
+                        if (isXp2pDetectReady) {
+                            isXp2pDetectReady = false
+                            val url_prefix = XP2P.delegateHttpFlv("$productId/$deviceName")
+                            if (!TextUtils.isEmpty(url_prefix) && mPlayer != null) {
+                                val url = url_prefix + "ipc.flv?action=live"
+                                mPlayer.reset()
+                                mPlayer.dataSource = url
+                                mPlayer.setSurface(video_view.holder.surface)
+                                mPlayer.prepareAsync()
+                                mPlayer.start()
+                            }
+                        } else {
+                            runOnUiThread {
+                                Toast.makeText(getApplicationContext(), "P2P探测失败，请检查当前网络环境", Toast.LENGTH_LONG).show()
+                            }
+                        }
                     } else {
                         runOnUiThread {
                             Toast.makeText(getApplicationContext(), "p2p连接断开,正在尝试重新连接", Toast.LENGTH_LONG).show()
@@ -166,7 +205,6 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
 
     private fun openP2PChannel(productId: String, deviceName: String, secretId: String, secretKey: String): Int {
         XP2P.setQcloudApiCred(secretId, secretKey)
-        XP2P.setCallback(this)
         return XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "")
     }
 
@@ -178,6 +216,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
 
     private fun stopSpeak() {
         audioRecordUtil.stop()
+        XP2P.stopSendService("$productId/$deviceName", null)
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) { }
@@ -205,9 +244,17 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         //do some non-time-consuming processing
     }
 
-    override fun xp2pLinkError(id: String?, msg: String?) {
-        isXp2pDisconnect = true
+    override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         //do some non-time-consuming processing
+        if (event == 1003) {
+            isXp2pDisconnect = true
+        } else if (event == 1004) {
+            isXp2pDetectReady = true
+            barrier.await()
+        } else if (event == 1005) {
+            isXp2pDetectError = true
+            barrier.await()
+        }
     }
 
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) { // 音视频数据回调接口
