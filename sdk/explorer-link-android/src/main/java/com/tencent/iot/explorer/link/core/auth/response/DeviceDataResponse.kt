@@ -14,7 +14,7 @@ class DeviceDataResponse {
     fun parseList(): List<DeviceDataEntity> {
         val list = ArrayList<DeviceDataEntity>()
         val obj = JSON.parseObject(Data)
-        obj.keys.forEach {
+        obj?.keys?.forEach {
             val entity = DeviceDataEntity()
             entity.id = it
             entity.value = obj.getJSONObject(it).getString("Value")
