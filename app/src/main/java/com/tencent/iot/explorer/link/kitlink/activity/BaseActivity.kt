@@ -99,11 +99,13 @@ abstract class BaseActivity : AppCompatActivity() {
     fun backToMain() {
         var stop = false
         while (!stop) {
-            if (App.data.activityList.last is MainActivity) {
-                stop = true
-            } else {
-                App.data.activityList.last.finish()
-                App.data.activityList.removeLast()
+            if (!App.data.activityList.isEmpty()) {
+                if (App.data.activityList.last is MainActivity) {
+                    stop = true
+                } else {
+                    App.data.activityList.last.finish()
+                    App.data.activityList.removeLast()
+                }
             }
         }
     }
