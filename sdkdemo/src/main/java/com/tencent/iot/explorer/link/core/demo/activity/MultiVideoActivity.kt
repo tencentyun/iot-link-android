@@ -2,7 +2,9 @@ package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
 import android.view.SurfaceHolder
+import android.view.SurfaceView
 import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
@@ -90,11 +92,15 @@ class MultiVideoActivity : BaseActivity(), XP2PCallback {
                 video_view_02.layoutParams = lp
             }
         }
+        playerClient01.video_view = video_view_01
+        playerClient02.video_view = video_view_02
+
         xp2pStartAndPlayThread(this, playerClient01)
         xp2pStartAndPlayThread(this, playerClient02)
     }
 
     private fun xp2pStartAndPlayThread(xp2p: XP2PCallback, playerClient: PlayerClient) {
+        xp2pRestartDaemonThread(playerClient)
         XP2P.setCallback(xp2p)
         object : Thread() {
             override fun run() {
@@ -115,18 +121,20 @@ class MultiVideoActivity : BaseActivity(), XP2PCallback {
         if (playerClient.isXp2pDetectReady) {
             playerClient.isXp2pDetectReady = false
 
-            val url = XP2P.delegateHttpFlv(playerClient.deviceId) + "ipc.flv?action=live"
+            val url_prefix = XP2P.delegateHttpFlv(playerClient.deviceId)
+            if (!TextUtils.isEmpty(url_prefix) && playerClient.mPlayer != null) {
+                val url = url_prefix + "ipc.flv?action=live"
+                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
 
-            playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
-            playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
-            playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
-            playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
-            playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
-            playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
-
-            playerClient.mPlayer.dataSource = url
-            playerClient.mPlayer.prepareAsync()
-            playerClient.mPlayer.start()
+                playerClient.mPlayer.dataSource = url
+                playerClient.mPlayer.prepareAsync()
+                playerClient.mPlayer.start()
+            }
         } else {
             runOnUiThread {
                 Toast.makeText(getApplicationContext(), "P2P探测失败，请检查当前网络环境", Toast.LENGTH_LONG).show()
@@ -139,8 +147,48 @@ class MultiVideoActivity : BaseActivity(), XP2PCallback {
         return XP2P.startServiceWithXp2pInfo("$productId/$deviceName", productId, deviceName, "")
     }
 
+    private fun xp2pRestartDaemonThread(playerClient: PlayerClient) {
+        playerClient.timer = Timer()
+        val task: TimerTask = object : TimerTask() {
+            override fun run() {
+                if (playerClient.isXp2pDisconnect) {
+                    XP2P.stopService(playerClient.deviceId)
+                    val ret = XP2P.startServiceWithXp2pInfo(playerClient.deviceId, productId, playerClient.deviceName, "")
+                    if (ret == 0) {
+                        playerClient.isXp2pDisconnect = false
+
+                        playerClient.barrier.await()
+                        if (playerClient.isXp2pDetectReady) {
+                            playerClient.isXp2pDetectReady = false
+                            val url_prefix = XP2P.delegateHttpFlv(playerClient.deviceId)
+                            if (!TextUtils.isEmpty(url_prefix) && playerClient.mPlayer != null) {
+                                val url = url_prefix + "ipc.flv?action=live"
+                                playerClient.mPlayer.reset()
+                                playerClient.mPlayer.dataSource = url
+                                playerClient.mPlayer.setSurface(playerClient.video_view.holder.surface)
+                                playerClient.mPlayer.prepareAsync()
+                                playerClient.mPlayer.start()
+                            }
+                        } else {
+                            runOnUiThread {
+                                Toast.makeText(getApplicationContext(), "P2P探测失败，请检查当前网络环境", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    } else {
+                        runOnUiThread {
+                            Toast.makeText(getApplicationContext(), "p2p连接断开,正在尝试重新连接", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
+        playerClient.timer!!.schedule(task,0,1000);
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        playerClient01.timer?.cancel()
+        playerClient02.timer?.cancel()
         playerClient01.mPlayer.release()
         playerClient02.mPlayer.release()
         XP2P.stopService(playerClient01.deviceId)
@@ -181,4 +229,7 @@ class PlayerClient {
     lateinit var deviceName: String
     lateinit var deviceId: String
     lateinit var mPlayer: IjkMediaPlayer
+
+    lateinit var timer: Timer
+    lateinit var video_view: SurfaceView
 }
