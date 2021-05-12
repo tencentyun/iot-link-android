@@ -16,6 +16,24 @@
       "revId": "448bc7b38d0fffee1d222044b6844de5751e43eb",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4915f0f_7c5b7925",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/verticaltab/ITabView.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-05-12T06:18:27Z",
+      "side": 1,
+      "message": "最新patch中已修改",
+      "parentUuid": "91bf728d_b47d9e4a",
+      "revId": "448bc7b38d0fffee1d222044b6844de5751e43eb",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
     }
   ]
 }
