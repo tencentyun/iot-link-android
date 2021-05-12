@@ -20,7 +20,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 import java.util.concurrent.CyclicBarrier
 
-lateinit var barrier: CyclicBarrier
+private lateinit var barrier: CyclicBarrier
 private var isXp2pDisconnect: Boolean = false
 private var isXp2pDetectReady: Boolean = false
 private var isXp2pDetectError: Boolean = false
