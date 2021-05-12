@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17e07adc_2849064a",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/activity/MultiVideoActivity.kt",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-05-12T00:56:08Z",
+      "side": 1,
+      "message": "PlayerClient，首字母大写\n这个class放在最下面吧",
+      "range": {
+        "startLine": 18,
+        "startChar": 6,
+        "endLine": 18,
+        "endChar": 18
+      },
+      "revId": "1db63c46b2c6679f466d53453aa8858f3a8ba26f",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
