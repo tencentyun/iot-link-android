@@ -110,7 +110,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         retry_to_scann02.setOnClickListener(this)
         my_scroll_view.setScrollChangedListener(object: MyScrollView.ScrollChangedListener{
             override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
-                val height = scanner_bar.height + gray_line_0.height + linearlayout_scann.height
+                val height = gray_line_0.height + gray_line_1.height + linearlayout_scann.height
                 if (scrollY >= height && vtab_device_category.parent ==container_normal) {
                     container_normal.removeView(vtab_device_category)
                     gray_line_1.visibility = View.GONE
