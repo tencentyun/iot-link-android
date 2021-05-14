@@ -145,22 +145,21 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                 tv_writting_raw_data.visibility = View.VISIBLE
                 XP2P.startAvRecvService("$productId/$deviceName", "action=live", true)
             } else {
-                tv_writting_raw_data.visibility = View.INVISIBLE
-                val url = XP2P.delegateHttpFlv("$productId/$deviceName") + "ipc.flv?action=live"
+//                tv_writting_raw_data.visibility = View.INVISIBLE
 
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
-                mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+                runOnUiThread {
+                    val url = XP2P.delegateHttpFlv("$productId/$deviceName") + "ipc.flv?action=live"
 
-                val cmd = "action=user_define&cmd=".toByteArray()
-                XP2P.postCommandRequestWithAsync("$productId/$deviceName", cmd, cmd.size.toLong())
-
-                mPlayer.dataSource = url
-                mPlayer.prepareAsync()
-                mPlayer.start()
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+                    mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+                    mPlayer.dataSource = url
+                    mPlayer.prepareAsync()
+                    mPlayer.start()
+                }
             }
         } else {
             runOnUiThread {
@@ -181,14 +180,17 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                         barrier.await()
                         if (isXp2pDetectReady) {
                             isXp2pDetectReady = false
-                            val url_prefix = XP2P.delegateHttpFlv("$productId/$deviceName")
-                            if (!TextUtils.isEmpty(url_prefix) && mPlayer != null) {
-                                val url = url_prefix + "ipc.flv?action=live"
-                                mPlayer.reset()
-                                mPlayer.dataSource = url
-                                mPlayer.setSurface(video_view.holder.surface)
-                                mPlayer.prepareAsync()
-                                mPlayer.start()
+
+                            runOnUiThread {
+                                val url_prefix = XP2P.delegateHttpFlv("$productId/$deviceName")
+                                if (!TextUtils.isEmpty(url_prefix) && mPlayer != null) {
+                                    val url = url_prefix + "ipc.flv?action=live"
+                                    mPlayer.reset()
+                                    mPlayer.dataSource = url
+                                    mPlayer.setSurface(video_view.holder.surface)
+                                    mPlayer.prepareAsync()
+                                    mPlayer.start()
+                                }
                             }
                         } else {
                             runOnUiThread {
