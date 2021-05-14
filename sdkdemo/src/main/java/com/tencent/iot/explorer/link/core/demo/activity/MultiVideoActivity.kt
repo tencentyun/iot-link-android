@@ -124,16 +124,18 @@ class MultiVideoActivity : BaseActivity(), XP2PCallback {
             val url_prefix = XP2P.delegateHttpFlv(playerClient.deviceId)
             if (!TextUtils.isEmpty(url_prefix) && playerClient.mPlayer != null) {
                 val url = url_prefix + "ipc.flv?action=live"
-                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
-                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
-                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
-                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
-                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
-                playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+                runOnUiThread {
+                    playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+                    playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+                    playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+                    playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+                    playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+                    playerClient.mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
 
-                playerClient.mPlayer.dataSource = url
-                playerClient.mPlayer.prepareAsync()
-                playerClient.mPlayer.start()
+                    playerClient.mPlayer.dataSource = url
+                    playerClient.mPlayer.prepareAsync()
+                    playerClient.mPlayer.start()
+                }
             }
         } else {
             runOnUiThread {
@@ -160,14 +162,17 @@ class MultiVideoActivity : BaseActivity(), XP2PCallback {
                         playerClient.barrier.await()
                         if (playerClient.isXp2pDetectReady) {
                             playerClient.isXp2pDetectReady = false
+
                             val url_prefix = XP2P.delegateHttpFlv(playerClient.deviceId)
                             if (!TextUtils.isEmpty(url_prefix) && playerClient.mPlayer != null) {
                                 val url = url_prefix + "ipc.flv?action=live"
-                                playerClient.mPlayer.reset()
-                                playerClient.mPlayer.dataSource = url
-                                playerClient.mPlayer.setSurface(playerClient.video_view.holder.surface)
-                                playerClient.mPlayer.prepareAsync()
-                                playerClient.mPlayer.start()
+                                runOnUiThread {
+                                    playerClient.mPlayer.reset()
+                                    playerClient.mPlayer.dataSource = url
+                                    playerClient.mPlayer.setSurface(playerClient.video_view.holder.surface)
+                                    playerClient.mPlayer.prepareAsync()
+                                    playerClient.mPlayer.start()
+                                }
                             }
                         } else {
                             runOnUiThread {
