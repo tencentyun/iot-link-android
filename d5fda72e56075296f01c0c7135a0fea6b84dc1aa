@@ -45,6 +45,30 @@
       "revId": "d5fda72e56075296f01c0c7135a0fea6b84dc1aa",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6a9d5a3_ae660de5",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/activity/VideoActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-05-17T06:09:11Z",
+      "side": 1,
+      "message": "这块为什么注掉",
+      "parentUuid": "cd42dd3c_745f4ccb",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 66
+      },
+      "revId": "d5fda72e56075296f01c0c7135a0fea6b84dc1aa",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
     }
   ]
 }
