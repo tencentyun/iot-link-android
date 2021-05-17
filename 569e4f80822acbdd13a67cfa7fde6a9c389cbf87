@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6244106_f3f82996",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/activity/VideoActivity.kt",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-05-17T07:15:22Z",
+      "side": 1,
+      "message": "这个也跑到ui线程",
+      "range": {
+        "startLine": 145,
+        "startChar": 16,
+        "endLine": 145,
+        "endChar": 62
+      },
+      "revId": "569e4f80822acbdd13a67cfa7fde6a9c389cbf87",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
