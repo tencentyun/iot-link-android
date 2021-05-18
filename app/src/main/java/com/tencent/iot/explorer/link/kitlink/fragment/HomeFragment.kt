@@ -190,13 +190,13 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
 
     private fun showWeather(show: Boolean) {
         if (show) {
-            layout_space.visibility = View.VISIBLE
-            layout_2_set_location.visibility = View.GONE
-            weather_iv.visibility = View.VISIBLE
+            layout_space?.visibility = View.VISIBLE
+            layout_2_set_location?.visibility = View.GONE
+            weather_iv?.visibility = View.VISIBLE
         } else {
-            layout_space.visibility = View.INVISIBLE
-            layout_2_set_location.visibility = View.VISIBLE
-            weather_iv.visibility = View.GONE
+            layout_space?.visibility = View.INVISIBLE
+            layout_2_set_location?.visibility = View.VISIBLE
+            weather_iv?.visibility = View.GONE
         }
     }
 
