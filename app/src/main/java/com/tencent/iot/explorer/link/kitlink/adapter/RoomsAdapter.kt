@@ -34,7 +34,8 @@ class RoomsAdapter(list: MutableList<RoomEntity>) : RecyclerView.Adapter<RoomsAd
         val holder = ViewHolder(view)
         view.setOnClickListener {
             val position = holder.adapterPosition
-            if (onItemClicked != null) {
+            if (onItemClicked != null &&
+                position < list.size && position >= 0) {
                 onItemClicked!!.onItemClicked(position, list[position])
             }
         }
