@@ -116,6 +116,8 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
             bar.setRange(modeInt.getMin(), modeInt.getMax());
 //            bar.setIndicatorText(progress + modeInt.getUnit());
             bar.setOnRangeChangedListener(onRangeChangedListener);
+            if (progress <= modeInt.getMin()) progress = modeInt.getMin();
+            if (progress >= modeInt.getMax()) progress = modeInt.getMax();
             bar.setProgress(progress);
             if (modeInt.getShowOp()) {
                 eqLayout.setVisibility(View.VISIBLE);
