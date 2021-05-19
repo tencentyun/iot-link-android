@@ -74,12 +74,7 @@ class MeFragment : BaseFragment(), View.OnClickListener, MyCallback {
     private fun showUserInfo() {
         tv_me_name.text = App.data.userInfo.NickName
         tv_me_phone.text = App.data.userInfo.PhoneNumber
-        ImageManager.setImagePath(
-            this.context,
-            me_portrait,
-            App.data.userInfo.Avatar,
-            0
-        )
+        ImageManager.setImagePath(this.context, me_portrait, App.data.userInfo.Avatar, 0)
     }
 
     override fun fail(msg: String?, reqCode: Int) {
