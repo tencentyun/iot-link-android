@@ -2,26 +2,27 @@ package com.tencent.iot.explorer.link.customview.image;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
-/**
- * 将矩形的图片裁剪成圆形
- * 圆形ImageView，可设置最多两个宽度不同且颜色不同的圆形边框。
- * Created by THINK on 2017/4/26.
- */
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 
 public class RoundImageView extends AppCompatImageView {
+    public static int defaultKeepValue = 50; //默认压缩到 50KB
+    private static int ORI_SCALE = 100; //原始比例
+
     private int mBorderThickness = 0;
     private int defaultColor = 0xFFFFFFFF;
     // 如果只有其中一个有值，则只画一个圆形边框
@@ -128,7 +129,45 @@ public class RoundImageView extends AppCompatImageView {
         drawable.setBounds(0, 0, w, h);
         // 把 drawable 内容画到画布中
         drawable.draw(canvas);
-        return bitmap;
+        return compressImage(bitmap, defaultKeepValue);
+    }
+
+    private double getBitmapSize(Bitmap image) {  // 解析图片失败，直接返回没有大小
+        try (ByteArrayOutputStream tagBaos = new ByteArrayOutputStream()) {
+            image.compress(Bitmap.CompressFormat.JPEG, ORI_SCALE, tagBaos);
+            double imgBytes = tagBaos.toByteArray().length * 1.0 / 1024;
+            return imgBytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    private Bitmap compressImage(Bitmap image, int expectSize) {
+        if (image == null) return null;
+
+        int options = ORI_SCALE;
+        double imgBytes = getBitmapSize(image);
+        if (imgBytes <= 0) return image; // 没有尺寸结果，返回原图
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            if (imgBytes > expectSize) { // 超出默认的值。计算新的尺寸
+                options = (int) (expectSize / imgBytes * ORI_SCALE);
+                if (options <= 0) options = 1;
+            }
+
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+            try (ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray())) {//获取图片输入流
+                return BitmapFactory.decodeStream(isBm, null, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image; // 获取图片流失败，返回原图
     }
 
     /**
