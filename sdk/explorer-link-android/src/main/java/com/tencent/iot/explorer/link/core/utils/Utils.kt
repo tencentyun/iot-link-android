@@ -8,8 +8,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.os.Build
+import android.os.LocaleList
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import com.tencent.iot.explorer.link.core.log.L
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -59,18 +61,20 @@ object Utils {
     }
 
     fun getLang(): String {
-        val local = Locale.getDefault().toString()
-        if (TextUtils.isEmpty(local)) {
+        var local: Locale?
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            local = LocaleList.getDefault().get(0)
+        } else {
+            local = Locale.getDefault()
+        }
+
+        if (local == null) {
             L.d("getLang return default lang(zh-CN)")
             return "zh-CN" // 默认时返回中文类型
         }
-        var tmp = local
-        val eleArray = tmp.split("_")
-        if (eleArray.size >= 3) {
-            tmp = eleArray[0] + "_" + eleArray[1]
-        }
-        val ret = tmp.replace("_", "-")
-        L.d("getLang return $ret")
+
+        var ret = local.getLanguage().toString() + "-" + local.getCountry().toString()
         return ret
     }
 
