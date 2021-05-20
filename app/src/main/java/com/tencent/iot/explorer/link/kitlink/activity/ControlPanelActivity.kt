@@ -120,13 +120,17 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
      *  获取列表对象
      */
     fun getDeviceProperty(position: Int): DevicePropertyEntity {
-        presenter.model!!.devicePropertyList.run {
-            if (position >= size) {// 云端定时
-                val entity = DevicePropertyEntity()
-                entity.type = "btn-col-1"
-                return entity
+        presenter.model?.let {
+            it.devicePropertyList.run {
+                if (position >= size) {// 云端定时
+                    val entity = DevicePropertyEntity()
+                    entity.type = "btn-col-1"
+                    return entity
+                }
+                return this[position]
             }
-            return this[position]
+        }?:let {
+            return DevicePropertyEntity()
         }
     }
 
@@ -155,7 +159,11 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     }
 
     override fun getViewType(position: Int): Int {
-        return PanelThemeManager.instance.getViewType(presenter.model!!.devicePropertyList[position])
+        presenter.model?.let {
+            return PanelThemeManager.instance.getViewType(presenter.model!!.devicePropertyList[position])
+        }?:let {
+            return PanelThemeManager.instance.getViewType(DevicePropertyEntity())
+        }
     }
 
     /**
