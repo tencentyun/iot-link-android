@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.webkit.*
 import com.alibaba.fastjson.JSON
@@ -84,7 +83,7 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
                             "&appID=${T.getContext().applicationInfo.packageName}" +
                             "&platform=android" +
                             "&regionId=${App.data.regionId}"
-                    if (deviceEntity?.shareDevice!!) {
+                    if (deviceEntity?.shareDevice != null && deviceEntity?.shareDevice!!) {
                         url += "&isShareDevice=true"
                     }
                     showUrl(url)
