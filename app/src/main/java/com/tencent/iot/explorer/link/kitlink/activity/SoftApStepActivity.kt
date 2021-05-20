@@ -88,9 +88,7 @@ class SoftApStepActivity : PActivity() {
 
     // 网络请求成功且返回自定义的内容，调用页面内容加载方法，网络请求失败无需调用
     private fun loadViewInfo() {
-        if (TextUtils.isEmpty(productId)) {
-            return
-        }
+        if (TextUtils.isEmpty(productId)) return
 
         val productsList  = arrayListOf<String>()
         productsList.add(productId)
@@ -101,6 +99,7 @@ class SoftApStepActivity : PActivity() {
 
             override fun success(response: BaseResponse, reqCode: Int) {
                 response.parse(ProductsConfigResponse::class.java)?.run {
+                    if (Data.size <= 0) return@run
                     val config = JsonManager.parseJson(Data[0].Config, ProdConfigDetailEntity::class.java)
 
                     if (config == null || TextUtils.isEmpty(config.WifiSoftAP)) {
