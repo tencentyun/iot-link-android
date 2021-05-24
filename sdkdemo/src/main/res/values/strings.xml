@@ -31,6 +31,23 @@
     <string name="set_avatar">设置头像</string>
     <string name="take_photo">拍照</string>
     <string name="select_local_album">选择图库</string>
+    <string name="demo_name">IoT Video</string>
+    <string name="iot_demo_name">IoT Video Demo</string>
+    <string name="welcome">欢迎使用腾讯云 IoT Video</string>
+    <string name="video">IoT Video（消费版）</string>
+    <string name="video_pro">IoT Video（行业版）</string>
+    <string name="api_tip">应用端API</string>
+    <string name="api_contain">有</string>
+    <string name="api_not_contain">无</string>
+    <string name="use_video_sdk">使用多媒体SDK</string>
+    <string name="login">登录</string>
+    <string name="access_id">Access ID</string>
+    <string name="access_token">Access Token</string>
+    <string name="product_id">Product ID</string>
+    <string name="hint_access_id">请输入Access ID</string>
+    <string name="hint_access_token">请输入Access Token</string>
+    <string name="hint_product_id">请输入Product ID</string>
+    <string name="please_use_sdk">请选择使用多媒体 SDK</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
