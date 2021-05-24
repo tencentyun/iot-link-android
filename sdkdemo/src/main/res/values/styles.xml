@@ -18,4 +18,13 @@
         <item name="android:windowExitAnimation">@anim/common_out</item>
     </style>
 
+    <style name="iOSDialog" parent="@android:style/Theme.Translucent">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>//无标题
+        <item name="android:windowBackground">@color/translucent</item>//背景
+        <item name="android:windowIsFloating">true</item>//悬浮
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
 </resources>
