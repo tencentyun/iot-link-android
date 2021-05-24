@@ -9,7 +9,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <SurfaceView
+        <TextureView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
@@ -38,4 +38,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="停止播放"/>
+    <Button
+        android:id="@+id/capture_snapshot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="截屏"/>
 </LinearLayout>
