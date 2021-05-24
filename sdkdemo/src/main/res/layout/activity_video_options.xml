@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.tencent.iot.explorer.link.core.demo.video.utils.StatusBarHeightView
+        android:id="@+id/v_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@null"
+        app:layout_constraintTop_toTopOf="parent"
+        app:use_type="use_padding_top">
+
+    </com.tencent.iot.explorer.link.core.demo.video.utils.StatusBarHeightView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_video"
+        app:layout_constraintTop_toBottomOf="@id/v_bar">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="128dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@mipmap/iot_video_logo"
+            />
+
+        <TextView
+            android:id="@+id/tv_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo"
+            android:textSize="25sp"
+            android:layout_marginTop="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/demo_name"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_logo"
+            android:layout_marginTop="16dp"
+            android:textSize="@dimen/ts_20"
+            android:text="@string/welcome"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    
+    <Button
+        android:id="@+id/btn_video"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/background_blue_cell_btn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/video"
+        android:textAllCaps="false"
+        android:textColor="@color/blue_0052D9"
+        android:textSize="@dimen/ts_17"
+        />
+
+    <Button
+        android:id="@+id/btn_video_pro"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_blue_cell_btn"
+        app:layout_constraintTop_toBottomOf="@id/btn_video"
+        android:text="@string/video_pro"
+        android:textAllCaps="false"
+        android:textColor="@color/blue_0052D9"
+        android:textSize="@dimen/ts_17"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

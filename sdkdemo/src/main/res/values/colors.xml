@@ -15,6 +15,7 @@
     <color name="line">#EAEAEA</color>
 
     <!--    蓝色-->
+    <color name="blue_0052D9">#0052D9</color>
     <color name="blue_006EFF">#006EFF</color>
     <color name="blue_0063E5">#0063E5</color>
     <color name="blue_33006EFF">#33006EFF</color>
@@ -25,8 +26,14 @@
     <color name="black_333333">#333333</color>
     <color name="black_888888">#888888</color>
     <color name="black_999999">#999999</color>
+    <color name="black_15161A">#15161A</color>
+    <color name="black_1A000000">#1A000000</color>
+    <color name="black_99000000">#99000000</color>
+
     <!--    灰色-->
+    <color name="gray_FF7F7F7F">#FF7F7F7F</color>
     <color name="gray_bbbbbb">#BBBBBB</color>
+    <color name="gray_FFBBBBBB">#FFBBBBBB</color>
     <color name="gray_cccccc">#CCCCCC</color>
     <color name="gray_d7d7d7">#D7D7D7</color>
     <color name="gray_dcdcdc">#DCDCDC</color>
