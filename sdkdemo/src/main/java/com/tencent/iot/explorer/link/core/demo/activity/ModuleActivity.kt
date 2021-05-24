@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
+import com.tencent.iot.explorer.link.core.demo.video.activity.VideoOptionsActivity
 import kotlinx.android.synthetic.main.activity_module.*
 
 class ModuleActivity : BaseActivity() {
@@ -35,6 +36,7 @@ class ModuleActivity : BaseActivity() {
 
         btn_3.setOnClickListener {
 //            jumpActivity()
+            jumpActivity(VideoOptionsActivity::class.java)
         }
     }
 
