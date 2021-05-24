@@ -14,4 +14,5 @@ object VideoConst {
     const val MULTI_VIDEO_SECRET_ID= "secretId"
     const val MULTI_VIDEO_DEVICE_NAME01= "deviceName01"
     const val MULTI_VIDEO_DEVICE_NAME02= "deviceName02"
+    const val VIDEO_ACCESS_INFOS = "VideoAccessInfos"
 }
