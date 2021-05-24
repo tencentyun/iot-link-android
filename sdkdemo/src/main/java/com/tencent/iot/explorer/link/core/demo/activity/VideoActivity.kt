@@ -2,17 +2,21 @@ package com.tencent.iot.explorer.link.core.demo.activity
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.SurfaceTexture
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.view.SurfaceHolder
+import android.view.Surface
+import android.view.TextureView
 import android.view.View
 import android.widget.Toast
 import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.util.ImageSelect
 import com.tencent.iot.explorer.link.core.demo.util.LogcatHelper
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
-import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.iot.video.link.consts.VideoConst
+import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video.*
@@ -20,11 +24,13 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 import java.util.concurrent.CyclicBarrier
 
+
 private lateinit var barrier: CyclicBarrier
 private var isXp2pDisconnect: Boolean = false
 private var isXp2pDetectReady: Boolean = false
 private var isXp2pDetectError: Boolean = false
-class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callback, XP2PCallback {
+class VideoActivity : BaseActivity(), View.OnClickListener, XP2PCallback,
+    TextureView.SurfaceTextureListener {
 
     private lateinit var secretId: String
     private lateinit var secretKey: String
@@ -60,7 +66,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         deviceName = bundle.get(VideoConst.VIDEO_DEVICE_NAME) as String
 
         audioRecordUtil = AudioRecordUtil(this, "$productId/$deviceName")
-        video_view.holder.addCallback(this)
+        video_view.surfaceTextureListener = this
         mPlayer = IjkMediaPlayer()
         mPlayer.setOnPreparedListener {
             mHandler.post {
@@ -84,6 +90,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     override fun setListener() {
         speak.setOnClickListener(this)
         watch_monitor.setOnClickListener(this)
+        capture_snapshot.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -113,6 +120,10 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                     isPlaying = true
                     watch_monitor.text = "停止播放"
                 }
+            }
+            capture_snapshot -> {
+                ImageSelect.saveBitmap(video_view.bitmap)
+                Toast.makeText(this, "截图保存成功", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -192,7 +203,6 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
                                     val url = url_prefix + "ipc.flv?action=live"
                                     mPlayer.reset()
                                     mPlayer.dataSource = url
-                                    mPlayer.setSurface(video_view.holder.surface)
                                     mPlayer.prepareAsync()
                                     mPlayer.start()
                                 }
@@ -227,14 +237,6 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
     private fun stopSpeak() {
         audioRecordUtil.stop()
         XP2P.stopSendService("$productId/$deviceName", null)
-    }
-
-    override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) { }
-
-    override fun surfaceDestroyed(holder: SurfaceHolder?) { }
-
-    override fun surfaceCreated(holder: SurfaceHolder?) {
-        mPlayer.setDisplay(holder)
     }
 
     override fun onDestroy() {
@@ -283,5 +285,19 @@ class VideoActivity : BaseActivity(), View.OnClickListener, SurfaceHolder.Callba
         @JvmStatic fun isSaveAVData() : Boolean {
             return saveData
         }
+    }
+
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
+    }
+
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+    }
+
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+        return false
+    }
+
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+        mPlayer.setSurface(Surface(surface))
     }
 }
