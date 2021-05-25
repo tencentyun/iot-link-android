@@ -16,6 +16,24 @@
       "revId": "78b9e9906f2fb4c1f9ddffc185e9e4f836e57246",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33f20a56_bcf3e3ed",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/video/dialog/ToastDialog.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-05-25T09:22:12Z",
+      "side": 1,
+      "message": "已移除",
+      "parentUuid": "74a3b9dd_a7f5d5e2",
+      "revId": "78b9e9906f2fb4c1f9ddffc185e9e4f836e57246",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
     }
   ]
 }
