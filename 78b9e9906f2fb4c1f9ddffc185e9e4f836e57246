@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74a3b9dd_a7f5d5e2",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/video/dialog/ToastDialog.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-25T09:10:47Z",
+      "side": 1,
+      "message": "WARNING和FAIL都用同一个图片么？如果没有FAIL类型，是否先不引入。也可以给个设置图片的接口。",
+      "revId": "78b9e9906f2fb4c1f9ddffc185e9e4f836e57246",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
