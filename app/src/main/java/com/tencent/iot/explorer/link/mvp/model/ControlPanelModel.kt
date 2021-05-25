@@ -1,11 +1,13 @@
 package com.tencent.iot.explorer.link.mvp.model
 
+import android.os.Build
 import android.os.Handler
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.*
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_AUDIO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_VIDEO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.USERID
@@ -145,7 +147,8 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
             if (value == "1") { //并且状态值为1，代表应用正在call设备
                 App.data.callingDeviceId = "$productId/$deviceName" //保存下设备id（productId/deviceName）
                 val userId = SharePreferenceUtil.getString(App.activity, App.CONFIG, CommonField.USER_ID)
-                data = "{\"$id\":$value, \"$USERID\":\"$userId\"}"
+                val agent = "android/1.4.0 (Android" + Build.VERSION.SDK_INT + ";" + Build.BRAND + " " + Build.MODEL + ";" + Locale.getDefault().language + "-" + Locale.getDefault().country + ")"
+                data = "{\"$id\":$value, \"$USERID\":\"$userId\", \"${MessageConst.AGENT}\":\"$agent\"}"
             }
         }
         HttpRequest.instance.controlDevice(productId, deviceName, data, this)
