@@ -8,8 +8,12 @@ echo ">>>latest tag: $latest_tag"
 vtag=${latest_tag#*v}
 echo ">>>latest tag(no v): $vtag"
 
+# v1.0.0-beta.1 --> v1.0.0
+vtag_no_beta=(${vtag//-/ })
+vtag_no_beta=${vtag_no_beta[0]}
+
 # snapshot版本自增（最新tag+1）
-vtaglist=(${vtag//./ })
+vtaglist=(${vtag_no_beta//./ })
 firsttag=${vtaglist[0]}
 secondtag=${vtaglist[1]}
 thirdtag=${vtaglist[2]}
