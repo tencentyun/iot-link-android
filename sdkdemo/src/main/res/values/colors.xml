@@ -6,6 +6,7 @@
 
     <color name="white">#FFFFFF</color>
     <color name="translucent">#00FFFFFF</color>
+    <color name="white_translucent_AAFFFFFF">#AAFFFFFF</color>
     <color name="line_F2F4F5">#F2F4F5</color>
     <color name="line_555869">#555869</color>
 
@@ -16,7 +17,10 @@
 
     <!--    蓝色-->
     <color name="blue_0052D9">#0052D9</color>
+    <color name="blue_3D8BFF">#3D8BFF</color>
+    <color name="blue_1242FF">#1242FF</color>
     <color name="blue_006EFF">#006EFF</color>
+    <color name="blue_0066FF">#0066FF</color>
     <color name="blue_0063E5">#0063E5</color>
     <color name="blue_33006EFF">#33006EFF</color>
     <color name="blue_8BBDFF">#8BBDFF</color>
@@ -36,6 +40,7 @@
     <color name="gray_FFBBBBBB">#FFBBBBBB</color>
     <color name="gray_cccccc">#CCCCCC</color>
     <color name="gray_d7d7d7">#D7D7D7</color>
+    <color name="gray_C2C5CC">#C2C5CC</color>
     <color name="gray_dcdcdc">#DCDCDC</color>
     <color name="gray_dddddd">#DDDDDD</color>
     <color name="gray_F2F2F2">#F2F2F2</color>
@@ -49,4 +54,5 @@
 
     <!--绿色-->
     <color name="green_1aad19">#1AAD19</color>
+    <color name="green_29CC85">#29CC85</color>
 </resources>

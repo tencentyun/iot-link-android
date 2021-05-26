@@ -1,10 +1,13 @@
 package com.tencent.iot.explorer.link.core.demo.video.activity
 
+import android.content.Intent
+import android.os.Bundle
 import android.text.InputType
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import com.alibaba.fastjson.JSONArray
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.video.dialog.HistoryAccessInfoDialog
@@ -12,8 +15,8 @@ import com.tencent.iot.explorer.link.core.demo.video.entity.AccessInfo
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.android.synthetic.main.activity_video_input_authorize.*
+import kotlinx.android.synthetic.main.blue_title_layout.*
 import kotlinx.android.synthetic.main.input_item_layout.view.*
-import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
 
 class VideoInputAuthorizeActivity : BaseActivity() , CoroutineScope by MainScope() {
@@ -102,17 +105,24 @@ class VideoInputAuthorizeActivity : BaseActivity() , CoroutineScope by MainScope
                 return
             }
 
+            var accessInfo = AccessInfo()
+            accessInfo.accessId = access_id_layout.ev_content.text.toString()
+            accessInfo.accessToken = access_token_layout.ev_content.text.toString()
+            accessInfo.productId = product_id_layout.ev_content.text.toString()
+
             launch (Dispatchers.Main) {
-                checkAccessInfo()
+                checkAccessInfo(accessInfo)
             }
+
+            var intent = Intent(this@VideoInputAuthorizeActivity, VideoMainActivity::class.java)
+            var bundle = Bundle()
+            bundle.putString(VideoConst.VIDEO_CONFIG, JSONObject.toJSONString(accessInfo))
+            intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
+            startActivity(intent)
         }
     }
 
-    private fun checkAccessInfo() {
-        var accessInfo = AccessInfo()
-        accessInfo.accessId = access_id_layout.ev_content.text.toString()
-        accessInfo.accessToken = access_token_layout.ev_content.text.toString()
-        accessInfo.productId = product_id_layout.ev_content.text.toString()
+    private fun checkAccessInfo(accessInfo: AccessInfo) {
 
         var jsonArrStr = SharePreferenceUtil.getString(this@VideoInputAuthorizeActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_ACCESS_INFOS)
         var accessInfos: MutableList<AccessInfo> = ArrayList()
