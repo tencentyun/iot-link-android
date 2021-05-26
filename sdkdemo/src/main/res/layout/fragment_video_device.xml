@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/my_devs_tip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_my_devs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="@dimen/ts_18"
+            android:text="@string/my_devs"
+            />
+
+        <RadioGroup
+            android:id="@+id/rg_edit_dev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_my_devs"
+            app:layout_constraintBottom_toBottomOf="@id/tv_my_devs"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:textSize="@dimen/ts_17"
+                android:button="@null"
+                android:drawablePadding="8dp"
+                android:textColor="@color/blue_0066FF"
+                android:drawableLeft="@mipmap/edit_devs"
+                android:text="@string/edit_devs" />
+            <RadioButton
+                android:id="@+id/radio_complete"
+                android:layout_marginStart="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/ts_17"
+                android:button="@null"
+                android:drawablePadding="8dp"
+                android:drawableLeft="@null"
+                android:textColor="@color/blue_0066FF"
+                android:text="@string/complete_edit_devs" />
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gv_devs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_devs_tip_layout"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
