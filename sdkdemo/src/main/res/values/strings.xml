@@ -48,6 +48,11 @@
     <string name="hint_access_token">请输入Access Token</string>
     <string name="hint_product_id">请输入Product ID</string>
     <string name="please_use_sdk">请选择使用多媒体 SDK</string>
+    <string name="my_devs">我的设备</string>
+    <string name="complete_edit_devs">完成</string>
+    <string name="edit_devs">编辑</string>
+    <string name="online">在线</string>
+    <string name="offline">离线</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
