@@ -65,7 +65,6 @@ public class DateSelectActivity extends AppCompatActivity {
             public void onSelectedDayChange(@NonNull CalendarView view, boolean select, int year, int month, int day) { }
         });
         // 设置是否能够改变日期状态
-        mCalendarView.setChangeDateStatus(true);
         mCalendarView.setSelectDate(all);
 
         // 设置日期点击监听

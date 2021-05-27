@@ -14,18 +14,13 @@ import androidx.annotation.Nullable;
 
 import com.tencent.iot.explorer.link.core.demo.R;
 
-
-/**
- * @author airsaid
- *
- * 自定义日历顶部星期 View.
- */
 public class WeekView extends View {
 
-    private String[] mWeeks = {"日", "一", "二", "三", "四", "五", "六"};
+    private String[] mWeeks = null;
 
     private int mTextSize;
     private int mTextColor;
+    private int mWeekendTextColor;
     private Typeface mTypeface;
     private final Paint mPaint;
     private float mMeasureTextWidth;
@@ -41,10 +36,14 @@ public class WeekView extends View {
     public WeekView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mWeeks = new String[] {context.getString(R.string.sunday),
+                context.getString(R.string.monday), context.getString(R.string.tuesday),
+                context.getString(R.string.wednesday), context.getString(R.string.thursday),
+                context.getString(R.string.friday), context.getString(R.string.saturday)};
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.WeekView);
-        int textColor = a.getColor(R.styleable.WeekView_wv_textColor, Color.BLACK);
-        setTextColor(textColor);
+        setTextColor(a.getColor(R.styleable.WeekView_wv_textColor, Color.BLACK));
+        setWeekendTextColorTextColor(a.getColor(R.styleable.WeekView_wv_weekend_textColor, Color.BLACK));
         int textSize = a.getDimensionPixelSize(R.styleable.WeekView_wv_textSize, -1);
         setTextSize(textSize);
         a.recycle();
@@ -75,9 +74,15 @@ public class WeekView extends View {
             mPaint.setTypeface(mTypeface);
         }
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(mTextColor);
+
         int columnWidth = (getWidth() - getPaddingLeft() - getPaddingRight()) / 7;
-        for(int i = 0; i < mWeeks.length; i++){
+        for (int i = 0; i < mWeeks.length; i++) {
+            if (i != 0 && i != mWeeks.length - 1) {
+                mPaint.setColor(mTextColor);
+            } else {
+                mPaint.setColor(mWeekendTextColor);
+            }
+
             String text = mWeeks[i];
             int fontWidth = (int) mPaint.measureText(text);
             int startX = columnWidth * i + (columnWidth - fontWidth) / 2 + getPaddingLeft();
@@ -86,41 +91,25 @@ public class WeekView extends View {
         }
     }
 
-    /**
-     * 设置字体大小.
-     *
-     * @param size text size.
-     */
     public void setTextSize(int size){
         this.mTextSize = size;
         mPaint.setTextSize(mTextSize);
         mMeasureTextWidth = mPaint.measureText(mWeeks[0]);
     }
 
-    /**
-     * 设置文字颜色.
-     *
-     * @param color 颜色.
-     */
     public void setTextColor(@ColorInt int color){
         this.mTextColor = color;
-        mPaint.setColor(mTextColor);
     }
 
-    /**
-     * 设置字体.
-     *
-     * @param typeface {@link Typeface}.
-     */
+    public void setWeekendTextColorTextColor(@ColorInt int color){
+        this.mWeekendTextColor = color;
+    }
+
     public void setTypeface(Typeface typeface){
         this.mTypeface = typeface;
         invalidate();
     }
 
-    /**
-     * 获取 {@link Paint} 对象.
-     * @return {@link Paint}.
-     */
     public Paint getPaint(){
         return mPaint;
     }
