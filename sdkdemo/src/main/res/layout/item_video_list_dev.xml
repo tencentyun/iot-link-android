@@ -74,14 +74,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
+            android:layout_width="48dp"
             android:layout_height="0dp"
             android:id="@+id/item_layout_background"
             app:layout_constraintStart_toStartOf="@id/item_layout"
-            app:layout_constraintEnd_toEndOf="@id/item_layout"
             app:layout_constraintTop_toTopOf="@id/item_layout"
-            app:layout_constraintBottom_toBottomOf="@id/item_layout"
             android:background="@drawable/background_white_alpha_cell"
-            />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintDimensionRatio="h,1:1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
