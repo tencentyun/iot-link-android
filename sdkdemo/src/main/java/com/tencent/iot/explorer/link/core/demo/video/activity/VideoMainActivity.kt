@@ -1,20 +1,16 @@
 package com.tencent.iot.explorer.link.core.demo.video.activity
 
-import android.content.Intent
-import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSONObject
 import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
-import com.tencent.iot.explorer.link.core.demo.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.core.demo.video.entity.AccessInfo
 import com.tencent.iot.explorer.link.core.demo.video.fragment.VideoDeviceFragment
 import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.title_layout.*
-import java.lang.Exception
 
 class VideoMainActivity : BaseActivity() {
 
