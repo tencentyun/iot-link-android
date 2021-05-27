@@ -53,6 +53,29 @@
     <string name="edit_devs">编辑</string>
     <string name="online">在线</string>
     <string name="offline">离线</string>
+    <string name="devs_limit">最多选择\n4台摄像机</string>
+    <string name="at_least_one">至少选择1台摄像机</string>
+    <string name="edit_devs_2_show">编辑同屏摄像机</string>
+    <string name="preview">预览</string>
+    <string name="playback">回放</string>
+    <string name="cloud_playback">云记录</string>
+    <string name="local_playback">本地记录</string>
+    <string name="switc_orientation_h">切换横屏</string>
+    <string name="switc_orientation_v">切换竖屏</string>
+    <string name="dev_offline">设备离线</string>
+    <string name="last_month">上个月</string>
+    <string name="next_month">下个月</string>
+    <string name="sunday">日</string>
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
+    <string name="today">今天</string>
+    <string name="year_and_month_unit">%s年%s月</string>
+    <string name="checked_date_no_video">该日期无录像</string>
+    <string name="checked_date_first">请选择日期</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>

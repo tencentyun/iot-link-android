@@ -46,6 +46,7 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video_list_dev, parent, false)
         val holder = ViewHolder(view)
         view.setOnClickListener {
+            if (showCheck) return@setOnClickListener
             val position = holder.adapterPosition
             if (position < list.size && position >= 0) {
                 onItemClicked?.onItemClicked(position, list[position])
@@ -59,23 +60,16 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
         Picasso.get().load(R.mipmap.ipc).into(holder.devImg)
 
         holder.checked.visibility = View.GONE
+        if (showCheck) {
+            holder.checked.visibility = View.VISIBLE
+        }
 
         if (list.get(position)?.Status != 0) {  // 原为等于 1 是在线
             holder.backgroundLayout.visibility = View.GONE
             holder.statusTv.setText(R.string.online)
             context?.let {
                 holder.statusTv.setTextColor(it.resources.getColor(R.color.green_29CC85))
-            }
-
-            // 只有在线的设备存在选中与未被选中的情况
-            if (showCheck) {
-                holder.checked.visibility = View.VISIBLE
-            }
-
-            if (checkedIds.contains(position)) {
-                holder.checked.setImageResource(R.mipmap.selected)
-            } else {
-                holder.checked.setImageResource(R.mipmap.unchecked)
+                holder.devName.setTextColor(it.resources.getColor(R.color.black_15161A))
             }
 
         } else {
@@ -83,10 +77,17 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
             holder.statusTv.setText(R.string.offline)
             context?.let {
                 holder.statusTv.setTextColor(it.resources.getColor(R.color.gray_C2C5CC))
+                holder.devName.setTextColor(it.resources.getColor(R.color.gray_C2C5CC))
             }
         }
 
-        holder.more.visibility = View.INVISIBLE
+        if (checkedIds.contains(position)) {
+            holder.checked.setImageResource(R.mipmap.selected)
+        } else {
+            holder.checked.setImageResource(R.mipmap.unchecked)
+        }
+
+        holder.more.visibility = View.VISIBLE
         holder.checked.setOnClickListener {
             if (checkedIds.contains(position)) {
                 checkedIds.remove(position)
@@ -117,6 +118,7 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
         fun onItemCheckedLimited()
     }
 
+    @Volatile
     private var onItemClicked: OnItemClicked? = null
 
     fun setOnItemClicked(onItemClicked: OnItemClicked?) {
