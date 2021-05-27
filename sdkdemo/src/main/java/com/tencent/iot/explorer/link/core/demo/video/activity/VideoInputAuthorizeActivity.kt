@@ -47,7 +47,7 @@ class VideoInputAuthorizeActivity : BaseActivity() , CoroutineScope by MainScope
                         access_id_layout.ev_content.setText(accessInfo.accessId)
                         access_token_layout.ev_content.setText(accessInfo.accessToken)
                         product_id_layout.ev_content.setText(accessInfo.productId)
-                        access_id_layout.ev_content.setSelection(accessInfo.accessId.length);
+                        access_id_layout.ev_content.setSelection(accessInfo.accessId.length)
                     }
                 }
             }
