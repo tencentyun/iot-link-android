@@ -5,10 +5,12 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,41 +26,31 @@ import com.tencent.iot.explorer.link.core.demo.util.DateUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CalendarView extends View {
 
-    /** 默认的日期格式化格式 */
-    private static final String DATE_FORMAT_PATTERN = "yyyyMMdd";
-
-    /** 默认文字颜色 */
-    private int mTextColor;
-    /** 选中后文字颜色 */
-    private int mSelectTextColor;
-    /** 默认文字大小 */
-    private float mTextSize;
-    /** 选中后文字大小 */
-    private float mSelectTextSize;
-    /** 默认天的背景 */
-    private Drawable mDayBackground;
-    /** 选中后天的背景 */
-    private Drawable mSelectDayBackground;
-    /** 日期格式化格式 */
-    private String mDateFormatPattern;
-    /** 字体 */
-    private Typeface mTypeface;
-    /** 日期状态是否能够改变 */
-    private boolean mIsChangeDateStatus;
-
-    /** 每列宽度 */
-    private int mColumnWidth;
-    /** 每行高度 */
-    private int mRowHeight;
-    /** 已选择日期数据 */
-    private List<String> mSelectDate;
-    /** 存储对应列行处的天 */
-    private int[][] mDays = new int[6][7];
+    public static final String DATE_FORMAT_PATTERN = "yyyyMMdd"; /** 默认的日期格式化格式 */
+    public static final String SECOND_DATE_FORMAT_PATTERN = "yyyy-MM-dd";
+    private int mTextColor; //默认文字颜色
+    private int mSelectTextColor; //选中后文字颜色
+    private int mCurrentDayTextColor; //当天文字的颜色
+    private int mTagTextColor; //被标记文字的颜色
+    private float mTextSize; // 阳历字体大小
+    private float mBottomTextSize; // 农历字体大小
+    private Drawable mDayBackground; //默认天的背景
+    private Drawable mSelectDayBackground; //选中后天的背景
+    private String mDateFormatPattern; //日期格式化格式
+    private String mTodayTag;
+    private Typeface mTypeface; //字体
+    private int mColumnWidth; //每列宽度
+    private int mRowHeight; //每行高度
+    private List<String> mSelectDate; //已标记的日期数据
+    private List<String> mCheckedDate = new CopyOnWriteArrayList<>(); //已标记的日期数据
+    private int[][] mDays = new int[6][7]; //存储对应列行处的天
 
     private OnDataClickListener  mOnDataClickListener;
     private OnDateChangeListener mChangeListener;
@@ -67,6 +59,7 @@ public class CalendarView extends View {
     private Calendar mCalendar;
     private Paint mPaint;
     private int mSlop;
+    private int mDownX = 0, mDownY = 0;
 
     public interface OnDataClickListener{
 
@@ -104,40 +97,28 @@ public class CalendarView extends View {
     public CalendarView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        mSelectCalendar = Calendar.getInstance(Locale.CHINA);
-        mCalendar = Calendar.getInstance(Locale.CHINA);
+        mSelectCalendar = Calendar.getInstance();
+        mCalendar = Calendar.getInstance();
+
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mSelectDate = new ArrayList<>();
         setClickable(true);
         initAttrs(attrs);
     }
 
-    private void initAttrs(AttributeSet attrs){
+    private void initAttrs(AttributeSet attrs) {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CalendarView);
 
-        int textColor = a.getColor(R.styleable.CalendarView_cv_textColor, Color.BLACK);
-        setTextColor(textColor);
-
-        int selectTextColor = a.getColor(R.styleable.CalendarView_cv_selectTextColor, Color.BLACK);
-        setSelectTextColor(selectTextColor);
-
-        float textSize = a.getDimension(R.styleable.CalendarView_cv_textSize, sp2px(14));
-        setTextSize(textSize);
-
-        float selectTextSize = a.getDimension(R.styleable.CalendarView_cv_selectTextSize, sp2px(14));
-        setSelectTextSize(selectTextSize);
-
-        Drawable dayBackground = a.getDrawable(R.styleable.CalendarView_cv_dayBackground);
-        setDayBackground(dayBackground);
-
-        Drawable selectDayBackground = a.getDrawable(R.styleable.CalendarView_cv_selectDayBackground);
-        setSelectDayBackground(selectDayBackground);
-
-        String pattern = a.getString(R.styleable.CalendarView_cv_dateFormatPattern);
-        setDateFormatPattern(pattern);
-
-        boolean isChange = a.getBoolean(R.styleable.CalendarView_cv_isChangeDateStatus, false);
-        setChangeDateStatus(isChange);
+        setTextColor(a.getColor(R.styleable.CalendarView_cv_textColor, Color.BLACK));
+        setCurrentDayTextColor(a.getColor(R.styleable.CalendarView_cv_currentDayTextColor, Color.BLACK));
+        setSelectTextColor(a.getColor(R.styleable.CalendarView_cv_selectTextColor, Color.BLACK));
+        setTagTextColor(a.getColor(R.styleable.CalendarView_cv_tagTextColor, Color.BLACK));
+        setTextSize(a.getDimension(R.styleable.CalendarView_cv_textSize, sp2px(14)));
+        setBottomTextSize(a.getDimension(R.styleable.CalendarView_cv_bottomTextSize, sp2px(14)));
+        setDayBackground(a.getDrawable(R.styleable.CalendarView_cv_dayBackground));
+        setSelectDayBackground(a.getDrawable(R.styleable.CalendarView_cv_selectDayBackground));
+        setDateFormatPattern(a.getString(R.styleable.CalendarView_cv_dateFormatPattern));
+        setTodayTag(a.getString(R.styleable.CalendarView_cv_today2Show));
 
         a.recycle();
     }
@@ -147,72 +128,86 @@ public class CalendarView extends View {
         super.onDraw(canvas);
         mColumnWidth = getWidth() / 7;
         mRowHeight = getHeight() / 6;
-        mPaint.setTextSize(mTextSize);
+        String currentDateStr = getCurrentDateStr();
 
         int year  = mCalendar.get(Calendar.YEAR);
-        // 获取的月份要少一月, 所以这里 + 1
-        int month = mCalendar.get(Calendar.MONTH) + 1;
-        // 获取当月的天数
-        int days  = DateUtils.getMonthDays(year, month);
-        // 获取当月第一天位于周几
-        int week  = DateUtils.getFirstDayWeek(year, month);
-        // 绘制每天
-        for (int day = 1; day <= days; day++) {
+        int month = mCalendar.get(Calendar.MONTH) + 1; // 获取的月份要少一月, 所以这里 + 1
+        int days  = DateUtils.getMonthDays(year, month); // 获取当月的天数
+        int week  = DateUtils.getFirstDayWeek(year, month); // 获取当月第一天位于周几
+
+        for (int day = 1; day <= days; day++) { // 绘制每天
             // 获取天在行、列的位置
             int column  =  (day + week - 1) % 7;
             int row     =  (day + week - 1) / 7;
-            // 存储对应天
-            mDays[row][column] = day;
+
+            mDays[row][column] = day; // 存储对应天
 
             String dayStr = String.valueOf(day);
+            if (getFormatDate(year, month - 1, day).equals(currentDateStr) && !TextUtils.isEmpty(mTodayTag)) dayStr = mTodayTag;
+
+            mPaint.setTextSize(mTextSize);
             float textWidth = mPaint.measureText(dayStr);
-            int x = (int) (mColumnWidth * column + (mColumnWidth - textWidth) / 2);
-            int y = (int) (mRowHeight * row + mRowHeight / 2 - (mPaint.ascent() + mPaint.descent()) / 2);
+            float topTextHeight = mPaint.descent() - mPaint.ascent();
+            int topX = (int) (mColumnWidth * column + (mColumnWidth - textWidth) / 2);
+
+            int[] lunarDayInfo = LunarCalendar.solarToLunar(year, month, day);
+            String lunarDay = LunarCalendar.getChinaDayString(lunarDayInfo[2]);
+            mPaint.setTextSize(mBottomTextSize);
+            float bottomTextWidth = mPaint.measureText(lunarDay);
+            float bottomTextHeight = mPaint.descent() - mPaint.ascent();
+            int bottomX = (int) (mColumnWidth * column + (mColumnWidth - bottomTextWidth) / 2);
+            int topY = (int) (mRowHeight * row + (mRowHeight - topTextHeight - bottomTextHeight) / 2 + topTextHeight);
+            int bottomY = topY + (int)bottomTextHeight;
 
             // 判断 day 是否在选择日期内
-            if(mSelectDate == null || mSelectDate.size() == 0 ||
-                    !mSelectDate.contains(getFormatDate(year, month - 1, day))){
-                // 没有则绘制默认背景和文字颜色
+            if (mSelectDate == null || mSelectDate.size() == 0 ||
+                    !mSelectDate.contains(getFormatDate(year, month - 1, day))){ // 没有则绘制默认背景和文字颜色
                 drawBackground(canvas, mDayBackground, column, row);
-                drawText(canvas, dayStr, mTextColor, mTextSize, x, y);
-            }else{
-                // 否则绘制选择后的背景和文字颜色
+                drawText(canvas, dayStr, mTextColor, mTextSize, topX, topY);
+                drawText(canvas, lunarDay, mTextColor, mBottomTextSize, bottomX, bottomY);
+            } else { // 绘制标记后的背景和文字颜色
+                drawBackground(canvas, mDayBackground, column, row);
+                drawText(canvas, dayStr, mTagTextColor, mTextSize, topX, topY);
+                drawText(canvas, lunarDay, mTagTextColor, mBottomTextSize, bottomX, bottomY);
+            }
+
+            if (getFormatDate(year, month - 1, day).equals(currentDateStr)) {
+                drawBackground(canvas, mDayBackground, column, row);
+                drawText(canvas, dayStr, mCurrentDayTextColor, mTextSize, topX, topY);
+                drawText(canvas, lunarDay, mCurrentDayTextColor, mBottomTextSize, bottomX, bottomY);
+            }
+
+            if (mCheckedDate.contains(getFormatDate(year, month - 1, day))) {
                 drawBackground(canvas, mSelectDayBackground, column, row);
-                drawText(canvas, dayStr, mSelectTextColor, mSelectTextSize, x, y);
+                drawText(canvas, dayStr, mSelectTextColor, mTextSize, topX, topY);
+                drawText(canvas, lunarDay, mSelectTextColor, mBottomTextSize, bottomX, bottomY);
             }
         }
     }
 
-    private void drawBackground(Canvas canvas, Drawable background, int column, int row){
-        if(background != null){
-            canvas.save();
-            int dx = (mColumnWidth * column) + (mColumnWidth / 2) -
-                    (background.getIntrinsicWidth() / 2);
-            int dy = (mRowHeight * row) + (mRowHeight / 2) -
-                    (background.getIntrinsicHeight() / 2);
-            canvas.translate(dx, dy);
-            background.draw(canvas);
-            canvas.restore();
-        }
+    private void drawBackground(Canvas canvas, Drawable background, int column, int row) {
+        if (background == null) return;
+
+        canvas.save();
+        int dx = (mColumnWidth * column) + mColumnWidth;
+        int dy = (mRowHeight * row) + mRowHeight;
+        background.setBounds(mColumnWidth * column, mRowHeight * row, dx, dy);
+        background.draw(canvas);
+        canvas.restore();
     }
 
-    private void drawText(Canvas canvas, String text, @ColorInt int color, float size, int x, int y){
+    private void drawText(Canvas canvas, String text, @ColorInt int color, float size, int x, int y) {
         mPaint.setColor(color);
         mPaint.setTextSize(size);
-        if(mTypeface != null){
-            mPaint.setTypeface(mTypeface);
-        }
+        if (mTypeface != null) mPaint.setTypeface(mTypeface);
         canvas.drawText(text, x, y, mPaint);
     }
 
-    private int mDownX = 0, mDownY = 0;
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(!isClickable()){
-            return false;
-        }
-        switch (event.getAction()){
+        if (!isClickable()) return false;
+
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = (int) event.getX();
                 mDownY = (int) event.getY();
@@ -235,38 +230,16 @@ public class CalendarView extends View {
         return super.onTouchEvent(event);
     }
 
-    private void onClick(int day){
-        if(day < 1){
-            return;
-        }
+    private void onClick(int day) {
+        if (day < 1) return;
 
         int year = mCalendar.get(Calendar.YEAR);
         int month = mCalendar.get(Calendar.MONTH);
-        if(mOnDataClickListener != null){
-            if (!mOnDataClickListener.onDataClick(this, year, month, day)) {
-                return;
-            }
-        }
+        if (mOnDataClickListener != null && !mOnDataClickListener.onDataClick(this, year, month, day)) return;
 
-        if(mIsChangeDateStatus){
-            // 如果选中的天已经选择则取消选中
-            String date = getFormatDate(year, month, day);
-            if(mSelectDate != null && mSelectDate.contains(date)){
-                mSelectDate.remove(date);
-                if(mChangeListener != null){
-                    mChangeListener.onSelectedDayChange(this, false, year, month, day);
-                }
-            }else{
-                if(mSelectDate == null){
-                    mSelectDate = new ArrayList<>();
-                }
-                mSelectDate.add(date);
-                if(mChangeListener != null){
-                    mChangeListener.onSelectedDayChange(this, true, year, month, day);
-                }
-            }
-            invalidate();
-        }
+        mCheckedDate.clear();
+        mCheckedDate.add(getFormatDate(year, month, day));
+        invalidate();
     }
 
     /**
@@ -275,7 +248,7 @@ public class CalendarView extends View {
      * @param days 日期数据, 日期格式为 {@link #setDateFormatPattern(String)} 方法所指定,
      * 如果没有设置则以默认的格式 {@link #DATE_FORMAT_PATTERN} 进行格式化.
      */
-    public void setSelectDate(List<String> days){
+    public void setSelectDate(List<String> days) {
         this.mSelectDate = days;
         invalidate();
     }
@@ -285,14 +258,18 @@ public class CalendarView extends View {
      *
      * @return 日期数据.
      */
-    public List<String> getSelectDate(){
+    public List<String> getSelectDate() {
         return mSelectDate;
+    }
+
+    public List<String> getCheckedDate() {
+        return mCheckedDate;
     }
 
     /**
      * 切换到下一个月.
      */
-    public void nextMonth(){
+    public void nextMonth() {
         mCalendar.add(Calendar.MONTH, 1);
         invalidate();
     }
@@ -300,7 +277,7 @@ public class CalendarView extends View {
     /**
      * 切换到上一个月.
      */
-    public void lastMonth(){
+    public void lastMonth() {
         mCalendar.add(Calendar.MONTH, -1);
         invalidate();
     }
@@ -351,31 +328,24 @@ public class CalendarView extends View {
         this.mTextColor = textColor;
     }
 
-    /**
-     * 设置选中后的的文字颜色.
-     *
-     * @param textColor 文字颜色 {@link ColorInt}.
-     */
+    public void setCurrentDayTextColor(@ColorInt int textColor) {
+        this.mCurrentDayTextColor = textColor;
+    }
+
     public void setSelectTextColor(@ColorInt int textColor){
         this.mSelectTextColor = textColor;
     }
 
-    /**
-     * 设置文字大小.
-     *
-     * @param textSize 文字大小 (sp).
-     */
+    public void setTagTextColor(@ColorInt int textColor){
+        this.mTagTextColor = textColor;
+    }
+
     public void setTextSize(float textSize){
         this.mTextSize = textSize;
     }
 
-    /**
-     * 设置选中后的的文字大小.
-     *
-     * @param textSize 文字大小 (sp).
-     */
-    public void setSelectTextSize(float textSize){
-        this.mSelectTextSize = textSize;
+    public void setBottomTextSize(float textSize){
+        this.mBottomTextSize = textSize;
     }
 
     /**
@@ -383,8 +353,8 @@ public class CalendarView extends View {
      *
      * @param background 背景 drawable.
      */
-    public void setDayBackground(Drawable background){
-        if(background != null && mDayBackground != background){
+    public void setDayBackground(Drawable background) {
+        if (background != null && mDayBackground != background) {
             this.mDayBackground = background;
             setCompoundDrawablesWithIntrinsicBounds(mDayBackground);
         }
@@ -395,8 +365,8 @@ public class CalendarView extends View {
      *
      * @param background 背景 drawable.
      */
-    public void setSelectDayBackground(Drawable background){
-        if(background != null && mSelectDayBackground != background){
+    public void setSelectDayBackground(Drawable background) {
+        if (background != null && mSelectDayBackground != background) {
             this.mSelectDayBackground = background;
             setCompoundDrawablesWithIntrinsicBounds(mSelectDayBackground);
         }
@@ -407,13 +377,17 @@ public class CalendarView extends View {
      *
      * @param pattern 格式化格式, 如: yyyy-MM-dd.
      */
-    public void setDateFormatPattern(String pattern){
-        if(!TextUtils.isEmpty(pattern)){
+    public void setDateFormatPattern(String pattern) {
+        if (!TextUtils.isEmpty(pattern)) {
             this.mDateFormatPattern = pattern;
-        }else{
+        } else {
             this.mDateFormatPattern = DATE_FORMAT_PATTERN;
         }
-        this.mDateFormat = new SimpleDateFormat(mDateFormatPattern, Locale.CHINA);
+        this.mDateFormat = new SimpleDateFormat(mDateFormatPattern);
+    }
+
+    public void setTodayTag(String today) {
+        this.mTodayTag = today;
     }
 
     /**
@@ -430,7 +404,7 @@ public class CalendarView extends View {
      *
      * @param typeface {@link Typeface}.
      */
-    public void setTypeface(Typeface typeface){
+    public void setTypeface(Typeface typeface) {
         this.mTypeface = typeface;
         invalidate();
     }
@@ -444,31 +418,11 @@ public class CalendarView extends View {
     }
 
     /**
-     * 设置点击是否能够改变日期状态 (默认或选中状态).
-     *
-     * 默认是 false, 即点击只会响应点击事件 {@link OnDataClickListener}, 日期状态而不会做出任何改变.
-     *
-     * @param isChanged 是否能改变日期状态.
-     */
-    public void setChangeDateStatus(boolean isChanged){
-        this.mIsChangeDateStatus = isChanged;
-    }
-
-    /**
-     * 获取是否能改变日期状态.
-     *
-     * @return {@link #mIsChangeDateStatus}.
-     */
-    public boolean isChangeDateStatus(){
-        return mIsChangeDateStatus;
-    }
-
-    /**
      * 设置日期点击监听.
      *
      * @param listener 被通知的监听器.
      */
-    public void setOnDataClickListener(OnDataClickListener listener){
+    public void setOnDataClickListener(OnDataClickListener listener) {
         this.mOnDataClickListener = listener;
     }
 
@@ -489,19 +443,28 @@ public class CalendarView extends View {
      * @param day   日.
      * @return 格式化后的日期.
      */
-    public String getFormatDate(int year, int month, int day){
+    public String getFormatDate(int year, int month, int day) {
         mSelectCalendar.set(year, month, day);
         return mDateFormat.format(mSelectCalendar.getTime());
     }
 
-    private void setCompoundDrawablesWithIntrinsicBounds(Drawable drawable){
-        if(drawable != null){
+    public String getCurrentDateStr() {
+        Calendar currentCalendar = Calendar.getInstance();
+        Date date = new Date();
+        currentCalendar.setTime(date);
+        int year  = currentCalendar.get(Calendar.YEAR);
+        int month = currentCalendar.get(Calendar.MONTH);
+        int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
+        return getFormatDate(year, month, day);
+    }
+
+    private void setCompoundDrawablesWithIntrinsicBounds(Drawable drawable) {
+        if (drawable != null) {
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         }
     }
 
     private int sp2px(float spVal) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-                spVal, getContext().getResources().getDisplayMetrics());
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spVal, getContext().getResources().getDisplayMetrics());
     }
 }
