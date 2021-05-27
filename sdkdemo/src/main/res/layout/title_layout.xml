@@ -24,10 +24,9 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center"
-        android:textStyle="bold"
         android:maxLines="1"
         android:textColor="@color/black"
-        android:textSize="@dimen/ts_20" />
+        android:textSize="@dimen/ts_17" />
 
     <ImageView
         android:id="@+id/iv_right_btn"
