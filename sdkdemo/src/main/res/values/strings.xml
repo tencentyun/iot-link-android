@@ -53,6 +53,15 @@
     <string name="edit_devs">编辑</string>
     <string name="online">在线</string>
     <string name="offline">离线</string>
+    <string name="devs_limit">最多选择\n4台摄像机</string>
+    <string name="at_least_one">至少选择1台摄像机</string>
+    <string name="edit_devs_2_show">编辑同屏摄像机</string>
+    <string name="preview">预览</string>
+    <string name="playback">回放</string>
+    <string name="cloud_playback">云记录</string>
+    <string name="local_playback">本地记录</string>
+    <string name="switc_orientation_h">切换横屏</string>
+    <string name="switc_orientation_v">切换竖屏</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>

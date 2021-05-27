@@ -1,5 +1,7 @@
 package com.tencent.iot.explorer.link.core.demo.video.fragment
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
@@ -8,10 +10,16 @@ import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
+import com.tencent.iot.explorer.link.core.demo.video.activity.VideoMultiPreviewActivity
+import com.tencent.iot.explorer.link.core.demo.video.activity.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.core.demo.video.adapter.DevsAdapter
+import com.tencent.iot.explorer.link.core.demo.video.dialog.ListOptionsDialog
+import com.tencent.iot.explorer.link.core.demo.video.dialog.ToastDialog
 import com.tencent.iot.explorer.link.core.demo.video.entity.AccessInfo
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
+import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
 import com.tencent.iot.video.link.callback.VideoCallback
+import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.fragment_video_device.*
 import kotlinx.coroutines.Dispatchers
@@ -34,11 +42,14 @@ class VideoDeviceFragment(accessInfo: AccessInfo?) : BaseFragment() {
 
     override fun startHere(view: View) {
         setListener()
-        rg_edit_dev.check(radio_complete.id)
+        switchBtnStatus(false)
         var devGridLayoutManager = GridLayoutManager(context, 2)
         context?.let {
             adapter = DevsAdapter(it, devs)
-            adapter?.let { it.maxNum = ITEM_MAX_NUM }
+            adapter?.let {
+                it.maxNum = ITEM_MAX_NUM
+                it.setOnItemClicked(onItemClickedListener)
+            }
             gv_devs.setLayoutManager(devGridLayoutManager)
             gv_devs.setAdapter(adapter)
             loadMoreVideoInfo()
@@ -50,37 +61,85 @@ class VideoDeviceFragment(accessInfo: AccessInfo?) : BaseFragment() {
     }
 
     private fun setListener() {
-        rg_edit_dev.setOnCheckedChangeListener { group, checkedId ->
-            when(checkedId) {
-                radio_edit.id -> {
-                    radio_edit.visibility = View.GONE
-                    radio_complete.visibility = View.VISIBLE
-                    adapter?.let {
-                        it.showCheck = true
-                        it.checkedIds.clear()
-                    }
-                    adapter?.notifyDataSetChanged()
-                }
-
-                radio_complete.id -> {
-                    radio_complete.visibility = View.GONE
-                    radio_edit.visibility = View.VISIBLE
-                    adapter?.let {
-                        it.showCheck = false
-                    }
-                    adapter?.notifyDataSetChanged()
-                }
+        radio_edit.setOnClickListener {
+            var options = arrayListOf(getString(R.string.edit_devs_2_show))
+            var dlg = ListOptionsDialog(context, options)
+            dlg.show()
+            dlg.setOnDismisListener {
+                switchBtnStatus(true)
             }
         }
 
-        adapter?.setOnItemClicked(onItemClickedListener)
+        radio_complete.setOnClickListener {
+            switchBtnStatus(false)
+            startMultiPreview()
+        }
+    }
+
+    private fun startMultiPreview() {
+        adapter?.let {
+            var allUrl = ArrayList<DevUrl2Preview>()
+            for (i in 0 until it.list.size) {
+                if (it.checkedIds.contains(i)) {
+                    var dev = DevUrl2Preview()
+                    dev.devName = it.list.get(i).deviceName
+                    allUrl.add(dev)
+                }
+            }
+
+            if (allUrl.size <= 0) {
+                ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.at_least_one), 2000).show()
+                return@let
+            }
+
+            var intent = Intent(context, VideoMultiPreviewActivity::class.java)
+            var bundle = Bundle()
+            intent.putExtra(VideoConst.VIDEO_URLS, bundle)
+            bundle.putString(VideoConst.VIDEO_URLS, JSON.toJSONString(allUrl))
+            startActivity(intent)
+        }
+    }
+
+    private fun switchBtnStatus(status: Boolean) {
+        radio_complete.visibility = if (status) View.VISIBLE else View.GONE
+        radio_edit.visibility = if (status) View.GONE else View.VISIBLE
+
+        if (status) {
+            adapter?.let {
+                it.showCheck = true
+                it.checkedIds.clear()
+            }
+
+        } else {
+            adapter?.let {
+                it.showCheck = false
+            }
+        }
+
+        adapter?.notifyDataSetChanged()
     }
 
     var onItemClickedListener = object: DevsAdapter.OnItemClicked {
-        override fun onItemClicked(pos: Int, dev: DevInfo) {}
+        override fun onItemClicked(pos: Int, dev: DevInfo) {
+            var options = arrayListOf(getString(R.string.preview), getString(R.string.playback))
+            var dlg = ListOptionsDialog(context, options)
+            dlg.show()
+            dlg.setOnDismisListener {
+                when(it) {
+                    0 -> {
+
+                    }
+                    1 -> {
+                        jumpActivity(VideoPlaybackActivity::class.java)
+                    }
+                }
+            }
+        }
         override fun onItemMoreClicked(pos: Int, dev: DevInfo) {}
         override fun onItemCheckedClicked(pos: Int, checked: Boolean) {}
-        override fun onItemCheckedLimited() {}
+        override fun onItemCheckedLimited() {
+            ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.devs_limit), 2000).show()
+        }
     }
 
     private var loadDevListener = object : VideoCallback {
