@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/outside_dialog_layout"
+    android:background="@color/black_99000000"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/inside_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_top_radius_cell"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/tv_month_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
+            />
+
+        <ImageView
+            android:id="@+id/iv_last_month"
+            android:layout_width="18dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/tv_month_tip"
+            app:layout_constraintBottom_toBottomOf="@id/tv_month_tip"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintDimensionRatio="h,1:1"
+            android:layout_marginStart="16dp"
+            android:src="@mipmap/blue_arrow"
+            />
+
+        <TextView
+            android:id="@+id/tv_last_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_month"
+            app:layout_constraintStart_toEndOf="@id/iv_last_month"
+            app:layout_constraintTop_toTopOf="@id/tv_month_tip"
+            app:layout_constraintBottom_toBottomOf="@id/tv_month_tip"
+            android:textSize="@dimen/ts_14"
+            android:textColor="@color/blue_0052D9"
+            />
+
+        <View
+            android:id="@+id/btn_last_month"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/iv_last_month"
+            app:layout_constraintTop_toTopOf="@id/tv_month_tip"
+            app:layout_constraintBottom_toBottomOf="@id/tv_month_tip"
+            app:layout_constraintEnd_toEndOf="@id/tv_last_month"
+            />
+
+        <ImageView
+            android:id="@+id/iv_next_month"
+            android:layout_width="18dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/tv_month_tip"
+            app:layout_constraintBottom_toBottomOf="@id/tv_month_tip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="h,1:1"
+            android:layout_marginEnd="16dp"
+            android:src="@mipmap/blue_arrow"
+            android:rotation="180"
+            />
+
+        <TextView
+            android:id="@+id/tv_next_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_month"
+            app:layout_constraintEnd_toStartOf="@id/iv_next_month"
+            app:layout_constraintTop_toTopOf="@id/tv_month_tip"
+            app:layout_constraintBottom_toBottomOf="@id/tv_month_tip"
+            android:textSize="@dimen/ts_14"
+            android:textColor="@color/blue_0052D9"
+            />
+
+        <View
+            android:id="@+id/btn_next_month"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/tv_next_month"
+            app:layout_constraintEnd_toEndOf="@id/iv_next_month"
+            app:layout_constraintTop_toTopOf="@id/tv_month_tip"
+            app:layout_constraintBottom_toBottomOf="@id/tv_month_tip"
+            />
+
+        <com.tencent.iot.explorer.link.core.demo.view.WeekView
+            app:layout_constraintTop_toBottomOf="@id/tv_month_tip"
+            android:id="@+id/week"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray_F5F5F5"
+            app:wv_textColor="@color/gray_7F7F7F"
+            app:wv_weekend_textColor="@color/green_29CC85"
+            app:wv_textSize="@dimen/ts_12"/>
+
+        <com.tencent.iot.explorer.link.core.demo.view.CalendarView
+            app:layout_constraintTop_toBottomOf="@id/week"
+            android:id="@+id/calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="332dp"
+            android:background="@color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:cv_dayBackground="@null"
+            app:cv_selectDayBackground="@drawable/bg_day_selected"
+            app:cv_selectTextColor="@color/white"
+            app:cv_currentDayTextColor="@color/green_29CC85"
+            app:cv_textColor="@color/gray_A1A7B2"
+            app:cv_tagTextColor="@color/black"
+            app:cv_bottomTextSize="@dimen/ts_10"
+            app:cv_today2Show="@string/today"
+            app:cv_textSize="@dimen/ts_16"/>
+
+        <View
+            android:id="@+id/v_space"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray_F5F5F5"
+            app:layout_constraintTop_toBottomOf="@id/calendar_view"
+            />
+
+        <View
+            android:id="@+id/divid_line"
+            android:layout_width="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_space"
+            android:layout_centerHorizontal="true"
+            android:layout_height="1dp"/>
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_below="@id/divid_line"
+            android:text="@string/cancel"
+            android:layout_width="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divid_line"
+            app:layout_constraintEnd_toEndOf="@id/divid_line"
+            android:textSize="@dimen/ts_17"
+            android:gravity="center"
+            android:layout_marginLeft="29dp"
+            android:layout_marginRight="14dp"
+            android:textColor="@color/blue_0052D9"
+            android:background="@drawable/background_gray_cell_btn"
+            android:layout_height="45dp"/>
+
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_below="@id/divid_line"
+            android:text="@string/confirm"
+            android:layout_centerHorizontal="true"
+            android:layout_width="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/ts_17"
+            android:textColor="@color/white"
+            android:background="@drawable/background_blue_btn"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="29dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/divid_line"
+            app:layout_constraintTop_toBottomOf="@id/divid_line"
+            android:layout_height="45dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
