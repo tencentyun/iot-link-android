@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="EdgeTransparentView">
+        <attr name="edge_position">
+            <flag name="top" value="0x01"/>
+            <flag name="bottom" value="0x02"/>
+            <flag name="left" value="0x04"/>
+            <flag name="right" value="0x08"/>
+        </attr>
+
+        <attr name="edge_width" format="dimension"/>
+    </declare-styleable>
+</resources>
