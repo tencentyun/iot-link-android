@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TimeLineView">
+        <attr name="centerlineColor" format="color"></attr>
+        <attr name="centerlineWidth" format="dimension"></attr>
+        <attr name="lineColor" format="color"></attr>
+        <attr name="lineWidth" format="dimension"></attr>
+        <attr name="bottomTextMaginBottom" format="dimension"></attr>
+        <attr name="textColor" format="color"></attr>
+        <attr name="timeBlockColor" format="color"></attr>
+        <attr name="bgColor" format="color"></attr>
+        <attr name="textSize" format="dimension"></attr>
+        <attr name="timeUnitSize" format="dimension"></attr>
+    </declare-styleable>
+</resources>

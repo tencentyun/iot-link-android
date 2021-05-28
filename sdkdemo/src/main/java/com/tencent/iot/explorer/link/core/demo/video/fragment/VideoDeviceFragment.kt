@@ -164,7 +164,11 @@ class VideoDeviceFragment(accessInfo: AccessInfo?) : BaseFragment() {
 
     private var loadDevListener = object : VideoCallback {
         override fun fail(msg: String?, reqCode: Int) {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            GlobalScope.launch (Dispatchers.Main) {
+                adapter?.notifyDataSetChanged()
+                if (smart_refresh_layout.isRefreshing) smart_refresh_layout.finishRefresh()
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            }
         }
 
         override fun success(response: String?, reqCode: Int) {
