@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4165d46_f47ad3db",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/video/dialog/ListOptionsDialog.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-05-28T06:28:02Z",
+      "side": 1,
+      "message": "删除",
+      "range": {
+        "startLine": 38,
+        "startChar": 7,
+        "endLine": 39,
+        "endChar": 24
+      },
+      "revId": "ab34da75a7db6960a9cbfb8b352a1508402b3cba",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
