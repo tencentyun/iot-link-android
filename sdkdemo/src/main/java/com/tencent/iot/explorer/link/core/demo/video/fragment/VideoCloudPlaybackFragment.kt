@@ -7,6 +7,9 @@ import com.tencent.iot.explorer.link.core.demo.video.dialog.CalendarDialog
 import com.tencent.iot.explorer.link.core.demo.video.dialog.CalendarDialog.OnClickedListener
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ToastDialog
 import com.tencent.iot.explorer.link.core.demo.view.CalendarView
+import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeBlockInfo
+import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineView
+import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineViewChangeListener
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -22,6 +25,7 @@ class VideoCloudPlaybackFragment : BaseFragment() {
     override fun startHere(view: View) {
         tv_date.setText(dateFormat.format(System.currentTimeMillis()))
 
+        testTagTimeBlock()
         setListener()
     }
 
@@ -52,7 +56,26 @@ class VideoCloudPlaybackFragment : BaseFragment() {
 
             })
         }
+
+        iv_left_go.setOnClickListener {
+            time_line.last()
+        }
+
+        iv_right_go.setOnClickListener {
+            time_line.next()
+        }
+
+        time_line.setTimelineChangeListener(timeLineViewChangeListener)
     }
+
+    var timeLineViewChangeListener = object : TimeLineViewChangeListener {
+        override fun onChange(date: Date?, timeLineView: TimeLineView?) {
+            date?.let {
+
+            }
+        }
+    }
+
 
     private fun dateConvertionWithSplit(str: String): String? {
         var dateString = ""
@@ -74,6 +97,30 @@ class VideoCloudPlaybackFragment : BaseFragment() {
             }
         } catch (e: ParseException) { }
         return dateString
+    }
+
+    private fun testTagTimeBlock() {
+        for (i in 0 .. 30) {
+            var cur = Date()
+            var timeBlock = TimeBlockInfo()
+            timeBlock.startTime = Date(cur.time)
+            timeBlock.startTime.hours = cur.hours - i
+            timeBlock.endTime = Date(cur.time)
+            timeBlock.endTime.hours = cur.hours - i
+            timeBlock.endTime.minutes = cur.minutes + 55
+            time_line.timeBlockInfos.add(timeBlock)
+        }
+
+        for (i in 1 .. 30) {
+            var cur = Date()
+            var timeBlock = TimeBlockInfo()
+            timeBlock.startTime = Date(cur.time)
+            timeBlock.startTime.hours = cur.hours + i
+            timeBlock.endTime = Date(cur.time)
+            timeBlock.endTime.hours = cur.hours + i
+            timeBlock.endTime.minutes = cur.minutes + 55
+            time_line.timeBlockInfos.add(timeBlock)
+        }
     }
 
 }
