@@ -1,0 +1,327 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "732998b3_c192fc76",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "待补充的内容，最好不合到master上给客户看到吧。\n可以参考下官网那里的概述？\n为进一步构建物联网开放生态，由腾讯云物联网平台打造的腾讯连连 App SDK，集成通用版 App 的多功能模块。设备厂商可通过 SDK 将设备接入腾讯云物联网平台进行设备管理，涵盖安防告警、家用电器、运动健康、网络设备等众多设备。",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3885b6b_ec3890fe",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "DeviceTask这个Task是不是改名字了LinkTask？？",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0df576b_9e7612c1",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "DeviceTask --\u003e LinkTask ??",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de9b999c_52357ede",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "SmartConfigSevice --\u003e SmartConfigService",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc258076_9f2f69b3",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "smartConfigService?.startConnect(task, smartConfigListener)",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42c54350_0a182847",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "可参考官网 [SmartConfig 配网开发](https://cloud.tencent.com/document/product/1081/48405) 了解详细数据交互流程。",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c98e827f_886a947a",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "SmartConfigService(this, task) --\u003e SmartConfigService(this)",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a610d61f_40fe7895",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "需要更新下SmartConfigListener接口方法",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47bda4e0_9eae3661",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "smartConfigService?.startConnect(task, smartConfigListener)",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dce73acc_451b2c1f",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "DeviceTask --\u003e LinkTask ??",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9032eb87_17c8ef70",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "SoftAPSevice --\u003e SoftAPService",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46b62c28_d2c66880",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "SofAPListener --\u003e SoftAPListener",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30a24dc8_ae61b368",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "softAPService?.startConnect(task, softAPListener)",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1fb34cd_a6e09c46",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "可参考官网 [softAP 配网开发](https://cloud.tencent.com/document/product/1081/48404) 了解详细数据交互流程。",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c6a8925_2f02da49",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "SoftAPService(this, task) --\u003e SoftAPService(this)",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a01eab9_804bcd0e",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "需要更新下SoftAPListener接口方法",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ca78801_29feaaae",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "这里貌似也改了。",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f67920b_6fa0281f",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "这块儿也需要更新。",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52ec540a_15f4c91d",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 1,
+      "message": "现在只有上面那个单个产品的接口了？",
+      "revId": "18e2d6b011f12151187b875d5caed07510f0a8fd",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
