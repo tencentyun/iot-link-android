@@ -1,530 +1,459 @@
-快速接入
-========
+## 概述
+为进一步构建物联网开放生态，由腾讯云物联网平台打造的腾讯连连 App SDK，集成通用版 App 的多功能模块。设备厂商可通过 SDK 将设备接入腾讯云物联网平台进行设备管理，涵盖安防告警、家用电器、运动健康、网络设备等众多设备。
 
-开发前准备
-----------
+## Android 接入流程
 
-获取AppKey
+1、在 App module下的build.gradle中添加依赖项
 
-下载SDK
+```
+implementation 'com.tencent.iot.explorer:explorer-link-android:x.x.x'
+```
+具体版本号可参考 [explorer-link-android](https://cloud.tencent.com/document/product/1081/47787)
 
-安装开发工具
-------------
 
-安装AndroidStudio，下载地址：http://www.android-studio.org/
+## SDK接口说明
 
-集成SDK
--------
-
-### 权限申请
-
-\<uses-permission android:name="android.permission.INTERNET" /\>  
-\<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /\>  
-\<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /\>  
-\<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"
-/\>  
-\<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /\>
-
-### 导入aar
-
-在项目中导入tenextll-release.aar包：选中模块键选择new-\>在弹出框Create New
-Module中选择Import JAR/AAR
-Package-\>next-\>打开tenextll-release.aar所在路径-\>选择tenextll-release.aar-\>OK-\>finish。
-
-![C:\\Users\\ADMINI\~1\\AppData\\Local\\Temp\\1584925522(1).jpg](media/f2782f1ec6c10a1ca63865bea66829ac.png)
-
-![C:\\Users\\ADMINI\~1\\AppData\\Local\\Temp\\1584925656(1).jpg](media/4ba137c33d275a98ee0abdb314c8a50e.png)
-
-![C:\\Users\\ADMINI\~1\\AppData\\Local\\Temp\\1584925950(1).jpg](media/bfa62c2374dcabff2df0de5b411d26aa.png)
-
-![](media/549d9f55bb504e2c943b0cd54a470e9d.png)
-
-![](media/be6ae6b39f1416e9ea2782996258dd85.png)
-
-导入成功后在项目中可以看到module：tenextll-release
-
-![](media/4faa6b6c9387de317ea62090d5fd7385.png)
-
-依赖tenextll-release module，module中还用到了Java-WebSocket和协程
-
-dependencies {  
-…  
-implementation project(path: ':tenextll-release')
-
-//WebSocket  
-implementation "org.java-websocket:Java-WebSocket:1.4.0"
-
-//kotlin协程  
-implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
-
-}
-
-开始使用
+设备相关
 --------
 
-在SDK中，请求相关的API都在IoTAuth中调用。配网使用IoTLink，目前支持智能配网（SmartConfig）和自助配网（SoftAP）。
+注册相关的api在`IoTAuth.registerImpl`中，每个传入callback的api都会有和api名字对应的reqCode，如发送手机验证码api：IoTAuth.registerImpl.sendPhoneCode对应的reqCode为：RequestCode.send_phone_code。
 
-在Application中初始化SDK,传入参数：Appkey
-
-IoTAuth.init(APP_KEY)
-
-退出SDK时调用：
-
-IoTAuth.destroy()
-
-根据需要打开日志开关：
-
-IoTAuth.openLog(true)
-
-编译测试
---------
-
-在项目中创建一个类APP继承Application，在AndroidManifest.xml中注册APP，重写onCreate()方法，在onCreate
-()中初始化SDK，打开日志开关，传入APP_KEY调用初始化SDK方法，需要时添加登录过期监听:
-
-![](media/e75425e96634be629ef24f01996cad77.png)
-
-在关闭应用时调用SDK的destroy方法：
-
-![](media/67bc6b9e334ca413cec5b026af9d69dc.png)
-
-在控制台日志中看到"The SDK initialized successfully"的日志说明成功接入SDK：
-
-![](media/a3cf705dea7c8ca8479880d1453fedb2.png)
-
-到此，你可以通过IoTAuth引用不同的impl来使用SDK的业务，如：IoTAuth.registerImpl、IoTAuth.loginImpl、
-IoTAuth.deviceImpl等。配网请使用IoTLink。
-
-SDK说明
-=======
-
-账户相关
---------
-
-注册相关api在IoTAuth.registerImpl中,每个传入callback的api都会有和api名字对应的reqCode,如发送手机验证码api：IoTAuth.registerImpl.sendPhoneCode对应的reqCode为：RequestCode.send_phone_code。
-
-### 手机号码注册
+#### 手机号码注册
 
 第一步：获取手机验证码
 
-IoTAuth.registerImpl.sendPhoneCode(phone, callback)
+```IoTAuth.registerImpl.sendPhoneCode(phone, callback)```
 
 第二步：校验手机验证码
 
-IoTAuth.registerImpl.checkPhoneCode(countryCode, phone, code, callback)
+```IoTAuth.registerImpl.checkPhoneCode(countryCode, phone, code, callback)```
 
 第三步：提交注册
 
-IoTAuth.registerImpl.registerPhone(countryCode, account, code, pwd, callback)
+```IoTAuth.registerImpl.registerPhone(countryCode, account, code, pwd, callback)```
 
 请求返回处理：
+```
+private val callback = object : MyCallback {
+    override fun fail(msg: String?, reqCode: Int) {  }
 
-private val callback = object : MyCallback {  
-override fun fail(msg: String?, reqCode: Int) {  
-}  
-  
-override fun success(response: BaseResponse, reqCode: Int) {  
-when(reqCode){  
-RequestCode.send_phone_code-\>{}  
-RequestCode.check_phone_code-\>{}  
-RequestCode.phone_register-\>{  
-if (response.isSuccess()){//请求成功  
-}else{  
-}  
-}  
-}  
-}  
+    override fun success(response: BaseResponse, reqCode: Int) {
+        when(reqCode){
+            RequestCode.send_phone_code->{}
+            RequestCode.check_phone_code->{}
+            RequestCode.phone_register->{
+                if (response.isSuccess()){
+                    //请求成功
+                } else { }
+            }
+        }
+    }
 }
+```
 
-### 邮箱帐号注册
+#### 邮箱帐号注册
 
-邮箱注册与手机号注册步骤一样，相关api为：
-
+邮箱注册与手机号注册步骤一样，相关api如下：
+```
 IoTAuth.registerImpl.sendEmailCode(account, callback)
-
 IoTAuth.registerImpl.checkEmailCode(account, code, callback)
-
 IoTAuth.registerImpl.registerEmail(account, code, pwd, callback)
+```
 
-### 帐号登录
+#### 帐号登录
 
 登录方式有三种：手机号、邮箱、微信授权登录，以下相关API使用IoTAuth.loginImpl
 调起：
 
-*/\*\**  
-*\* 手机号登录*  
-*\*/*  
-fun loginPhone(countryCode: String, phone: String, pwd: String, callback:
-LoginCallback)  
-  
-*/\*\**  
-*\* 邮箱登录*  
-*\*/*  
-fun loginEmail(email: String, pwd: String, callback: LoginCallback)  
-  
-*/\*\**  
-*\* 微信登录*
+```fun loginPhone(countryCode: String, phone: String, pwd: String, callback:LoginCallback)```
 
-*\* \@param code 微信授权得到的code*  
-*\*/*  
-fun wechatLogin(code: String, callback: LoginCallback)
+```fun loginEmail(email: String, pwd: String, callback: LoginCallback)```
+
+```fun wechatLogin(code: String, callback: LoginCallback)```
 
 登录回调LoginCallback成功回调返回的user中包含用户登录信息：登录过期时间ExpireAt、登录口令Token:
-
-interface LoginCallback {  
-fun success(user: User)  
-fun fail(msg: String)  
+```
+interface LoginCallback {
+    fun success(user: User)
+    fun fail(msg: String)
 }
+```
 
 关于SDK登录过期，SDK内部有过期处理机制，可以在Application中注册登录过期监听回调：
 
-IoTAuth.addLoginExpiredListener(object : LoginExpiredListener {  
-override fun expired(user: User) {  
-Log.e("TAG", "用户登录过期")  
-}  
+```
+IoTAuth.addLoginExpiredListener(object : LoginExpiredListener {
+    override fun expired(user: User) {
+        Log.e("TAG", "用户登录过期")
+    }
 })
+```
 
 ### 个人信息
 
 查询个人信息详情：
 
-IoTAuth.userImpl.userInfo(callback)
+```IoTAuth.userImpl.userInfo(callback)```
 
 修改用户昵称：
 
-IoTAuth.userImpl.modifyAlias(nick, callback)
+```IoTAuth.userImpl.modifyAlias(nick, callback)```
 
 修改用户头像：
 
-IoTAuth.userImpl.modifyPortrait(url, callback)
+```IoTAuth.userImpl.modifyPortrait(url, callback)```
 
 绑定手机号：发送验证码、校验、绑定。
 
+```
 IoTAuth.userImpl.sendBindPhoneCode(countryCode, account, callback)
-
 IoTAuth.userImpl.checkBindPhoneCode(countryCode, account, code, callback)
-
 IoTAuth.userImpl.bindPhone(countryCode, account, code, callback)
+```
 
 ### 意见反馈
 
 可以提交文字、图片链接和联系方式
 
-IoTAuth.userImpl.feedback(advise: String, phone: String, picUrl: String,
-callback: MyCallback)
+```IoTAuth.userImpl.feedback(advise: String, phone: String, picUrl: String, callback: MyCallback)```
 
 ### 密码服务
 
 使用旧密码更新密码：
 
-IoTAuth.passwordImpl.resetPassword(oldPwd, newPwd, callback)
+```IoTAuth.passwordImpl.resetPassword(oldPwd, newPwd, callback)```
 
 通过手机号验证重置：发送验证码、校验、设置密码。
 
+```
 IoTAuth.passwordImpl.sendPhoneCode(countryCode,phone, callback)
-
 IoTAuth.passwordImpl.checkPhoneCode(countryCode,phone, code, callback)
-
 IoTAuth.passwordImpl.resetPhonePassword(countryCode, phone, code, pwd, callback)
+```
 
 通过邮箱验证重置：发送验证码、校验、设置密码。
-
+```
 IoTAuth.passwordImpl.sendEmailCode(email, callback)
-
 IoTAuth.passwordImpl.checkEmailCode(email, code, callback)
-
 IoTAuth.passwordImpl.resetEmailPassword(email, code, pwd, callback)
+```
 
 设备相关
 --------
 
 ### 设备配网
 
-创建service对象，task是DeviceTask，主要保存wifi信息
+创建service对象，task是LinkTask，主要保存wifi信息
 
-class DeviceTask {  
-var mSsid: String = "" //wifi名  
-var mBssid: String = "" //mac地址 SoftAP时不用给  
-var mPassword: String = "" //wifi密码  
+```
+class LinkTask {
+    var mSsid: String = "" //wifi名
+    var mBssid: String = "" //mac地址 SoftAP时不用给
+    var mPassword: String = "" //wifi密码
+    ...
 }
+```
 
-智能配网（SmartConfig），步骤为：打开设备进入SmartConfig
-配网模式-\>获取配网wifi信息-\>创建DeviceTask-\>创建SmartConfigSevice-\>添加监听SmartConfigListener-\>IoTLink.instance.start(service)-\>获取设备签名-\>绑定设备。如果界面需要展示配网进度，可以根据监听返回的步骤决定进度值。
+#### 智能配网（SmartConfig）
 
-val service = SmartConfigService(this, task)  
-service.listener = object : SmartConfigListener {  
-override fun connectedToWifi(isSuccess: Boolean, bssid: String, isCancel:
-Boolean, inetAddress: InetAddress  
-) {
+步骤：
+* 打开设备进入SmartConfig配网模式
+* 获取配网wifi信息
+* 创建LinkTask
+* 创建SmartConfigService
+* 添加监听SmartConfigListener
+* smartConfigService?.startConnect(task, smartConfigListener)
+* 获取设备签名
+* 绑定设备。
 
-//1.配网开始后，设备联网成功，后台开始获取签名  
-}  
-override fun connectFailed() {  
-//2.设备联网失败,停止配网  
-}  
-override fun onSuccess(deviceInfo: DeviceInfo) {  
-//3.获取签名成功,开始绑定设备  
-bindDevice(deviceInfo)  
-}  
-override fun onFail(code: String, msg: String) {  
-//4.配网失败  
-}  
-}  
-IoTLink.instance.start(service)
+注：如果界面需要展示配网进度，可以根据监听返回的步骤决定进度值。可参考官网 [SmartConfig 配网开发](https://cloud.tencent.com/document/product/1081/48405) 了解详细数据交互流程。
 
-自助配网（SoftAP），步骤为:
-打开设备进入SoftAP配网模式-\>获取配网wifi信息-\>创建DeviceTask-\>手机连接设备热点-\>创建SoftAPSevice-\>添加监听SofAPListener-\>IoTLink.instance.start(service)-\>
-获取设备签名-\>手机重新联网-\>绑定设备。
+```
+val service = SmartConfigService(this)
+service.listener = object : SmartConfigListener {
 
-val service = SoftAPService(this, task)  
-service.listener = object : SoftAPListener {  
-override fun connectedToWifi(deviceInfo: DeviceInfo) {  
-//2.手机重连WIFI成功，开始绑定设备  
-//重新连接上网络时请求不一定成功，所以在这里做请求监听  
-retry(deviceInfo)  
-}  
-override fun connectFailed(deviceInfo: DeviceInfo, ssid: String) {  
-//3.手机重连WIFI失败，尝试使用其它网络绑定设备  
-//重连网络失败，可以做监听  
-retry(deviceInfo)  
-}  
-override fun onSuccess(deviceInfo: DeviceInfo) {  
-//1.获取签名成功,与热点断开并尝试连接网络  
-}  
-override fun onFail(code: String, msg: String) {  
-//4.配网失败  
-}  
-}  
-IoTLink.instance.start(service)
+    override fun onSuccess(deviceInfo: DeviceInfo) {
+        //获取签名成功,开始绑定设备
+    }
+    override fun deviceConnectToWifi(result: IEsptouchResult) {
+        //配网开始后，设备联网成功，后台开始获取签名
+    }
+    override fun onStep(step: SmartConfigStep) {
+        //配网步骤回调
+    }
+    override fun deviceConnectToWifiFail() {
+        //设备联网失败
+    }
+    override fun onFail(exception: TCLinkException) {
+        //配网失败
+    }
+}
+smartConfigService?.startConnect(task, smartConfigListener)
+```
+
+#### 自助配网（SoftAP）
+
+步骤:
+* 打开设备进入SoftAP配网模式
+* 获取配网wifi信息
+* 创建LinkTask
+* 手机连接设备热点
+* 创建SoftAPService
+* 添加监听SoftAPListener
+* softAPService?.startConnect(task, softAPListener)
+* 获取设备签名
+* 手机重新联网
+* 绑定设备。
+
+可参考官网 [softAP 配网开发](https://cloud.tencent.com/document/product/1081/48404) 了解详细数据交互流程。
+
+```
+val service = SoftAPService(this)
+service.listener = object : SoftAPListener {
+    override fun onSuccess(deviceInfo: DeviceInfo) {
+        //获取签名成功,与热点断开并尝试连接网络
+    }
+    override fun reconnectedSuccess(deviceInfo: DeviceInfo) {
+        //重连成功
+    }
+    override fun reconnectedFail(deviceInfo: DeviceInfo, ssid: String) {
+        //重连失败
+    }
+    override fun onStep(step: SoftAPStep) {
+        //配网步骤回调
+    }
+    override fun onFail(code: String, msg: String) {
+        //配网失败
+    }
+}
+softAPService?.startConnect(task, softAPListener)
+```
 
 重连网络后请求不一定能成功，为保证设备绑定成功，需要尝试多次发起绑定请求，最大程序保证请求发送成功：
 
-private val retryJob: RetryJob = RetryJob()
-
-private fun retry(deviceInfo: DeviceInfo) {  
-retryJob.start(object : RetryListener {  
-override fun onRetry() {  
-bindDevice(deviceInfo)  
-}  
-})  
+```
+override fun reconnectedFail(deviceInfo: DeviceInfo, ssid: String) {
+    Reconnect.instance.start(connectionListener)
 }
+```
 
-在绑定请求发送成功响应后，无论绑定成功还是失败，都要取消，否则请求会一直发送：
-
-//取消网络请求重发监听  
+在绑定请求发送成功响应后，无论绑定成功还是失败，都要取消，否则请求会一直发送
+```
+//取消网络请求重发监听
 retryJob.stop()
+```
 
 ### 设备绑定
 
 配网设备绑定：
 
-IoTAuth.deviceImpl.wifiBindDevice(FamilyId, deviceInfo,  
-object : MyCallback {  
-override fun fail(msg: String?, reqCode: Int) {  
-//请求发送失败
-
-}  
-override fun success(response: BaseResponse, reqCode: Int) {  
-if (response.isSuccess())｛//绑定成功｝  
-else｛//绑定失败｝  
-//取消网络请求重发监听  
-retryJob.stop()  
-}  
+```
+IoTAuth.deviceImpl.wifiBindDevice(UserID, bindDeviceToken, FamilyId, data, object: MyCallback {
+    override fun fail(msg: String?, reqCode: Int) {
+        //请求发送失败
+    }
+    override fun success(response: BaseResponse, reqCode: Int) {
+        if (response.isSuccess())｛//绑定成功｝
+        else｛//绑定失败｝
+        //取消网络请求重发监听
+        retryJob.stop()
+    }
 })
+```
 
 扫码设备绑定：
 
-IoTAuth.deviceImpl.scanBindDevice(familyId: String, signature: String, callback:
-MyCallback)
+```IoTAuth.deviceImpl.scanBindDevice(familyId: String, signature: String, callback:MyCallback)```
 
 ### 设备控制
 
-控制设备，其中data是控制数据json字符串，如:{\\"light_switch\\":0}
+控制设备，其中data是控制数据json字符串，如:{"light_switch":0}
 
+```
 IoTAuth.deviceImpl.controlDevice(productId: String, deviceName: String, data:
 String, callback: MyCallback)
+```
 
 获取设备控制面板的数据，物联网平台为设备提供了三种不同风格的面板控制：简约simple、标准standard、暗黑dark.获取面板数据有两种：
 
 直接获取，此方式只支持单个产品设备获取：
-
+```
 IoTAuth.deviceImpl.controlPanel(productId: String, deviceName: String, callback:
 ControlPanelCallback)
+```
 
 自定义获取，分别获取设备对应产品的物模型数据、产品的界面配置、设备当前各项属性值。
 
 物模型数据（属性类型、名称、取值范围等）：
 
-IoTAuth.deviceImpl.controlPanel(productIds:ArrayList\<String\>, callback:
-MyCallback)
+```
+IoTAuth.deviceImpl.controlPanel(productIds:ArrayList<String>, callback:MyCallback)
+```
 
 界面配置（每个属性的按钮大、中、小、长）:
-
-IoTAuth.deviceImpl.deviceProducts(productIds: ArrayList\<String\>, callback:
-MyCallback)
-
+```
+IoTAuth.deviceImpl.deviceProducts(productIds: ArrayList<String>, callback:MyCallback)
+```
 设备当前各项属性值(开关状态、亮度、温度等)：
-
-IoTAuth.deviceImpl.deviceData(productId: String, deviceName: String, callback:
-MyCallback)
+```
+IoTAuth.deviceImpl.deviceData(productId: String, deviceName: String, callback:MyCallback)
+```
 
 ### 设备管理
 
 添加设备监听，用于监听物联网平台下发的数据变化，可以重复调用。
-
-*/\*\**  
-*\* 注册监听*  
-*\* \@param deviceIds 多个设备的deviceId*  
-*\* \@param callback MessageCallback注册监听请求回调，可为null*  
-*\*/*  
+```
+/**
+ * 注册监听
+ * @param deviceIds 多个设备的deviceId
+ * @param callback MessageCallback注册监听请求回调，可为null
+ */
 IoTAuth.registerActivePush(deviceIds: ArrayString, callback: MessageCallback?)
+```
 
 以上步骤是为SDK注册的，想要在app内得到下发数据还需要在需要的地方添加监听器：[ActivePushCallback](#activepushcallback)，详情在请看
 相关Callback介绍。
-
-*/\*\**  
-*\* 添加监听器*  
-*\* \@param callback
-ActivePushCallback，设备数据推送到客户端的回调。在调用registerActivePush成功后，*  
-*\*
-添加有监听器的页面可以收到推送数据，最多30个监听器，超出时会移除最先添加的监听器，即先进先出（FIFO）*  
-*\*/*  
+```
+/**
+ * 添加监听器
+ * @param callback ActivePushCallback，设备数据推送到客户端的回调。在调用registerActivePush成功后，添加有监听器的页面可以收到推送数据，最多30个监听器，超出时会移除最先添加的监听器，即先进先出（FIFO）
+ */
 IoTAuth.addActivePushCallback(callback: ActivePushCallback)
+```
 
 移除监听器：
-
+```
 IoTAuth.removeActivePushCallback(callback: ActivePushCallback)
-
 IoTAuth.removeAllActivePushCallback()
+```
 
-另外还有IoTAuth.deviceImpl中还有修改设备名称、获取设备详情、设备在线状态、设备更换房间、删除设备等api，具体参考demo使用。
+另外IoTAuth.deviceImpl中还有修改设备名称、获取设备详情、设备在线状态、设备更换房间、删除设备等api，具体参考demo使用。
 
 ### 设备列表
 
 直接获取设备列表，返回的设备列表无设备在线状态，offset和limit分页相关参数，offset为起始位置，limit为当次请求返回的列表长度，不传入limit默认返回20。
+```
+IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int, callback: MyCallback)
+IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int, limit: Int, callback: MyCallback)
+```
 
-IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int,
-callback: MyCallback)
-
-IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int,
-limit: Int, callback: MyCallback)
-
-以下方式返回设备列表List\<Device\>并且会同步设备在线状态，同样支持分页，[DeviceCallback](#devicecallback)详情请看
-相关Callback介绍。
-
-IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int,
-callback: DeviceCallback)
-
-IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int,
-limit: Int, callback: DeviceCallback)
+以下方式返回设备列表List<Device>并且会同步设备在线状态，同样支持分页，[DeviceCallback](#devicecallback)详情请看相关Callback介绍。
+```
+IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int, callback: DeviceCallback)
+IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int, limit: Int, callback: DeviceCallback)
+```
 
 ### 设备分享
 
 通过手机号或者邮箱查询用户id，以下接口返回用户信息。
-
-IoTAuth.userImpl.findPhoneUser(phone: String, countryCode: String, callback:
-MyCallback)
-
+```
+IoTAuth.userImpl.findPhoneUser(phone: String, countryCode: String, callback:MyCallback)
 IoTAuth.userImpl.findEmailUser(email: String, callback: MyCallback)
+```
 
 发送设备分享
-
-IoTAuth.shareImpl.sendShareDevice(productId: String,deviceName: String,  
-userId: String,callback: MyCallback)
+```
+IoTAuth.shareImpl.sendShareDevice(productId: String,deviceName: String, userId: String,callback: MyCallback)
+```
 
 调用绑定共享设备api来同意设备分享
-
-IoTAuth.shareImpl.bindShareDevice(productId: String, deviceName: String,
-deviceToken: String, callback: MyCallback)
+```
+IoTAuth.shareImpl.bindShareDevice(productId: String, deviceName: String, deviceToken: String, callback: MyCallback)
+```
 
 查询自己当前设备已经分享的用户列表
-
-IoTAuth.shareImpl.shareUserList (productId: String, deviceName: String, offset:
-Int, callback: MyCallback)
+```
+IoTAuth.shareImpl.shareUserList (productId: String, deviceName: String, offset: Int, callback: MyCallback)
+```
 
 查询自己已经接受共享的设备列表
 
+```
 IoTAuth.shareImpl.shareDeviceList(offset: Int, callback: MyCallback)
-
+```
 IoTAuth.shareImpl中还有删除分享用户、删除共享设备，详情可参考demo
 
 云端定时
 --------
 
-云端定时api请使用IoTAuth.timingImpl。days 定时器开启时间，每一位——0:关闭,1:开启,
-从左至右依次表示: 周日 周一 周二 周三 周四 周五 周六 1000000，repeat
-是否循环，0表示不需要，1表示需要，timePoint是定时时间，格式：12:00或者16：01。Data是设备动作json字符串，如:
-{\\"brightness\\": 25, \\"color\\": 1}。
+云端定时api请使用 IoTAuth.timingImpl
+
+通用参数说明：
+* days: 定时器开启时间，每一位——0:关闭,1:开启,从左至右依次表示: 周日 周一 周二 周三 周四 周五 周六 1000000
+* repeat: 是否循环，0表示不需要，1表示需要
+* timePoint: 定时时间，格式：12:00或者16：01
+* Data: 是设备动作json字符串，如:{"brightness": 25, "color": 1}。
 
 创建定时任务：
-
-createTimer(productId: String, deviceName: String, timerName: String, days:
-String, timePoint: String,  
-repeat: Int, data: String, callback: MyCallback)
+```
+createTimer(productId: String, deviceName: String, timerName: String, days:String, timePoint: String, repeat: Int, data: String, callback: MyCallback)
+```
 
 定时列表：
+```
+timeList(productId: String, deviceName: String, offset: Int, callback:MyCallback)
+timeList(productId: String,deviceName: String,offset: Int,limit: Int,callback:MyCallback)
+```
 
-timeList(productId: String, deviceName: String, offset: Int, callback:
-MyCallback)
-
-timeList(productId: String,deviceName: String,offset: Int,limit: Int,callback:
-MyCallback)
-
-开关定时任务，status 0 关闭，1 开启：
-
-modifyTimerStatus(productId: String, deviceName: String, timerId: String,
-status: Int, callback:MyCallback)
+开关定时任务，status: 0 关闭，1 开启
+```
+modifyTimerStatus(productId: String, deviceName: String, timerId: String, status: Int, callback:MyCallback)
+```
 
 修改定时任务：
-
-modifyTimer(productId: String, deviceName: String, timerName: String, timerId:
-String, days: String,  
-timePoint: String, repeat: Int, data: String, callback: MyCallback)
+```
+modifyTimer(productId: String, deviceName: String, timerName: String, timerId:String, days: String, timePoint: String, repeat: Int, data: String, callback: MyCallback)
+```
 
 删除定时：
-
-deleteTimer(productId: String, deviceName: String, timerId: String, callback:
-MyCallback)
+```
+deleteTimer(productId: String, deviceName: String, timerId: String, callback:MyCallback)
+```
 
 家庭管理
 --------
 
 ### 家庭
 
-IoTAuth.familyImpl：增加家庭、修改家庭、删除家庭、家庭详情、查询家庭列表，查询家庭成员列表和家庭房间列表。
+`IoTAuth.familyImpl`：增加家庭、修改家庭、删除家庭、家庭详情、查询家庭列表，查询家庭成员列表和家庭房间列表。
 
 ### 房间
 
-IoTAuth.roomImpl：增加房间、修改房间名、删除房间。
+`IoTAuth.roomImpl`：增加房间、修改房间名、删除房间。
 
 ### 家庭成员
 
-IoTAuth.memberImpl：邀请家庭成员流程也是先查询用户id，然后发送邀请。所有者在这里可以移除普通家庭成员，普通家庭成员可以主动退出家庭，调用joinFamily可以接受邀请加入家庭。
+`IoTAuth.memberImpl`：邀请家庭成员流程也是先查询用户id，然后发送邀请。所有者在这里可以移除普通家庭成员，普通家庭成员可以主动退出家庭，调用joinFamily可以接受邀请加入家庭。
 
 消息管理
 --------
 
 SDK支持与信鸽推送绑定，在集成信鸽推送后调用api绑定，退出时解绑
 
-*/\*\**  
-*\* 绑定信鸽*  
-*\*/*  
-IoTAuth.messageImpl.bindXG(xgToken: String, callback: MyCallback)  
-  
-*/\*\**  
-*\* 解除绑定信鸽*  
-*\*/*  
+```
+/**
+ * 绑定信鸽
+ */
+IoTAuth.messageImpl.bindXG(xgToken: String, callback: MyCallback)
+```
+
+```
+/**
+ * 解除绑定信鸽
+ */
 IoTAuth.messageImpl.unbindXG(xgToken: String, callback: MyCallback)
+```
 
-获取消息列表，category消息主类型，1设备，2家庭，3通知\|，msgId消息
-Id，首次可不传，timestamp消息的时间戳，首次可不传或传 0\|
-
-*/\*\**  
-*\* 消息列表*  
-*\* \@param category 1设备，2家庭，3通知*  
-*\*/*  
-fun messageList(category: Int, msgId: String, timestamp: Long, callback:
-MyCallback)
+```
+/**
+ * 获取消息列表
+ * @param category：消息主类型，1设备，2家庭，3通知
+ * @param msgId: 消息Id，首次可不传，
+ * @param timestamp: 消息的时间戳，首次可不传或传0
+ * @param callback: 消息列表回调
+ */
+fun messageList(category: Int, msgId: String, timestamp: Long, callback: MyCallback)
+```
 
 相关Callback介绍
 ----------------
@@ -532,76 +461,64 @@ MyCallback)
 ### MyCallback
 
 接口成功时执行success()，response.isSuccess()可以判断响应是成功或失败，response.parse()可以解析json，解析工具是fastjson
-
-interface MyCallback {  
-  
-fun fail(msg: String?, reqCode: Int)  
-  
-fun success(response: BaseResponse, reqCode: Int)  
-  
+```
+interface MyCallback {
+    fun fail(msg: String?, reqCode: Int)
+    fun success(response: BaseResponse, reqCode: Int)
 }
+```
 
 ### LoginCallback
 
 LoginCallback是登录回调，user是用户登录成功后返回信息，可以通过IoTAuth.user访问
-
-interface LoginCallback {  
-fun success(user: User)  
-fun fail(msg: String)  
+```
+interface LoginCallback {
+    fun success(user: User)
+    fun fail(msg: String)
 }
+```
 
 ### ControlPanelCallback
 
-获取一个设备控制面板回调，
-成功时首先回调success(panelist:List\<ControlPanel\>),panelList是设备每个控制属性对应的面板类型集合，该集合也可以通过IoTAuth.deviceImpl.
-panelList()得到引用，另外IoTAuth.deviceImpl.
-panelConfig()返回产品界面配置和IoTAuth.deviceImpl.
-product()设备物模型，注意：只有调用了IoTAuth.deviceImpl. controlPanel(
+获取一个设备控制面板回调，成功时首先回调success(panelist:List<ControlPanel>),panelList是设备每个控制属性对应的面板类型集合，该集合也可以通过IoTAuth.deviceImpl.panelList()得到引用，另外IoTAuth.deviceImpl.panelConfig()返回产品界面配置和IoTAuth.deviceImpl.product()设备物模型
 
-productId: String, deviceName: String, callback: ControlPanelCallback
-
-)这3个api才会有数据。panelConfig中包含有面板主题风格的数据。当回调refresh()时说明panelList集合中的属性值获取成功，有更新。
-
-interface ControlPanelCallback {  
-*/\*\**  
-*\* 请求成功*  
-*\*/*  
-fun success(panelList: List\<ControlPanel\>)  
-*/\*\**  
-*\* 数据刷新*  
-*\*/*  
-fun refresh()  
-*/\*\**  
-*\* 请求失败*  
-*\*/*  
-fun fail(msg: String)  
+注意：只有调用了IoTAuth.deviceImpl.controlPanel(productId: String, deviceName: String, callback: ControlPanelCallback) 这3个api才会有数据。panelConfig中包含有面板主题风格的数据。当回调refresh()时说明panelList集合中的属性值获取成功，有更新。
+```
+interface ControlPanelCallback {
+    //请求成功
+    fun success(panelList: List<ControlPanel>)
+    //数据刷新
+    fun refresh()
+    //请求失败
+    fun fail(msg: String)
 }
+```
 
 ### DeviceCallback
 
-只有调用了IoTAuth.deviceImpl.deviceList( familyId: String, roomId: String,
-offset: Int, callback:
-DeviceCallback)，IoTAuth.deviceList这个列表中才会有数据，否则只是长度为0的列表。请求成功回调success(deviceList:List\<Device\>)，获取到列表中的设备在线状态时：onlineUpdate()。注意：success(deviceList:List\<Device\>)中的deviceList与IoTAuth.deviceList不是同一个对象，每次调用了IoTAuth.deviceImpl.deviceList(
-familyId: String, roomId: String, offset: Int, callback:
-DeviceCallback)这个方法得到的设备列表都会全部添加到IoTAuth.deviceList列表中，所以刷新设备列表时记得清空，以免造成列表数据重复。
+只有调用了IoTAuth.deviceImpl.deviceList( familyId: String, roomId: String, offset: Int, callback:DeviceCallback)接口，IoTAuth.deviceList这个列表中才会有数据，否则只是长度为0的列表。
 
-*/\*\**  
-*\* 设备列表callback*  
-*\*/*  
-interface DeviceCallback {  
-*/\*\**  
-*\* 列表请求成功*  
-*\*/*  
-fun success(deviceList: List\<Device\>)  
-*/\*\**  
-*\* 在线状态获取成功*  
-*\*/*  
-fun onlineUpdate()  
-*/\*\**  
-*\* 请求失败*  
-*\*/*  
-fun fail(message: String)  
+请求成功回调`success(deviceList:List<Device>)`
+获取到列表中的设备在线状态时回调`onlineUpdate()`
+
+注意：success(deviceList:List<Device>)中的deviceList与IoTAuth.deviceList不是同一个对象，每次调用了
+```
+IoTAuth.deviceImpl.deviceList(familyId: String, roomId: String, offset: Int, callback:DeviceCallback)
+```
+这个方法得到的设备列表都会全部添加到IoTAuth.deviceList列表中，所以刷新设备列表时记得清空，以免造成列表数据重复。
+```
+/**
+ * 设备列表callback
+ */
+interface DeviceCallback {
+    //请求成功
+    fun success(deviceList: List<Device>)
+    //在线状态获取成功
+    fun onlineUpdate()
+    //请求失败*
+    fun fail(message: String)
 }
+```
 
 ### ActivePushCallback
 
@@ -609,56 +526,78 @@ SDK内部会将接收到的下发数据解析到payload，payload中json为原�
 
 一次平台下发的数据json：
 
-{"action":"DeviceChange","params":{"Time":"2020-03-20T17:38:26+08:00","Type":"Template","SubType":"Push","Topic":"","Payload":"xxxxxxxxxxoiZGVsdGEiLCAicGF5bG9hZCI6eyJzdGF0ZSI6eyJwb3dlcl9zd2l0Y2giOjB9LCJ2ZXJzaW9uIjowfX0=","Seq":1584697106,"DeviceId":"xxxxxxxxxx/big_light"},"push":true}
+```
+{
+  "action": "DeviceChange",
+  "params": {
+    "Time": "2020-03-20T17:38:26+08:00",
+    "Type": "Template",
+    "SubType": "Push",
+    "Topic": "",
+    "Payload": "xxxxxxxxxxoiZGVsdGEiLCAicGF5bG9hZCI6eyJzdGF0ZSI6eyJwb3dlcl9zd2l0Y2giOjB9LCJ2ZXJzaW9uIjowfX0=",
+    "Seq": 1584697106,
+    "DeviceId": "xxxxxxxxxx/big_light"
+  },
+  "push": true
+}
+```
 
 其中的Payload经过Base64解码后的数据：
 
-{"type":"delta", "payload":{"state":{"power_switch":0},"version":0}}
+```
+{
+  "type": "delta",
+  "payload": {
+    "state": {
+      "power_switch": 0
+    },
+    "version": 0
+  }
+}
+```
 
 进一步解析得到data:
 
+```
 {"power_switch":0}
+```
 
 若上述过程出错，请求回调ActivePushCallback的unknown()方法，下发数据是json。
 
-class Payload {  
-//设备监听到下发的数据字符串  
-var json = ""  
-//json中返回的“Payload”字段base64转码后得到的json数据  
-var payload = ""  
-//在payload中得到的设备更新字段json字符串  
-var data = ""  
-//json中返回的“DeviceId”字段  
-var deviceId = ""
+```
+class Payload {
+    //设备监听到下发的数据字符串
+    var json = ""
+    //json中返回的“Payload”字段base64转码后得到的json数据
+    var payload = ""
+    //在payload中得到的设备更新字段json字符串
+    var data = ""
+    //json中返回的“DeviceId”字段
+    var deviceId = ""
 
-override fun toString(): String {  
-val sb = StringBuilder()  
-sb.append("收到下发原数据：").append(json).append("\\n")  
-.append("原数据中Payload转码后（base64）：").append(payload).append("\\n")  
-.append("payload中有效数据：").append(data)  
-return sb.toString()  
-}  
+    override fun toString(): String {
+        val sb = StringBuilder()
+        sb.append("收到下发原数据：").append(json).append("\\n")
+        .append("原数据中Payload转码后（base64）：").append(payload).append("\\n")
+        .append("payload中有效数据：").append(data)
+        return sb.toString()
+    }
 }
+```
 
-*/\*\**  
-*\* 设备接收到下发数据回调*  
-*\*/*  
+```
+/**
+ * 设备接收到下发数据回调
+ */
 interface ActivePushCallback {
-
-*/\*\**  
-*\* 网络断开后重连*  
-*\*/*  
-fun reconnected()
-
-*/\*\**  
-*\* 成功解析*  
-*\*/*  
-fun success(payload: Payload)  
-*/\*\**  
-*\* 未知的数据解析失败，需要开发者解析*  
-*\*/*  
-fun unknown(json: String, errorMessage: String)  
+    //网络断开后重连
+    fun reconnected()
+    //成功解析
+    fun success(payload: Payload)
+    //未知的数据解析失败，需要开发者解析
+    fun unknown(json: String, errorMessage: String)
 }
+```
 
 相关字段说明
 ------------
