@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f30a4b96_1295d974",
+        "filename": "sdk/explorer-link-android/腾讯连连SDK使用文档.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-05-31T16:04:40Z",
+      "side": 0,
+      "message": "图片不需要引用了，可以删掉。",
+      "revId": "0eaf2f543f9136856484b60b41fb6087ce10b12b",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
