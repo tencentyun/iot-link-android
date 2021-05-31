@@ -43,7 +43,7 @@ dependencies {
 public TraeVoip(Context context)
 
 | 参数 | 类型 | 描述 |
-|:-:|:-:|:-:|
+|:-|:-|:-|
 | context | Context | 上下文 |
 
 ##### 2.1.2 初始化方法
@@ -51,13 +51,13 @@ public TraeVoip(Context context)
 public boolean initVoip(int fps, int channel, boolean isLog)
 
 | 参数 | 类型 | 描述 |
-|:-:|:-:|:-:|
+|:-|:-|:-|
 | fps | int | 帧率 |
 | channel | int | 通道数 |
 | isLog | boolean | 是否打印日志 |
 
 | 返回值 | 描述 |
-|:-:|:-:|
+|:-|:-|
 | boolean | 是否初始化成功 |
 
 ##### 2.1.3 是否已经初始化
@@ -65,7 +65,7 @@ public boolean initVoip(int fps, int channel, boolean isLog)
 public boolean isVoipInit()
 
 | 返回值 | 描述 |
-|:-:|:-:|
+|:-|:-|
 | boolean | 是否已经初始化 |
 
 #### 2.2 销毁
@@ -85,11 +85,11 @@ public void voipResetEcBuff()
 public boolean voipCapture(short[] pPcmIn0ut) //处理麦克风采集数据
 
 | 参数 | 类型 | 描述 |
-|:-:|:-:|:-:|
+|:-|:-|:-|
 | pPcmIn0ut | short[] | 从麦克风采集到的音频数据 |
 
 | 返回值 | 描述 |
-|:-:|:-:|
+|:-|:-|
 | boolean | 处理结果成功或失败 |
 
 ##### 2.3.2 Render方法
@@ -97,11 +97,11 @@ public boolean voipCapture(short[] pPcmIn0ut) //处理麦克风采集数据
 public boolean voipRender(short[] pPcmRef) //处理扬声器将要回放的数据
 
 | 参数 | 类型 | 描述 |
-|:-:|:-:|:-:|
+|:-|:-|:-|
 | pPcmRef | short[] | 扬声器即将播放的音频数据 |
 
 | 返回值 | 描述 |
-|:-:|:-:|
+|:-|:-|
 | boolean | 处理结果成功或失败 |
 
 
