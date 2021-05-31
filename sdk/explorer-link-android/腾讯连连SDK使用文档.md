@@ -1,239 +1,144 @@
-快速接入
-========
+## 概述
+待补充
 
-开发前准备
-----------
+## Android 接入流程
 
-获取AppKey
+1、在 App module下的build.gradle中添加依赖项
 
-下载SDK
+```
+implementation 'com.tencent.iot.explorer:explorer-link-android:x.x.x'
+```
+具体版本号可参考 [explorer-link-android](https://cloud.tencent.com/document/product/1081/47787)
 
-安装开发工具
-------------
 
-安装AndroidStudio，下载地址：http://www.android-studio.org/
+## SDK接口说明
 
-集成SDK
--------
-
-### 权限申请
-
-\<uses-permission android:name="android.permission.INTERNET" /\>  
-\<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /\>  
-\<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /\>  
-\<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"
-/\>  
-\<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /\>
-
-### 导入aar
-
-在项目中导入tenextll-release.aar包：选中模块键选择new-\>在弹出框Create New
-Module中选择Import JAR/AAR
-Package-\>next-\>打开tenextll-release.aar所在路径-\>选择tenextll-release.aar-\>OK-\>finish。
-
-![C:\\Users\\ADMINI\~1\\AppData\\Local\\Temp\\1584925522(1).jpg](media/f2782f1ec6c10a1ca63865bea66829ac.png)
-
-![C:\\Users\\ADMINI\~1\\AppData\\Local\\Temp\\1584925656(1).jpg](media/4ba137c33d275a98ee0abdb314c8a50e.png)
-
-![C:\\Users\\ADMINI\~1\\AppData\\Local\\Temp\\1584925950(1).jpg](media/bfa62c2374dcabff2df0de5b411d26aa.png)
-
-![](media/549d9f55bb504e2c943b0cd54a470e9d.png)
-
-![](media/be6ae6b39f1416e9ea2782996258dd85.png)
-
-导入成功后在项目中可以看到module：tenextll-release
-
-![](media/4faa6b6c9387de317ea62090d5fd7385.png)
-
-依赖tenextll-release module，module中还用到了Java-WebSocket和协程
-
-dependencies {  
-…  
-implementation project(path: ':tenextll-release')
-
-//WebSocket  
-implementation "org.java-websocket:Java-WebSocket:1.4.0"
-
-//kotlin协程  
-implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
-
-}
-
-开始使用
+设备相关
 --------
 
-在SDK中，请求相关的API都在IoTAuth中调用。配网使用IoTLink，目前支持智能配网（SmartConfig）和自助配网（SoftAP）。
+注册相关的api在IoTAuth.registerImpl中,每个传入callback的api都会有和api名字对应的reqCode,如发送手机验证码api：IoTAuth.registerImpl.sendPhoneCode对应的reqCode为：RequestCode.send_phone_code。
 
-在Application中初始化SDK,传入参数：Appkey
-
-IoTAuth.init(APP_KEY)
-
-退出SDK时调用：
-
-IoTAuth.destroy()
-
-根据需要打开日志开关：
-
-IoTAuth.openLog(true)
-
-编译测试
---------
-
-在项目中创建一个类APP继承Application，在AndroidManifest.xml中注册APP，重写onCreate()方法，在onCreate
-()中初始化SDK，打开日志开关，传入APP_KEY调用初始化SDK方法，需要时添加登录过期监听:
-
-![](media/e75425e96634be629ef24f01996cad77.png)
-
-在关闭应用时调用SDK的destroy方法：
-
-![](media/67bc6b9e334ca413cec5b026af9d69dc.png)
-
-在控制台日志中看到"The SDK initialized successfully"的日志说明成功接入SDK：
-
-![](media/a3cf705dea7c8ca8479880d1453fedb2.png)
-
-到此，你可以通过IoTAuth引用不同的impl来使用SDK的业务，如：IoTAuth.registerImpl、IoTAuth.loginImpl、
-IoTAuth.deviceImpl等。配网请使用IoTLink。
-
-SDK说明
-=======
-
-账户相关
---------
-
-注册相关api在IoTAuth.registerImpl中,每个传入callback的api都会有和api名字对应的reqCode,如发送手机验证码api：IoTAuth.registerImpl.sendPhoneCode对应的reqCode为：RequestCode.send_phone_code。
-
-### 手机号码注册
+#### 手机号码注册
 
 第一步：获取手机验证码
 
-IoTAuth.registerImpl.sendPhoneCode(phone, callback)
+```IoTAuth.registerImpl.sendPhoneCode(phone, callback)```
 
 第二步：校验手机验证码
 
-IoTAuth.registerImpl.checkPhoneCode(countryCode, phone, code, callback)
+```IoTAuth.registerImpl.checkPhoneCode(countryCode, phone, code, callback)```
 
 第三步：提交注册
 
-IoTAuth.registerImpl.registerPhone(countryCode, account, code, pwd, callback)
+```IoTAuth.registerImpl.registerPhone(countryCode, account, code, pwd, callback)```
 
 请求返回处理：
+```
+private val callback = object : MyCallback {
+    override fun fail(msg: String?, reqCode: Int) {  }
 
-private val callback = object : MyCallback {  
-override fun fail(msg: String?, reqCode: Int) {  
-}  
-  
-override fun success(response: BaseResponse, reqCode: Int) {  
-when(reqCode){  
-RequestCode.send_phone_code-\>{}  
-RequestCode.check_phone_code-\>{}  
-RequestCode.phone_register-\>{  
-if (response.isSuccess()){//请求成功  
-}else{  
-}  
-}  
-}  
-}  
+    override fun success(response: BaseResponse, reqCode: Int) {
+        when(reqCode){
+            RequestCode.send_phone_code-\>{}
+                    RequestCode.check_phone_code-\>{}
+                    RequestCode.phone_register-\>{
+                if (response.isSuccess()){
+                    //请求成功
+                } else { }
+            }
+        }
+    }
 }
+```
 
-### 邮箱帐号注册
+#### 邮箱帐号注册
 
 邮箱注册与手机号注册步骤一样，相关api为：
-
+```
 IoTAuth.registerImpl.sendEmailCode(account, callback)
-
 IoTAuth.registerImpl.checkEmailCode(account, code, callback)
-
 IoTAuth.registerImpl.registerEmail(account, code, pwd, callback)
+```
 
-### 帐号登录
+#### 帐号登录
 
 登录方式有三种：手机号、邮箱、微信授权登录，以下相关API使用IoTAuth.loginImpl
 调起：
 
-*/\*\**  
-*\* 手机号登录*  
-*\*/*  
-fun loginPhone(countryCode: String, phone: String, pwd: String, callback:
-LoginCallback)  
-  
-*/\*\**  
-*\* 邮箱登录*  
-*\*/*  
-fun loginEmail(email: String, pwd: String, callback: LoginCallback)  
-  
-*/\*\**  
-*\* 微信登录*
+```fun loginPhone(countryCode: String, phone: String, pwd: String, callback:
+LoginCallback)```
 
-*\* \@param code 微信授权得到的code*  
-*\*/*  
-fun wechatLogin(code: String, callback: LoginCallback)
+```fun loginEmail(email: String, pwd: String, callback: LoginCallback)```
+
+```fun wechatLogin(code: String, callback: LoginCallback)```
 
 登录回调LoginCallback成功回调返回的user中包含用户登录信息：登录过期时间ExpireAt、登录口令Token:
-
-interface LoginCallback {  
-fun success(user: User)  
-fun fail(msg: String)  
+```
+interface LoginCallback {
+    fun success(user: User)
+    fun fail(msg: String)
 }
+```
 
 关于SDK登录过期，SDK内部有过期处理机制，可以在Application中注册登录过期监听回调：
 
-IoTAuth.addLoginExpiredListener(object : LoginExpiredListener {  
-override fun expired(user: User) {  
-Log.e("TAG", "用户登录过期")  
-}  
+```
+IoTAuth.addLoginExpiredListener(object : LoginExpiredListener {
+    override fun expired(user: User) {
+        Log.e("TAG", "用户登录过期")
+    }
 })
+```
 
 ### 个人信息
 
 查询个人信息详情：
 
-IoTAuth.userImpl.userInfo(callback)
+```IoTAuth.userImpl.userInfo(callback)```
 
 修改用户昵称：
 
-IoTAuth.userImpl.modifyAlias(nick, callback)
+```IoTAuth.userImpl.modifyAlias(nick, callback)```
 
 修改用户头像：
 
-IoTAuth.userImpl.modifyPortrait(url, callback)
+```IoTAuth.userImpl.modifyPortrait(url, callback)```
 
 绑定手机号：发送验证码、校验、绑定。
 
+```
 IoTAuth.userImpl.sendBindPhoneCode(countryCode, account, callback)
-
 IoTAuth.userImpl.checkBindPhoneCode(countryCode, account, code, callback)
-
 IoTAuth.userImpl.bindPhone(countryCode, account, code, callback)
+```
 
 ### 意见反馈
 
 可以提交文字、图片链接和联系方式
 
-IoTAuth.userImpl.feedback(advise: String, phone: String, picUrl: String,
-callback: MyCallback)
+```IoTAuth.userImpl.feedback(advise: String, phone: String, picUrl: String,
+callback: MyCallback)```
 
 ### 密码服务
 
 使用旧密码更新密码：
 
-IoTAuth.passwordImpl.resetPassword(oldPwd, newPwd, callback)
+```IoTAuth.passwordImpl.resetPassword(oldPwd, newPwd, callback)```
 
 通过手机号验证重置：发送验证码、校验、设置密码。
 
+```
 IoTAuth.passwordImpl.sendPhoneCode(countryCode,phone, callback)
-
 IoTAuth.passwordImpl.checkPhoneCode(countryCode,phone, code, callback)
-
 IoTAuth.passwordImpl.resetPhonePassword(countryCode, phone, code, pwd, callback)
+```
 
 通过邮箱验证重置：发送验证码、校验、设置密码。
-
+```
 IoTAuth.passwordImpl.sendEmailCode(email, callback)
-
 IoTAuth.passwordImpl.checkEmailCode(email, code, callback)
-
 IoTAuth.passwordImpl.resetEmailPassword(email, code, pwd, callback)
+```
 
 设备相关
 --------
@@ -242,13 +147,17 @@ IoTAuth.passwordImpl.resetEmailPassword(email, code, pwd, callback)
 
 创建service对象，task是DeviceTask，主要保存wifi信息
 
+```
 class DeviceTask {  
-var mSsid: String = "" //wifi名  
-var mBssid: String = "" //mac地址 SoftAP时不用给  
-var mPassword: String = "" //wifi密码  
+    var mSsid: String = "" //wifi名
+    var mBssid: String = "" //mac地址 SoftAP时不用给
+    var mPassword: String = "" //wifi密码
 }
+```
 
-智能配网（SmartConfig），步骤为：打开设备进入SmartConfig
+智能配网（SmartConfig）
+步骤为：
+打开设备进入SmartConfig
 配网模式-\>获取配网wifi信息-\>创建DeviceTask-\>创建SmartConfigSevice-\>添加监听SmartConfigListener-\>IoTLink.instance.start(service)-\>获取设备签名-\>绑定设备。如果界面需要展示配网进度，可以根据监听返回的步骤决定进度值。
 
 val service = SmartConfigService(this, task)  
