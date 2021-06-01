@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/v_title"
+        layout="@layout/title_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_video_preview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintTop_toBottomOf="@id/v_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:id="@+id/v_preview"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/black_413F3F"
+            app:layout_constraintDimensionRatio="h,16:9"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btn_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp">
+
+            <com.tencent.iot.explorer.link.core.demo.view.RoundImageView
+                android:id="@+id/iv_orientation_back"
+                android:layout_width="32dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@color/black_B3000000"
+                />
+
+            <ImageView
+                android:id="@+id/iv_orientation"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="@id/iv_orientation_back"
+                app:layout_constraintBottom_toBottomOf="@id/iv_orientation_back"
+                app:layout_constraintStart_toStartOf="@id/iv_orientation_back"
+                app:layout_constraintEnd_toEndOf="@id/iv_orientation_back"
+                android:src="@mipmap/orientation"
+                android:padding="8dp"
+                />
+
+            <com.tencent.iot.explorer.link.core.demo.view.RoundImageView
+                android:id="@+id/iv_audio_back"
+                android:layout_width="32dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintBottom_toBottomOf="@id/iv_orientation_back"
+                app:layout_constraintEnd_toStartOf="@id/iv_orientation_back"
+                android:layout_marginEnd="10dp"
+                android:src="@color/black_B3000000"
+                />
+
+            <ImageView
+                android:id="@+id/iv_audio"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="@id/iv_audio_back"
+                app:layout_constraintBottom_toBottomOf="@id/iv_audio_back"
+                app:layout_constraintStart_toStartOf="@id/iv_audio_back"
+                app:layout_constraintEnd_toEndOf="@id/iv_audio_back"
+                android:src="@mipmap/no_audio"
+                android:padding="8dp"
+                />
+
+            <com.tencent.iot.explorer.link.core.demo.view.RoundImageView
+                android:id="@+id/iv_video_quality_back"
+                android:layout_width="32dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintBottom_toBottomOf="@id/iv_audio_back"
+                app:layout_constraintEnd_toStartOf="@id/iv_audio_back"
+                android:layout_marginEnd="10dp"
+                android:src="@color/black_B3000000"
+                />
+
+            <TextView
+                android:id="@+id/tv_video_quality"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="@id/iv_video_quality_back"
+                app:layout_constraintBottom_toBottomOf="@id/iv_video_quality_back"
+                app:layout_constraintStart_toStartOf="@id/iv_video_quality_back"
+                app:layout_constraintEnd_toEndOf="@id/iv_video_quality_back"
+                android:src="@mipmap/no_audio"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="@dimen/ts_12"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_video_preview">
+
+        <View
+            android:id="@+id/v_btn_back"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="h, 343:158"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@mipmap/video_control_btn_background" />
+
+        <RadioGroup
+            android:id="@+id/rg_talk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.14"
+            app:layout_constraintHorizontal_bias="0.08"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio_talk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="false"
+                android:drawableTop="@drawable/background_talk_radio_style"
+                android:drawablePadding="2dp"
+                android:gravity="center_horizontal"
+                android:text="@string/talk"
+                android:textSize="@dimen/ts_15" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rg_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.14"
+            app:layout_constraintHorizontal_bias="0.92"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:textSize="@dimen/ts_15"
+                android:button="@null"
+                android:drawablePadding="2dp"
+                android:gravity="center_horizontal"
+                android:drawableTop="@drawable/background_record_radio_style"
+                android:text="@string/record" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rg_playback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.86"
+            app:layout_constraintHorizontal_bias="0.08"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio_playback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:textSize="@dimen/ts_15"
+                android:button="@null"
+                android:drawablePadding="2dp"
+                android:gravity="center_horizontal"
+                android:drawableTop="@mipmap/playback"
+                android:text="@string/playback" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rg_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.86"
+            app:layout_constraintHorizontal_bias="0.92"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:textSize="@dimen/ts_15"
+                android:button="@null"
+                android:drawablePadding="2dp"
+                android:gravity="center_horizontal"
+                android:drawableTop="@mipmap/photo"
+                android:text="@string/photo" />
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/iv_left"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            android:src="@mipmap/ic_arrow_left_gray"
+            app:layout_constraintHorizontal_bias="0.35"
+            android:padding="15dp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_right"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            android:src="@mipmap/ic_arrow_left_gray"
+            app:layout_constraintHorizontal_bias="0.65"
+            android:rotation="180"
+            android:padding="15dp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_up"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            android:src="@mipmap/ic_arrow_left_gray"
+            app:layout_constraintVertical_bias="0.12"
+            android:rotation="90"
+            android:padding="15dp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_down"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            android:src="@mipmap/ic_arrow_left_gray"
+            app:layout_constraintVertical_bias="0.88"
+            android:rotation="-90"
+            android:padding="15dp"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
