@@ -76,6 +76,15 @@
     <string name="year_and_month_unit">%s年%s月</string>
     <string name="checked_date_no_video">该日期无录像</string>
     <string name="checked_date_first">请选择日期</string>
+    <string name="talk">对讲</string>
+    <string name="record">录像</string>
+    <string name="photo">拍照</string>
+    <string name="video_quality_high">超清 720P</string>
+    <string name="video_quality_medium">高清 480P</string>
+    <string name="video_quality_low">标清 270P</string>
+    <string name="video_quality_high_str">超清</string>
+    <string name="video_quality_medium_str">高清</string>
+    <string name="video_quality_low_str">标清</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
