@@ -16,6 +16,7 @@ import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
 import com.tencent.iot.explorer.link.core.demo.video.activity.VideoMultiPreviewActivity
 import com.tencent.iot.explorer.link.core.demo.video.activity.VideoPlaybackActivity
+import com.tencent.iot.explorer.link.core.demo.video.activity.VideoPreviewActivity
 import com.tencent.iot.explorer.link.core.demo.video.adapter.DevsAdapter
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ToastDialog
@@ -147,7 +148,14 @@ class VideoDeviceFragment(accessInfo: AccessInfo?) : BaseFragment() {
             dlg.setOnDismisListener {
                 when(it) {
                     0 -> {
-
+                        var intent = Intent(context, VideoPreviewActivity::class.java)
+                        var bundle = Bundle()
+                        intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
+                        var devInfo = DevUrl2Preview()
+                        devInfo.devName = dev.deviceName
+                        devInfo.Status = dev.Status
+                        bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(devInfo))
+                        startActivity(intent)
                     }
                     1 -> {
                         jumpActivity(VideoPlaybackActivity::class.java)
