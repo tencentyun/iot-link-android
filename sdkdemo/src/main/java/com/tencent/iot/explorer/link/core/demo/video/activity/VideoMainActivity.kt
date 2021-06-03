@@ -4,6 +4,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSONObject
 import com.google.android.material.tabs.TabLayout
+import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.video.entity.AccessInfo
@@ -15,7 +16,6 @@ import kotlinx.android.synthetic.main.title_layout.*
 class VideoMainActivity : BaseActivity() {
 
     private val fragments = arrayListOf<Fragment>()
-    private var accessInfo : AccessInfo? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_video_main
@@ -30,7 +30,7 @@ class VideoMainActivity : BaseActivity() {
                 var infoStr = bundle.getString(VideoConst.VIDEO_CONFIG)
                 infoStr?.let {
                     try {
-                        accessInfo = JSONObject.parseObject(it, AccessInfo::class.java)
+                        App.data.accessInfo = JSONObject.parseObject(it, AccessInfo::class.java)
                     } catch (e : Exception) {
                         e.printStackTrace()
                     }
@@ -41,7 +41,7 @@ class VideoMainActivity : BaseActivity() {
         tv_title.setText(R.string.iot_demo_name)
         tb_bottom.visibility = View.GONE
         fragments.clear()
-        fragments.add(VideoDeviceFragment(accessInfo))
+        fragments.add(VideoDeviceFragment())
         this.supportFragmentManager.beginTransaction()
             .add(R.id.main_container, fragments[0])
             .show(fragments[0])
