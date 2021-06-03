@@ -12,6 +12,7 @@ import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
+import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
 import com.tencent.iot.explorer.link.core.demo.video.activity.VideoMultiPreviewActivity
@@ -31,15 +32,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class VideoDeviceFragment(accessInfo: AccessInfo?) : BaseFragment() {
-    private var accessInfo : AccessInfo? = null
+class VideoDeviceFragment : BaseFragment() {
     private var devs : MutableList<DevInfo> = ArrayList()
     private var adapter : DevsAdapter? = null
     private var ITEM_MAX_NUM = 4
-
-    init {
-        this.accessInfo = accessInfo
-    }
 
     override fun getContentView(): Int {
         return R.layout.fragment_video_device
@@ -158,7 +154,11 @@ class VideoDeviceFragment(accessInfo: AccessInfo?) : BaseFragment() {
                         startActivity(intent)
                     }
                     1 -> {
-                        jumpActivity(VideoPlaybackActivity::class.java)
+                        var intent = Intent(context, VideoPlaybackActivity::class.java)
+                        var bundle = Bundle()
+                        bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(dev))
+                        intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
+                        startActivity(intent)
                     }
                 }
             }
@@ -200,7 +200,7 @@ class VideoDeviceFragment(accessInfo: AccessInfo?) : BaseFragment() {
 
     private fun loadMoreVideoInfo() {
         devs.clear()
-        accessInfo?.let {
+        App.data.accessInfo?.let {
             VideoBaseService(it.accessId, it.accessToken).getDeviceList(it.productId, 0, 99, loadDevListener)
         }
     }
