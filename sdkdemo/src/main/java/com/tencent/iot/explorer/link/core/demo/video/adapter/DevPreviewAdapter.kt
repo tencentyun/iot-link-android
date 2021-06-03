@@ -38,7 +38,7 @@ class DevPreviewAdapter(context: Context, list: MutableList<DevUrl2Preview>) : R
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.devName.text = list.get(position).devName
-        if (list.get(position).Status != 0) {
+        if (list.get(position).Status == 1) {
             holder.offlineTip.visibility = View.GONE
         } else {
             holder.offlineTip.visibility = View.VISIBLE
