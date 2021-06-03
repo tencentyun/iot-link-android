@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "955c5fad_600526a5",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/video/activity/VideoPreviewActivity.kt",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-06-03T01:30:42Z",
+      "side": 1,
+      "message": "\"XXX\"  ---\u003e   使用 统一设置个 TAG？",
+      "revId": "54cb45a94ab8d816c6f116d360156887bdfa3f05",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
