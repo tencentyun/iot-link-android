@@ -1,22 +1,34 @@
 package com.tencent.iot.explorer.link.core.demo.video.fragment
 
 import android.view.View
+import android.widget.Toast
+import com.alibaba.fastjson.JSONArray
+import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
+import com.tencent.iot.explorer.link.core.demo.entity.BaseResponse
+import com.tencent.iot.explorer.link.core.demo.entity.TimeBlock
+import com.tencent.iot.explorer.link.core.demo.entity.VideoHistory
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
 import com.tencent.iot.explorer.link.core.demo.video.dialog.CalendarDialog
 import com.tencent.iot.explorer.link.core.demo.video.dialog.CalendarDialog.OnClickedListener
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ToastDialog
+import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.view.CalendarView
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeBlockInfo
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineView
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineViewChangeListener
+import com.tencent.iot.video.link.callback.VideoCallback
+import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class VideoCloudPlaybackFragment : BaseFragment() {
-    var dateFormat = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN, Locale.getDefault());
+    var dateFormat = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN, Locale.getDefault())
+    var devInfo: DevInfo? = null
+    var baseUrl = ""
 
     override fun getContentView(): Int {
         return R.layout.fragment_video_cloud_playback
@@ -24,37 +36,121 @@ class VideoCloudPlaybackFragment : BaseFragment() {
 
     override fun startHere(view: View) {
         tv_date.setText(dateFormat.format(System.currentTimeMillis()))
-
-        testTagTimeBlock()
         setListener()
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun try2GetVideoDateData() {
+        App.data.accessInfo?.let {
+            if (devInfo == null) return@let
+            VideoBaseService(it.accessId, it.accessToken).getIPCDateData(it.productId, devInfo!!.deviceName, object:
+                VideoCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun success(response: String?, reqCode: Int) {
+                    var resp = JSONObject.parseObject(response, BaseResponse::class.java)
+                    resp?.let {
+                        if (it.Response == null) return@let
+                        var dataList = JSONArray.parseArray(it.Response!!.data, String::class.java)
+                        dataList?.let {
+                            if (it.size == 0) {
+                                ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.no_data), 2000).show()
+                                return@let
+                            }
+                            for (i in 0 until it.size) {
+                                it[i] = it.get(i).replace("-", "")
+                            }
+                            showCalendarDialog(it)
+                        }?:let {
+                            ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.no_data), 2000).show()
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    private fun formatTimeData(allTimeBlock: MutableList<TimeBlock>) : MutableList<TimeBlockInfo> {
+        var dateList = ArrayList<TimeBlockInfo>()
+
+        var i = 0
+        while (i < allTimeBlock.size) {
+            var start = Date(allTimeBlock.get(i).StartTime * 1000)
+            while (i + 1 < allTimeBlock.size &&
+                ((allTimeBlock.get(i).EndTime + 60) >= allTimeBlock.get(i + 1).StartTime)) {  // 上一次的结束时间和下一次的开始时间相差一分钟之内
+                i++
+            }
+            var end = Date(allTimeBlock.get(i).EndTime * 1000)
+
+            var item = TimeBlockInfo()
+            item.startTime = start
+            item.endTime = end
+            dateList.add(item)
+            i++
+        }
+
+        return dateList
+    }
+
+    private fun refreshTimeLine(timeStr : String?) {
+        App.data.accessInfo?.let {
+            if (devInfo == null || timeStr == null) return@let
+            VideoBaseService(it.accessId, it.accessToken).getIPCTimeData(it.productId, devInfo!!.deviceName, timeStr, object : VideoCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun success(response: String?, reqCode: Int) {
+                    var resp = JSONObject.parseObject(response, BaseResponse::class.java)
+                    resp?.let {
+                        var history = JSONObject.parseObject(it.Response?.data, VideoHistory::class.java)
+                        history?.let {
+                            baseUrl = it.VideoURL
+                            it.TimeList?.let {
+                                if (it.size <= 0) return@let
+                                var selectDate = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN).parse(timeStr)
+                                if (selectDate == null) return@let
+                                time_line.currentDayTime = selectDate
+
+                                var dataList = formatTimeData(it)
+                                time_line.setTimeLineTimeDay(dataList.get(0).startTime)
+                                time_line.timeBlockInfos = dataList
+                                time_line.invalidate()
+                            }
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    private fun showCalendarDialog(dataList: MutableList<String>) {
+        var dlg = CalendarDialog(context, dataList)
+        dlg.show()
+        dlg.setOnClickedListener(object : OnClickedListener {
+            override fun onOkClicked(checkedDates: MutableList<String>?) {
+                checkedDates?.let {
+                    if (it.size <= 0) return@let
+                    tv_date.setText(dateConvertionWithSplit(it.get(0))) // 当前列表有数据时，有且仅有一个元素，所以可以直接去第一个位置的元素
+                    refreshTimeLine(dateConvertionWithSplit(it.get(0)))
+                }
+            }
+
+            override fun onOkClickedCheckedDateWithoutData() {
+                ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.checked_date_no_video), 2000).show()
+            }
+
+            override fun onOkClickedWithoutDateChecked() {
+                ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.checked_date_first), 2000).show()
+            }
+
+        })
     }
 
     private fun setListener() {
         layout_select_date.setOnClickListener {
-            var testDateSet = arrayListOf("20210527", "20210526", "20210525", "20210522", "20210510", "20210426")
-            var dlg = CalendarDialog(context, testDateSet)
-            dlg.show()
-            dlg.setOnClickedListener(object : OnClickedListener {
-                override fun onOkClicked(checkedDates: MutableList<String>?) {
-                    checkedDates?.let {
-                        if (it.size <= 0) return@let
-                        tv_date.setText(dateConvertionWithSplit(it.get(0))) // 当前列表有数据时，有且仅有一个元素，所以可以直接去第一个位置的元素
-                    }
-                }
-
-                override fun onOkClickedCheckedDateWithoutData() {
-                    ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.checked_date_no_video), 2000).show()
-                }
-
-                override fun onOkClickedWithoutDateChecked() {
-                    ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.checked_date_first), 2000).show()
-                }
-
-            })
+            try2GetVideoDateData()
         }
 
         iv_left_go.setOnClickListener {
@@ -76,7 +172,6 @@ class VideoCloudPlaybackFragment : BaseFragment() {
         }
     }
 
-
     private fun dateConvertionWithSplit(str: String): String? {
         var dateString = ""
         try {
@@ -86,41 +181,6 @@ class VideoCloudPlaybackFragment : BaseFragment() {
             }
         } catch (e: ParseException) { }
         return dateString
-    }
-
-    private fun dateConvertionWithoutSplit(str: String): String? {
-        var dateString = ""
-        try {
-            var parse = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN).parse(str)
-            parse.let {
-                dateString = SimpleDateFormat(CalendarView.DATE_FORMAT_PATTERN).format(parse)
-            }
-        } catch (e: ParseException) { }
-        return dateString
-    }
-
-    private fun testTagTimeBlock() {
-        for (i in 0 .. 30) {
-            var cur = Date()
-            var timeBlock = TimeBlockInfo()
-            timeBlock.startTime = Date(cur.time)
-            timeBlock.startTime.hours = cur.hours - i
-            timeBlock.endTime = Date(cur.time)
-            timeBlock.endTime.hours = cur.hours - i
-            timeBlock.endTime.minutes = cur.minutes + 55
-            time_line.timeBlockInfos.add(timeBlock)
-        }
-
-        for (i in 1 .. 30) {
-            var cur = Date()
-            var timeBlock = TimeBlockInfo()
-            timeBlock.startTime = Date(cur.time)
-            timeBlock.startTime.hours = cur.hours + i
-            timeBlock.endTime = Date(cur.time)
-            timeBlock.endTime.hours = cur.hours + i
-            timeBlock.endTime.minutes = cur.minutes + 55
-            time_line.timeBlockInfos.add(timeBlock)
-        }
     }
 
 }
