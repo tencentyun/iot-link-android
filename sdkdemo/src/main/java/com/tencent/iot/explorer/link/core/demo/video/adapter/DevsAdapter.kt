@@ -64,7 +64,7 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
             holder.checked.visibility = View.VISIBLE
         }
 
-        if (list.get(position)?.Status != 0) {  // 原为等于 1 是在线
+        if (list.get(position)?.Status == 1) {
             holder.backgroundLayout.visibility = View.GONE
             holder.statusTv.setText(R.string.online)
             context?.let {
@@ -101,6 +101,10 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
                 onItemClicked?.onItemCheckedClicked(position, true)
             }
             this.notifyDataSetChanged()
+        }
+
+        if (list.get(position)?.deviceName.endsWith("8405_91")) {
+            holder.devName.setTextColor(context!!.resources.getColor(R.color.red_e54545))
         }
     }
 
