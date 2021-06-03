@@ -77,7 +77,7 @@
             android:id="@+id/tv_next_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/last_month"
+            android:text="@string/next_month"
             app:layout_constraintEnd_toStartOf="@id/iv_next_month"
             app:layout_constraintTop_toTopOf="@id/tv_month_tip"
             app:layout_constraintBottom_toBottomOf="@id/tv_month_tip"
