@@ -129,6 +129,14 @@
         </com.tencent.iot.explorer.link.core.demo.view.EdgeTransparentView>
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/action_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/time_line_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingTop="8dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
