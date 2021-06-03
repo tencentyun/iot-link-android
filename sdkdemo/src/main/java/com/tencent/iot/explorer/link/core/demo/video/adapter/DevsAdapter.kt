@@ -102,6 +102,10 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
             }
             this.notifyDataSetChanged()
         }
+
+        if (list.get(position)?.deviceName.endsWith("20237_7")) {
+            holder.devName.setTextColor(context!!.resources.getColor(R.color.red_e54545))
+        }
     }
 
     override fun getItemCount(): Int {

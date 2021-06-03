@@ -1,13 +1,17 @@
 package com.tencent.iot.explorer.link.core.demo.video.activity
 
+import android.text.TextUtils
 import android.widget.LinearLayout
 import androidx.viewpager.widget.ViewPager
+import com.alibaba.fastjson.JSON
 import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
+import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.video.fragment.VideoCloudPlaybackFragment
 import com.tencent.iot.explorer.link.core.demo.view.PageAdapter
+import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.android.synthetic.main.activity_video_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
 import java.util.*
@@ -38,6 +42,14 @@ class VideoPlaybackActivity : BaseActivity() {
         val tabStrip = tab_playback.getChildAt(0) as LinearLayout
         for (i in 0 until tabStrip.childCount) {
             tabStrip.getChildAt(i).setOnTouchListener { v, event -> true }
+        }
+
+        var bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
+        bundle?.let {
+            var jsonStr = it.getString(VideoConst.VIDEO_CONFIG)
+            if (TextUtils.isEmpty(jsonStr)) return@let
+
+            page1.devInfo = JSON.parseObject(jsonStr, DevInfo::class.java)
         }
     }
 
