@@ -1,0 +1,31 @@
+package com.tencent.iot.explorer.link.core.demo.video.mvp.presenter
+
+import com.tencent.iot.explorer.link.core.demo.mvp.ParentPresenter
+import com.tencent.iot.explorer.link.core.demo.video.mvp.model.EventModel
+import com.tencent.iot.explorer.link.core.demo.video.mvp.view.EventView
+import java.util.*
+
+
+class EventPresenter : ParentPresenter<EventModel, EventView> {
+    constructor(view: EventView) : super(view)
+
+    override fun getIModel(view: EventView): EventModel {
+        return EventModel(view)
+    }
+
+    fun getCurrentDayEventsData(accessId: String, accessToken: String, productId: String, deviceName: String) {
+        model?.getCurrentDayEventsData(accessId, accessToken, productId, deviceName)
+    }
+
+    fun getEventsData(accessId: String, accessToken: String, productId: String, date: Date, deviceName: String) {
+        var startDate = Date(date.time)
+        startDate.hours = 0
+        startDate.minutes = 0
+        startDate.seconds = 0
+        var endDate = Date(date.time)
+        endDate.hours = 23
+        endDate.minutes = 59
+        endDate.seconds = 59
+        model?.getEventsData(accessId, accessToken, productId, startDate, endDate, deviceName)
+    }
+}

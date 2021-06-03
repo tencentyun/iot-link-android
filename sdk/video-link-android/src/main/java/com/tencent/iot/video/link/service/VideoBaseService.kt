@@ -52,6 +52,30 @@ open class VideoBaseService(secretId: String, secretKey: String) {
         basePost(VideoHttpUtil.EXPLORER_SERVICE + VideoHttpUtil.REST_HOST_URL, param, headerParams, callback, VideoRequestCode.video_describe_devices)
     }
 
+    fun getIPCRecordData(productId: String, devName: String, startDate: Date, endDate: Date, callback: VideoCallback) {
+        var headerParams = videoCommonHeaderParams("DescribeCloudStorageEvents", "2020-12-15")
+        val param = TreeMap<String, Any>()
+        param["ProductId"] = productId
+        param["DeviceName"] = devName
+        param["StartTime"] = startDate.time / 1000
+        param["EndTime"] = endDate.time / 1000
+        val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
+        if (authorization != null) {
+            headerParams["Authorization"] = authorization
+        }
+        basePost(VideoHttpUtil.VIDEO_SERVICE + VideoHttpUtil.REST_HOST_URL,
+            param, headerParams, callback, VideoRequestCode.video_describe_record_date)
+    }
+
+    fun getIPCCurrentDayRecordData(productId: String, devName: String, callback: VideoCallback) {
+        var startDate = Date()
+        var endDate = Date()
+        startDate.hours = 0
+        startDate.minutes = 0
+        startDate.seconds = 0
+        getIPCRecordData(productId, devName, startDate, endDate, callback)
+    }
+
     fun getIPCDateData(
         productId: String, devName: String, callback: VideoCallback
     ) {
