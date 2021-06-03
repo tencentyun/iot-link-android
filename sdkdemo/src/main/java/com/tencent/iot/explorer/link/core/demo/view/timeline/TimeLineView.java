@@ -49,6 +49,14 @@ public class TimeLineView extends View {
         return step;
     }
 
+    public Date getCurrentDayTime() {
+        return mCurrentDayTime;
+    }
+
+    public void setCurrentDayTime(Date mCurrentDayTime) {
+        this.mCurrentDayTime = mCurrentDayTime;
+    }
+
     public boolean next() {
         Date date = new Date(mTime.getTime() + step * ONE_MINUTE);
         return updateDate(date);
@@ -92,6 +100,10 @@ public class TimeLineView extends View {
 
     public Date getTime() {
         return mTime;
+    }
+
+    public void setTimeLineTimeDay(Date time) {
+        mTime = time;
     }
 
     private boolean setTime(Date time) {
