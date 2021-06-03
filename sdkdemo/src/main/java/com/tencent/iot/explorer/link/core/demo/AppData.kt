@@ -5,6 +5,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.entity.UserInfo
+import com.tencent.iot.explorer.link.core.demo.video.entity.AccessInfo
 import java.util.*
 
 /**
@@ -32,6 +33,8 @@ class AppData private constructor() {
     val activityList = LinkedList<BaseActivity>()
 
     var callingDeviceId = "" //主动呼叫的设备的id
+
+    var accessInfo : AccessInfo? = null
 
 
     /**
