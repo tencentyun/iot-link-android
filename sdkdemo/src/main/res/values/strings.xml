@@ -87,6 +87,7 @@
     <string name="video_quality_low_str">标清</string>
     <string name="week">星期</string>
     <string name="video_quality">画质</string>
+    <string name="no_data">没有数据</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
