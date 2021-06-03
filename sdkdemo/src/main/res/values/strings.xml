@@ -76,6 +76,7 @@
     <string name="year_and_month_unit">%s年%s月</string>
     <string name="checked_date_no_video">该日期无录像</string>
     <string name="checked_date_first">请选择日期</string>
+    <string name="no_data">没有数据</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
