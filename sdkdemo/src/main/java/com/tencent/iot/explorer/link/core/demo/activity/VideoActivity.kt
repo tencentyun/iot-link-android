@@ -137,9 +137,10 @@ class VideoActivity : BaseActivity(), View.OnClickListener, XP2PCallback,
                     avPlay()
                 } else {
                     isP2PChannelAvailable = false
-                    speak.visibility = View.GONE
-                    watch_monitor.visibility = View.GONE
                     runOnUiThread {
+                        speak.visibility = View.GONE
+                        watch_monitor.visibility = View.GONE
+                        capture_snapshot.visibility = View.GONE
                         Toast.makeText(getApplicationContext(), "P2P通道建立失败，请检查设备是否上线", Toast.LENGTH_LONG).show()
                     }
                 }
