@@ -61,6 +61,8 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
                 var item = ActionRecord()
                 var startDate = Date(eventResponse.events.get(i).startTime * 1000)
                 item.time = String.format("%02d:%02d", startDate.hours, startDate.minutes)
+                item.startTime = eventResponse.events.get(i).startTime
+                item.endTime = eventResponse.events.get(i).endTime
                 item.action = eventResponse.events.get(i).eventId
                 VideoBaseService(accessId, accessToken).getSnapshotUrl(productId, deviceName, eventResponse.events.get(i).thumbnail,
                     object : VideoCallback {
@@ -110,6 +112,10 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
 
     fun setDeviceName(deviceName : String) {
         this.deviceName = deviceName
+    }
+
+    fun getDeviceName() : String {
+        return this.deviceName
     }
 
     fun getSnapshotUrl(thumbnail : String) {
