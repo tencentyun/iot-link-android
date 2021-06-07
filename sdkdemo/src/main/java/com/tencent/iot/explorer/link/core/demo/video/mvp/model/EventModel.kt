@@ -35,6 +35,7 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
     override fun success(response: String?, reqCode: Int) {
         when(reqCode) {
             VideoRequestCode.video_describe_record_date -> {
+                Log.e("XXX", "response " + response)
                 var json = JSONObject.parseObject(response)
                 json?.let {
                     var value = it.getJSONObject("Response")
@@ -110,6 +111,10 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
 
     fun setDeviceName(deviceName : String) {
         this.deviceName = deviceName
+    }
+
+    fun getDeviceName() : String {
+        return this.deviceName
     }
 
     fun getSnapshotUrl(thumbnail : String) {

@@ -6,6 +6,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
+import com.squareup.picasso.OkHttp3Downloader
+import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.entity.BaseResponse
@@ -20,6 +22,7 @@ import com.tencent.iot.explorer.link.core.demo.video.entity.ActionRecord
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.video.mvp.presenter.EventPresenter
 import com.tencent.iot.explorer.link.core.demo.video.mvp.view.EventView
+import com.tencent.iot.explorer.link.core.demo.video.utils.PicassoTrustAll
 import com.tencent.iot.explorer.link.core.demo.view.CalendarView
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeBlockInfo
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineView
@@ -27,10 +30,13 @@ import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineViewChangeL
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
+import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 class VideoCloudPlaybackFragment : BaseFragment(), EventView {
     var dateFormat = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN, Locale.getDefault())
@@ -51,7 +57,7 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView {
         tv_date.setText(dateFormat.format(System.currentTimeMillis()))
         setListener()
         var linearLayoutManager = LinearLayoutManager(context)
-        adapter = ActionListAdapter(records)
+        adapter = ActionListAdapter(context, records)
         action_list_view.layoutManager = linearLayoutManager
         action_list_view.adapter = adapter
 
