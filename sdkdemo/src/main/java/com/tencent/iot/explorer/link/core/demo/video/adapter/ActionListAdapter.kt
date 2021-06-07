@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.demo.video.adapter
 
+import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,13 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.video.entity.ActionRecord
+import com.tencent.iot.explorer.link.core.demo.video.utils.PicassoTrustAll
 
-class ActionListAdapter(list: MutableList<ActionRecord>) : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
+class ActionListAdapter(context: Context?, list: MutableList<ActionRecord>) : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
     var list: MutableList<ActionRecord> = ArrayList()
     var index = -1
+    var context: Context? = null
 
     init {
         this.list = list
+        this.context = context
     }
 
     class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
@@ -47,7 +51,7 @@ class ActionListAdapter(list: MutableList<ActionRecord>) : RecyclerView.Adapter<
         holder.action.visibility = View.GONE
         holder.actionTv.text = list.get(position).action
         if (!TextUtils.isEmpty(list.get(position).snapshotUrl)) {
-            Picasso.get().load(list.get(position).snapshotUrl).into(holder.snapshot)
+            PicassoTrustAll.getInstance(context).load(list.get(position).snapshotUrl).fit().into(holder.snapshot);
         } else {
             Picasso.get().load(R.color.black).into(holder.snapshot)
         }
@@ -56,6 +60,10 @@ class ActionListAdapter(list: MutableList<ActionRecord>) : RecyclerView.Adapter<
             holder.play.visibility = View.GONE
         } else {
             holder.play.visibility = View.VISIBLE
+        }
+
+        holder.snapshot.setOnClickListener {
+            onItemClicked?.onItemVideoClicked(position)
         }
     }
 
@@ -66,4 +74,13 @@ class ActionListAdapter(list: MutableList<ActionRecord>) : RecyclerView.Adapter<
         return list.size
     }
 
+    interface OnItemClicked {
+        fun onItemVideoClicked(pos: Int)
+    }
+
+    private var onItemClicked: OnItemClicked? = null
+
+    fun setOnItemClicked(onItemClicked: OnItemClicked?) {
+        this.onItemClicked = onItemClicked
+    }
 }

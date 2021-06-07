@@ -22,6 +22,116 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <VideoView
+            android:id="@+id/palayback_video"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:padding="16dp"
+            android:background="@drawable/background_black_radius_alpha_cell"
+            android:id="@+id/pause_tip_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@mipmap/stop"
+                />
+
+            <TextView
+                android:layout_marginLeft="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_14"
+                android:text="@string/paused"/>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/playback_control"
+            android:layout_width="0dp"
+            android:background="@drawable/background_white_black_gradient"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/palayback_video"
+            app:layout_constraintEnd_toEndOf="@id/palayback_video"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_start"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:padding="4dp"
+                app:layout_constraintTop_toTopOf="@id/playback_control_orientation"
+                app:layout_constraintBottom_toBottomOf="@id/playback_control_orientation"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@mipmap/start"
+                android:layout_marginStart="7dp" />
+
+            <TextView
+                android:id="@+id/tv_current_pos"
+                android:textColor="@color/white"
+                android:layout_marginStart="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/iv_start"
+                app:layout_constraintTop_toTopOf="@id/playback_control_orientation"
+                app:layout_constraintBottom_toBottomOf="@id/playback_control_orientation" />
+
+            <TextView
+                android:id="@+id/tv_all_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toStartOf="@id/playback_control_orientation"
+                app:layout_constraintTop_toTopOf="@id/playback_control_orientation"
+                app:layout_constraintBottom_toBottomOf="@id/playback_control_orientation" />
+
+            <SeekBar
+                android:id="@+id/video_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/playback_control_orientation"
+                app:layout_constraintBottom_toBottomOf="@id/playback_control_orientation"
+                app:layout_constraintStart_toEndOf="@id/tv_current_pos"
+                app:layout_constraintEnd_toStartOf="@id/tv_all_time"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:thumb="@drawable/thumb_drawable"
+                android:maxHeight="2dp"
+                android:progressDrawable="@drawable/seekbar_background_style"
+                />
+
+            <ImageView
+                android:id="@+id/playback_control_orientation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/orientation"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

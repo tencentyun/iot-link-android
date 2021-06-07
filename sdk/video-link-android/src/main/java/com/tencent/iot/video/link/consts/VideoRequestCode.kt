@@ -9,5 +9,6 @@ object VideoRequestCode {
     const val video_describe_url = 20003
     const val video_describe_record_date = 20004
     const val video_describe_snapshot = 20005
+    const val video_describe_video_url = 20006
     /*************video接口结束**************/
 }
