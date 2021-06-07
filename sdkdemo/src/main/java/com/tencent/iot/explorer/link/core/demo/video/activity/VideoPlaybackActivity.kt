@@ -1,7 +1,10 @@
 package com.tencent.iot.explorer.link.core.demo.video.activity
 
+import android.content.pm.ActivityInfo
 import android.text.TextUtils
+import android.view.View
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.ViewPager
 import com.alibaba.fastjson.JSON
 import com.google.android.material.tabs.TabLayout
@@ -13,6 +16,9 @@ import com.tencent.iot.explorer.link.core.demo.video.fragment.VideoCloudPlayback
 import com.tencent.iot.explorer.link.core.demo.view.PageAdapter
 import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.android.synthetic.main.activity_video_playback.*
+import kotlinx.android.synthetic.main.activity_video_playback.v_title
+import kotlinx.android.synthetic.main.activity_video_preview.*
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
 import java.util.*
 
@@ -65,6 +71,30 @@ class VideoPlaybackActivity : BaseActivity() {
         })
 
         fragment_pager.setOnPageChangeListener(pageSelectListener)
+        page1.setOnOrientationChangedListener(onOrientationChangedListener)
+    }
+
+    private var onOrientationChangedListener = object : VideoCloudPlaybackFragment.OnOrientationChangedListener {
+        override fun onOrientationChanged(portrait: Boolean) {
+            var layoutParams = layout_video.layoutParams as ConstraintLayout.LayoutParams
+            var fitSize = 0
+            var visibility = View.VISIBLE
+
+            if (portrait) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                visibility = View.GONE
+                fitSize = ConstraintLayout.LayoutParams.MATCH_PARENT
+            }
+            v_title.visibility = visibility
+            tab_playback.visibility = visibility
+            v_line.visibility = visibility
+
+            layoutParams.height = fitSize
+            layoutParams.width = fitSize
+            layout_video.layoutParams = layoutParams
+        }
     }
 
     private var pageSelectListener = object : ViewPager.OnPageChangeListener{
