@@ -29,6 +29,13 @@ class EventPresenter : ParentPresenter<EventModel, EventView> {
         model?.setDeviceName(deviceName)
     }
 
+    fun getDeviceName() : String {
+        model?.let {
+            return it.getDeviceName()
+        }
+        return ""
+    }
+
     fun getCurrentDayEventsData() {
         model?.getCurrentDayEventsData()
     }
