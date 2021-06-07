@@ -3,7 +3,6 @@ package com.tencent.iot.video.link.service
 import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import com.alibaba.fastjson.JSONPObject
 import com.tencent.iot.video.link.util.JsonManager
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoRequestCode
@@ -64,6 +63,19 @@ open class VideoBaseService(secretId: String, secretKey: String) {
         }
         basePost(VideoHttpUtil.VIDEO_SERVICE + VideoHttpUtil.REST_HOST_URL,
             param, headerParams, callback, VideoRequestCode.video_describe_snapshot)
+    }
+
+    fun getVideoUrl(videoUrl: String, expireTime: kotlin.Long, callback: VideoCallback) {
+        var headerParams = videoCommonHeaderParams("GenerateSignedVideoURL", "2020-12-15")
+        val param = TreeMap<String, Any>()
+        param["VideoURL"] = videoUrl
+        param["ExpireTime"] = expireTime
+        val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
+        if (authorization != null) {
+            headerParams["Authorization"] = authorization
+        }
+        basePost(VideoHttpUtil.VIDEO_SERVICE + VideoHttpUtil.REST_HOST_URL,
+            param, headerParams, callback, VideoRequestCode.video_describe_video_url)
     }
 
     fun getIPCRecordData(productId: String, devName: String, startDate: Date, endDate: Date, callback: VideoCallback) {
