@@ -1,32 +1,46 @@
 package com.tencent.iot.explorer.link.core.demo.video.activity
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
+import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
+import com.tencent.iot.explorer.link.core.demo.video.adapter.ActionListAdapter
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.core.demo.video.dialog.VideoQualityDialog
+import com.tencent.iot.explorer.link.core.demo.video.entity.ActionRecord
+import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
-import com.tencent.iot.explorer.link.rtc.ui.utils.Utils
+import com.tencent.iot.explorer.link.core.demo.video.mvp.presenter.EventPresenter
+import com.tencent.iot.explorer.link.core.demo.video.mvp.view.EventView
 import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.android.synthetic.main.activity_video_preview.*
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
 import java.util.*
 
 
-class VideoPreviewActivity : BaseActivity() {
+class VideoPreviewActivity : BaseActivity(), EventView {
     private var orientationV = true
+    private var adapter : ActionListAdapter? = null
+    private var records : MutableList<ActionRecord> = ArrayList()
+    private var handler = Handler()
+    private lateinit var presenter: EventPresenter
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
     }
 
     override fun initView() {
+        presenter = EventPresenter(this@VideoPreviewActivity)
         var bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
         bundle?.let {
             var videoConfig = bundle.getString(VideoConst.VIDEO_CONFIG)
@@ -35,11 +49,24 @@ class VideoPreviewActivity : BaseActivity() {
             var devInfo = JSON.parseObject(videoConfig, DevUrl2Preview::class.java)
             devInfo?.let {
                 tv_title.setText(it.devName)
+                presenter.setDeviceName(it.devName)
             }
         }
 
+        var linearLayoutManager = LinearLayoutManager(this@VideoPreviewActivity)
+        adapter = ActionListAdapter(this@VideoPreviewActivity, records)
+        list_event.layoutManager = linearLayoutManager
+        list_event.adapter = adapter
+
         tv_video_quality.setText(R.string.video_quality_medium_str)
         today_tip.setText(getString(R.string.today) + " " + getweekDay())
+        records.clear()
+        App.data.accessInfo?.let {
+            presenter.setAccessId(it.accessId)
+            presenter.setAccessToken(it.accessToken)
+            presenter.setProductId(it.productId)
+            presenter.getCurrentDayEventsData()
+        }
     }
 
     private fun getweekDay() : String {
@@ -93,6 +120,19 @@ class VideoPreviewActivity : BaseActivity() {
         iv_down.setOnClickListener {  }
         iv_right.setOnClickListener {  }
         iv_left.setOnClickListener {  }
+        adapter?.setOnItemClicked(onItemVideoClicked)
+    }
+
+    private var onItemVideoClicked = object : ActionListAdapter.OnItemClicked {
+        override fun onItemVideoClicked(pos: Int) {
+            var intent = Intent(this@VideoPreviewActivity, VideoPlaybackActivity::class.java)
+            var bundle = Bundle()
+            var dev = DevInfo()
+            dev.deviceName = presenter.getDeviceName()
+            bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(dev))
+            intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
+            startActivity(intent)
+        }
     }
 
     private var switchVideoQualityListener = object : View.OnClickListener {
@@ -187,5 +227,11 @@ class VideoPreviewActivity : BaseActivity() {
         btn_layout.layoutParams = btnLayoutParams
     }
 
+    override fun eventReady(events: MutableList<ActionRecord>) {
+        handler.post(Runnable {
+            records.addAll(events)
+            adapter?.notifyDataSetChanged()
+        })
+    }
 
 }
