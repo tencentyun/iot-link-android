@@ -1,8 +1,14 @@
 package com.tencent.iot.explorer.link.core.demo.video.fragment
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Handler
+import android.util.Log
 import android.view.View
+import android.widget.MediaController
+import android.widget.SeekBar
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
@@ -12,6 +18,7 @@ import com.tencent.iot.explorer.link.core.demo.entity.BaseResponse
 import com.tencent.iot.explorer.link.core.demo.entity.TimeBlock
 import com.tencent.iot.explorer.link.core.demo.entity.VideoHistory
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
+import com.tencent.iot.explorer.link.core.demo.response.SignedUrlResponse
 import com.tencent.iot.explorer.link.core.demo.video.adapter.ActionListAdapter
 import com.tencent.iot.explorer.link.core.demo.video.dialog.CalendarDialog
 import com.tencent.iot.explorer.link.core.demo.video.dialog.CalendarDialog.OnClickedListener
@@ -26,20 +33,38 @@ import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineView
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineViewChangeListener
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.service.VideoBaseService
+import kotlinx.android.synthetic.main.activity_date_ipc.*
+import kotlinx.android.synthetic.main.activity_ipc.*
+import kotlinx.android.synthetic.main.activity_video_preview.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_date
+import kotlinx.coroutines.*
+import java.lang.Runnable
+import java.net.URLDecoder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class VideoCloudPlaybackFragment : BaseFragment(), EventView {
-    var dateFormat = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN, Locale.getDefault())
+
+class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by MainScope() {
+    private var dateFormat = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN, Locale.getDefault())
     var devInfo: DevInfo? = null
-    var baseUrl = ""
-    var adapter : ActionListAdapter? = null
-    var records : MutableList<ActionRecord> = ArrayList()
-    var handler = Handler()
-    lateinit var presenter: EventPresenter
+    private var baseUrl = ""
+    private var adapter : ActionListAdapter? = null
+    private var records : MutableList<ActionRecord> = ArrayList()
+    private var handler = Handler()
+    private var job : Job? = null
+    @Volatile
+    private var portrait = true
+    private lateinit var presenter: EventPresenter
+    private var URL_FORMAT = "%s?starttime_epoch=%s&endtime_epoch=%s"
+    private var seekBarJob : Job? = null
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
+    }
 
     override fun getContentView(): Int {
         return R.layout.fragment_video_cloud_playback
@@ -51,9 +76,10 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView {
         tv_date.setText(dateFormat.format(System.currentTimeMillis()))
         setListener()
         var linearLayoutManager = LinearLayoutManager(context)
-        adapter = ActionListAdapter(records)
+        adapter = ActionListAdapter(context, records)
         action_list_view.layoutManager = linearLayoutManager
         action_list_view.adapter = adapter
+        playback_control.visibility = View.GONE
 
         // 获取当前时间节点以前的事件云内容
         records.clear()
@@ -153,6 +179,12 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView {
                                 time_line.setTimeLineTimeDay(Date(dataList.get(0).startTime.time))
                                 time_line.timeBlockInfos = dataList
                                 time_line.invalidate()
+
+                                var url = String.format(URL_FORMAT, baseUrl,
+                                    (dataList.get(0).startTime.time / 1000).toString(),
+                                    (dataList.get(0).endTime.time / 1000).toString())
+
+                                playVideo(url, 0)
                             }
                         }
                     }
@@ -201,14 +233,194 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView {
         }
 
         time_line.setTimelineChangeListener(timeLineViewChangeListener)
-    }
-
-    var timeLineViewChangeListener = object : TimeLineViewChangeListener {
-        override fun onChange(date: Date?, timeLineView: TimeLineView?) {
-            date?.let {
-
+        layout_video.setOnClickListener {
+            if (playback_control.visibility == View.VISIBLE) {
+                playback_control.visibility = View.GONE
+                job?.let {
+                    it.cancel()
+                }
+            } else {
+                playback_control.visibility = View.VISIBLE
+                job = launch {
+                    delay(5 * 1000)
+                    playback_control.visibility = View.GONE
+                }
             }
         }
+
+        playback_control_orientation.setOnClickListener {
+            portrait = !portrait
+            onOrientationChangedListener?.onOrientationChanged(portrait)
+            var moreSpace = 12
+            var marginWidth = 0
+            if (portrait) {
+                layout_control.visibility = View.VISIBLE
+                v_space.visibility = View.VISIBLE
+            } else {
+                layout_control.visibility = View.GONE
+                v_space.visibility = View.GONE
+                moreSpace = 32
+                marginWidth = 73
+            }
+
+            var btnLayoutParams = playback_control_orientation.layoutParams as ConstraintLayout.LayoutParams
+            btnLayoutParams.bottomMargin = dp2px(moreSpace)
+            playback_control_orientation.layoutParams = btnLayoutParams
+
+            var videoLayoutParams = palayback_video.layoutParams as ConstraintLayout.LayoutParams
+            videoLayoutParams.marginStart = dp2px(marginWidth)
+            videoLayoutParams.marginEnd = dp2px(marginWidth)
+            palayback_video.layoutParams = videoLayoutParams
+        }
+
+        playback_control.setOnClickListener {  }
+        palayback_video.setOnInfoListener(onInfoListener)
+        iv_start.setOnClickListener {
+
+            if (palayback_video.isPlaying) {
+                palayback_video.pause()
+                iv_start.setImageResource(R.mipmap.start)
+                seekBarJob?.cancel()
+            } else {
+                palayback_video.start()
+                iv_start.setImageResource(R.mipmap.stop)
+                startJobRereshTimeAndProgress()
+            }
+        }
+
+        video_seekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
+        palayback_video.setOnErrorListener(onErrorListener)
+    }
+
+    private var onErrorListener = object : MediaPlayer.OnErrorListener {
+        override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+            video_seekbar.progress = 0
+            video_seekbar.max = 0
+            tv_current_pos.setText("00:00:00")
+            tv_all_time.setText("00:00:00")
+            iv_start.setImageResource(R.mipmap.start)
+            Toast.makeText(context, getString(R.string.no_data), Toast.LENGTH_SHORT).show()
+            iv_start.isClickable = false
+            return true
+        }
+    }
+
+    private var onSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            if (fromUser && palayback_video.isPlaying) {  // 是用户操作的，且视频正在播放，调整视频到指定的时间点
+                palayback_video.seekTo(progress * 1000)
+                return
+            }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+    }
+
+    private var timeLineViewChangeListener = object : TimeLineViewChangeListener {
+        override fun onChange(date: Date?, timeLineView: TimeLineView?) {
+            if (timeLineView == null) return
+            date?.let {
+                for (j in 0 until timeLineView!!.timeBlockInfos.size) {
+                    var blockTime = timeLineView!!.timeBlockInfos!!.get(j)
+                    if (blockTime.startTime.time <= date.time && blockTime.endTime.time >= date.time) {
+                        var url = String.format(URL_FORMAT, baseUrl,
+                            (blockTime.startTime.time / 1000).toString(),
+                            (blockTime.endTime.time / 1000).toString())
+
+                        var offest = date.time - blockTime.startTime.time
+                        Log.e("XXX", "date.time " + date.time)
+                        Log.e("XXX", "blockTime.startTime.time " + blockTime.startTime.time)
+                        Log.e("XXX", "blockTime.endTime.time " + blockTime.endTime.time)
+                        playVideo(url, offest)
+                        return@onChange
+                    }
+                }
+
+                // 如果对应时间段没有视频内容
+                palayback_video.setVideoURI(Uri.parse(""))
+            }
+        }
+    }
+
+    private fun playVideo(url: String, offset: Long) {
+        App.data.accessInfo?.let {
+            var expireDate = Date((Date().time + 60 * 60 * 1000))
+            var time = expireDate.time / 1000
+            VideoBaseService(it.accessId, it.accessToken).getVideoUrl(url, time, object : VideoCallback{
+                override fun fail(msg: String?, reqCode: Int) {
+                    ToastDialog(context, ToastDialog.Type.WARNING, msg?:"", 2000).show()
+                }
+
+                override fun success(response: String?, reqCode: Int) {
+                    var json = JSONObject.parseObject(response)
+                    json?.let {
+                        var value = it.getJSONObject("Response")
+                        value?.let {
+                            var eventResp = JSONObject.parseObject(it.toJSONString(), SignedUrlResponse::class.java)
+                            eventResp?.let {
+                                var url2Play = URLDecoder.decode(it.signedVideoURL)
+                                startVideo(url2Play, offset)
+                            }
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    private fun startVideo(url: String, offset: Long) {
+        Log.e("XXX", "url " + url)
+        Log.e("XXX", "offset " + offset)
+        val uri: Uri = Uri.parse(url)
+        palayback_video.setVideoURI(uri)
+        seekBarJob?.cancel()
+        palayback_video.setOnPreparedListener {
+            var realOffset = offset
+            if (realOffset >= it.duration) {
+                realOffset = it.duration.toLong()
+            }
+            tv_current_pos.setText(formatTime(realOffset))
+            tv_all_time.setText(formatTime(it.duration.toLong()))
+            Log.e("XXX", "tv_current_pos " + tv_current_pos.text.toString())
+            Log.e("XXX", "tv_all_time " + tv_all_time.text.toString())
+            video_seekbar.max = it.duration / 1000
+            startJobRereshTimeAndProgress()
+            iv_start.isClickable = true
+            it.start()
+            it.seekTo(realOffset.toInt())
+        }
+    }
+
+    private fun startJobRereshTimeAndProgress() {
+        seekBarJob = launch {
+            while (isActive) {
+                delay(1000)
+                tv_current_pos.setText(formatTime(palayback_video.currentPosition.toLong()))
+                video_seekbar.progress = palayback_video.currentPosition / 1000
+            }
+        }
+    }
+
+    private var onInfoListener = object : MediaPlayer.OnInfoListener {
+        override fun onInfo(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+            mp?.let {
+                if (it.isPlaying) {
+                    iv_start.setImageResource(R.mipmap.stop)
+                } else {
+                    iv_start.setImageResource(R.mipmap.start)
+                }
+            }?:let {
+                iv_start.setImageResource(R.mipmap.start)
+            }
+            return true
+        }
+    }
+
+    private fun formatTime(time: Long): String {
+        var hours = time / (1000 * 60 * 60)
+        var leftMin = time % (1000 * 60 * 60)
+        return String.format("%02d:%02d:%02d", hours, leftMin / (1000 * 60), (leftMin / 1000) % 60)
     }
 
     private fun dateConvertionWithSplit(str: String): String? {
@@ -229,4 +441,13 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView {
         })
     }
 
+    interface OnOrientationChangedListener {
+        fun onOrientationChanged(portrait : Boolean)
+    }
+
+    private var onOrientationChangedListener : OnOrientationChangedListener? = null
+
+    fun setOnOrientationChangedListener(onOrientationChangedListener : OnOrientationChangedListener) {
+        this.onOrientationChangedListener = onOrientationChangedListener
+    }
 }
