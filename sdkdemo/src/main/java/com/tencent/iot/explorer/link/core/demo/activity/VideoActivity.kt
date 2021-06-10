@@ -39,6 +39,8 @@ class VideoActivity : BaseActivity(), View.OnClickListener, XP2PCallback,
     private var isPlaying: Boolean = true
     private var isP2PChannelAvailable: Boolean = false
 
+    private lateinit var surface: Surface
+
     private var timer: Timer? = null
 
     private lateinit var mPlayer: IjkMediaPlayer
@@ -202,6 +204,7 @@ class VideoActivity : BaseActivity(), View.OnClickListener, XP2PCallback,
                                 if (!TextUtils.isEmpty(url_prefix) && mPlayer != null) {
                                     val url = url_prefix + "ipc.flv?action=live"
                                     mPlayer.reset()
+                                    mPlayer.setSurface(surface)
                                     mPlayer.dataSource = url
                                     mPlayer.prepareAsync()
                                     mPlayer.start()
@@ -296,6 +299,9 @@ class VideoActivity : BaseActivity(), View.OnClickListener, XP2PCallback,
     }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
-        mPlayer.setSurface(Surface(surface))
+        if (surface != null) {
+            this.surface = Surface(surface)
+        }
+        mPlayer.setSurface(this.surface)
     }
 }
