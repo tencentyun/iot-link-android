@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.core.demo.video.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -20,7 +21,7 @@ class DevPreviewAdapter(context: Context, list: MutableList<DevUrl2Preview>) : R
 
     class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
         var devName: TextView
-        var videoView: View
+        var videoView: TextureView
         var offlineTip: TextView
 
         init {
@@ -43,6 +44,7 @@ class DevPreviewAdapter(context: Context, list: MutableList<DevUrl2Preview>) : R
         } else {
             holder.offlineTip.visibility = View.VISIBLE
         }
+        holder.videoView.surfaceTextureListener = list.get(position).surfaceTextureListener
     }
 
     override fun getItemCount(): Int {
