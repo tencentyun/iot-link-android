@@ -420,7 +420,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        mTRTCCalling.exitRoom();
+        TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_VIDEO_CALL, mSponsorUserInfo.getUserId());
         stopCameraAndFinish();
         super.onBackPressed();
     }
