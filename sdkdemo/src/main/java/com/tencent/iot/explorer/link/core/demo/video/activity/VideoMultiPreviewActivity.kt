@@ -23,17 +23,20 @@ import kotlinx.android.synthetic.main.activity_video_multi_preview.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.Runnable
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 
 
 private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
+private var allDevUrl: MutableList<DevUrl2Preview> = CopyOnWriteArrayList()
 
 class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
     lateinit var gridLayoutManager : GridLayoutManager
     lateinit var linearLayoutManager : LinearLayoutManager
-    private var allDevUrl: MutableList<DevUrl2Preview> = ArrayList()
     private var adapter : DevPreviewAdapter? = null
+    private var tag = VideoMultiPreviewActivity::class.simpleName
 
     override fun getContentView(): Int {
         return R.layout.activity_video_multi_preview
@@ -78,7 +81,10 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
             var player = IjkMediaPlayer()
             allDevUrl.get(i).surfaceTextureListener = object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
-                    player.setSurface(Surface(surface))
+                    surface?.let {
+                        allDevUrl.get(i).surface = Surface(surface)
+                        player.setSurface(allDevUrl.get(i).surface)
+                    }
                 }
 
                 override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
@@ -108,6 +114,7 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
                 player?.let {
                     val url = urlPrefix + "ipc.flv?action=live"
                     playPlayer(it, url)
+                    keepPlayerplay("${App.data.accessInfo!!.productId}/${devName}")
                 }
             }
         }).start()
@@ -120,6 +127,7 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 1)
         player.dataSource = url
         player.prepareAsync()
         player.start()
@@ -158,45 +166,78 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
     override fun commandRequest(id: String?, msg: String?) {}
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
+        Log.d(tag, "id=${id},event=${event}")
         if (event == 1003) {
-            restartPlayer(id)
+            var lockHolder = getHolderById(id)
+            lockHolder?.lock?.let {
+                synchronized(it) {
+                    it.notify()
+                }
+            } // 唤醒守护线程
         } else if (event == 1004 || event == 1005) {
-            countDownLatchs.get(id)?.countDown()
+            countDownLatchs.get(id)?.let {
+                it.countDown()
+            }
         }
     }
 
-    private fun restartPlayer(id: String?) {
+    private fun getHolderById(id: String?) : DevUrl2Preview? {
+        if (TextUtils.isEmpty(id)) return null
+
+        var playerHolder: DevUrl2Preview? = null
+        for (devUrl in allDevUrl) {
+            if (!TextUtils.isEmpty(devUrl.devName) && id!!.endsWith(devUrl.devName)) {
+                playerHolder = devUrl
+                break
+            }
+        }
+        return playerHolder
+    }
+
+    private fun keepPlayerplay(id: String?) {
         if (TextUtils.isEmpty(id)) return
 
+        // 开启守护线程
         Thread(Runnable {
-            var playerHolder : DevUrl2Preview? = null
-            for (devUrl in allDevUrl) {
-                if (!TextUtils.isEmpty(devUrl.devName) && id!!.endsWith(devUrl.devName)) {
-                    playerHolder = devUrl
-                    break
+            var objectLock = Object()
+            while (true) {
+                var playerHolder = getHolderById(id)
+                if (playerHolder == null || TextUtils.isEmpty(playerHolder.devName)) return@Runnable
+
+                var tmpCountDownLatch = CountDownLatch(1)
+                countDownLatchs.put(id!!, tmpCountDownLatch)
+
+                synchronized(playerHolder.lock) {
+                    playerHolder.lock.wait()
                 }
-            }
-            if (playerHolder == null || TextUtils.isEmpty(playerHolder.devName)) return@Runnable
+                if (!playerHolder.keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
 
-            XP2P.stopService(id)
-            var started = XP2P.startServiceWithXp2pInfo(id,
-                App.data.accessInfo!!.productId, playerHolder.devName, "")
-            if (started != 0) return@Runnable
-
-            var tmpCountDownLatch = CountDownLatch(1)
-            countDownLatchs.put(id!!, tmpCountDownLatch)
-            tmpCountDownLatch.await()
-
-            val urlPrefix = XP2P.delegateHttpFlv(id)
-            if (!TextUtils.isEmpty(urlPrefix)) {
-                playerHolder.player?.let {
-                    val url = urlPrefix + "ipc.flv?action=live"
-                    it.reset()
-                    it.dataSource = url
-                    it.prepareAsync()
-                    it.start()
+                // 发现断开尝试恢复视频，每隔一秒尝试一次
+                var flag = -1
+                while (flag != 0) {
+                    XP2P.stopService(id)
+                    flag = XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, playerHolder.devName, "")
+                    synchronized(objectLock) {
+                        objectLock.wait(1000)
+                    }
                 }
 
+                Log.d(tag, "id=${id} keepPlayerplay countDownLatch wait ")
+                countDownLatchs.put(id!!, tmpCountDownLatch)
+                tmpCountDownLatch.await()
+                Log.d(tag, "id=${id} keepPlayerplay countDownLatch passed")
+
+                val urlPrefix = XP2P.delegateHttpFlv(id)
+                if (!TextUtils.isEmpty(urlPrefix)) {
+                    playerHolder.player?.let {
+                        val url = urlPrefix + "ipc.flv?action=live"
+                        it.reset()
+                        it.setSurface(playerHolder.surface)
+                        it.dataSource = url
+                        it.prepareAsync()
+                        it.start()
+                    }
+                }
             }
         }).start()
     }
@@ -220,5 +261,15 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
 
         XP2P.setCallback(null)
         countDownLatchs.clear()
+
+        // 关闭所有守护线程
+        for (devUrl in allDevUrl) {
+            devUrl.keepAliveThreadRuning = false
+            devUrl.lock?.let {
+                synchronized(it) {
+                    it.notify()
+                }
+            }
+        }
     }
 }
