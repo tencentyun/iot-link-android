@@ -392,7 +392,8 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // 退出这个界面的时候，需要挂断
-        mTRTCCalling.exitRoom();
+        TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
+        removeCallbackAndFinish();
         super.onBackPressed();
     }
 
