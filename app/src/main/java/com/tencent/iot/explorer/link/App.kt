@@ -411,17 +411,37 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                     audioCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_AUDIO_CALL_STATUS)
                 }
 
-                if (videoCallStatus == -1 && audioCallStatus == -1) {
-                    return; //过滤掉非音视频通话的消息
-                }
-
                 var deviceId = ""
                 if (payloadParamsJson.has(MessageConst.USERID)) {
                     deviceId = payloadParamsJson.getString(MessageConst.USERID)
                 }
 
-                // 判断主动呼叫的回调中收到的_sys_userid不为自己的userid则被其他用户抢先呼叫设备了，提示用户 对方正忙...
+                var rejectId = ""
+                if (payloadParamsJson.has(MessageConst.TRTC_EXTRA_INFO)) {
+                    val extraInfo = org.json.JSONObject(payloadParamsJson.getString(MessageConst.TRTC_EXTRA_INFO))
+                    if (extraInfo.has(MessageConst.TRTC_REJECT_USERID)) {
+                        rejectId = extraInfo.getString(MessageConst.TRTC_REJECT_USERID)
+                    }
+                }
+
+                if (videoCallStatus == -1 && audioCallStatus == -1 && rejectId.isEmpty()) {
+                    return; //过滤掉非音视频通话的消息
+                }
+
                 val userId = SharePreferenceUtil.getString(activity, App.CONFIG, CommonField.USER_ID)
+                // 判断主动呼叫的回调中收到_sys_extra_info中的reject_userId为自己的userId，表示设备正和其他设备通话，拒绝了本次呼叫
+                if (!rejectId.isEmpty()) {
+                    if (data.callingDeviceId != "" && rejectId == userId && TRTCUIManager.getInstance().isCalling) {
+                        TRTCUIManager.getInstance().userBusy()
+                        TRTCUIManager.getInstance().exitRoom()
+                        activity?.runOnUiThread {
+                            Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                    return
+                }
+
+                // 判断主动呼叫的回调中收到的_sys_userid不为自己的userid则被其他用户抢先呼叫设备了，提示用户 对方正忙...
                 if (data.callingDeviceId != "" && deviceId != userId) {
                     if (TRTCUIManager.getInstance().isCalling) { //当前正显示音视频通话页面，finish掉
                         if (data.callingDeviceId == payload.deviceId) {
