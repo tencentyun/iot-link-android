@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "245c517f_de8aae7c",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/util/ImageSelect.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-15T11:04:21Z",
+      "side": 1,
+      "message": "这个方法貌似过期了，看下要不要改成下面这种\nval file \u003d File(filePath) \nMediaScannerConnection.scanFile(context, arrayOf(file.toString()), null, null)",
+      "range": {
+        "startLine": 124,
+        "startChar": 12,
+        "endLine": 124,
+        "endChar": 95
+      },
+      "revId": "1f4689b441e679de53920f897b23855350370270",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ec7254d_701ab8c2",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/video/activity/VideoPreviewActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-15T11:04:21Z",
+      "side": 1,
+      "message": "改成mute是不是好点",
+      "range": {
+        "startLine": 74,
+        "startChar": 16,
+        "endLine": 74,
+        "endChar": 25
+      },
+      "revId": "1f4689b441e679de53920f897b23855350370270",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee8e0004_e700d7fd",
+        "filename": "sdkdemo/src/main/java/com/tencent/iot/explorer/link/core/demo/video/activity/VideoPreviewActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-15T11:04:21Z",
+      "side": 1,
+      "message": "这个一直是true",
+      "range": {
+        "startLine": 301,
+        "startChar": 20,
+        "endLine": 301,
+        "endChar": 38
+      },
+      "revId": "1f4689b441e679de53920f897b23855350370270",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
