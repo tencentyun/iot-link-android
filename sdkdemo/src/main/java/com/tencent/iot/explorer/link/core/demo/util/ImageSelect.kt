@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.core.demo.util
 
+import android.R.attr
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -9,8 +11,10 @@ import android.provider.MediaStore
 import android.widget.Toast
 import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.*
+
 
 object ImageSelect {
 
@@ -96,20 +100,29 @@ object ImageSelect {
         }
     }
 
-    /**
-     * 保存图片
-     */
     fun saveBitmap(bitmap: Bitmap): File {
-        val file = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath,
-            "${System.currentTimeMillis()}.jpg"
-        )
+        return saveBitmap(null, bitmap)
+    }
+
+    fun saveBitmap(context: Context?, bitmap: Bitmap): File {
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath, "${System.currentTimeMillis()}.jpg")
+        return saveBitmap(context, bitmap, file.absolutePath)
+    }
+
+    fun saveBitmap(context: Context?, bitmap: Bitmap, path: String): File {
+        val file = File(path)
         BufferedOutputStream(FileOutputStream(file)).run {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, this)
             flush()
             close()
         }
         fileList.add(file)
+
+        context?.let {
+            if (!file.exists()) return@let
+            MediaStore.Images.Media.insertImage(it.getContentResolver(), file.absolutePath, file.name, null)
+            it.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
+        }
         return file
     }
 

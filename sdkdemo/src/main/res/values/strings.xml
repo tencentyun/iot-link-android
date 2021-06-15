@@ -89,6 +89,7 @@
     <string name="video_quality">画质</string>
     <string name="no_data">没有数据</string>
     <string name="paused">已暂停</string>
+    <string name="capture_successed">已保存至相册</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
