@@ -33,8 +33,6 @@ import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineView
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineViewChangeListener
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.service.VideoBaseService
-import kotlinx.android.synthetic.main.activity_date_ipc.*
-import kotlinx.android.synthetic.main.activity_ipc.*
 import kotlinx.android.synthetic.main.activity_video_preview.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_date

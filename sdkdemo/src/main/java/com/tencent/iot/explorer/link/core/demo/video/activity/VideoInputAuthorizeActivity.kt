@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.demo.BuildConfig
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.video.dialog.HistoryAccessInfoDialog
@@ -49,6 +50,11 @@ class VideoInputAuthorizeActivity : BaseActivity() , CoroutineScope by MainScope
                         product_id_layout.ev_content.setText(accessInfo.productId)
                         access_id_layout.ev_content.setSelection(accessInfo.accessId.length)
                     }
+                }?:let{
+                    access_id_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretId)
+                    access_token_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretKey)
+                    product_id_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoProductId)
+                    access_id_layout.ev_content.setSelection(BuildConfig.TencentIotLinkVideoSDKDemoSecretId.length)
                 }
             }
         }
