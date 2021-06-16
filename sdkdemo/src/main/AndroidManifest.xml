@@ -21,9 +21,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MultiVideoActivity" />
-        <activity android:name=".activity.PlaybackVideoActivity" />
-        <activity android:name=".activity.VideoActivity" />
         <activity android:name=".activity.BindMobilePhoneActivity" />
         <activity android:name=".activity.ForgotPasswordActivity" />
         <activity android:name=".activity.SetPasswordActivity" />
@@ -65,7 +62,6 @@
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
         <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.VideoModuleActivity" />
         <activity android:name=".activity.ModuleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,11 +75,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AddDeviceActivity" />
-        <activity android:name=".activity.IPCActivity" />
-        <activity android:name=".activity.DateIPCActivity" />
-        <activity android:name=".activity.DateSelectActivity" />
-        <activity android:name=".activity.VideoMessageActivity" />
-        <activity android:name=".activity.InputAuthorizeActivity" />
     </application>
 
 </manifest>

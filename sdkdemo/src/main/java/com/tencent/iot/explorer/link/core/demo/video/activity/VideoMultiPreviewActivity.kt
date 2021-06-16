@@ -18,7 +18,6 @@ import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
-import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.activity_video_multi_preview.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer

@@ -1,6 +1,5 @@
 package com.tencent.iot.explorer.link.core.demo.util
 
-import android.R.attr
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -11,7 +10,6 @@ import android.provider.MediaStore
 import android.widget.Toast
 import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.*
 

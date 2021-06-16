@@ -40,13 +40,11 @@ import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
-import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.activity_video_preview.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.io.File
-import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap

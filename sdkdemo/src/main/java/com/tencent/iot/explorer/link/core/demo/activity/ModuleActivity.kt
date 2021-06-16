@@ -18,8 +18,7 @@ class ModuleActivity : BaseActivity() {
         return R.layout.activity_module
     }
 
-    override fun initView() {
-    }
+    override fun initView() {}
 
     override fun setListener() {
         btn_1.setOnClickListener {
@@ -28,20 +27,17 @@ class ModuleActivity : BaseActivity() {
 
         btn_2.setOnClickListener {
             if (checkPermissions(permissions)) {
-                jumpActivity(InputAuthorizeActivity::class.java)
+                jumpActivity(VideoOptionsActivity::class.java)
             } else {
                 requestPermission(permissions)
             }
         }
 
-        btn_3.setOnClickListener {
-//            jumpActivity()
-            jumpActivity(VideoOptionsActivity::class.java)
-        }
+        btn_3.setOnClickListener {}
     }
 
     override fun permissionAllGranted() {
-        jumpActivity(InputAuthorizeActivity::class.java)
+        jumpActivity(VideoOptionsActivity::class.java)
     }
 
 }
