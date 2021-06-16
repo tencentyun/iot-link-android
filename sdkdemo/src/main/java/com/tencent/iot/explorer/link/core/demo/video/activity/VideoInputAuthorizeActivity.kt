@@ -138,8 +138,9 @@ class VideoInputAuthorizeActivity : BaseActivity() , CoroutineScope by MainScope
                 accessInfos?.let {
                     if(it.contains(accessInfo)) it.remove(accessInfo)
                 }
-            } catch (e: IllegalStateException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
+                accessInfos = ArrayList()
             }
         }
 
