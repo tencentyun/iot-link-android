@@ -328,10 +328,10 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             ImageSelect.saveBitmap(this@VideoPreviewActivity, v_preview.bitmap)
             ToastDialog(this, ToastDialog.Type.SUCCESS, getString(R.string.capture_successed), 2000).show()
         }
-        iv_up.setOnClickListener {  }
-        iv_down.setOnClickListener {  }
-        iv_right.setOnClickListener {  }
-        iv_left.setOnClickListener {  }
+        iv_up.setOnClickListener(controlListener)
+        iv_down.setOnClickListener(controlListener)
+        iv_right.setOnClickListener(controlListener)
+        iv_left.setOnClickListener(controlListener)
         adapter?.setOnItemClicked(onItemVideoClicked)
         v_preview.surfaceTextureListener = this
         iv_audio.setOnClickListener {
@@ -346,6 +346,34 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
                 var volume = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM)
                 player.setVolume(volume.toFloat(), volume.toFloat())
             }
+        }
+    }
+
+    private var controlListener = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            var command = ""
+            when(v) {
+                iv_up -> {
+                    command = "action=user_define&cmd=ballhead_top"
+                }
+                iv_down -> {
+                    command = "action=user_define&cmd=ballhead_bottom"
+                }
+                iv_right -> {
+                    command = "action=user_define&cmd=ballhead_right"
+                }
+                iv_left -> {
+                    command = "action=user_define&cmd=ballhead_left"
+                }
+            }
+
+            Thread(Runnable {
+                App.data.accessInfo?.let {
+                    if (command.length <= 0) return@Runnable
+                    XP2P.postCommandRequestSync("${it.productId}/${presenter.getDeviceName()}",
+                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                }
+            }).start()
         }
     }
 
