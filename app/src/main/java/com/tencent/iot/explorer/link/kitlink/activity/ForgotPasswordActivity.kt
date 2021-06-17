@@ -99,13 +99,27 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
         val spannable = SpannableStringBuilder(showStr)
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val intent = Intent(this@ForgotPasswordActivity, WebActivity::class.java)
-                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
-                var url = CommonField.POLICY_PREFIX
-                url += "?uin=$ANDROID_ID"
-                url += CommonField.SERVICE_POLICY_SUFFIX
-                intent.putExtra(CommonField.EXTRA_TEXT, url)
-                startActivity(intent)
+                if (presenter.getCountryCode() == "86") {
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        val intent = Intent(this@ForgotPasswordActivity, WebActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
+                        var url = CommonField.POLICY_PREFIX
+                        url += "?uin=$ANDROID_ID"
+                        url += CommonField.SERVICE_POLICY_SUFFIX
+                        intent.putExtra(CommonField.EXTRA_TEXT, url)
+                        startActivity(intent)
+                    } else {
+                        OpensourceLicenseActivity.startWebWithExtra(this@ForgotPasswordActivity, getString(R.string.register_agree_2), CommonField.SERVICE_AGREEMENT_URL_CN_EN)
+                    }
+                } else {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.SERVICE_AGREEMENT_URL_US_ZH
+                    } else {
+                        url = CommonField.SERVICE_AGREEMENT_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@ForgotPasswordActivity, getString(R.string.register_agree_2), url)
+                }
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -118,13 +132,27 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
 
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val intent = Intent(this@ForgotPasswordActivity, WebActivity::class.java)
-                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
-                var url = CommonField.POLICY_PREFIX
-                url += "?uin=$ANDROID_ID"
-                url += CommonField.PRIVACY_POLICY_SUFFIX
-                intent.putExtra(CommonField.EXTRA_TEXT, url)
-                startActivity(intent)
+                if (presenter.getCountryCode() == "86") {
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        val intent = Intent(this@ForgotPasswordActivity, WebActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
+                        var url = CommonField.POLICY_PREFIX
+                        url += "?uin=$ANDROID_ID"
+                        url += CommonField.PRIVACY_POLICY_SUFFIX
+                        intent.putExtra(CommonField.EXTRA_TEXT, url)
+                        startActivity(intent)
+                    } else {
+                        OpensourceLicenseActivity.startWebWithExtra(this@ForgotPasswordActivity, getString(R.string.register_agree_4), CommonField.PRIVACY_POLICY_URL_CN_EN)
+                    }
+                } else {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.PRIVACY_POLICY_URL_US_ZH
+                    } else {
+                        url = CommonField.PRIVACY_POLICY_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@ForgotPasswordActivity, getString(R.string.register_agree_4), url)
+                }
             }
 
             override fun updateDrawState(ds: TextPaint) {
