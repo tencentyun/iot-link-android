@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.customview.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -59,6 +60,9 @@ public class IosCenterStyleDialog extends Dialog {
 
     @Override
     public void show() {
+        // 如果显示对话框的 activity 已经回收，不再显示对话框
+        if(((Activity) mContext).isFinishing() || ((Activity) mContext).isDestroyed()) return;
+
         super.show();
         // 设置dialog的宽高是全屏，注意：一定要放在show的后面，否则不是全屏显示
         WindowManager.LayoutParams params = getWindow().getAttributes();
