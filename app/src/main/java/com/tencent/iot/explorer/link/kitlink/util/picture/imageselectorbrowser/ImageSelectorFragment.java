@@ -554,6 +554,7 @@ public class ImageSelectorFragment extends Fragment implements OnClickListener{
                             // 获取文件夹名称
                             File imageFile = new File(path);
                             File folderFile = imageFile.getParentFile();
+                            if (folderFile == null) continue;
                             ImageSelectorFolderBean folder = new ImageSelectorFolderBean();
                             folder.setFileDirectoryName(folderFile.getName());
                             folder.setFristImagePath(folderFile.getAbsolutePath());
