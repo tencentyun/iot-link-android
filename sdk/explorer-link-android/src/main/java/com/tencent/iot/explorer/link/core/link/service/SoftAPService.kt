@@ -37,7 +37,11 @@ class SoftAPService(context: Context) : ConfigService(){
     private var listener: SoftAPListener? = null
 
     init {
-        createClient()
+        try {
+            createClient()
+        } catch (e : Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun createClient() {
@@ -71,9 +75,15 @@ class SoftAPService(context: Context) : ConfigService(){
      */
     fun startConnect(task: LinkTask, listener: SoftAPListener) {
         L.e("开始 soft ap 配网")
+        this.listener = listener
+
+        socket?:let {
+            fail(SEND_WIFI_FAIL, "创建 socket 失败")
+            return@startConnect
+        }
+
         hasRun = true
         this.task = task
-        this.listener = listener
         listener.onStep(SoftAPStep.STEP_LINK_START)
         thread {
             sendUdpPacketWithWifiInfo()
