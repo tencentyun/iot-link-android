@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SdkDemo</string>
+    <string name="app_name">Explorer Link Demo</string>
 
     <string name="cancel">取消</string>
     <string name="delete">删除</string>
