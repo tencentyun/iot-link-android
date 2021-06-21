@@ -60,7 +60,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/icon_wechat"
+        android:src="@mipmap/icon_wechat_drawable"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_other_login_way"/>

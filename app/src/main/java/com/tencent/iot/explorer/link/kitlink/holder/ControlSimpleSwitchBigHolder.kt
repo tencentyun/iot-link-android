@@ -20,10 +20,10 @@ class ControlSimpleSwitchBigHolder : CRecyclerView.CViewHolder<DevicePropertyEnt
     override fun show(position: Int) {
         entity?.run {
             itemView.tv_simple_big_switch_text.text = if (getValue() == "1") {
-                itemView.iv_simple_big_switch.setImageResource(R.drawable.icon_control_simple_switch_on_1)
+                itemView.iv_simple_big_switch.setImageResource(R.mipmap.icon_control_simple_switch_on_1)
                 "$name：${getString(R.string.on)}"
             } else {
-                itemView.iv_simple_big_switch.setImageResource(R.drawable.icon_control_simple_switch_off_1)
+                itemView.iv_simple_big_switch.setImageResource(R.mipmap.icon_control_simple_switch_off_1)
                 "$name：${getString(R.string.off)}"
             }
             DataHolder.instance.get<DeviceEntity>("device")?.let {
@@ -32,15 +32,15 @@ class ControlSimpleSwitchBigHolder : CRecyclerView.CViewHolder<DevicePropertyEnt
                         when (event.action) {
                             KeyEvent.ACTION_DOWN -> {
                                 if (getValue() == "1")
-                                    itemView.iv_simple_big_switch.setImageResource(R.drawable.icon_control_simple_switch_on_2)
+                                    itemView.iv_simple_big_switch.setImageResource(R.mipmap.icon_control_simple_switch_on_2)
                                 else
-                                    itemView.iv_simple_big_switch.setImageResource(R.drawable.icon_control_simple_switch_off_2)
+                                    itemView.iv_simple_big_switch.setImageResource(R.mipmap.icon_control_simple_switch_off_2)
                             }
                             KeyEvent.ACTION_UP -> {
                                 if (getValue() == "1")
-                                    itemView.iv_simple_big_switch.setImageResource(R.drawable.icon_control_simple_switch_on_1)
+                                    itemView.iv_simple_big_switch.setImageResource(R.mipmap.icon_control_simple_switch_on_1)
                                 else
-                                    itemView.iv_simple_big_switch.setImageResource(R.drawable.icon_control_simple_switch_off_1)
+                                    itemView.iv_simple_big_switch.setImageResource(R.mipmap.icon_control_simple_switch_off_1)
                                 recyclerItemView?.doAction(
                                     this@ControlSimpleSwitchBigHolder,
                                     v,

@@ -139,7 +139,7 @@ class SmartConfigStepActivity : PActivity() {
                             iv_soft_ap?.setImageResource(R.mipmap.image_soft_ap)
                         } else {
                             Picasso.get().load(hardwareGuide.bgImg)
-                                .placeholder(R.drawable.imageselector_default_error)
+                                .placeholder(R.mipmap.imageselector_default_error)
                                 .into(iv_soft_ap)
                         }
                     } else {
