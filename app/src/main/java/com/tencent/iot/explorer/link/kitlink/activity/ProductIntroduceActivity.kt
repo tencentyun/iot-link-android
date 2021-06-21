@@ -46,7 +46,7 @@ class ProductIntroduceActivity : BaseActivity(), MyCallback {
             iv_product_intrduce?.setImageResource(R.mipmap.product_intrduce)
         } else {
             Picasso.get().load(productGlobal.IconUrlAdvertise)
-                .placeholder(R.drawable.imageselector_default_error)
+                .placeholder(R.mipmap.imageselector_default_error)
                 .into(iv_product_intrduce)
         }
 

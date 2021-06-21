@@ -83,7 +83,7 @@ public class ImageSelectorPopupFolderAdapter extends BaseAdapter {
                 if(mFolders.size()>0){
                 	ImageSelectorFolderBean f = mFolders.get(0);
                 	ImageManager.show(mContext, new File(f.getImageSelectorImageBean().getImagePath()),
-                			R.drawable.imageselector_default_error, mImageSize, mImageSize, holder.iv_folder_first_img);
+                			R.mipmap.imageselector_default_error, mImageSize, mImageSize, holder.iv_folder_first_img);
 //                    Picasso.with(mContext)
 //                            .load(new File(f.getImageSelectorImageBean().getImagePath()))
 //                            .error(R.drawable.imageselector_default_error)
@@ -150,7 +150,7 @@ public class ImageSelectorPopupFolderAdapter extends BaseAdapter {
         	tv_folder_img_count.setText(data.getImages().size() + mContext.getResources().getString(R.string.imageselector_sheets));
             // 显示图片
         	ImageManager.show(mContext, new File(data.getImageSelectorImageBean().getImagePath()),
-        			R.drawable.imageselector_default_error, mImageSize, mImageSize, iv_folder_first_img);
+        			R.mipmap.imageselector_default_error, mImageSize, mImageSize, iv_folder_first_img);
 //            Picasso.with(mContext)
 //                    .load(new File(data.getImageSelectorImageBean().getImagePath()))
 //                    .placeholder(R.drawable.imageselector_default_error)

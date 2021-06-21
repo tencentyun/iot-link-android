@@ -15,7 +15,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:padding="2dp"
-            app:srcCompat="@drawable/icon_warning"/>
+            app:srcCompat="@mipmap/icon_warning"/>
 
         <TextView
             android:layout_toRightOf="@id/iv_tag_blue"

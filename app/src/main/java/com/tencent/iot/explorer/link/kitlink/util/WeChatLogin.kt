@@ -106,7 +106,7 @@ class WeChatLogin {
                     bitmap?.recycle()
                     msg.thumbData = Utils.bmpToByteArray(sendBitmap)
                 } else {
-                    val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher)
+                    val bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher)
                     val sendBitmap = Bitmap.createScaledBitmap(bitmap!!, 200, 200, true)
                     bitmap?.recycle()
                     msg.thumbData = Utils.bmpToByteArray(sendBitmap)
