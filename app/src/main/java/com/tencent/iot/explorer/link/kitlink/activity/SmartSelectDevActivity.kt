@@ -138,6 +138,6 @@ class SmartSelectDevActivity : BaseActivity(), MyCallback, VerticalTabLayout.OnT
                 vtab_device_category.getTabAt(i).setBackgroundColor(resources.getColor(R.color.gray_F5F5F5))
             }
         }
-        tab?.setBackground(R.drawable.tab)
+        tab?.setBackground(R.mipmap.tab)
     }
 }
