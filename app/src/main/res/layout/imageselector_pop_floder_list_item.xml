@@ -14,8 +14,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/imageselector_default_margin_left"
         android:scaleType="centerCrop"
-        android:src="@drawable/imageselector_default_error"
-        tools:src="@drawable/btn_back" />
+        android:src="@mipmap/imageselector_default_error"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,6 +55,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="20dp"
-        android:src="@drawable/imageselector_default_check" />
+        android:src="@mipmap/imageselector_default_check" />
 
 </RelativeLayout>
