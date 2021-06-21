@@ -104,7 +104,7 @@ public class BitmapUtils {
         try {
             return Bitmap.createScaledBitmap(weak.get(), w, h, true);
         } catch (Exception e) {
-            return getBitmapFromDrawableRes(R.drawable.imageselector_default_error);
+            return getBitmapFromDrawableRes(R.mipmap.imageselector_default_error);
         }
     }
 
