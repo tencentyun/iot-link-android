@@ -302,11 +302,11 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                 url = entity.IconUrl
             }
             if (TextUtils.isEmpty(url)) {
-                Picasso.get().load(R.drawable.device_placeholder).placeholder(R.drawable.device_placeholder)
+                Picasso.get().load(R.mipmap.device_placeholder).placeholder(R.mipmap.device_placeholder)
                     .resize(App.data.screenWith / 5, App.data.screenWith / 5).centerCrop()
                     .into(viewHolder.image)
             } else {
-                Picasso.get().load(url).placeholder(R.drawable.device_placeholder)
+                Picasso.get().load(url).placeholder(R.mipmap.device_placeholder)
                     .resize(App.data.screenWith / 5, App.data.screenWith / 5).centerCrop()
                     .into(viewHolder.image)
             }

@@ -110,7 +110,7 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
             if (!TextUtils.isEmpty(list[position].iconUrl)) {
                 Picasso.get().load(list[position].iconUrl).into(holder.ivType)
             } else {
-                Picasso.get().load(R.drawable.device_placeholder).into(holder.ivType)
+                Picasso.get().load(R.mipmap.device_placeholder).into(holder.ivType)
             }
             holder.taskDesc.setText(": " + list[position].task + list[position].unit)
         } else if (list[position].type == 2) {
@@ -166,7 +166,7 @@ class ManualTaskAdapter(list: MutableList<ManualTask>) : RecyclerView.Adapter<Ma
             if (!TextUtils.isEmpty(list[position].iconUrl)) {
                 Picasso.get().load(list[position].iconUrl).into(holder.ivType)
             } else {
-                Picasso.get().load(R.drawable.device_placeholder).into(holder.ivType)
+                Picasso.get().load(R.mipmap.device_placeholder).into(holder.ivType)
             }
 
             var prefix = ""

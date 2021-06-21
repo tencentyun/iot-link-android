@@ -59,7 +59,7 @@ class RoomDevAdapter(list: MutableList<DeviceEntity>) : RecyclerView.Adapter<Roo
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.devName.setText(list.get(position)?.AliasName)
         if (TextUtils.isEmpty(list.get(position)?.IconUrl)) {
-            Picasso.get().load(R.drawable.device_placeholder).into(holder.devImg)
+            Picasso.get().load(R.mipmap.device_placeholder).into(holder.devImg)
         } else {
             Picasso.get().load(list.get(position)?.IconUrl).into(holder.devImg)
         }
