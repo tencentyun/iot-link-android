@@ -12,7 +12,7 @@
             android:id="@+id/iv_no_device_add"
             android:layout_width="280dp"
             android:layout_height="280dp"
-            android:src="@drawable/image_no_device"
+            android:src="@mipmap/image_no_device_drawable"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"

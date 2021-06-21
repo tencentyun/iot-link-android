@@ -14,7 +14,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentTop="true"
-            android:src="@drawable/icon_warning"/>
+            android:src="@mipmap/icon_warning"/>
 
         <TextView
             android:id="@+id/tv_tag"

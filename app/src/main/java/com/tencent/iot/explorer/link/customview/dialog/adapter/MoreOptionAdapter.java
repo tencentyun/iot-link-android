@@ -67,7 +67,7 @@ public class MoreOptionAdapter extends RecyclerView.Adapter<MoreOptionAdapter.Vi
 
         if (TextUtils.isEmpty(options.get(position).getRes())) {
             holder.optionIv.setVisibility(View.INVISIBLE);
-            Picasso.get().load(R.drawable.device_placeholder).into(holder.optionIv);
+            Picasso.get().load(R.mipmap.device_placeholder).into(holder.optionIv);
         } else {
             holder.optionIv.setVisibility(View.VISIBLE);
             Picasso.get().load(options.get(position).getRes()).into(holder.optionIv);

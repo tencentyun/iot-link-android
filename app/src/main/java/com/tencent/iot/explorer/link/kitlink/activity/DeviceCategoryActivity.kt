@@ -413,7 +413,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         var context = ctx
 
         override fun getBackground(position: Int): Int {
-            if (position == 0) return R.drawable.tab
+            if (position == 0) return R.mipmap.tab
             return 0
         }
 
@@ -437,6 +437,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             if (i != position)
                 vtab_device_category.getTabAt(i).setBackgroundColor(resources.getColor(R.color.gray_F5F5F5))
         }
-        tab?.setBackground(R.drawable.tab)
+        tab?.setBackground(R.mipmap.tab)
     }
 }
