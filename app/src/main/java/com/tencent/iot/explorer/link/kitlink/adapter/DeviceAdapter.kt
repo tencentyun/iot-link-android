@@ -43,7 +43,7 @@ class DeviceAdapter(list: MutableList<DeviceEntity>) : RecyclerView.Adapter<Devi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (TextUtils.isEmpty(list.get(position)?.IconUrl)) {
-            Picasso.get().load(R.drawable.device_placeholder).into(holder.image)
+            Picasso.get().load(R.mipmap.device_placeholder).into(holder.image)
         } else {
             Picasso.get().load(list.get(position)?.IconUrl).into(holder.image)
         }
