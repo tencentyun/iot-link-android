@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
-        android:src="@drawable/imageselector_default_error" />
+        android:src="@mipmap/imageselector_default_error" />
 
     <View
         android:id="@+id/mask"
@@ -24,6 +24,6 @@
         android:layout_gravity="top|right"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/imageselector_btn_unselected" />
+        android:src="@mipmap/imageselector_btn_unselected" />
 
 </FrameLayout>

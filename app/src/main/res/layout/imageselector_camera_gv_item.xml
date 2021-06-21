@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:drawablePadding="@dimen/imageselector_default_padding"
-        android:drawableTop="@drawable/imageselector_asy"
+        android:drawableTop="@mipmap/imageselector_asy"
         android:gravity="center_horizontal"
         android:text="@string/imageselector_camera_gv_item_tv"
         android:textColor="@android:color/white"

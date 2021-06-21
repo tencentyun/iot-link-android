@@ -257,12 +257,12 @@ public class ImageSelectorGridAdapter extends BaseAdapter {
 				if (mSelectedImages.contains(data)) {
 					// 设置选中状态
 					iv_indicator_select
-							.setImageResource(R.drawable.imageselector_btn_selected);
+							.setImageResource(R.mipmap.imageselector_btn_selected);
 					mask.setVisibility(View.VISIBLE);
 				} else {
 					// 未选择
 					iv_indicator_select
-							.setImageResource(R.drawable.imageselector_btn_unselected);
+							.setImageResource(R.mipmap.imageselector_btn_unselected);
 					mask.setVisibility(View.GONE);
 				}
 			} else {
@@ -273,7 +273,7 @@ public class ImageSelectorGridAdapter extends BaseAdapter {
 			if (mItemSize > 0) {
 				// 显示图片
 				ImageManager.show(mContext, imageFile,
-	        			R.drawable.imageselector_default_error, mItemSize, mItemSize, iv_default_img);
+	        			R.mipmap.imageselector_default_error, mItemSize, mItemSize, iv_default_img);
 //				Picasso.with(mContext).load(imageFile)
 //						.placeholder(R.drawable.imageselector_default_error)
 //						.error(R.drawable.imageselector_default_error)
