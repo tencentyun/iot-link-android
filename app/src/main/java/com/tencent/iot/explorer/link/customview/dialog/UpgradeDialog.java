@@ -1,36 +1,14 @@
 package com.tencent.iot.explorer.link.customview.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.tencent.iot.explorer.link.R;
+import com.tencent.iot.explorer.link.customview.dialog.entity.UpgradeInfo;
 
-public class UpgradeDialog extends Dialog implements View.OnClickListener {
+public class UpgradeDialog extends IosCenterStyleDialog implements View.OnClickListener {
 
-    public final static int MSG_REFRESH = 0;
-
-    private DisplayMetrics displayMetrics;
-    private View view;
-    private Context mContext;
     private TextView title;
     private TextView log;
     private TextView version;
@@ -46,42 +24,12 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
     private static boolean dialogShowed = false;
 
     public UpgradeDialog(Context context, UpgradeInfo info) {
-        super(context, R.style.iOSDialog);
-        mContext = context;
-        displayMetrics = context.getResources().getDisplayMetrics();
+        super(context, R.layout.popup_upgrade_layout);
         this.info = info;
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == MSG_REFRESH) {
-
-            }
-        }
-    };
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //设置view 弹出的平移动画，从底部-100% 平移到自身位置
-        TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,
-                0f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
-        animation.setInterpolator(new DecelerateInterpolator());
-        animation.setDuration(350);
-        animation.setStartOffset(150);
-
-        view = View.inflate(mContext, R.layout.popup_upgrade_layout, null);
-        view.setAnimation(animation);//设置动画
-        initView();
-        btnNextTime.setOnClickListener(this);
-        btnUpgrade.setOnClickListener(this);
-        outLayout.setOnClickListener(this);
-    }
-
-    private void initView() {
+    public void initView() {
         outLayout = view.findViewById(R.id.upgrade_dialog_layout);
         title = view.findViewById(R.id.tv_upgrade_tip);
         log = view.findViewById(R.id.tv_upgrade_log);
@@ -92,15 +40,19 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
         btnUpgrade = view.findViewById(R.id.tv_upgrade_now);
         centreView = view.findViewById(R.id.divid_line);
 
+        btnNextTime.setOnClickListener(this);
+        btnUpgrade.setOnClickListener(this);
+        outLayout.setOnClickListener(this);
+
         title.setText(info.getTitle());
         log.setText(info.getLog());
-        version.setText(mContext.getResources().getString(R.string.version_code) +
-                mContext.getResources().getString(R.string.splite_from_name) + info.getVersion());
-        packgeSize.setText(mContext.getResources().getString(R.string.package_size) +
-                mContext.getResources().getString(R.string.splite_from_name) + info.getPackageSzie());
-        publishTime.setText(mContext.getResources().getString(R.string.publish_time) +
-                mContext.getResources().getString(R.string.splite_from_name) + info.getPublishTime());
-        outLayout.setBackgroundColor(mContext.getResources().getColor(R.color.dialog_background));
+        version.setText(getContext().getString(R.string.version_code) +
+                getContext().getString(R.string.splite_from_name) + info.getVersion());
+        packgeSize.setText(getContext().getString(R.string.package_size) +
+                getContext().getString(R.string.splite_from_name) + info.getPackageSzie());
+        publishTime.setText(getContext().getString(R.string.publish_time) +
+                getContext().getString(R.string.splite_from_name) + info.getPublishTime());
+        outLayout.setBackgroundColor(getContext().getResources().getColor(R.color.dialog_background));
         if (info.getUpgradeType() == 1) { // 2:静默更新不提示 1:强制升级 0:用户确认
             btnNextTime.setVisibility(View.GONE);
             centreView.setVisibility(View.GONE);
@@ -143,7 +95,6 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
 
     private volatile OnDismisListener onDismisListener;
 
-    //对外的接口回调
     public interface OnDismisListener {
         void OnClickUpgrade(String url);
     }
@@ -151,19 +102,4 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
     public void setOnDismisListener(OnDismisListener onDismisListener) {
         this.onDismisListener = onDismisListener;
     }
-
-    @Override
-    public void show() {
-        super.show();
-        // 设置dialog的宽高是全屏，注意：一定要放在show的后面，否则不是全屏显示
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.width = displayMetrics.widthPixels;
-        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.gravity = Gravity.CENTER;
-        getWindow().setAttributes(params);
-        getWindow().setContentView(view);
-        dialogShowing = true;
-        dialogShowed = true;
-    }
-
 }
