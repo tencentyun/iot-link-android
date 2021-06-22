@@ -21,14 +21,11 @@ public class SuccessToastDialog extends IosCenterStyleDialog {
     }
 
     @Override
-    public void initView() {
-
-    }
+    public void initView() { }
 
     public void show() {
         if (!isShowing()) {
             super.show();
         }
     }
-
 }
