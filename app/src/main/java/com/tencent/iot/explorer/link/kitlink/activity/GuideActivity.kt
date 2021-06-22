@@ -52,7 +52,6 @@ class GuideActivity  : PActivity(), View.OnClickListener{
         }
         if (!TextUtils.isEmpty(App.data.getToken())) {
             startActivity(Intent(this, MainActivity::class.java))
-            finish()
             return
         }
 
