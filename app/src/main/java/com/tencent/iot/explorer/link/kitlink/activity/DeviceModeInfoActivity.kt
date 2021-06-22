@@ -147,7 +147,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
                 return@setOnClickListener
             }
 
-            // 用于手机所有被修改的项，未被修改的项目不需要传递
+            // 用于收集所有被修改的项，未被修改的项目不需要传递
             var passDevModes = ArrayList<DevModeInfo>()
             for (i in 0 until devModes.size) {
                 if (!TextUtils.isEmpty(devModes.get(i).value)) {
