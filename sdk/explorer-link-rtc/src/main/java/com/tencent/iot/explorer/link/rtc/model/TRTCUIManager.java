@@ -31,14 +31,17 @@ public class TRTCUIManager {
 
     public void removeCallingParamsCallback() {
         this.callingParamsCallback = null;
+        if (sessionManager == null) return;
         sessionManager.resetTRTCStatus();
     }
 
     public void didAcceptJoinRoom(Integer callingType, String deviceId) {
+        if (sessionManager == null) return;
         sessionManager.joinRoom(callingType, deviceId);
     }
 
     public void refuseEnterRoom(Integer callingType, String deviceId) {
+        if (sessionManager == null) return;
         sessionManager.exitRoom(callingType, deviceId);
     }
 
