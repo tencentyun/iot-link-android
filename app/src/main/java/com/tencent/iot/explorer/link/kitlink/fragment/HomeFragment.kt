@@ -32,7 +32,7 @@ import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCal
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.dialog.DevModeSetDialog
-import com.tencent.iot.explorer.link.customview.dialog.KeyBooleanValue
+import com.tencent.iot.explorer.link.customview.dialog.entity.KeyBooleanValue
 import com.tencent.iot.explorer.link.customview.dialog.MoreOptionDialog
 import com.tencent.iot.explorer.link.customview.dialog.entity.DevOption
 import com.tencent.iot.explorer.link.customview.dialog.entity.OptionMore
