@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.tencent.iot.explorer.link.R;
-import com.tencent.iot.explorer.link.customview.dialog.entity.AddItem;
 import com.tencent.iot.explorer.link.customview.dialog.entity.DevOption;
 
 import java.util.List;

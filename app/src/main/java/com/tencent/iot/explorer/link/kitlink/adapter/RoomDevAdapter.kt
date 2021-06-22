@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.adapter
 
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.fastjson.JSON
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.ProductUIDevShortCutConfig
-import com.tencent.iot.explorer.link.customview.dialog.KeyBooleanValue
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 
