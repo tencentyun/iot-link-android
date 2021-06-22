@@ -12,7 +12,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.customview.dialog.SelectWoringTimeDialog
-import com.tencent.iot.explorer.link.customview.dialog.WorkTimeMode
+import com.tencent.iot.explorer.link.customview.dialog.entity.WorkTimeMode
 import com.tencent.iot.explorer.link.kitlink.adapter.ManualTaskAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*

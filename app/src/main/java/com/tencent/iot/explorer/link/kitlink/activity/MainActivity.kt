@@ -7,7 +7,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
@@ -44,10 +43,10 @@ import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
+import com.tencent.iot.explorer.link.customview.dialog.entity.UpgradeInfo
 import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
 import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
