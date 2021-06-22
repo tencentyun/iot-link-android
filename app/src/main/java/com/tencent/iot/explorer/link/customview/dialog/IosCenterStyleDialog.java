@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +53,7 @@ public class IosCenterStyleDialog extends Dialog {
         initView();
     }
 
-    public void initView() {
-
-    }
+    public void initView() { }
 
     @Override
     public void show() {
@@ -71,6 +68,19 @@ public class IosCenterStyleDialog extends Dialog {
         params.gravity = Gravity.CENTER;
         getWindow().setAttributes(params);
         getWindow().setContentView(view);
+        if (onShowed != null) {
+            onShowed.onShowed();
+        }
+    }
+
+    protected interface OnShowed {
+        void onShowed();
+    }
+
+    private OnShowed onShowed = null;
+
+    protected void setOnShowed(OnShowed onShowed) {
+        this.onShowed = onShowed;
     }
 
 }
