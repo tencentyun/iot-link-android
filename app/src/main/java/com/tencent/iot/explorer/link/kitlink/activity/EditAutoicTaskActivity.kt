@@ -578,9 +578,11 @@ class EditAutoicTaskActivity : BaseActivity(), MyCallback {
                 task.type = 0
                 manualTasks.add(task)
             } else if (routeType == RouteType.EDIT_AUTOMIC_TASK_DETAIL_ROUTE) {
+                if (devModeInfos.get(i).pos >= manualTasks.size) continue
                 task.type = 0
                 manualTasks.set(devModeInfos.get(i).pos, task)
             } else if (routeType == RouteType.EDIT_AUTOMIC_CONDITION_DETAIL_ROUTE) {
+                if (devModeInfos.get(i).pos >= manualConditions.size) continue
                 task.op = devModeInfos.get(i).op
                 task.type = 5
                 manualConditions.set(devModeInfos.get(i).pos, task)
