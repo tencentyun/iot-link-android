@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.customview.dialog.DevModeSetDialog
-import com.tencent.iot.explorer.link.customview.dialog.KeyBooleanValue
+import com.tencent.iot.explorer.link.customview.dialog.entity.KeyBooleanValue
 import com.tencent.iot.explorer.link.kitlink.adapter.DevModeAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*

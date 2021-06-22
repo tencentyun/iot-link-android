@@ -15,6 +15,7 @@ import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.customview.dialog.adapter.DevModeOptionsAdapter;
+import com.tencent.iot.explorer.link.customview.dialog.entity.KeyBooleanValue;
 import com.tencent.iot.explorer.link.kitlink.entity.ModeInt;
 import com.tencent.iot.explorer.link.core.auth.entity.OpValue;
 import com.tencent.iot.explorer.link.kitlink.util.Utils;
