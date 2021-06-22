@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.customview.dialog
+package com.tencent.iot.explorer.link.customview.dialog.entity
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
