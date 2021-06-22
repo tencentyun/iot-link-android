@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.os.SystemClock
 import android.text.TextUtils
@@ -11,12 +10,11 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
-import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
-import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
+import com.tencent.iot.explorer.link.customview.dialog.entity.UpgradeInfo
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
