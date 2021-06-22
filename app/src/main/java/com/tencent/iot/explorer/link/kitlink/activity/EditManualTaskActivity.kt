@@ -85,9 +85,7 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
         for (i in 0 until automation!!.sceneListItem!!.Actions!!.size) {
             var task = ManualTask()
             var json = automation!!.sceneListItem!!.Actions!!.get(i) as JSONObject
-            if (json == null) {
-                continue
-            }
+            if (json == null) continue
 
             if (json.getIntValue("ActionType") == 1) {
                 var time = json.getLongValue("Data")
@@ -114,10 +112,12 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
                 }
                 var value = json.getString("Data")
                 var dataJson = JSON.parseObject(value)
-                for (keys in dataJson.keys) {
-                    task.actionId = keys
-                    task.taskKey = dataJson.getString(keys)
-                    task.task = dataJson.getString(keys)
+                dataJson?.let {
+                    for (key in it.keys) {
+                        task.actionId = key
+                        task.taskKey = it.getString(key)
+                        task.task = it.getString(key)
+                    }
                 }
 
                 loadTaskVauleInfo(task)
