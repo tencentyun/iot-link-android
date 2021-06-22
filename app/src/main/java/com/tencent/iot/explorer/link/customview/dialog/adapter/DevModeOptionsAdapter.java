@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.iot.explorer.link.R;
-import com.tencent.iot.explorer.link.customview.dialog.KeyBooleanValue;
+import com.tencent.iot.explorer.link.customview.dialog.entity.KeyBooleanValue;
 
 import java.util.List;
 

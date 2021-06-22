@@ -1,8 +1,4 @@
-package com.tencent.iot.explorer.link.customview.dialog
-
-import android.util.Log
-import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.serializer.IntegerCodec
+package com.tencent.iot.explorer.link.customview.dialog.entity
 
 class WorkTimeMode {
     var timeType = 0 // 0 全天  1 自定义

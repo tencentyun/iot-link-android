@@ -15,7 +15,7 @@ import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.ProgressDialog
 import com.tencent.iot.explorer.link.customview.dialog.UpgradeDialog
-import com.tencent.iot.explorer.link.customview.dialog.UpgradeInfo
+import com.tencent.iot.explorer.link.customview.dialog.entity.UpgradeInfo
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import kotlinx.android.synthetic.main.activity_about_us.*
