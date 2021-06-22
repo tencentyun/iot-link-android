@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
 import com.alibaba.fastjson.JSONArray
-import com.tencent.iot.explorer.link.customview.dialog.WorkTimeMode
+import com.tencent.iot.explorer.link.customview.dialog.entity.WorkTimeMode
 
 class AutomicTaskEntity {
     var automationId = ""
