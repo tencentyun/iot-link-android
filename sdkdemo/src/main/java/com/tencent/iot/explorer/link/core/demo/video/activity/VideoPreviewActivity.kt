@@ -354,16 +354,16 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             var command = ""
             when(v) {
                 iv_up -> {
-                    command = "action=user_define&cmd=ballhead_top"
+                    command = "action=user_define&cmd=ptz_top"
                 }
                 iv_down -> {
-                    command = "action=user_define&cmd=ballhead_bottom"
+                    command = "action=user_define&cmd=ptz_bottom"
                 }
                 iv_right -> {
-                    command = "action=user_define&cmd=ballhead_right"
+                    command = "action=user_define&cmd=ptz_right"
                 }
                 iv_left -> {
-                    command = "action=user_define&cmd=ballhead_left"
+                    command = "action=user_define&cmd=ptz_left"
                 }
             }
 
