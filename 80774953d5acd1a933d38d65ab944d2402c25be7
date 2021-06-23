@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "259b8954_114e1455",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/dialog/ConnectWifiDialog.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-06-23T14:52:58Z",
+      "side": 0,
+      "message": "popup_connect_layout是不是也可以一起去掉了？",
+      "revId": "80774953d5acd1a933d38d65ab944d2402c25be7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
