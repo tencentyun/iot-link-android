@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eff2f038_c6d1939c",
+        "filename": "sdk/video-link-android/doc/VideoSDK信令使用.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000001
+      },
+      "writtenOn": "2021-06-23T09:26:25Z",
+      "side": 1,
+      "message": "nvr\u003d$nvrname\" 删除多余参数",
+      "revId": "4516c129d0654518dd821983e43daf849abf499c",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
