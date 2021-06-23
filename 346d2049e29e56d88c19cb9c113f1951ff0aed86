@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8db4eabf_023a3fe2",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/MessageActivity.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-06-23T14:28:04Z",
+      "side": 1,
+      "message": "是不是有必要需要另提一个change统一改一下，现在代码中好多是333333的也有好多是15161A了，要是统一搞个iv_back_color统一改风格更方便点。",
+      "revId": "346d2049e29e56d88c19cb9c113f1951ff0aed86",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
