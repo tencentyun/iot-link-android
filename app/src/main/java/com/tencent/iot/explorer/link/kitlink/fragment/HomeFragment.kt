@@ -83,15 +83,18 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         setListener()
         registBrodcast()
         showWeather(false)
+        onHiddenChanged(false)
     }
 
-    override fun onResume() {
-        super.onResume()
-        IoTAuth.addDeviceStatusCallback(this)
-        if (App.data.refresh) { //更新数据
-            requestData()
-        } else {    //更新界面
-            showData()
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            IoTAuth.addDeviceStatusCallback(this)
+            if (App.data.refresh) { //更新数据
+                requestData()
+            } else {    //更新界面
+                showData()
+            }
         }
     }
 
@@ -123,7 +126,6 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         }
         //级别降为设备刷新
         App.data.resetRefreshLevel()
-        loadCurrentWeather()
     }
 
     private fun loadCurrentWeather() {
@@ -164,6 +166,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
 
     private var weatherListener = object : OnWeatherListener {
         override fun onWeatherSuccess(weatherInfo: WeatherInfo) {
+
             handler.post {
                 tv_temperature.text = weatherInfo.temp
                 tv_outside_humidity.text = getString(R.string.outside_humidity,
@@ -200,14 +203,10 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         }
     }
 
-    /**
-     * 更新界面
-     */
     private fun showData() {
-        presenter.model!!.run {
+        presenter.model?.let {
             showFamily()
             showRoomList()
-            loadCurrentWeather()
         }
     }
 
@@ -258,14 +257,11 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
             }
         })
         smart_refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
-            override fun onLoadMore(refreshLayout: RefreshLayout) {
-                refreshLayout.finishLoadMore()
-                presenter.loadDeviceList()
-            }
-
+            override fun onLoadMore(refreshLayout: RefreshLayout) {}
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 refreshLayout.finishRefresh()
                 requestData()
+                loadCurrentWeather()
             }
         })
         layout_2_set_location.setOnClickListener {
@@ -519,6 +515,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
     // 切换家庭
     fun tabFamily(position: Int) {
         presenter.tabFamily(position)
+        roomsAdapter?.selectPos = 0
         showFamily()
     }
 
@@ -536,16 +533,17 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
 
     // 显示房间列表
     override fun showRoomList() {
-        roomList.clear()
-        roomList.addAll(App.data.roomList)
         if (roomList == null) return
 
-        for (i in 0 .. roomList.size - 1) {
+        roomList.clear()
+        roomList.addAll(App.data.roomList)
+        for (i in 0 until roomList.size) {
             if (TextUtils.isEmpty(roomList.get(i).RoomName)) {
                 roomList[i].RoomName = getString(R.string.all_dev)
             }
         }
         roomsAdapter?.notifyDataSetChanged()
+
         loadCurrentWeather()
     }
 
