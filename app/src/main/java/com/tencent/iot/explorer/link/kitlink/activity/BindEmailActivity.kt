@@ -6,14 +6,12 @@ import android.view.View
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.BindEmailPresenter
 import com.tencent.iot.explorer.link.mvp.view.BindEmailView
-import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
 import kotlinx.android.synthetic.main.activity_bind_email.*
-import kotlinx.android.synthetic.main.activity_bind_email.tv_get_verify_code
-import kotlinx.android.synthetic.main.activity_modify_email.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class BindEmailActivity : PActivity(), BindEmailView, View.OnClickListener  {

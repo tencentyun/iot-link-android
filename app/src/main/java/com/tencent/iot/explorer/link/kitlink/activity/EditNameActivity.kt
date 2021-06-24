@@ -4,11 +4,9 @@ import android.content.Intent
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
 import kotlinx.android.synthetic.main.activity_add_task_name.*
