@@ -59,7 +59,7 @@
             android:visibility="gone"
             android:orientation="vertical"/>
 
-        <com.tencent.iot.explorer.link.kitlink.customview.MyScrollView
+        <com.tencent.iot.explorer.link.customview.MyScrollView
             android:id="@+id/my_scroll_view"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -150,6 +150,6 @@
                         tools:ignore="NestedWeights" />
                 </LinearLayout>
             </LinearLayout>
-        </com.tencent.iot.explorer.link.kitlink.customview.MyScrollView>
+        </com.tencent.iot.explorer.link.customview.MyScrollView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
-import android.text.TextUtils
 import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import kotlinx.android.synthetic.main.activity_config_net_failed.*
 

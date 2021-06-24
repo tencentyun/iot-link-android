@@ -3,7 +3,6 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.content.Intent
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T

@@ -7,7 +7,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,15 +18,17 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 
+import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.kitlink.util.picture.clipimage.ClipView.OnDrawListenerComplete;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.BitmapUtils;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.ImageUtils;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.WindowManage;
-import com.tencent.iot.explorer.link.R;;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+;
 
 /**
  * 剪裁图片
