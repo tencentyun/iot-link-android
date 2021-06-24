@@ -1,12 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.net.http.SslError
-import android.os.Build
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
-import androidx.fragment.app.FragmentActivity
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
+import android.webkit.WebViewClient
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import kotlinx.android.synthetic.main.activity_web.*

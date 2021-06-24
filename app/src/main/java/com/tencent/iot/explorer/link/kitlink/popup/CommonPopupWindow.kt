@@ -5,7 +5,6 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.marginStart
 import com.tencent.iot.explorer.link.R
 import kotlinx.android.synthetic.main.popup_common.view.*
 

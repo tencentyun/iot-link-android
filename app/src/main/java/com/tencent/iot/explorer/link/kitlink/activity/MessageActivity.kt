@@ -1,6 +1,5 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.customview.PageAdapter

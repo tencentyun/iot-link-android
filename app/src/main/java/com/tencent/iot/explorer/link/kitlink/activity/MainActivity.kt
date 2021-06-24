@@ -26,32 +26,32 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.*
+import com.tencent.iot.explorer.link.customview.dialog.entity.UpgradeInfo
 import com.tencent.iot.explorer.link.customview.home.BottomItemEntity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
+import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
+import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
 import com.tencent.iot.explorer.link.kitlink.fragment.CommentFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.MeFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.SmartFragment
 import com.tencent.iot.explorer.link.kitlink.popup.FamilyListPopup
+import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.util.JsonManager
-import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
-import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
-import com.tencent.iot.explorer.link.customview.dialog.entity.UpgradeInfo
-import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
-import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
-import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
-import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
-import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.LogcatHelper
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -121,10 +121,7 @@ class MainActivity : PActivity(), MyCallback {
                         if (isForceUpgrade || (!isForceUpgrade && !UpgradeDialog.dialogShowed())) {
                             val dialog = UpgradeDialog(this@MainActivity, info)
                             dialog.setOnDismisListener(upgradeDialogListener)
-
-                            if (!this@MainActivity.isFinishing) {
-                                dialog.show()
-                            }
+                            dialog.show()
                         }
                     }
                 }
