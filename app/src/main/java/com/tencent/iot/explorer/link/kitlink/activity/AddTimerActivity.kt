@@ -87,7 +87,6 @@ class AddTimerActivity : BaseActivity(), CRecyclerView.RecyclerItemView, MyCallb
         deviceEntity = get("device")
         timerListEntity = get("timer")
         devicePropertyList = get("property")
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = if (timerListEntity == null) getString(R.string.add_timer) else
             getString(R.string.modify_timer)
         mTimerListEntity = timerListEntity ?: createNewTimerListEntity()

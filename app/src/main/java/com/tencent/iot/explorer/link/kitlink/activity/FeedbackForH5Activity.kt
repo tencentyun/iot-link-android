@@ -24,7 +24,6 @@ class FeedbackForH5Activity : BaseActivity(), View.OnClickListener, MyCallback {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(R.color.black_333333)
         tv_title.text = ""
         getAppGetTokenTicket()
     }
