@@ -1,6 +1,5 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
-import android.util.Log
 import com.tencent.iot.explorer.link.kitlink.util.DateUtils
 import java.text.SimpleDateFormat
 import java.util.*
