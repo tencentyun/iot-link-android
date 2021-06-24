@@ -43,7 +43,6 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
     }
 
     override fun initView() {
-        iv_back.setColorFilter(R.color.black_333333)
         tv_title.text = ""
         deviceEntity = get("device")
         getAppGetTokenTicket()
