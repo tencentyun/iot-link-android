@@ -3,12 +3,11 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import com.alibaba.fastjson.JSONObject
 import com.squareup.picasso.Picasso
-import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
@@ -19,10 +18,9 @@ import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_smart_config_step.*
-import java.util.ArrayList
+import java.util.*
 
 class SmartConfigStepActivity : PActivity() {
 

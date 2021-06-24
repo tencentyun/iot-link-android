@@ -3,12 +3,10 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.content.Intent
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.customview.dialog.TimerOptionsDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.entity.DelayTimeExtra
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import com.tencent.iot.explorer.link.kitlink.entity.TimerExtra
 import kotlinx.android.synthetic.main.activity_delay_time.*

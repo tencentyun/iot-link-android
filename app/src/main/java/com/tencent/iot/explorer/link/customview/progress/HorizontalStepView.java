@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.customview.progress;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
