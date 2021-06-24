@@ -2,13 +2,12 @@ package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
 import android.view.ViewGroup
-import androidx.core.text.isDigitsOnly
-import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.DataHolder
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.progress.SeekProgress
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import kotlinx.android.synthetic.main.control_simple_big_int.view.*
 
 /**

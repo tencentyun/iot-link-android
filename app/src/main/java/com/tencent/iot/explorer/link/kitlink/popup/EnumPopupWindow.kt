@@ -5,11 +5,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.holder.EnumViewHolder
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.holder.EnumViewHolder
 import kotlinx.android.synthetic.main.popup_enum.view.*
 
 /**

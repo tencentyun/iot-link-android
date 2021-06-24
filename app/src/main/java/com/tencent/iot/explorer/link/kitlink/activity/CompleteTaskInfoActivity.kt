@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Handler
 import android.text.TextUtils
 import android.view.View
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
@@ -13,6 +12,7 @@ import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.customview.dialog.SuccessToastDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -21,7 +21,6 @@ import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.entity.SceneEntity
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.Utils
 import kotlinx.android.synthetic.main.activity_complete_task_info.*
 import kotlinx.android.synthetic.main.menu_back_layout.*

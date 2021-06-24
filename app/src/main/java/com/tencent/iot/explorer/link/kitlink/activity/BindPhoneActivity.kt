@@ -7,25 +7,17 @@ import android.view.View
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorMessage
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.mvp.presenter.BindPhonePresenter
-import com.tencent.iot.explorer.link.mvp.view.BindPhoneView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.User
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.AutomicUtils
+import com.tencent.iot.explorer.link.mvp.IPresenter
+import com.tencent.iot.explorer.link.mvp.presenter.BindPhonePresenter
 import com.tencent.iot.explorer.link.mvp.presenter.LoginPresenter
+import com.tencent.iot.explorer.link.mvp.view.BindPhoneView
 import com.tencent.iot.explorer.link.mvp.view.LoginView
 import kotlinx.android.synthetic.main.activity_bind_phone.*
-import kotlinx.android.synthetic.main.activity_bind_phone.et_set_password
-import kotlinx.android.synthetic.main.activity_bind_phone.et_verify_set_password
-import kotlinx.android.synthetic.main.activity_bind_phone.iv_clear_password
-import kotlinx.android.synthetic.main.activity_bind_phone.iv_clear_verify_password
-import kotlinx.android.synthetic.main.activity_bind_phone.line2_set_pwd
-import kotlinx.android.synthetic.main.activity_bind_phone.line_set_pwd
-import kotlinx.android.synthetic.main.activity_bind_phone.tv_get_verify_code
-import kotlinx.android.synthetic.main.activity_modify_phone.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
 class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {

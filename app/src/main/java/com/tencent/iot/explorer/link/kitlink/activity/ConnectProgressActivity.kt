@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
-import android.graphics.Color
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
@@ -18,10 +17,7 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import kotlinx.android.synthetic.main.activity_connect_progress.*
-import kotlinx.android.synthetic.main.activity_connect_progress.softap_step_progress
-import kotlinx.android.synthetic.main.activity_connect_progress.tv_soft_ap_cancel
-import kotlinx.android.synthetic.main.activity_connect_progress.tv_soft_ap_title
-import java.util.ArrayList
+import java.util.*
 
 class ConnectProgressActivity : PActivity(), ConnectView {
 

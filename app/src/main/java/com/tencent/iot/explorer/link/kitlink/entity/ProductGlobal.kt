@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
 import android.text.TextUtils
-import android.util.Log
 import com.alibaba.fastjson.JSON
 
 class ProductGlobal {

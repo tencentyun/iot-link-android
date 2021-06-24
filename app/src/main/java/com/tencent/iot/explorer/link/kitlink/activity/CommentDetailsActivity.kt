@@ -3,7 +3,6 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +13,12 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.ShareOptionDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.WeChatLogin
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
 import kotlinx.android.synthetic.main.activity_comment_detail.*
