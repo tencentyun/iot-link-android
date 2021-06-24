@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.holder
 
 import android.content.Context
-import android.location.Address
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.fastjson.JSON

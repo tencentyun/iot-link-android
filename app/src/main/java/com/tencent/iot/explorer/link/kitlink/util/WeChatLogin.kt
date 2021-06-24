@@ -5,14 +5,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.text.TextUtils
-import android.util.Log
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.wxapi.WXEntryActivity
-import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.modelmsg.*
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
