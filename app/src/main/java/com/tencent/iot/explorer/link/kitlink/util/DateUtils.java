@@ -1,7 +1,5 @@
 package com.tencent.iot.explorer.link.kitlink.util;
 
-import android.util.Log;
-
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.T;
 

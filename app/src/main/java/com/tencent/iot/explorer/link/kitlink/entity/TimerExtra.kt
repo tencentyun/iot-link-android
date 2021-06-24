@@ -1,7 +1,5 @@
 package com.tencent.iot.explorer.link.kitlink.entity
 
-import android.util.Log
-import com.alibaba.fastjson.JSON
 import java.util.*
 import kotlin.collections.HashSet
 

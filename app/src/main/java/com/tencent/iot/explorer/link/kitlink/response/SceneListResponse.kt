@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.response
 
 import com.tencent.iot.explorer.link.kitlink.entity.SceneListItem
-import com.tencent.iot.explorer.link.kitlink.entity.TimerListEntity
 
 /**
  * 云端定时列表响应实体
