@@ -1,14 +1,13 @@
 package com.tencent.iot.explorer.link.kitlink.util
 
 import android.content.Context
-import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
 import com.tencent.iot.explorer.link.core.utils.LocationUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.CityInfo
+import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
 import com.tencent.map.geolocation.TencentLocation
 import com.tencent.map.geolocation.TencentLocationListener
 import okhttp3.*

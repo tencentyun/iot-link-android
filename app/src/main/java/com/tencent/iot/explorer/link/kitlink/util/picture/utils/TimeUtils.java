@@ -1,8 +1,3 @@
-/**ʱ�乤���࣬������ʱ����ز������磺
-getCurrentTimeInLong() �õ���ǰʱ��
-getTime(long timeInMillis, SimpleDateFormat dateFormat) ��longת��Ϊ�̶���ʽʱ���ַ���
-=====================================================================================
-*/
 package com.tencent.iot.explorer.link.kitlink.util.picture.utils;
 
 import java.io.File;

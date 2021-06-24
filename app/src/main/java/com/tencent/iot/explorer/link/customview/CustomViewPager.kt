@@ -10,7 +10,6 @@ import android.view.animation.Interpolator
 import android.widget.Scroller
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import java.lang.reflect.AccessibleObject.setAccessible
 
 
 class CustomViewPager : WrapContentHeightViewPager {

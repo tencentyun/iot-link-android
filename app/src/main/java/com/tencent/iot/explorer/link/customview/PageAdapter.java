@@ -4,7 +4,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.tencent.iot.explorer.link.kitlink.fragment.BaseFragment;
-import com.tencent.iot.explorer.link.kitlink.fragment.MessageFragment;
 
 import java.util.List;
 
