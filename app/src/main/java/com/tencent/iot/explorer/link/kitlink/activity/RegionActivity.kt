@@ -40,8 +40,6 @@ class RegionActivity: PActivity(),
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
-        tv_title.setTextColor(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.country_code)
         crv_region.setList(regionList)
         crv_region.addRecyclerItemView(this)
