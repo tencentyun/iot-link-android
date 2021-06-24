@@ -8,8 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-
 
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.core.log.L;

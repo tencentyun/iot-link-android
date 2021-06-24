@@ -151,7 +151,6 @@ class AboutUsActivity : BaseActivity() {
                     var json = response.data as JSONObject
                     var info = UpgradeInfo.convertJson2UpgradeInfo(json)
                     if (App.needUpgrade(info!!.version)) {
-                        if (this@AboutUsActivity.isFinishing || this@AboutUsActivity.isDestroyed) return
                         var dialog = UpgradeDialog(this@AboutUsActivity, info)
                         dialog.setOnDismisListener(upgradeDialogListener)
                         dialog.show()
