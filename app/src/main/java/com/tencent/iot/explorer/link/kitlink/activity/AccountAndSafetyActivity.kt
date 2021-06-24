@@ -32,7 +32,6 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.account_and_safety)
         presenter = AccountAndSafetyPresenter(this)
     }

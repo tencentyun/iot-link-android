@@ -39,7 +39,6 @@ class RoomActivity : BaseActivity(), MyCallback {
     override fun initView() {
         roomEntity = get("room")
         familyEntity = get("family")
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.room_setting)
         tv_room_setting_name.text = roomEntity?.RoomName ?: ""
     }

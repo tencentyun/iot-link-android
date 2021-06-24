@@ -41,7 +41,6 @@ class ShareUserListActivity : BaseActivity(), MyCallback, CRecyclerView.Recycler
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         deviceEntity = get("device")
         tv_title.text = getString(R.string.device_share)
         crv_share_user_list.setList(userList)

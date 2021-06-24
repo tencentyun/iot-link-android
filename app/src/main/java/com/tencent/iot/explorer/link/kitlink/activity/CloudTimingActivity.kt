@@ -47,7 +47,6 @@ class CloudTimingActivity : MActivity(), TimerListView, CRecyclerView.RecyclerIt
         deviceEntity = get("device")
         devicePropertyList = get("property")
         tv_title.text = getString(R.string.cloud_timing)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         crv_cloud_timing.setList(model.timerList)
         crv_cloud_timing.addRecyclerItemView(this)
         model.deviceEntity = deviceEntity

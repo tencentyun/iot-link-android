@@ -229,8 +229,6 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
      */
     private fun initTheme() {
         StatusBarUtil.setStatusBarDarkTheme(this, true)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        tv_title.setTextColor(resources.getColor(R.color.black_333333))
         iv_right.setImageResource(R.mipmap.icon_black_more)
         control_panel.setBackgroundColor(resources.getColor(R.color.white))
     }

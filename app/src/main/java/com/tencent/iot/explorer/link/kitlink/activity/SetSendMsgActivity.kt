@@ -16,7 +16,6 @@ class SetSendMsgActivity : BaseActivity(){
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.select_notification_type)
     }
 

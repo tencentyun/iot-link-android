@@ -75,9 +75,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     override fun initView() {
         tv_title.text = getString(R.string.add_device)
-        if (iv_back != null) {
-            iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        }
         App.data.tabPosition = 0  // Reset the position of vertical tab
         App.data.screenWith = getScreenWidth()
         HttpRequest.instance.getParentCategoryList(this)

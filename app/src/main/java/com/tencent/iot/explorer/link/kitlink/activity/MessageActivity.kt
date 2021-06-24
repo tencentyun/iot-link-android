@@ -22,7 +22,6 @@ class MessageActivity : BaseActivity() {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.message_notification)
 
         mPageList.add(page1)
