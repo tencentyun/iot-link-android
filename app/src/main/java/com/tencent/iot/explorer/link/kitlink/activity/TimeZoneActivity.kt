@@ -61,8 +61,6 @@ class TimeZoneActivity: PActivity(),
     override fun initView() {
         var bundle = intent.extras?.get(CommonField.EXTRA_TIME_ZONE_BUNDLE_TAG) as Bundle
         tag = bundle.getString(CommonField.EXTRA_TIME_ZONE_INFO)!!
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        tv_title.setTextColor(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.select_timezone)
         crv_time_zone.setList(timeZoneList)
         crv_time_zone.addRecyclerItemView(this)

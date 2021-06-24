@@ -40,7 +40,6 @@ class RoomListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerItemV
 
     override fun initView() {
         familyEntity = get("family")
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.room_manager)
         crv_room_list.setList(roomList)
         crv_room_list.addRecyclerItemView(this)

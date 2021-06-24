@@ -52,7 +52,6 @@ class FeedbackActivity : BaseActivity(), UploadView, CRecyclerView.RecyclerItemV
     override fun initView() {
         successList.add(emptyEntity)
         uploadModel = UploadModel(this)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.feedback)
         crv_feedback.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
