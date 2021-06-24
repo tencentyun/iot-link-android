@@ -112,6 +112,7 @@ abstract class BaseActivity : AppCompatActivity() {
     fun backTo(level: Int) {
         if (level <= 0) return
         for (i in 1..level) {
+            if (App.data.activityList.isEmpty()) return
             App.data.activityList.last.finish()
             App.data.activityList.removeLast()
         }
