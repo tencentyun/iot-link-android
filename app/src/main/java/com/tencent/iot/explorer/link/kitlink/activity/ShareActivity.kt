@@ -40,7 +40,6 @@ class ShareActivity : BaseActivity(), MyCallback, View.OnClickListener {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         deviceEntity = get("device")
         tv_title.text = getString(R.string.device_share_to_user)
         initViewPager()

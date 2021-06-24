@@ -59,7 +59,6 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
             configQuestionList = intent.getBooleanExtra(CommonField.CONFIG_QUESTION_LIST, false)
         }
         initWebView()
-        iv_back.setColorFilter(R.color.black_333333)
         getAppGetTokenTicket()
     }
 

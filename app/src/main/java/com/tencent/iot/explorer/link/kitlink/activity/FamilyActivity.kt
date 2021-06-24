@@ -65,7 +65,6 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
         familyEntity = get("family")
         canDelete = App.data.familyList.size > 0
         tv_title.text = getString(R.string.family_detail)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         val layoutManager = LinearLayoutManager(this)
         crv_member_list.layoutManager = layoutManager
         crv_member_list.setList(model.memberList)

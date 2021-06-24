@@ -41,7 +41,6 @@ class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         intent.getStringExtra(CommonField.EXTRA_TITLE)?.let {
             tv_title.text = it
         }

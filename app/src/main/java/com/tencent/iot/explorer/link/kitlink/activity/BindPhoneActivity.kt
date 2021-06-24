@@ -49,7 +49,6 @@ class BindPhoneActivity : PActivity(), BindPhoneView, View.OnClickListener  {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.bind_phone_number)
         et_bind_phone.addClearImage(iv_clear_bind_phone)
         et_set_password.addClearImage(iv_clear_password)

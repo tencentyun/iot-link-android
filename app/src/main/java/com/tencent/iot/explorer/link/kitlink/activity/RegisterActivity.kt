@@ -59,7 +59,6 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         App.data.region = "ap-guangzhou"
         presenter = RegisterPresenter(this)
         btn_register_get_code.setRegisterPresenter(presenter)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.mobile_phone_register)
         initViewPager()
         intent.getBooleanExtra(ACCOUNT_TYPE, true).let {

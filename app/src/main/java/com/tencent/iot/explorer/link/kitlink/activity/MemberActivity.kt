@@ -33,7 +33,6 @@ class MemberActivity : BaseActivity(), MyCallback {
     override fun initView() {
         memberEntity = get("member")
         familyEntity = get("family")
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.member_setting)
         showMemberInfo()
     }

@@ -72,7 +72,6 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun initView() {
         presenter = UserInfoPresenter(this)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.personal_info)
         temperatureDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_temperature, null)
         bottomDialog = Dialog(this, R.style.BottomDialog)

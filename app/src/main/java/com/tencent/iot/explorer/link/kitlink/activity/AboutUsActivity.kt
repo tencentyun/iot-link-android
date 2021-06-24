@@ -34,7 +34,6 @@ class AboutUsActivity : BaseActivity() {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.about_me)
         tv_about_app_version.text = resources.getString(R.string.current_version, BuildConfig.VERSION_NAME)
 

@@ -38,7 +38,6 @@ class SetPasswordActivity : PActivity(), SetPasswordView {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         presenter = SetPasswordPresenter(this)
         tv_title.text = getString(R.string.set_password)
         et_set_password.addClearImage(iv_clear_password)
