@@ -40,7 +40,6 @@ class ModifyPhoneActivity : PActivity(), ModifyPhoneView, View.OnClickListener  
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.modify_phone)
         et_modify_phone.addClearImage(iv_modify_phone_clear)
         presenter = ModifyPhonePresenter(this)
