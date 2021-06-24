@@ -42,7 +42,6 @@ class InviteMemberActivity : BaseActivity(), View.OnClickListener, MyCallback {
 
     override fun initView() {
         familyEntity = get("family")
-        iv_back.setColorFilter(resources.getColor(R.color.black_15161A))
         tv_title.text = getString(R.string.invite_member)
         initViewPager()
         showPhoneInvite()
