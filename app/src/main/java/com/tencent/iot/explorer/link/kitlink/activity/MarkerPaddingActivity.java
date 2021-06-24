@@ -9,14 +9,11 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -2,7 +2,6 @@ package com.tencent.iot.explorer.link.mvp.presenter
 
 import com.tencent.iot.explorer.link.mvp.ParentPresenter
 import com.tencent.iot.explorer.link.mvp.model.ModifyPhoneModel
-import com.tencent.iot.explorer.link.mvp.view.ModifyEmailView
 import com.tencent.iot.explorer.link.mvp.view.ModifyPhoneView
 
 class ModifyPhonePresenter : ParentPresenter<ModifyPhoneModel, ModifyPhoneView> {

@@ -1,9 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.os.Handler
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONObject
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
