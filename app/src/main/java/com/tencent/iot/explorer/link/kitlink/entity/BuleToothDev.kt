@@ -3,7 +3,6 @@ package com.tencent.iot.explorer.link.kitlink.entity
 import android.bluetooth.BluetoothDevice
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
-import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 
 class BuleToothDev {
     var name = ""
