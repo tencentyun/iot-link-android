@@ -36,7 +36,6 @@ class SelectManualTaskActivity : BaseActivity() , MyCallback {
     }
 
     override fun initView() {
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.select_manual_smart)
         singleCheck = intent.getBooleanExtra(CommonField.EXTRA_SINGLE_CHECK, false)
 

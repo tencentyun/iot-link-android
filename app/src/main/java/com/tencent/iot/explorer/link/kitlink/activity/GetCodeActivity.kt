@@ -56,7 +56,6 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
         presenter = GetCodePresenter(this)
         //剪切板
         clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.verification_code)
         presenter.lockResend()
         getInitData()
