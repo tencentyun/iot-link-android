@@ -35,8 +35,6 @@ class ModuleActivity : BaseActivity() {
         }
 
         btn_3.setOnClickListener {
-//            jumpActivity()
-            jumpActivity(VideoOptionsActivity::class.java)
         }
     }
 
