@@ -36,8 +36,6 @@ class CountryCodeActivity : PActivity(),
 
     override fun initView() {
         sbhv_country_code.setBackgroundColor(Color.WHITE)
-        iv_back.setColorFilter(resources.getColor(R.color.black_333333))
-        tv_title.setTextColor(resources.getColor(R.color.black_333333))
         tv_title.text = getString(R.string.country_code)
         crv_country_code.setList(countryCodeList)
         crv_country_code.addRecyclerItemView(this)
