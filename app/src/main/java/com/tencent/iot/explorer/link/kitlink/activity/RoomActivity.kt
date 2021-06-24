@@ -6,18 +6,17 @@ import android.text.TextUtils
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
-import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
-import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.kitlink.util.RequestCode
-import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
+import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
+import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import kotlinx.android.synthetic.main.activity_room.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

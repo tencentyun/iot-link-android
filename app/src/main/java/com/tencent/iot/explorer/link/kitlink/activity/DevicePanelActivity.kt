@@ -14,6 +14,7 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.AppLifeCircleListener
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.log.L
@@ -21,13 +22,11 @@ import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
 import com.tencent.iot.explorer.link.kitlink.webview.OnEventCallback
 import com.tencent.iot.explorer.link.kitlink.webview.WebCallBack
-import kotlinx.android.synthetic.main.activity_device_details.*
 import kotlinx.android.synthetic.main.activity_device_panel.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
