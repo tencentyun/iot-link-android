@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.core.demo.video.activity
 
 import android.Manifest
+import android.app.Activity
 import android.app.Service
 import android.content.ContentValues
 import android.content.Context
@@ -557,6 +558,21 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             synchronized(it) {
                 it.notify()
             }
+        }
+    }
+
+    companion object {
+        fun startPreviewActivity(context: Context?, dev: DevInfo) {
+            context?:let { return }
+
+            var intent = Intent(context, VideoPreviewActivity::class.java)
+            var bundle = Bundle()
+            intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
+            var devInfo = DevUrl2Preview()
+            devInfo.devName = dev.deviceName
+            devInfo.Status = dev.Status
+            bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(devInfo))
+            context.startActivity(intent)
         }
     }
 }

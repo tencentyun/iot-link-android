@@ -90,6 +90,7 @@
     <string name="no_data">没有数据</string>
     <string name="paused">已暂停</string>
     <string name="capture_successed">已保存至相册</string>
+    <string name="devs_checked">已选择 %d 台设备</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
