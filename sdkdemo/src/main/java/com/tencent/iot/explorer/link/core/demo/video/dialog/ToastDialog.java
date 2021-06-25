@@ -53,8 +53,6 @@ public class ToastDialog extends IosCenterStyleDialog {
 
     @Override
     public void show() {
-        if (!isShowing()) {
-            super.show();
-        }
+        super.show();
     }
 }

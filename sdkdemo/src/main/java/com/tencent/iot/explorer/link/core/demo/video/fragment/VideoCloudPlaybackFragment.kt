@@ -27,6 +27,7 @@ import com.tencent.iot.explorer.link.core.demo.video.entity.ActionRecord
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.video.mvp.presenter.EventPresenter
 import com.tencent.iot.explorer.link.core.demo.video.mvp.view.EventView
+import com.tencent.iot.explorer.link.core.demo.video.utils.CommonUtils
 import com.tencent.iot.explorer.link.core.demo.view.CalendarView
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeBlockInfo
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineView
@@ -51,7 +52,6 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by 
     private var baseUrl = ""
     private var adapter : ActionListAdapter? = null
     private var records : MutableList<ActionRecord> = ArrayList()
-    private var handler = Handler()
     private var job : Job? = null
     @Volatile
     private var portrait = true
@@ -92,7 +92,7 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by 
         }
     }
 
-    private fun try2GetRecord(date : Date) {
+    private fun try2GetRecord(date: Date) {
         records.clear()
         App.data.accessInfo?.let {
             if (devInfo == null) return@let
@@ -132,28 +132,6 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by 
         }
     }
 
-    private fun formatTimeData(allTimeBlock: MutableList<TimeBlock>) : MutableList<TimeBlockInfo> {
-        var dateList = ArrayList<TimeBlockInfo>()
-
-        var i = 0
-        while (i < allTimeBlock.size) {
-            var start = Date(allTimeBlock.get(i).StartTime * 1000)
-            while (i + 1 < allTimeBlock.size &&
-                ((allTimeBlock.get(i).EndTime + 60) >= allTimeBlock.get(i + 1).StartTime)) {  // 上一次的结束时间和下一次的开始时间相差一分钟之内
-                i++
-            }
-            var end = Date(allTimeBlock.get(i).EndTime * 1000)
-
-            var item = TimeBlockInfo()
-            item.startTime = start
-            item.endTime = end
-            dateList.add(item)
-            i++
-        }
-
-        return dateList
-    }
-
     private fun refreshTimeLine(timeStr : String?) {
         App.data.accessInfo?.let {
             if (devInfo == null || timeStr == null) return@let
@@ -174,7 +152,7 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by 
                                 if (selectDate == null) return@let
                                 time_line.currentDayTime = selectDate
 
-                                var dataList = formatTimeData(it)
+                                var dataList = CommonUtils.formatTimeData(it)
                                 time_line.setTimeLineTimeDay(Date(dataList.get(0).startTime.time))
                                 time_line.timeBlockInfos = dataList
                                 time_line.invalidate()
@@ -199,10 +177,11 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by 
             override fun onOkClicked(checkedDates: MutableList<String>?) {
                 checkedDates?.let {
                     if (it.size <= 0) return@let
-                    tv_date.setText(dateConvertionWithSplit(it.get(0))) // 当前列表有数据时，有且仅有一个元素，所以可以直接去第一个位置的元素
-                    refreshTimeLine(dateConvertionWithSplit(it.get(0)))
+                    tv_date.setText(CommonUtils.dateConvertionWithSplit(it.get(0))) // 当前列表有数据时，有且仅有一个元素，所以可以直接去第一个位置的元素
+                    refreshTimeLine(CommonUtils.dateConvertionWithSplit(it.get(0)))
 
-                    var selectDate = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN).parse(dateConvertionWithSplit(it.get(0)))
+                    var selectDate = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN).parse(
+                        CommonUtils.dateConvertionWithSplit(it.get(0)))
                     try2GetRecord(selectDate)
                 }
             }
@@ -440,22 +419,11 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by 
         return String.format("%02d:%02d:%02d", hours, leftMin / (1000 * 60), (leftMin / 1000) % 60)
     }
 
-    private fun dateConvertionWithSplit(str: String): String? {
-        var dateString = ""
-        try {
-            var parse = SimpleDateFormat(CalendarView.DATE_FORMAT_PATTERN).parse(str)
-            parse.let {
-                dateString = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN).format(parse)
-            }
-        } catch (e: ParseException) { }
-        return dateString
-    }
-
     override fun eventReady(events: MutableList<ActionRecord>) {
-        handler.post(Runnable {
+        launch(Dispatchers.Main) {
             records.addAll(events)
             adapter?.notifyDataSetChanged()
-        })
+        }
     }
 
     interface OnOrientationChangedListener {
