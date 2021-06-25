@@ -53,6 +53,7 @@
         <activity android:name=".video.activity.VideoOptionsActivity" />
         <activity android:name=".video.activity.VideoInputAuthorizeActivity" />
         <activity android:name=".video.activity.VideoMainActivity" />
+        <activity android:name=".video.activity.VideoNvrActivity" />
         <activity android:name=".video.activity.VideoPlaybackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name=".video.activity.VideoMultiPreviewActivity"

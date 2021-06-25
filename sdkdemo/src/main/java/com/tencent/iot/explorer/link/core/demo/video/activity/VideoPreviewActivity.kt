@@ -9,17 +9,13 @@ import android.content.pm.ActivityInfo
 import android.graphics.SurfaceTexture
 import android.media.AudioManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
@@ -27,6 +23,7 @@ import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.util.ImageSelect
+import com.tencent.iot.explorer.link.core.demo.video.Command
 import com.tencent.iot.explorer.link.core.demo.video.adapter.ActionListAdapter
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ToastDialog
@@ -36,6 +33,7 @@ import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
 import com.tencent.iot.explorer.link.core.demo.video.mvp.presenter.EventPresenter
 import com.tencent.iot.explorer.link.core.demo.video.mvp.view.EventView
+import com.tencent.iot.explorer.link.core.demo.video.utils.CommonUtils
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
@@ -43,9 +41,10 @@ import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
+import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.io.File
-import java.text.SimpleDateFormat
+import java.lang.Runnable
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
@@ -56,15 +55,12 @@ private var keepPlayThreadLock = Object()
 private var keepAliveThreadRuning = true
 
 class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextureListener,
-    XP2PCallback {
+    XP2PCallback, CoroutineScope by MainScope() {
+
     private var tag = VideoPreviewActivity::class.simpleName
-    private var STANDARD_URL_SUFFIX = "ipc.flv?action=live&quality=standard"
-    private var HIGH_URL_SUFFIX = "ipc.flv?action=live&quality=high"
-    private var SUPER_URL_SUFFIX = "ipc.flv?action=live&quality=super"
     private var orientationV = true
     private var adapter : ActionListAdapter? = null
     private var records : MutableList<ActionRecord> = ArrayList()
-    private var handler = Handler()
     private lateinit var presenter: EventPresenter
     private lateinit var player : IjkMediaPlayer
     private lateinit var surface: Surface
@@ -74,9 +70,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
     private var urlPrefix = ""
     private var filePath: String? = null
     private lateinit var audioRecordUtil: AudioRecordUtil
-    private var permissions = arrayOf(
-        Manifest.permission.RECORD_AUDIO
-    )
+    private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
@@ -103,7 +97,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         list_event.adapter = adapter
 
         tv_video_quality.setText(R.string.video_quality_medium_str)
-        today_tip.setText(getString(R.string.today) + " " + getweekDay())
+        today_tip.setText(getString(R.string.today) + " " + CommonUtils.getWeekDay(this@VideoPreviewActivity))
         records.clear()
         App.data.accessInfo?.let {
             presenter.setAccessId(it.accessId)
@@ -134,7 +128,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
             if (!TextUtils.isEmpty(urlPrefix)) {
                 player?.let {
-                    val url = urlPrefix + STANDARD_URL_SUFFIX
+                    val url = urlPrefix + Command.VIDEO_STANDARD_QUALITY_URL_SUFFIX
                     playPlayer(it, url)
                     keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
                 }
@@ -162,7 +156,6 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         Thread(Runnable {
             var objectLock = Object()
             while (true) {
-
                 var tmpCountDownLatch = CountDownLatch(1)
                 countDownLatchs.put(id!!, tmpCountDownLatch)
 
@@ -190,32 +183,16 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
                 Log.d(tag, "id=${id}, tmpCountDownLatch do not wait any more")
 
                 urlPrefix = XP2P.delegateHttpFlv(id)
-                if (!TextUtils.isEmpty(urlPrefix)) {
-                    player?.let {
-                        val url = urlPrefix + STANDARD_URL_SUFFIX
-                        it.reset()
-                        it.setSurface(this.surface)
-                        it.dataSource = url
-                        it.prepareAsync()
-                        it.start()
-                    }
-                    resetPlayer()
-                }
+                if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
             }
         }).start()
     }
 
     private fun resetPlayer() {
         when (tv_video_quality.text.toString()) {
-            getString(R.string.video_quality_high_str) -> {
-                setPlayerUrl(SUPER_URL_SUFFIX)
-            }
-            getString(R.string.video_quality_medium_str) -> {
-                setPlayerUrl(HIGH_URL_SUFFIX)
-            }
-            getString(R.string.video_quality_low_str) -> {
-                setPlayerUrl(STANDARD_URL_SUFFIX)
-            }
+            getString(R.string.video_quality_high_str) -> setPlayerUrl(Command.VIDEO_SUPER_QUALITY_URL_SUFFIX)
+            getString(R.string.video_quality_medium_str) -> setPlayerUrl(Command.VIDEO_HIGH_QUALITY_URL_SUFFIX)
+            getString(R.string.video_quality_low_str) -> setPlayerUrl(Command.VIDEO_STANDARD_QUALITY_URL_SUFFIX)
         }
     }
 
@@ -226,49 +203,15 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         }
     }
 
-    private fun getweekDay() : String {
-        var calendar = Calendar.getInstance()
-        calendar.setTimeInMillis(System.currentTimeMillis())
-        var day = calendar.get(Calendar.DAY_OF_WEEK)
-
-        var retStr = getString(R.string.week)
-        when(day % 7) {
-            0 -> {
-                retStr += getString(R.string.saturday)
-            }
-            1 -> {
-                retStr += getString(R.string.sunday)
-            }
-            2 -> {
-                retStr += getString(R.string.monday)
-            }
-            3 -> {
-                retStr += getString(R.string.tuesday)
-            }
-            4 -> {
-                retStr += getString(R.string.wednesday)
-            }
-            5 -> {
-                retStr += getString(R.string.thursday)
-            }
-            6 -> {
-                retStr += getString(R.string.friday)
-            }
-        }
-        return retStr
-    }
-
-    private fun startSpeak() {
+    private fun speakAble(able: Boolean) {
         App.data.accessInfo?.let {
-            XP2P.runSendService("${it.productId}/${presenter.getDeviceName()}", "", true)
-            audioRecordUtil.start()
-        }
-    }
-
-    private fun stopSpeak() {
-        App.data.accessInfo?.let {
-            audioRecordUtil.stop()
-            XP2P.stopSendService("${it.productId}/${presenter.getDeviceName()}", null)
+            if (able) {
+                XP2P.runSendService("${it.productId}/${presenter.getDeviceName()}", "", true)
+                audioRecordUtil.start()
+            } else {
+                audioRecordUtil.stop()
+                XP2P.stopSendService("${it.productId}/${presenter.getDeviceName()}", null)
+            }
         }
     }
 
@@ -280,26 +223,17 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         }
         tv_video_quality.setOnClickListener(switchVideoQualityListener)
         radio_talk.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (!isChecked) {
-                stopSpeak()
+            if (isChecked && checkPermissions(permissions)) {
+                speakAble(true)
+            } else if (isChecked && !checkPermissions(permissions)) {
+                requestPermission(permissions)
             } else {
-                if (checkPermissions(permissions)) {
-                    startSpeak()
-                } else {
-                    requestPermission(permissions)
-                }
+                speakAble(false)
             }
         }
         radio_record.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                val sdf = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
-                var fileName = "${sdf.format(Date())}.mp4"
-                var path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath
-                if (path.endsWith("/")) {
-                    path = path.substring(0, path.length - 1)
-                }
-                filePath = "${path}/${fileName}"
-
+                filePath = CommonUtils.generateFileDefaultPath()
                 player.startRecord(filePath)
             } else {
                 player.stopRecord()
@@ -315,13 +249,9 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             }
         }
         radio_playback.setOnClickListener {
-            var intent = Intent(this@VideoPreviewActivity, VideoPlaybackActivity::class.java)
-            var bundle = Bundle()
             var dev = DevInfo()
             dev.deviceName = presenter.getDeviceName()
-            bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(dev))
-            intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
-            startActivity(intent)
+            VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewActivity, dev)
             finish()
         }
         radio_photo.setOnClickListener {
@@ -335,17 +265,20 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         adapter?.setOnItemClicked(onItemVideoClicked)
         v_preview.surfaceTextureListener = this
         iv_audio.setOnClickListener {
-            if (audioAble) {
-                audioAble = false
-                iv_audio.setImageResource(R.mipmap.no_audio)
-                player.setVolume(0F, 0F);
-            } else {
-                audioAble = true
-                iv_audio.setImageResource(R.mipmap.audio)
-                var audioManager = getSystemService(Service.AUDIO_SERVICE) as AudioManager
-                var volume = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM)
-                player.setVolume(volume.toFloat(), volume.toFloat())
-            }
+            audioAble = !audioAble
+            chgAudioStatus(audioAble)
+        }
+    }
+
+    private fun chgAudioStatus(audioAble: Boolean) {
+        if (!audioAble) {
+            iv_audio.setImageResource(R.mipmap.no_audio)
+            player.setVolume(0F, 0F)
+        } else {
+            iv_audio.setImageResource(R.mipmap.audio)
+            var audioManager = getSystemService(Service.AUDIO_SERVICE) as AudioManager
+            var volume = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM)
+            player.setVolume(volume.toFloat(), volume.toFloat())
         }
     }
 
@@ -353,18 +286,10 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         override fun onClick(v: View?) {
             var command = ""
             when(v) {
-                iv_up -> {
-                    command = "action=user_define&cmd=ptz_top"
-                }
-                iv_down -> {
-                    command = "action=user_define&cmd=ptz_bottom"
-                }
-                iv_right -> {
-                    command = "action=user_define&cmd=ptz_right"
-                }
-                iv_left -> {
-                    command = "action=user_define&cmd=ptz_left"
-                }
+                iv_up -> command = Command.PTZ_UP
+                iv_down -> command = Command.PTZ_DOWN
+                iv_right -> command = Command.PTZ_RIGHT
+                iv_left -> command = Command.PTZ_LEFT
             }
 
             Thread(Runnable {
@@ -407,16 +332,12 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
     }
 
     private fun showVVideoQualityDialog() {
-        var options = arrayListOf(
-                getString(R.string.video_quality_high_str) + " " + getString(R.string.video_quality_high),
+        var options = arrayListOf(getString(R.string.video_quality_high_str) + " " + getString(R.string.video_quality_high),
                 getString(R.string.video_quality_medium_str) + " " + getString(R.string.video_quality_medium),
-                getString(R.string.video_quality_low_str) + " " + getString(R.string.video_quality_low)
-        )
+                getString(R.string.video_quality_low_str) + " " + getString(R.string.video_quality_low))
         var dlg = ListOptionsDialog(this@VideoPreviewActivity, options)
         dlg.show()
-        dlg.setOnDismisListener {
-            chgTextState(it)
-        }
+        dlg.setOnDismisListener { chgTextState(it) }
     }
 
     private fun showHVideoQualityDialog() {
@@ -430,13 +351,8 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         dlg.show()
         btn_layout.visibility = View.GONE
         dlg.setOnDismisListener(object : VideoQualityDialog.OnDismisListener {
-            override fun onItemClicked(pos: Int) {
-                chgTextState(pos)
-            }
-
-            override fun onDismiss() {
-                btn_layout.visibility = View.VISIBLE
-            }
+            override fun onItemClicked(pos: Int) { chgTextState(pos) }
+            override fun onDismiss() { btn_layout.visibility = View.VISIBLE }
         })
     }
 
@@ -444,24 +360,19 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         when(value) {
             0 -> {
                 tv_video_quality.setText(R.string.video_quality_high_str)
-                setPlayerUrl(SUPER_URL_SUFFIX)
+                setPlayerUrl(Command.VIDEO_SUPER_QUALITY_URL_SUFFIX)
             }
             1 -> {
                 tv_video_quality.setText(R.string.video_quality_medium_str)
-                setPlayerUrl(HIGH_URL_SUFFIX)
+                setPlayerUrl(Command.VIDEO_HIGH_QUALITY_URL_SUFFIX)
             }
             2 -> {
                 tv_video_quality.setText(R.string.video_quality_low_str)
-                setPlayerUrl(STANDARD_URL_SUFFIX)
+                setPlayerUrl(Command.VIDEO_SUPER_QUALITY_URL_SUFFIX)
             }
         }
-        if (!audioAble) {
-            player.setVolume(0F, 0F);
-        } else {
-            var audioManager = getSystemService(Service.AUDIO_SERVICE) as AudioManager
-            var volume = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM)
-            player.setVolume(volume.toFloat(), volume.toFloat())
-        }
+
+        chgAudioStatus(audioAble)
     }
 
     private fun setPlayerUrl(suffix: String) {
@@ -509,16 +420,14 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
     }
 
     override fun eventReady(events: MutableList<ActionRecord>) {
-        handler.post(Runnable {
+        launch(Dispatchers.Main) {
             records.addAll(events)
             adapter?.notifyDataSetChanged()
-        })
+        }
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-        return false
-    }
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
     override fun fail(msg: String?, errorCode: Int) {}
     override fun commandRequest(id: String?, msg: String?) {}
@@ -557,6 +466,22 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             synchronized(it) {
                 it.notify()
             }
+        }
+        cancel()
+    }
+
+    companion object {
+        fun startPreviewActivity(context: Context?, dev: DevInfo) {
+            context?:let { return }
+
+            var intent = Intent(context, VideoPreviewActivity::class.java)
+            var bundle = Bundle()
+            intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
+            var devInfo = DevUrl2Preview()
+            devInfo.devName = dev.deviceName
+            devInfo.Status = dev.Status
+            bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(devInfo))
+            context.startActivity(intent)
         }
     }
 }
