@@ -61,9 +61,7 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
 
     @Override
     public void show() {
-        if (!isShowing()) {
-            super.show();
-        }
+        super.show();
     }
 
     public void next(){
