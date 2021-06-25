@@ -1,7 +1,10 @@
 package com.tencent.iot.explorer.link.core.demo.video.activity
 
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.SurfaceTexture
+import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.Surface
@@ -9,11 +12,13 @@ import android.view.TextureView
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.*
 import com.tencent.iot.explorer.link.core.demo.video.adapter.DevPreviewAdapter
+import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
@@ -269,6 +274,19 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
                     it.notify()
                 }
             }
+        }
+    }
+
+    companion object {
+
+        fun startMultiPreviewActivity(context: Context?, allUrl: ArrayList<DevUrl2Preview>) {
+            if (context == null) return
+
+            var intent = Intent(context, VideoMultiPreviewActivity::class.java)
+            var bundle = Bundle()
+            intent.putExtra(VideoConst.VIDEO_URLS, bundle)
+            bundle.putString(VideoConst.VIDEO_URLS, JSON.toJSONString(allUrl))
+            context?.startActivity(intent)
         }
     }
 }
