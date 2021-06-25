@@ -1,6 +1,9 @@
 package com.tencent.iot.explorer.link.core.demo.video.activity
 
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.LinearLayout
@@ -12,6 +15,7 @@ import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
+import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
 import com.tencent.iot.explorer.link.core.demo.video.fragment.VideoCloudPlaybackFragment
 import com.tencent.iot.explorer.link.core.demo.view.PageAdapter
 import com.tencent.iot.video.link.consts.VideoConst
@@ -107,7 +111,15 @@ class VideoPlaybackActivity : BaseActivity() {
         override fun onPageSelected(position: Int) {
             tab_playback.getTabAt(position)?.select()
         }
-
     }
 
+    companion object {
+        fun startPlaybackActivity(context: Context?, dev: DevInfo) {
+            var intent = Intent(context, VideoPlaybackActivity::class.java)
+            var bundle = Bundle()
+            bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(dev))
+            intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
+            context?.startActivity(intent)
+        }
+    }
 }

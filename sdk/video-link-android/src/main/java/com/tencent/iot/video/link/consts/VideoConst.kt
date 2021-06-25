@@ -16,4 +16,5 @@ object VideoConst {
     const val MULTI_VIDEO_DEVICE_NAME02= "deviceName02"
     const val VIDEO_ACCESS_INFOS = "VideoAccessInfos"
     const val VIDEO_URLS = "VideoUrls"
+    const val VIDEO_NVR_INFO = "VideoNvrInfo"
 }
