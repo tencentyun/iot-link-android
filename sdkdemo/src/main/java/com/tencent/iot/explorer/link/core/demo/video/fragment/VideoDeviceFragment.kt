@@ -16,26 +16,28 @@ import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
 import com.tencent.iot.explorer.link.core.demo.video.activity.VideoMultiPreviewActivity
+import com.tencent.iot.explorer.link.core.demo.video.activity.VideoNvrActivity
 import com.tencent.iot.explorer.link.core.demo.video.activity.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.core.demo.video.activity.VideoPreviewActivity
 import com.tencent.iot.explorer.link.core.demo.video.adapter.DevsAdapter
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ToastDialog
-import com.tencent.iot.explorer.link.core.demo.video.entity.AccessInfo
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
+import com.tencent.iot.explorer.link.core.demo.video.entity.VideoProductInfo
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
+import com.tencent.iot.video.link.consts.VideoRequestCode
 import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.fragment_video_device.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class VideoDeviceFragment : BaseFragment() {
+class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemClicked {
     private var devs : MutableList<DevInfo> = ArrayList()
     private var adapter : DevsAdapter? = null
-    private var ITEM_MAX_NUM = 4
+    private var videoProductInfo : VideoProductInfo? = null
 
     override fun getContentView(): Int {
         return R.layout.fragment_video_device
@@ -43,27 +45,26 @@ class VideoDeviceFragment : BaseFragment() {
 
     override fun startHere(view: View) {
         setListener()
-        switchBtnStatus(false)
+
         var devGridLayoutManager = GridLayoutManager(context, 2)
         context?.let {
             adapter = DevsAdapter(it, devs)
             adapter?.let {
-                it.maxNum = ITEM_MAX_NUM
-                it.setOnItemClicked(onItemClickedListener)
+                it.setOnItemClicked(this)
+                it.tipText = tv_tip_txt
             }
+            adapter?.radioComplete = radio_complete
+            adapter?.radioEdit = radio_edit
             gv_devs.setLayoutManager(devGridLayoutManager)
             gv_devs.setAdapter(adapter)
-            loadMoreVideoInfo()
+            loadAllVideoInfo()
         }
+        adapter?.switchBtnStatus(false)
 
         smart_refresh_layout.setEnableRefresh(true)
         smart_refresh_layout.setRefreshHeader(ClassicsHeader(context))
         smart_refresh_layout.setEnableLoadMore(false)
         smart_refresh_layout.setRefreshFooter(ClassicsFooter(context))
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     private fun setListener() {
@@ -72,27 +73,29 @@ class VideoDeviceFragment : BaseFragment() {
             var dlg = ListOptionsDialog(context, options)
             dlg.show()
             dlg.setOnDismisListener {
-                switchBtnStatus(true)
+                adapter?.switchBtnStatus(true)
             }
         }
 
         radio_complete.setOnClickListener {
-            switchBtnStatus(false)
+            adapter?.switchBtnStatus(false)
             startMultiPreview()
         }
 
         smart_refresh_layout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
-            override fun onLoadMore(refreshLayout: RefreshLayout) {
-                refreshLayout.finishLoadMore()
-            }
-
+            override fun onLoadMore(refreshLayout: RefreshLayout) {}
             override fun onRefresh(refreshLayout: RefreshLayout) {
-                loadMoreVideoInfo()
+                loadAllVideoInfo()
             }
         })
     }
 
     private fun startMultiPreview() {
+        if (adapter?.checkedIds!!.size <= 0) {
+            ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.at_least_one), 2000).show()
+            return
+        }
+
         adapter?.let {
             var allUrl = ArrayList<DevUrl2Preview>()
             for (i in 0 until it.list.size) {
@@ -104,104 +107,91 @@ class VideoDeviceFragment : BaseFragment() {
                 }
             }
 
-            if (allUrl.size <= 0) {
-                ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.at_least_one), 2000).show()
-                return@let
-            }
+            VideoMultiPreviewActivity.startMultiPreviewActivity(context, allUrl)
+        }
+    }
 
-            var intent = Intent(context, VideoMultiPreviewActivity::class.java)
+    override fun onItemClicked(pos: Int, dev: DevInfo) {
+        if (videoProductInfo?.DeviceType == VideoProductInfo.DEV_TYPE_NVR) {
+            var intent = Intent(context, VideoNvrActivity::class.java)
             var bundle = Bundle()
-            intent.putExtra(VideoConst.VIDEO_URLS, bundle)
-            bundle.putString(VideoConst.VIDEO_URLS, JSON.toJSONString(allUrl))
+            bundle.putString(VideoConst.VIDEO_NVR_INFO, JSON.toJSONString(dev))
+            intent.putExtra(VideoConst.VIDEO_NVR_INFO, bundle)
             startActivity(intent)
-        }
-    }
-
-    private fun switchBtnStatus(status: Boolean) {
-        radio_complete.visibility = if (status) View.VISIBLE else View.GONE
-        radio_edit.visibility = if (status) View.GONE else View.VISIBLE
-
-        if (status) {
-            adapter?.let {
-                it.showCheck = true
-                it.checkedIds.clear()
-            }
-
-        } else {
-            adapter?.let {
-                it.showCheck = false
-            }
+            return
         }
 
-        adapter?.notifyDataSetChanged()
-    }
-
-    var onItemClickedListener = object: DevsAdapter.OnItemClicked {
-        override fun onItemClicked(pos: Int, dev: DevInfo) {
-            var options = arrayListOf(getString(R.string.preview), getString(R.string.playback))
-            var dlg = ListOptionsDialog(context, options)
-            dlg.show()
-            dlg.setOnDismisListener {
-                when(it) {
-                    0 -> {
-                        var intent = Intent(context, VideoPreviewActivity::class.java)
-                        var bundle = Bundle()
-                        intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
-                        var devInfo = DevUrl2Preview()
-                        devInfo.devName = dev.deviceName
-                        devInfo.Status = dev.Status
-                        bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(devInfo))
-                        startActivity(intent)
-                    }
-                    1 -> {
-                        var intent = Intent(context, VideoPlaybackActivity::class.java)
-                        var bundle = Bundle()
-                        bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(dev))
-                        intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
-                        startActivity(intent)
-                    }
-                }
-            }
-        }
-        override fun onItemMoreClicked(pos: Int, dev: DevInfo) {}
-        override fun onItemCheckedClicked(pos: Int, checked: Boolean) {}
-        override fun onItemCheckedLimited() {
-            ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.devs_limit), 2000).show()
-        }
-    }
-
-    private var loadDevListener = object : VideoCallback {
-        override fun fail(msg: String?, reqCode: Int) {
-            GlobalScope.launch (Dispatchers.Main) {
-                adapter?.notifyDataSetChanged()
-                if (smart_refresh_layout.isRefreshing) smart_refresh_layout.finishRefresh()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        override fun success(response: String?, reqCode: Int) {
-            val jsonObject = JSON.parse(response) as JSONObject
-            val jsonResponset = jsonObject.getJSONObject("Response") as JSONObject
-
-            if (jsonResponset.containsKey("Devices")) {
-                val dataArray: JSONArray = jsonResponset.getJSONArray("Devices")
-                for (i in 0 until dataArray.size) {
-                    var dev = JSON.parseObject(dataArray.getString(i), DevInfo::class.java)
-                    devs.add(dev)
-                }
-            }
-
-            GlobalScope.launch (Dispatchers.Main) {
-                adapter?.notifyDataSetChanged()
-                if (smart_refresh_layout.isRefreshing) smart_refresh_layout.finishRefresh()
+        var options = arrayListOf(getString(R.string.preview), getString(R.string.playback))
+        var dlg = ListOptionsDialog(context, options)
+        dlg.show()
+        dlg.setOnDismisListener {
+            when(it) {
+                0 -> { VideoPreviewActivity.startPreviewActivity(context, dev) }
+                1 -> { VideoPlaybackActivity.startPlaybackActivity(context, dev) }
             }
         }
     }
+    override fun onItemMoreClicked(pos: Int, dev: DevInfo) {}
+    override fun onItemCheckedClicked(pos: Int, checked: Boolean) {}
+    override fun onItemCheckedLimited() {
+        ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.devs_limit), 2000).show()
+    }
 
-    private fun loadMoreVideoInfo() {
-        devs.clear()
+    private fun loadAllVideoInfo() {
         App.data.accessInfo?.let {
-            VideoBaseService(it.accessId, it.accessToken).getDeviceList(it.productId, 0, 99, loadDevListener)
+            VideoBaseService(it.accessId, it.accessToken).getProductInfo(it.productId, this)
+        }
+    }
+
+    override fun fail(msg: String?, reqCode: Int) {
+        GlobalScope.launch (Dispatchers.Main) {
+            adapter?.notifyDataSetChanged()
+            if (smart_refresh_layout.isRefreshing) smart_refresh_layout.finishRefresh()
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun success(response: String?, reqCode: Int) {
+        val jsonObject = JSON.parse(response) as JSONObject
+        val jsonResponset = jsonObject.getJSONObject("Response") as JSONObject
+
+        when (reqCode) {
+            VideoRequestCode.video_describe_devices -> {
+                if (jsonResponset.containsKey("Devices")) {
+                    val dataArray: JSONArray = jsonResponset.getJSONArray("Devices")
+                    for (i in 0 until dataArray.size) {
+                        var dev = JSON.parseObject(dataArray.getString(i), DevInfo::class.java)
+                        devs.add(dev)
+                    }
+                }
+
+                GlobalScope.launch (Dispatchers.Main) {
+                    adapter?.videoProductInfo = videoProductInfo
+                    adapter?.notifyDataSetChanged()
+                    if (adapter?.videoProductInfo?.DeviceType == VideoProductInfo.DEV_TYPE_IPC) {
+                        rg_edit_dev.visibility = View.VISIBLE
+                    } else {
+                        rg_edit_dev.visibility = View.GONE
+                    }
+                    if (smart_refresh_layout.isRefreshing) smart_refresh_layout.finishRefresh()
+                }
+            }
+
+            VideoRequestCode.video_describe_product -> {
+                if (jsonResponset.containsKey("Data")) {
+                    videoProductInfo = jsonResponset.getObject("Data", VideoProductInfo::class.java)
+                    requestDevs()
+                }
+            }
+        }
+    }
+
+    private fun requestDevs() {
+        videoProductInfo?.let {
+            App.data.accessInfo?.let {
+                devs.clear()
+                VideoBaseService(it.accessId, it.accessToken).getDeviceList(it.productId, 0, 99, this)
+            }
         }
     }
 }

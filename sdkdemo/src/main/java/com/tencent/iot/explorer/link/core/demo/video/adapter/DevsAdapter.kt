@@ -5,19 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RadioButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
+import com.tencent.iot.explorer.link.core.demo.video.entity.VideoProductInfo
+import kotlinx.android.synthetic.main.fragment_video_device.*
 
 class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.Adapter<DevsAdapter.ViewHolder>() {
+    private var ITEM_MAX_NUM = 4
     var list: MutableList<DevInfo> = ArrayList()
     var context: Context? = null
     var showCheck = false
     var checkedIds : MutableList<Int> = ArrayList()
-    var maxNum = -1 // 选择子项目的上限， <= 0 没有上限， > 0 上限生效
+    var maxNum = ITEM_MAX_NUM // 选择子项目的上限， <= 0 没有上限， > 0 上限生效
+    var videoProductInfo : VideoProductInfo? = null
+    var tipText: TextView? = null
+    var radioComplete: RadioButton? = null
+    var radioEdit: RadioButton? = null
 
     init {
         this.list = list
@@ -57,11 +65,24 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.devName.setText(list.get(position)?.deviceName)
-        Picasso.get().load(R.mipmap.ipc).into(holder.devImg)
+
+        videoProductInfo?.let {
+            when(it.DeviceType ) {
+                VideoProductInfo.DEV_TYPE_IPC -> {
+                    Picasso.get().load(R.mipmap.ipc).into(holder.devImg)
+                }
+                VideoProductInfo.DEV_TYPE_NVR -> {
+                    Picasso.get().load(R.mipmap.nvr).into(holder.devImg)
+                }
+            }
+        }
 
         holder.checked.visibility = View.GONE
+        tipText?.visibility = View.GONE
         if (showCheck) {
             holder.checked.visibility = View.VISIBLE
+            tipText?.visibility = View.VISIBLE
+            tipText?.setText(context?.getString(R.string.devs_checked, checkedIds?.size))
         }
 
         if (list.get(position)?.Status == 1) {
@@ -123,5 +144,13 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
 
     fun setOnItemClicked(onItemClicked: OnItemClicked?) {
         this.onItemClicked = onItemClicked
+    }
+
+    fun switchBtnStatus(status: Boolean) {
+        radioComplete?.visibility = if (status) View.VISIBLE else View.GONE
+        radioEdit?.visibility = if (status) View.GONE else View.VISIBLE
+        showCheck = status
+        if (showCheck) checkedIds.clear()
+        this.notifyDataSetChanged()
     }
 }

@@ -70,9 +70,7 @@ public class ListOptionsDialog extends IosCenterStyleDialog {
     }
 
     public void show() {
-        if (!isShowing()) {
-            super.show();
-        }
+        super.show();
     }
 
 }
