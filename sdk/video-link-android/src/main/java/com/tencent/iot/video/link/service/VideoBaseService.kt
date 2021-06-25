@@ -134,6 +134,18 @@ open class VideoBaseService(secretId: String, secretKey: String) {
             param, headerParams, callback, VideoRequestCode.video_describe_date_time)
     }
 
+    fun getProductInfo(productId: String, callback: VideoCallback) {
+        var headerParams = videoCommonHeaderParams("DescribeProduct", "2020-12-15")
+        val param = TreeMap<String, Any>()
+        param["ProductId"] = productId
+        val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
+        if (authorization != null) {
+            headerParams["Authorization"] = authorization
+        }
+        basePost(VideoHttpUtil.VIDEO_SERVICE + VideoHttpUtil.REST_HOST_URL,
+            param, headerParams, callback, VideoRequestCode.video_describe_product)
+    }
+
     fun getVideoBaseUrl(productId: String, devName: String, callback: VideoCallback) {
         var headerParams = videoCommonHeaderParams("DescribeCloudStorageVideoUrl")
         val param = TreeMap<String, Any>()
@@ -324,6 +336,5 @@ open class VideoBaseService(secretId: String, secretKey: String) {
             }
         })
     }
-
 
 }

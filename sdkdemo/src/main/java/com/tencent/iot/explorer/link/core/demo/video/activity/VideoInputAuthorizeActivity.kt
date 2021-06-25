@@ -50,6 +50,7 @@ class VideoInputAuthorizeActivity : BaseActivity() , CoroutineScope by MainScope
                         product_id_layout.ev_content.setText(accessInfo.productId)
                         access_id_layout.ev_content.setSelection(accessInfo.accessId.length)
                     }
+
                 }?:let{
                     access_id_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretId)
                     access_token_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretKey)
@@ -58,7 +59,6 @@ class VideoInputAuthorizeActivity : BaseActivity() , CoroutineScope by MainScope
                 }
             }
         }
-
     }
 
     override fun setListener() {
