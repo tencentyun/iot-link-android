@@ -17,4 +17,5 @@ object VideoConst {
     const val VIDEO_ACCESS_INFOS = "VideoAccessInfos"
     const val VIDEO_URLS = "VideoUrls"
     const val VIDEO_NVR_INFO = "VideoNvrInfo"
+    const val VIDEO_PAGE_INDEX = "VideoPageIndex"
 }
