@@ -88,6 +88,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             devInfo?.let {
                 tv_title.setText(it.devName)
                 presenter.setDeviceName(it.devName)
+                presenter.setChannel(it.channel)
             }
         }
 
@@ -128,7 +129,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
             if (!TextUtils.isEmpty(urlPrefix)) {
                 player?.let {
-                    val url = urlPrefix + Command.VIDEO_STANDARD_QUALITY_URL_SUFFIX
+                    val url = urlPrefix + Command.getVideoHightQualityUrlSuffix(presenter.getChannel())
                     playPlayer(it, url)
                     keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
                 }
@@ -190,9 +191,9 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
 
     private fun resetPlayer() {
         when (tv_video_quality.text.toString()) {
-            getString(R.string.video_quality_high_str) -> setPlayerUrl(Command.VIDEO_SUPER_QUALITY_URL_SUFFIX)
-            getString(R.string.video_quality_medium_str) -> setPlayerUrl(Command.VIDEO_HIGH_QUALITY_URL_SUFFIX)
-            getString(R.string.video_quality_low_str) -> setPlayerUrl(Command.VIDEO_STANDARD_QUALITY_URL_SUFFIX)
+            getString(R.string.video_quality_high_str) -> setPlayerUrl(Command.getVideoSuperQualityUrlSuffix(presenter.getChannel()))
+            getString(R.string.video_quality_medium_str) -> setPlayerUrl(Command.getVideoHightQualityUrlSuffix(presenter.getChannel()))
+            getString(R.string.video_quality_low_str) -> setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
         }
     }
 
@@ -286,10 +287,10 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         override fun onClick(v: View?) {
             var command = ""
             when(v) {
-                iv_up -> command = Command.PTZ_UP
-                iv_down -> command = Command.PTZ_DOWN
-                iv_right -> command = Command.PTZ_RIGHT
-                iv_left -> command = Command.PTZ_LEFT
+                iv_up -> command = Command.getPtzUpCommand(presenter.getChannel())
+                iv_down -> command = Command.getPtzDownCommand(presenter.getChannel())
+                iv_right -> command = Command.getPtzRightCommand(presenter.getChannel())
+                iv_left -> command = Command.getPtzLeftCommand(presenter.getChannel())
             }
 
             Thread(Runnable {
@@ -360,15 +361,15 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         when(value) {
             0 -> {
                 tv_video_quality.setText(R.string.video_quality_high_str)
-                setPlayerUrl(Command.VIDEO_SUPER_QUALITY_URL_SUFFIX)
+                setPlayerUrl(Command.getVideoSuperQualityUrlSuffix(presenter.getChannel()))
             }
             1 -> {
                 tv_video_quality.setText(R.string.video_quality_medium_str)
-                setPlayerUrl(Command.VIDEO_HIGH_QUALITY_URL_SUFFIX)
+                setPlayerUrl(Command.getVideoHightQualityUrlSuffix(presenter.getChannel()))
             }
             2 -> {
                 tv_video_quality.setText(R.string.video_quality_low_str)
-                setPlayerUrl(Command.VIDEO_SUPER_QUALITY_URL_SUFFIX)
+                setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
             }
         }
 
@@ -480,6 +481,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             var devInfo = DevUrl2Preview()
             devInfo.devName = dev.deviceName
             devInfo.Status = dev.Status
+            devInfo.channel = dev.channel
             bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(devInfo))
             context.startActivity(intent)
         }

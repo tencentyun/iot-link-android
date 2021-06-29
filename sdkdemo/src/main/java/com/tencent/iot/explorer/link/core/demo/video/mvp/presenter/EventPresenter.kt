@@ -40,6 +40,17 @@ class EventPresenter : ParentPresenter<EventModel, EventView> {
         model?.getCurrentDayEventsData()
     }
 
+    fun setChannel(channel: Int) {
+        model?.setChannel(channel)
+    }
+
+    fun getChannel() : Int {
+        model?.let {
+            return it.getChannel()
+        }
+        return 0
+    }
+
     fun getEventsData(date: Date) {
         var startDate = Date(date.time)
         startDate.hours = 0
