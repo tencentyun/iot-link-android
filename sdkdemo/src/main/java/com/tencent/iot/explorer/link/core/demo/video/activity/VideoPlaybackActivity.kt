@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,9 +15,10 @@ import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
 import com.tencent.iot.explorer.link.core.demo.fragment.BaseFragment
+import com.tencent.iot.explorer.link.core.demo.video.OnOrientationChangedListener
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
-import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
 import com.tencent.iot.explorer.link.core.demo.video.fragment.VideoCloudPlaybackFragment
+import com.tencent.iot.explorer.link.core.demo.video.fragment.VideoLocalPlaybackFragment
 import com.tencent.iot.explorer.link.core.demo.view.PageAdapter
 import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.android.synthetic.main.activity_video_playback.*
@@ -30,9 +32,10 @@ import java.util.*
 class VideoPlaybackActivity : BaseActivity() {
 
     private val page1 = VideoCloudPlaybackFragment()
-    private val page2 = VideoCloudPlaybackFragment()
+    private val page2 = VideoLocalPlaybackFragment()
     private val mPageList: MutableList<BaseFragment> = ArrayList()
     private lateinit var mAdapter : PageAdapter
+    private var pageIndex = 0
 
     override fun getContentView(): Int {
         return R.layout.activity_video_playback
@@ -47,7 +50,6 @@ class VideoPlaybackActivity : BaseActivity() {
         fragment_pager.setAdapter(mAdapter)
         fragment_pager.setPagingEnabled(false)
         fragment_pager.setOffscreenPageLimit(2)
-        fragment_pager.setCurrentItem(0)
 
         val tabStrip = tab_playback.getChildAt(0) as LinearLayout
         for (i in 0 until tabStrip.childCount) {
@@ -60,7 +62,9 @@ class VideoPlaybackActivity : BaseActivity() {
             if (TextUtils.isEmpty(jsonStr)) return@let
 
             page1.devInfo = JSON.parseObject(jsonStr, DevInfo::class.java)
+            pageIndex = it.getInt(VideoConst.VIDEO_PAGE_INDEX)
         }
+        fragment_pager.setCurrentItem(pageIndex)
     }
 
     override fun setListener() {
@@ -75,10 +79,11 @@ class VideoPlaybackActivity : BaseActivity() {
         })
 
         fragment_pager.setOnPageChangeListener(pageSelectListener)
-        page1.setOnOrientationChangedListener(onOrientationChangedListener)
+        page1.onOrientationChangedListener = onOrientationChangedListener
+        page2.onOrientationChangedListener = onOrientationChangedListener
     }
 
-    private var onOrientationChangedListener = object : VideoCloudPlaybackFragment.OnOrientationChangedListener {
+    private var onOrientationChangedListener = object : OnOrientationChangedListener {
         override fun onOrientationChanged(portrait: Boolean) {
             var layoutParams = layout_video.layoutParams as ConstraintLayout.LayoutParams
             var fitSize = 0
@@ -114,12 +119,17 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     companion object {
-        fun startPlaybackActivity(context: Context?, dev: DevInfo) {
+        fun startPlaybackActivity(context: Context?, dev: DevInfo, pageIndex: Int) {
             var intent = Intent(context, VideoPlaybackActivity::class.java)
             var bundle = Bundle()
             bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(dev))
+            bundle.putInt(VideoConst.VIDEO_PAGE_INDEX, pageIndex)
             intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
             context?.startActivity(intent)
+        }
+
+        fun startPlaybackActivity(context: Context?, dev: DevInfo) {
+            startPlaybackActivity(context, dev, 0)
         }
     }
 }
