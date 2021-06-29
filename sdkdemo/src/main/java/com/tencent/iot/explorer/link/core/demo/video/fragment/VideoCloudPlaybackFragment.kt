@@ -46,29 +46,17 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by MainScope() {
-    private var dateFormat = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN, Locale.getDefault())
+class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView {
     var devInfo: DevInfo? = null
     private var baseUrl = ""
     private var adapter : ActionListAdapter? = null
     private var records : MutableList<ActionRecord> = ArrayList()
-    private var job : Job? = null
-    @Volatile
-    private var portrait = true
     private lateinit var presenter: EventPresenter
     private var URL_FORMAT = "%s?starttime_epoch=%s&endtime_epoch=%s"
     private var seekBarJob : Job? = null
 
-    override fun onDestroy() {
-        super.onDestroy()
-        cancel()
-    }
-
-    override fun getContentView(): Int {
-        return R.layout.fragment_video_cloud_playback
-    }
-
     override fun startHere(view: View) {
+        super.startHere(view)
         presenter = EventPresenter(this)
 
         tv_date.setText(dateFormat.format(System.currentTimeMillis()))
@@ -211,45 +199,6 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by 
         }
 
         time_line.setTimelineChangeListener(timeLineViewChangeListener)
-        layout_video.setOnClickListener {
-            if (playback_control.visibility == View.VISIBLE) {
-                playback_control.visibility = View.GONE
-                job?.let {
-                    it.cancel()
-                }
-            } else {
-                playback_control.visibility = View.VISIBLE
-                job = launch {
-                    delay(5 * 1000)
-                    playback_control.visibility = View.GONE
-                }
-            }
-        }
-
-        playback_control_orientation.setOnClickListener {
-            portrait = !portrait
-            onOrientationChangedListener?.onOrientationChanged(portrait)
-            var moreSpace = 12
-            var marginWidth = 0
-            if (portrait) {
-                layout_control.visibility = View.VISIBLE
-                v_space.visibility = View.VISIBLE
-            } else {
-                layout_control.visibility = View.GONE
-                v_space.visibility = View.GONE
-                moreSpace = 32
-                marginWidth = 73
-            }
-
-            var btnLayoutParams = playback_control_orientation.layoutParams as ConstraintLayout.LayoutParams
-            btnLayoutParams.bottomMargin = dp2px(moreSpace)
-            playback_control_orientation.layoutParams = btnLayoutParams
-
-            var videoLayoutParams = palayback_video.layoutParams as ConstraintLayout.LayoutParams
-            videoLayoutParams.marginStart = dp2px(marginWidth)
-            videoLayoutParams.marginEnd = dp2px(marginWidth)
-            palayback_video.layoutParams = videoLayoutParams
-        }
 
         playback_control.setOnClickListener {  }
         palayback_video.setOnInfoListener(onInfoListener)
@@ -424,15 +373,5 @@ class VideoCloudPlaybackFragment : BaseFragment(), EventView, CoroutineScope by 
             records.addAll(events)
             adapter?.notifyDataSetChanged()
         }
-    }
-
-    interface OnOrientationChangedListener {
-        fun onOrientationChanged(portrait : Boolean)
-    }
-
-    private var onOrientationChangedListener : OnOrientationChangedListener? = null
-
-    fun setOnOrientationChangedListener(onOrientationChangedListener : OnOrientationChangedListener) {
-        this.onOrientationChangedListener = onOrientationChangedListener
     }
 }

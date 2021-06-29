@@ -18,6 +18,7 @@ import com.tencent.iot.explorer.link.core.demo.video.adapter.DevsAdapter
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.core.demo.video.dialog.ToastDialog
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
+import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
 import com.tencent.iot.explorer.link.core.demo.video.entity.VideoProductInfo
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
@@ -57,11 +58,8 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
         adapter?.radioComplete = radio_complete
         adapter?.radioEdit = radio_edit
         adapter?.switchBtnStatus(false)
-
-        smart_refresh_layout.setEnableRefresh(true)
-        smart_refresh_layout.setRefreshHeader(ClassicsHeader(this@VideoNvrActivity))
+        smart_refresh_layout.setEnableRefresh(false)
         smart_refresh_layout.setEnableLoadMore(false)
-        smart_refresh_layout.setRefreshFooter(ClassicsFooter(this@VideoNvrActivity))
 
         App.data.accessInfo?.let {
             XP2P.setQcloudApiCred(it.accessId, it.accessToken)
@@ -93,48 +91,54 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
                     countDownLatch = CountDownLatch(1)
                     var started = XP2P.startServiceWithXp2pInfo("${it.productId}/${devName}",
                         it.productId, devName, "")
-                    Log.e("XXX", "showDev started " + started)
-                    if (started != 0) {
-                        launch(Dispatchers.Main) {
-                            smart_refresh_layout?.finishRefresh()
-                        }
-                        return@launch
-                    }
+                    if (started != 0) return@launch
 
-                    Log.e("XXX", "start wait")
                     countDownLatch.await(5, TimeUnit.SECONDS)
-                    Log.e("XXX", "pass wait")
                     queryNvrDev(devName)
                 }
             }
         }).start()
     }
 
+    private fun startMultiPreview() {
+        adapter?.let {
+            var allUrl = ArrayList<DevUrl2Preview>()
+            for (i in 0 until it.list.size) {
+                if (it.checkedIds.contains(i)) {
+                    var dev = DevUrl2Preview()
+                    dev.devName = tv_title.text.toString()
+                    dev.Status = it.list.get(i).Status
+                    dev.channel = it.list.get(i).channel
+                    allUrl.add(dev)
+                }
+            }
+
+            VideoMultiPreviewActivity.startMultiPreviewActivity(this@VideoNvrActivity, allUrl)
+        }
+    }
+
     private fun queryNvrDev(devName: String) {
         App.data.accessInfo?.let {
-            var nvrDevs = XP2P.postCommandRequestSync("${it.productId}/${devName}", Command.QUERY_NVR_DEVS.toByteArray(),
+            var nvrDevsStr = XP2P.postCommandRequestSync("${it.productId}/${devName}", Command.QUERY_NVR_DEVS.toByteArray(),
                 Command.QUERY_NVR_DEVS.toByteArray().size.toLong(), 2 * 1000 * 1000)
-            Log.e("XXX", "nvrDevs ${nvrDevs}")
-            nvrDevs?.let {
+            nvrDevsStr?.let {
                 launch(Dispatchers.Main) {
-                    smart_refresh_layout?.finishRefresh()
                     devs.clear()
-                    var nvrDevs = JSONArray.parseArray(nvrDevs, DevInfo::class.java)
+                    var nvrDevs = JSONArray.parseArray(it, DevInfo::class.java)
                     nvrDevs?.let { devs?.addAll(it) }
                     rg_edit_dev.visibility = View.VISIBLE
                     adapter?.videoProductInfo = videoProductInfo
                     adapter?.notifyDataSetChanged()
                 }
             }
+
+            XP2P.stopService("${it.productId}/${tv_title.text}")
+            XP2P.setCallback(null)
         }
     }
 
     override fun onDestroy() {
         cancel()
-        App.data.accessInfo?.let {
-            XP2P.stopService("${it.productId}/${tv_title.text}")
-        }
-        XP2P.setCallback(null)
         super.onDestroy()
     }
 
@@ -156,21 +160,9 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
                 ToastDialog(this@VideoNvrActivity, ToastDialog.Type.WARNING, getString(R.string.at_least_one), 2000).show()
                 return@setOnClickListener
             }
-        }
 
-        smart_refresh_layout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
-            override fun onLoadMore(refreshLayout: RefreshLayout) {}
-            override fun onRefresh(refreshLayout: RefreshLayout) {
-                rg_edit_dev.visibility = View.GONE
-                try {
-                    queryNvrDev(tv_title.text.toString())
-                } catch (e: Exception) {
-                    refreshLayout.finishRefresh()
-                    e.printStackTrace()
-                    ToastDialog(this@VideoNvrActivity, ToastDialog.Type.WARNING, getString(R.string.query_failed), 2000).show()
-                }
-            }
-        })
+            startMultiPreview()
+        }
     }
 
     override fun onItemMoreClicked(pos: Int, dev: DevInfo) {}
@@ -181,13 +173,17 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
     }
 
     override fun onItemClicked(pos: Int, dev: DevInfo) {
+        var devInfo = DevInfo()
+        devInfo.deviceName = tv_title.text.toString()
+        devInfo.online = dev.online
+        devInfo.channel = dev.channel
         var options = arrayListOf(getString(R.string.preview), getString(R.string.playback))
         var dlg = ListOptionsDialog(this@VideoNvrActivity, options)
         dlg.show()
         dlg.setOnDismisListener {
             when(it) {
-                0 -> { VideoPreviewActivity.startPreviewActivity(this@VideoNvrActivity, dev) }
-                1 -> { VideoPlaybackActivity.startPlaybackActivity(this@VideoNvrActivity, dev) }
+                0 -> { VideoPreviewActivity.startPreviewActivity(this@VideoNvrActivity, devInfo) }
+                1 -> { VideoPlaybackActivity.startPlaybackActivity(this@VideoNvrActivity, devInfo, 1) }
             }
         }
     }
@@ -195,7 +191,6 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
     override fun fail(msg: String?, errorCode: Int) {}
     override fun commandRequest(id: String?, msg: String?) {}
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-        Log.e("XXX", "id ${id} msg ${msg} event ${event}")
         if (event == 1004) {
             countDownLatch.countDown()
         }

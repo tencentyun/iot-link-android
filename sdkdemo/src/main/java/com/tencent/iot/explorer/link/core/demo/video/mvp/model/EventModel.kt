@@ -26,6 +26,7 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
     private var accessToken : String = ""
     private var productId: String = ""
     private var deviceName: String = ""
+    private var channel: Int = 0
     private var coundownLatch: CountDownLatch? = null
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -116,6 +117,14 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
 
     fun getDeviceName() : String {
         return this.deviceName
+    }
+
+    fun setChannel(channel: Int) {
+        this.channel = channel
+    }
+
+    fun getChannel(): Int {
+        return this.channel
     }
 
     fun getSnapshotUrl(thumbnail : String) {
