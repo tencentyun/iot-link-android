@@ -20,6 +20,7 @@ import com.tencent.iot.explorer.link.core.demo.activity.*
 import com.tencent.iot.explorer.link.core.demo.video.Command
 import com.tencent.iot.explorer.link.core.demo.video.adapter.DevPreviewAdapter
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
+import com.tencent.iot.explorer.link.core.demo.video.entity.NvrDevStatus
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
@@ -31,6 +32,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
+import kotlin.collections.ArrayList
 
 
 private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
@@ -82,6 +84,7 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
 
         for (i in 0 until allDevUrl.size) {
             if (allDevUrl.get(i).Status != 1) continue
+
             var player = IjkMediaPlayer()
             allDevUrl.get(i).surfaceTextureListener = object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
@@ -92,33 +95,32 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
                 }
 
                 override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
-                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-                    return false
-                }
+                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
             }
 
-            setPlayerSource(player, allDevUrl.get(i).devName)
+            setPlayerSource(player, allDevUrl.get(i).devName, allDevUrl.get(i).channel)
             allDevUrl.get(i).player = player
         }
     }
 
-    private fun setPlayerSource(player: IjkMediaPlayer, devName: String) {
+    private fun setPlayerSource(player: IjkMediaPlayer, devName: String, channel: Int) {
         Thread(Runnable {
             var started = XP2P.startServiceWithXp2pInfo("${App.data.accessInfo!!.productId}/${devName}",
                 App.data.accessInfo!!.productId, devName, "")
-            if (started != 0) return@Runnable
+            // 已经启动过，或者第一次启动，继续进行
+            if (started != 0 && started != -1011) return@Runnable
 
             var tmpCountDownLatch = CountDownLatch(1)
-            countDownLatchs.put("${App.data.accessInfo!!.productId}/${devName}", tmpCountDownLatch)
+            countDownLatchs.put("${App.data.accessInfo!!.productId}/${devName}/${channel}", tmpCountDownLatch)
             tmpCountDownLatch.await()
 
             val urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${devName}")
             if (!TextUtils.isEmpty(urlPrefix)) {
                 player?.let {
-                    val url = urlPrefix + Command.VIDEO_HIGH_QUALITY_URL_SUFFIX
+                    val url = urlPrefix + Command.getVideoHightQualityUrlSuffix(channel)
                     playPlayer(it, url)
-                    keepPlayerplay("${App.data.accessInfo!!.productId}/${devName}")
+                    //keepPlayerplay("${App.data.accessInfo!!.productId}/${devName}")
                 }
             }
         }).start()
@@ -165,81 +167,101 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
     override fun commandRequest(id: String?, msg: String?) {}
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-        Log.d(tag, "id=${id},event=${event}")
+        Log.d(tag, "xxxx id=${id},event=${event},msg=${msg}")
         if (event == 1003) {
-            var lockHolder = getHolderById(id)
-            lockHolder?.lock?.let {
-                synchronized(it) {
-                    it.notify()
+//            var lockHolder = getHolderById(id)
+//            lockHolder?.lock?.let {
+//                synchronized(it) {
+//                    it.notify()
+//                }
+//            } // 唤醒守护线程
+        } else if (event == 1004) {
+            tryReleaseLock(id)
+        } else if (event == 1005) { }
+    }
+
+    private fun tryReleaseLock(id: String?) {
+        var holders = getHolderById(id)
+        for (i in 0 until holders.size) {
+            Thread(Runnable {
+                App.data.accessInfo?.let {
+                    var command = Command.getNvrIpcStatus(holders.get(i).channel, 0)
+                    var repStatus = XP2P.postCommandRequestSync("${it.productId}/${holders.get(i).devName}",
+                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                    Log.e("XXX", "repStatus ${repStatus}")
+                    var status = JSONArray.parseArray(repStatus, NvrDevStatus::class.java)
+                    Log.e("XXX", "status ${status}")
+                    status?.let {
+                        if (it.size == 1 && it.get(0).status == 0) {
+                            countDownLatchs.get("${id}/${holders.get(i).channel}")?.let {
+                                it.countDown()
+                            }
+                        }
+                    }
                 }
-            } // 唤醒守护线程
-        } else if (event == 1004 || event == 1005) {
-            countDownLatchs.get(id)?.let {
-                it.countDown()
-            }
+            }).start()
         }
     }
 
-    private fun getHolderById(id: String?) : DevUrl2Preview? {
-        if (TextUtils.isEmpty(id)) return null
+    private fun getHolderById(id: String?) : MutableList<DevUrl2Preview> {
+        if (TextUtils.isEmpty(id)) return ArrayList()
 
-        var playerHolder: DevUrl2Preview? = null
+        var ret = ArrayList<DevUrl2Preview>()
         for (devUrl in allDevUrl) {
             if (!TextUtils.isEmpty(devUrl.devName) && id!!.endsWith(devUrl.devName)) {
-                playerHolder = devUrl
-                break
+                ret.add(devUrl)
             }
         }
-        return playerHolder
+        return ret
     }
 
-    private fun keepPlayerplay(id: String?) {
-        if (TextUtils.isEmpty(id)) return
-
-        // 开启守护线程
-        Thread(Runnable {
-            var objectLock = Object()
-            while (true) {
-                var playerHolder = getHolderById(id)
-                if (playerHolder == null || TextUtils.isEmpty(playerHolder.devName)) return@Runnable
-
-                var tmpCountDownLatch = CountDownLatch(1)
-                countDownLatchs.put(id!!, tmpCountDownLatch)
-
-                synchronized(playerHolder.lock) {
-                    playerHolder.lock.wait()
-                }
-                if (!playerHolder.keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
-
-                // 发现断开尝试恢复视频，每隔一秒尝试一次
-                var flag = -1
-                while (flag != 0) {
-                    XP2P.stopService(id)
-                    flag = XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, playerHolder.devName, "")
-                    synchronized(objectLock) {
-                        objectLock.wait(1000)
-                    }
-                }
-
-                Log.d(tag, "id=${id} keepPlayerplay countDownLatch wait ")
-                countDownLatchs.put(id!!, tmpCountDownLatch)
-                tmpCountDownLatch.await()
-                Log.d(tag, "id=${id} keepPlayerplay countDownLatch passed")
-
-                val urlPrefix = XP2P.delegateHttpFlv(id)
-                if (!TextUtils.isEmpty(urlPrefix)) {
-                    playerHolder.player?.let {
-                        val url = urlPrefix + Command.VIDEO_HIGH_QUALITY_URL_SUFFIX
-                        it.reset()
-                        it.setSurface(playerHolder.surface)
-                        it.dataSource = url
-                        it.prepareAsync()
-                        it.start()
-                    }
-                }
-            }
-        }).start()
-    }
+//    private fun keepPlayerplay(id: String?) {
+//        if (TextUtils.isEmpty(id)) return
+//
+//        // 开启守护线程
+//        Thread(Runnable {
+//            var objectLock = Object()
+//            while (true) {
+//                var playerHolder = getHolderById(id)
+//                if (playerHolder == null || TextUtils.isEmpty(playerHolder.devName)) return@Runnable
+//
+//                var tmpCountDownLatch = CountDownLatch(1)
+//                countDownLatchs.put(id!!, tmpCountDownLatch)
+//
+//                synchronized(playerHolder.lock) {
+//                    playerHolder.lock.wait()
+//                }
+//                if (!playerHolder.keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
+//
+//                // 发现断开尝试恢复视频，每隔一秒尝试一次
+//                var flag = -1
+//                while (flag != 0) {
+//                    XP2P.stopService(id)
+//                    flag = XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, playerHolder.devName, "")
+//                    synchronized(objectLock) {
+//                        objectLock.wait(1000)
+//                    }
+//                }
+//
+//                Log.d(tag, "id=${id} keepPlayerplay countDownLatch wait ")
+//                countDownLatchs.put(id!!, tmpCountDownLatch)
+//                tmpCountDownLatch.await()
+//                Log.d(tag, "id=${id} keepPlayerplay countDownLatch passed")
+//
+//                val urlPrefix = XP2P.delegateHttpFlv(id)
+//                if (!TextUtils.isEmpty(urlPrefix)) {
+//                    playerHolder.player?.let {
+//                        val url = urlPrefix + Command.getVideoHightQualityUrlSuffix(playerHolder.channel)
+//                        it.reset()
+//                        it.setSurface(playerHolder.surface)
+//                        it.dataSource = url
+//                        it.prepareAsync()
+//                        it.start()
+//                    }
+//                }
+//            }
+//        }).start()
+//    }
 
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
