@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f86267ef_32b3665e",
+        "filename": "sdk/video-link-android/src/main/java/com/tencent/iot/video/link/service/VideoBaseService.kt",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-06-29T02:09:18Z",
+      "side": 1,
+      "message": "这里的\"2020-12-15\" Version  和  \"DescribeProduct\" Action，可以统一管理一下。",
+      "revId": "dc5a1057eaf943f6e51cedd09e3397f44cf13a84",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
