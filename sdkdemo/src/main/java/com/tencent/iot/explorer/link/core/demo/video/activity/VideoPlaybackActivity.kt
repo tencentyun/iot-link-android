@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -56,8 +55,7 @@ class VideoPlaybackActivity : BaseActivity() {
             tabStrip.getChildAt(i).setOnTouchListener { v, event -> true }
         }
 
-        var bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
-        bundle?.let {
+        intent.getBundleExtra(VideoConst.VIDEO_CONFIG)?.let {
             var jsonStr = it.getString(VideoConst.VIDEO_CONFIG)
             if (TextUtils.isEmpty(jsonStr)) return@let
 
@@ -72,7 +70,6 @@ class VideoPlaybackActivity : BaseActivity() {
         tab_playback.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {}
             override fun onTabUnselected(tab: TabLayout.Tab) {}
-
             override fun onTabSelected(tab: TabLayout.Tab) {
                 fragment_pager?.setCurrentItem(tab.position)
             }

@@ -23,6 +23,7 @@ import kotlinx.coroutines.*
 class VideoInputAuthorizeActivity : BaseActivity() , CoroutineScope by MainScope() {
 
     override fun getContentView(): Int {
+        
         return R.layout.activity_video_input_authorize
     }
 

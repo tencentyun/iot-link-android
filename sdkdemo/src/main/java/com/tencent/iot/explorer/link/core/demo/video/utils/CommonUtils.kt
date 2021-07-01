@@ -1,11 +1,17 @@
 package com.tencent.iot.explorer.link.core.demo.video.utils
 
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Environment
+import android.provider.MediaStore
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.entity.TimeBlock
+import com.tencent.iot.explorer.link.core.demo.video.dialog.ToastDialog
 import com.tencent.iot.explorer.link.core.demo.view.CalendarView
 import com.tencent.iot.explorer.link.core.demo.view.timeline.TimeBlockInfo
+import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -73,6 +79,37 @@ class CommonUtils {
             }
 
             return dateList
+        }
+
+        fun formatTime(time: Long): String {
+            var hours = time / (1000 * 60 * 60)
+            var leftMin = time % (1000 * 60 * 60)
+            return String.format("%02d:%02d:%02d", hours, leftMin / (1000 * 60), (leftMin / 1000) % 60)
+        }
+
+        fun refreshVideoList(ctx: Context, path: String?) {
+            path?.let {
+                var file = File(it)
+                if (!file.exists()) return@let
+
+                var localContentValues = getVideoContentValues(file, System.currentTimeMillis())
+                ctx.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues)
+                ctx.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
+                ToastDialog(ctx, ToastDialog.Type.SUCCESS, ctx.getString(R.string.capture_successed), 1500).show()
+            }
+        }
+
+        private fun getVideoContentValues(paramFile: File, paramLong: Long): ContentValues {
+            var localContentValues = ContentValues()
+            localContentValues.put("title", paramFile.getName())
+            localContentValues.put("_display_name", paramFile.getName())
+            localContentValues.put("mime_type", "video/mp4")
+//        localContentValues.put("datetaken", paramLong)
+//        localContentValues.put("date_modified", paramLong)
+//        localContentValues.put("date_added", paramLong)
+//        localContentValues.put("_data", paramFile.getAbsolutePath())
+//        localContentValues.put("_size", paramLong)
+            return localContentValues
         }
     }
 }

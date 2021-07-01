@@ -56,10 +56,8 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
 
         gridLayoutManager = GridLayoutManager(this@VideoMultiPreviewActivity, 2)
         linearLayoutManager = LinearLayoutManager(this@VideoMultiPreviewActivity)
-        var bundle = intent.getBundleExtra(VideoConst.VIDEO_URLS)
-        bundle?.let {
-            var jsonArrStr = it.getString(VideoConst.VIDEO_URLS)
-            jsonArrStr?.let {
+        intent.getBundleExtra(VideoConst.VIDEO_URLS)?.let {
+            it.getString(VideoConst.VIDEO_URLS)?.let {
                 try {
                     allDevUrl = JSONArray.parseArray(it, DevUrl2Preview::class.java)
                     var column = 2
@@ -191,8 +189,7 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
                     var command = Command.getNvrIpcStatus(holders.get(i).channel, 0)
                     var repStatus = XP2P.postCommandRequestSync("${it.productId}/${holders.get(i).devName}",
                         command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
-                    var status = JSONArray.parseArray(repStatus, NvrDevStatus::class.java)
-                    status?.let {
+                    JSONArray.parseArray(repStatus, NvrDevStatus::class.java)?.let {
                         if (it.size == 1 && it.get(0).status == 0) {
                             countDownLatchs.get("${id}/${holders.get(i).channel}")?.let {
                                 it.countDown()
