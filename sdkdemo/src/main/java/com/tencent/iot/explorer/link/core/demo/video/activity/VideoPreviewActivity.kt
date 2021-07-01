@@ -2,15 +2,12 @@ package com.tencent.iot.explorer.link.core.demo.video.activity
 
 import android.Manifest
 import android.app.Service
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.SurfaceTexture
 import android.media.AudioManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.Surface
@@ -19,6 +16,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.core.demo.App
 import com.tencent.iot.explorer.link.core.demo.R
 import com.tencent.iot.explorer.link.core.demo.activity.BaseActivity
@@ -31,6 +29,7 @@ import com.tencent.iot.explorer.link.core.demo.video.dialog.VideoQualityDialog
 import com.tencent.iot.explorer.link.core.demo.video.entity.ActionRecord
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevInfo
 import com.tencent.iot.explorer.link.core.demo.video.entity.DevUrl2Preview
+import com.tencent.iot.explorer.link.core.demo.video.entity.NvrDevStatus
 import com.tencent.iot.explorer.link.core.demo.video.mvp.presenter.EventPresenter
 import com.tencent.iot.explorer.link.core.demo.video.mvp.view.EventView
 import com.tencent.iot.explorer.link.core.demo.video.utils.CommonUtils
@@ -43,7 +42,6 @@ import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
-import java.io.File
 import java.lang.Runnable
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -204,16 +202,27 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         }
     }
 
-    private fun speakAble(able: Boolean) {
-        App.data.accessInfo?.let {
+    private fun speakAble(able: Boolean): Boolean {
+        App.data.accessInfo?.let { accessInfo ->
             if (able) {
-                XP2P.runSendService("${it.productId}/${presenter.getDeviceName()}", "", true)
-                audioRecordUtil.start()
+                var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
+                var repStatus = XP2P.postCommandRequestSync("${accessInfo.productId}/${presenter.getDeviceName()}",
+                    command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                JSONArray.parseArray(repStatus, NvrDevStatus::class.java)?.let {
+                    if (it.size == 1 && it.get(0).status == 0) {
+                        XP2P.runSendService("${accessInfo.productId}/${presenter.getDeviceName()}", Command.getTwoWayRadio(presenter.getChannel()), true)
+                        audioRecordUtil.start()
+                        return true
+                    }
+                }
+
             } else {
                 audioRecordUtil.stop()
-                XP2P.stopSendService("${it.productId}/${presenter.getDeviceName()}", null)
+                XP2P.stopSendService("${accessInfo.productId}/${presenter.getDeviceName()}", null)
+                return true
             }
         }
+        return false
     }
 
     override fun setListener() {
@@ -225,7 +234,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         tv_video_quality.setOnClickListener(switchVideoQualityListener)
         radio_talk.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked && checkPermissions(permissions)) {
-                speakAble(true)
+                if (!speakAble(true)) radio_talk.isChecked = false
             } else if (isChecked && !checkPermissions(permissions)) {
                 requestPermission(permissions)
             } else {
@@ -238,15 +247,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
                 player.startRecord(filePath)
             } else {
                 player.stopRecord()
-                filePath?.let {
-                    var file = File(it)
-                    if (!file.exists()) return@let
-
-                    var localContentValues = getVideoContentValues(file, System.currentTimeMillis())
-                    this@VideoPreviewActivity.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues)
-                    this@VideoPreviewActivity.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
-                    ToastDialog(this, ToastDialog.Type.SUCCESS, getString(R.string.capture_successed), 1500).show()
-                }
+                CommonUtils.refreshVideoList(this@VideoPreviewActivity, filePath)
             }
         }
         radio_playback.setOnClickListener {
@@ -301,19 +302,6 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
                 }
             }).start()
         }
-    }
-
-    private fun getVideoContentValues(paramFile: File, paramLong: Long): ContentValues {
-        var localContentValues = ContentValues()
-        localContentValues.put("title", paramFile.getName())
-        localContentValues.put("_display_name", paramFile.getName())
-        localContentValues.put("mime_type", "video/mp4")
-//        localContentValues.put("datetaken", paramLong)
-//        localContentValues.put("date_modified", paramLong)
-//        localContentValues.put("date_added", paramLong)
-//        localContentValues.put("_data", paramFile.getAbsolutePath())
-//        localContentValues.put("_size", paramLong)
-        return localContentValues
     }
 
     private var onItemVideoClicked = object : ActionListAdapter.OnItemClicked {
@@ -436,7 +424,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-        Log.d(tag, "id=${id}, event=${event}")
+        Log.e(tag, "id=${id}, event=${event}")
         if (event == 1003) {
             keepPlayThreadLock?.let {
                 synchronized(it) {
@@ -455,12 +443,18 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         super.onDestroy()
 
         player?.release()
+        if (radio_talk.isChecked) speakAble(false)
+        if (radio_record.isChecked) {
+            player.stopRecord()
+            CommonUtils.refreshVideoList(this@VideoPreviewActivity, filePath)
+        }
+
         App.data.accessInfo?.let {
             XP2P.stopService("${it.productId}/${presenter.getDeviceName()}")
         }
         XP2P.setCallback(null)
-        countDownLatchs.clear()
 
+        countDownLatchs.clear()
         // 关闭守护线程
         keepAliveThreadRuning = false
         keepPlayThreadLock?.let {

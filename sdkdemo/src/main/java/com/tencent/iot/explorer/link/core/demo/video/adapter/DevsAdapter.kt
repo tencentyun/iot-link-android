@@ -126,9 +126,7 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
     }
 
     override fun getItemCount(): Int {
-        if (list == null) {
-            return 0
-        }
+        if (list == null) return 0
         return list.size
     }
 
@@ -139,7 +137,6 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
         fun onItemCheckedLimited()
     }
 
-    @Volatile
     private var onItemClicked: OnItemClicked? = null
 
     fun setOnItemClicked(onItemClicked: OnItemClicked?) {
