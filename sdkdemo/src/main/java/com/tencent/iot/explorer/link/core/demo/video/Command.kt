@@ -41,5 +41,9 @@ class Command {
             }
             return "action=inner_define&channel=${channel}&cmd=get_device_st&type=${typeStr}&quality=standard"
         }
+
+        fun getTwoWayRadio(channel: Int): String {
+            return "channel=${channel}"
+        }
     }
 }
