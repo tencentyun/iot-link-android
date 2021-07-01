@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.title_layout.*
 
 class VideoMainActivity : BaseActivity() {
-
     private val fragments = arrayListOf<Fragment>()
 
     override fun getContentView(): Int {
@@ -22,13 +21,9 @@ class VideoMainActivity : BaseActivity() {
     }
 
     override fun initView() {
-
-        var intent = getIntent()
         intent?.let {
-            var bundle = it.getBundleExtra(VideoConst.VIDEO_CONFIG)
-            bundle?.let {
-                var infoStr = bundle.getString(VideoConst.VIDEO_CONFIG)
-                infoStr?.let {
+            it.getBundleExtra(VideoConst.VIDEO_CONFIG)?.let {
+                it.getString(VideoConst.VIDEO_CONFIG)?.let {
                     try {
                         App.data.accessInfo = JSONObject.parseObject(it, AccessInfo::class.java)
                     } catch (e : Exception) {
@@ -55,7 +50,6 @@ class VideoMainActivity : BaseActivity() {
             override fun onTabSelected(tab: TabLayout.Tab) {}
         })
     }
-
 }
 
 
