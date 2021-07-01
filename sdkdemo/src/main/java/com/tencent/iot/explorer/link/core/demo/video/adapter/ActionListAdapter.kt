@@ -42,8 +42,7 @@ class ActionListAdapter(context: Context?, list: MutableList<ActionRecord>) : Re
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_record_action, parent, false)
-        val holder = ViewHolder(view)
-        return holder
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -68,9 +67,7 @@ class ActionListAdapter(context: Context?, list: MutableList<ActionRecord>) : Re
     }
 
     override fun getItemCount(): Int {
-        if (list == null) {
-            return 0
-        }
+        if (list == null) return 0
         return list.size
     }
 

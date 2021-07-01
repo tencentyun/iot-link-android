@@ -146,7 +146,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
     override fun fail(msg: String?, reqCode: Int) {
         GlobalScope.launch (Dispatchers.Main) {
             adapter?.notifyDataSetChanged()
-            if (smart_refresh_layout.isRefreshing) smart_refresh_layout.finishRefresh()
+            smart_refresh_layout?.finishRefresh()
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
     }
@@ -173,7 +173,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
                     } else {
                         rg_edit_dev.visibility = View.GONE
                     }
-                    if (smart_refresh_layout.isRefreshing) smart_refresh_layout.finishRefresh()
+                    smart_refresh_layout?.finishRefresh()
                 }
             }
 
