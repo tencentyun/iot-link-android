@@ -4,18 +4,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.iot.explorer.link.core.demo.R;
-
 import java.util.List;
 
 public class ListOptionsAdapter extends RecyclerView.Adapter<ListOptionsAdapter.ViewHolder> {
-
     List<String> options;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         View layout;
         View line;
         TextView option;

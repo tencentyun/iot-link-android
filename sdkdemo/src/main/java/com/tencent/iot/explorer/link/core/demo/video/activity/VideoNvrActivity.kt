@@ -39,7 +39,7 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
     private var adapter : DevsAdapter? = null
     private var videoProductInfo = VideoProductInfo()
     @Volatile
-    private var queryJon: Job? = null
+    private var queryJob: Job? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_video_nvr_devs
@@ -81,10 +81,10 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
 
     private fun showDev(devName: String) {
         if (TextUtils.isEmpty(devName)) return
-        queryJon?.let { it.cancel() }  // 先关闭上次未完成的协程
+        queryJob?.let { it.cancel() }  // 先关闭上次未完成的协程
 
         Thread(Runnable {
-            queryJon = launch (Dispatchers.Default){
+            queryJob = launch (Dispatchers.Default){
                 delay(100)
 
                 App.data.accessInfo?.let {
@@ -109,6 +109,7 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
                     dev.devName = tv_title.text.toString()
                     dev.Status = it.list.get(i).Status
                     dev.channel = it.list.get(i).channel
+                    dev.channel2DevName = it.list.get(i).deviceName
                     allUrl.add(dev)
                 }
             }
@@ -177,7 +178,7 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
         devInfo.deviceName = tv_title.text.toString()
         devInfo.online = dev.online
         devInfo.channel = dev.channel
-        var options = arrayListOf(getString(R.string.preview), getString(R.string.playback))
+        var options = arrayListOf(getString(R.string.preview))
         var dlg = ListOptionsDialog(this@VideoNvrActivity, options)
         dlg.show()
         dlg.setOnDismisListener {
@@ -198,6 +199,3 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
 }
-
-
-
