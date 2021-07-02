@@ -6,4 +6,6 @@ import com.tencent.iot.explorer.link.core.auth.entity.NavBar
 interface ControlPanelView : ParentView {
 
     fun showControlPanel(navBar: NavBar?, timingProject: Boolean)
+
+    fun refreshDeviceStatus(isOnline: Boolean)
 }

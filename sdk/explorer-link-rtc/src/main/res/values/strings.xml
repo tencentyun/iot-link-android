@@ -9,6 +9,7 @@
     <string name="trtccalling_dialed_is_busy_vedio">"视频通话中..."</string>
     <string name="trtccalling_customer_hand_up">"对方已挂断..."</string>
     <string name="trtccalling_customer_no_resp">"对方无人接听..."</string>
+    <string name="trtccalling_customer_no_net">"网络异常，请稍后重试"</string>
     <string name="trtccalling_customer_busy">"对方正忙..."</string>
     <string name="trtccalling_other_customer_accpet">"其他用户已接听..."</string>
     <string name="trtccalling_customer_calling_audio">"语音通话邀请"</string>
