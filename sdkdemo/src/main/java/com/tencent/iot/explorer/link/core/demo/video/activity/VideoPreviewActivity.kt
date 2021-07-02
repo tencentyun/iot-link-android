@@ -143,9 +143,16 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 1)
-        player.dataSource = url
-        player.prepareAsync()
-        player.start()
+//        player.dataSource = url
+//        player.prepareAsync()
+//        player.start()
+
+//        player.reset()
+//        player.setSurface(this.surface)
+//        player.dataSource = url
+//        player.prepareAsync()
+//        player.start()
+        resetPlayer()
     }
 
     private fun keepPlayerplay(id: String?) {
