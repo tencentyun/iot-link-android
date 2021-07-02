@@ -120,6 +120,13 @@
         <activity android:name=".kitlink.activity.SelectPointActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
+        <receiver android:name="com.tencent.iot.explorer.link.rtc.ui.utils.NetWorkStateReceiver">
+            <intent-filter>
+                <!--检测网络变化的acton-->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".kitlink.activity.ConfigNetFailedActivity"
             android:launchMode="singleTask" />
