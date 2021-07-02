@@ -7,26 +7,28 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.TRTCAppSessionManager
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
-import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.NavBar
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.NumberPopupWindow
+import com.tencent.iot.explorer.link.kitlink.popup.OfflinePopupWindow
 import com.tencent.iot.explorer.link.kitlink.theme.PanelThemeManager
 import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
-import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.kitlink.popup.OfflinePopupWindow
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.link.rtc.ui.utils.NetWorkStateReceiver
 import com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.coroutines.*
+
 
 /**
  * 控制面板
@@ -42,6 +44,8 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     private var enumPopup: EnumPopupWindow? = null
     private var offlinePopup: OfflinePopupWindow? = null
     private var job: Job? = null
+
+    private var netWorkStateReceiver: NetWorkStateReceiver? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_control_panel
@@ -61,6 +65,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     override fun initView() {
 //        App.setEnableEnterRoomCallback(false)
         presenter = ControlPanelPresenter(this)
+        netWorkStateReceiver = NetWorkStateReceiver()
         deviceEntity = get("device")
         deviceEntity?.run {
             presenter.setProductId(ProductId)
@@ -177,6 +182,17 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         }
     }
 
+    override fun refreshDeviceStatus(isOnline: Boolean) {
+        if (!isOnline) {
+            job = CoroutineScope(Dispatchers.IO).launch {
+                delay(200)
+                CoroutineScope(Dispatchers.Main).launch {
+                    showOfflinePopup()
+                }
+            }
+        }
+    }
+
     /**
      *  显示NavBar
      */
@@ -263,6 +279,10 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
      * 检查设备TRTC状态是否空闲
      */
     fun checkTRTCCallStatusIsBusy() : Boolean {
+        if (!netWorkStateReceiver!!.isConnected(getApplicationContext())) {
+            Toast.makeText(this, "网络异常请重试", Toast.LENGTH_LONG).show()
+            return true;
+        }
         var audioCallStatus = "0";
         var videoCallStatus = "0";
         presenter.model!!.devicePropertyList.forEach {

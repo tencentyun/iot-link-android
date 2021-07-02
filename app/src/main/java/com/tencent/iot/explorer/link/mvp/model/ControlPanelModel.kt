@@ -91,6 +91,18 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 }
             }
         }
+        val jsonObject = org.json.JSONObject(payload.json)
+        val action = jsonObject.getString(MessageConst.MODULE_ACTION)
+        if (action == MessageConst.DEVICE_CHANGE) { //设备状态发生改变
+            val paramsObject = jsonObject.getJSONObject(MessageConst.PARAM) as org.json.JSONObject
+            val subType = paramsObject.getString(MessageConst.SUB_TYPE)
+            val deviceId = paramsObject.getString(MessageConst.DEVICE_ID)
+            if (subType == MessageConst.ONLINE) {
+                view?.refreshDeviceStatus(true)
+            } else if (subType == MessageConst.OFFLINE) {
+                view?.refreshDeviceStatus(false)
+            }
+        }
     }
 
     /**
