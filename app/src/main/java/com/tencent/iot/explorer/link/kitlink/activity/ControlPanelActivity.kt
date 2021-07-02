@@ -177,6 +177,17 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         }
     }
 
+    override fun refreshDeviceStatus(isOnline: Boolean) {
+        if (!isOnline) {
+            job = CoroutineScope(Dispatchers.IO).launch {
+                delay(200)
+                CoroutineScope(Dispatchers.Main).launch {
+                    showOfflinePopup()
+                }
+            }
+        }
+    }
+
     /**
      *  显示NavBar
      */

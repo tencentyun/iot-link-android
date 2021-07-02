@@ -2,10 +2,12 @@ package com.tencent.iot.explorer.link.rtc.ui.audiocall;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,6 +34,7 @@ import com.tencent.iot.explorer.link.rtc.model.impl.TRTCCallingImpl;
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.audiolayout.TRTCAudioLayout;
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.audiolayout.TRTCAudioLayoutManager;
 import com.tencent.iot.explorer.link.rtc.model.TRTCCallStatus;
+import com.tencent.iot.explorer.link.rtc.ui.utils.NetWorkStateReceiver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +46,7 @@ import java.util.TimerTask;
 /**
  * 用于展示语音通话的主界面，通话的接听和拒绝就是在这个界面中完成的。
  */
-public class TRTCAudioCallActivity extends AppCompatActivity {
+public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkStateReceiver.NetworkStateReceiverListener {
     private static final String TAG = TRTCAudioCallActivity.class.getName();
 
     public static final String PARAM_TYPE                = "type";
@@ -83,9 +86,11 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     private TRTCCallingImpl mTRTCCalling;
     private boolean               isHandsFree       = true;
     private boolean               isMuteMic         = false;
+    private volatile boolean      mIsEnterRoom      = false;
 
     private TimerTask otherEnterRoomTask = null;
     private TimerTask enterRoomTask = null;
+    private NetWorkStateReceiver netWorkStateReceiver;
 
     /**
      * 拨号的回调
@@ -122,6 +127,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                         mCallUserModelMap.put(model.getUserId(), model);
                         addUserToManager(model);
                     }
+                    mIsEnterRoom = true;
                 }
             });
         }
@@ -265,25 +271,27 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     }
 
     private void checkoutOtherIsEnterRoom15seconds() {
-        otherEnterRoomTask = new TimerTask(){
-            public void run(){
-                //自己已进入房间15秒内对方没有进入房间 则显示对方已挂断，并主动退出，进入了就取消timertask
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mStatusView.setText(R.string.trtccalling_customer_hand_up);
-                            }
-                        });
-                        removeCallbackAndFinish();
-                    }
-                });
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(otherEnterRoomTask, 15000);
+        if (otherEnterRoomTask == null) {
+            otherEnterRoomTask = new TimerTask(){
+                public void run(){
+                    //自己已进入房间15秒内对方没有进入房间 则显示对方已挂断，并主动退出，进入了就取消timertask
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                                }
+                            });
+                            removeCallbackAndFinish();
+                        }
+                    });
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(otherEnterRoomTask, 15000);
+        }
     }
 
     private void removeOtherIsEnterRoom15secondsTask() {
@@ -293,28 +301,30 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         }
     }
 
-    private void checkoutIsEnterRoom60seconds(boolean calling) {
-        enterRoomTask = new TimerTask(){
-            public void run(){
-                //呼叫了60秒，对方未接听 显示对方无人接听，并退出，进入了就取消timertask
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (calling) {
-                                    mStatusView.setText(R.string.trtccalling_customer_no_resp);
+    private void checkoutIsEnterRoom60seconds(boolean calling, String message) {
+        if (enterRoomTask == null) {
+            enterRoomTask = new TimerTask(){
+                public void run(){
+                    //呼叫了60秒，对方未接听 显示对方无人接听，并退出，进入了就取消timertask
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (calling) {
+                                        mStatusView.setText(message);
+                                    }
                                 }
-                            }
-                        });
-                        removeCallbackAndFinish();
-                    }
-                });
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(enterRoomTask, 60000);
+                            });
+                            removeCallbackAndFinish();
+                        }
+                    });
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(enterRoomTask, 60000);
+        }
     }
 
     private void removeIsEnterRoom60secondsTask() {
@@ -332,6 +342,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.trtccalling_audiocall_activity_call_main);
+        startNetworkBroadcastReceiver(this);
 
         TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
             @Override
@@ -386,7 +397,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         initView();
         boolean calling = initData();
         initListener();
-        checkoutIsEnterRoom60seconds(calling);
+        checkoutIsEnterRoom60seconds(calling, getString(R.string.trtccalling_customer_no_resp));
     }
 
     @Override
@@ -413,6 +424,60 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         super.onDestroy();
         stopTimeCount();
         mTimeHandlerThread.quit();
+    }
+
+    //在onResume()方法注册
+    @Override
+    protected void onResume() {
+        registerNetworkBroadcastReceiver(this);
+        Log.e(TAG, "注册netWorkStateReceiver");
+        super.onResume();
+    }
+
+    //onPause()方法注销
+    @Override
+    protected void onPause() {
+        unregisterNetworkBroadcastReceiver(this);
+        Log.e(TAG, "注销netWorkStateReceiver");
+        super.onPause();
+    }
+
+    public void startNetworkBroadcastReceiver(Context currentContext) {
+        netWorkStateReceiver = new NetWorkStateReceiver();
+        netWorkStateReceiver.addListener((NetWorkStateReceiver.NetworkStateReceiverListener) currentContext);
+        registerNetworkBroadcastReceiver(currentContext);
+    }
+
+    /**
+     * Register the NetworkStateReceiver with your activity
+     *
+     * @param currentContext
+     */
+    public void registerNetworkBroadcastReceiver(Context currentContext) {
+        currentContext.registerReceiver(netWorkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    /**
+     * Unregister the NetworkStateReceiver with your activity
+     *
+     * @param currentContext
+     */
+    public void unregisterNetworkBroadcastReceiver(Context currentContext) {
+        currentContext.unregisterReceiver(netWorkStateReceiver);
+    }
+
+    @Override
+    public void networkAvailable() {
+        Log.e(TAG, "networkAvailable");
+        if (mIsEnterRoom) {
+            removeIsEnterRoom60secondsTask();
+        }
+    }
+
+    @Override
+    public void networkUnavailable() {
+        Log.e(TAG, "networkUnavailable");
+        checkoutIsEnterRoom60seconds(true, getString(R.string.trtccalling_customer_no_net));
     }
 
     private void initListener() {
