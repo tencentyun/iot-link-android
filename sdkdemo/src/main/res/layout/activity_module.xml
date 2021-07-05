@@ -10,7 +10,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="linksdk"
+        android:text="core"
         android:id="@+id/btn_1"
         app:layout_constraintBottom_toTopOf="@id/btn_2"
         />
