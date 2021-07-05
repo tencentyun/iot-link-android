@@ -140,6 +140,12 @@ class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback
 
     override fun onDestroy() {
         cancel()
+
+        App.data.accessInfo?.let {
+            XP2P.stopService("${it.productId}/${tv_title.text}")
+            XP2P.setCallback(null)
+        }
+
         super.onDestroy()
     }
 
