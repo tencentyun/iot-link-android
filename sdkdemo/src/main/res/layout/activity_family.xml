@@ -5,7 +5,7 @@
     android:id="@+id/family_contain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.FamilyActivity">
+    tools:context=".core.activity.FamilyActivity">
 
     <include
         android:id="@+id/family_menu"
