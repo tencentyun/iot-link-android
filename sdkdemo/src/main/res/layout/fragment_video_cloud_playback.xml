@@ -209,7 +209,7 @@
             android:layout_marginEnd="16dp"
             />
 
-        <com.tencent.iot.explorer.link.core.demo.view.EdgeTransparentView
+        <com.tencent.iot.explorer.link.demo.common.customView.EdgeTransparentView
             android:id="@+id/time_line_layout"
             android:layout_width="0dp"
             app:layout_constraintStart_toEndOf="@id/iv_left_go"
@@ -219,7 +219,7 @@
             app:edge_width="38dp"
             app:edge_position="left|right">
 
-            <com.tencent.iot.explorer.link.core.demo.view.timeline.TimeLineView
+            <com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineView
                 android:id="@+id/time_line"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
@@ -236,7 +236,7 @@
                 app:bottomTextMaginBottom="9dp"
                 />
 
-        </com.tencent.iot.explorer.link.core.demo.view.EdgeTransparentView>
+        </com.tencent.iot.explorer.link.demo.common.customView.EdgeTransparentView>
 
 
         <androidx.recyclerview.widget.RecyclerView

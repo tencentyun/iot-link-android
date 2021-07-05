@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".App"
+        android:name="com.tencent.iot.explorer.link.demo.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,61 +21,61 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.BindMobilePhoneActivity" />
-        <activity android:name=".activity.ForgotPasswordActivity" />
-        <activity android:name=".activity.SetPasswordActivity" />
-        <activity android:name=".activity.ShareDeviceListActivity" />
-        <activity android:name=".activity.ShareDeviceActivity" />
-        <activity android:name=".activity.ShareUserListActivity" />
-        <activity android:name=".activity.SelectRoomActivity" />
-        <activity android:name=".activity.WeekRepeatActivity" />
-        <activity android:name=".activity.AddTimingProjectActivity" />
-        <activity android:name=".activity.TimingProjectActivity" />
-        <activity android:name=".activity.ConnectDeviceActivity" />
-        <activity android:name=".activity.ScanBindActivity" />
-        <activity android:name=".activity.AddRoomActivity" />
-        <activity android:name=".activity.RoomActivity" />
-        <activity android:name=".activity.MemberActivity" />
-        <activity android:name=".activity.InviteMemberActivity" />
-        <activity android:name=".activity.RoomListActivity" />
-        <activity android:name=".activity.FamilyActivity" />
-        <activity android:name=".activity.AddFamilyActivity" />
-        <activity android:name=".activity.FeedbackActivity" />
-        <activity android:name=".activity.MessageActivity" />
-        <activity android:name=".activity.PersonalInfoActivity" />
-        <activity android:name=".activity.FamilyListActivity" />
-        <activity android:name=".activity.ControlPanelActivity" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.ConfigNetActivity" />
-        <activity android:name=".activity.QrcodeConfigNetActivity" />
-        <activity android:name=".activity.ApConfigNetActivity" />
-        <activity android:name=".activity.WiredConfigNetActivity" />
-        <activity android:name=".video.activity.VideoOptionsActivity" />
-        <activity android:name=".video.activity.VideoInputAuthorizeActivity" />
-        <activity android:name=".video.activity.VideoMainActivity" />
-        <activity android:name=".video.activity.VideoNvrActivity" />
-        <activity android:name=".video.activity.VideoPlaybackActivity"
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.BindMobilePhoneActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ForgotPasswordActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.SetPasswordActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ShareDeviceListActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ShareDeviceActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ShareUserListActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.SelectRoomActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.WeekRepeatActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.AddTimingProjectActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.TimingProjectActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ConnectDeviceActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ScanBindActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.AddRoomActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.RoomActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.MemberActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.InviteMemberActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.RoomListActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.FamilyActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.AddFamilyActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.FeedbackActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.MessageActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.PersonalInfoActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.FamilyListActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ControlPanelActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.RegisterActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ConfigNetActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.QrcodeConfigNetActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ApConfigNetActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.WiredConfigNetActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.video.activity.VideoOptionsActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.video.activity.VideoInputAuthorizeActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.video.activity.VideoMainActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.video.activity.VideoNvrActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.video.activity.VideoPlaybackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name=".video.activity.VideoMultiPreviewActivity"
+        <activity android:name="com.tencent.iot.explorer.link.demo.video.activity.VideoMultiPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name=".video.activity.VideoPreviewActivity"
+        <activity android:name="com.tencent.iot.explorer.link.demo.video.activity.VideoPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
-        <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.ModuleActivity">
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.LoginActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.ModuleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AddDeviceActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.demo.core.activity.AddDeviceActivity" />
     </application>
 
 </manifest>
