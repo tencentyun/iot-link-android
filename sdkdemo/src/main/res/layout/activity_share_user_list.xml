@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ShareUserListActivity">
+    tools:context="com.tencent.iot.explorer.link.demo.core.activity.ShareUserListActivity">
 
     <include
         android:id="@+id/menu_share_user_list"
