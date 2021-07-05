@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.tencent.iot.explorer.link.core.demo.video.utils.StatusBarHeightView
+    <com.tencent.iot.explorer.link.demo.common.util.StatusBarHeightView
         android:id="@+id/v_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,7 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:use_type="use_padding_top">
 
-    </com.tencent.iot.explorer.link.core.demo.video.utils.StatusBarHeightView>
+    </com.tencent.iot.explorer.link.demo.common.util.StatusBarHeightView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_logo"
