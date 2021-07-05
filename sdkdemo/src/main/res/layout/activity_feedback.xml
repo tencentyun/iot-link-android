@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.FeedbackActivity">
+    tools:context="com.tencent.iot.explorer.link.demo.core.activity.FeedbackActivity">
 
     <!--    返回键-->
     <include
