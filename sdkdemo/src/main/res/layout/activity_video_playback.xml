@@ -45,7 +45,7 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <com.tencent.iot.explorer.link.core.demo.view.FragmentViewPager
+    <com.tencent.iot.explorer.link.demo.common.customView.FragmentViewPager
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

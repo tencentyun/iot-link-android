@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/room_contain"
     android:background="@color/white"
-    tools:context=".activity.RoomActivity">
+    tools:context=".core.activity.RoomActivity">
 
     <include
         android:id="@+id/room_setting_menu"
