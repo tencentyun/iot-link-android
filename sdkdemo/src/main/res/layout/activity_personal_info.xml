@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/personal_info"
     android:background="@color/white"
-    tools:context=".activity.PersonalInfoActivity">
+    tools:context=".core.activity.PersonalInfoActivity">
 
     <include
         android:id="@+id/menu_personal_info"
@@ -28,7 +28,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/user_info_portrait_bg" />
 
-    <com.tencent.iot.explorer.link.core.demo.view.RoundImageView
+    <com.tencent.iot.explorer.link.demo.common.customView.RoundImageView
         android:id="@+id/user_info_portrait"
         android:layout_width="80dp"
         android:layout_height="80dp"
