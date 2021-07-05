@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".activity.FamilyActivity">
+    tools:context="com.tencent.iot.explorer.link.demo.core.activity.FamilyActivity">
 
     <include
         android:id="@+id/add_family_menu"
