@@ -95,7 +95,7 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_month_tip"
             />
 
-        <com.tencent.iot.explorer.link.core.demo.view.WeekView
+        <com.tencent.iot.explorer.link.demo.common.customView.WeekView
             app:layout_constraintTop_toBottomOf="@id/tv_month_tip"
             android:id="@+id/week"
             android:layout_width="match_parent"
@@ -106,7 +106,7 @@
             app:wv_weekend_textColor="@color/green_29CC85"
             app:wv_textSize="@dimen/ts_12"/>
 
-        <com.tencent.iot.explorer.link.core.demo.view.CalendarView
+        <com.tencent.iot.explorer.link.demo.common.customView.CalendarView
             app:layout_constraintTop_toBottomOf="@id/week"
             android:id="@+id/calendar_view"
             android:layout_width="match_parent"
