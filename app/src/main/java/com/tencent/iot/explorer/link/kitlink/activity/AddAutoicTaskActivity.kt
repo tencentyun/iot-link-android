@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
 import android.view.View
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
@@ -14,9 +15,23 @@ import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
 import com.tencent.iot.explorer.link.customview.dialog.SelectWoringTimeDialog
 import com.tencent.iot.explorer.link.customview.dialog.entity.WorkTimeMode
 import com.tencent.iot.explorer.link.kitlink.adapter.ManualTaskAdapter
+import com.tencent.iot.explorer.link.kitlink.adapter.touch.OnItemTouchListener
+import com.tencent.iot.explorer.link.kitlink.adapter.touch.TaskItemTouchHelper
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
 import kotlinx.android.synthetic.main.activity_add_autoic_task.*
+import kotlinx.android.synthetic.main.activity_add_autoic_task.add_automic_item_layout
+import kotlinx.android.synthetic.main.activity_add_autoic_task.add_manual_item_layout
+import kotlinx.android.synthetic.main.activity_add_autoic_task.iv_add_condition_task
+import kotlinx.android.synthetic.main.activity_add_autoic_task.iv_automiac_add_task
+import kotlinx.android.synthetic.main.activity_add_autoic_task.layout_manual_task
+import kotlinx.android.synthetic.main.activity_add_autoic_task.lv_automic_task
+import kotlinx.android.synthetic.main.activity_add_autoic_task.lv_condition_task
+import kotlinx.android.synthetic.main.activity_add_autoic_task.tv_next
+import kotlinx.android.synthetic.main.activity_add_autoic_task.tv_tip_title
+import kotlinx.android.synthetic.main.activity_add_autoic_task.tv_working_time_value
+import kotlinx.android.synthetic.main.activity_add_autoic_task.working_time_layout
+import kotlinx.android.synthetic.main.activity_edit_automic_task.*
 import kotlinx.android.synthetic.main.add_new_item_layout.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import java.util.*
@@ -32,6 +47,8 @@ class AddAutoicTaskActivity : BaseActivity() {
     private var adapter: ManualTaskAdapter? = null
     private var manualConditions: MutableList<ManualTask> = LinkedList()
     private var conditionAdapter: ManualTaskAdapter? = null
+    private var touchHelper = TaskItemTouchHelper()
+    private var conditionTouchHelper = TaskItemTouchHelper()
 
     override fun getContentView(): Int {
         return R.layout.activity_add_autoic_task
@@ -57,12 +74,14 @@ class AddAutoicTaskActivity : BaseActivity() {
         adapter = ManualTaskAdapter(manualTasks, false)
         adapter?.setOnItemClicked(onListItemClicked)
         lv_automic_task.setAdapter(adapter)
+        ItemTouchHelper(touchHelper).attachToRecyclerView(lv_automic_task)
 
         val conditionLayoutManager = LinearLayoutManager(this)
         lv_condition_task.setLayoutManager(conditionLayoutManager)
         conditionAdapter = ManualTaskAdapter(manualConditions, false)
         conditionAdapter?.setOnItemClicked(onConditionListItemClicked)
         lv_condition_task.setAdapter(conditionAdapter)
+        ItemTouchHelper(conditionTouchHelper).attachToRecyclerView(lv_condition_task)
     }
 
     private var onConditionListItemClicked = object : ManualTaskAdapter.OnItemClicked {
@@ -137,7 +156,27 @@ class AddAutoicTaskActivity : BaseActivity() {
         }
     }
 
+    private var itemTouchListener = object: OnItemTouchListener {
+        override fun onMove(fromPosition: Int, toPosition: Int) {
+            var tmp = manualTasks.get(toPosition)
+            manualTasks.set(toPosition, manualTasks.get(fromPosition))
+            manualTasks.set(fromPosition, tmp)
+            adapter?.notifyItemMoved(fromPosition, toPosition)
+        }
+    }
+
+    private var conditionItemTouchListener = object: OnItemTouchListener {
+        override fun onMove(fromPosition: Int, toPosition: Int) {
+            var tmp = manualConditions.get(toPosition)
+            manualConditions.set(toPosition, manualConditions.get(fromPosition))
+            manualConditions.set(fromPosition, tmp)
+            conditionAdapter?.notifyItemMoved(fromPosition, toPosition)
+        }
+    }
+
     override fun setListener() {
+        conditionTouchHelper.touchListener = conditionItemTouchListener
+        touchHelper.touchListener = itemTouchListener
         iv_back.setOnClickListener { finish() }
         add_manual_item_layout.setOnClickListener {showAddConditionDialog()}
         iv_add_condition_task.setOnClickListener{showAddConditionDialog()}

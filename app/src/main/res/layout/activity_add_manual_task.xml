@@ -37,11 +37,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <include
+        android:id="@+id/header_tip_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintTop_toBottomOf="@id/shbv_add_manual_task"
+        layout="@layout/task_header_layout"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lv_manual_task"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/shbv_add_manual_task"
+        app:layout_constraintTop_toBottomOf="@id/header_tip_layout"
         app:layout_constraintBottom_toTopOf="@id/layout_btn"
         />
 
