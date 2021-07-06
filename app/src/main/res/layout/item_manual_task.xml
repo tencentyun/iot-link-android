@@ -8,38 +8,9 @@
     android:paddingRight="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <include
         android:id="@+id/layout_manual_task"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-    <TextView
-        android:layout_marginTop="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/tv_tip_title"
-        android:paddingBottom="10dp"
-        android:paddingTop="11dp"
-        android:text="@string/run_all_task"
-        android:textColor="@color/black_15161A"
-        android:textSize="@dimen/ts_14"
-        />
-
-    <ImageView
-        android:id="@+id/iv_add_task"
-        android:layout_width="22dp"
-        android:layout_height="0dp"
-        android:src="@mipmap/add_task"
-        app:layout_constraintDimensionRatio="h, 1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_tip_title"
-        app:layout_constraintBottom_toBottomOf="@id/tv_tip_title"
-        />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        layout="@layout/task_header_layout"/>
 
     <com.chauthai.swipereveallayout.SwipeRevealLayout
         android:layout_width="match_parent"

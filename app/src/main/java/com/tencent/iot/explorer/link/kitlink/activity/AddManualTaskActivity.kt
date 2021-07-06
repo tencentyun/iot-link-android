@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
 import android.view.View
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.R
@@ -14,10 +15,13 @@ import com.tencent.iot.explorer.link.kitlink.adapter.ManualTaskAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DelayTimeExtra
 import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
+import com.tencent.iot.explorer.link.kitlink.adapter.touch.OnItemTouchListener
+import com.tencent.iot.explorer.link.kitlink.adapter.touch.TaskItemTouchHelper
 import com.tencent.iot.explorer.link.kitlink.entity.ManualTask
 import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import kotlinx.android.synthetic.main.activity_add_manual_task.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
+import kotlinx.android.synthetic.main.task_header_layout.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,6 +31,7 @@ class AddManualTaskActivity : BaseActivity() {
     private var optionsDialog: ListOptionsDialog? = null
     private var manualTasks: MutableList<ManualTask> = LinkedList()
     private var adapter: ManualTaskAdapter? = null
+    private var touchHelper = TaskItemTouchHelper()
 
     override fun getContentView(): Int {
         return R.layout.activity_add_manual_task
@@ -41,9 +46,11 @@ class AddManualTaskActivity : BaseActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         lv_manual_task.setLayoutManager(layoutManager)
-        adapter = ManualTaskAdapter(manualTasks)
+        adapter = ManualTaskAdapter(manualTasks, false)
         adapter?.setOnItemClicked(onListItemClicked)
         lv_manual_task.setAdapter(adapter)
+
+        ItemTouchHelper(touchHelper).attachToRecyclerView(lv_manual_task)
 
         refreshView()
     }
@@ -116,15 +123,28 @@ class AddManualTaskActivity : BaseActivity() {
         if (manualTasks.size <= 0) {
             layout_no_data.visibility = View.VISIBLE
             layout_btn.visibility = View.GONE
+            header_tip_layout.visibility = View.GONE
         } else {
             layout_no_data.visibility = View.GONE
             layout_btn.visibility = View.VISIBLE
+            header_tip_layout.visibility = View.VISIBLE
+        }
+    }
+
+    private var itemTouchListener = object: OnItemTouchListener {
+        override fun onMove(fromPosition: Int, toPosition: Int) {
+            var tmp = manualTasks.get(toPosition)
+            manualTasks.set(toPosition, manualTasks.get(fromPosition))
+            manualTasks.set(fromPosition, tmp)
+            adapter?.notifyItemMoved(fromPosition, toPosition)
         }
     }
 
     override fun setListener() {
+        touchHelper.touchListener = itemTouchListener
+        iv_add_task.setOnClickListener { optionsDialog?.show() }
         iv_back.setOnClickListener { finish() }
-        tv_add_now_btn.setOnClickListener{ optionsDialog!!.show() }
+        tv_add_now_btn.setOnClickListener{ optionsDialog?.show() }
         tv_next.setOnClickListener {
             if (manualTasks.size <= 0) {
                 T.show(getString(R.string.no_task_to_add))
