@@ -3,7 +3,9 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
@@ -21,15 +23,18 @@ import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
+import com.tencent.iot.explorer.link.kitlink.adapter.touch.OnItemTouchListener
+import com.tencent.iot.explorer.link.kitlink.adapter.touch.TaskItemTouchHelper
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.kitlink.util.Utils
+import kotlinx.android.synthetic.main.activity_add_manual_task.*
 import kotlinx.android.synthetic.main.activity_complete_task_info.iv_smart_background
 import kotlinx.android.synthetic.main.activity_complete_task_info.layout_smart_name
 import kotlinx.android.synthetic.main.activity_complete_task_info.layout_smart_pic
 import kotlinx.android.synthetic.main.activity_complete_task_info.tv_unset_tip_1
 import kotlinx.android.synthetic.main.activity_complete_task_info.tv_unset_tip_2
-import kotlinx.android.synthetic.main.activity_edit_manual_task.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
+import kotlinx.android.synthetic.main.task_header_layout.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -44,6 +49,7 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
     @Volatile
     private var smartName = ""
     private var automation: Automation? = null
+    private var touchHelper = TaskItemTouchHelper()
 
     override fun getContentView(): Int {
         return R.layout.activity_edit_manual_task
@@ -71,9 +77,11 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
 
         val layoutManager = LinearLayoutManager(this)
         lv_manual_task.setLayoutManager(layoutManager)
-        adapter = ManualTaskAdapter(manualTasks)
+        adapter = ManualTaskAdapter(manualTasks, false)
         adapter?.setOnItemClicked(onListItemClicked)
         lv_manual_task.setAdapter(adapter)
+
+        ItemTouchHelper(touchHelper).attachToRecyclerView(lv_manual_task)
 
         loadAllTaskData()
         refreshView()
@@ -276,15 +284,28 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
 
     private fun refreshView() {
         if (manualTasks.size <= 0) {
+            header_tip_layout.visibility = View.GONE
             layout_no_data.visibility = View.VISIBLE
         } else {
             layout_no_data.visibility = View.GONE
+            header_tip_layout.visibility = View.VISIBLE
+        }
+    }
+
+    private var itemTouchListener = object: OnItemTouchListener {
+        override fun onMove(fromPosition: Int, toPosition: Int) {
+            var tmp = manualTasks.get(toPosition)
+            manualTasks.set(toPosition, manualTasks.get(fromPosition))
+            manualTasks.set(fromPosition, tmp)
+            adapter?.notifyItemMoved(fromPosition, toPosition)
         }
     }
 
     override fun setListener() {
+        touchHelper.touchListener = itemTouchListener
+        iv_add_task.setOnClickListener { optionsDialog?.show() }
         iv_back.setOnClickListener { finish() }
-        tv_add_now_btn.setOnClickListener{ optionsDialog!!.show() }
+        tv_add_now_btn.setOnClickListener{ optionsDialog?.show() }
 
         tv_next.setOnClickListener {
 
