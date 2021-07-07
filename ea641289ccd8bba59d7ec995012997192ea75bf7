@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9651617f_f2356355",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/adapter/touch/TaskItemTouchHelper.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-07T01:46:16Z",
+      "side": 1,
+      "message": "sort 貌似没有被修改过",
+      "range": {
+        "startLine": 30,
+        "startChar": 15,
+        "endLine": 30,
+        "endChar": 19
+      },
+      "revId": "ea641289ccd8bba59d7ec995012997192ea75bf7",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
