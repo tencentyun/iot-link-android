@@ -110,7 +110,7 @@ public class PCMEncoder {
      */
     private void addADTStoPacket(byte[] packet, int packetLen) {
         int profile = 2;  // AAC LC
-        int freqIdx = 4;  // 44.1KHz
+        int freqIdx = 8;  // 44.1KHz
         int chanCfg = 2;  // CPE
         // filled in ADTS data
         packet[0] = (byte) 0xFF;
