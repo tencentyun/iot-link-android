@@ -10,19 +10,23 @@ import com.tencent.xnet.XP2P;
 public class AudioRecordUtil implements EncoderListener {
 
     //设置音频采样率，44100是目前的标准，但是某些设备仍然支持22050，16000，11025
-    private int sampleRateInHz = 44100;
+    private int sampleRateInHz = 16000;
     //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
     private int channelConfig = AudioFormat.CHANNEL_IN_STEREO;
     //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
     //录制状态
-    private boolean recorderState = true;
+    private volatile boolean recorderState = true;
     private byte[] buffer;
     private AudioRecord audioRecord;
-    private PCMEncoder pcmEncoder;
-    private FLVPacker flvPacker;
+    private volatile PCMEncoder pcmEncoder;
+    private volatile FLVPacker flvPacker;
     private Context context;
     private String deviceId; //"productId/deviceName"
+    private int recordMinBufferSize;
+    private int sampleRate;
+    private int channel;
+    private int bitDepth;
 
     public AudioRecordUtil(Context ctx, String id) {
         context = ctx;
@@ -35,26 +39,27 @@ public class AudioRecordUtil implements EncoderListener {
     }
 
     private void init(int sampleRate, int channel, int bitDepth) {
-        int recordMinBufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, bitDepth);
-        //指定 AudioRecord 缓冲区大小
-        buffer = new byte[recordMinBufferSize];
-        //根据录音参数构造AudioRecord实体对象
-        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel,
-                bitDepth, recordMinBufferSize);
-        //初始化编码器
-        pcmEncoder = new PCMEncoder(sampleRateInHz, this, PCMEncoder.AAC_FORMAT);
-        flvPacker = new FLVPacker();
+        recordMinBufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, bitDepth);
+        this.sampleRate = sampleRate;
+        this.channel = channel;
+        this.bitDepth = bitDepth;
     }
 
     /**
      * 开始录制
      */
     public void start() {
-        if (audioRecord.getState() == AudioRecord.RECORDSTATE_STOPPED) {
-            recorderState = true;
-            audioRecord.startRecording();
-            new RecordThread().start();
-        }
+        reset();
+        recorderState = true;
+        audioRecord.startRecording();
+        new RecordThread().start();
+    }
+
+    private void reset() {
+        buffer = new byte[recordMinBufferSize];
+        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
+        pcmEncoder = new PCMEncoder(sampleRateInHz, this, PCMEncoder.AAC_FORMAT);
+        flvPacker = new FLVPacker();
     }
 
     /**
@@ -62,9 +67,8 @@ public class AudioRecordUtil implements EncoderListener {
      */
     public void stop() {
         recorderState = false;
-        if (audioRecord.getState() == AudioRecord.RECORDSTATE_RECORDING) {
-            audioRecord.stop();
-        }
+        audioRecord.stop();
+        audioRecord = null;
     }
 
     public void release() {
@@ -78,8 +82,7 @@ public class AudioRecordUtil implements EncoderListener {
     }
 
     @Override
-    public void encodeG711(byte[] data) {
-    }
+    public void encodeG711(byte[] data) { }
 
     private class RecordThread extends Thread {
         @Override
