@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c609ed3_d317f6b5",
+        "filename": "sdkdemo/src/main/res/layout/activity_add_device.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-07-07T11:55:11Z",
+      "side": 1,
+      "message": "com.tencent.iot.explorer.link.demo.core.activity.AddDeviceActivity  --------\u003e  .core.activity.AddDeviceActivity\nxml中的都检查一下。",
+      "revId": "555dd54fbac3eeda6d95b01ee1e30345ae8bb44c",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
