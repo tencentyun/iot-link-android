@@ -8,7 +8,7 @@ public class FLVPacker {
 
     private long pts = 0;
     private long sudioPts = 0;
-    private boolean isHead = false;
+    private volatile boolean isHead = false;
 
     public synchronized byte[] getFLV(byte[] data) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
