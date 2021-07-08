@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.core.demo;
 import android.content.Intent;
 import android.widget.Button;
 
+import com.tencent.iot.explorer.link.demo.R;
 import com.tencent.iot.explorer.link.demo.core.activity.LoginActivity;
 import com.tencent.iot.explorer.link.demo.ModuleActivity;
 
