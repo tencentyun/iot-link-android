@@ -307,11 +307,13 @@ class MainActivity : PActivity(), MyCallback {
     private fun openXGPush() {
         XGPushConfig.init(applicationContext)
         if (App.data.regionId == "1") {// 中国大陆
-            XGPushConfig.setAccessId(applicationContext, BuildConfig.XgAccessId.toLong())
+            XGPushConfig.setAccessId(applicationContext,
+                if (BuildConfig.XgAccessId.toLongOrNull() == null) 0 else BuildConfig.XgAccessId.toLong())
             XGPushConfig.setAccessKey(applicationContext, BuildConfig.XgAccessKey)
             XGApiConfig.setServerSuffix(applicationContext, CommonField.XG_ACCESS_POINT_CHINA)
         } else if (App.data.regionId == "22") {// 美国
-            XGPushConfig.setAccessId(applicationContext, BuildConfig.XgUSAAccessId.toLong())
+            XGPushConfig.setAccessId(applicationContext,
+                if (BuildConfig.XgUSAAccessId.toLongOrNull() == null) 0 else BuildConfig.XgUSAAccessId.toLong())
             XGPushConfig.setAccessKey(applicationContext, BuildConfig.XgUSAAccessKey)
             XGApiConfig.setServerSuffix(applicationContext, CommonField.XG_ACCESS_POINT_USA)
         }
