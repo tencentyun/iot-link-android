@@ -2,7 +2,7 @@ package com.tencent.iot.explorer.link.demo
 
 import android.Manifest
 import com.tencent.iot.explorer.link.demo.core.activity.LoginActivity
-import com.tencent.iot.explorer.link.demo.video.activity.VideoOptionsActivity
+import com.tencent.iot.explorer.link.demo.video.VideoOptionsActivity
 import kotlinx.android.synthetic.main.activity_module.*
 
 class ModuleActivity : BaseActivity() {

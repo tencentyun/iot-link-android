@@ -4,7 +4,7 @@ import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.demo.core.entity.UserInfo
-import com.tencent.iot.explorer.link.demo.video.entity.AccessInfo
+import com.tencent.iot.explorer.link.demo.video.AccessInfo
 import java.util.*
 
 /**
