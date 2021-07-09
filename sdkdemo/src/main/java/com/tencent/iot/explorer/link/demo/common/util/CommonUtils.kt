@@ -8,7 +8,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.entity.TimeBlock
-import com.tencent.iot.explorer.link.demo.video.dialog.ToastDialog
+import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeBlockInfo
 import java.io.File
@@ -95,7 +95,12 @@ class CommonUtils {
                 var localContentValues = getVideoContentValues(file, System.currentTimeMillis())
                 ctx.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues)
                 ctx.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
-                ToastDialog(ctx, ToastDialog.Type.SUCCESS, ctx.getString(R.string.capture_successed), 1500).show()
+                ToastDialog(
+                    ctx,
+                    ToastDialog.Type.SUCCESS,
+                    ctx.getString(R.string.capture_successed),
+                    1500
+                ).show()
             }
         }
 
