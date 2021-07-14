@@ -76,7 +76,7 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-def libVersion = rootProject.ext.android.sdkSnapshotVersion + '-SNAPSHOT'
+def libVersion = rootProject.ext.android.videoSdkSnapshotVersion + '-SNAPSHOT'
 ext.isReleaseVersion = !libVersion.endsWith("SNAPSHOT")
 publishing {
     publications {
