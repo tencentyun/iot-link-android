@@ -37,24 +37,31 @@ jobs:
       - name: Use cmake
         run: |
           cmake --version
-      - name: install fir
+      - name: Common-->install fir
         run: sudo gem install fir-cli
-      - name: Fix App Version
+
+      - name: Common-->Fix App Version
         run: |
           rtt=$(git describe --tags `git rev-list --tags --max-count=1`)
           rt=${rtt#*v}
+          echo "curr_tag=$rt" >> $GITHUB_ENV
           rc=$(git rev-parse --short HEAD)
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rt'\"#g' config.gradle
           sed -i 's#def sdkVersion.*#def sdkVersion = \"'$rt'\"#g' config.gradle
-      - name: Update Values of Signing
+
+      - name: Common-->Update Values of Signing
         run: |
           export KEY_ID_OF_SIGN=$IOT_GPG_KEYNAME
           export PASSWORD_OF_SIGN=$IOT_GPG_PASSPHRASE
           sh .github/scripts/updateValuesForSign.sh
-      - name: Update VersionCode
+
+      - name: Link-->Update Link App VersionCode
+        if: ${{!contains(env.curr_tag, 'video')}}
         run: |
           sh .github/scripts/updateVersionCode.sh
-      - name: Adapt build.gradle from debug to release
+
+      - name: Link-->Adapt build.gradle from debug to release
+        if: ${{!contains(env.curr_tag, 'video')}}
         run: |
           sed -i 's#opensource_keystore#tencent_official_keystore#g' app/build.gradle
           sed -i '/opensource {/, +4d' app/build.gradle
@@ -62,33 +69,80 @@ jobs:
           sed -i "s#'111222'#System.getenv(\"IOT_RELEASE_KEYSTORE_PASSWORD\")#g" app/build.gradle
           sed -i 's#-SNAPSHOT##g' sdk/explorer-link-android/build.gradle
           sed -i 's#-SNAPSHOT##g' sdk/explorer-link-rtc/build.gradle
-          sed -i '60,$s#-SNAPSHOT##g' sdk/video-link-android/build.gradle
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Package apk and aar with Gradle
+
+      - name: Video-->Update Video SDK Version
+        if: ${{contains(env.curr_tag, 'video')}}
+        run: |
+          export VIDEO_TAG=${{env.curr_tag}}
+          bash .github/scripts/updateVideoSDKVersion.sh
+
+      - name: Video-->Build Video with Gradle
+        if: ${{contains(env.curr_tag, 'video')}}
+        run: |
+          ./gradlew :sdk:video-link-android:build :sdkdemo:build
+
+      - name: Video-->Publish aar to Maven
+        if: ${{contains(env.curr_tag, 'video')}}
+        run: ./gradlew :sdk:video-link-android:publish
+
+      - name: Link-->Build Link with Gradle
+        if: ${{!contains(env.curr_tag, 'video')}}
+        run: ./gradlew :sdk:explorer-link-android:build :sdk:explorer-link-rtc:build :app:build
+
+      - name: Link-->Package apk and aar with Gradle
+        if: ${{!contains(env.curr_tag, 'video')}}
         run: ./gradlew assembleTencentOfficial
-      - name: Publish aar to Maven
-        run: ./gradlew publish
-      - name: Update iot-version-android.txt in iot-version repo
+
+      - name: Link-->Publish aar to Maven
+        if: ${{!contains(env.curr_tag, 'video')}}
+        run: ./gradlew :sdk:explorer-link-android:publish :sdk:explorer-link-rtc:publish
+
+      - name: Link-->Update iot-version-android.txt in iot-version repo
+        if: ${{!contains(env.curr_tag, 'video')}}
         run: sh .github/scripts/updateVersionInIotVersionRepo.sh
-      - name: Encrypt Apk
+
+      - name: Link-->Encrypt Link Apk
+        if: ${{!contains(env.curr_tag, 'video')}}
         run: |
           gpg --batch --passphrase "$GPG_DECRYPT_PASSPHRASE" -c app/build/outputs/apk/tencentOfficial/debug/*.apk
           gpg --batch --passphrase "$GPG_DECRYPT_PASSPHRASE" -c app/build/outputs/apk/tencentOfficial/release/*.apk
-      - name: Archive the encrypted apk
+
+      - name: Link--Archive the encrypted link app
+        if: ${{!contains(env.curr_tag, 'video')}}
         uses: actions/upload-artifact@v2
         with:
           path: app/build/outputs/apk/tencentOfficial/release/*.apk.gpg
-      - name: Rename Release APK
+
+      - name: Link-->Rename Release Link APK
+        if: ${{!contains(env.curr_tag, 'video')}}
         run: |
           APK_PATH=$(ls app/build/outputs/apk/tencentOfficial/release/*.apk.gpg)
           cp $APK_PATH iot-link-android.apk.gpg
-      - name: Upload Release apk to Asset
+
+      - name: Link-->Upload Release apk to Asset
+        if: ${{!contains(env.curr_tag, 'video')}}
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: iot-link-android.apk.gpg
           asset_name: iot-link-android.apk.gpg
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Video-->Rename Release SDK Demo APK
+        if: ${{contains(env.curr_tag, 'video')}}
+        run: |
+          SDKDEMO_PATH=$(ls sdkdemo/build/outputs/apk/release/*-release.apk)
+          cp $SDKDEMO_PATH sdkdemo-release.apk
+
+      - name: Video-->Upload SDK Demo to Asset
+        if: ${{contains(env.curr_tag, 'video')}}
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: sdkdemo-release.apk
+          asset_name: sdkdemo-release.apk
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
