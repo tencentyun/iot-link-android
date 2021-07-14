@@ -130,19 +130,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Video-->Encrypt SDK Demo
+        if: ${{contains(env.curr_tag, 'video')}}
+        run: |
+          gpg --batch --passphrase "$GPG_DECRYPT_PASSPHRASE" -c sdkdemo/build/outputs/apk/release/*.apk
+
       - name: Video-->Rename Release SDK Demo APK
         if: ${{contains(env.curr_tag, 'video')}}
         run: |
-          SDKDEMO_PATH=$(ls sdkdemo/build/outputs/apk/release/*-release.apk)
-          cp $SDKDEMO_PATH sdkdemo-release.apk
+          SDKDEMO_PATH=$(ls sdkdemo/build/outputs/apk/release/*-release.apk.gpg)
+          cp $SDKDEMO_PATH sdkdemo-release.apk.gpg
 
       - name: Video-->Upload SDK Demo to Asset
         if: ${{contains(env.curr_tag, 'video')}}
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: sdkdemo-release.apk
-          asset_name: sdkdemo-release.apk
+          asset_path: sdkdemo-release.apk.gpg
+          asset_name: sdkdemo-release.apk.gpg
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
