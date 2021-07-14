@@ -2,6 +2,7 @@ def gitCommitShortHash = 'git log -1 --pretty=%h'.execute([], project.rootDir).t
 def versionNamePrefix = "1.1.0"
 def versionAppName = "local"
 def sdkVersion = "1.4.1"
+def videoSdkVersion = "1.0.0"
 
 ext {
     android = [
@@ -9,7 +10,8 @@ ext {
             versionName: versionAppName,
             versionCode: 3,
             sdkDemoCommitId: 'xxx',
-            sdkSnapshotVersion: sdkVersion
+            sdkSnapshotVersion: sdkVersion,
+            videoSdkSnapshotVersion: videoSdkVersion
     ]
 
     configPath = ""
