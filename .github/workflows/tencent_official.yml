@@ -42,12 +42,14 @@ jobs:
 
       - name: Common-->Fix App Version
         run: |
+          rb=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           rtt=$(git describe --tags `git rev-list --tags --max-count=1`)
           rt=${rtt#*v}
           echo "curr_tag=$rt" >> $GITHUB_ENV
           rc=$(git rev-parse --short HEAD)
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rt'\"#g' config.gradle
           sed -i 's#def sdkVersion.*#def sdkVersion = \"'$rt'\"#g' config.gradle
+          sed -i "s#xxx#$rb+git.$rc#g" config.gradle
 
       - name: Common-->Update Values of Signing
         run: |
