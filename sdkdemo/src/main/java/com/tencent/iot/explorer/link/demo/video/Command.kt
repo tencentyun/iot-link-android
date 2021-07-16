@@ -6,11 +6,11 @@ class Command {
         var QUERY_NVR_DEVS = "action=inner_define&cmd=get_nvr_list" // 查询 NVR 设备列表
 
         fun getPtzUpCommand(channel: Int): String {
-            return "action=user_define&channel=${channel}&cmd=ptz_top"
+            return "action=user_define&channel=${channel}&cmd=ptz_up"
         }
 
         fun getPtzDownCommand(channel: Int): String {
-            return "action=user_define&channel=${channel}&cmd=ptz_bottom"
+            return "action=user_define&channel=${channel}&cmd=ptz_down"
         }
 
         fun getPtzRightCommand(channel: Int): String {
