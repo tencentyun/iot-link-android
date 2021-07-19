@@ -2,11 +2,12 @@
 
 vtag=$VIDEO_TAG
 
-# vtag 2.2.0-video.0
+# vtag video-v2.2.0
 vtaglist=(${vtag//-/ })
 
-# version 2.2.0
-version=${vtaglist[0]}
+# version v2.2.0
+version=${vtaglist[1]}
+version=${version#*v}
 
 # replace videoSdkVersion with version
 sed -i 's#def videoSdkVersion.*#def videoSdkVersion = \"'$version'\"#g' config.gradle
