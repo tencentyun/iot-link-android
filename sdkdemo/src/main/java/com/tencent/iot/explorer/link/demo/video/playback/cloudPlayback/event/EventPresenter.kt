@@ -34,6 +34,13 @@ class EventPresenter : ParentPresenter<EventModel, EventView> {
         return ""
     }
 
+    fun getBaseUrl() : String {
+        model?.let {
+            return it.getBaseUrl()
+        }
+        return ""
+    }
+
     fun getCurrentDayEventsData() {
         model?.getCurrentDayEventsData()
     }
