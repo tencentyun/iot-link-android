@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event
 
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.log.L
@@ -23,6 +24,7 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
     private var deviceName: String = ""
     private var channel: Int = 0
     private var coundownLatch: CountDownLatch? = null
+    private var baseUrl = ""
 
     override fun fail(msg: String?, reqCode: Int) {
         L.e(msg ?: "")
@@ -50,6 +52,7 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
     }
 
     private fun readyDataAndCallback(eventResponse : EventResponse) {
+        baseUrl = eventResponse.videoURL
         val events : MutableList<ActionRecord> = CopyOnWriteArrayList()
         coundownLatch =  CountDownLatch(eventResponse.events.size)
         GlobalScope.launch {
@@ -112,6 +115,10 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
 
     fun getDeviceName() : String {
         return this.deviceName
+    }
+
+    fun getBaseUrl() : String {
+        return this.baseUrl
     }
 
     fun setChannel(channel: Int) {

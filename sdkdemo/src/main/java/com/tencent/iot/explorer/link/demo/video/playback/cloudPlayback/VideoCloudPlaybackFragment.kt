@@ -11,21 +11,21 @@ import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.core.entity.BaseResponse
-import com.tencent.iot.explorer.link.demo.core.entity.VideoHistory
-import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionListAdapter
-import com.tencent.iot.explorer.link.demo.video.playback.CalendarDialog
-import com.tencent.iot.explorer.link.demo.video.playback.CalendarDialog.OnClickedListener
-import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
-import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionRecord
-import com.tencent.iot.explorer.link.demo.video.DevInfo
-import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineViewChangeListener
+import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
+import com.tencent.iot.explorer.link.demo.core.entity.BaseResponse
+import com.tencent.iot.explorer.link.demo.core.entity.VideoHistory
+import com.tencent.iot.explorer.link.demo.video.DevInfo
+import com.tencent.iot.explorer.link.demo.video.playback.CalendarDialog
+import com.tencent.iot.explorer.link.demo.video.playback.CalendarDialog.OnClickedListener
 import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackBaseFragment
+import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionListAdapter
+import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionRecord
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventPresenter
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventView
+import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoRequestCode
 import com.tencent.iot.video.link.service.VideoBaseService
@@ -115,6 +115,9 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                     var selectDate = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN).parse(
                         CommonUtils.dateConvertionWithSplit(it.get(0)))
                     try2GetRecord(selectDate)
+                    adapter?.let {
+                        it.index = -1
+                    }
                 }
             }
 
@@ -174,7 +177,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                 it.index = pos
                 it.notifyDataSetChanged()
 
-                var url = String.format(URL_FORMAT, baseUrl,
+                var url = String.format(URL_FORMAT, presenter.getBaseUrl(),
                     (it.list.get(pos).startTime).toString(),
                     (it.list.get(pos).endTime).toString())
                 playVideo(url, 0)
