@@ -71,15 +71,7 @@ class FamilyListActivity : BaseActivity(), MyCallback, CRecyclerView.RecyclerIte
      */
     private fun refreshFamilyList() {
         App.data.familyList.clear()
-        loadFamilyList()
-    }
-
-    /**
-     *  获取家庭列表
-     */
-    private fun loadFamilyList() {
-        if (App.data.familyList.size > 0 && App.data.familyList.size >= total) return
-        HttpRequest.instance.familyList(App.data.familyList.size, this)
+        HttpRequest.instance.familyList(0, this)
     }
 
     /**
