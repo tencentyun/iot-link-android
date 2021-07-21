@@ -316,13 +316,21 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
 
                         val myUserId = SharePreferenceUtil.getString(activity, App.CONFIG, CommonField.USER_ID)
                         // 判断设备的video_call_status, audio_call_status字段是否等于1，若等于1并且呼叫的是自己，就调用CallDevice接口
-                        if (videoCallStatus == 1 && calledUserId == myUserId) {
-                            App.appStartBeingCall(TRTCCalling.TYPE_VIDEO_CALL, device.DeviceId)
-                        } else if (audioCallStatus == 1 && calledUserId == myUserId) {
-                            App.appStartBeingCall(TRTCCalling.TYPE_AUDIO_CALL, device.DeviceId)
+                        if (calledUserId == myUserId) {
+                            if (videoCallStatus == 1 || audioCallStatus == 1) {
+                                if (videoCallStatus == 1) {
+                                    App.appStartBeingCall(TRTCCalling.TYPE_VIDEO_CALL, device.DeviceId)
+                                } else if (audioCallStatus == 1) {
+                                    App.appStartBeingCall(TRTCCalling.TYPE_AUDIO_CALL, device.DeviceId)
+                                }
+                            } else {
+                                if (data.rtcNotificationClicked) {
+                                    T.show("对方已挂断")
+                                    data.rtcNotificationClicked = false
+                                }
+                            }
                         }
                     }
-
                 }
             })
     }

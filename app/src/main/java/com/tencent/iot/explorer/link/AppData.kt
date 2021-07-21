@@ -43,6 +43,7 @@ class AppData private constructor() {
     var notificationId = 0
     var isForeground = false
     var callingDeviceId = "" //主动呼叫的设备的id
+    var rtcNotificationClicked = false
 
     //activity列表
     val activityList = LinkedList<BaseActivity>()
