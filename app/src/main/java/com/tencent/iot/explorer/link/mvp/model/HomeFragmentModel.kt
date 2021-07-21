@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.mvp.model
 
 import android.text.TextUtils
-import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
@@ -37,11 +36,6 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(view), MyCallback {
 
-    private var shareDeviceTotal = 0
-    private var deviceTotal = 0
-    private var familyTotal = 0
-    private var roomTotal = 0
-
     private val familyList = App.data.familyList
     private val roomList = App.data.roomList
     val deviceList = App.data.deviceList
@@ -49,10 +43,6 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
     val shortCuts: MutableMap<String, ProductUIDevShortCutConfig> = ConcurrentHashMap()
 
     var roomId = ""
-    private var familyListEnd = false
-    private var roomListEnd = false
-
-    private var isTabFamily = false
 
     fun getDeviceEntity(position: Int): DeviceEntity {
         return deviceList[position]
@@ -80,18 +70,8 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
      * 请求获取家庭列表
      */
     fun refreshFamilyList() {
-        familyListEnd = false
-        roomListEnd = false
         familyList.clear()
-        loadFamilyList()
-    }
-
-    /**
-     * 请求获取家庭列表
-     */
-    private fun loadFamilyList() {
-        if (familyListEnd) return
-        HttpRequest.instance.familyList(familyList.size, this)
+        HttpRequest.instance.familyList(0, this)
     }
 
     fun loadDevData(device: DeviceEntity) {
@@ -177,17 +157,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
      * 请求获取当前家庭房间列表
      */
     fun refreshRoomList() {
-        isTabFamily = true
-        roomListEnd = false
         roomList.clear()
-        loadRoomList()
-    }
-
-    /**
-     * 请求获取当前家庭房间列表
-     */
-    private fun loadRoomList() {
-        if (roomListEnd) return
         HttpRequest.instance.roomList(App.data.getCurrentFamily().FamilyId, 0, this)
     }
 
@@ -320,18 +290,12 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
             RequestCode.family_list -> {
                 if (response.isSuccess()) {
                     response.parse(FamilyListResponse::class.java)?.run {
+
                         familyList.addAll(FamilyList)
-                        if (Total >= 0) {
-                            familyTotal = Total
-                        }
-                        familyListEnd = familyList.size == familyTotal
                         if (familyList.isNotEmpty()) {
                             App.data.getCurrentFamily()
                             view?.showFamily()
                             refreshRoomList()
-                            if (!familyListEnd) {
-                                loadFamilyList()
-                            }
                         } else {//没有家庭，创建家庭
                             HttpRequest.instance.createFamily(
                                 T.getContext().getString(R.string.somebody_family, App.data.userInfo.NickName),//"${App.data.userInfo.NickName}的家",
@@ -349,30 +313,21 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
             RequestCode.room_list -> {
                 if (response.isSuccess()) {
                     response.parse(RoomListResponse::class.java)?.run {
-                        if (isTabFamily) {
-                            isTabFamily = false
-                            roomList.clear()
-                            roomList.add(RoomEntity())
-                            //刷新房间列表后，设备列表显示全部设备
-                            roomId = ""
-                            refreshDeviceList()
-                        }
-                        if (Roomlist != null) {
-                            roomList.addAll(Roomlist!!)
+                        roomList.clear()
+                        roomList.add(RoomEntity())
+                        //刷新房间列表后，设备列表显示全部设备
+                        roomId = ""
+                        refreshDeviceList()
+
+                        Roomlist?.let {
+                            roomList.addAll(it)
                             if (roomList.isNoSelect()) {
                                 roomList.addSelect(0)
                             }
                         }
-                        if (Total >= 0) {
-                            roomTotal = Total
-                        }
-                        roomListEnd = roomList.size >= roomTotal
+
                         L.e("roomList=${JSON.toJSONString(roomList)}")
                         view?.showRoomList()
-                        //还有数据
-                        if (!roomListEnd) {
-                            loadRoomList()
-                        }
                     }
                 }
             }
