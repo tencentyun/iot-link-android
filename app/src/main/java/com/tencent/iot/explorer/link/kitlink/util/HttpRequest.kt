@@ -729,7 +729,7 @@ class HttpRequest private constructor() {
     fun familyList(offset: Int, callback: MyCallback) {
         val param = tokenParams("AppGetFamilyList")
         param["Offset"] = offset
-        param["Limit"] = 50
+        param["Limit"] = 999
         tokenPost(param, callback, RequestCode.family_list)
     }
 
