@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -110,6 +111,12 @@ public class MessageReceiver extends XGPushBaseReceiver {
             // APP自己处理点击的相关动作
             // 这个动作可以在activity的onResume也能监听，请看第3点相关内容
             text = context.getString(R.string.notification_opened) + message; // "通知被打开 :"
+            String customContent = message.getCustomContent();
+            if (!TextUtils.isEmpty(customContent)) {
+                if (customContent.contains("call_status")) { // RTC信鸽推送消息
+                    App.Companion.getData().setRtcNotificationClicked(true);
+                }
+            }
         } else if (message.getActionType() == NotificationAction.delete.getType()) {
             // 通知被清除啦。。。。
             // APP自己处理通知被清除后的相关动作
@@ -155,47 +162,12 @@ public class MessageReceiver extends XGPushBaseReceiver {
         if (TextUtils.isEmpty(msg)) {
             return;
         }
-
         JSONObject msgJson = JSON.parseObject(msg);
         if (msgJson.containsKey(CommonField.MSG_TYPE) &&
                 msgJson.getString(CommonField.MSG_TYPE).equals(
                         PushedMessageType.FEEDBACK.getValueStr())) {
             Intent intent = new Intent(App.Companion.getActivity(), HelpWebViewActivity.class);
             App.Companion.getActivity().startActivity(intent);
-        } else if (msgJson.containsKey(MessageConst.TRTC_AUDIO_CALL_STATUS)) {
-            final int videoCallStatus = msgJson.getInteger(MessageConst.TRTC_VIDEO_CALL_STATUS);
-            final int audioCallStatus = msgJson.getInteger(MessageConst.TRTC_AUDIO_CALL_STATUS);
-            final String userId = msgJson.getString(MessageConst.USERID);
-            // 调用 CallDevice 接口
-//            HttpRequest.Companion.getInstance().trtcCallDevice(userId, new MyCallback() {
-//                @Override
-//                public void fail(String msg, int reqCode) {
-//                    L.INSTANCE.e(msg);
-//                }
-//                @Override
-//                public void success(BaseResponse response, int reqCode) {
-//                    if (response.isSuccess()) {
-//                        JSONObject json = JSON.parseObject(response.getData().toString());
-//                        if (json == null || !json.containsKey(CommonField.TRTC_PARAMS)) return;
-//                        String data = json.getString(CommonField.TRTC_PARAMS);
-//                        if (TextUtils.isEmpty(data)) return;
-//
-//                        TRTCParamsEntity params = JSON.parseObject(data, TRTCParamsEntity.class);
-//                        RoomKey roomKey = new RoomKey();
-//                        roomKey.setAppId(params.getSdkAppId());
-//                        roomKey.setUserId(params.getUserId());
-//                        roomKey.setUserSig(params.getUserSig());
-//                        // 根据 callType, 拉起语音或者视频的被呼页面
-//                        if (videoCallStatus == 1) {
-//                            // 视频通话
-//                            TRTCAudioCallActivity.startBeingCall(App.Companion.getActivity(), roomKey, userId);
-//                        } else if (audioCallStatus == 1) {
-//                            // 语音通话
-//                            TRTCAudioCallActivity.startBeingCall(App.Companion.getActivity(), roomKey, userId);
-//                        }
-//                    }
-//                }
-//            });
         }
     }
 }
