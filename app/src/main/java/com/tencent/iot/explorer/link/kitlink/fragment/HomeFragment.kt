@@ -260,6 +260,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
             override fun onLoadMore(refreshLayout: RefreshLayout) {}
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 refreshLayout.finishRefresh()
+                App.data.resetRefreshLevel() // 仅刷新设备列表
                 requestData()
                 loadCurrentWeather()
             }
@@ -540,6 +541,13 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         for (i in 0 until roomList.size) {
             if (TextUtils.isEmpty(roomList.get(i).RoomName)) {
                 roomList[i].RoomName = getString(R.string.all_dev)
+            }
+        }
+        App.data.roomList?.let {
+            for (i in 0 until it.size) {
+                if (App.data.roomList.isSelect(i)) {
+                    roomsAdapter?.selectPos = i
+                }
             }
         }
         roomsAdapter?.notifyDataSetChanged()
