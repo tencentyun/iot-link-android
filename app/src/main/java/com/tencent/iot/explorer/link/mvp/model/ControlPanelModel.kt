@@ -3,6 +3,8 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.os.Build
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
@@ -257,6 +259,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 it[0].parse().run {
                     navBar = getNavBar()
                     hasTimerCloud = isTimingProject()
+                    uiList.clear()
                     uiList.addAll(getUIList())
                     L.e("uiList = ${JsonManager.toJson(uiList)}")
                     if (uiList.isNotEmpty()) {
@@ -329,6 +332,8 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     @Synchronized
     private fun mergeData() {
         if (!hasPanel || !hasProduct) return
+        devicePropertyList.clear()
+        var tmpList = LinkedList<DevicePropertyEntity>()
         uiList.forEachIndexed { _, property ->
             val devicePropertyEntity = DevicePropertyEntity()
             devicePropertyEntity.id = property.id
@@ -341,12 +346,13 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
             if (!TextUtils.isEmpty(devicePropertyEntity.name))
                 if (property.isBig()) {
                     //大按钮在第一个位置
-                    devicePropertyList.addFirst(devicePropertyEntity)
+                    tmpList.addFirst(devicePropertyEntity)
                 } else {
-                    devicePropertyList.add(devicePropertyEntity)
+                    tmpList.add(devicePropertyEntity)
                 }
         }
-        devicePropertyList = LinkedList(LinkedHashSet(devicePropertyList))
+        tmpList = LinkedList(LinkedHashSet(tmpList))
+        devicePropertyList.addAll(tmpList)
         L.e("devicePropertyList", JsonManager.toJson(devicePropertyList) ?: "")
         view?.showControlPanel(navBar, hasTimerCloud)
     }
