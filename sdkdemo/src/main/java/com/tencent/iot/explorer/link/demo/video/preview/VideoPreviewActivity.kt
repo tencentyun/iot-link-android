@@ -289,7 +289,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         } else {
             iv_audio.setImageResource(R.mipmap.audio)
             var audioManager = getSystemService(Service.AUDIO_SERVICE) as AudioManager
-            var volume = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM)
+            var volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
             player.setVolume(volume.toFloat(), volume.toFloat())
         }
     }
