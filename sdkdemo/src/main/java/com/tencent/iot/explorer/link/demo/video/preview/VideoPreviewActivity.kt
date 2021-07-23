@@ -249,7 +249,11 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         radio_record.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 filePath = CommonUtils.generateFileDefaultPath()
-                player.startRecord(filePath)
+                var ret = player.startRecord(filePath)
+                if (ret != 0) {
+                    ToastDialog(this, ToastDialog.Type.WARNING, getString(R.string.record_failed), 2000).show()
+                    radio_record.isChecked = false
+                }
             } else {
                 player.stopRecord()
                 CommonUtils.refreshVideoList(this@VideoPreviewActivity, filePath)
