@@ -4,4 +4,6 @@ interface ConnectionCallback {
     fun connected()
 
     fun disconnected()
+
+    fun onOpen()
 }
