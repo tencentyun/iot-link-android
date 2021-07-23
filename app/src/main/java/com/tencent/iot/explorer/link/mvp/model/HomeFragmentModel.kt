@@ -440,6 +440,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                                     }
                                     // TRTC: trtc设备注册websocket监听
                                     IoTAuth.registerActivePush(trtcDeviceIdList, null)
+                                    App.data.rtcDeviceIdList = trtcDeviceIdList
                                 }
                             }
                             if (callingMyApp) {
