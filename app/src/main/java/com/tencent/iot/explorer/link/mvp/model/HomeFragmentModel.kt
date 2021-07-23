@@ -360,6 +360,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         }
                         // TRTC: trtc设备注册websocket监听
                         IoTAuth.registerActivePush(deviceIdList, null)
+                        App.data.rtcDeviceIdList = deviceIdList
                     }
                 }
             }
@@ -381,6 +382,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                         }
                         // TRTC: trtc设备注册websocket监听
                         IoTAuth.registerActivePush(deviceIdList, null)
+                        App.data.rtcDeviceIdList = deviceIdList
 
                         view?.showDeviceList(shareDeviceList.size, roomId, false, true)
                         //在线状态
@@ -440,6 +442,7 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                                     }
                                     // TRTC: trtc设备注册websocket监听
                                     IoTAuth.registerActivePush(trtcDeviceIdList, null)
+                                    App.data.rtcDeviceIdList = trtcDeviceIdList
                                 }
                             }
                             if (callingMyApp) {
