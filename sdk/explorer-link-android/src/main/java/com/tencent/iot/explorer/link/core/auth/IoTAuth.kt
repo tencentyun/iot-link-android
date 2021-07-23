@@ -10,6 +10,7 @@ import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.service.*
 import com.tencent.iot.explorer.link.core.auth.socket.WSClientManager
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
+import com.tencent.iot.explorer.link.core.auth.socket.callback.ConnectionCallback
 import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
 import com.tencent.iot.explorer.link.core.auth.socket.callback.MessageCallback
 import com.tencent.iot.explorer.link.core.log.L
@@ -212,6 +213,13 @@ object IoTAuth {
      */
     fun setWebSocketTag(tag: String) {
         WSClientManager.setDebugTag(tag)
+    }
+
+    /**
+     * 设置WebSocket连接状态回调
+     */
+    fun setWebSocketCallback(callback: ConnectionCallback) {
+        WSClientManager.instance.setSocketCallback(callback)
     }
 
     /**
