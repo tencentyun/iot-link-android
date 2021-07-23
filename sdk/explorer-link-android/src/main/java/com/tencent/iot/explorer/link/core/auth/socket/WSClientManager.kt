@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.core.auth.socket
 
 import android.text.TextUtils
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.resp.RespFailMessage
@@ -60,6 +61,7 @@ internal class WSClientManager private constructor() {
     //enterRoom监听使能参数
     public var enablePayloadMessageCallback = true
 
+    private var socketCallback: ConnectionCallback? = null
 
     /**
      * 单例
@@ -93,6 +95,13 @@ internal class WSClientManager private constructor() {
         startHeartJob()
     }
 
+    /**
+     * 设置WebSocket连接状态回调
+     */
+    fun setSocketCallback(callback: ConnectionCallback) {
+        socketCallback = callback
+    }
+
     fun setBrokerUrl(value: String) {
         host = value
     }
@@ -102,7 +111,10 @@ internal class WSClientManager private constructor() {
      */
     fun addDeviceIds(ids: ArrayString) {
         for (i in 0 until ids.size()) {
-            heartMessageList.addValue(ids.getValue(i))
+            val id = ids.getValue(i)
+            if (!heartMessageList.contains(id)) {
+                heartMessageList.addValue(id)
+            }
         }
     }
 
@@ -258,10 +270,11 @@ internal class WSClientManager private constructor() {
 
         override fun connected() {
             resend()
-            if (job != null)
+            if (job != null) {
                 activePushCallbacks.forEach {
                     it.reconnected()
                 }
+            }
             stopJob()
         }
 
@@ -270,6 +283,11 @@ internal class WSClientManager private constructor() {
             client?.destroy()
             client = null
             startJob()
+            socketCallback?.disconnected()
+        }
+
+        override fun onOpen() {
+            socketCallback?.onOpen()
         }
     }
 
