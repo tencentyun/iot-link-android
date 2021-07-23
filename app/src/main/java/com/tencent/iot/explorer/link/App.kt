@@ -18,6 +18,7 @@ import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.*
+import com.tencent.iot.explorer.link.core.auth.socket.callback.ConnectionCallback
 import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.auth.util.Weak
@@ -43,7 +44,8 @@ import kotlin.collections.ArrayList
 /**
  * APP
  */
-class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessageCallback {
+class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessageCallback,
+    ConnectionCallback {
 
     companion object {
         //app数据
@@ -129,6 +131,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         super.onCreate()
         MultiDex.install(this)
         IoTAuth.setWebSocketTag(Utils.getAndroidID(this)) // 设置wss的uin
+        IoTAuth.setWebSocketCallback(this) // 设置WebSocket连接状态回调
         IoTAuth.init(BuildConfig.TencentIotLinkAppkey, BuildConfig.TencentIotLinkAppSecret)
         //初始化弹框
         T.setContext(this.applicationContext)
@@ -266,6 +269,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                                     getDeviceCallStatus(device)
                                     // TRTC: trtc设备注册websocket监听
                                     IoTAuth.registerActivePush(trtcDeviceIdList, null)
+                                    App.data.rtcDeviceIdList = trtcDeviceIdList
                                 }
                             }
                         }
@@ -556,6 +560,20 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
             }
 
         })
+    }
+
+    override fun connected() {
+    }
+
+    override fun disconnected() {
+        L.e("WebSocket已断开连接")
+    }
+
+    override fun onOpen() {
+        L.e("WebSocket已连接")
+        if (data.rtcDeviceIdList != null) {
+            IoTAuth.registerActivePush(data.rtcDeviceIdList!!, null)
+        }
     }
 }
 
