@@ -18,6 +18,7 @@ import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.*
+import com.tencent.iot.explorer.link.core.auth.socket.callback.ConnectionCallback
 import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.auth.util.Weak
@@ -43,7 +44,8 @@ import kotlin.collections.ArrayList
 /**
  * APP
  */
-class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessageCallback {
+class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessageCallback,
+    ConnectionCallback {
 
     companion object {
         //app数据
@@ -129,13 +131,14 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         super.onCreate()
         MultiDex.install(this)
         IoTAuth.setWebSocketTag(Utils.getAndroidID(this)) // 设置wss的uin
+        IoTAuth.setWebSocketCallback(this) // 设置WebSocket连接状态回调
         IoTAuth.init(BuildConfig.TencentIotLinkAppkey, BuildConfig.TencentIotLinkAppSecret)
         //初始化弹框
         T.setContext(this.applicationContext)
         //日志开关
         L.isLog = DEBUG_VERSION
         //日志等级
-        L.LOG_LEVEL = L.LEVEL_INFO
+        L.LOG_LEVEL = L.LEVEL_DEBUG
         //信鸽推送日志开关
         XGPushConfig.enableDebug(applicationContext, DEBUG_VERSION)
         XGPushConfig.enablePullUpOtherApp(applicationContext, PULL_OTHER)
@@ -556,6 +559,17 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
             }
 
         })
+    }
+
+    override fun connected() {
+        L.d("WebSocket已连接")
+        if (data.rtcDeviceIdList != null) {
+//            IoTAuth.registerActivePush(data.rtcDeviceIdList!!, null)
+        }
+    }
+
+    override fun disconnected() {
+        L.e("WebSocket已断开连接")
     }
 }
 
