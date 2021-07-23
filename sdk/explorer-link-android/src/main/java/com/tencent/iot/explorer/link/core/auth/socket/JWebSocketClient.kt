@@ -12,6 +12,7 @@ class JWebSocketClient(serverUri: URI, handler: DispatchMsgHandler, connectionCa
     private val connectListener = connectionCallback
 
     override fun onOpen(handshakedata: ServerHandshake) {
+        connectListener.onOpen()
     }
 
     override fun onClose(code: Int, reason: String, remote: Boolean) {
