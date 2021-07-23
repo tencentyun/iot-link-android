@@ -7,6 +7,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -44,6 +45,7 @@ class AppData private constructor() {
     var isForeground = false
     var callingDeviceId = "" //主动呼叫的设备的id
     var rtcNotificationClicked = false
+    var rtcDeviceIdList: ArrayString? = null
 
     //activity列表
     val activityList = LinkedList<BaseActivity>()
