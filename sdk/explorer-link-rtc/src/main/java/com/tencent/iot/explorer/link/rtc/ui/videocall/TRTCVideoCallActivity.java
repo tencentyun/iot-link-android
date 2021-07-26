@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -509,6 +510,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
     @Override
     public void networkUnavailable() {
         Log.e(TAG, "networkUnavailable");
+        Toast.makeText(this, R.string.trtccalling_customer_no_net, Toast.LENGTH_SHORT).show();
         checkoutIsEnterRoom60seconds(true, getString(R.string.trtccalling_customer_no_net));
     }
 
