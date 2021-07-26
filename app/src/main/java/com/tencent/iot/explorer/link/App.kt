@@ -13,14 +13,12 @@ import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
-import com.tencent.iot.explorer.link.core.auth.entity.ProductEntity
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.*
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ConnectionCallback
 import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
-import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.core.log.L
@@ -112,6 +110,8 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         }
 
         fun appStartBeingCall(callingType: Int, deviceId: String) {
+            L.e("App isForeground ${data.isForeground}")
+            L.e("App isCalling ${TRTCUIManager.getInstance().isCalling}")
             if (data.isForeground && !TRTCUIManager.getInstance().isCalling) { //在前台，没有正在通话时，唤起通话页面
                 TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
 
@@ -164,13 +164,13 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
     }
 
     private var activityReferences = 0
-    private var isActivityChangingConfigurations = false
 
     override fun onActivityStarted(activity: Activity) {
         Utils.clearMsgNotify(activity, data.notificationId)
-        if (++activityReferences == 1 && !isActivityChangingConfigurations) {
+        if (++activityReferences == 1) {
             // App enters foreground
             data.isForeground = true
+            L.e("App foreground")
             requestDeviceList()
             if (activity is AppLifeCircleListener) {
                 activity.onAppGoforeground()
@@ -179,10 +179,10 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
     }
 
     override fun onActivityStopped(activity: Activity) {
-        isActivityChangingConfigurations = activity.isChangingConfigurations
-        if (--activityReferences == 0 && !isActivityChangingConfigurations) {
+        if (--activityReferences == 0) {
             // App enters background
             data.isForeground = false
+            L.e("App background")
             if (activity is AppLifeCircleListener) {
                 activity.onAppGoBackground()
             }
