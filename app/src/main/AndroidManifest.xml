@@ -118,8 +118,10 @@
         <activity android:name=".kitlink.activity.ControlPanelActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />
         <activity android:name=".kitlink.activity.SelectPointActivity" />
-        <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
-        <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
+        <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity"
+            android:screenOrientation="portrait"/>
         <receiver android:name="com.tencent.iot.explorer.link.rtc.ui.utils.NetWorkStateReceiver">
             <intent-filter>
                 <!--检测网络变化的acton-->
