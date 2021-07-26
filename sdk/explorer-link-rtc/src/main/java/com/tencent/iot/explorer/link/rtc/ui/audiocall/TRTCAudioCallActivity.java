@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -304,6 +305,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkS
     private void checkoutIsEnterRoom60seconds(boolean calling, String message) {
         if (enterRoomTask == null) {
             enterRoomTask = new TimerTask(){
+                @Override
                 public void run(){
                     //呼叫了60秒，对方未接听 显示对方无人接听，并退出，进入了就取消timertask
                     runOnUiThread(new Runnable() {
@@ -477,6 +479,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkS
     @Override
     public void networkUnavailable() {
         Log.e(TAG, "networkUnavailable");
+        Toast.makeText(this, R.string.trtccalling_customer_no_net, Toast.LENGTH_SHORT).show();
         checkoutIsEnterRoom60seconds(true, getString(R.string.trtccalling_customer_no_net));
     }
 
