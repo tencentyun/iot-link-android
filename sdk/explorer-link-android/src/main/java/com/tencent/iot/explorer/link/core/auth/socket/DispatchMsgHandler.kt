@@ -143,7 +143,13 @@ open class DispatchMsgHandler {
                         return it.getString("state")
                     }
                 }
-                else -> return getString("params")
+                else ->  {
+                    if (containsKey("params")) {
+                        return getString("params")
+                    } else {
+                        return ""
+                    }
+                }
             }
         }
         return ""
