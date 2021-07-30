@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.customview.verticaltab.*
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -78,14 +80,15 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         App.data.tabPosition = 0  // Reset the position of vertical tab
         App.data.screenWith = getScreenWidth()
         HttpRequest.instance.getParentCategoryList(this)
+        BleConfigService.get().context = this
         beginScanning()
     }
-
 
     private val runnable = Runnable {
         iv_loading_cirecle.clearAnimation()
         scanning.visibility = View.GONE
         not_found_dev.visibility = View.VISIBLE
+        BleConfigService.get().stopScanBluetoothDevices()
     }
 
     override fun onResume() {
@@ -380,7 +383,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     }
 
     private fun isBluetoothValid() : Boolean {
-        val adapter  = BluetoothAdapter.getDefaultAdapter()
+        val adapter = BluetoothAdapter.getDefaultAdapter()
         return adapter?.isEnabled ?: false
     }
 
@@ -393,7 +396,8 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             not_found_dev.visibility = View.GONE
             scann_fail.visibility = View.GONE
             iv_loading_cirecle.startAnimation(rotateAnimation)
-            handler.postDelayed(runnable, 15000)
+            handler.postDelayed(runnable, 60000)
+            BleConfigService.get().startScanBluetoothDevices()
         } else {
             scann_fail.visibility = View.VISIBLE
             scanning.visibility = View.GONE
