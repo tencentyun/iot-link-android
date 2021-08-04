@@ -12,7 +12,7 @@
     <string name="accept">接受</string>
     <string name="agree">同意</string>
     <string name="save">保存</string>
-
+    <string name="ok">OK</string>
 
     <string name="add_device">添加设备</string>
     <string name="device_list">设备列表</string>
@@ -93,6 +93,11 @@
     <string name="devs_checked">已选择 %d 台设备</string>
     <string name="query_failed">查询失败</string>
     <string name="record_failed">录像失败</string>
+    <string name="time_2_show">P2P 连接时间: %s(ms) \n\n 出图时间: %s(ms)</string>
+    <string name="disconnected_and_reconnecting">%s 通道断开，正在重连</string>
+    <string name="connected">%s 通道建立成功</string>
+    <string name="error_with_code">%s 连接错误码 %s，通道断开</string>
+    <string name="command_with_error">执行信令 %s 不成功</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
