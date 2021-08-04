@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
@@ -36,7 +37,7 @@ import kotlin.collections.ArrayList
 private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
 private var allDevUrl: MutableList<DevUrl2Preview> = CopyOnWriteArrayList()
 
-class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
+class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback, CoroutineScope by MainScope() {
     lateinit var gridLayoutManager : GridLayoutManager
     lateinit var linearLayoutManager : LinearLayoutManager
     private var adapter : DevPreviewAdapter? = null
@@ -102,10 +103,17 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
 
     private fun setPlayerSource(player: IjkMediaPlayer, devName: String, channel: Int) {
         Thread(Runnable {
-            var started = XP2P.startServiceWithXp2pInfo("${App.data.accessInfo!!.productId}/${devName}",
+            var id = "${App.data.accessInfo!!.productId}/${devName}"
+            var started = XP2P.startServiceWithXp2pInfo(id,
                 App.data.accessInfo!!.productId, devName, "")
             // 已经启动过，或者第一次启动，继续进行
-            if (started != 0 && started != -1011) return@Runnable
+            if (started != 0 && started != -1011) {
+                launch(Dispatchers.Main) {
+                    var errInfo = getString(R.string.error_with_code, id, started.toString())
+                    Toast.makeText(this@VideoMultiPreviewActivity, errInfo, Toast.LENGTH_SHORT).show()
+                }
+                return@Runnable
+            }
 
             var tmpCountDownLatch = CountDownLatch(1)
             countDownLatchs.put("${App.data.accessInfo!!.productId}/${devName}/${channel}", tmpCountDownLatch)
@@ -174,7 +182,17 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
                     }
                 } // 唤醒守护线程
             }
+            launch(Dispatchers.Main) {
+                var content = getString(R.string.disconnected_and_reconnecting, id)
+                Toast.makeText(this@VideoMultiPreviewActivity, content, Toast.LENGTH_SHORT).show()
+            }
+
         } else if (event == 1004) {
+            launch(Dispatchers.Main) {
+                var content = getString(R.string.connected, id)
+                Toast.makeText(this@VideoMultiPreviewActivity, content, Toast.LENGTH_SHORT).show()
+            }
+
             tryReleaseLock(id)
         } else if (event == 1005) { }
     }
@@ -302,6 +320,7 @@ class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback {
                 }
             }
         }
+        cancel()
     }
 
     companion object {
