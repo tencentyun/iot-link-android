@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
@@ -31,6 +32,7 @@ import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.Eve
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventView
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
+import com.tencent.iot.explorer.link.demo.video.utils.TipToastDialog
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
@@ -67,6 +69,16 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
     private var filePath: String? = null
     private lateinit var audioRecordUtil: AudioRecordUtil
     private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+    @Volatile
+    private var showTip = false
+    @Volatile
+    private var connectStartTime = 0L
+    @Volatile
+    private var connectTime = 0L
+    @Volatile
+    private var startShowVideoTime = 0L
+    @Volatile
+    private var showVideoTime = 0L
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
@@ -114,9 +126,17 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         player = IjkMediaPlayer()
 
         Thread(Runnable {
-            var started = XP2P.startServiceWithXp2pInfo("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
+            connectStartTime = System.currentTimeMillis()
+            var id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
+            var started = XP2P.startServiceWithXp2pInfo(id,
                 App.data.accessInfo!!.productId, presenter.getDeviceName(), "")
-            if (started != 0) return@Runnable
+            if (started != 0) {
+                launch(Dispatchers.Main) {
+                    var errInfo = getString(R.string.error_with_code, id, started.toString())
+                    Toast.makeText(this@VideoPreviewActivity, errInfo, Toast.LENGTH_SHORT).show()
+                }
+                return@Runnable
+            }
 
             var tmpCountDownLatch = CountDownLatch(1)
             countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
@@ -125,6 +145,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
             if (!TextUtils.isEmpty(urlPrefix)) {
                 player?.let {
+                    startShowVideoTime = System.currentTimeMillis()
                     resetPlayer()
                     keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
                 }
@@ -192,6 +213,15 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
                 var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
                 var repStatus = XP2P.postCommandRequestSync("${accessInfo.productId}/${presenter.getDeviceName()}",
                     command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+
+                launch(Dispatchers.Main) {
+                    var retContent = StringBuilder(repStatus).toString()
+                    if (TextUtils.isEmpty(retContent)) {
+                        retContent = getString(R.string.command_with_error, command)
+                    }
+                    Toast.makeText(this@VideoPreviewActivity, retContent, Toast.LENGTH_SHORT).show()
+                }
+
                 JSONArray.parseArray(repStatus, DevStatus::class.java)?.let {
                     if (it.size == 1 && it.get(0).status == 0) {
                         XP2P.runSendService("${accessInfo.productId}/${presenter.getDeviceName()}", Command.getTwoWayRadio(presenter.getChannel()), true)
@@ -290,8 +320,14 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             Thread(Runnable {
                 App.data.accessInfo?.let {
                     if (command.length <= 0) return@Runnable
-                    XP2P.postCommandRequestSync("${it.productId}/${presenter.getDeviceName()}",
+                    var retContent = XP2P.postCommandRequestSync("${it.productId}/${presenter.getDeviceName()}",
                         command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                    launch(Dispatchers.Main) {
+                        if (TextUtils.isEmpty(retContent)) {
+                            retContent = getString(R.string.command_with_error, command)
+                        }
+                        Toast.makeText(this@VideoPreviewActivity, retContent, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }).start()
         }
@@ -333,11 +369,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             getString(R.string.video_quality_medium_str) -> pos = 1
             getString(R.string.video_quality_low_str) -> pos = 0
         }
-        var dlg =
-            VideoQualityDialog(
-                this@VideoPreviewActivity,
-                pos
-            )
+        var dlg = VideoQualityDialog(this@VideoPreviewActivity, pos)
         dlg.show()
         btn_layout.visibility = View.GONE
         dlg.setOnDismisListener(object : VideoQualityDialog.OnDismisListener {
@@ -379,6 +411,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
 
             it.setSurface(this.surface)
             it.dataSource = url
+
             it.prepareAsync()
             it.start()
         }
@@ -426,7 +459,14 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
-    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+        if (!showTip) {
+            showVideoTime = System.currentTimeMillis() - startShowVideoTime
+            var content = getString(R.string.time_2_show, connectTime.toString(), showVideoTime.toString())
+            TipToastDialog(this, content, 10000).show()
+            showTip = true
+        }
+    }
     override fun fail(msg: String?, errorCode: Int) {}
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
@@ -440,10 +480,20 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
                     it.notify()
                 }
             } // 唤醒守护线程
+            launch(Dispatchers.Main) {
+                var content = getString(R.string.disconnected_and_reconnecting, id)
+                Toast.makeText(this@VideoPreviewActivity, content, Toast.LENGTH_SHORT).show()
+            }
+
         } else if (event == 1004 || event == 1005) {
+            connectTime = System.currentTimeMillis() - connectStartTime
             countDownLatchs.get(id)?.let {
                 Log.d(tag, "id=${id}, countDownLatch=${it}, countDownLatch.count=${it.count}")
                 it.countDown()
+            }
+            launch(Dispatchers.Main) {
+                var content = getString(R.string.connected, id)
+                Toast.makeText(this@VideoPreviewActivity, content, Toast.LENGTH_SHORT).show()
             }
         }
     }
