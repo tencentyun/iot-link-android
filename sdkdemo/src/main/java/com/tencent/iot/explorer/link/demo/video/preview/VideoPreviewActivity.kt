@@ -125,32 +125,11 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
             if (!TextUtils.isEmpty(urlPrefix)) {
                 player?.let {
-                    val url = urlPrefix + Command.getVideoHightQualityUrlSuffix(presenter.getChannel())
-                    playPlayer(it, url)
+                    resetPlayer()
                     keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
                 }
             }
         }).start()
-    }
-
-    private fun playPlayer(player: IjkMediaPlayer, url: String) {
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 1)
-//        player.dataSource = url
-//        player.prepareAsync()
-//        player.start()
-
-//        player.reset()
-//        player.setSurface(this.surface)
-//        player.dataSource = url
-//        player.prepareAsync()
-//        player.start()
-        resetPlayer()
     }
 
     private fun keepPlayerplay(id: String?) {
@@ -390,6 +369,14 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         player?.let {
             val url = urlPrefix + suffix
             it.reset()
+
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+
             it.setSurface(this.surface)
             it.dataSource = url
             it.prepareAsync()
