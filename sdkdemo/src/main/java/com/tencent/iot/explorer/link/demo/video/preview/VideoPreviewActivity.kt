@@ -276,12 +276,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         }
         radio_photo.setOnClickListener {
             ImageSelect.saveBitmap(this@VideoPreviewActivity, v_preview.bitmap)
-            ToastDialog(
-                this,
-                ToastDialog.Type.SUCCESS,
-                getString(R.string.capture_successed),
-                2000
-            ).show()
+            ToastDialog(this, ToastDialog.Type.SUCCESS, getString(R.string.capture_successed), 2000).show()
         }
         iv_up.setOnClickListener(controlListener)
         iv_down.setOnClickListener(controlListener)
@@ -353,11 +348,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         var options = arrayListOf(getString(R.string.video_quality_high_str) + " " + getString(R.string.video_quality_high),
                 getString(R.string.video_quality_medium_str) + " " + getString(R.string.video_quality_medium),
                 getString(R.string.video_quality_low_str) + " " + getString(R.string.video_quality_low))
-        var dlg =
-            ListOptionsDialog(
-                this@VideoPreviewActivity,
-                options
-            )
+        var dlg = ListOptionsDialog(this@VideoPreviewActivity, options)
         dlg.show()
         dlg.setOnDismisListener { chgTextState(it) }
     }
