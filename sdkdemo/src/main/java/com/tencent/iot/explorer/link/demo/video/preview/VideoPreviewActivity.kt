@@ -19,20 +19,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
-import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.BaseActivity
+import com.tencent.iot.explorer.link.demo.R
+import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.video.Command
-import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionListAdapter
-import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
-import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
-import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionRecord
 import com.tencent.iot.explorer.link.demo.video.DevInfo
+import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
+import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionListAdapter
+import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionRecord
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventPresenter
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventView
-import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
-import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
+import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
 import com.tencent.iot.explorer.link.demo.video.utils.TipToastDialog
+import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
+import com.tencent.iot.explorer.link.demo.video.utils.VolumeChangeObserver
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
@@ -47,13 +48,14 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 
+
 private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
 private var keepPlayThreadLock = Object()
 @Volatile
 private var keepAliveThreadRuning = true
 
 class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextureListener,
-    XP2PCallback, CoroutineScope by MainScope() {
+    XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener {
 
     private var tag = VideoPreviewActivity::class.simpleName
     private var orientationV = true
@@ -79,6 +81,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
     private var startShowVideoTime = 0L
     @Volatile
     private var showVideoTime = 0L
+    private var volumeChangeObserver: VolumeChangeObserver? = null
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
@@ -119,6 +122,11 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
         }
 
         startPlayer()
+
+        //实例化对象并设置监听器
+        volumeChangeObserver = VolumeChangeObserver(this)
+        volumeChangeObserver?.setVolumeChangeListener(this)
+        volumeChangeObserver?.registerReceiver();
     }
 
     private fun startPlayer() {
@@ -513,6 +521,7 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             }
         }
         cancel()
+        volumeChangeObserver?.unregisterReceiver();
     }
 
     companion object {
@@ -528,6 +537,12 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             devInfo.channel = dev.channel
             bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(devInfo))
             context.startActivity(intent)
+        }
+    }
+
+    override fun onVolumeChanged(volume: Int) {
+        if (audioAble) {
+            player?.setVolume(volume.toFloat(), volume.toFloat())
         }
     }
 }
