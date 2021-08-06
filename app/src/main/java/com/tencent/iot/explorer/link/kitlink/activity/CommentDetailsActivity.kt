@@ -113,7 +113,8 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
             return
         }
         var js = JSON.parse(response.data.toString()) as JSONObject
-        var weburl = CommonField.H5_BASE_URL + "?uin=${Utils.getAndroidID(this)}#" + pathUrl + "&ticket=${js[CommonField.TOKEN_TICKET]}"
+        var weburl = CommonField.H5_BASE_URL + "?uin=${Utils.getAndroidID(this)}#" +
+                pathUrl + "&ticket=${js[CommonField.TOKEN_TICKET]}" + "&lang=${Utils.getLang()}"
         comment_detail_web.loadUrl(weburl)
     }
 
