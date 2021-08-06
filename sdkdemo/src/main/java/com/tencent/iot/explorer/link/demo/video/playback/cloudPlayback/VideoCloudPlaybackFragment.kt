@@ -52,6 +52,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         presenter = EventPresenter(this)
 
         tv_date.setText(dateFormat.format(System.currentTimeMillis()))
+        refreshTimeLine(dateFormat.format(System.currentTimeMillis()))
         setListener()
         var linearLayoutManager = LinearLayoutManager(context)
         adapter = ActionListAdapter(context, records)
@@ -61,14 +62,13 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         adapter?.setOnItemClicked(onItemClicked)
 
         // 获取当前时间节点以前的事件云内容
-        records.clear()
         App.data.accessInfo?.let {
             if (devInfo == null) return@let
             presenter.setAccessId(it.accessId)
             presenter.setAccessToken(it.accessToken)
             presenter.setProductId(it.productId)
             presenter.setDeviceName(devInfo!!.deviceName)
-            presenter.getCurrentDayEventsData()
+            try2GetRecord(Date())
         }
     }
 
@@ -76,6 +76,8 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         records.clear()
         App.data.accessInfo?.let {
             presenter.getEventsData(date)
+            tv_status.visibility = View.VISIBLE
+            tv_status.setText(R.string.loading)
         }
     }
 
@@ -98,11 +100,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     }
 
     private fun showCalendarDialog(dataList: MutableList<String>) {
-        var dlg =
-            CalendarDialog(
-                context,
-                dataList
-            )
+        var dlg = CalendarDialog(context, dataList)
         dlg.show()
         dlg.setOnClickedListener(object : OnClickedListener {
             override fun onOkClicked(checkedDates: MutableList<String>?) {
@@ -122,21 +120,11 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
             }
 
             override fun onOkClickedCheckedDateWithoutData() {
-                ToastDialog(
-                    context,
-                    ToastDialog.Type.WARNING,
-                    getString(R.string.checked_date_no_video),
-                    2000
-                ).show()
+                ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.checked_date_no_video), 2000).show()
             }
 
             override fun onOkClickedWithoutDateChecked() {
-                ToastDialog(
-                    context,
-                    ToastDialog.Type.WARNING,
-                    getString(R.string.checked_date_first),
-                    2000
-                ).show()
+                ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.checked_date_first), 2000).show()
             }
         })
     }
@@ -239,12 +227,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
             var time = expireDate.time / 1000
             VideoBaseService(it.accessId, it.accessToken).getVideoUrl(url, time, object : VideoCallback{
                 override fun fail(msg: String?, reqCode: Int) {
-                    ToastDialog(
-                        context,
-                        ToastDialog.Type.WARNING,
-                        msg ?: "",
-                        2000
-                    ).show()
+                    ToastDialog(context, ToastDialog.Type.WARNING, msg ?: "", 2000).show()
                 }
 
                 override fun success(response: String?, reqCode: Int) {
@@ -312,19 +295,22 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     }
 
     override fun eventReady(events: MutableList<ActionRecord>) {
+        if (events == null || events.size <= 0) {
+            launch(Dispatchers.Main) {
+                tv_status.setText(R.string.no_data)
+            }
+            return
+        }
+
         launch(Dispatchers.Main) {
+            tv_status.visibility = View.GONE
             records.addAll(events)
             adapter?.notifyDataSetChanged()
         }
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        ToastDialog(
-            context,
-            ToastDialog.Type.WARNING,
-            msg ?: "",
-            2000
-        ).show()
+        ToastDialog(context, ToastDialog.Type.WARNING, msg ?: "", 2000).show()
     }
 
     override fun success(response: String?, reqCode: Int) {
@@ -365,12 +351,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                     return
                 }
 
-                ToastDialog(
-                    context,
-                    ToastDialog.Type.WARNING,
-                    getString(R.string.no_data),
-                    2000
-                ).show()
+                ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.no_data), 2000).show()
             }
         }
     }
