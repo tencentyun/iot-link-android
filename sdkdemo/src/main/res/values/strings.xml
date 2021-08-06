@@ -98,6 +98,7 @@
     <string name="connected">%s 通道建立成功</string>
     <string name="error_with_code">%s 连接错误码 %s，通道断开</string>
     <string name="command_with_error">执行信令 %s 不成功</string>
+    <string name="loading">加载中</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>
