@@ -25,6 +25,7 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.core.utils.PhotoUtils
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
@@ -143,6 +144,7 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
                 if (!App.isOEMApp()) {
                     url += "&appID=" + T.getContext().applicationInfo.packageName
                 }
+                url += "&lang=${Utils.getLang()}"
                 if (configQuestionList) {
                     url += "/#/pages/Functional/HelpCenter/QnAList/QnAList?genCateID=config7"
                 }
