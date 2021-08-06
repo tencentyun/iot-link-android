@@ -115,7 +115,9 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
             presenter.setAccessId(it.accessId)
             presenter.setAccessToken(it.accessToken)
             presenter.setProductId(it.productId)
-            presenter.getCurrentDayEventsData()
+            presenter.getEventsData(Date())
+            tv_event_status.visibility = View.VISIBLE
+            tv_event_status.setText(R.string.loading)
             XP2P.setQcloudApiCred(it.accessId, it.accessToken)
             XP2P.setCallback(this)
             audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}")
@@ -450,7 +452,15 @@ class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextu
     }
 
     override fun eventReady(events: MutableList<ActionRecord>) {
+        if (events == null || events.size <= 0) {
+            launch(Dispatchers.Main) {
+                tv_event_status.setText(R.string.no_data)
+            }
+            return
+        }
+
         launch(Dispatchers.Main) {
+            tv_event_status.visibility = View.GONE
             records.addAll(events)
             adapter?.notifyDataSetChanged()
         }

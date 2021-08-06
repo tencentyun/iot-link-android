@@ -16,6 +16,7 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback {
     private var accessId: String = ""
@@ -88,10 +89,12 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
         }
 
         Thread(Runnable{
-            val await = coundownLatch?.await(60, TimeUnit.SECONDS)
+            val await = coundownLatch?.await(180, TimeUnit.SECONDS)
             await?.let {
                 if (it) {  // 成功进行所有请求，才对数据做返回
                     view?.eventReady(events)
+                } else {
+                    view?.eventReady(ArrayList())
                 }
             }
         }).start()
