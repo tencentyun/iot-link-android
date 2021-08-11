@@ -153,3 +153,6 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload apk to PGY
+          run: curl -F 'file=@sdkdemo/build/outputs/apk/release/sdkdemo-release.apk' -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
+
