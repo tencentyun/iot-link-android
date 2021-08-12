@@ -50,6 +50,7 @@ jobs:
           echo "latest_video_tag=$video_tag" >> $GITHUB_ENV
           echo "latest_link_tag=$link_tag" >> $GITHUB_ENV
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rb'+git.'$rc'\"#g' config.gradle
+          sed -i 's#def versionSDKDemoName.*#def versionSDKDemoName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i "s#xxx#$rb+git.$rc#g" config.gradle
 
       - name: Update SDK Version
