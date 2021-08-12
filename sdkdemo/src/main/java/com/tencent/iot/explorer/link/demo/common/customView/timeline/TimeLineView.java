@@ -189,11 +189,12 @@ public class TimeLineView extends View {
         return true;
     }
 
+    // 一天最小刻度为 0 时 0 分 1 秒
     private long getCurrentDayMinTime() {
         Date currentTimeDate = new Date(mCurrentDayTime.getTime());
         currentTimeDate.setMinutes(0);
         currentTimeDate.setHours(0);
-        currentTimeDate.setSeconds(0);
+        currentTimeDate.setSeconds(1);
         return currentTimeDate.getTime();
     }
 
