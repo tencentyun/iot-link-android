@@ -62,20 +62,13 @@ class CommonUtils {
         fun formatTimeData(allTimeBlock: MutableList<TimeBlock>) : MutableList<TimeBlockInfo> {
             var dateList = ArrayList<TimeBlockInfo>()
 
-            var i = 0
-            while (i < allTimeBlock.size) {
-                var start = Date(allTimeBlock.get(i).StartTime * 1000)
-                while (i + 1 < allTimeBlock.size &&
-                    ((allTimeBlock.get(i).EndTime + 60) >= allTimeBlock.get(i + 1).StartTime)) {  // 上一次的结束时间和下一次的开始时间相差一分钟之内
-                    i++
-                }
-                var end = Date(allTimeBlock.get(i).EndTime * 1000)
-
-                var item = TimeBlockInfo()
-                item.startTime = start
-                item.endTime = end
-                dateList.add(item)
-                i++
+            for (time in allTimeBlock) {
+                var start = Date(time.StartTime * 1000)
+                var end = Date(time.EndTime * 1000)
+                var itemEle = TimeBlockInfo()
+                itemEle.startTime = start
+                itemEle.endTime = end
+                dateList.add(itemEle)
             }
 
             return dateList
