@@ -153,6 +153,11 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload apk to PGY
-          run: curl -F 'file=@sdkdemo/build/outputs/apk/release/sdkdemo-release.apk' -F '_api_key=${{ secrets.RELEASE_PGYER_API_KEY }}' https://www.pgyer.com/apiv2/app/upload
-
+      - name: Deploy App to fir
+        run: |
+          demoApk=$(ls sdkdemo/build/outputs/apk/release/sdkdemo-release.apk)
+          rc=$(git rev-parse --short HEAD)
+          rl=$(git log --pretty=format:"%s" $rc -1)
+          fir publish $demoApk -T $IOT_FIRIM_API_TOKEN -c "$rl" --oversea_turbo --force_pin_history -V
+        env:
+          IOT_FIRIM_API_TOKEN: ${{ secrets.IOT_FIRIM_API_TOKEN }}
