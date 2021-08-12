@@ -79,9 +79,9 @@
     <string name="talk">对讲</string>
     <string name="record">录像</string>
     <string name="photo">拍照</string>
-    <string name="video_quality_high">720P</string>
-    <string name="video_quality_medium">480P</string>
-    <string name="video_quality_low">270P</string>
+    <string name="video_quality_high">1080P</string>
+    <string name="video_quality_medium">720P</string>
+    <string name="video_quality_low">360P</string>
     <string name="video_quality_high_str">超清</string>
     <string name="video_quality_medium_str">高清</string>
     <string name="video_quality_low_str">标清</string>
