@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ed298e8_6fc1b8dd",
+        "filename": "sdk/explorer-link-android/src/main/java/com/tencent/iot/explorer/link/core/link/service/BleConfigService.kt",
+        "patchSetId": 8
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-12T09:13:45Z",
+      "side": 1,
+      "message": "这些测试代码要不要去掉下？还是下个change里面再去掉调用正确的顺序",
+      "revId": "b1dd418b79c7b118a2a2a1ec75028975bba65577",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
