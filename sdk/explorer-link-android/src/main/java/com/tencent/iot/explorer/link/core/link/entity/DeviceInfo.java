@@ -14,6 +14,11 @@ public class DeviceInfo {
     private JSONArray mErrorLogs;
     private String mErrorLogStr;
 
+    public DeviceInfo(String productId, String deviceName) {
+        this.mDeviceName = deviceName;
+        this.mProductId = productId;
+    }
+
     public DeviceInfo(String json) {
         mTimestamp = System.currentTimeMillis() / 1000;
         mErrorLogs = null;
