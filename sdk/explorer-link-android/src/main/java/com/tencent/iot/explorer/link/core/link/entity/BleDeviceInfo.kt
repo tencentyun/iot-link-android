@@ -25,4 +25,5 @@ class BleDeviceInfo {
     var mtuSize = 0  // mtu 大小
     var devNameLen = 0
     var devName = ""
+    var devUrl = ""
 }
