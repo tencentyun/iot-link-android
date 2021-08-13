@@ -19,51 +19,62 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.fastjson.JSON
 import com.example.qrcode.Constant
 import com.example.qrcode.ScannerActivity
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
+import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.MyScrollView
+import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.customview.verticaltab.*
+import com.tencent.iot.explorer.link.kitlink.adapter.BleDeviceAdapter
+import com.tencent.iot.explorer.link.kitlink.adapter.DeviceAdapter
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.kitlink.holder.DeviceListViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryListResponse
-import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.customview.MyScrollView
-import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
-import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
-import com.tencent.iot.explorer.link.core.link.service.BleConfigService
-import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.customview.verticaltab.*
-import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
-import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
-import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
-import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_device_category.*
 import kotlinx.android.synthetic.main.bluetooth_adapter_invalid.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
 import kotlinx.android.synthetic.main.not_found_device.*
+import kotlinx.android.synthetic.main.scanned_devices.*
 import kotlinx.android.synthetic.main.scanning.*
 
 
 class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerItemView, View.OnClickListener, VerticalTabLayout.OnTabSelectedListener{
 
     private val handler = Handler()
+    private var bleDevAdapter: BleDeviceAdapter? = null
+    private var bleDevs: MutableList<BleDevice> = ArrayList()
 
     private var permissions = arrayOf(
         Manifest.permission.CAMERA,
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    private var blueToothPermissions = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
 
@@ -77,17 +88,69 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     override fun initView() {
         tv_title.text = getString(R.string.add_device)
+        bleDevAdapter = BleDeviceAdapter(bleDevs)
+        bleDevAdapter?.scaningTxt = tv_scanning_ble_devs
+        bleDevAdapter?.titleTxt = tv_devs_tip
+        var layoutManager = GridLayoutManager(this@DeviceCategoryActivity, 4)
+        scanned_device_list.setLayoutManager(layoutManager)
+        scanned_device_list.adapter = bleDevAdapter
         App.data.tabPosition = 0  // Reset the position of vertical tab
         App.data.screenWith = getScreenWidth()
         HttpRequest.instance.getParentCategoryList(this)
-        BleConfigService.get().context = this
+        BleConfigService.get().connetionListener = bleDeviceConnectionListener
         beginScanning()
+    }
+
+    private fun refreshDevInfo(bleDevice: BleDevice) {
+        var productsList = arrayListOf<String>()
+        productsList.add(bleDevice.productId)
+        HttpRequest.instance.deviceProducts(productsList, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {}
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    if (TextUtils.isEmpty(response.data.toString())) return
+
+                    var products = JSON.parseObject(response.data.toString(), ProductsEntity::class.java)
+                    products?.Products?.let {
+                        var product = JSON.parseObject(it.getString(0), ProductEntity::class.java)
+                        product?.Name?.let { bleDevice.productName = it }
+                        product?.IconUrl?.let { bleDevice.url = it }
+                        bleDevAdapter?.notifyDataSetChanged()
+                    }
+                }
+            }
+        })
+    }
+
+    private var bleDeviceConnectionListener = object: BleDeviceConnectionListener {
+        override fun onBleDeviceFounded(bleDevice: BleDevice) {
+            var index = bleDevs.indexOf(bleDevice)
+            if (index < 0) {
+                bleDevs.add(bleDevice)
+                refreshDevInfo(bleDevice)
+            }
+            bleDevAdapter?.notifyDataSetChanged()
+        }
+
+        override fun onBleDeviceConnected() {}
+        override fun onBleDeviceDisconnected(exception: TCLinkException) {}
+        override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {}
+        override fun onBleSetWifiModeResult(success: Boolean) {}
+        override fun onBleSendWifiInfoResult(success: Boolean) {}
+        override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {}
+        override fun onBlePushTokenResult(success: Boolean) {}
     }
 
     private val runnable = Runnable {
         iv_loading_cirecle.clearAnimation()
         scanning.visibility = View.GONE
         not_found_dev.visibility = View.VISIBLE
+        if (bleDevs.size > 0) {
+            not_found_dev.visibility = View.GONE
+        } else {
+            tv_tag.setText(R.string.not_found_device)
+        }
         BleConfigService.get().stopScanBluetoothDevices()
     }
 
@@ -99,6 +162,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     override fun onDestroy() {
         super.onDestroy()
         iv_loading_cirecle.clearAnimation()
+        BleConfigService.get().stopScanBluetoothDevices()
     }
 
     override fun setListener() {
@@ -123,6 +187,21 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 }
             }
         })
+        bleDevAdapter?.setOnItemClicked(onBleDevSeclectedListener)
+    }
+
+    private var onBleDevSeclectedListener = object: BleDeviceAdapter.OnItemClicked {
+        override fun onItemClicked(pos: Int, dev: BleDevice) {
+            if (TextUtils.isEmpty(dev.productId)) {
+                T.show(getString(R.string.no_product_info))
+                return
+            }
+            var intent = Intent(this@DeviceCategoryActivity, BleConfigHardwareActivity::class.java)
+            intent.putExtra(CommonField.PRODUCT_ID, dev.productId)
+            App.data.bleDevice = dev
+            this@DeviceCategoryActivity.startActivity(intent)
+            BleConfigService.get().stopScanBluetoothDevices()
+        }
     }
 
     override fun fail(msg: String?, reqCode: Int) {
@@ -269,14 +348,16 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                             }
                         }
                         contains("page=softap") -> {
-                            var uri = Uri.parse(this)
-                            var productId = uri.getQueryParameter(CommonField.EXTRA_PRODUCT_ID)
-                            SoftApStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
+                            var productid = Utils.getUrlParamValue(this, "productId")
+                            val productsList = arrayListOf<String>()
+                            productsList.add(productid?:"")
+                            HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
                         }
                         contains("page=smartconfig") -> {
-                            var uri = Uri.parse(this)
-                            var productId = uri.getQueryParameter(CommonField.EXTRA_PRODUCT_ID)
-                            SmartConfigStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
+                            var productid = Utils.getUrlParamValue(this, "productId")
+                            val productsList = arrayListOf<String>()
+                            productsList.add(productid?:"")
+                            HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
                         }
                         contains("page=adddevice") && contains("productId") -> {
                             var productid = Utils.getUrlParamValue(this, "productId")
@@ -338,6 +419,8 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                         val typeList = JsonManager.parseArray(wifiConfigTypeList)
                         if (typeList.size > 0 && typeList[0] == "softap") {
                             SoftApStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
+                        } else if (typeList.size > 0 && typeList[0] == "llsyncble") {
+                            BleConfigHardwareActivity.startWithProductid(this@DeviceCategoryActivity, productId)
                         } else {
                             SmartConfigStepActivity.startActivityWithExtra(this@DeviceCategoryActivity, productId)
                         }
@@ -388,6 +471,11 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     }
 
     private fun beginScanning() {
+        if (!checkPermissions(blueToothPermissions)) {
+            requestPermission(blueToothPermissions)
+            return
+        }
+
         val rotateAnimation : Animation = AnimationUtils.loadAnimation(this, R.anim.circle_rotate)
         val interpolator =  LinearInterpolator()
         rotateAnimation.interpolator = interpolator
@@ -396,7 +484,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             not_found_dev.visibility = View.GONE
             scann_fail.visibility = View.GONE
             iv_loading_cirecle.startAnimation(rotateAnimation)
-            handler.postDelayed(runnable, 60000)
+            handler.postDelayed(runnable, 120000)
+            bleDevs.clear()
+            bleDevAdapter?.notifyDataSetChanged()
             BleConfigService.get().startScanBluetoothDevices()
         } else {
             scann_fail.visibility = View.VISIBLE
@@ -405,9 +495,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         }
     }
 
-    private fun stopScanning() {
-
-    }
+    private fun stopScanning() {}
 
     class MyTabAdapter(ctx: Context) : TabAdapter {
         var titleList = arrayListOf<String>()
@@ -429,8 +517,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         }
     }
 
-    override fun onTabReselected(tab: TabView?, position: Int) {
-    }
+    override fun onTabReselected(tab: TabView?, position: Int) {}
 
     override fun onTabSelected(tab: TabView?, position: Int) {
         App.data.tabPosition = position
@@ -439,5 +526,12 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 vtab_device_category.getTabAt(i).setBackgroundColor(resources.getColor(R.color.gray_F5F5F5))
         }
         tab?.setBackground(R.mipmap.tab)
+    }
+
+    // 从当前页面离开，即停止扫描蓝牙设备
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(runnable)
+        handler.postDelayed(runnable, 100)
     }
 }
