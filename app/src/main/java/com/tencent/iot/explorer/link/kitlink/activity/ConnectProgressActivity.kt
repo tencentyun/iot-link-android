@@ -1,28 +1,34 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.bluetooth.BluetoothDevice
 import android.content.Intent
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.link.entity.BleConfigStep
 import com.tencent.iot.explorer.link.core.link.entity.SmartConfigStep
 import com.tencent.iot.explorer.link.core.link.entity.SoftAPStep
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import kotlinx.android.synthetic.main.activity_connect_progress.*
+import kotlinx.android.synthetic.main.activity_connect_progress.softap_step_progress
+import kotlinx.android.synthetic.main.activity_connect_progress.tv_soft_ap_cancel
+import kotlinx.android.synthetic.main.activity_connect_progress.tv_soft_ap_title
 import java.util.*
 
 class ConnectProgressActivity : PActivity(), ConnectView {
 
     private lateinit var presenter: ConnectPresenter
-    private var type = DeviceFragment.ConfigType.SmartConfig.id
+    private var type = ConfigType.SmartConfig.id
     private var ssid = ""
     private var bssid = ""
     private var wifiPassword = ""
@@ -46,7 +52,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
     }
 
     private fun refreshTypeView() {
-        if (type == DeviceFragment.ConfigType.SoftAp.id){
+        if (type == ConfigType.SoftAp.id){
             tv_soft_ap_title.setText(R.string.soft_config_network)
             val stepsBeanList = ArrayList<StepBean>()
             stepsBeanList.add(StepBean(getString(R.string.config_hardware)))
@@ -57,7 +63,11 @@ class ConnectProgressActivity : PActivity(), ConnectView {
             softap_step_progress.setStepViewTexts(stepsBeanList)
             softap_step_progress.setTextSize(12)
         } else {
-            tv_soft_ap_title.setText(R.string.smart_config_config_network)
+            if (type == ConfigType.SmartConfig.id) {
+                tv_soft_ap_title.setText(R.string.smart_config_config_network)
+            } else {
+                tv_soft_ap_title.setText(R.string.ble_config_network)
+            }
             val stepsBeanList = ArrayList<StepBean>()
             stepsBeanList.add(StepBean(getString(R.string.config_hardware)))
             stepsBeanList.add(StepBean(getString(R.string.select_wifi)))
@@ -80,7 +90,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
             closePopup?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
                 override fun confirm(popupWindow: CommonPopupWindow) {
                     quit = true
-                    if (type == DeviceFragment.ConfigType.SmartConfig.id) {
+                    if (type == ConfigType.SmartConfig.id) {
                         backTo(3)
                     } else {
                         backTo(4)
@@ -97,7 +107,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
 
     override fun initView() {
         productId = intent.getStringExtra(CommonField.PRODUCT_ID) ?: ""
-        type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
+        type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         if (intent.hasExtra(CommonField.SSID)) {
             ssid = intent.getStringExtra(CommonField.SSID)
         }
@@ -121,6 +131,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
         presenter = ConnectPresenter(this)
         presenter.setWifiInfo(ssid, bssid, wifiPassword)
         presenter.initService(type, this)
+        presenter.setExtraInfo(App.data.bleDevice)
         presenter.startConnect()
     }
 
@@ -226,7 +237,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
 
     // 根据回调，处理界面的进度步骤
     override fun connectStep(step: Int) {
-        if (type == DeviceFragment.ConfigType.SmartConfig.id) {
+        if (type == ConfigType.SmartConfig.id) {
             when (step) {
                 SmartConfigStep.STEP_DEVICE_CONNECTED_TO_WIFI.ordinal -> {
                     state = ConnectProgressState.MobileAndDeviceConnectSuccess
@@ -246,7 +257,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
                 }
             }
 
-        } else {
+        } else if (type == ConfigType.SoftAp.id) {
             when (step) {
                 SoftAPStep.STEP_SEND_WIFI_INFO.ordinal -> {
                     state = ConnectProgressState.MobileAndDeviceConnectSuccess
@@ -261,6 +272,25 @@ class ConnectProgressActivity : PActivity(), ConnectView {
                     refreshView()
                 }
                 SoftAPStep.STEP_LINK_SUCCESS.ordinal -> {
+                    state = ConnectProgressState.InitSuccess
+                    refreshView()
+                }
+            }
+        } else {
+            when (step) {
+                BleConfigStep.STEP_CONNECT_BLE_DEV.ordinal -> {
+                    state = ConnectProgressState.MobileAndDeviceConnectSuccess
+                    refreshView()
+                }
+                BleConfigStep.STEP_SEND_WIFI_INFO.ordinal -> {
+                    state = ConnectProgressState.SendMessageToDeviceSuccess
+                    refreshView()
+                }
+                BleConfigStep.STEP_SEND_TOKEN.ordinal -> {
+                    state = ConnectProgressState.DeviceConnectServiceSuccess
+                    refreshView()
+                }
+                BleConfigStep.STEP_LINK_SUCCESS.ordinal -> {
                     state = ConnectProgressState.InitSuccess
                     refreshView()
                 }
@@ -291,12 +321,15 @@ class ConnectProgressActivity : PActivity(), ConnectView {
         super.onDestroy()
     }
 
+    // 尽最大努力回到类目层级，如果不存在，回退到主界面
     private fun backToDeviceCategoryActivity() {
         var stop = false
         while (!stop) {
             if (App.data.activityList != null && App.data.activityList.size <= 0) break
 
             if (App.data.activityList.last != null && App.data.activityList.last is DeviceCategoryActivity) {
+                stop = true
+            } else if (App.data.activityList.last != null && App.data.activityList.last is MainActivity) {
                 stop = true
             } else {
                 if (App.data.activityList.last != null) {

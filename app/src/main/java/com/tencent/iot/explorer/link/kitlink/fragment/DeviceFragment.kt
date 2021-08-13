@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,9 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.link.entity.BleDevice
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.kitlink.activity.BleConfigHardwareActivity
 import com.tencent.iot.explorer.link.kitlink.activity.BuleToothActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConfigStepActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SoftApStepActivity
@@ -65,10 +69,6 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
         Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
-
-    enum class ConfigType (val id:Int) {
-        SoftAp(1), SmartConfig(0);
-    }
 
     constructor(c: Context):this() {
         mContext = c
@@ -185,6 +185,10 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                             val typeList = JsonManager.parseArray(wifiConfigTypeList)
                             if (typeList.size > 0 && typeList[0] == "softap") {
                                 startActivityWithExtra(SoftApStepActivity::class.java, productId)
+                            } else if (typeList.size > 0 && typeList[0] == "llsyncble") {
+                                this@DeviceFragment.context?.let {
+                                    BleConfigHardwareActivity.startWithProductid(it, productId)
+                                }
                             } else {
                                 startActivityWithExtra(SmartConfigStepActivity::class.java, productId)
                             }
