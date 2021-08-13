@@ -12,6 +12,7 @@ import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.kitlink.entity.ConnectApGuide
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
@@ -25,7 +26,7 @@ class SoftHotspotActivity : PActivity() {
 
     private var loadViewTextType = LoadViewTxtType.LoadLocalViewTxt.ordinal // 0 加载本地文案  1 尝试加载远端配置文案
     private var productId = ""
-    private var type = DeviceFragment.ConfigType.SoftAp.id
+    private var type = ConfigType.SoftAp.id
     private var extraSsid = ""
     private var extraBssid = ""
     private var extraPwd = ""
