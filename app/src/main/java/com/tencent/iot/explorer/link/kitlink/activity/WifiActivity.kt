@@ -1,5 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.Manifest
+import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiInfo
@@ -9,7 +11,6 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
-import androidx.appcompat.content.res.AppCompatResources
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.log.L
@@ -19,7 +20,7 @@ import com.tencent.iot.explorer.link.customview.dialog.WifiHelperDialog
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.GetBindDeviceTokenPresenter
 import com.tencent.iot.explorer.link.mvp.view.GetBindDeviceTokenView
@@ -32,12 +33,16 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
     private lateinit var presenter: GetBindDeviceTokenPresenter
     private var loadViewTextType = LoadViewTxtType.LoadLocalViewTxt.ordinal // 0 加载本地文案  1 尝试加载远端配置文案
     private var productId = ""
-    private var type = DeviceFragment.ConfigType.SmartConfig.id
+    private var type = ConfigType.SmartConfig.id
     private var wifiInfo: WifiInfo? = null
     private var bssid = ""
     private var extraSsid = ""
     private var extraBssid = ""
     private var extraPwd = ""
+    private var blueToothPermissions = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
     var openWifiDialog: WifiHelperDialog? = null
     var openLocationServiceDialog: WifiHelperDialog? = null
@@ -47,7 +52,7 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
     }
 
     private fun refreshTypeView() {
-        if (type == DeviceFragment.ConfigType.SoftAp.id){
+        if (type == ConfigType.SoftAp.id){
             tv_soft_ap_title.setText(R.string.soft_config_network)
             val stepsBeanList = ArrayList<StepBean>()
             stepsBeanList.add(StepBean(getString(R.string.config_hardware)))
@@ -58,7 +63,11 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
             softap_step_progress.setStepViewTexts(stepsBeanList)
             softap_step_progress.setTextSize(12)
         } else {
-            tv_soft_ap_title.setText(R.string.smart_config_config_network)
+            if (type == ConfigType.SmartConfig.id) {
+                tv_soft_ap_title.setText(R.string.smart_config_config_network)
+            } else {
+                tv_soft_ap_title.setText(R.string.ble_config_network)
+            }
             val stepsBeanList = ArrayList<StepBean>()
             stepsBeanList.add(StepBean(getString(R.string.config_hardware)))
             stepsBeanList.add(StepBean(getString(R.string.select_wifi)))
@@ -74,7 +83,7 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
         if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
             productId = intent.getStringExtra(CommonField.PRODUCT_ID)
         }
-        type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
+        type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         if (intent.hasExtra(CommonField.SSID)) {
             extraSsid = intent.getStringExtra(CommonField.SSID)
         }
@@ -127,7 +136,7 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
                 }
                 bssid = wifiInfo!!.bssid
             }
-            tv_select_wifi.isEnabled = type == DeviceFragment.ConfigType.SoftAp.id
+            tv_select_wifi.isEnabled = type == ConfigType.SoftAp.id
 
             isNextClickable()
 
@@ -153,23 +162,13 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
         })
         tv_select_wifi.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
         et_select_wifi_pwd.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                isNextClickable()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+            override fun afterTextChanged(s: Editable?) { isNextClickable() }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
         container_wifi.setOnClickListener {
             KeyBoardUtils.hideKeyBoard(this, et_select_wifi_pwd)
@@ -185,10 +184,7 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
                 extraBssid = it.bssid
                 extraPwd = et_select_wifi_pwd.text.trim().toString()
             }
-            KeyBoardUtils.hideKeyBoard(
-                this,
-                et_select_wifi_pwd
-            )
+            KeyBoardUtils.hideKeyBoard(this, et_select_wifi_pwd)
         }
     }
 
@@ -212,26 +208,31 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
             tv_select_wifi.text.toString().equals(CommonField.SSID_UNKNOWN) ||
             (et_select_wifi_pwd.text != null && (TextUtils.isEmpty(et_select_wifi_pwd.text.toString())))) {
             tv_wifi_commit.isClickable = false
-            tv_wifi_commit.background =
-                AppCompatResources.getDrawable(this, R.drawable.background_grey_dark_cell)
+            tv_wifi_commit.setBackgroundResource(R.drawable.background_grey_dark_cell)
             return
         }
 
         tv_wifi_commit.isClickable = true
-        tv_wifi_commit.background = AppCompatResources.getDrawable(this, R.drawable.background_circle_bule_gradient)
+        tv_wifi_commit.setBackgroundResource(R.drawable.background_circle_bule_gradient)
     }
 
     override fun onSuccess(token: String) {
-        L.e("getToken onSuccess token:" + token)
+        L.e("getToken onSuccess token: $token")
 
-        if (type == DeviceFragment.ConfigType.SoftAp.id){
-            startActivityWithExtra(SoftHotspotActivity::class.java);
-        } else {
-            startActivityWithExtra(ConnectProgressActivity::class.java);
+        when (type) {
+            ConfigType.SoftAp.id -> startActivityWithExtra(SoftHotspotActivity::class.java)
+            ConfigType.SmartConfig.id -> startActivityWithExtra(ConnectProgressActivity::class.java)
+            ConfigType.BleConfig.id -> {
+                if (!checkPermissions(blueToothPermissions)) {
+                    requestPermission(blueToothPermissions)
+                    return
+                }
+                startActivityWithExtra(ConnectProgressActivity::class.java)
+            }
         }
     }
 
     override fun onFail(msg: String) {
-        L.e("getToken onFail msg:" + msg)
+        L.e("getToken onFail msg: $msg")
     }
 }
