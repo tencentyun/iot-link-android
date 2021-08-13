@@ -87,6 +87,13 @@
                     android:paddingBottom="20dp">
 
                     <include
+                        android:id="@+id/scann_success"
+                        layout="@layout/scanned_devices"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <include
                         android:id="@+id/scanning"
                         layout="@layout/scanning"
                         android:layout_width="match_parent"
@@ -105,14 +112,6 @@
                     <include
                         android:id="@+id/not_found_dev"
                         layout="@layout/not_found_device"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:visibility="gone" />
-
-                    <include
-                        android:id="@+id/scann_success"
-                        layout="@layout/scanned_devices"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
