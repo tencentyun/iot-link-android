@@ -1,8 +1,13 @@
 package com.tencent.iot.explorer.link.core.link.entity
 
-class BleDeviceWifiInfo {
+class BleDeviceWifiInfo() {
     var ssid = ""
     var pwd = ""
+
+    constructor(ssid: String, pwd: String): this() {
+        this.ssid = ssid
+        this.pwd = pwd
+    }
 
     fun formatByteArr(): ByteArray {
         if (ssid == null || pwd == null) {
