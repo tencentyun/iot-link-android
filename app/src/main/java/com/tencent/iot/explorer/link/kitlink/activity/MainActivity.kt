@@ -523,6 +523,8 @@ class MainActivity : PActivity(), MyCallback {
                         val typeList = JsonManager.parseArray(wifiConfigTypeList)
                         if (typeList.size > 0 && typeList[0] == "softap") {
                             SoftApStepActivity.startActivityWithExtra(this@MainActivity, productId)
+                        } else if (typeList.size > 0 && typeList[0] == "llsyncble") {
+                            BleConfigHardwareActivity.startWithProductid(this@MainActivity, productId)
                         } else {
                             SmartConfigStepActivity.startActivityWithExtra(this@MainActivity, productId)
                         }
@@ -551,14 +553,16 @@ class MainActivity : PActivity(), MyCallback {
                             }
                         }
                         contains("page=softap") -> {
-                            var uri = Uri.parse(this)
-                            var productId = uri.getQueryParameter(CommonField.EXTRA_PRODUCT_ID)
-                            SoftApStepActivity.startActivityWithExtra(this@MainActivity, productId)
+                            var productid = Utils.getUrlParamValue(this, "productId")
+                            val productsList = arrayListOf<String>()
+                            productsList.add(productid?:"")
+                            HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
                         }
                         contains("page=smartconfig") -> {
-                            var uri = Uri.parse(this)
-                            var productId = uri.getQueryParameter(CommonField.EXTRA_PRODUCT_ID)
-                            SmartConfigStepActivity.startActivityWithExtra(this@MainActivity, productId)
+                            var productid = Utils.getUrlParamValue(this, "productId")
+                            val productsList = arrayListOf<String>()
+                            productsList.add(productid?:"")
+                            HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
                         }
                         contains("page=adddevice") && contains("productId") -> {
                             var productid = Utils.getUrlParamValue(this, "productId")

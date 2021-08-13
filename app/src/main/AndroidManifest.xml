@@ -114,6 +114,7 @@
         <activity android:name=".kitlink.activity.TimeZoneActivity" />
         <activity android:name=".kitlink.activity.RegionActivity" />
         <activity android:name=".kitlink.activity.WebActivity" />
+        <activity android:name=".kitlink.activity.BleConfigHardwareActivity" />
         <activity android:name=".kitlink.activity.DeviceDetailsActivity" />
         <activity android:name=".kitlink.activity.ControlPanelActivity" />
         <activity android:name=".kitlink.activity.AboutUsActivity" />

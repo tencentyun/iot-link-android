@@ -6,4 +6,5 @@ class ProductEntity {
     var Name = ""
     var DataTemplate = ""
     var ProductType = 0
+    var IconUrl = ""
 }
