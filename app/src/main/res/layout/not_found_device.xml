@@ -13,6 +13,7 @@
             android:id="@+id/iv_tag"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:padding="2dp"
             android:layout_alignParentTop="true"
             android:src="@mipmap/icon_warning"/>
 
