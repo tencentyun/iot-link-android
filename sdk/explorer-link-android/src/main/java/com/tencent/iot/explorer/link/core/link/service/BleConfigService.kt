@@ -8,22 +8,23 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.Build
 import android.text.TextUtils
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
-import com.tencent.iot.explorer.link.core.link.listener.BleDeviceScanResult
 import com.tencent.iot.explorer.link.core.log.L
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class BleConfigService private constructor() {
 
     private val TAG = this.javaClass.simpleName
-    private var listener : BleDeviceScanResult? = null
-    private var connetionListener : BleDeviceConnectionListener? = null
-
+    var connetionListener : BleDeviceConnectionListener? = null
+    @Volatile
+    var dev: BleDevice? = null
     var context: Context? = null
 
     companion object {
@@ -56,30 +57,57 @@ class BleConfigService private constructor() {
 
         var filters = ArrayList<ScanFilter>()
         var scanSettings = ScanSettings.Builder()
-            .setReportDelay(0)
+            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+            .setReportDelay(1)
             .build()
-        bluetoothadapter.bluetoothLeScanner.startScan(filters, scanSettings, scanCallback)
+
+        bluetoothadapter.bluetoothLeScanner.startScan(filters, scanSettings, getScanCallback())
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    var scanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            super.onScanResult(callbackType, result)
+    private var scanCallback: ScanCallback? = null
 
-            result?.scanRecord?.serviceUuids?.let {
-                for (value in it) {
-                    if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFF0")) {
-                        var dev = BleDevice()
-                        dev.devName = result?.scanRecord?.deviceName.toString()
-                        dev.blueDev = result?.device
-                        listener?.onBleDeviceFounded(dev)
-                        //connectBleDevice(dev)
-                        return@let
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun getScanCallback(): ScanCallback {
+        var foundedSet: HashMap<String, Boolean> = HashMap()
+        scanCallback = object : ScanCallback() {
+            override fun onBatchScanResults(results: List<ScanResult?>?) {
+
+                results?.let { ress ->
+                    Log.e("XXX", "size ${ress.size}")
+                    for (result in ress) {
+                        result?.scanRecord?.serviceUuids?.let {
+                            for (value in it) {
+                                if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFF0")) {
+                                    dev = BleDevice()
+                                    dev?.devName = result?.scanRecord?.deviceName.toString()
+                                    dev?.blueDev = result?.device
+                                    result?.scanRecord?.manufacturerSpecificData?.let { msd ->
+                                        Log.e("XXX", "--- ${msd.size()}")
+                                        if (msd.size() > 0) {
+                                            dev?.manufacturerSpecificData = msd.valueAt(0)
+                                        }
+                                    }
+                                    Log.e("XXX", "productid ${dev?.productId}")
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+
+                dev?.let { bleDev ->
+                    var founded = foundedSet.get(bleDev.productId + bleDev.devName)
+                    founded?:let { // 不存在对应的元素，第一次发现该设备
+                        connetionListener?.onBleDeviceFounded(bleDev)
+                        Log.e("XXX", "onScanResults productId ${bleDev.productId} devName ${bleDev.devName}")
+                        foundedSet.set(bleDev.productId + bleDev.devName, true)
                     }
                 }
             }
         }
+
+        return scanCallback!!
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -114,12 +142,15 @@ class BleConfigService private constructor() {
             return null
         }
 
-        var test = dev?.blueDev?.connectGatt(context, autoConnect,
+        return dev?.blueDev?.connectGatt(context, autoConnect,
             object: BluetoothGattCallback() {
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                 override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+                    Log.e("XXX", "onBleDeviceConnected status ${status}, newState ${newState}")
                     if (newState == BluetoothProfile.STATE_CONNECTED) {
                         L.d(TAG, "onBleDeviceConnected")
                         gatt?.discoverServices()
+                        gatt?.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
                         connetionListener?.onBleDeviceConnected()
                         return
                     }
@@ -161,52 +192,29 @@ class BleConfigService private constructor() {
                         }
                     }
                 }
-                override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {}
+                override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {
+                    Log.e("XXX", "onCharacteristicWrite byteArr ${bytes2hex(characteristic!!.value)}")
+                }
                 override fun onCharacteristicRead(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {}
                 override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {}
                 override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {}
                 override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {}
             })
-
-        Thread(Runnable {
-            Thread.sleep(5000)
-            var ret = false
-//            ret = requestDevInfo(test)
-//            Log.e("XXX", "requestDevInfo ${ret}")
-//            Thread.sleep(5000)
-//            ret = setWifiMode(test, BleDeviceWifiMode.STA)
-//            Log.e("XXX", "setWifiMode ${ret}")
-//            Thread.sleep(5000)
-//
-//            var bleDeviceWifiInfo = BleDeviceWifiInfo()
-//            bleDeviceWifiInfo.ssid = "L-004"
-//            bleDeviceWifiInfo.pwd = "iot2021\$"
-//            ret = sendWifiInfo(test, bleDeviceWifiInfo)
-//            Log.e("XXX", "sendWifiInfo ${ret}")
-//
-//            ret = requestConnectWifi(test)
-//            Log.e("XXX", "requestConnectWifi ${ret}")
-//
-//            ret = configToken(test, "asdasasdqweqweqw")
-//            Log.e("XXX", "configToken ${ret}")
-        }).start()
-
-        return test
     }
 
-    fun convertData2SetWifiResult(byteArray: ByteArray): Boolean {
+    private fun convertData2SetWifiResult(byteArray: ByteArray): Boolean {
         if (byteArray.isEmpty()) return false
         if (byteArray[0] != 0xE0.toByte()) return false
         return byteArray[3].toInt() == 0
     }
 
-    fun convertData2SendWifiResult(byteArray: ByteArray): Boolean {
+    private fun convertData2SendWifiResult(byteArray: ByteArray): Boolean {
         if (byteArray.isEmpty()) return false
         if (byteArray[0] != 0xE1.toByte()) return false
         return byteArray[3].toInt() == 0
     }
 
-    fun convertData2PushTokenResult(byteArray: ByteArray): Boolean {
+    private fun convertData2PushTokenResult(byteArray: ByteArray): Boolean {
         if (byteArray.isEmpty()) return false
         if (byteArray[0] != 0xE3.toByte()) return false
         return byteArray[3].toInt() == 0
@@ -246,6 +254,14 @@ class BleConfigService private constructor() {
         return false
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun setMtuSize(connection: BluetoothGatt?, size: Int): Boolean {
+        connection?.let {
+            return it.requestMtu(size)
+        }
+        return false
+    }
+
     fun requestConnectWifi(connection: BluetoothGatt?): Boolean {
         if (!enableCharacteristicNotification(connection)) return false
         return setCharacteristicValue(connection, ByteArray(1){0xE3.toByte()})
@@ -266,6 +282,7 @@ class BleConfigService private constructor() {
 
     fun sendWifiInfo(connection: BluetoothGatt?, bleDeviceWifiInfo: BleDeviceWifiInfo): Boolean {
         if (!enableCharacteristicNotification(connection)) return false
+        Log.e("XXX", "wifi info size ${bleDeviceWifiInfo.formatByteArr().size}")
         return setCharacteristicValue(connection, bleDeviceWifiInfo.formatByteArr())
     }
 
@@ -278,6 +295,23 @@ class BleConfigService private constructor() {
         byteArr[1] = (token.toByteArray().size / Math.pow(2.0, 8.0).toInt()).toByte()
         byteArr[2] = (token.toByteArray().size % Math.pow(2.0, 8.0).toInt()).toByte()
         System.arraycopy(token.toByteArray(), 0, byteArr, 3, token.toByteArray().size)
+        Log.e("XXX", "token $token")
+        Log.e("XXX", "byteArr ${bytes2hex(byteArr)}")
+        Log.e("XXX", "configToken size ${byteArr.size}")
         return setCharacteristicValue(connection, byteArr)
+    }
+
+    fun bytes2hex(bytes: ByteArray): String? {
+        val sb = StringBuilder()
+        var tmp: String? = null
+        for (b in bytes) {
+            // 将每个字节与0xFF进行与运算，然后转化为10进制，然后借助于Integer再转化为16进制
+            tmp = Integer.toHexString(0xFF and b.toInt())
+            if (tmp.length == 1) {
+                tmp = "0$tmp"
+            }
+            sb.append(tmp)
+        }
+        return sb.toString()
     }
 }

@@ -13,9 +13,9 @@ import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.kitlink.entity.HardwareGuide
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -27,7 +27,7 @@ class SmartConfigStepActivity : PActivity() {
     private var loadViewTextType =
         LoadViewTxtType.LoadLocalViewTxt.ordinal // 0 加载本地文案  1 尝试加载远端配置文案
     private var productId = ""
-    private var type = DeviceFragment.ConfigType.SmartConfig.id
+    private var type = ConfigType.SmartConfig.id
 
     override fun getContentView(): Int {
         return R.layout.activity_smart_config_step
@@ -65,7 +65,7 @@ class SmartConfigStepActivity : PActivity() {
         if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
             productId = intent.getStringExtra(CommonField.PRODUCT_ID)
         }
-        type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
+        type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         if (loadViewTextType == LoadViewTxtType.LoadLocalViewTxt.ordinal) {
             loadViewStandradInfo()
         } else {

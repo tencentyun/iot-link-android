@@ -66,10 +66,6 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
         Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    enum class ConfigType (val id:Int) {
-        SoftAp(1), SmartConfig(0);
-    }
-
     constructor(c: Context):this() {
         mContext = c
     }
