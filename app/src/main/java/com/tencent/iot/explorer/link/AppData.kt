@@ -8,6 +8,7 @@ import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.entity.User
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
+import com.tencent.iot.explorer.link.core.link.entity.BleDevice
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -39,6 +40,7 @@ class AppData private constructor() {
     var userSetting = UserSetting()
     var regionId = "1"
     var conutryCode = "1"  // 当前的登录的国家码
+    var bleDevice: BleDevice? = null  // 用于标记将要被索引的蓝牙设备
     var region = "ap-guangzhou"
     var appLifeCircleId = "0"
     var notificationId = 0

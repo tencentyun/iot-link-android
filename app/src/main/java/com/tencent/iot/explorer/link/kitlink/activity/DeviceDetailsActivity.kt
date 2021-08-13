@@ -71,7 +71,9 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
     }
 
     override fun deleteSuccess() {
+        App.data.refresh = true
         App.data.setRefreshLevel(2)
+        Utils.sendRefreshBroadcast(this@DeviceDetailsActivity)
         backToMain()
     }
 
