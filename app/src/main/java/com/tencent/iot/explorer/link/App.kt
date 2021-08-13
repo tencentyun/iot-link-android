@@ -21,6 +21,7 @@ import com.tencent.iot.explorer.link.core.auth.socket.callback.ConnectionCallbac
 import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
 import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.core.utils.Utils
@@ -148,6 +149,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         var lang = Utils.getLang()
         lang = lang.substring(0,2)
         WeatherUtils.defaultLang = lang
+        BleConfigService.get().context = this
     }
 
     /**
