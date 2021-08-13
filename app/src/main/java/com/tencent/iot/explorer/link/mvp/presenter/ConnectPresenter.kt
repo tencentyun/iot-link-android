@@ -1,7 +1,8 @@
 package com.tencent.iot.explorer.link.mvp.presenter
 
 import android.content.Context
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.core.link.entity.BleDevice
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.mvp.ParentPresenter
 import com.tencent.iot.explorer.link.mvp.model.ConnectModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
@@ -14,17 +15,11 @@ class ConnectPresenter(view: ConnectView) :
     }
 
     fun initService(type: Int, context: Context) {
-        model?.type = type
         model?.initService(type, context)
     }
 
-    fun isNullService(type: Int): Boolean {
-        if (model == null) throw NullPointerException("ConnectModel is not init")
-        return if (type == DeviceFragment.ConfigType.SmartConfig.id) {
-            model!!.smartConfig == null
-        } else {
-            model!!.softAP == null
-        }
+    fun setExtraInfo(bleDevice: BleDevice?) {
+        model?.bleDevice = bleDevice
     }
 
     fun setWifiInfo(ssid: String, bssid: String, password: String) {
@@ -35,16 +30,15 @@ class ConnectPresenter(view: ConnectView) :
         }
     }
 
-
     /**
      * 开始配网
      */
     fun startConnect() {
         model?.run {
-            if (type == DeviceFragment.ConfigType.SmartConfig.id) {
-                startSmartConnect()
-            } else {
-                startSoftAppConnect()
+            when(type) {
+                ConfigType.SmartConfig.id -> startSmartConnect()
+                ConfigType.SoftAp.id -> startSoftAppConnect()
+                ConfigType.BleConfig.id -> startBleConfigNet()
             }
         }
     }
@@ -54,13 +48,14 @@ class ConnectPresenter(view: ConnectView) :
      */
     fun stopConnect() {
         model?.run {
-            if (type == DeviceFragment.ConfigType.SmartConfig.id) {
-                model?.smartConfig?.stopConnect()
-            } else {
-                model?.softAP?.stopConnect()
-                model?.softAP = null
+            when(type) {
+                ConfigType.SmartConfig.id -> smartConfig?.stopConnect()
+                ConfigType.SoftAp.id -> softAP?.stopConnect()
+                ConfigType.BleConfig.id -> {
+
+                }
+                else -> return@run
             }
         }
     }
-
 }
