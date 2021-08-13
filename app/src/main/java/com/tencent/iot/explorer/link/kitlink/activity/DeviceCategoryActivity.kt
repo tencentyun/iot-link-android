@@ -19,45 +19,52 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.fastjson.JSON
 import com.example.qrcode.Constant
 import com.example.qrcode.ScannerActivity
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
-import com.tencent.iot.explorer.link.core.auth.util.JsonManager
-import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
-import com.tencent.iot.explorer.link.core.log.L
-import com.tencent.iot.explorer.link.core.utils.Utils
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
-import com.tencent.iot.explorer.link.kitlink.holder.DeviceListViewHolder
-import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryListResponse
-import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.iot.explorer.link.customview.MyScrollView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
-import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
+import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.link.entity.*
+import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
+import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
 import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.MyScrollView
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.customview.verticaltab.*
+import com.tencent.iot.explorer.link.kitlink.adapter.BleDeviceAdapter
+import com.tencent.iot.explorer.link.kitlink.adapter.DeviceAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
 import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
+import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.kitlink.holder.DeviceListViewHolder
+import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryListResponse
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.*
+import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_device_category.*
 import kotlinx.android.synthetic.main.bluetooth_adapter_invalid.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
 import kotlinx.android.synthetic.main.not_found_device.*
+import kotlinx.android.synthetic.main.scanned_devices.*
 import kotlinx.android.synthetic.main.scanning.*
 
 
 class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerItemView, View.OnClickListener, VerticalTabLayout.OnTabSelectedListener{
 
     private val handler = Handler()
+    private var bleDevAdapter: BleDeviceAdapter? = null
+    private var bleDevs: MutableList<BleDevice> = ArrayList()
 
     private var permissions = arrayOf(
         Manifest.permission.CAMERA,
@@ -77,11 +84,56 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     override fun initView() {
         tv_title.text = getString(R.string.add_device)
+        var test = BleDevice()
+        test.devName="xxxxxxxxxxxxxxxx"
+        bleDevs.add(test)
+        bleDevAdapter = BleDeviceAdapter(bleDevs)
+        var layoutManager = GridLayoutManager(this@DeviceCategoryActivity, 4)
+        scanned_device_list.setLayoutManager(layoutManager)
+        scanned_device_list.adapter = bleDevAdapter
         App.data.tabPosition = 0  // Reset the position of vertical tab
         App.data.screenWith = getScreenWidth()
         HttpRequest.instance.getParentCategoryList(this)
         BleConfigService.get().context = this
+        BleConfigService.get().connetionListener = bleDeviceConnectionListener
         beginScanning()
+    }
+
+    private var bleDeviceConnectionListener = object: BleDeviceConnectionListener {
+        override fun onBleDeviceConnected() {
+        }
+
+        override fun onBleDeviceFounded(bleDevice: BleDevice) {
+            Log.e("XXX", "bleDevice dev ${JSON.toJSONString(bleDevice)}")
+            var index = bleDevs.indexOf(bleDevice)
+            Log.e("XXX", "index ${index}")
+            if (index >= 0) {
+                bleDevs.set(index, bleDevice)
+            } else {
+                bleDevs.add(bleDevice)
+            }
+            bleDevAdapter?.notifyDataSetChanged()
+        }
+
+        override fun onBleDeviceDisconnected(exception: TCLinkException) {
+        }
+
+        override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {
+
+        }
+
+        override fun onBleSetWifiModeResult(success: Boolean) {
+        }
+
+        override fun onBleSendWifiInfoResult(success: Boolean) {
+        }
+
+        override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {
+        }
+
+        override fun onBlePushTokenResult(success: Boolean) {
+        }
+
     }
 
     private val runnable = Runnable {
@@ -396,8 +448,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             not_found_dev.visibility = View.GONE
             scann_fail.visibility = View.GONE
             iv_loading_cirecle.startAnimation(rotateAnimation)
-            handler.postDelayed(runnable, 60000)
-            BleConfigService.get().startScanBluetoothDevices()
+            handler.postDelayed(runnable, 120000)
+            var ret = BleConfigService.get().startScanBluetoothDevices()
+            Log.e("XXX", "startScanBluetoothDevices ret ${ret}")
         } else {
             scann_fail.visibility = View.VISIBLE
             scanning.visibility = View.GONE

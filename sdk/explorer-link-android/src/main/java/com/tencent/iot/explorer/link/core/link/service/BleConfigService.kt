@@ -8,12 +8,12 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.Build
 import android.text.TextUtils
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
-import com.tencent.iot.explorer.link.core.link.listener.BleDeviceScanResult
 import com.tencent.iot.explorer.link.core.log.L
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,8 +21,7 @@ import kotlin.collections.ArrayList
 class BleConfigService private constructor() {
 
     private val TAG = this.javaClass.simpleName
-    private var listener : BleDeviceScanResult? = null
-    private var connetionListener : BleDeviceConnectionListener? = null
+    var connetionListener : BleDeviceConnectionListener? = null
 
     var context: Context? = null
 
@@ -63,7 +62,7 @@ class BleConfigService private constructor() {
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    var scanCallback = object : ScanCallback() {
+    private var scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             super.onScanResult(callbackType, result)
 
@@ -73,7 +72,8 @@ class BleConfigService private constructor() {
                         var dev = BleDevice()
                         dev.devName = result?.scanRecord?.deviceName.toString()
                         dev.blueDev = result?.device
-                        listener?.onBleDeviceFounded(dev)
+                        connetionListener?.onBleDeviceFounded(dev)
+                        Log.e("XXX", "dev ${JSON.toJSONString(dev)}")
                         //connectBleDevice(dev)
                         return@let
                     }
@@ -194,19 +194,19 @@ class BleConfigService private constructor() {
         return test
     }
 
-    fun convertData2SetWifiResult(byteArray: ByteArray): Boolean {
+    private fun convertData2SetWifiResult(byteArray: ByteArray): Boolean {
         if (byteArray.isEmpty()) return false
         if (byteArray[0] != 0xE0.toByte()) return false
         return byteArray[3].toInt() == 0
     }
 
-    fun convertData2SendWifiResult(byteArray: ByteArray): Boolean {
+    private fun convertData2SendWifiResult(byteArray: ByteArray): Boolean {
         if (byteArray.isEmpty()) return false
         if (byteArray[0] != 0xE1.toByte()) return false
         return byteArray[3].toInt() == 0
     }
 
-    fun convertData2PushTokenResult(byteArray: ByteArray): Boolean {
+    private fun convertData2PushTokenResult(byteArray: ByteArray): Boolean {
         if (byteArray.isEmpty()) return false
         if (byteArray[0] != 0xE3.toByte()) return false
         return byteArray[3].toInt() == 0

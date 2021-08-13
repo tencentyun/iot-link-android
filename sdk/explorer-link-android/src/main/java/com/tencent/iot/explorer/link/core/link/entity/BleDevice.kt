@@ -7,4 +7,11 @@ class BleDevice {
     var productName = ""
     var devName = ""
     var blueDev : BluetoothDevice? = null
+
+    override fun equals(other: Any?): Boolean {
+        if (other is BleDevice) {
+            return this.devName == other.devName && this.productName == other.productName
+        }
+        return false
+    }
 }
