@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.core.link.entity.SmartConfigStep
 import com.tencent.iot.explorer.link.core.link.entity.SoftAPStep
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
@@ -22,7 +22,7 @@ import java.util.*
 class ConnectProgressActivity : PActivity(), ConnectView {
 
     private lateinit var presenter: ConnectPresenter
-    private var type = DeviceFragment.ConfigType.SmartConfig.id
+    private var type = ConfigType.SmartConfig.id
     private var ssid = ""
     private var bssid = ""
     private var wifiPassword = ""
@@ -46,7 +46,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
     }
 
     private fun refreshTypeView() {
-        if (type == DeviceFragment.ConfigType.SoftAp.id){
+        if (type == ConfigType.SoftAp.id){
             tv_soft_ap_title.setText(R.string.soft_config_network)
             val stepsBeanList = ArrayList<StepBean>()
             stepsBeanList.add(StepBean(getString(R.string.config_hardware)))
@@ -80,7 +80,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
             closePopup?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
                 override fun confirm(popupWindow: CommonPopupWindow) {
                     quit = true
-                    if (type == DeviceFragment.ConfigType.SmartConfig.id) {
+                    if (type == ConfigType.SmartConfig.id) {
                         backTo(3)
                     } else {
                         backTo(4)
@@ -97,7 +97,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
 
     override fun initView() {
         productId = intent.getStringExtra(CommonField.PRODUCT_ID) ?: ""
-        type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
+        type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         if (intent.hasExtra(CommonField.SSID)) {
             ssid = intent.getStringExtra(CommonField.SSID)
         }
@@ -226,7 +226,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
 
     // 根据回调，处理界面的进度步骤
     override fun connectStep(step: Int) {
-        if (type == DeviceFragment.ConfigType.SmartConfig.id) {
+        if (type == ConfigType.SmartConfig.id) {
             when (step) {
                 SmartConfigStep.STEP_DEVICE_CONNECTED_TO_WIFI.ordinal -> {
                     state = ConnectProgressState.MobileAndDeviceConnectSuccess
