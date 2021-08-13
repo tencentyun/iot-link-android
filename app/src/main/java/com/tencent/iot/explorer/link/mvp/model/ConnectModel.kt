@@ -1,7 +1,12 @@
 package com.tencent.iot.explorer.link.mvp.model
 
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.location.Location
+import android.text.TextUtils
+import android.util.Log
+import com.alibaba.fastjson.JSON
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
@@ -21,12 +26,16 @@ import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
+import kotlinx.coroutines.*
+import java.lang.Runnable
 
 /**
  * 配网进度、绑定设备
  */
-class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallback {
+class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallback, CoroutineScope by MainScope(){
 
     private val TAG = this.javaClass.simpleName
     private val maxTime = 100   // 执行最大时间间隔
@@ -41,16 +50,20 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     @Volatile
     var checkDeviceBindTokenStateStarted = false
     var deviceInfo: DeviceInfo? = null
-
-    var type = DeviceFragment.ConfigType.SmartConfig.id
+    var type = ConfigType.SmartConfig.id
+    @Volatile
+    var bluetoothGatt: BluetoothGatt? = null
+    @Volatile
+    var job: Job? = null
+    var bleDevice: BleDevice? = null
 
     fun initService(type: Int, context: Context) {
-        if (type == DeviceFragment.ConfigType.SmartConfig.id) {
-            smartConfig =
-                SmartConfigService(context.applicationContext)
-        } else {
+        this.type = type
+        if (type == ConfigType.SmartConfig.id) {
+            smartConfig = SmartConfigService(context.applicationContext)
+        } else if (type == ConfigType.SoftAp.id) {
             softAP = SoftAPService(context.applicationContext)
-        }
+        } else {} // 蓝牙服务时单例，在 app 中已经初始化过，无需再处理
     }
 
     /**
@@ -63,8 +76,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             checkDeviceBindTokenState()
         }
 
-        override fun deviceConnectToWifi(result: IEsptouchResult) {
-        }
+        override fun deviceConnectToWifi(result: IEsptouchResult) {}
 
         override fun onStep(step: SmartConfigStep) {
             view.connectStep(step.ordinal)
@@ -76,6 +88,152 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
 
         override fun onFail(exception: TCLinkException) {
             view.connectFail(exception.errorCode, exception.errorMessage)
+        }
+    }
+
+    fun startBleConfigNet() {
+        // 先关闭当前的扫描
+        BleConfigService.get().stopScanBluetoothDevices()
+        bleDevice?:let { // 没有解析出内容，直接返回
+            bleFailed("param error")
+            return
+        }
+
+        deviceInfo = DeviceInfo(bleDevice?.productId, bleDevice?.devName)
+        BleConfigService.get().connetionListener = getBleListener(bleDevice!!)
+
+        // 快速连接，避免多次的扫描设备带来的耗时
+        bleDevice?.blueDev?.let {
+            this@ConnectModel.view?.connectStep(BleConfigStep.STEP_CONNECT_BLE_DEV.ordinal)
+            bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+            L.d(TAG, "do not need scan device ${bluetoothGatt}")
+        }
+
+        // 无法快速连接的，走全流程连接
+        bleDevice?.blueDev?:let {
+            var ret = BleConfigService.get().startScanBluetoothDevices()
+            L.d(TAG, "startScanBluetoothDevices $ret")
+        }
+
+        Thread {
+            job = GlobalScope.launch(Dispatchers.Default) {
+                delay(240000) // 超时
+                bleFailed("time out")
+            }
+        }.start()
+    }
+
+    private fun bleFailed(msg: String?) {
+        launch (Dispatchers.Main){
+            job?.cancel()  // 结束超时任务
+            BleConfigService.get().connetionListener = null
+            L.e(TAG, msg?:"")
+            view?.connectFail("bind bluetooth device", msg?:"")
+            bluetoothGatt?.close()
+        }
+    }
+
+    private fun getBleListener(dev: BleDevice): BleDeviceConnectionListener {
+        return object: BleDeviceConnectionListener {
+            override fun onBleDeviceFounded(bleDevice: BleDevice) {
+                L.d(TAG, "onBleDeviceFounded ${bleDevice.devName} ${bleDevice.productId} ${bleDevice.indexWithDevname}")
+                L.d(TAG, "tagBleDev ${dev.devName} ${dev.productId} ${dev.indexWithDevname}")
+
+                if (dev == bleDevice) {
+                    launch {
+                        delay(2000)
+                        BleConfigService.get().stopScanBluetoothDevices()
+                        this@ConnectModel.view?.connectStep(BleConfigStep.STEP_CONNECT_BLE_DEV.ordinal)
+                        bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+                        L.d(TAG, "bluetoothGatt ${bluetoothGatt}")
+                    }
+                }
+            }
+            override fun onBleDeviceDisconnected(exception: TCLinkException) {
+                bleFailed(exception.errorMessage)
+            }
+            override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {}
+
+            override fun onBleDeviceConnected() {
+                L.d(TAG, "onBleDeviceConnected")
+                launch {
+                    delay(2000)
+                    bluetoothGatt?.let {
+                        var mtuRet = BleConfigService.get().setMtuSize(it, App.data.bindDeviceToken.length * 2 + 20)
+                        L.d(TAG, "mtuRet ${mtuRet}")
+                    }
+                    delay(1000)
+                    bluetoothGatt?.let {
+                        if (BleConfigService.get().setWifiMode(it, BleDeviceWifiMode.STA)) {
+                            return@launch // 设置成功则直接退出
+                        }
+                    }
+                    bleFailed("connect ble dev failed")
+                }
+            }
+
+            override fun onBleSetWifiModeResult(success: Boolean) {
+                L.d(TAG, "onBleSetWifiModeResult ${success}")
+                if (!success) {
+                    bleFailed("set wifi mode failed")
+                    return
+                }
+
+                launch {
+                    delay(1000)
+                    bluetoothGatt?.let {
+                        var bleDeviceWifiInfo = BleDeviceWifiInfo(ssid, password)
+                        L.d(TAG, "bleDeviceWifiInfo ${JSON.toJSONString(bleDeviceWifiInfo)}")
+                        this@ConnectModel.view?.connectStep(BleConfigStep.STEP_SEND_WIFI_INFO.ordinal)
+                        if (BleConfigService.get().sendWifiInfo(it, bleDeviceWifiInfo)) return@launch
+                        bleFailed("send wifi info failed")
+                    }
+                }
+            }
+
+            override fun onBleSendWifiInfoResult(success: Boolean) {
+                L.d(TAG, "onBleSendWifiInfoResult ${success}")
+                if (!success) {
+                    bleFailed("send wifi info failed")
+                    return
+                }
+
+                launch {
+                    delay(1000)
+                    bluetoothGatt?.let {
+                        if (BleConfigService.get().requestConnectWifi(it)) return@launch
+                        bleFailed("connect wifi failed")
+                    }
+                }
+            }
+
+            override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {
+                L.d(TAG, "onBleWifiConnectedInfo ${wifiConnectInfo.connected}")
+                if (!wifiConnectInfo.connected) {
+                    bleFailed("connect wifi failed")
+                    return
+                }
+
+                launch {
+                    delay(1000)
+                    bluetoothGatt?.let {
+                        this@ConnectModel.view?.connectStep(BleConfigStep.STEP_SEND_TOKEN.ordinal)
+                        //L.d(TAG, "send token ${App.data.bindDeviceToken}")
+                        if (BleConfigService.get().configToken(it, App.data.bindDeviceToken)) return@launch
+                        bleFailed("send token failed")
+                    }
+                }
+            }
+
+            override fun onBlePushTokenResult(success: Boolean) {
+                L.d(TAG, "onBlePushTokenResult ${success}")
+                if (success) {
+                    checkDeviceBindTokenState()
+                } else {
+                    bleFailed("send wifi info failed")
+                }
+            }
+
         }
     }
 
@@ -220,8 +378,12 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     override fun success(response: BaseResponse, reqCode: Int) {
         if (response.isSuccess()) {
             when(type) {
-                DeviceFragment.ConfigType.SmartConfig.id -> smartConfigListener.onStep(SmartConfigStep.STEP_LINK_SUCCESS)
-                DeviceFragment.ConfigType.SoftAp.id -> softAPListener.onStep(SoftAPStep.STEP_LINK_SUCCESS)
+                ConfigType.SmartConfig.id -> smartConfigListener.onStep(SmartConfigStep.STEP_LINK_SUCCESS)
+                ConfigType.SoftAp.id -> softAPListener.onStep(SoftAPStep.STEP_LINK_SUCCESS)
+                ConfigType.BleConfig.id -> {
+                    this@ConnectModel.view?.connectStep(BleConfigStep.STEP_LINK_SUCCESS.ordinal)
+                    launch(Dispatchers.Main) {  bluetoothGatt?.close() }
+                }
             }
             view?.connectSuccess()
         } else {
@@ -234,6 +396,8 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     override fun onDestroy() {
         smartConfig?.stopConnect()
         softAP?.stopConnect()
+        cancel()
+        bluetoothGatt?.close()
         Reconnect.instance.stop(connectionListener)
         L.e("停止配网")
         super.onDestroy()
