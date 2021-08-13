@@ -277,8 +277,12 @@
     <string name="smart_config_third_connect_progress">Network configuration progress</string>
     <string name="smart_config_config_network">Quick network configuration</string>
     <string name="softap_config_network">Hotspot network configuration</string>
-
     <string name="soft_ap_first_title">Put the device into hotspot network configuration mode</string>
+    <string name="reset_ble_dev">重置设备</string>
+    <string name="reset_ble_dev_way">重置设备教程</string>
+    <string name="confirm_env">我已确认上述操作</string>
+    <string name="reset_ble_dev_content">请打开手机蓝牙功能，后将设备置于可发现状态。</string>
+    <string name="no_product_info">没有产品信息</string>
     <string name="soft_ap_first_toast1">If the indicator is already blinking slowly, you can skip this step.</string>
     <string name="soft_ap_first_toast">1. Power on the device. \n2. Press and hold the reset button (switch) for 5 seconds, and when the indicator blinks quickly, press and hold the button again for 3 seconds. \n3. The indicator starts blinking slowly.</string>
     <string name="soft_ap_first_button">Next</string>
@@ -338,6 +342,7 @@
     <string name="wifi_list_refresh">Refresh</string>
     <string name="connect_device">Connect to Device</string>
     <string name="soft_config_network">Hotspot network configuration</string>
+    <string name="ble_config_network">蓝牙设备绑定</string>
     <string name="click_get_wifi">Click to get the Wi-Fi network list</string>
     <string name="please_open_gps">Enable the GPS feature of your mobile phone to receive Wi-Fi signals.</string>
     <string name="wifi_connect_failed">Failed to connect</string>
@@ -459,6 +464,7 @@
     <!--设备分类-->
     <string name="scanned_devices">The following devices have been found</string>
     <string name="scanning_device">Scanning for nearby devices</string>
+    <string name="keep_scanning_device">Scanning for nearby devices</string>
     <string name="bluetooth_adapter_invalid">Your phone\'s Bluetooth needs to be turned on to discover devices (10001)</string>
     <string name="not_found_device">No device found. Please make sure that the device is powered on</string>
     <string name="scanning_retry">Retry</string>
