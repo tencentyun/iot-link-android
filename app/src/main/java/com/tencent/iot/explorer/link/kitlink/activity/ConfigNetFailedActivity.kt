@@ -4,11 +4,11 @@ import android.content.Intent
 import android.view.View
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import kotlinx.android.synthetic.main.activity_config_net_failed.*
 
 class ConfigNetFailedActivity : BaseActivity() {
-    var type = DeviceFragment.ConfigType.SmartConfig.id
+    var type = ConfigType.SmartConfig.id
     var productId = ""
 
     override fun getContentView(): Int {
@@ -16,21 +16,29 @@ class ConfigNetFailedActivity : BaseActivity() {
     }
 
     override fun initView() {
-        type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SmartConfig.id)
+        type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         productId = intent.getStringExtra(CommonField.PRODUCT_ID) ?: ""
 
         when (type) {
 
-            DeviceFragment.ConfigType.SmartConfig.id -> {
+            ConfigType.SmartConfig.id -> {
                 tv_config_net_failed_title.setText(R.string.smart_config_config_network)
                 tv_config_net_failed_reason.setText(R.string.reson_config_net_info)
                 tv_soft_first_commit.setText(R.string.switch_softap)
             }
 
-            DeviceFragment.ConfigType.SoftAp.id -> {
+            ConfigType.SoftAp.id -> {
                 tv_config_net_failed_title.setText(R.string.softap_config_network)
                 tv_config_net_failed_reason.setText(R.string.softap_reson_config_net_info)
                 tv_soft_first_commit.setText(R.string.switch_smart_config)
+            }
+
+            ConfigType.BleConfig.id -> {
+                tv_config_net_failed_title.setText(getString(R.string.ble_config_network))
+                tv_config_net_failed_reason.setText("")
+                tv_soft_first_commit.visibility = View.GONE
+                tv_soft_first_commit.setText("")
+                tv_more_reason.visibility = View.GONE
             }
         }
     }
@@ -46,19 +54,23 @@ class ConfigNetFailedActivity : BaseActivity() {
         override fun onClick(v: View?) {
             when(v) {
                 tv_soft_first_commit -> {
-                    if (type == DeviceFragment.ConfigType.SoftAp.id) {
+                    if (type == ConfigType.SoftAp.id) {
                         SmartConfigStepActivity.startActivityWithExtra(this@ConfigNetFailedActivity, productId)
-                    } else {
+                    } else if (type == ConfigType.SmartConfig.id) {
                         SoftApStepActivity.startActivityWithExtra(this@ConfigNetFailedActivity, productId)
+                    } else {
+
                     }
                     this@ConfigNetFailedActivity.finish()
                 }
 
                 tv_retry -> {
-                    if (type == DeviceFragment.ConfigType.SoftAp.id) {
+                    if (type == ConfigType.SoftAp.id) {
                         SoftApStepActivity.startActivityWithExtra(this@ConfigNetFailedActivity, productId)
-                    } else {
+                    } else if (type == ConfigType.SmartConfig.id) {
                         SmartConfigStepActivity.startActivityWithExtra(this@ConfigNetFailedActivity, productId)
+                    } else {
+
                     }
                     this@ConfigNetFailedActivity.finish()
                 }
