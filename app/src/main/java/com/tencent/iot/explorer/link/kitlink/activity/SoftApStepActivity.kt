@@ -14,10 +14,10 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.HardwareGuide
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
-import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_soft_ap_step.*
 import java.util.ArrayList
@@ -26,7 +26,7 @@ class SoftApStepActivity : PActivity() {
 
     private var loadViewTextType = LoadViewTxtType.LoadLocalViewTxt.ordinal // 0 加载本地文案  1 尝试加载远端配置文案
     private var productId = ""
-    private var type = DeviceFragment.ConfigType.SoftAp.id
+    private var type = ConfigType.SoftAp.id
 
     override fun getContentView(): Int {
         return R.layout.activity_soft_ap_step
@@ -62,7 +62,7 @@ class SoftApStepActivity : PActivity() {
         if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
             productId = intent.getStringExtra(CommonField.PRODUCT_ID)
         }
-        type = intent.getIntExtra(CommonField.CONFIG_TYPE, DeviceFragment.ConfigType.SoftAp.id)
+        type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SoftAp.id)
         if (loadViewTextType == LoadViewTxtType.LoadLocalViewTxt.ordinal) {
             loadViewStandradInfo()
         } else {
