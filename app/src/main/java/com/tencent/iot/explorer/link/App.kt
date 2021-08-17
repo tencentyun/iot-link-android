@@ -202,13 +202,10 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 override fun success(response: BaseResponse, reqCode: Int) {
                     if (response.isSuccess()) {
                         response.parse(DeviceListResponse::class.java)?.run {
-                            val deviceList = DeviceList
-                            val productIdList = ArrayList<String>()
                             // TRTC: 轮询在线的trtc设备的call_status
                             for (device in DeviceList) {
                                 val deviceIds = ArrayList<String>()
                                 deviceIds.add(device.DeviceId)
-                                productIdList.add(device.ProductId)
                                 getDeviceOnlineStatus(device.ProductId, deviceIds, device)
                             }
                             // TRTC：轮询在线的trtc共享设备的call_status
@@ -216,7 +213,6 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                                 val deviceIds = ArrayList<String>()
                                 if (!device.DeviceId.isNullOrEmpty() && !device.ProductId.isNullOrEmpty()) {
                                     deviceIds.add(device.DeviceId)
-                                    productIdList.add(device.ProductId)
                                     getDeviceOnlineStatus(device.ProductId, deviceIds, device)
                                 }
                             }
@@ -527,6 +523,9 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                         TRTCUIManager.getInstance().exitRoom()
                     }
                 }
+            } else if (subType == MessageConst.OFFLINE) {
+                val deviceId = paramsObject.getString(MessageConst.DEVICE_ID)
+                TRTCUIManager.getInstance().userOffline(deviceId)
             }
         }
     }

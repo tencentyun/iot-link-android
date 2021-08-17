@@ -9,4 +9,6 @@ public interface TRTCCallingParamsCallback {
     void userBusy();
 
     void otherUserAccept();
+
+    void userOffline(String deviceId);
 }
