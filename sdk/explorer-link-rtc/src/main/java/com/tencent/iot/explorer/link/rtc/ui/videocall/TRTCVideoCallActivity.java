@@ -97,6 +97,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
     private boolean               isHandsFree       = true;
     private boolean               isMuteMic         = false;
     private volatile boolean      mIsEnterRoom      = false;
+    private Map<String, Boolean> mUserOfflineMap = new HashMap<>();
 
     private TimerTask otherEnterRoomTask = null;
     private TimerTask enterRoomTask = null;
@@ -155,13 +156,18 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mStatusView.setText(R.string.trtccalling_customer_hand_up);
-                            mStatusView.setVisibility(View.VISIBLE);
-                        }
-                    });
+                    Boolean offline = mUserOfflineMap.get(userId);
+                    if (offline != null && offline) {
+                        Toast.makeText(TRTCVideoCallActivity.this, R.string.trtccalling_customer_offline, Toast.LENGTH_SHORT).show();
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                                mStatusView.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
                     stopCameraAndFinish();
                 }
             });
@@ -424,6 +430,11 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
                     }
                 });
                 stopCameraAndFinish();
+            }
+
+            @Override
+            public void userOffline(String deviceId) {
+                mUserOfflineMap.put(deviceId, true);
             }
         });
 

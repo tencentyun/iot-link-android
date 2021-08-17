@@ -68,4 +68,10 @@ public class TRTCUIManager {
             callingParamsCallback.otherUserAccept();
         }
     }
+
+    public void userOffline(String deviceId) {
+        if (callingParamsCallback != null) {
+            callingParamsCallback.userOffline(deviceId);
+        }
+    }
 }
