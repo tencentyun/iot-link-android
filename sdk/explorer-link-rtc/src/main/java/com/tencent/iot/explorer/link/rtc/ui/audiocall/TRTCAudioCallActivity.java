@@ -88,6 +88,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkS
     private boolean               isHandsFree       = true;
     private boolean               isMuteMic         = false;
     private volatile boolean      mIsEnterRoom      = false;
+    private Map<String, Boolean> mUserOfflineMap = new HashMap<>();
 
     private TimerTask otherEnterRoomTask = null;
     private TimerTask enterRoomTask = null;
@@ -145,7 +146,12 @@ public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkS
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
                     }
-                    mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                    Boolean offline = mUserOfflineMap.get(userId);
+                    if (offline != null && offline) {
+                        Toast.makeText(TRTCAudioCallActivity.this, R.string.trtccalling_customer_offline, Toast.LENGTH_SHORT).show();
+                    } else {
+                        mStatusView.setText(R.string.trtccalling_customer_hand_up);
+                    }
                     removeCallbackAndFinish();
                 }
             });
@@ -393,6 +399,11 @@ public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkS
                 });
 
                 removeCallbackAndFinish();
+            }
+
+            @Override
+            public void userOffline(String deviceId) {
+                mUserOfflineMap.put(deviceId, true);
             }
         });
 
