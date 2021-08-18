@@ -44,7 +44,6 @@ class AppData private constructor() {
     var notificationId = 0
     @Volatile
     var isForeground = false
-    var callingDeviceId = "" //主动呼叫的设备的id
     var rtcNotificationClicked = false
     var rtcDeviceIdList: ArrayString? = null
 
