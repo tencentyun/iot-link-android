@@ -30,6 +30,7 @@ import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
+import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashSet
@@ -159,7 +160,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         }
         if (id == TRTC_VIDEO_CALL_STATUS || id == TRTC_AUDIO_CALL_STATUS) { //如果点击选择的是trtc设备的呼叫状态
             if (value == "1") { //并且状态值为1，代表应用正在call设备
-                App.data.callingDeviceId = "$productId/$deviceName" //保存下设备id（productId/deviceName）
+                TRTCUIManager.getInstance().callingDeviceId = "$productId/$deviceName" //保存下设备id（productId/deviceName）
                 val userId = SharePreferenceUtil.getString(App.activity, App.CONFIG, CommonField.USER_ID)
                 val agent = "android/1.4.0 (Android" + Build.VERSION.SDK_INT + ";" + Build.BRAND + " " + Build.MODEL + ";" + Locale.getDefault().language + "-" + Locale.getDefault().country + ")"
                 data = "{\"$id\":$value, \"$USERID\":\"$userId\", \"${MessageConst.AGENT}\":\"$agent\"}"
@@ -406,7 +407,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(runnable)
-        App.data.callingDeviceId = "" //暂时打电话的入口只在控制面板内，所以销毁了控制面板，就重置一下callingDeviceId为空字符串，代表没有在打电话了。
+        TRTCUIManager.getInstance().callingDeviceId = "" //暂时打电话的入口只在控制面板内，所以销毁了控制面板，就重置一下callingDeviceId为空字符串，代表没有在打电话了。
         IoTAuth.removeActivePushCallback(ArrayString(deviceId), this)
     }
 
