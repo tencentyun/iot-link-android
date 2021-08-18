@@ -35,7 +35,7 @@ class TRTCAppSessionManager : TRTCSessionManager() {
 
     override fun resetTRTCStatus() {
         super.resetTRTCStatus()
-        App.data.callingDeviceId = ""
+        TRTCUIManager.getInstance().callingDeviceId = ""
     }
 
     /**
