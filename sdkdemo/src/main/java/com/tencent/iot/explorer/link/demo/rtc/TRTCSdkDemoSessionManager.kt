@@ -74,7 +74,6 @@ class TRTCSdkDemoSessionManager : TRTCSessionManager() {
      * 用户控制设备(上报数据)
      */
     fun controlDevice(id: String, value: String, deviceId: String) {
-
         val list = deviceId.split("/")
 
         var productId = ""
@@ -86,18 +85,15 @@ class TRTCSdkDemoSessionManager : TRTCSessionManager() {
             return
         }
 
-        com.tencent.iot.explorer.link.core.log.L.d("上报数据:id=$id value=$value")
-        var userId = App.data.userInfo.UserID
-        var data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\"}"
+        L.d("上报数据:id=$id value=$value")
+        val userId = App.data.userInfo.UserID
+        val data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\"}"
         IoTAuth.deviceImpl.controlDevice(productId, deviceName, data, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                if (msg != null) com.tencent.iot.explorer.link.core.log.L.e(msg)
+                if (msg != null) L.e(msg)
             }
 
-            override fun success(response: BaseResponse, reqCode: Int) {
-
-            }
-
+            override fun success(response: BaseResponse, reqCode: Int) { }
         })
     }
 }
