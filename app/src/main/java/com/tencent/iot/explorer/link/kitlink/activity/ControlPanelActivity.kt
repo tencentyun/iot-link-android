@@ -312,8 +312,8 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
             controlDevice(entity.id, "1")
             TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
             TRTCUIManager.getInstance().isCalling = true
-            TRTCUIManager.getInstance().deviceId = App.data.callingDeviceId
-            TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
+            TRTCUIManager.getInstance().deviceId = TRTCUIManager.getInstance().callingDeviceId
+            TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), TRTCUIManager.getInstance().callingDeviceId)
             return
         } else if (entity.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
             if (checkTRTCCallStatusIsBusy()) {
@@ -322,8 +322,8 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
             controlDevice(entity.id, "1")
             TRTCUIManager.getInstance().isCalling = true
             TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
-            TRTCUIManager.getInstance().deviceId = App.data.callingDeviceId
-            TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
+            TRTCUIManager.getInstance().deviceId = TRTCUIManager.getInstance().callingDeviceId
+            TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), TRTCUIManager.getInstance().callingDeviceId)
             return
         }
         if (enumPopup == null) {
