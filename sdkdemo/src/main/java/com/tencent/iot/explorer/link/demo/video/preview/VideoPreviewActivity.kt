@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
+import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.video.Command
@@ -54,7 +55,7 @@ private var keepPlayThreadLock = Object()
 @Volatile
 private var keepAliveThreadRuning = true
 
-class VideoPreviewActivity : BaseActivity(), EventView, TextureView.SurfaceTextureListener,
+class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener {
 
     private var tag = VideoPreviewActivity::class.simpleName
