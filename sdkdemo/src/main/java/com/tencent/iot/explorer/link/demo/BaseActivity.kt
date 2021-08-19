@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.Watermark
-import com.tencent.iot.explorer.link.demo.common.util.StatusBarUtil
 import com.tencent.iot.explorer.link.demo.core.activity.MainActivity
 
 /**
@@ -58,16 +57,7 @@ abstract class BaseActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //在setContentView()后调用
         startHere()
-        checkStyle()
         Watermark.getInstance().show(this, BuildConfig.SDKDemoCommitID)
-    }
-
-    private fun checkStyle() {
-        StatusBarUtil.setRootViewFitsSystemWindows(this, false)
-        StatusBarUtil.setTranslucentStatus(this)
-        if (!StatusBarUtil.setStatusBarDarkTheme(this, true)) {
-            StatusBarUtil.setStatusBarColor(this, 0x55000000)
-        }
     }
 
     override fun onResume() {
