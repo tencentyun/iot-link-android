@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.demo
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -58,16 +59,7 @@ abstract class BaseActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //在setContentView()后调用
         startHere()
-        checkStyle()
         Watermark.getInstance().show(this, BuildConfig.SDKDemoCommitID)
-    }
-
-    private fun checkStyle() {
-        StatusBarUtil.setRootViewFitsSystemWindows(this, false)
-        StatusBarUtil.setTranslucentStatus(this)
-        if (!StatusBarUtil.setStatusBarDarkTheme(this, true)) {
-            StatusBarUtil.setStatusBarColor(this, 0x55000000)
-        }
     }
 
     override fun onResume() {
