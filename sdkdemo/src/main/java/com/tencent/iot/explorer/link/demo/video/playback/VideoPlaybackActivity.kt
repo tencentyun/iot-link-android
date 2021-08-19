@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON
 import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.BaseActivity
+import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.VideoCloudPlaybackFragment
@@ -27,7 +28,7 @@ import kotlinx.android.synthetic.main.title_layout.*
 import java.util.*
 
 
-class VideoPlaybackActivity : BaseActivity() {
+class VideoPlaybackActivity : VideoBaseActivity() {
 
     private val page1 = VideoCloudPlaybackFragment()
     private val page2 = VideoLocalPlaybackFragment()
