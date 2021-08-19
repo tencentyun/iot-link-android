@@ -21,6 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".VideoBaseActivity" />
         <activity android:name=".core.activity.BindMobilePhoneActivity" />
         <activity android:name=".core.activity.ForgotPasswordActivity" />
         <activity android:name=".core.activity.SetPasswordActivity" />
@@ -54,12 +55,15 @@
         <activity android:name=".video.VideoInputAuthorizeActivity" />
         <activity android:name=".video.VideoMainActivity" />
         <activity android:name=".video.nvr.VideoNvrActivity" />
-        <activity android:name=".video.playback.VideoPlaybackActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name=".video.preview.VideoMultiPreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name=".video.preview.VideoPreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".video.playback.VideoPlaybackActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".video.preview.VideoMultiPreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".video.preview.VideoPreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity" />
         <activity android:name=".core.activity.LoginActivity" />
