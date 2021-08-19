@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
+import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.core.activity.*
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.video.link.consts.VideoConst
@@ -37,7 +38,7 @@ import kotlin.collections.ArrayList
 private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
 private var allDevUrl: MutableList<DevUrl2Preview> = CopyOnWriteArrayList()
 
-class VideoMultiPreviewActivity : BaseActivity(), XP2PCallback, CoroutineScope by MainScope() {
+class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by MainScope() {
     lateinit var gridLayoutManager : GridLayoutManager
     lateinit var linearLayoutManager : LinearLayoutManager
     private var adapter : DevPreviewAdapter? = null
