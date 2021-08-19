@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.BaseActivity
+import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevsAdapter
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit
 
 private var countDownLatch = CountDownLatch(1)
 
-class VideoNvrActivity : BaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback,
+class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback,
     CoroutineScope by MainScope() {
     private var devs : MutableList<DevInfo> = ArrayList()
     private var adapter : DevsAdapter? = null
