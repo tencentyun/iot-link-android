@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c8d6d75_938f3a51",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/App.kt",
+        "patchSetId": 7
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-19T12:32:20Z",
+      "side": 1,
+      "message": "看到k和v没太明白代表啥意思。看了controlDevice方法知道了k是属性key，v是属性value",
+      "revId": "0ec6ec80184817abfe662fea139e8f29c41955de",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0aa3ec0c_0f38a0bf",
+        "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/link/rtc/model/TRTCUIManager.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-19T12:32:20Z",
+      "side": 1,
+      "message": "deviceId和callingDeviceId是不是都是 主动呼叫的deviceid？",
+      "revId": "0ec6ec80184817abfe662fea139e8f29c41955de",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76719ab3_578fc0d6",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/App.kt",
+        "patchSetId": 7
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-19T12:32:20Z",
+      "side": 0,
+      "message": "sdkDemo的App别忘记抽离下。",
+      "revId": "1daa1096828ba8b0316f35716f4681dcdb9be67f",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
