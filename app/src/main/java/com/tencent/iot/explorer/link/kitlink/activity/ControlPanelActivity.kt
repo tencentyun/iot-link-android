@@ -1,8 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.TRTCAppSessionManager
@@ -255,11 +257,11 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     fun showNumberPopup(entity: DevicePropertyEntity) {
         if (numberPopup == null) {
             numberPopup = NumberPopupWindow(this)
-            numberPopup?.onUploadListener = object : NumberPopupWindow.OnUploadListener {
-                override fun upload(progress: Int) {
-                    controlDevice(entity.id, progress.toString())
-                    numberPopup?.dismiss()
-                }
+        }
+        numberPopup?.onUploadListener = object : NumberPopupWindow.OnUploadListener {
+            override fun upload(progress: Int) {
+                controlDevice(entity.id, progress.toString())
+                numberPopup?.dismiss()
             }
         }
         numberPopup!!.showTitle(entity.name)
