@@ -255,11 +255,11 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     fun showNumberPopup(entity: DevicePropertyEntity) {
         if (numberPopup == null) {
             numberPopup = NumberPopupWindow(this)
-            numberPopup?.onUploadListener = object : NumberPopupWindow.OnUploadListener {
-                override fun upload(progress: Int) {
-                    controlDevice(entity.id, progress.toString())
-                    numberPopup?.dismiss()
-                }
+        }
+        numberPopup?.onUploadListener = object : NumberPopupWindow.OnUploadListener {
+            override fun upload(progress: Int) {
+                controlDevice(entity.id, progress.toString())
+                numberPopup?.dismiss()
             }
         }
         numberPopup!!.showTitle(entity.name)
