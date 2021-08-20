@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd040a91_d17ad69f",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/DeviceCategoryActivity.kt",
+        "patchSetId": 8
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-20T09:21:07Z",
+      "side": 1,
+      "message": "可以去掉 这些注释掉的代码。",
+      "revId": "b68e525745c493190101392766c4b7d6c95d17cc",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "105cef46_6724b027",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/DeviceCategoryActivity.kt",
+        "patchSetId": 8
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-20T09:21:07Z",
+      "side": 1,
+      "message": "可以去掉 这些注释掉的代码。",
+      "revId": "b68e525745c493190101392766c4b7d6c95d17cc",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e78dc0a4_49bd4827",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/MainActivity.kt",
+        "patchSetId": 8
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-20T09:21:07Z",
+      "side": 1,
+      "message": "可以去掉 这些注释掉的代码。",
+      "revId": "b68e525745c493190101392766c4b7d6c95d17cc",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6175319d_cf2a548c",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/MainActivity.kt",
+        "patchSetId": 8
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-20T09:21:07Z",
+      "side": 1,
+      "message": "可以去掉 这些注释掉的代码。 这两个softap和smartconfig都走相同的代码哈~",
+      "revId": "b68e525745c493190101392766c4b7d6c95d17cc",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e6dee7e_618bf46f",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/mvp/model/ConnectModel.kt",
+        "patchSetId": 8
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-20T09:21:07Z",
+      "side": 1,
+      "message": "测试使用的代码，记得去掉哈~",
+      "revId": "b68e525745c493190101392766c4b7d6c95d17cc",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4113af5_49138576",
+        "filename": "app/src/main/res/values-en-rUS/strings.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-08-20T09:21:07Z",
+      "side": 1,
+      "message": "看看找哪个同学帮翻译一下。",
+      "revId": "b68e525745c493190101392766c4b7d6c95d17cc",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
