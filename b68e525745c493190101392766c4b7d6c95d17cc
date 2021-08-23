@@ -101,6 +101,24 @@
       "revId": "b68e525745c493190101392766c4b7d6c95d17cc",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4407c0ac_4d50de91",
+        "filename": "app/src/main/res/values-en-rUS/strings.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2021-08-23T02:46:06Z",
+      "side": 1,
+      "message": "翻译部分的内容统一来做处理是不是会好一点",
+      "parentUuid": "f4113af5_49138576",
+      "revId": "b68e525745c493190101392766c4b7d6c95d17cc",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
     }
   ]
 }
