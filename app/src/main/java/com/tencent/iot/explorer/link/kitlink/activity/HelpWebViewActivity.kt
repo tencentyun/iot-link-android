@@ -138,9 +138,7 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
                 var js = JSON.parse(response.data.toString()) as JSONObject
                 var url ="https://iot.cloud.tencent.com/explorer-h5/help-center/?" +
                         "&ticket=" + js[CommonField.TOKEN_TICKET]
-                if (App.DEBUG_VERSION) {
-                    url += "&uin=help_center_h5&api_uin=help_center_h5_api"
-                }
+                url += "&uin=${Utils.getAndroidID(this)}"
                 if (!App.isOEMApp()) {
                     url += "&appID=" + T.getContext().applicationInfo.packageName
                 }
