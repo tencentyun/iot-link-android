@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "724de39d_e4ac1aaa",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/App.kt",
+        "patchSetId": 7
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-23T01:00:41Z",
+      "side": 1,
+      "message": "最新patch已修改",
+      "parentUuid": "3c8d6d75_938f3a51",
+      "revId": "0ec6ec80184817abfe662fea139e8f29c41955de",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0aa3ec0c_0f38a0bf",
         "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/link/rtc/model/TRTCUIManager.java",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2021-08-19T12:32:20Z",
       "side": 1,
       "message": "deviceId和callingDeviceId是不是都是 主动呼叫的deviceid？",
+      "revId": "0ec6ec80184817abfe662fea139e8f29c41955de",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cff6221c_9aa896e0",
+        "filename": "sdk/explorer-link-rtc/src/main/java/com/tencent/iot/explorer/link/rtc/model/TRTCUIManager.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-23T01:00:41Z",
+      "side": 1,
+      "message": "\u003e deviceId和callingDeviceId是不是都是 主动呼叫的deviceid？\n\n提新的change验证这里",
+      "parentUuid": "0aa3ec0c_0f38a0bf",
       "revId": "0ec6ec80184817abfe662fea139e8f29c41955de",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
