@@ -16,6 +16,24 @@
       "revId": "1daa1096828ba8b0316f35716f4681dcdb9be67f",
       "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ed62a78_362ef263",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/App.kt",
+        "patchSetId": 7
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-23T01:00:41Z",
+      "side": 0,
+      "message": "sdkdemo 单独提个change来改",
+      "parentUuid": "76719ab3_578fc0d6",
+      "revId": "1daa1096828ba8b0316f35716f4681dcdb9be67f",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
     }
   ]
 }
