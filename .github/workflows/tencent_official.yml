@@ -153,7 +153,8 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy App to fir
+      - name: Video-->Deploy SDKDemo to fir
+        if: ${{contains(env.curr_tag, 'video')}}
         run: |
           demoApk=$(ls sdkdemo/build/outputs/apk/release/sdkdemo-release.apk)
           rc=$(git rev-parse --short HEAD)
