@@ -17,10 +17,7 @@ import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
 import com.tencent.iot.explorer.link.demo.rtc.TRTCSdkDemoSessionManager
-import com.tencent.iot.explorer.link.rtc.model.RoomKey
-import com.tencent.iot.explorer.link.rtc.model.TRTCCallStatus
-import com.tencent.iot.explorer.link.rtc.model.TRTCCalling
-import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
+import com.tencent.iot.explorer.link.rtc.model.*
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity
 
@@ -130,92 +127,49 @@ class App : Application(), PayloadMessageCallback {
     }
 
     override fun payloadMessage(payload: Payload) {
-
-        var jsonObject = org.json.JSONObject(payload.json)
-        val action = jsonObject.getString(MessageConst.MODULE_ACTION);
-        if (action == MessageConst.DEVICE_CHANGE) { //收到了设备属性改变的wss消息
-            var paramsObject = jsonObject.getJSONObject(MessageConst.PARAM) as org.json.JSONObject
-            val subType = paramsObject.getString(MessageConst.SUB_TYPE)
-            if (subType == MessageConst.REPORT) { //收到了设备端上报的属性状态改变的wss消息
-
-                var payloadParamsObject = org.json.JSONObject(payload.payload)
-                val payloadParamsJson = payloadParamsObject.getJSONObject(MessageConst.PARAM)
-                var videoCallStatus = -1
-                if (payloadParamsJson.has(MessageConst.TRTC_VIDEO_CALL_STATUS)) {
-                    videoCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_VIDEO_CALL_STATUS)
+        val userId = data.userInfo.UserID
+        val trtcPayload = TRTCPayload(payload.json, payload.payload, payload.deviceId)
+        TRTCUIManager.getInstance().payloadMessage(trtcPayload, userId, object:
+            TRTCCallback {
+            override fun busy() {
+                TRTCUIManager.getInstance().userBusy()
+                TRTCUIManager.getInstance().exitRoom()
+                activity?.runOnUiThread {
+                    Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
                 }
-                var audioCallStatus = -1
-                if (payloadParamsJson.has(MessageConst.TRTC_AUDIO_CALL_STATUS)) {
-                    audioCallStatus = payloadParamsJson.getInt(MessageConst.TRTC_AUDIO_CALL_STATUS)
-                }
+            }
 
-                var deviceId = ""
-                if (payloadParamsJson.has(MessageConst.USERID)) {
-                    deviceId = payloadParamsJson.getString(MessageConst.USERID)
-                }
+            override fun updateCallStatus(key: String?, value: String?, deviceId: String?) {
+                controlDevice(key!!, value!!, deviceId!!)
+            }
 
-                // 判断主动呼叫的回调中收到的_sys_userid不为自己的userid则被其他用户抢先呼叫设备了，提示用户 对方正忙...
-                val userId = data.userInfo.UserID
-                if (data.callingDeviceId != "" && deviceId != userId) {
-                    if (TRTCUIManager.getInstance().isCalling) { //当前正显示音视频通话页面，finish掉
-                        TRTCUIManager.getInstance().userBusy()
-                        TRTCUIManager.getInstance().exitRoom()
+            override fun startCall(type: Int, deviceId: String?) {
+                startBeingCall(type, deviceId!!)
+            }
+
+            override fun otherUserAnswered() {
+                activity?.runOnUiThread {
+                    Toast.makeText(activity, "其他用户已接听...", Toast.LENGTH_LONG).show()
+                }
+                TRTCUIManager.getInstance().otherUserAccept()
+                TRTCUIManager.getInstance().exitRoom()
+            }
+
+            override fun hungUp() {
+                if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value) {
+                    if (TRTCUIManager.getInstance().callingDeviceId == "") { //被动呼叫
                         activity?.runOnUiThread {
                             Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
                         }
-                        return
-                    }
-                }
-
-                // 判断被动呼叫时，已经被一台设备呼叫，又接到其他设备的呼叫请求，则调用AppControldeviceData拒绝其他设备的请求
-                if (data.callingDeviceId == "" && TRTCUIManager.getInstance().isCalling) {
-                    if (videoCallStatus == TRTCCallStatus.TYPE_CALLING.value) {
-                        controlDevice(MessageConst.TRTC_VIDEO_CALL_STATUS, "0", payload.deviceId)
-                    } else if (audioCallStatus == TRTCCallStatus.TYPE_CALLING.value) {
-                        controlDevice(MessageConst.TRTC_AUDIO_CALL_STATUS, "0", payload.deviceId)
-                    }
-                }
-
-                // 判断payload中是否包含设备的video_call_status, audio_call_status字段以及是否等于1，若等于1，就调用CallDevice接口, 主动拨打
-                if (videoCallStatus == 1) {
-                    if (data.callingDeviceId == "" && deviceId != "" && !deviceId.contains(userId)) { //App被动呼叫 _sys_userid有值 且不包含当前用户的userid
-                    } else {
-                        startBeingCall(TRTCCalling.TYPE_VIDEO_CALL, payload.deviceId)
-                    }
-                } else if (audioCallStatus == 1) {
-                    if (data.callingDeviceId == "" && deviceId != "" && !deviceId.contains(userId)) { //App被动呼叫 _sys_userid有值 且不包含当前用户的userid
-                    } else {
-                        startBeingCall(TRTCCalling.TYPE_AUDIO_CALL, payload.deviceId)
-                    }
-                } else if (videoCallStatus == 0 || audioCallStatus == 0) { //空闲或拒绝了，当前正显示音视频通话页面的话，finish掉
-                    if (TRTCUIManager.getInstance().deviceId == payload.deviceId) {
-                        if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value) {
-                            if (data.callingDeviceId == "") { //被动呼叫
-                                activity?.runOnUiThread {
-                                    Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
-                                }
-                            } else { //主动呼叫
-                                activity?.runOnUiThread {
-                                    Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
-                                }
-                            }
-                        }
-                        TRTCUIManager.getInstance().exitRoom()
-                    }
-                } else if (videoCallStatus == 2 || audioCallStatus == 2) {
-                    if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value && data.callingDeviceId == "") {
+                    } else { //主动呼叫
                         activity?.runOnUiThread {
-                            Toast.makeText(activity, "其他用户已接听...", Toast.LENGTH_LONG).show()
+                            Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
                         }
-                        TRTCUIManager.getInstance().exitRoom()
                     }
                 }
-
-                if (audioCallStatus == 0 || videoCallStatus == 0) {
-                    data.callingDeviceId = ""
-                }
+                TRTCUIManager.getInstance().exitRoom()
             }
-        }
+        })
     }
 
     /**
