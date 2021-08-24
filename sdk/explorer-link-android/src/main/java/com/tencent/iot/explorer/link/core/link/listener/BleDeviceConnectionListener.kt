@@ -14,4 +14,5 @@ interface BleDeviceConnectionListener {
     fun onBleSendWifiInfoResult(success: Boolean)
     fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo)
     fun onBlePushTokenResult(success: Boolean)
+    fun onMtuChanged(mtu: Int, status: Int)
 }
