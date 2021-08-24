@@ -101,7 +101,7 @@ class BleConfigService private constructor() {
                         return@let
                     }
 
-                    L.d(TAG, "productID ${dev?.productId}")
+                    L.d(TAG, "productID ${bleDev?.productId} devName ${bleDev.devName}")
                     var founded = foundedSet.get(bleDev.productId + bleDev.devName)
                     founded?:let { // 不存在对应的元素，第一次发现该设备
                         connetionListener?.onBleDeviceFounded(bleDev)
