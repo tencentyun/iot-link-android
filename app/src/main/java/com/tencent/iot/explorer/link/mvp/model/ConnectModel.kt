@@ -1,36 +1,32 @@
 package com.tencent.iot.explorer.link.mvp.model
 
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.location.Location
-import android.text.TextUtils
-import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.http.ConnectionListener
 import com.tencent.iot.explorer.link.core.auth.http.Reconnect
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.response.DeviceBindTokenStateResponse
-import com.tencent.iot.explorer.link.core.link.service.SmartConfigService
-import com.tencent.iot.explorer.link.core.link.service.SoftAPService
 import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
+import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
 import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
 import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.core.link.service.SmartConfigService
+import com.tencent.iot.explorer.link.core.link.service.SoftAPService
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
-import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
-import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
-import com.tencent.iot.explorer.link.core.link.service.BleConfigService
-import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import kotlinx.coroutines.*
-import java.lang.Runnable
 
 /**
  * 配网进度、绑定设备
@@ -63,7 +59,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             smartConfig = SmartConfigService(context.applicationContext)
         } else if (type == ConfigType.SoftAp.id) {
             softAP = SoftAPService(context.applicationContext)
-        } else {} // 蓝牙服务时单例，在 app 中已经初始化过，无需再处理
+        } else {} // 蓝牙服务是单例，在 app 中已经初始化过，无需再处理
     }
 
     /**
@@ -99,7 +95,6 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             return
         }
 
-        deviceInfo = DeviceInfo(bleDevice?.productId, bleDevice?.devName)
         BleConfigService.get().connetionListener = getBleListener(bleDevice!!)
 
         // 快速连接，避免多次的扫描设备带来的耗时
@@ -152,23 +147,28 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             override fun onBleDeviceDisconnected(exception: TCLinkException) {
                 bleFailed(exception.errorMessage)
             }
-            override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {}
-
-            override fun onBleDeviceConnected() {
-                L.d(TAG, "onBleDeviceConnected")
+            override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {
+                L.d(TAG, "onBleDeviceInfo ${JSON.toJSONString(bleDeviceInfo)}")
+                deviceInfo = DeviceInfo(bleDevice?.productId, bleDeviceInfo.devName)
                 launch {
-                    delay(2000)
                     bluetoothGatt?.let {
-                        var mtuRet = BleConfigService.get().setMtuSize(it, App.data.bindDeviceToken.length * 2 + 20)
-                        L.d(TAG, "mtuRet ${mtuRet}")
-                    }
-                    delay(1000)
-                    bluetoothGatt?.let {
+                        delay(500)
                         if (BleConfigService.get().setWifiMode(it, BleDeviceWifiMode.STA)) {
                             return@launch // 设置成功则直接退出
                         }
                     }
-                    bleFailed("connect ble dev failed")
+                    bleFailed("request device info failed")
+                }
+            }
+
+            override fun onBleDeviceConnected() {
+                L.d(TAG, "onBleDeviceConnected")
+                launch {
+                    bluetoothGatt?.let {
+                        delay(3000)
+                        if (BleConfigService.get().setMtuSize(it, 512)) return@launch
+                    }
+                    bleFailed("config mtu failed")
                 }
             }
 
@@ -180,7 +180,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 }
 
                 launch {
-                    delay(1000)
+                    delay(500)
                     bluetoothGatt?.let {
                         var bleDeviceWifiInfo = BleDeviceWifiInfo(ssid, password)
                         L.d(TAG, "bleDeviceWifiInfo ${JSON.toJSONString(bleDeviceWifiInfo)}")
@@ -199,7 +199,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 }
 
                 launch {
-                    delay(1000)
+                    delay(500)
                     bluetoothGatt?.let {
                         if (BleConfigService.get().requestConnectWifi(it)) return@launch
                         bleFailed("connect wifi failed")
@@ -215,10 +215,9 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 }
 
                 launch {
-                    delay(1000)
+                    delay(500)
                     bluetoothGatt?.let {
                         this@ConnectModel.view?.connectStep(BleConfigStep.STEP_SEND_TOKEN.ordinal)
-                        //L.d(TAG, "send token ${App.data.bindDeviceToken}")
                         if (BleConfigService.get().configToken(it, App.data.bindDeviceToken)) return@launch
                         bleFailed("send token failed")
                     }
@@ -231,6 +230,24 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                     checkDeviceBindTokenState()
                 } else {
                     bleFailed("send wifi info failed")
+                }
+            }
+
+            override fun onMtuChanged(mtu: Int, status: Int) {
+                L.d(TAG, "onMtuChanged mtu $mtu status $status")
+                if (BluetoothGatt.GATT_SUCCESS != status) {
+                    bleFailed("config mtu $mtu failed")
+                    return
+                }
+
+                launch {
+                    bluetoothGatt?.let {
+                        delay(500)
+                        if (BleConfigService.get().requestDevInfo(it)) {
+                            return@launch
+                        }
+                    }
+                    bleFailed("request device info failed")
                 }
             }
 
@@ -317,9 +334,9 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
         var currentNo = 0
 
         // 开启线程做网络请求
-        Thread(Runnable {
+        Thread{
             checkDeviceBindTokenState(currentNo, maxTimes2Try, interval)
-        }).start()
+        }.start()
         checkDeviceBindTokenStateStarted = true
     }
 
@@ -347,15 +364,15 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                         2 -> {
                             Reconnect.instance.stop(connectionListener)
                             checkDeviceBindTokenStateStarted = false
-                            Thread(Runnable {
+                            Thread{
                                 wifiBindDevice(deviceInfo!!)
-                            }).start()
+                            }.start()
                         } else -> {
                             // 主线程回调，子线程开启新的网络请求，避免阻塞主线程
-                            Thread(Runnable{
+                            Thread{
                                 Thread.sleep(interval.toLong() * 1000)
                                 checkDeviceBindTokenState(nextNo, maxTimes, interval)
-                            }).start()
+                            }.start()
                         }
                     }
                 }
