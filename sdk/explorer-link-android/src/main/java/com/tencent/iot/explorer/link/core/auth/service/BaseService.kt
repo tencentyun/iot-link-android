@@ -8,6 +8,7 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.auth.util.SignatureUtil
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.Utils
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -20,19 +21,15 @@ open class BaseService {
         var OEM_APP_API = "https://iot.cloud.tencent.com/api/exploreropen/appapi" // 需要替换为自建后台服务地址
         var OEM_TOKEN_API = "https://iot.cloud.tencent.com/api/exploreropen/tokenapi"  // 可安全在设备端调用。
         var APP_COS_AUTH = "https://iot.cloud.tencent.com/api/studioapp/AppCosAuth"
+        var PLATFORM = "android"
     }
 
     /**
      * 未登录接口公共参数
      */
     fun commonParams(action: String): HashMap<String, Any> {
-        val param = HashMap<String, Any>()
-        param["RequestId"] = UUID.randomUUID().toString()
+        val param = baseParams()
         param["Action"] = action
-        param["Platform"] = "android"
-        param["AppKey"] = IoTAuth.APP_KEY
-        param["Timestamp"] = System.currentTimeMillis() / 1000
-        param["Nonce"] = Random().nextInt(10)
         return param
     }
 
@@ -40,14 +37,21 @@ open class BaseService {
      * 登录后接口公共参数
      */
     fun tokenParams(action: String): HashMap<String, Any> {
+        val param = baseParams()
+        param["Action"] = action
+        param["AccessToken"] = IoTAuth.user.Token
+        return param
+    }
+
+    private fun baseParams(): HashMap<String, Any> {
         val param = HashMap<String, Any>()
         param["RequestId"] = UUID.randomUUID().toString()
-        param["Action"] = action
-        param["Platform"] = "android"
+        param["lang"] = Utils.getLang()
+        param["Platform"] = PLATFORM
+        param["Agent"] = PLATFORM
         param["AppKey"] = IoTAuth.APP_KEY
         param["Timestamp"] = System.currentTimeMillis() / 1000
         param["Nonce"] = Random().nextInt(10)
-        param["AccessToken"] = IoTAuth.user.Token
         return param
     }
 
