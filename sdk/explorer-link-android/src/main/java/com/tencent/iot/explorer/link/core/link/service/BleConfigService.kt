@@ -101,7 +101,7 @@ class BleConfigService private constructor() {
                         return@let
                     }
 
-                    L.d(TAG, "productID ${dev?.productId}")
+                    L.d(TAG, "productID ${bleDev?.productId} devName ${bleDev.devName}")
                     var founded = foundedSet.get(bleDev.productId + bleDev.devName)
                     founded?:let { // 不存在对应的元素，第一次发现该设备
                         connetionListener?.onBleDeviceFounded(bleDev)
@@ -201,7 +201,9 @@ class BleConfigService private constructor() {
                 override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {}
                 override fun onCharacteristicRead(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {}
                 override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {}
-                override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {}
+                override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
+                    connetionListener?.onMtuChanged(mtu, status)
+                }
                 override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {}
             })
     }

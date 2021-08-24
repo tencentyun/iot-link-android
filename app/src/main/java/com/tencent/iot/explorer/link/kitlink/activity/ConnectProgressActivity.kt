@@ -90,11 +90,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
             closePopup?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
                 override fun confirm(popupWindow: CommonPopupWindow) {
                     quit = true
-                    if (type == ConfigType.SmartConfig.id) {
-                        backTo(3)
-                    } else {
-                        backTo(4)
-                    }
+                    backToDeviceCategoryActivity()
                 }
 
                 override fun cancel(popupWindow: CommonPopupWindow) {
