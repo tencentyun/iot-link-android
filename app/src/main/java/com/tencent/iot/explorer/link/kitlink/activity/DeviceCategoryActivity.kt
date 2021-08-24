@@ -140,6 +140,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         override fun onBleSendWifiInfoResult(success: Boolean) {}
         override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {}
         override fun onBlePushTokenResult(success: Boolean) {}
+        override fun onMtuChanged(mtu: Int, status: Int) {}
     }
 
     private val runnable = Runnable {
