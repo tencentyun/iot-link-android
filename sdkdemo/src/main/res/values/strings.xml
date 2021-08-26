@@ -92,7 +92,7 @@
     <string name="capture_successed">已保存至相册</string>
     <string name="devs_checked">已选择 %d 台设备</string>
     <string name="query_failed">查询失败</string>
-    <string name="record_failed">录像失败</string>
+    <string name="record_failed">该音视频格式不支持录像</string>
     <string name="time_2_show">P2P 连接时间: %s(ms) \n\n 出图时间: %s(ms)</string>
     <string name="disconnected_and_reconnecting">%s 通道断开，正在重连</string>
     <string name="connected">%s 通道建立成功</string>
