@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
-import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
@@ -137,7 +136,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         player = IjkMediaPlayer()
 
         Thread(Runnable {
-            connectStartTime = System.currentTimeMillis()
             var id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
             var started = XP2P.startServiceWithXp2pInfo(id,
                 App.data.accessInfo!!.productId, presenter.getDeviceName(), "")
@@ -149,6 +147,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 return@Runnable
             }
 
+            connectStartTime = System.currentTimeMillis()
             var tmpCountDownLatch = CountDownLatch(1)
             countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
             tmpCountDownLatch.await()
@@ -156,7 +155,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
             if (!TextUtils.isEmpty(urlPrefix)) {
                 player?.let {
-                    startShowVideoTime = System.currentTimeMillis()
                     resetPlayer()
                     keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
                 }
@@ -168,7 +166,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         if (TextUtils.isEmpty(id)) return
 
         // 开启守护线程
-        Thread(Runnable {
+        Thread{
             var objectLock = Object()
             while (true) {
                 var tmpCountDownLatch = CountDownLatch(1)
@@ -190,6 +188,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                     }
                     Log.d(tag, "id=${id}, try to call startServiceWithXp2pInfo")
                 }
+                connectStartTime = System.currentTimeMillis()
 
                 Log.d(tag, "id=${id}, call startServiceWithXp2pInfo successed")
                 countDownLatchs.put(id!!, tmpCountDownLatch)
@@ -200,7 +199,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 urlPrefix = XP2P.delegateHttpFlv(id)
                 if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
             }
-        }).start()
+        }.start()
     }
 
     private fun resetPlayer() {
@@ -400,6 +399,8 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     }
 
     private fun setPlayerUrl(suffix: String) {
+        showTip = false
+        startShowVideoTime = System.currentTimeMillis()
         player?.let {
             val url = urlPrefix + suffix
             it.reset()
