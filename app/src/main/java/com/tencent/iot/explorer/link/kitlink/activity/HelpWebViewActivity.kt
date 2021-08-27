@@ -82,6 +82,9 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
         help_web.settings.builtInZoomControls = true
         help_web.settings.displayZoomControls = false
         help_web.settings.cacheMode = WebSettings.LOAD_NO_CACHE     // 不缓存
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            help_web.settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+        }
     }
 
     override fun setListener() {
