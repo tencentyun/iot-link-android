@@ -3,9 +3,11 @@ package com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback
 import android.media.MediaPlayer
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
@@ -31,6 +33,17 @@ import com.tencent.iot.video.link.consts.VideoRequestCode
 import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.activity_video_preview.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.iv_left_go
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.iv_right_go
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.iv_start
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.layout_select_date
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.pause_tip_layout
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.playback_control
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.time_line
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_all_time
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_current_pos
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_date
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.video_seekbar
 import kotlinx.coroutines.*
 import java.net.URLDecoder
 import java.text.SimpleDateFormat
@@ -46,6 +59,18 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     private lateinit var presenter: EventPresenter
     private var URL_FORMAT = "%s?starttime_epoch=%s&endtime_epoch=%s"
     private var seekBarJob : Job? = null
+    @Volatile
+    private var isShowing = false
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        palayback_video?.let {
+            if (!isVisibleToUser && palayback_video.isPlaying) {
+                // 滑动该页面时，如果处于播放状态，暂停播放
+                iv_start.performClick()
+            }
+        }
+        isShowing = isVisibleToUser
+    }
 
     override fun startHere(view: View) {
         super.startHere(view)
@@ -261,6 +286,12 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
             iv_start.isClickable = true
             it.start()
             it.seekTo(realOffset.toInt())
+            launch(Dispatchers.Main) {
+                delay(10)
+                if (!isShowing) {
+                    iv_start.performClick()
+                }
+            }
         }
     }
 
@@ -354,5 +385,12 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                 ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.no_data), 2000).show()
             }
         }
+    }
+
+    override fun videoViewNeeResize(marginStart: Int, marginEnd: Int) {
+        var videoLayoutParams = palayback_video.layoutParams as ConstraintLayout.LayoutParams
+        videoLayoutParams.marginStart = marginStart
+        videoLayoutParams.marginEnd = marginEnd
+        palayback_video.layoutParams = videoLayoutParams
     }
 }

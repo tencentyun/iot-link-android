@@ -216,7 +216,7 @@ public class CalendarView extends View {
                 int upY = (int) event.getY();
                 int diffX = Math.abs(upX - mDownX);
                 int diffY = Math.abs(upY - mDownY);
-                if(diffX < mSlop && diffY < mSlop){
+                if(diffX < mSlop && diffY < mSlop && mColumnWidth > 0 && mRowHeight > 0){
                     int column = upX / mColumnWidth;
                     int row    = upY / mRowHeight;
                     onClick(mDays[row][column]);
