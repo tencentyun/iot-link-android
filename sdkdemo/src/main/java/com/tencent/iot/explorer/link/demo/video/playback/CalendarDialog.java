@@ -23,19 +23,36 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
     private ConstraintLayout outsideLayout;
     private ConstraintLayout insideLayout;
     private OnClickedListener onClickedListener;
+    private OnMonthChanged onMonthChanged;
     private List<String> allDate2Tag;
 
     public List<String> getAllDate2Tag() {
         return this.allDate2Tag;
     }
 
+    public void addTagDates(List<String> tagDates) {
+        allDate2Tag.addAll(tagDates);
+        if (calendar != null) {
+            calendar.invalidate();
+        }
+    }
+
     public void setOnClickedListener(OnClickedListener onClickedListener) {
         this.onClickedListener = onClickedListener;
+    }
+
+    public void setOnMonthChanged(OnMonthChanged onMonthChanged) {
+        this.onMonthChanged = onMonthChanged;
     }
 
     public CalendarDialog(Context context, List<String> allDate2Tag) {
         super(context, R.layout.popup_calendar_layout);
         this.allDate2Tag = allDate2Tag;
+    }
+
+    public CalendarDialog(Context context, List<String> allDate2Tag, OnMonthChanged onMonthChanged) {
+        this(context, allDate2Tag);
+        this.onMonthChanged = onMonthChanged;
     }
 
     @Override
@@ -78,6 +95,9 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
     private void setCurDate() {
         month2Show.setText(getContext().getString(R.string.year_and_month_unit,
                 String.valueOf(calendar.getYear()), String.valueOf((calendar.getMonth() + 1))));
+        if (onMonthChanged != null) {
+            onMonthChanged.onMonthChanged(this, String.format("%04d-%02d", calendar.getYear(), calendar.getMonth() + 1));
+        }
     }
 
     @Override
@@ -118,5 +138,9 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
         void onOkClicked(List<String> checkedDates);
         void onOkClickedWithoutDateChecked();
         void onOkClickedCheckedDateWithoutData();
+    }
+
+    public interface OnMonthChanged {
+        void onMonthChanged(CalendarDialog dlg, String dateStr);
     }
 }
