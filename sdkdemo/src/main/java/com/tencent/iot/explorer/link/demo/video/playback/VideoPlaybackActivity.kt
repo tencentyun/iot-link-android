@@ -6,24 +6,21 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.viewpager.widget.ViewPager
 import com.alibaba.fastjson.JSON
 import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
+import com.tencent.iot.explorer.link.demo.common.customView.PageAdapter
 import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.VideoCloudPlaybackFragment
 import com.tencent.iot.explorer.link.demo.video.playback.localPlayback.VideoLocalPlaybackFragment
-import com.tencent.iot.explorer.link.demo.common.customView.PageAdapter
 import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.android.synthetic.main.activity_video_playback.*
 import kotlinx.android.synthetic.main.activity_video_playback.v_title
 import kotlinx.android.synthetic.main.activity_video_preview.*
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
+import kotlinx.android.synthetic.main.fragment_video_local_playback.layout_video
 import kotlinx.android.synthetic.main.title_layout.*
 import java.util.*
 
@@ -46,23 +43,24 @@ class VideoPlaybackActivity : VideoBaseActivity() {
         mPageList.add(page1)
         mPageList.add(page2)
         mAdapter = PageAdapter(this.supportFragmentManager, mPageList)
-        fragment_pager.setAdapter(mAdapter)
+        fragment_pager.adapter = mAdapter
         fragment_pager.setPagingEnabled(false)
-        fragment_pager.setOffscreenPageLimit(2)
-
-        val tabStrip = tab_playback.getChildAt(0) as LinearLayout
-        for (i in 0 until tabStrip.childCount) {
-            tabStrip.getChildAt(i).setOnTouchListener { v, event -> true }
-        }
+        fragment_pager.offscreenPageLimit = 2
+//        // 禁止 tab 点击
+//        val tabStrip = tab_playback.getChildAt(0) as LinearLayout
+//        for (i in 0 until tabStrip.childCount) {
+//            tabStrip.getChildAt(i).setOnTouchListener { v, event -> true }
+//        }
 
         intent.getBundleExtra(VideoConst.VIDEO_CONFIG)?.let {
             var jsonStr = it.getString(VideoConst.VIDEO_CONFIG)
             if (TextUtils.isEmpty(jsonStr)) return@let
 
             page1.devInfo = JSON.parseObject(jsonStr, DevInfo::class.java)
+            page2.devInfo = JSON.parseObject(jsonStr, DevInfo::class.java)
             pageIndex = it.getInt(VideoConst.VIDEO_PAGE_INDEX)
         }
-        fragment_pager.setCurrentItem(pageIndex)
+        fragment_pager.currentItem = pageIndex
     }
 
     override fun setListener() {
@@ -71,25 +69,25 @@ class VideoPlaybackActivity : VideoBaseActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabSelected(tab: TabLayout.Tab) {
-                fragment_pager?.setCurrentItem(tab.position)
+                fragment_pager?.currentItem = tab.position
             }
         })
 
-        fragment_pager.setOnPageChangeListener(pageSelectListener)
-        page1.onOrientationChangedListener = onOrientationChangedListener
         page2.onOrientationChangedListener = onOrientationChangedListener
+        page1.onOrientationChangedListener = onOrientationChangedListener
     }
 
     private var onOrientationChangedListener = object : OnOrientationChangedListener {
         override fun onOrientationChanged(portrait: Boolean) {
-            var layoutParams = layout_video.layoutParams as ConstraintLayout.LayoutParams
+            var layoutParams = page1.layout_video.layoutParams as ConstraintLayout.LayoutParams
+            var localLayoutParams = page2.layout_video.layoutParams as ConstraintLayout.LayoutParams
             var fitSize = 0
             var visibility = View.VISIBLE
 
             if (portrait) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 visibility = View.GONE
                 fitSize = ConstraintLayout.LayoutParams.MATCH_PARENT
             }
@@ -99,19 +97,10 @@ class VideoPlaybackActivity : VideoBaseActivity() {
 
             layoutParams.height = fitSize
             layoutParams.width = fitSize
-            layout_video.layoutParams = layoutParams
-        }
-    }
-
-    private var pageSelectListener = object : ViewPager.OnPageChangeListener{
-        override fun onPageScrollStateChanged(state: Int) {}
-
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            tab_playback?.setScrollPosition(position, positionOffset, true)
-        }
-
-        override fun onPageSelected(position: Int) {
-            tab_playback.getTabAt(position)?.select()
+            localLayoutParams.height = fitSize
+            localLayoutParams.width = fitSize
+            page1.layout_video.layoutParams = layoutParams
+            page2.layout_video.layoutParams = localLayoutParams
         }
     }
 
