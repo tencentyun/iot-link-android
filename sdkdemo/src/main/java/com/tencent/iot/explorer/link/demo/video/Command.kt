@@ -45,5 +45,10 @@ class Command {
         fun getTwoWayRadio(channel: Int): String {
             return "channel=${channel}"
         }
+
+        fun getMonthDates(channel: Int, time: String): String {
+            // yyyymm 年月
+            return "action=inner_define&channel=${channel}&cmd=get_month_record&time=${time}"
+        }
     }
 }
