@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback
 import android.media.MediaPlayer
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
@@ -46,6 +47,18 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     private lateinit var presenter: EventPresenter
     private var URL_FORMAT = "%s?starttime_epoch=%s&endtime_epoch=%s"
     private var seekBarJob : Job? = null
+    @Volatile
+    private var isShowing = false
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        palayback_video?.let {
+            if (!isVisibleToUser && palayback_video.isPlaying) {
+                // 滑动该页面时，如果处于播放状态，暂停播放
+                iv_start.performClick()
+            }
+        }
+        isShowing = isVisibleToUser
+    }
 
     override fun startHere(view: View) {
         super.startHere(view)
@@ -261,6 +274,12 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
             iv_start.isClickable = true
             it.start()
             it.seekTo(realOffset.toInt())
+            launch(Dispatchers.Main) {
+                delay(10)
+                if (!isShowing) {
+                    iv_start.performClick()
+                }
+            }
         }
     }
 
