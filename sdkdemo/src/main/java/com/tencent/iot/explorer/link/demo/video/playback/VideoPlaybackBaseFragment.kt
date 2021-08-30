@@ -5,7 +5,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.layout_control
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.layout_video
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.palayback_video
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.playback_control
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.playback_control_orientation
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.v_space
+import kotlinx.android.synthetic.main.fragment_video_local_playback.*
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,6 +28,8 @@ open class VideoPlaybackBaseFragment: BaseFragment(), CoroutineScope by MainScop
     }
 
     override fun startHere(view: View) {
+        playback_control.visibility = View.GONE
+        top_control_layout?.visibility = View.GONE
         playback_control_orientation.setOnClickListener {
             portrait = !portrait
             onOrientationChangedListener?.onOrientationChanged(portrait)
@@ -45,19 +53,37 @@ open class VideoPlaybackBaseFragment: BaseFragment(), CoroutineScope by MainScop
             videoLayoutParams.marginStart = dp2px(marginWidth)
             videoLayoutParams.marginEnd = dp2px(marginWidth)
             palayback_video.layoutParams = videoLayoutParams
+
+            if (!portrait) {
+                iv_video_back?.visibility = View.VISIBLE
+                tv_video_title?.visibility = View.VISIBLE
+            } else {
+                iv_video_back?.visibility = View.GONE
+                tv_video_title?.visibility = View.GONE
+            }
         }
 
         layout_video.setOnClickListener {
             if (playback_control.visibility == View.VISIBLE) {
                 playback_control.visibility = View.GONE
+                top_control_layout?.visibility = View.GONE
                 job?.let {
                     it.cancel()
                 }
             } else {
                 playback_control.visibility = View.VISIBLE
+                top_control_layout?.visibility = View.VISIBLE
+                if (!portrait) {
+                    iv_video_back?.visibility = View.VISIBLE
+                    tv_video_title?.visibility = View.VISIBLE
+                } else {
+                    iv_video_back?.visibility = View.GONE
+                    tv_video_title?.visibility = View.GONE
+                }
                 job = launch {
                     delay(5 * 1000)
                     playback_control.visibility = View.GONE
+                    top_control_layout?.visibility = View.GONE
                 }
             }
         }
