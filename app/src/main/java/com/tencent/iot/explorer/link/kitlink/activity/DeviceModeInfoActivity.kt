@@ -64,7 +64,7 @@ class DeviceModeInfoActivity : BaseActivity(), MyCallback {
             if (devModeInfo.define == null) return
 
             var type = devModeInfo.define!!.get("type")
-            if (type == "bool" || type == "enum") {
+            if (type == "bool" || type == "enum" || type == "stringenum") {
                 showMapDialog(pos, devModeInfo)
             } else if (type == "int") {
                 showNumDialog(true, pos, devModeInfo)
