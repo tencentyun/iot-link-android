@@ -47,7 +47,7 @@ class ControlPanel {
 
     fun isEnumType(): Boolean {
         return when (valueType) {
-            "enum" -> true
+            "enum", "stringenum" -> true
             else -> false
         }
     }
