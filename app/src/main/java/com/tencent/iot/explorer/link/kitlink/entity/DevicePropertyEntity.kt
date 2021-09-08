@@ -79,7 +79,21 @@ class DevicePropertyEntity {
 
     fun getValue(): String {
         return when {
-            isEnumType() -> value?.toString() ?: "0"
+            isEnumType() -> {
+                if (valueType == "enum") {
+                    value?.toString() ?: "0"
+                } else {
+                    var ret = "0"
+                    enumEntity?.mapping?.keys?.let {
+                        for (key in it) {
+                            ret = key
+                            break
+                        }
+                    }
+                    ret
+                    value?.toString() ?: ret
+                }
+            }
             isNumberType() -> value?.toString()?.toDouble()?.toInt()?.toString()
                 ?: numberEntity!!.min.toDouble().toInt().toString()
             isTimestampType() -> value?.toString() ?: "0"
@@ -134,7 +148,7 @@ class DevicePropertyEntity {
     }
 
     fun isEnumType(): Boolean {
-        if (valueType == "enum") {
+        if (valueType == "enum" || valueType == "stringenum") {
             return true
         }
         return false
