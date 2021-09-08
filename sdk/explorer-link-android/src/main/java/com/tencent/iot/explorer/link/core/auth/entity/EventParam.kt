@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.auth.entity
 
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 
@@ -20,7 +21,7 @@ class EventParam {
             "int", "float" -> {
                 productDefine = JsonManager.parseJson(define, NumberDefine::class.java)
             }
-            "enum" -> {
+            "enum", "stringenum" -> {
                 productDefine = JsonManager.parseJson(define, EnumDefine::class.java)
             }
             "bool" -> {
@@ -58,7 +59,7 @@ class EventParam {
 
     fun isEnumType(): Boolean {
         return when (getType()) {
-            "enum" -> true
+            "enum", "stringenum" -> true
             else -> false
         }
     }

@@ -426,7 +426,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
             devOption.id = devModeInfo.id
             devOption.res = res
             var type = devModeInfo.define!!.get("type")
-            if (type == "bool" || type == "enum") {
+            if (type == "bool" || type == "enum" || type == "stringenum") {
                 var mapJson = devModeInfo.define!!.getJSONObject("mapping")
                 devOption.mapJson = mapJson
                 devOption.type = DevOption.TYPE_LIST
@@ -445,7 +445,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
             for (devData in dev.deviceDataList) {
                 if (devModeInfo.id == devData.id) {
                     var type = devModeInfo.define!!.get("type")
-                    if (type == "bool" || type == "enum") {
+                    if (type == "bool" || type == "enum" || type == "stringenum") {
                         var mapJson = devModeInfo.define!!.getJSONObject("mapping")
                         if (!TextUtils.isEmpty(devData.value)) {
                             devOption.value = mapJson.getString(devData.value)
@@ -469,7 +469,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
             if (!hasValue) {
                 var initData = DeviceDataEntity()
                 initData.id = devModeInfo.id
-                if (type == "bool" || type == "enum") {
+                if (type == "bool" || type == "enum" || type == "stringenum") {
 
                 } else if (type == "int" || type == "float") {
 
