@@ -164,7 +164,7 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
                         if (devModeInfo.id == task.actionId) {
                             task.taskTip = devModeInfo.name
                             var type = devModeInfo.define!!.get("type")
-                            if (type == "bool" || type == "enum") {
+                            if (type == "bool" || type == "enum" || type == "stringenum") {
                                 var mapJson = devModeInfo.define!!.getJSONObject("mapping")
                                 for (key in mapJson.keys) {
                                     if (key == task.taskKey) {
