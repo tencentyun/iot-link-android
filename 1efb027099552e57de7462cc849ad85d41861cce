@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c236681b_3fb8ec25",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-09-09T12:30:26Z",
+      "side": 1,
+      "message": "流程图可以引到explorer-link-rtc的README文档中去，用户可能看不到这里。",
+      "revId": "1efb027099552e57de7462cc849ad85d41861cce",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
