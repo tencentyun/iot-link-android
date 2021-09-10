@@ -27,6 +27,18 @@
             android:gravity="center"
             android:text="@string/add_device" />
 
+        <TextView
+            android:id="@+id/tv_show_all_device"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:textSize="16sp"
+            android:textColor="@color/black_333333"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/show_all_device" />
+            />
+
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
