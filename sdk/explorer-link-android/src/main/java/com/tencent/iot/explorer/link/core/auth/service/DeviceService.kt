@@ -148,6 +148,18 @@ internal class DeviceService : BaseService(), DeviceImpl {
     }
 
     /**
+     * 获取所有设备
+     */
+    override fun allDevices(token: String, platformId: String, offset: Int, limit: Int, callback: MyCallback) {
+        val param = tokenParams("AppGetVirtualBindDeviceList")
+        param["BindPlatformId"] = platformId
+        param["Offset"] = offset
+        param["Limit"] = limit
+        param["AccessToken"] = token
+        tokenPost(param, callback, RequestCode.all_device)
+    }
+
+    /**
      * 获取设备在线状态
      */
     override fun deviceOnlineStatus(deviceIds: ArrayList<String>, callback: MyCallback) {
