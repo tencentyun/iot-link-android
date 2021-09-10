@@ -16,7 +16,8 @@
 
     <string name="add_device">添加设备</string>
     <string name="device_list">设备列表</string>
-
+    <string name="show_all_device">显示所有设备</string>
+    <string name="no_devices">没有设备</string>
     <string name="scan_add">扫码添加</string>
     <string name="smart_config">智能配网</string>
     <string name="soft_ap">自助配网</string>
