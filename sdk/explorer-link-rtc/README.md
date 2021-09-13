@@ -46,4 +46,4 @@ TRTCVideoCallActivity.startBeingCall(Context context, RoomKey roomKey, String be
 ##### 连连 APP 呼叫 Android 设备端
 
 时序图：
-![UserCallDeviceUML](media/UserCallDeviceUML.png)
+![UserCallDeviceUML](media/UserCallDeviceUML.jpg)
