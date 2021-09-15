@@ -8,6 +8,8 @@ import android.content.pm.ActivityInfo
 import android.graphics.SurfaceTexture
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.text.TextUtils
 import android.util.Log
 import android.view.Surface
@@ -39,6 +41,7 @@ import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
+import kotlinx.android.synthetic.main.dash_board_layout.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
@@ -82,6 +85,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     @Volatile
     private var showVideoTime = 0L
     private var volumeChangeObserver: VolumeChangeObserver? = null
+    private val MSG_UPDATE_HUD = 1
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
@@ -124,7 +128,11 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         }
 
         startPlayer()
-
+        if (player != null) {
+            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
+        } else {
+            mHandler.removeMessages(MSG_UPDATE_HUD)
+        }
         //实例化对象并设置监听器
         volumeChangeObserver = VolumeChangeObserver(this)
         volumeChangeObserver?.setVolumeChangeListener(this)
@@ -555,6 +563,31 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     override fun onVolumeChanged(volume: Int) {
         if (audioAble) {
             player?.setVolume(volume.toFloat(), volume.toFloat())
+        }
+    }
+
+    private val mHandler: Handler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                MSG_UPDATE_HUD -> {
+                    val videoCachedDuration = player.videoCachedDuration
+                    val audioCachedDuration = player.audioCachedDuration
+                    val videoCachedBytes = player.videoCachedBytes
+                    val audioCachedBytes = player.audioCachedBytes
+                    val tcpSpeed = player.tcpSpeed
+
+                    tv_a_cache.text = String.format(Locale.US, "%s, %s",
+                        CommonUtils.formatedDurationMilli(audioCachedDuration),
+                        CommonUtils.formatedSize(audioCachedBytes))
+                    tv_v_cache.text = String.format(Locale.US, "%s, %s",
+                        CommonUtils.formatedDurationMilli(videoCachedDuration),
+                        CommonUtils.formatedSize(videoCachedBytes))
+                    tv_tcp_speed.text = String.format(Locale.US, "%s",
+                        CommonUtils.formatedSpeed(tcpSpeed, 1000))
+                    removeMessages(MSG_UPDATE_HUD)
+                    sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
+                }
+            }
         }
     }
 }
