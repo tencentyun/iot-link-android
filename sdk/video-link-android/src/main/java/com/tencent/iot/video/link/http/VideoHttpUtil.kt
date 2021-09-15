@@ -53,7 +53,7 @@ object VideoHttpUtil {
 
                     // 添加通用header参数
                     for ((key, value) in headerParams.entries) {
-                        addRequestProperty(key, value.toString() + "")
+                        addRequestProperty(key, (value.toString() + "").replace("\n", ""))
                     }
 
                     outputStream?.run {
