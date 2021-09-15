@@ -7,10 +7,10 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.core.entity.TimeBlock
-import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeBlockInfo
+import com.tencent.iot.explorer.link.demo.core.entity.TimeBlock
+import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -108,6 +108,41 @@ class CommonUtils {
 //        localContentValues.put("_data", paramFile.getAbsolutePath())
 //        localContentValues.put("_size", paramLong)
             return localContentValues
+        }
+
+        fun formatedDurationMilli(duration: Long): String {
+            return if (duration >= 1000) {
+                String.format(Locale.US, "%.2f sec", duration.toFloat() / 1000)
+            } else {
+                String.format(Locale.US, "%d msec", duration)
+            }
+        }
+
+        fun formatedSpeed(bytes: Long, elapsed_milli: Long): String {
+            if (elapsed_milli <= 0) {
+                return "0 B/s"
+            }
+            if (bytes <= 0) {
+                return "0 B/s"
+            }
+            val bytes_per_sec = bytes.toFloat() * 1000f / elapsed_milli
+            return if (bytes_per_sec >= 1000 * 1000) {
+                String.format(Locale.US, "%.2f MB/s", bytes_per_sec / 1000 / 1000)
+            } else if (bytes_per_sec >= 1000) {
+                String.format(Locale.US, "%.1f KB/s", bytes_per_sec / 1000)
+            } else {
+                String.format(Locale.US, "%d B/s", bytes_per_sec.toLong())
+            }
+        }
+
+        fun formatedSize(bytes: Long): String? {
+            return if (bytes >= 100 * 1000) {
+                String.format(Locale.US, "%.2f MB", bytes.toFloat() / 1000 / 1000)
+            } else if (bytes >= 100) {
+                String.format(Locale.US, "%.1f KB", bytes.toFloat() / 1000)
+            } else {
+                String.format(Locale.US, "%d B", bytes)
+            }
         }
     }
 }
