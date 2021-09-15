@@ -36,6 +36,15 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="10dp">
 
+            <include
+                android:id="@+id/ll_dash_board"
+                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/iv_orientation"
+                layout="@layout/dash_board_layout" />
+
             <com.tencent.iot.explorer.link.demo.common.customView.RoundImageView
                 android:id="@+id/iv_orientation_back"
                 android:layout_width="32dp"
