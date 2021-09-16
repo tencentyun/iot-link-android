@@ -575,19 +575,19 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 MSG_UPDATE_HUD -> {
-                    val videoCachedDuration = player.videoCachedDuration
-                    val audioCachedDuration = player.audioCachedDuration
-                    val videoCachedBytes = player.videoCachedBytes
-                    val audioCachedBytes = player.audioCachedBytes
-                    val tcpSpeed = player.tcpSpeed
+                    val videoCachedDuration = player?.videoCachedDuration
+                    val audioCachedDuration = player?.audioCachedDuration
+                    val videoCachedBytes = player?.videoCachedBytes
+                    val audioCachedBytes = player?.audioCachedBytes
+                    val tcpSpeed = player?.tcpSpeed
 
-                    tv_a_cache.text = String.format(Locale.US, "%s, %s",
+                    tv_a_cache?.text = String.format(Locale.US, "%s, %s",
                         CommonUtils.formatedDurationMilli(audioCachedDuration),
                         CommonUtils.formatedSize(audioCachedBytes))
-                    tv_v_cache.text = String.format(Locale.US, "%s, %s",
+                    tv_v_cache?.text = String.format(Locale.US, "%s, %s",
                         CommonUtils.formatedDurationMilli(videoCachedDuration),
                         CommonUtils.formatedSize(videoCachedBytes))
-                    tv_tcp_speed.text = String.format(Locale.US, "%s",
+                    tv_tcp_speed?.text = String.format(Locale.US, "%s",
                         CommonUtils.formatedSpeed(tcpSpeed, 1000))
                     removeMessages(MSG_UPDATE_HUD)
                     sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
