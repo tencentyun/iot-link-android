@@ -141,7 +141,12 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 App.data.accessInfo!!.productId, presenter.getDeviceName(), "")
             if (started != 0) {
                 launch(Dispatchers.Main) {
-                    var errInfo = getString(R.string.error_with_code, id, started.toString())
+                    var errInfo = ""
+                    if (started.toString() == "-1007") {
+                        errInfo = getString(R.string.xp2p_err_version)
+                    } else {
+                        errInfo = getString(R.string.error_with_code, id, started.toString())
+                    }
                     Toast.makeText(this@VideoPreviewActivity, errInfo, Toast.LENGTH_SHORT).show()
                 }
                 return@Runnable
