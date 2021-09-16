@@ -5,10 +5,7 @@ buildscript {
     ext.kotlin_version = '1.4.32'
     repositories {
         google()
-        jcenter()
-        maven{
-            url "https://oss.sonatype.org/content/groups/public"
-        }
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
@@ -24,10 +21,9 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
-        // 添加如下 maven 仓库地址--- 腾讯对象存储
+        mavenCentral()
         maven {
-            url "https://dl.bintray.com/tencentqcloudterminal/maven"
+            url "https://maven.aliyun.com/repository/public"
         }
         // SNAPSHOT
         maven {
