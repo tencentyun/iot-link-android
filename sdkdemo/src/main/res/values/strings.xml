@@ -97,6 +97,7 @@
     <string name="disconnected_and_reconnecting">%s 通道断开，正在重连</string>
     <string name="connected">%s 通道建立成功</string>
     <string name="error_with_code">%s 连接错误码 %s，通道断开</string>
+    <string name="xp2p_err_version">APP SDK 版本与设备端 SDK 版本号不匹配，版本号需前两位保持一致</string>
     <string name="command_with_error">执行信令 %s 不成功</string>
     <string name="loading">加载中</string>
 
