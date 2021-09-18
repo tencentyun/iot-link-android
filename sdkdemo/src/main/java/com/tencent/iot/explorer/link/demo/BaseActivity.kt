@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.Watermark
 import com.tencent.iot.explorer.link.demo.core.activity.MainActivity
+import com.tencent.xnet.XP2P
 
 /**
  * baseActivity
@@ -57,7 +58,7 @@ abstract class BaseActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //在setContentView()后调用
         startHere()
-        Watermark.getInstance().show(this, BuildConfig.SDKDemoCommitID)
+        Watermark.getInstance().show(this, BuildConfig.SDKDemoCommitID + "    xp2p: " + XP2P.getVersion())
     }
 
     override fun onResume() {
