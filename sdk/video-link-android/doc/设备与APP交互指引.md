@@ -50,53 +50,50 @@ int postCommandRequestWithAsync(const char *id, const unsigned char *command, si
     * 查询设备本地录像列表:
       * 按时间查询 `action=inner_define&channel=0&cmd=get_record_index&start_time=000&end_time=111`
 
-		    ```
-	    参数说明：start_time 和 end_time 秒为单位，差值不得小于5s，UNIX时间戳
-	    设备返回的json结构：
-	    {"video_list":	[{
-								"start_time":	"<unix时间戳>",
-								"end_time":	"<unix时间戳>"
-							}, 
-							{
-								"start_time":	"<unix时间戳>",
-								"end_time":	"<unix时间戳>"
-							}]
+		```
+		参数说明：start_time 和 end_time 秒为单位，差值不得小于5s，UNIX时间戳
+		设备返回的json结构：
+		{
+		    "video_list":[
+			{
+			    "start_time":"&lt;unix时间戳&gt;",
+			    "end_time":"&lt;unix时间戳&gt;"
+			},
+			{
+			    "start_time":"&lt;unix时间戳&gt;",
+			    "end_time":"&lt;unix时间戳&gt;"
 			}
-
-	   	 ```
+		    ]
+		}
+		```
       * 按月查询 `action=inner_define&channel=0&cmd=get_month_record&time=yyyymm`
 		    
-		    ```
-  	    参数说明：
-  	       yyyymm中前四位是年份，后两位是月份；
-  	       xxxx：表示32位的数字，从低位到高位每一比特代表月份的第几天是否有录像；例如：8320（0010000010000000）表示8号和14号有录像；
-	    设备返回的json结构：
-	    {"video_list"："xxxx"}
-
-	   	 ```
-
+		```
+		参数说明：
+		yyyymm中前四位是年份，后两位是月份；
+		xxxx：表示32位的数字，从低位到高位每一比特代表月份的第几天是否有录像；例如：8320（0010000010000000）表示8号和14号有录像；
+		设备返回的json结构：
+		{"video_list"："xxxx"}
+		```
       * 暂停回放 `action=inner_define&channel=xxx&cmd=playback_pause`
 		    
-		    ```
-  		    设备返回的json结构：
-		     {"status":"code"}
-
-	   		 ```
+		```
+		设备返回的json结构：
+		{"status":"code"}
+		```
       * 继续回放 `action=inner_define&channel=xxx&cmd=playback_resume`
 		    
-		    ```
-  		    设备返回的json结构：
-		     {"status":"code"}
-
-	   		 ```
+		```
+		设备返回的json结构：
+		{"status":"code"}
+		```
       * 录像进度条滑动 `action=inner_define&channel=xxx&cmd=playback_seek&time=ssss`
 		    
-		    ```
-  	       参数说明：ssss是UNIX时间戳,单位s
-  	         	设备返回的json结构：
-		     {"status":"code"}
-
-	   		 ```
+		```
+		参数说明：ssss是UNIX时间戳,单位s
+		设备返回的json结构：
+		{"status":"code"}
+		```
 	   	 
 
     * 获取ipc设备状态,判断是否可以请求视频流(type区分直播(live)和对讲(voice)):`action=inner_define&channel=0&cmd=get_device_st&type=(voice/live)&quality=standard`
