@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.demo.video.playback.localPlayback
 
 import android.graphics.SurfaceTexture
-import android.media.MediaPlayer
 import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
@@ -17,7 +16,6 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
-import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeBlockInfo
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineViewChangeListener
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
@@ -67,7 +65,7 @@ private var keepAliveThreadRuning = true
 class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.SurfaceTextureListener, XP2PCallback, CoroutineScope by MainScope() {
     private var TAG = VideoLocalPlaybackFragment::class.java.simpleName
     var devInfo: DevInfo? = null
-    private lateinit var player : IjkMediaPlayer
+    private var player : IjkMediaPlayer = IjkMediaPlayer()
     private lateinit var surface: Surface
     @Volatile
     private var currentPostion = -1L // 小于 0 不需要恢复录像的进度，大于等于 0 需要恢复录像的进度
@@ -83,7 +81,9 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private var keepEndTime = 0L
     private var filePath: String? = null
     @Volatile
-    private var connected = false;
+    private var connected = false
+    @Volatile
+    private var isShowing = false
 
     private fun sendCmd(id: String, cmd: String):String {
         if (connected)
@@ -91,11 +91,24 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         return ""
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        player?.let {
+            if (!isVisibleToUser && currentPlayerState) {
+                Log.d(TAG, "setUserVisibleHint playVideo isVisibleToUser $isVisibleToUser")
+                // 滑动该页面时，如果处于播放状态，暂停播放
+                launch (Dispatchers.Main) {
+                    iv_start.performClick()
+                }
+            }
+        }
+        isShowing = isVisibleToUser
+        Log.d(TAG, "setUserVisibleHint isShowing $isShowing")
+    }
+
     override fun startHere(view: View) {
         super.startHere(view)
         tv_date.text = dateFormat.format(System.currentTimeMillis())
         setListener()
-        player = IjkMediaPlayer()
         launch(Dispatchers.Main) {
             delay(100)  // 延迟一秒再进行连接，保证存在设备信息
             startConnect()
@@ -118,6 +131,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         iv_start.setOnClickListener {
             devInfo?:let { return@setOnClickListener }
             var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
+            Log.d(TAG, "setOnClickListener currentPlayerState $currentPlayerState")
 
             if (currentPlayerState) {
                 launch (Dispatchers.IO) {
@@ -249,7 +263,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
             launch(Dispatchers.Main) {
                 var resp = requestTagDateInfo(it)
-                L.d(TAG, "resp $resp")
+                Log.d(TAG, "resp $resp")
                 if (TextUtils.isEmpty(resp)) return@launch
 
                 try {
@@ -379,7 +393,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
         var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
         var timeStr = formateDateParam(dateStr)
-        L.d(TAG, "request timeStr $timeStr")
+        Log.d(TAG, "request timeStr $timeStr")
         var command = Command.getMonthDates(devInfo!!.channel, timeStr)
         if (TextUtils.isEmpty(command)) return ""
         return sendCmd(id, command)
@@ -407,12 +421,16 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     private fun playVideo(startTime: Long, endTime: Long, offset: Long) {
-        L.d(TAG, "startTime $startTime endTime $endTime offset $offset")
+        Log.d(TAG, "startTime $startTime endTime $endTime offset $offset")
         keepStartTime = startTime
         keepEndTime = endTime
         devInfo?.let {
-            setPlayerUrl(Command.getLocalVideoUrl(it.channel, startTime, endTime), offset)
+            Log.d(TAG, "isShowing $isShowing")
             launch (Dispatchers.Main) {
+                delay(1000)
+                if (!isShowing) currentPlayerState = false
+                Log.d(TAG, "playVideo currentPlayerState $currentPlayerState")
+                setPlayerUrl(Command.getLocalVideoUrl(it.channel, startTime, endTime), offset)
                 tv_all_time.text = CommonUtils.formatTime(endTime * 1000 - startTime * 1000)
                 video_seekbar.max = (endTime - startTime).toInt()
             }
@@ -423,7 +441,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
         player?.let {
             val url = urlPrefix + suffix
-            L.d(TAG, "setPlayerUrl url $url")
+            Log.d(TAG, "setPlayerUrl url $url")
             it.reset()
 
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
