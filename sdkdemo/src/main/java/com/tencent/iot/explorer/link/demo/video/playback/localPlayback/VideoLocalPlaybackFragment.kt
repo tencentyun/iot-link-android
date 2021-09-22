@@ -82,6 +82,14 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private var keepStartTime = 0L
     private var keepEndTime = 0L
     private var filePath: String? = null
+    @Volatile
+    private var connected = false;
+
+    private fun sendCmd(id: String, cmd: String):String {
+        if (connected)
+            return XP2P.postCommandRequestSync(id, cmd.toByteArray(), cmd.toByteArray().size.toLong(), 2 * 1000 * 1000)
+        return ""
+    }
 
     override fun startHere(view: View) {
         super.startHere(view)
@@ -114,7 +122,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             if (currentPlayerState) {
                 launch (Dispatchers.IO) {
                     var stopCommand = Command.pauseLocalVideoUrl(devInfo!!.channel)
-                    var resp = XP2P.postCommandRequestSync(id, stopCommand.toByteArray(), stopCommand.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                    var resp = sendCmd(id, stopCommand)
                     var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
                     if (commandResp != null && commandResp.status == 0) {
                         launch (Dispatchers.Main) {
@@ -130,7 +138,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             } else {
                 launch (Dispatchers.IO) {
                     var startCommand = Command.resumeLocalVideoUrl(devInfo!!.channel)
-                    var resp = XP2P.postCommandRequestSync(id, startCommand.toByteArray(), startCommand.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                    var resp = sendCmd(id, startCommand)
                     var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
                     if (commandResp != null && commandResp.status == 0) {
                         launch (Dispatchers.Main) {
@@ -159,10 +167,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                         playVideo(blockTime.startTime.time/1000, blockTime.endTime.time/1000, offest/1000)
                         return@onChange
                     }
-                }
-
-                // 如果对应时间段没有视频内容
-                palayback_video.setVideoURI(Uri.parse(""))
+                }                    
             }
         }
     }
@@ -377,7 +382,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         L.d(TAG, "request timeStr $timeStr")
         var command = Command.getMonthDates(devInfo!!.channel, timeStr)
         if (TextUtils.isEmpty(command)) return ""
-        return XP2P.postCommandRequestSync(id, command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+        return sendCmd(id, command)
     }
 
     private fun refreshDateTime(date: Date) {
@@ -386,7 +391,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
         var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
         var command = Command.getDayTimeBlocks(devInfo!!.channel, date)
-        var resp = XP2P.postCommandRequestSync(id, command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+        var resp = sendCmd(id, command)
 
         if (TextUtils.isEmpty(resp)) return
         var devVideoHistory = JSONObject.parseObject(resp, DevVideoHistory::class.java)
@@ -442,7 +447,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                     var seekCommand = Command.seekLocalVideo(dev.channel, offset)
                     var id = "${App.data.accessInfo?.productId}/${dev.deviceName}"
 
-                    var seekResp = XP2P.postCommandRequestSync(id, seekCommand.toByteArray(), seekCommand.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                    var seekResp = sendCmd(id, seekCommand)
                     var commandResp = JSON.parseObject(seekResp, CommandResp::class.java)
                     L.e(TAG, "seekCommandResp code " + commandResp?.status)
                 }
@@ -571,6 +576,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             launch (Dispatchers.Main) {
                 Toast.makeText(context, getString(R.string.error_with_code, id, msg), Toast.LENGTH_SHORT).show()
             }
+            connected = false
 
         } else if (event == 1004 || event == 1005) {
             countDownLatchs.get(id)?.let {
@@ -581,6 +587,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             launch (Dispatchers.Main) {
                 Toast.makeText(context, getString(R.string.connected, id), Toast.LENGTH_SHORT).show()
             }
+            connected = true
         }
     }
 
