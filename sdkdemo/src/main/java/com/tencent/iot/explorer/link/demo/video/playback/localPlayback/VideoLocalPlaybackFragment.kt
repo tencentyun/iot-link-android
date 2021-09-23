@@ -107,6 +107,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
     override fun startHere(view: View) {
         super.startHere(view)
+        IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG)
         tv_date.text = dateFormat.format(System.currentTimeMillis())
         setListener()
         launch(Dispatchers.Main) {
@@ -130,6 +131,8 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
         iv_start.setOnClickListener {
             devInfo?:let { return@setOnClickListener }
+            if (TextUtils.isEmpty(tv_all_time.text.toString())) return@setOnClickListener
+
             var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
             Log.d(TAG, "setOnClickListener currentPlayerState $currentPlayerState")
 
@@ -167,6 +170,19 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             }
         }
         video_seekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
+        player.setOnCompletionListener(onCompletionListener)
+    }
+
+    private var onCompletionListener = object: IMediaPlayer.OnCompletionListener {
+        override fun onCompletion(mp: IMediaPlayer?) {
+            Log.d(TAG, "onCompletion")
+            iv_start.setImageResource(R.mipmap.start)
+            pause_tip_layout.visibility = View.VISIBLE
+            seekBarJob?.cancel()
+            currentPlayerState = false
+            player?.pause()
+            player.seekTo(0)
+        }
     }
 
     private var timeLineViewChangeListener = object : TimeLineViewChangeListener {
@@ -440,7 +456,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private fun setPlayerUrl(suffix: String, offset: Long) {
 
         player?.let {
-            val url = urlPrefix + suffix
+            var url = urlPrefix + suffix
             Log.d(TAG, "setPlayerUrl url $url")
             it.reset()
 
