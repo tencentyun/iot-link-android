@@ -224,7 +224,9 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+        Log.e("XXXB", "onSurfaceTextureAvailable aaaa")
         surface?.let {
+            Log.e("XXXB", "onSurfaceTextureAvailable")
             this.surface = Surface(surface)
             player.setSurface(this.surface)
         }
@@ -414,6 +416,13 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     private fun setPlayerUrl(suffix: String) {
         showTip = false
         startShowVideoTime = System.currentTimeMillis()
+        player.release()
+        launch (Dispatchers.Main) {
+            layout_video_preview?.removeView(v_preview)
+            layout_video_preview?.addView(v_preview, 0)
+        }
+
+        player = IjkMediaPlayer()
         player?.let {
             val url = urlPrefix + suffix
             it.reset()
@@ -424,6 +433,10 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+            Log.e("XXXB", "try set mediacodec")
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
 
             it.setSurface(this.surface)
             it.dataSource = url
@@ -490,6 +503,8 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             TipToastDialog(this, content, 10000).show()
             showTip = true
         }
+        var coder = player?.videoDecoder
+        Log.e("XXXB", "getVideoDecoder $coder")
     }
     override fun fail(msg: String?, errorCode: Int) {}
     override fun commandRequest(id: String?, msg: String?) {}
