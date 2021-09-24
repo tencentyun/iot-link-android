@@ -139,6 +139,10 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
+
         player.dataSource = url
         player.prepareAsync()
         player.start()
