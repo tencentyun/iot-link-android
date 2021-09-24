@@ -32,7 +32,6 @@ import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.fragment_video_local_playback.*
 import kotlinx.android.synthetic.main.fragment_video_local_playback.iv_left_go
 import kotlinx.android.synthetic.main.fragment_video_local_playback.iv_right_go
@@ -454,7 +453,13 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     private fun setPlayerUrl(suffix: String, offset: Long) {
+        player.release()
+        launch (Dispatchers.Main) {
+            layout_video?.removeView(local_palayback_video)
+            layout_video?.addView(local_palayback_video, 0)
+        }
 
+        player = IjkMediaPlayer()
         player?.let {
             var url = urlPrefix + suffix
             Log.d(TAG, "setPlayerUrl url $url")
@@ -470,6 +475,10 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             }
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
+
 
             it.setSurface(this.surface)
             it.dataSource = url
