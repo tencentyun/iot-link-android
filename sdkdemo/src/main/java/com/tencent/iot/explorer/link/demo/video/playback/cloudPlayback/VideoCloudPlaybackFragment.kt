@@ -190,9 +190,15 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                 it.index = pos
                 it.notifyDataSetChanged()
 
+                var endtime = ""
+                if (it.list.get(pos).endTime != 0L) {
+                    endtime = (it.list.get(pos).endTime).toString()
+                } else {
+                    endtime = (System.currentTimeMillis() / 1000).toString()
+                }
                 var url = String.format(URL_FORMAT, presenter.getBaseUrl(),
                     (it.list.get(pos).startTime).toString(),
-                    (it.list.get(pos).endTime).toString())
+                    endtime)
                 playVideo(url, 0)
             }
         }
@@ -229,10 +235,16 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
             date?.let {
                 for (j in 0 until timeLineView!!.timeBlockInfos.size) {
                     var blockTime = timeLineView!!.timeBlockInfos!!.get(j)
-                    if (blockTime.startTime.time <= date.time && blockTime.endTime.time >= date.time) {
+                    if (blockTime.startTime.time <= date.time && (blockTime.endTime.time >= date.time || blockTime.endTime.time == 0L)) {
+                        var endtime = ""
+                        if (blockTime.endTime.time != 0L) {
+                            endtime = (blockTime.endTime.time / 1000).toString()
+                        } else {
+                            endtime = (System.currentTimeMillis() / 1000).toString()
+                        }
                         var url = String.format(URL_FORMAT, baseUrl,
                             (blockTime.startTime.time / 1000).toString(),
-                            (blockTime.endTime.time / 1000).toString())
+                            endtime)
 
                         var offest = date.time - blockTime.startTime.time
                         playVideo(url, offest)
@@ -361,9 +373,15 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                         time_line.timeBlockInfos = dataList
                         time_line.invalidate()
 
+                        var endtime = ""
+                        if (dataList.get(0).endTime.time != 0L) {
+                            endtime = (dataList.get(0).endTime.time / 1000).toString()
+                        } else {
+                            endtime = (System.currentTimeMillis() / 1000).toString()
+                        }
                         var url = String.format(URL_FORMAT, baseUrl,
                             (dataList.get(0).startTime.time / 1000).toString(),
-                            (dataList.get(0).endTime.time / 1000).toString())
+                            endtime)
 
                         playVideo(url, 0)
                     }
