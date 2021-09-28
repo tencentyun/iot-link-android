@@ -511,7 +511,7 @@ class MainActivity : PActivity(), MyCallback {
 
                     if (config != null && !TextUtils.isEmpty(config.Global) && ProductGlobal.isProductGlobalLegal(config.Global)) {
                         var intent = Intent(this@MainActivity, ProductIntroduceActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_INFO, productId)
+                        intent.putExtra(CommonField.PRODUCT_ID, productId)
                         startActivity(intent)
                         return@run
                     }
@@ -570,7 +570,7 @@ class MainActivity : PActivity(), MyCallback {
                             productsList.add(productid!!)
                             if (contains("preview=1")) {
                                 var intent = Intent(this@MainActivity, ProductIntroduceActivity::class.java)
-                                intent.putExtra(CommonField.EXTRA_INFO, productid)
+                                intent.putExtra(CommonField.PRODUCT_ID, productid)
                                 startActivity(intent)
                             } else {
                                 HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
