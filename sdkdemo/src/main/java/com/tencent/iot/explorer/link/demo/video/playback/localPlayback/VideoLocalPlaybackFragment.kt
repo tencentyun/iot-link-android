@@ -24,10 +24,7 @@ import com.tencent.iot.explorer.link.demo.core.entity.DevVideoHistory
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.CommandResp
 import com.tencent.iot.explorer.link.demo.video.DevInfo
-import com.tencent.iot.explorer.link.demo.video.playback.BottomPlaySpeedDialog
-import com.tencent.iot.explorer.link.demo.video.playback.CalendarDialog
-import com.tencent.iot.explorer.link.demo.video.playback.RightPlaySpeedDialog
-import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackBaseFragment
+import com.tencent.iot.explorer.link.demo.video.playback.*
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
@@ -634,8 +631,24 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
+        if (context is VideoPlaybackActivity) {
+            if ((context as VideoPlaybackActivity).isFinishing) {
+                finishAll()
+                return
+            }
+        }
+        player?.let {
+            if (currentPlayerState) {
+                launch (Dispatchers.Main) {
+                    iv_start.performClick()
+                }
+            }
+        }
+    }
+
+    private fun finishAll() {
         player?.release()
 
         if (recordingState) {
