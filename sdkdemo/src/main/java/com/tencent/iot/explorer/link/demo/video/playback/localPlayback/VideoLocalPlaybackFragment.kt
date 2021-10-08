@@ -24,10 +24,7 @@ import com.tencent.iot.explorer.link.demo.core.entity.DevVideoHistory
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.CommandResp
 import com.tencent.iot.explorer.link.demo.video.DevInfo
-import com.tencent.iot.explorer.link.demo.video.playback.BottomPlaySpeedDialog
-import com.tencent.iot.explorer.link.demo.video.playback.CalendarDialog
-import com.tencent.iot.explorer.link.demo.video.playback.RightPlaySpeedDialog
-import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackBaseFragment
+import com.tencent.iot.explorer.link.demo.video.playback.*
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
@@ -625,8 +622,27 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
+        if (context is VideoPlaybackActivity) {
+            if ((context as VideoPlaybackActivity).isFinishing) {
+                Log.e("XXX", "isFinishing")
+                finishAll()
+                return
+            }
+        }
+        Log.e("XXX", "onPause")
+        player?.let {
+            if (currentPlayerState) {
+                launch (Dispatchers.Main) {
+                    iv_start.performClick()
+                }
+            }
+        }
+    }
+
+    private fun finishAll() {
+        Log.e("XXX", "local fragment onDestroy")
         player?.release()
 
         if (recordingState) {
@@ -638,6 +654,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
         App.data.accessInfo?.let { access ->
             devInfo?.let {
+                Log.e("XXX", "local fragment stop")
                 XP2P.stopService("${access.productId}/${it.deviceName}")
             }
         }
