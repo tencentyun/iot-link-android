@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.demo.video.preview
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.SurfaceTexture
 import android.os.Bundle
 import android.text.TextUtils
@@ -43,9 +44,19 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
     lateinit var linearLayoutManager : LinearLayoutManager
     private var adapter : DevPreviewAdapter? = null
     private var tag = VideoMultiPreviewActivity::class.simpleName
+    private var orientation = true
 
     override fun getContentView(): Int {
         return R.layout.activity_video_multi_preview
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter = DevPreviewAdapter(this@VideoMultiPreviewActivity, allDevUrl)
+        gl_video.layoutManager = linearLayoutManager
+        gl_video.adapter = adapter
+        switchOrientation(orientation)
+        playAll()
     }
 
     override fun initView() {
@@ -64,10 +75,6 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
                     if (allDevUrl.size <= 1) column = 1  // 当只有一个元素的时候，网格只有一列
                     gridLayoutManager = GridLayoutManager(this@VideoMultiPreviewActivity, column)
                     linearLayoutManager = LinearLayoutManager(this@VideoMultiPreviewActivity)
-                    adapter = DevPreviewAdapter(this@VideoMultiPreviewActivity, allDevUrl)
-                    gl_video.layoutManager = linearLayoutManager
-                    gl_video.adapter = adapter
-                    playAll()
                 } catch (e : Exception) {
                     e.printStackTrace()
                 }
@@ -81,14 +88,14 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
         if (App.data.accessInfo == null) return
 
         for (i in 0 until allDevUrl.size) {
-            if (allDevUrl.get(i).Status != 1) continue
+            if (allDevUrl[i].Status != 1) continue
 
             var player = IjkMediaPlayer()
-            allDevUrl.get(i).surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+            allDevUrl[i].surfaceTextureListener = object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
                     surface?.let {
-                        allDevUrl.get(i).surface = Surface(surface)
-                        player.setSurface(allDevUrl.get(i).surface)
+                        allDevUrl[i].surface = Surface(surface)
+                        player.setSurface(allDevUrl[i].surface)
                     }
                 }
 
@@ -97,7 +104,7 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
             }
 
-            setPlayerSource(player, allDevUrl.get(i).devName, allDevUrl.get(i).channel)
+            setPlayerSource(player, allDevUrl[i].devName, allDevUrl[i].channel)
             allDevUrl.get(i).player = player
         }
     }
@@ -169,6 +176,7 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
             radio_orientation_h.visibility = View.GONE
             gl_video.layoutManager = gridLayoutManager
         }
+        orientation = orientationV
         adapter?.notifyDataSetChanged()
     }
 
@@ -300,9 +308,12 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
+        finishAll()
+    }
 
+    private fun finishAll() {
         for (devPlayer in allDevUrl) {
             devPlayer.player?.release()
         }
@@ -313,7 +324,6 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
             }
         }
 
-        XP2P.setCallback(null)
         countDownLatchs.clear()
 
         // 关闭所有守护线程
@@ -325,6 +335,12 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        finishAll()
+        XP2P.setCallback(null)
         cancel()
     }
 

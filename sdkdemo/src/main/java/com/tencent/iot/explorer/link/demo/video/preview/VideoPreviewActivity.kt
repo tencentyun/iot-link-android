@@ -91,8 +91,14 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         return R.layout.activity_video_preview
     }
 
-    override fun initView() {
+    override fun onResume() {
+        super.onResume()
+        XP2P.setCallback(this)
         keepAliveThreadRuning = true
+        startPlayer()
+    }
+
+    override fun initView() {
         presenter = EventPresenter(this@VideoPreviewActivity)
         var bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
         bundle?.let {
@@ -123,16 +129,9 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
             XP2P.setQcloudApiCred(it.accessId, it.accessToken)
-            XP2P.setCallback(this)
             audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}")
         }
 
-        startPlayer()
-        if (player != null) {
-            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
-        } else {
-            mHandler.removeMessages(MSG_UPDATE_HUD)
-        }
         //实例化对象并设置监听器
         volumeChangeObserver = VolumeChangeObserver(this)
         volumeChangeObserver?.setVolumeChangeListener(this)
@@ -142,6 +141,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     private fun startPlayer() {
         if (App.data.accessInfo == null || TextUtils.isEmpty(presenter.getDeviceName())) return
         player = IjkMediaPlayer()
+        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
 
         Thread(Runnable {
             var id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
@@ -295,7 +295,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             var dev = DevInfo()
             dev.deviceName = presenter.getDeviceName()
             VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewActivity, dev)
-            finish()
         }
         radio_photo.setOnClickListener {
             ImageSelect.saveBitmap(this@VideoPreviewActivity, v_preview.bitmap)
@@ -532,9 +531,13 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
+        finishPlayer()
+    }
 
+    private fun finishPlayer() {
+        mHandler.removeMessages(MSG_UPDATE_HUD)
         player?.release()
         if (radio_talk.isChecked) speakAble(false)
         if (radio_record.isChecked) {
@@ -545,7 +548,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         App.data.accessInfo?.let {
             XP2P.stopService("${it.productId}/${presenter.getDeviceName()}")
         }
-        XP2P.setCallback(null)
 
         countDownLatchs.clear()
         // 关闭守护线程
@@ -555,6 +557,12 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 it.notify()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        finishPlayer()
+        XP2P.setCallback(null)
         cancel()
         volumeChangeObserver?.unregisterReceiver();
     }
