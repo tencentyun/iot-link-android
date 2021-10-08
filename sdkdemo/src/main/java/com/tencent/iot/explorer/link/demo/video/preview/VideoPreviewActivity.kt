@@ -119,8 +119,12 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
             XP2P.setQcloudApiCred(it.accessId, it.accessToken)
+<<<<<<< HEAD   (6b1cf2 修复CI success)
             XP2P.setCallback(this)
             audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}")
+=======
+            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000)
+>>>>>>> CHANGE (82a812 音频采集工具类暴露采样率设置接口)
         }
 
         startPlayer()
