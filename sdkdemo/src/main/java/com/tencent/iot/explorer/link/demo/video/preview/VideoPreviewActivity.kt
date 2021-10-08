@@ -120,7 +120,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             tv_event_status.setText(R.string.loading)
             XP2P.setQcloudApiCred(it.accessId, it.accessToken)
             XP2P.setCallback(this)
-            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}")
+            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000)
         }
 
         startPlayer()
