@@ -6,6 +6,8 @@ import android.media.MediaFormat;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class PCMEncoder {
@@ -23,19 +25,37 @@ public class PCMEncoder {
     private MediaCodec.BufferInfo encodeBufferInfo;
     private EncoderListener encoderListener;
     private int encodeType = 0;
+    private int sampleRate = 0;
+
+    // 采样频率对照表
+    private static Map<Integer, Integer> samplingFrequencyIndexMap = new HashMap<>();
+
+    static {
+        samplingFrequencyIndexMap.put(96000, 0);
+        samplingFrequencyIndexMap.put(88200, 1);
+        samplingFrequencyIndexMap.put(64000, 2);
+        samplingFrequencyIndexMap.put(48000, 3);
+        samplingFrequencyIndexMap.put(44100, 4);
+        samplingFrequencyIndexMap.put(32000, 5);
+        samplingFrequencyIndexMap.put(24000, 6);
+        samplingFrequencyIndexMap.put(22050, 7);
+        samplingFrequencyIndexMap.put(16000, 8);
+        samplingFrequencyIndexMap.put(12000, 9);
+        samplingFrequencyIndexMap.put(11025, 10);
+        samplingFrequencyIndexMap.put(8000, 11);
+    }
 
     public PCMEncoder(int sampleRate, EncoderListener encoderListener, int encodeFormat) {
         this.encoderListener = encoderListener;
         this.encodeType = encodeFormat;
-        init(sampleRate);
+        this.sampleRate = sampleRate;
+        init();
     }
 
     /**
      * 初始化AAC编码器
-     *
-     * @param sampleRate 采样率
      */
-    private void init(int sampleRate) {
+    private void init() {
         try {
             //参数对应-> mime type、采样率、声道数
             MediaFormat encodeFormat = MediaFormat.createAudioFormat(MediaFormat.MIMETYPE_AUDIO_AAC,
@@ -110,8 +130,8 @@ public class PCMEncoder {
      */
     private void addADTStoPacket(byte[] packet, int packetLen) {
         int profile = 2;  // AAC LC
-        int freqIdx = 8;  // 44.1KHz
         int chanCfg = 2;  // CPE
+        int freqIdx = samplingFrequencyIndexMap.get(sampleRate);
         // filled in ADTS data
         packet[0] = (byte) 0xFF;
         packet[1] = (byte) 0xF9;
