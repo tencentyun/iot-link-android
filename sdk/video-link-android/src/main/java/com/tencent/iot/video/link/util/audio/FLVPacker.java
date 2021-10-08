@@ -7,7 +7,6 @@ import java.util.Arrays;
 public class FLVPacker {
 
     private long pts = 0;
-    private long sudioPts = 0;
     private volatile boolean isHead = false;
 
     public synchronized byte[] getFLV(byte[] data) {
@@ -32,13 +31,13 @@ public class FLVPacker {
             baos.write(0x08);
             // 长度
             baos.write(integerTo3Bytes(data.length + 2));
-            if (sudioPts == 0) {
+            if (pts == 0) {
                 // 时间戳
                 baos.write(0x00);
                 baos.write(0x00);
                 baos.write(0x00);
                 baos.write(0x00);
-                sudioPts = System.currentTimeMillis();
+                pts = System.currentTimeMillis();
             } else {
                 byte[] b = integerTo4Bytes((int) (System.currentTimeMillis() - pts));
                 baos.write(b[1]);
