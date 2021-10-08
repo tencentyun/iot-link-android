@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.demo.common.util
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -118,7 +119,11 @@ object ImageSelect {
 
         context?.let {
             if (!file.exists()) return@let
-            MediaStore.Images.Media.insertImage(it.getContentResolver(), file.absolutePath, file.name, null)
+
+            val values = ContentValues()
+            values.put(MediaStore.Images.Media.DATA, file.absolutePath)
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            it.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
             it.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
         }
         return file
