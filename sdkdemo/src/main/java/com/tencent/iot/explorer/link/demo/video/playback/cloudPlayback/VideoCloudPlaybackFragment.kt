@@ -163,6 +163,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         palayback_video.setOnInfoListener(onInfoListener)
         video_seekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
         palayback_video.setOnErrorListener(onErrorListener)
+        pause_tip_layout.setOnClickListener { iv_start.performClick() }
 
         palayback_video.setOnCompletionListener {
             iv_start.setImageResource(R.mipmap.start)
