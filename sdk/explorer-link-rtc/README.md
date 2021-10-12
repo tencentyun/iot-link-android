@@ -43,7 +43,14 @@ TRTCVideoCallActivity.startBeingCall(Context context, RoomKey roomKey, String be
 可参考app module下的[requestDeviceList](https://github.com/tencentyun/iot-link-android/blob/master/app/src/main/java/com/tencent/iot/explorer/link/App.kt)接口
 
 ## 通话流程梳理
-##### 连连 APP 呼叫 Android 设备端
+##### 连连 APP 呼叫设备端
 
 时序图：
+
 ![UserCallDeviceUML](media/UserCallDeviceUML.jpg)
+
+##### 设备端呼叫连连 APP 
+
+时序图：
+
+![UserCallDeviceUML](media/DeviceCallUserUML.jpg)
