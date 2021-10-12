@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.demo.video.playback.localPlayback
 
 import android.graphics.SurfaceTexture
-import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
 import android.view.Surface
@@ -121,8 +120,6 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         play_speed.setText(R.string.play_speed_1)
         recordView()
         local_palayback_video.surfaceTextureListener = this
-        player.setOnInfoListener(onInfoListener)
-        player.setOnErrorListener(onErrorListener)
         time_line.setTimelineChangeListener(timeLineViewChangeListener)
 
         iv_start.setOnClickListener {
@@ -166,7 +163,6 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             }
         }
         video_seekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
-        player.setOnCompletionListener(onCompletionListener)
     }
 
     private var onCompletionListener = object: IMediaPlayer.OnCompletionListener {
@@ -176,8 +172,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             pause_tip_layout.visibility = View.VISIBLE
             seekBarJob?.cancel()
             currentPlayerState = false
-            player?.pause()
-            player.seekTo(0)
+            playVideo(keepStartTime, keepEndTime, 0)
         }
     }
 
@@ -305,6 +300,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     private fun setListener() {
+        pause_tip_layout.setOnClickListener { iv_start.performClick() }
         iv_video_back.setOnClickListener { }
         playback_control.setOnClickListener {  }
         iv_left_go.setOnClickListener { time_line.last() }
@@ -457,6 +453,9 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         }
 
         player = IjkMediaPlayer()
+        player.setOnInfoListener(onInfoListener)
+        player.setOnErrorListener(onErrorListener)
+        player.setOnCompletionListener(onCompletionListener)
         player?.let {
             var url = urlPrefix + suffix
             Log.d(TAG, "setPlayerUrl url $url")
