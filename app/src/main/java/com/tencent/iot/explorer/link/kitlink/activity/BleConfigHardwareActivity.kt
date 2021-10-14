@@ -1,9 +1,9 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
@@ -71,9 +71,11 @@ class BleConfigHardwareActivity : PActivity() {
         }
 
         if (!TextUtils.isEmpty(productId)) {  // 尝试网络加载
+            Log.e("XXX", "xxx 1")
             loadViewInfo(productId)
         } else {  // 本地加载
             sv_content.visibility = View.VISIBLE
+            Log.e("XXX", "xxx 2")
         }
     }
 
@@ -110,6 +112,7 @@ class BleConfigHardwareActivity : PActivity() {
 
         override fun success(response: BaseResponse, reqCode: Int) {
             sv_content.visibility = View.VISIBLE
+            Log.e("XXX", "resp " + response.data)
             if (!response.isSuccess()) return
 
             response.parse(ProductsConfigResponse::class.java)?.run {

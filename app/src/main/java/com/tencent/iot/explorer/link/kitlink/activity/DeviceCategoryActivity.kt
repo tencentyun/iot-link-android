@@ -141,6 +141,10 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {}
         override fun onBlePushTokenResult(success: Boolean) {}
         override fun onMtuChanged(mtu: Int, status: Int) {}
+        override fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition) {}
+        override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {}
+        override fun onBleUnbindSignInfo(signInfo: String) {}
+        override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {}
     }
 
     private val runnable = Runnable {
@@ -197,10 +201,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 T.show(getString(R.string.no_product_info))
                 return
             }
-            var intent = Intent(this@DeviceCategoryActivity, BleConfigHardwareActivity::class.java)
-            intent.putExtra(CommonField.PRODUCT_ID, dev.productId)
-            App.data.bleDevice = dev
-            this@DeviceCategoryActivity.startActivity(intent)
+            BleConfigHardwareActivity.startWithProductid(this@DeviceCategoryActivity, dev.productId)
             BleConfigService.get().stopScanBluetoothDevices()
         }
     }
@@ -231,6 +232,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
             }
             RequestCode.scan_bind_device, RequestCode.sig_bind_device-> {
                 if (response.isSuccess()) {
+                    Log.e("XXX", "data " + response.data.toString())
                     T.show(getString(R.string.add_sucess)) //添加成功
                     App.data.setRefreshLevel(2)
                     finish()
