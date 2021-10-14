@@ -165,11 +165,13 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
             tmpCountDownLatch.await()
 
-            urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
-            if (!TextUtils.isEmpty(urlPrefix)) {
-                player?.let {
-                    resetPlayer()
-                    keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
+                urlPrefix = it
+                if (!TextUtils.isEmpty(urlPrefix)) {
+                    player?.let {
+                        resetPlayer()
+                        keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+                    }
                 }
             }
         }).start()
@@ -209,8 +211,10 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 tmpCountDownLatch.await()
                 Log.d(tag, "id=${id}, tmpCountDownLatch do not wait any more")
 
-                urlPrefix = XP2P.delegateHttpFlv(id)
-                if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
+                XP2P.delegateHttpFlv(id)?.let {
+                    urlPrefix = it
+                    if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
+                }
             }
         }.start()
     }
@@ -235,7 +239,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             if (able) {
                 var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
                 var repStatus = XP2P.postCommandRequestSync("${accessInfo.productId}/${presenter.getDeviceName()}",
-                    command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                    command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000) ?:""
 
                 launch(Dispatchers.Main) {
                     var retContent = StringBuilder(repStatus).toString()
@@ -338,7 +342,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 App.data.accessInfo?.let {
                     if (command.length <= 0) return@Runnable
                     var retContent = XP2P.postCommandRequestSync("${it.productId}/${presenter.getDeviceName()}",
-                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)?:""
                     launch(Dispatchers.Main) {
                         if (TextUtils.isEmpty(retContent)) {
                             retContent = getString(R.string.command_with_error, command)
