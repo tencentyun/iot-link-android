@@ -1,8 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.app.Activity
+import android.bluetooth.BluetoothGatt
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
@@ -11,9 +13,16 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.link.entity.*
+import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
+import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.BleConfig
 import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
+import com.tencent.iot.explorer.link.kitlink.entity.ProductEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductsEntity
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
@@ -23,8 +32,9 @@ import com.tencent.iot.explorer.link.mvp.presenter.DeviceDetailPresenter
 import com.tencent.iot.explorer.link.mvp.view.DeviceDetailView
 import kotlinx.android.synthetic.main.activity_device_details.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
+import kotlinx.coroutines.*
 
-class DeviceDetailsActivity : PActivity(), DeviceDetailView {
+class DeviceDetailsActivity : PActivity(), CoroutineScope by MainScope(), DeviceDetailView {
 
     private var deviceEntity: DeviceEntity? = null
 
@@ -71,6 +81,9 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
     }
 
     override fun deleteSuccess() {
+        BleConfigService.get().bluetoothGatt?.let {
+            BleConfigService.get().sendUnbindResult(it, true)
+        }
         App.data.refresh = true
         App.data.setRefreshLevel(2)
         Utils.sendRefreshBroadcast(this@DeviceDetailsActivity)
@@ -78,6 +91,9 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
     }
 
     override fun fail(message: String) {
+        BleConfigService.get().bluetoothGatt?.let {
+            BleConfigService.get().sendUnbindResult(it, false)
+        }
         T.show(message)
     }
 
@@ -96,9 +112,21 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
             override fun confirm(popupWindow: CommonPopupWindow) {
                 popupWindow.dismiss()
                 deviceEntity?.run {
-                    presenter.deleteDevice(ProductId, DeviceName)
+                    getDeviceType(ProductId, object: OnTypeGeted {
+                        override fun onType(type: String) {
+                            if (type == "ble") {
+                                BleConfigService.get()?.let {
+                                    BleConfigService.get().connetionListener = bleDeviceConnectionListener
+                                    if (BleConfigService.get().unbind(it.bluetoothGatt)) {
+                                        T.show(getString(R.string.fail))
+                                    }
+                                }
+                            } else {
+                                deleteDevice()
+                            }
+                        }
+                    })
                 }
-                Utils.sendRefreshBroadcast(this@DeviceDetailsActivity)
             }
 
             override fun cancel(popupWindow: CommonPopupWindow) {
@@ -107,20 +135,17 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
         }
     }
 
+    private fun deleteDevice() {
+        launch (Dispatchers.Main) {
+            deviceEntity?.run {
+                presenter.deleteDevice(ProductId, DeviceName)
+            }
+            Utils.sendRefreshBroadcast(this@DeviceDetailsActivity)
+        }
+    }
+
     private fun showEditPopup() {
-//        if (editPopupWindow == null) {
-            editPopupWindow = EditPopupWindow(this)
-//        }
-//        deviceEntity?.run {
-//            editPopupWindow?.setShowData(getString(R.string.device_name), AliasName)
-//        }
-//        editPopupWindow?.setBg(device_detail_bg)
-//        editPopupWindow?.show(device_detail)
-//        editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
-//            override fun onVerify(text: String) {
-//                commitAlias(text)
-//            }
-//        }
+        editPopupWindow = EditPopupWindow(this)
         var intent = Intent(this@DeviceDetailsActivity, EditNameActivity::class.java)
         var editNameValue = EditNameValue()
         editNameValue.name = deviceEntity!!.getAlias()
@@ -130,6 +155,31 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
         editNameValue.errorTip = getString(R.string.toast_name_length)
         intent.putExtra(CommonField.EXTRA_INFO, JSON.toJSONString(editNameValue))
         startActivityForResult(intent, CommonField.EDIT_NAME_REQ_CODE)
+    }
+
+    private var bleDeviceConnectionListener = object: BleDeviceConnectionListener {
+        override fun onBleDeviceFounded(bleDevice: BleDevice) {}
+        override fun onBleDeviceConnected() {}
+        override fun onBleDeviceDisconnected(exception: TCLinkException) {}
+        override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {}
+        override fun onBleSetWifiModeResult(success: Boolean) {}
+        override fun onBleSendWifiInfoResult(success: Boolean) {}
+        override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {}
+        override fun onBlePushTokenResult(success: Boolean) {}
+        override fun onMtuChanged(mtu: Int, status: Int) {}
+        override fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition) {}
+        override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {}
+        override fun onBleUnbindSignInfo(signInfo: String) {
+            deleteDevice()
+        }
+        override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleControlPropertyResult(result: Int) {}
+        override fun onBleRequestCurrentProperty() {}
+        override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+        override fun onBleDeviceMtuSize(size: Int) {}
+        override fun onBleDeviceTimeOut(timeLong: Int) {}
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -196,6 +246,7 @@ class DeviceDetailsActivity : PActivity(), DeviceDetailView {
                 dismiss()
             }
         }
+        cancel()
         super.onDestroy()
     }
 
