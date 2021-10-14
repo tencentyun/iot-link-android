@@ -165,11 +165,13 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
             tmpCountDownLatch.await()
 
-            urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
-            if (!TextUtils.isEmpty(urlPrefix)) {
-                player?.let {
-                    resetPlayer()
-                    keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
+                urlPrefix = it
+                if (!TextUtils.isEmpty(urlPrefix)) {
+                    player?.let {
+                        resetPlayer()
+                        keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+                    }
                 }
             }
         }).start()
@@ -209,8 +211,10 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 tmpCountDownLatch.await()
                 Log.d(tag, "id=${id}, tmpCountDownLatch do not wait any more")
 
-                urlPrefix = XP2P.delegateHttpFlv(id)
-                if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
+                XP2P.delegateHttpFlv(id)?.let {
+                    urlPrefix = it
+                    if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
+                }
             }
         }.start()
     }
