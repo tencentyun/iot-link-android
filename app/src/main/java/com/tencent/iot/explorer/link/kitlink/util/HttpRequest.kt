@@ -955,7 +955,9 @@ class HttpRequest private constructor() {
         param["RoomId"] = roomId
         param["DeviceId"] = deviceInfo.productId + "/" + deviceInfo.deviceName
         param["DeviceTimestamp"] = deviceInfo.timestamp
-        param["ConnId"] = deviceInfo.connId
+        if (!TextUtils.isEmpty(deviceInfo.connId)) {
+            param["ConnId"] = deviceInfo.connId
+        }
         param["SignMethod"] = deviceInfo.signMethod
         param["BindType"] = bindType
         param["Signature"] = deviceInfo.signature
