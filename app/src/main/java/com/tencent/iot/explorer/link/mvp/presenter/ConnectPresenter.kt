@@ -38,7 +38,7 @@ class ConnectPresenter(view: ConnectView) :
             when(type) {
                 ConfigType.SmartConfig.id -> startSmartConnect()
                 ConfigType.SoftAp.id -> startSoftAppConnect()
-                ConfigType.BleConfig.id -> startBleConfigNet()
+                ConfigType.BleConfig.id, ConfigType.BleBindConfig.id -> startBleConfigNet()
             }
         }
     }
