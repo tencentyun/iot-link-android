@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.espressif.iot.esptouch.IEsptouchResult
 import com.tencent.iot.explorer.link.App
@@ -27,6 +28,7 @@ import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import kotlinx.coroutines.*
+import java.util.*
 
 /**
  * 配网进度、绑定设备
@@ -240,6 +242,20 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                     return
                 }
 
+                if (BleConfigService.get().currentConnectBleDevice?.type == 1) {
+                    Log.e("XXX", "xxxxx 1")
+                    launch {
+                        bluetoothGatt?.let {
+                            delay(3000)
+                            if (BleConfigService.get().sendUNTX(it)) return@launch
+                            Log.e("XXX", "xxxxx 2")
+                            bleFailed("send untx failed")
+                        }
+                    }
+                    return
+                }
+                Log.e("XXX", "xxxxx 3")
+
                 launch {
                     bluetoothGatt?.let {
                         delay(500)
@@ -251,6 +267,57 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 }
             }
 
+            override fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition) {
+                Log.e("XXX", "onBleBindSignInfo ${JSON.toJSONString(bleDevBindCondition)}")
+                BleConfigService.get().currentConnectBleDevice?.let {
+                    var deviceInfo = BleSubDeviceInfo()
+                    deviceInfo.signMethod = "hmacsha1"
+                    deviceInfo.deviceName = bleDevBindCondition.deviceName
+                    deviceInfo.signature = bleDevBindCondition.signInfo
+                    deviceInfo.productId = it.productId
+//                    var bytes = BleConfigService.get().number2Bytes(BleConfigService.get().nonceKeep, 4)
+                    deviceInfo.connId = BleConfigService.get().nonceKeep.toString()//BleConfigService.get().bytesToHex(bytes)
+                    deviceInfo.timestamp = BleConfigService.get().unixTimestemp + 60
+                    Log.e("XXX", "deviceInfo.timestamp " + deviceInfo.timestamp)
+                    Log.e("XXX", "deviceInfo.connId " + deviceInfo.connId)
+                    HttpRequest.instance.sigBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId,
+                        deviceInfo, "bluetooth_sign", object : MyCallback {
+                            override fun fail(msg: String?, reqCode: Int) {
+                                bleFailed(msg)
+                                BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
+                            }
+
+                            override fun success(response: BaseResponse, reqCode: Int) {
+                                if (!response.isSuccess()) {
+                                    bleFailed(response.msg)
+                                    BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
+                                    return
+                                }
+                                launch {
+                                    bluetoothGatt?.let {
+                                        delay(1000)
+                                        if (BleConfigService.get().sendBindSuccessedResult(it, bleDevBindCondition.deviceName)) return@launch
+                                    }
+                                    bleFailed("send bind result failed")
+                                    BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
+                                }
+                            }
+                        })
+                    return
+                }
+
+                bleFailed("param error")
+            }
+            override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {}
+            override fun onBleUnbindSignInfo(signInfo: String) {}
+            override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {}
+            override fun onBleControlPropertyResult(result: Int) {}
+            override fun onBleRequestCurrentProperty() {}
+            override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
+            override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
+            override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+            override fun onBleDeviceMtuSize(size: Int) {}
+            override fun onBleDeviceTimeOut(timeLong: Int) {}
         }
     }
 
