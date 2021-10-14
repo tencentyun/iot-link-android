@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
 import android.text.TextUtils
 import android.view.View
 import android.view.animation.Animation
@@ -30,6 +29,7 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.link.entity.BleDeviceProperty
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
 import com.tencent.iot.explorer.link.core.log.L
@@ -105,6 +105,19 @@ class MainActivity : PActivity(), MyCallback {
         if (isForceUpgrade) {
             startUpdateApp()
         }
+
+//        BleConfigService.get().sign("UnbindRequest".toByteArray(), (System.currentTimeMillis() / 1000).toString())
+//        var bytea = BleConfigService.get().number2Bytes(100, 4)
+//        var inta = BleDeviceProperty.bytesToInt(bytea)
+//        Log.e("XXX", "inta " + inta)
+//        var test = byteArrayOf(0x00.toByte(), 0x00.toByte(), 0x0F.toByte(), 0x00.toByte(), 0x01.toByte(), 0x81.toByte(), 0x00.toByte(), 0x01.toByte()
+//            , 0x22.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x23.toByte()
+//            , 0x43.toByte(), 0x00.toByte(), 0x02.toByte(), 0x31.toByte(), 0x32.toByte())
+//
+//        var aa = BleDeviceProperty.data2BleDeviceProperty(test)
+//        var byteArr = aa.toData()
+//        var bb = BleDeviceProperty.data2BleDeviceProperty(byteArr)
+//        var a = 1 + 2
     }
 
     private fun startUpdateApp() {
