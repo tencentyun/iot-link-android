@@ -1,8 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.bluetooth.BluetoothDevice
 import android.content.Intent
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
@@ -20,9 +18,6 @@ import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import kotlinx.android.synthetic.main.activity_connect_progress.*
-import kotlinx.android.synthetic.main.activity_connect_progress.softap_step_progress
-import kotlinx.android.synthetic.main.activity_connect_progress.tv_soft_ap_cancel
-import kotlinx.android.synthetic.main.activity_connect_progress.tv_soft_ap_title
 import java.util.*
 
 class ConnectProgressActivity : PActivity(), ConnectView {
@@ -60,6 +55,14 @@ class ConnectProgressActivity : PActivity(), ConnectView {
             stepsBeanList.add(StepBean(getString(R.string.connect_device)))
             stepsBeanList.add(StepBean(getString(R.string.start_config_network)))
             softap_step_progress.currentStep = 4
+            softap_step_progress.setStepViewTexts(stepsBeanList)
+            softap_step_progress.setTextSize(12)
+        } else if (type == ConfigType.BleBindConfig.id) {
+            tv_soft_ap_title.setText(R.string.ble_config_network)
+            val stepsBeanList = ArrayList<StepBean>()
+            stepsBeanList.add(StepBean(getString(R.string.config_hardware)))
+            stepsBeanList.add(StepBean(getString(R.string.start_bind)))
+            softap_step_progress.currentStep = 2
             softap_step_progress.setStepViewTexts(stepsBeanList)
             softap_step_progress.setTextSize(12)
         } else {
