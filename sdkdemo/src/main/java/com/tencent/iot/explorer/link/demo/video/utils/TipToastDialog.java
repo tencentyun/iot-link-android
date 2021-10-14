@@ -33,7 +33,7 @@ public class TipToastDialog extends IosCenterStyleDialog {
     public void initView() {
         handler.postDelayed(() -> {
             if (isShowing()) {
-                super.dismiss();
+                dismiss();
             }
         }, duration);
 
