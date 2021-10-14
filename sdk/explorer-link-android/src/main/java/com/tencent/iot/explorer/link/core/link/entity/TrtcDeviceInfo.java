@@ -12,6 +12,8 @@ public class TrtcDeviceInfo {
     private String mSignMethod;
     private String mSignature;
 
+    protected TrtcDeviceInfo() { }
+
     public TrtcDeviceInfo(String deviceInfo) {
         //${product_id};${device_name};${random};${timestamp};hmacsha256;sign
         String[] items = deviceInfo.split(";");
@@ -23,6 +25,30 @@ public class TrtcDeviceInfo {
             mSignMethod = items[4];
             mSignature = Utils.INSTANCE.bytesToHexString(Base64.decodeFast(items[5]));
         }
+    }
+
+    public void setProductId(String productId) {
+        mProductId = productId;
+    }
+
+    public void setDeviceName(String deviceName) {
+        mDeviceName = deviceName;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.mTimestamp = timestamp;
+    }
+
+    public void setSignMethod(String signMethod) {
+        this.mSignMethod = signMethod;
+    }
+
+    public void setSignature(String signature) {
+        this.mSignature = signature;
+    }
+
+    public void setConnId(String connId) {
+        this.mConnId = connId;
     }
 
     public String getProductId() { return mProductId; }

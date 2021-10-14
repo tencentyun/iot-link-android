@@ -1,9 +1,6 @@
 package com.tencent.iot.explorer.link.core.link.entity
 
 import android.bluetooth.BluetoothDevice
-import android.util.Log
-import com.alibaba.fastjson.JSONObject
-import java.lang.Exception
 
 class BleDevice {
     var url = ""
@@ -24,6 +21,10 @@ class BleDevice {
         }
     var blueDev : BluetoothDevice? = null
     var indexWithDevname = true  // 默认需要同时匹配设备名
+    var boundState = 0 // 0 未绑定  1 绑定中  2 已绑定
+    var mac = ""
+    var type = 0 // 1 纯蓝牙协议   0 蓝牙辅助配网
+    var bindTag = ""
 
     override fun equals(other: Any?): Boolean {
         if (other is BleDevice) {

@@ -5,8 +5,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
@@ -30,6 +30,8 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.FamilyEntity
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.link.entity.BleDeviceFirmwareVersion
+import com.tencent.iot.explorer.link.core.link.entity.BleDeviceProperty
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
 import com.tencent.iot.explorer.link.core.log.L
