@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -651,12 +652,14 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
                             ProdConfigDetailEntity::class.java
                         )
                         if (config == null) {
+                            Log.e("XXX", "config " + Data[0].Config)
                             jumpActivity(ControlPanelActivity::class.java)
                         } else {
                             val panelInfo = JSON.parseObject(config.Panel)
                             if (panelInfo != null && panelInfo["type"] == "h5") {
                                 jumpActivity(DevicePanelActivity::class.java)
                             } else {
+                                Log.e("XXX", "config " + Data[0].Config)
                                 jumpActivity(ControlPanelActivity::class.java)
                             }
                         }

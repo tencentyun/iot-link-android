@@ -24,6 +24,9 @@ class BleDevice {
         }
     var blueDev : BluetoothDevice? = null
     var indexWithDevname = true  // 默认需要同时匹配设备名
+    var boundState = 0 // 0 未绑定  1 绑定中  2 已绑定
+    var mac = ""
+    var type = 0 // 1 纯蓝牙协议   0 蓝牙辅助配网
 
     override fun equals(other: Any?): Boolean {
         if (other is BleDevice) {

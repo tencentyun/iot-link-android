@@ -1,20 +1,34 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.bluetooth.BluetoothGatt
+import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.TRTCAppSessionManager
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.NavBar
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
+import com.tencent.iot.explorer.link.core.link.entity.*
+import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
+import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductsEntity
 import com.tencent.iot.explorer.link.kitlink.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.OfflinePopupWindow
 import com.tencent.iot.explorer.link.kitlink.theme.PanelThemeManager
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
@@ -33,8 +47,8 @@ import kotlinx.coroutines.*
 /**
  * 控制面板
  */
-class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.RecyclerItemView {
-
+class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), ControlPanelView, CRecyclerView.RecyclerItemView {
+    private var TAG = ControlPanelActivity::class.java.simpleName
     private var deviceEntity: DeviceEntity? = null
 
     private lateinit var presenter: ControlPanelPresenter
@@ -44,7 +58,8 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     private var enumPopup: EnumPopupWindow? = null
     private var offlinePopup: OfflinePopupWindow? = null
     private var job: Job? = null
-
+    @Volatile
+    private var bluetoothGatt: BluetoothGatt? = null
     private var netWorkStateReceiver: NetWorkStateReceiver? = null
 
     override fun getContentView(): Int {
@@ -67,6 +82,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
         presenter = ControlPanelPresenter(this)
         netWorkStateReceiver = NetWorkStateReceiver()
         deviceEntity = get("device")
+        Log.e("XXX", "device " + JSON.toJSONString(deviceEntity))
         deviceEntity?.run {
             presenter.setProductId(ProductId)
             presenter.setDeviceName(DeviceName)
@@ -77,6 +93,7 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
             crv_panel.addRecyclerItemView(this@ControlPanelActivity)
             presenter.requestControlPanel()
             presenter.registerActivePush()
+            getDeviceType(ProductId)
 
             if (online != 1) {//延时显示
                 job = CoroutineScope(Dispatchers.IO).launch {
@@ -87,6 +104,116 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
                 }
             }
         }
+    }
+
+    private fun getDeviceType(productId: String) {
+        var productsList = arrayListOf(productId)
+        HttpRequest.instance.deviceProducts(productsList, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {}
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    if (TextUtils.isEmpty(response.data.toString())) return
+
+                    var products = JSON.parseObject(response.data.toString(), ProductsEntity::class.java)
+                    products?.Products?.let {
+                        var product = JSON.parseObject(it.getString(0), ProductEntity::class.java)
+                        product?.let {
+                            if (it.NetType == "ble") {
+                                launch (Dispatchers.Main) {
+                                    startScanBleDev()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun startScanBleDev() {
+        ble_connect_layout.visibility = View.VISIBLE
+        BleConfigService.get().connetionListener = bleDeviceConnectionListener
+        BleConfigService.get().startScanBluetoothDevices()
+        search_ble_dev_layout.visibility = View.VISIBLE
+        search_reault_layout.visibility = View.GONE
+    }
+
+    private fun stopScanBleDev(connected: Boolean) {
+        launch(Dispatchers.Main) {
+            ble_connect_layout.visibility = View.VISIBLE
+            BleConfigService.get().stopScanBluetoothDevices()
+            search_ble_dev_layout.visibility = View.GONE
+            search_reault_layout.visibility = View.VISIBLE
+            if (connected) {
+                retry_connect.setText(R.string.connect_success)
+                retry_connect.setOnClickListener(null)
+            } else {
+                retry_connect.setText(R.string.scanning_retry)
+                retry_connect.setOnClickListener { startScanBleDev() }
+            }
+        }
+    }
+
+    private var bleDeviceConnectionListener = object: BleDeviceConnectionListener {
+        override fun onBleDeviceFounded(bleDevice: BleDevice) {
+            Log.e("XXX", "bleDevice.productId " + bleDevice.productId)
+            Log.e("XXX", "deviceEntity?.ProductId " + deviceEntity?.ProductId)
+            if (bleDevice.productId == deviceEntity?.ProductId) {
+                //&& bleDevice.devName == deviceEntity?.DeviceName) {
+                Log.e("XXX", "connect ble device")
+                bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+            }
+        }
+
+        override fun onBleDeviceConnected() {
+            launch {
+                bluetoothGatt?.let {
+                    delay(3000)
+                    if (BleConfigService.get().setMtuSize(it, 512)) return@launch
+                }
+            }
+        }
+        override fun onBleDeviceDisconnected(exception: TCLinkException) {
+            stopScanBleDev(false)
+        }
+        override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {}
+        override fun onBleSetWifiModeResult(success: Boolean) {}
+        override fun onBleSendWifiInfoResult(success: Boolean) {}
+        override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {}
+        override fun onBlePushTokenResult(success: Boolean) {}
+        override fun onMtuChanged(mtu: Int, status: Int) {
+            L.d(TAG, "onMtuChanged mtu $mtu status $status")
+            if (BluetoothGatt.GATT_SUCCESS == status) {
+                launch (Dispatchers.Main) {
+                    delay(1000)
+                    Log.e("XXX", "---------------------- success")
+                    bluetoothGatt?.let {
+                        BleConfigService.get().stopScanBluetoothDevices()
+                        if (!BleConfigService.get().connectSubDevice(it)) {
+                            Log.e("XXX", "connected failed")
+                            stopScanBleDev(false)
+                        }
+                    }
+                }
+                return
+            }
+            stopScanBleDev(false)
+        }
+        override fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition) {}
+        override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {
+            stopScanBleDev(true)
+            Log.e("XXX", "bleDevSignResult " + JSON.toJSONString(bleDevSignResult))
+        }
+        override fun onBleUnbindSignInfo(signInfo: String) {}
+        override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleControlPropertyResult(result: Int) {}
+        override fun onBleRequestCurrentProperty() {}
+        override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+        override fun onBleDeviceMtuSize(size: Int) {}
+        override fun onBleDeviceTimeOut(timeLong: Int) {}
     }
 
     override fun setListener() {
@@ -367,6 +494,8 @@ class ControlPanelActivity : PActivity(), ControlPanelView, CRecyclerView.Recycl
     override fun onDestroy() {
         PanelThemeManager.instance.destroy()
         job?.cancel()
+        cancel()
+        BleConfigService.get().stopScanBluetoothDevices()
 //        App.setEnableEnterRoomCallback(true)
         super.onDestroy()
     }

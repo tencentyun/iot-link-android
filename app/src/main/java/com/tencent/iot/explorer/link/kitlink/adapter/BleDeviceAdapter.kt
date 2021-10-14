@@ -51,8 +51,8 @@ class BleDeviceAdapter(list: MutableList<BleDevice>) : RecyclerView.Adapter<BleD
         } else {
             Picasso.get().load(list[position]?.url).into(holder.image)
         }
-        holder.textDev.text = list.get(position)?.devName
-        holder.textProduct.text = list.get(position)?.productName
+        holder.textDev.text = list.get(position)?.productName
+        holder.textProduct.text = list.get(position)?.devName
 
         if (list.size > 0) {
             titleTxt?.visibility = View.VISIBLE
