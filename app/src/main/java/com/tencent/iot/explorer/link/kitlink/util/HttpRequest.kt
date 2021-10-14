@@ -953,7 +953,7 @@ class HttpRequest private constructor() {
         val param = tokenParams("AppSigBindDeviceInFamily")
         param["FamilyId"] = familyId
         param["RoomId"] = roomId
-        param["DeviceId"] = deviceInfo.productId + "/" + deviceInfo.deviceName
+        param["DeviceId"] = "${deviceInfo.productId}/${deviceInfo.deviceName}"
         param["DeviceTimestamp"] = deviceInfo.timestamp
         param["ConnId"] = deviceInfo.connId
         param["SignMethod"] = deviceInfo.signMethod
