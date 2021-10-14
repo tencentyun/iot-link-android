@@ -80,9 +80,11 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     @Volatile
     private var isShowing = false
 
-    private fun sendCmd(id: String, cmd: String):String {
+    private fun sendCmd(id: String, cmd: String): String {
         if (connected)
-            return XP2P.postCommandRequestSync(id, cmd.toByteArray(), cmd.toByteArray().size.toLong(), 2 * 1000 * 1000)
+            XP2P.postCommandRequestSync(id, cmd.toByteArray(), cmd.toByteArray().size.toLong(), 2 * 1000 * 1000)?.let {
+                return it
+            }
         return ""
     }
 
