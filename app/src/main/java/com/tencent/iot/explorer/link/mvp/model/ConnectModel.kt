@@ -251,6 +251,10 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 }
             }
 
+            override fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition) {}
+            override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {}
+            override fun onBleUnbindSignInfo(signInfo: String) {}
+            override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {}
         }
     }
 
