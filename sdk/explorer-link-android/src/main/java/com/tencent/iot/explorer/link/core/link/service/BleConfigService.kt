@@ -15,9 +15,6 @@ import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
 import com.tencent.iot.explorer.link.core.log.L
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -26,8 +23,6 @@ class BleConfigService private constructor() {
 
     private val TAG = this.javaClass.simpleName
     var connetionListener : BleDeviceConnectionListener? = null
-    @Volatile
-//    var dev: BleDevice? = null
     var context: Context? = null
 
     companion object {
@@ -80,15 +75,20 @@ class BleConfigService private constructor() {
                     for (result in ress) {
                         result?.scanRecord?.serviceUuids?.let {
                             for (value in it) {
+                                Log.e("XXX", "service uuid " + value.uuid.toString())
                                 if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFF0")) {
                                     dev = BleDevice()
                                     dev?.devName = result?.scanRecord?.deviceName.toString()
                                     dev?.blueDev = result?.device
+                                    Log.e("XXX", "dev.devName " + dev?.devName)
                                     result?.scanRecord?.manufacturerSpecificData?.let { msd ->
                                         if (msd.size() > 0) {
                                             dev?.manufacturerSpecificData = msd.valueAt(0)
                                         }
                                     }
+                                    break
+                                } else if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFE0")) {
+                                    dev = convertManufacturerData2BleDevice(result)
                                     break
                                 }
                             }
@@ -96,10 +96,9 @@ class BleConfigService private constructor() {
                     }
                 }
 
+                Log.e("XXX", "productID ${dev?.productId} devName ${dev?.devName}")
                 dev?.let { bleDev ->
-                    if (TextUtils.isEmpty(bleDev.productId)) {
-                        return@let
-                    }
+                    if (TextUtils.isEmpty(bleDev.productId))  return@let
 
                     L.d(TAG, "productID ${bleDev?.productId} devName ${bleDev.devName}")
                     var founded = foundedSet.get(bleDev.productId + bleDev.devName)
@@ -113,6 +112,69 @@ class BleConfigService private constructor() {
         }
 
         return scanCallback!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun convertManufacturerData2BleDevice(result: ScanResult): BleDevice {
+        var dev = BleDevice()
+        result?.scanRecord?.manufacturerSpecificData?.let { msd ->
+            if (msd.size() > 0) {
+                dev?.manufacturerSpecificData = msd.valueAt(0)
+                dev?.manufacturerSpecificData?.let { manufacturerData ->
+                    if (manufacturerData.isNotEmpty() && manufacturerData.size == 17) {
+                        var status = manufacturerData.get(0).toInt() and 0x03
+                        when (status) {
+                            0, 1 -> {
+                                dev?.boundState = status
+                                val productByteArr = ByteArray(10)
+                                System.arraycopy(manufacturerData, 7, productByteArr, 0, 10)
+                                dev?.productId = String(productByteArr)
+                                Log.e("XXX", "productId ${dev?.productId}")
+
+                                val macByteArr = ByteArray(6)
+                                System.arraycopy(manufacturerData, 1, macByteArr, 0, 6)
+                                bytesToHex(macByteArr)?.let {
+                                    dev?.mac = it
+                                    Log.e("XXX", "mac ${dev?.mac}")
+                                }
+                            }
+                            else -> {
+                                dev?.boundState = 2
+                            }
+                        }
+                    }
+                    Log.e("XXX", "hex " + bytesToHex(manufacturerData))
+                    Log.e("XXX", "str " + String(manufacturerData))
+                }
+            }
+        }
+        return dev
+    }
+
+    /**
+     * 字节数组转Hex
+     * @param bytes 字节数组
+     * @return Hex
+     */
+    fun bytesToHex(bytes: ByteArray?): String? {
+        val sb = StringBuffer()
+        if (bytes != null && bytes.size > 0) {
+            for (i in bytes.indices) {
+                val hex = byteToHex(bytes[i])
+                sb.append(hex)
+            }
+        }
+        return sb.toString()
+    }
+
+    fun byteToHex(b: Byte): String? {
+        var hexString = Integer.toHexString(b.toInt() and 0xFF)
+        //由于十六进制是由0~9、A~F来表示1~16，所以如果Byte转换成Hex后如果是<16,就会是一个字符（比如A=10），通常是使用两个字符来表示16进制位的,
+        //假如一个字符的话，遇到字符串11，这到底是1个字节，还是1和1两个字节，容易混淆，如果是补0，那么1和1补充后就是0101，11就表示纯粹的11
+        if (hexString.length < 2) {
+            hexString = java.lang.StringBuilder(0.toString()).append(hexString).toString()
+        }
+        return hexString.toUpperCase()
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -193,6 +255,10 @@ class BleConfigService private constructor() {
                                 0xE3.toByte() -> {
                                     L.d(TAG, "0xE3")
                                     connetionListener?.onBlePushTokenResult(convertData2PushTokenResult(it.value))
+                                }
+                                0x05.toByte() -> {
+                                    L.d(TAG, "0x05")
+                                    connetionListener?.onBleBindSignInfo(BleDevBindCondition.data2BleDevBindCondition(it.value))
                                 }
                             }
                         }
@@ -303,17 +369,49 @@ class BleConfigService private constructor() {
         return setCharacteristicValue(connection, byteArr)
     }
 
-    fun bytes2hex(bytes: ByteArray): String? {
-        val sb = StringBuilder()
-        var tmp: String? = null
-        for (b in bytes) {
-            // 将每个字节与0xFF进行与运算，然后转化为10进制，然后借助于Integer再转化为16进制
-            tmp = Integer.toHexString(0xFF and b.toInt())
-            if (tmp.length == 1) {
-                tmp = "0$tmp"
-            }
-            sb.append(tmp)
+    fun intToBytes(number: Int, size: Int): ByteArray {
+        val bytes = ByteArray(size)
+        for (i in 0 until size) {
+            bytes[i] = (number shr size * i).toByte()
         }
-        return sb.toString()
+        return bytes
     }
+
+    fun sendUNTX(connection: BluetoothGatt?): Boolean {
+        if (!enableCharacteristicNotification(connection)) return false
+        var byteArr = ByteArray(9)
+        byteArr[0] = 0x00.toByte()
+        var nonceBytes = intToBytes(Random().nextInt(10), 4)
+        System.arraycopy(nonceBytes, 0, byteArr, 1, 4)
+        var tsBytes = intToBytes((System.currentTimeMillis() / 1000).toInt(), 4)
+        System.arraycopy(tsBytes, 0, byteArr, 5, 4)
+        return setCharacteristicValue(connection, byteArr)
+    }
+
+    /**
+     * 启动安全绑定
+     */
+    fun enableSafeBind(connection: BluetoothGatt?, seconds: Int): Boolean {
+        if (!enableCharacteristicNotification(connection)) return false
+        var byteArr = ByteArray(5)
+        byteArr[0] = 0x0D.toByte()
+        var lenBytes = intToBytes(2, 2)
+        System.arraycopy(lenBytes, 0, byteArr, 1, 2)
+        var secBytes = intToBytes(seconds, 2)
+        System.arraycopy(secBytes, 0, byteArr, 3, 2)
+        return setCharacteristicValue(connection, byteArr)
+    }
+
+    fun bindCanceled(connection: BluetoothGatt?, outTime: Boolean): Boolean  {
+        if (!enableCharacteristicNotification(connection)) return false
+        var byteArr = ByteArray(2)
+        byteArr[0] = 0x0A.toByte()
+        if (outTime) {  // 超时
+            byteArr[1] = 1.toByte()
+        } else { // 人为取消
+            byteArr[1] = 0.toByte()
+        }
+        return setCharacteristicValue(connection, byteArr)
+    }
+
 }

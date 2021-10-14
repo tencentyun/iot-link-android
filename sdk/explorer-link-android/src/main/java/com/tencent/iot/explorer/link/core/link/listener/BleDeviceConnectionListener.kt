@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.link.listener
 
+import com.tencent.iot.explorer.link.core.link.entity.BleDevBindCondition
 import com.tencent.iot.explorer.link.core.link.entity.BleDevice
 import com.tencent.iot.explorer.link.core.link.entity.BleDeviceInfo
 import com.tencent.iot.explorer.link.core.link.entity.BleWifiConnectInfo
@@ -15,4 +16,5 @@ interface BleDeviceConnectionListener {
     fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo)
     fun onBlePushTokenResult(success: Boolean)
     fun onMtuChanged(mtu: Int, status: Int)
+    fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition)
 }
