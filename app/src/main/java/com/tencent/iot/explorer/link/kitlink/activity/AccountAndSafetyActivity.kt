@@ -49,6 +49,7 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
         tv_wechat.setOnClickListener(this)
         tv_modify_passwd.setOnClickListener(this)
         tv_account_logout.setOnClickListener(this)
+        tv_controller_of_permission.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -79,6 +80,9 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
             }
             tv_account_logout -> {// 注销账号
                 jumpActivity(LogoutActivity::class.java)
+            }
+            tv_controller_of_permission -> {
+                jumpActivity(ControlPermissionActivity::class.java)
             }
         }
     }

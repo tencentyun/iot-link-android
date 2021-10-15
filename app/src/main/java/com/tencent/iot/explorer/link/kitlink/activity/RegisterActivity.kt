@@ -16,6 +16,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.InputBirthdayDialog
+import com.tencent.iot.explorer.link.customview.dialog.UserAgreeDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -91,6 +92,24 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         loadLastCountryInfo()
         showBirthDayDlg()
         formatTipText()
+        checkIfShowAgreeDlg()
+    }
+
+    private fun checkIfShowAgreeDlg() {
+        var agreed = Utils.getStringValueFromXml(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG)
+        agreed?.let {
+            if (it == "1") {
+                return@checkIfShowAgreeDlg
+            }
+        }
+        var dlg = UserAgreeDialog(this@RegisterActivity)
+        dlg.show()
+        dlg.setOnDismisListener(object : UserAgreeDialog.OnDismisListener {
+            override fun onDismised() { finish() }
+            override fun onOkClicked() {
+                Utils.setXmlStringValue(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG, "1")
+            }
+        })
     }
 
     private fun formatTipText() {
