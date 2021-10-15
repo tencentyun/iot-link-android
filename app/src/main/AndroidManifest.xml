@@ -78,6 +78,7 @@
         <activity android:name=".kitlink.activity.AddTimerActivity" />
         <activity android:name=".kitlink.activity.FamilyActivity" />
         <activity android:name=".kitlink.activity.RoomListActivity" />
+        <activity android:name=".kitlink.activity.ControlPermissionActivity" />
         <activity android:name=".kitlink.activity.AddRoomActivity" />
         <activity android:name=".kitlink.activity.AddFamilyActivity" />
         <activity android:name=".kitlink.activity.CommentDetailsActivity" />

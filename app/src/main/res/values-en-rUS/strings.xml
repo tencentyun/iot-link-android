@@ -680,7 +680,9 @@
     <string name="device_offline_already">The device is offline</string>
     <string name="zero_device">0 devices</string>
     <string name="dialog_title_name">Popup title</string>
-
+    <string name="rule_content_prefix">为了保证您的个人隐私安全，在进行账号注册前，您需要确认您已经阅读腾讯云</string>
+    <string name="rule_content_suffix">，并同意授权腾讯连连为您注册账号信息（如手机号、昵称、头像）</string>
+    <string name="controller_of_permission">权限管理</string>
 
     <!--international end  -->
 </resources>
