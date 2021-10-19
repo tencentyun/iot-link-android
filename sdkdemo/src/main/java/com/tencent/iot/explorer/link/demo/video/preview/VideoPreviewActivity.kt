@@ -497,7 +497,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
-        if (!showTip) {
+        if (!showTip && startShowVideoTime > 0) {
             showVideoTime = System.currentTimeMillis() - startShowVideoTime
             var content = getString(R.string.time_2_show, connectTime.toString(), showVideoTime.toString())
             TipToastDialog(this, content, 10000).show()
@@ -512,6 +512,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e(tag, "id=${id}, event=${event}")
         if (event == 1003) {
+            startShowVideoTime = 0L
             keepPlayThreadLock?.let {
                 synchronized(it) {
                     it.notify()
