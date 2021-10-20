@@ -50,6 +50,7 @@ jobs:
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rt'\"#g' config.gradle
           sed -i 's#def sdkVersion.*#def sdkVersion = \"'$rt'\"#g' config.gradle
           sed -i "s#xxx#$rb+git.$rc#g" config.gradle
+          sed -i '/snapshots/, +d' build.gradle
 
       - name: Common-->Update Values of Signing
         run: |
