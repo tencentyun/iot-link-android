@@ -26,9 +26,7 @@ allprojects {
             url "https://maven.aliyun.com/repository/public"
         }
         // SNAPSHOT
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         //左滑删除
         maven {
             url "https://jitpack.io"
