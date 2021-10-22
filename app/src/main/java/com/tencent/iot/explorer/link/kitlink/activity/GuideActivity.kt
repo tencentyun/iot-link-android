@@ -73,7 +73,7 @@ class GuideActivity  : PActivity(), View.OnClickListener{
     override fun onClick(v: View?) {
         when (v) {
             btn_create_new_account -> {
-                Intent(this, RegisterActivity::class.java).run {
+                Intent(this, ChooseCountryActivity::class.java).run {
                     startActivity(this)
                 }
             }
