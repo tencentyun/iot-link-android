@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.Manifest
 import android.content.Intent
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -16,6 +17,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.InputBirthdayDialog
+import com.tencent.iot.explorer.link.customview.dialog.UserAgreeDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -31,6 +33,12 @@ import java.util.*
  * 手机号注册界面
  */
 class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
+
+    private val permissions = arrayOf(
+        Manifest.permission.RECEIVE_SMS,
+        Manifest.permission.READ_SMS,
+        Manifest.permission.SEND_SMS
+    )
 
     companion object {
         const val ACCOUNT_TYPE = "account_type"
@@ -88,9 +96,91 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         phoneView.tv_register_to_country.text = getString(R.string.country_china) + getString(R.string.conutry_code_num, presenter.getCountryCode())
         emailView.tv_register_to_country_email.text = getString(R.string.country_china) + getString(R.string.conutry_code_num, presenter.getCountryCode())
 
+        phoneView.layout_phone_country.visibility = View.GONE
+        emailView.layout_email_country.visibility = View.GONE
+
+        iv_register_agreement.visibility = View.INVISIBLE
+
         loadLastCountryInfo()
-        showBirthDayDlg()
-        formatTipText()
+//        showBirthDayDlg()
+//        formatTipText()
+        checkIfShowAgreeDlg()
+    }
+
+    private fun checkIfShowAgreeDlg() {
+        var agreed = Utils.getStringValueFromXml(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG)
+        agreed?.let {
+            if (it == "1") {
+                presenter.agreement()
+                if (!checkPermissions(permissions)) {
+                    requestPermission(permissions)
+                } else {
+                    permissionAllGranted()
+                }
+                return@checkIfShowAgreeDlg
+            }
+        }
+        var dlg = UserAgreeDialog(this@RegisterActivity)
+        dlg.show()
+        dlg.setOnDismisListener(object : UserAgreeDialog.OnDismisListener {
+            override fun onDismised() { finish() }
+            override fun onOkClicked() {
+                Utils.setXmlStringValue(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG, "1")
+                if (!checkPermissions(permissions)) {
+                    requestPermission(permissions)
+                } else {
+                    permissionAllGranted()
+                }
+            }
+
+            override fun onOkClickedUserAgreement() {
+                if (presenter.getCountryCode() == "86") {
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        val intent = Intent(this@RegisterActivity, WebActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
+                        var url = CommonField.POLICY_PREFIX
+                        url += "?uin=$ANDROID_ID"
+                        url += CommonField.SERVICE_POLICY_SUFFIX
+                        intent.putExtra(CommonField.EXTRA_TEXT, url)
+                        startActivity(intent)
+                    } else {
+                        OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_2), CommonField.SERVICE_AGREEMENT_URL_CN_EN)
+                    }
+                } else {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.SERVICE_AGREEMENT_URL_US_ZH
+                    } else {
+                        url = CommonField.SERVICE_AGREEMENT_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_2), url)
+                }
+            }
+
+            override fun onOkClickedPrivacyPolicy() {
+                if (presenter.getCountryCode() == "86") {
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        val intent = Intent(this@RegisterActivity, WebActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
+                        var url = CommonField.POLICY_PREFIX
+                        url += "?uin=$ANDROID_ID"
+                        url += CommonField.PRIVACY_POLICY_SUFFIX
+                        intent.putExtra(CommonField.EXTRA_TEXT, url)
+                        startActivity(intent)
+                    } else {
+                        OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_4), CommonField.PRIVACY_POLICY_URL_CN_EN)
+                    }
+                } else {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.PRIVACY_POLICY_URL_US_ZH
+                    } else {
+                        url = CommonField.PRIVACY_POLICY_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_4), url)
+                }
+            }
+        })
     }
 
     private fun formatTipText() {
@@ -301,6 +391,13 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     }
 
     override fun unselectedAgreement() {
+        var agreed = Utils.getStringValueFromXml(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG)
+        agreed?.let {
+            if (it == "1") {
+                presenter.agreement()
+                return@unselectedAgreement
+            }
+        }
         T.show(getString(R.string.toast_register_agreement))
     }
 
@@ -324,7 +421,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         var tagMonth = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_MONTH)
         var tagDay = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_DAY)
         if (currentYear - tagYear > 0 && currentMonth - tagMonth == 0 && currentDay - tagDay == 0) { // 满周年
-            return true
+//            return true
         }
 
         return false
