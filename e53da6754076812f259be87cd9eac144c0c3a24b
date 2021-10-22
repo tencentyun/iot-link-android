@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eaf7790b_1afd7ae1",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/customview/dialog/UserAgreeDialog.kt",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2021-10-22T02:44:46Z",
+      "side": 1,
+      "message": "调试日志",
+      "range": {
+        "startLine": 140,
+        "startChar": 12,
+        "endLine": 140,
+        "endChar": 45
+      },
+      "revId": "e53da6754076812f259be87cd9eac144c0c3a24b",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
