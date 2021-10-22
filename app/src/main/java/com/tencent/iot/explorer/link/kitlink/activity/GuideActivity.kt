@@ -23,12 +23,6 @@ import kotlinx.android.synthetic.main.activity_guide.*
 
 class GuideActivity  : PActivity(), View.OnClickListener{
 
-    private val permissions = arrayOf(
-        Manifest.permission.RECEIVE_SMS,
-        Manifest.permission.READ_SMS,
-        Manifest.permission.SEND_SMS
-    )
-
     private val counts = 5 //点击次数
     private val duration = 3 * 1000.toLong() //规定有效时间
     private val hits = LongArray(counts)
@@ -43,11 +37,6 @@ class GuideActivity  : PActivity(), View.OnClickListener{
     }
 
     override fun initView() {
-        if (!checkPermissions(permissions)) {
-            requestPermission(permissions)
-        } else {
-            permissionAllGranted()
-        }
         if (!TextUtils.isEmpty(App.data.getToken())) {
             startActivity(Intent(this, MainActivity::class.java))
             return
@@ -73,7 +62,7 @@ class GuideActivity  : PActivity(), View.OnClickListener{
     override fun onClick(v: View?) {
         when (v) {
             btn_create_new_account -> {
-                Intent(this, RegisterActivity::class.java).run {
+                Intent(this, ChooseCountryActivity::class.java).run {
                     startActivity(this)
                 }
             }

@@ -152,7 +152,20 @@ class MainActivity : PActivity(), MyCallback {
         FirebaseAnalytics.getInstance(this).setUserId(userId)
         openXGPush()
         home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
-        requestPermission(permissions)
+        if (!checkPermissions(permissions)) {
+            var dlg = PermissionDialog(this@MainActivity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+            dlg.show()
+            dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
+                override fun OnClickRefuse() {
+
+                }
+
+                override fun OnClickOK() {
+                    requestPermission(permissions)
+                }
+
+            })
+        }
         LogcatHelper.getInstance(this).start()
         home_bottom_view.addMenu(
             BottomItemEntity(
