@@ -15,6 +15,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import kotlinx.android.synthetic.main.activity_account_and_safety.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -49,6 +50,7 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
         tv_wechat.setOnClickListener(this)
         tv_modify_passwd.setOnClickListener(this)
         tv_account_logout.setOnClickListener(this)
+        tv_controller_of_permission.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -71,7 +73,18 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
                 if (App.data.userInfo.HasWxOpenID == "1") {
                     T.show(getString(R.string.wechat_bind_already)) //微信已经绑定过了, 请勿重复绑定
                 } else {
-                    WeChatLogin.getInstance().login(this, this)
+                    var dlg = PermissionDialog(this@AccountAndSafetyActivity, getString(R.string.permission_of_wechat), getString(R.string.permission_of_wechat_lips))
+                    dlg.show()
+                    dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
+                        override fun OnClickRefuse() {
+
+                        }
+
+                        override fun OnClickOK() {
+                            WeChatLogin.getInstance().login(this@AccountAndSafetyActivity, this@AccountAndSafetyActivity)
+                        }
+
+                    })
                 }
             }
             tv_modify_passwd -> {// 修改密码
@@ -79,6 +92,9 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
             }
             tv_account_logout -> {// 注销账号
                 jumpActivity(LogoutActivity::class.java)
+            }
+            tv_controller_of_permission -> {
+                jumpActivity(ControlPermissionActivity::class.java)
             }
         }
     }
