@@ -73,7 +73,7 @@
                     android:layout_marginTop="18dp"
                     android:layout_marginRight="20dp"
                     android:lineSpacingExtra="7dp"
-                    android:text="@string/permission_of_detail"
+                    android:text="@string/permission_of_wifi"
                     android:textColor="@color/black_888888"
                     android:textSize="@dimen/ts_14" />
 
@@ -87,7 +87,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="20dp"
                     android:lineSpacingExtra="7dp"
-                    android:text="@string/permission_of_detail_lips"
+                    android:text="@string/permission_of_wifi_lips"
                     android:textColor="@color/black"
                     android:textSize="@dimen/ts_14" />
 
