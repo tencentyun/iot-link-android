@@ -125,6 +125,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         dlg.setOnDismisListener(object : UserAgreeDialog.OnDismisListener {
             override fun onDismised() { finish() }
             override fun onOkClicked() {
+                presenter.agreement()
                 Utils.setXmlStringValue(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG, "1")
                 if (!checkPermissions(permissions)) {
                     requestPermission(permissions)
@@ -179,6 +180,16 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                     }
                     OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_4), url)
                 }
+            }
+
+            override fun onOkClickedThirdSDKList() {
+                var url = ""
+                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                    url = CommonField.THIRD_SDK_URL_US_ZH
+                } else {
+                    url = CommonField.THIRD_SDK_URL_US_EN
+                }
+                OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.rule_content_list), url)
             }
         })
     }
@@ -394,7 +405,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         var agreed = Utils.getStringValueFromXml(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG)
         agreed?.let {
             if (it == "1") {
-                presenter.agreement()
+//                presenter.agreement()
                 return@unselectedAgreement
             }
         }
