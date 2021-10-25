@@ -46,34 +46,26 @@ class UserAgreeDialog(context: Context) : IosCenterStyleDialog(context, R.layout
         tv_confirm = view.findViewById(R.id.tv_confirm)
         tv_cancel = view.findViewById(R.id.tv_cancel)
         select_tag_layout = view.findViewById(R.id.select_tag_layout)
-        iv_agreement = view.findViewById(R.id.iv_agreement)
-        iv_agreement_status = view.findViewById(R.id.iv_agreement_status)
 
-        val partStr0 = context.getString(R.string.register_agree_1)
-        val partStr1 = context.getString(R.string.register_agree_2)
-        val partStr2 = context.getString(R.string.register_agree_3)
-        val partStr3 = context.getString(R.string.register_agree_4)
-        var showStr = partStr1 + partStr2 + partStr3
-        tip_title?.text = showStr
-
-        var agreeStr = partStr0 + showStr
-        var spannable = SpannableStringBuilder(agreeStr)
-        spannable.setSpan(IndexClickableSpan(context, 1),
-            partStr0.length, partStr0.length + partStr1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        spannable.setSpan(IndexClickableSpan(context, 2),
-            agreeStr.length - partStr1.length, agreeStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        tv_register_tip?.movementMethod = LinkMovementMethod.getInstance()
-        tv_register_tip?.text = spannable
+        tip_title?.text = context.getString(R.string.register_agree_2) + context.getString(R.string.rule_title_and) + context.getString(R.string.rule_title_private_protect)
 
         val agreeContentStrPrefix = context.getString(R.string.rule_content_prefix)
+        val partStr1 = "《${context.getString(R.string.register_agree_2)}》"
+        val partStr2 = context.getString(R.string.register_agree_3)
+        val partStr3 = "《${context.getString(R.string.register_agree_4)}》"
+        val agreeContentStrMiddle = context.getString(R.string.rule_content_middle)
+        val partStr4 = "《${context.getString(R.string.rule_content_list)}》"
         val agreeContentStrSuffix = context.getString(R.string.rule_content_suffix)
-        var agreeContentStr = agreeContentStrPrefix + showStr + agreeContentStrSuffix
+        var agreeContentStr = agreeContentStrPrefix + partStr1 + partStr2 + partStr3 + agreeContentStrMiddle + partStr4 + agreeContentStrSuffix
         var agreeContentSpannable = SpannableStringBuilder(agreeContentStr)
         agreeContentSpannable.setSpan(IndexClickableSpan(context, 1),
             agreeContentStrPrefix.length, agreeContentStrPrefix.length + partStr1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        val start = agreeContentStrPrefix.length + partStr1.length + partStr2.length
+        val start1 = agreeContentStrPrefix.length + partStr1.length + partStr2.length
         agreeContentSpannable.setSpan(IndexClickableSpan(context, 2),
-            start, start + partStr3.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            start1, start1 + partStr3.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val start2 = agreeContentStrPrefix.length + partStr1.length + partStr2.length + partStr3.length + agreeContentStrMiddle.length
+        agreeContentSpannable.setSpan(IndexClickableSpan(context, 3),
+            start2, start2 + partStr4.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         tv_tip_content?.movementMethod = LinkMovementMethod.getInstance()
         tv_tip_content?.text = agreeContentSpannable
 
@@ -87,8 +79,6 @@ class UserAgreeDialog(context: Context) : IosCenterStyleDialog(context, R.layout
     override fun onClick(v: View?) {
         when(v) {
             select_tag_layout -> {
-                readed =! readed
-                freshReadState()
             }
 
             tv_cancel -> {
@@ -96,7 +86,8 @@ class UserAgreeDialog(context: Context) : IosCenterStyleDialog(context, R.layout
             }
 
             tv_confirm -> {
-                if (!readed) return
+                readed = true
+                freshReadState()
                 onDismisListener?.onOkClicked()
                 dismiss()
             }
@@ -111,6 +102,7 @@ class UserAgreeDialog(context: Context) : IosCenterStyleDialog(context, R.layout
         fun onOkClicked()
         fun onOkClickedUserAgreement()
         fun onOkClickedPrivacyPolicy()
+        fun onOkClickedThirdSDKList()
     }
 
     fun setOnDismisListener(onDismisListener: OnDismisListener?) {
@@ -136,6 +128,8 @@ class UserAgreeDialog(context: Context) : IosCenterStyleDialog(context, R.layout
                 onDismisListener?.onOkClickedUserAgreement()
             } else if (index == 2) {
                 onDismisListener?.onOkClickedPrivacyPolicy()
+            } else if (index == 3) {
+                onDismisListener?.onOkClickedThirdSDKList()
             }
         }
 
