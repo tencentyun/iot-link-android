@@ -282,6 +282,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                     // 转换成实际有录像的日期
                     dateDataSet.add(it)
                     var datesStrArr = Integer.toBinaryString(respJson.getInteger("video_list"))
+                    datesStrArr = datesStrArr.reversed()
                     var dateParam: MutableList<String> = ArrayList()
                     for (i in datesStrArr.indices) {
                         if (datesStrArr[i].toString() == "1") {
