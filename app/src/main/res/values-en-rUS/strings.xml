@@ -26,7 +26,7 @@
     <string name="modify_fail">Failed to edit</string>
     <string name="save">Save</string>
     <string name="refuse">Reject</string>
-    <string name="always_agree">始终允许</string>
+    <string name="always_agree">Allow</string>
     <string name="invite">Accept</string>
     <string name="exit">Exit</string>
     <string name="agree">Agree</string>

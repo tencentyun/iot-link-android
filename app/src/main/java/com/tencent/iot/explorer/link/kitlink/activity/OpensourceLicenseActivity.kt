@@ -30,7 +30,7 @@ class OpensourceLicenseActivity : BaseActivity(), MyCustomCallBack {
         var urlSet = Arrays.asList(CommonField.OPENSOURCE_LICENSE_URL_EN, CommonField.OPENSOURCE_LICENSE_URL_ZH,
             CommonField.PRIVACY_POLICY_URL_CN_EN, CommonField.PRIVACY_POLICY_URL_US_ZH, CommonField.PRIVACY_POLICY_URL_US_EN,
             CommonField.SERVICE_AGREEMENT_URL_CN_EN, CommonField.SERVICE_AGREEMENT_URL_US_ZH, CommonField.SERVICE_AGREEMENT_URL_US_EN,
-            CommonField.DELET_ACCOUNT_POLICY_EN)
+            CommonField.DELET_ACCOUNT_POLICY_EN, CommonField.THIRD_SDK_URL_US_ZH, CommonField.THIRD_SDK_URL_US_EN)
 
         fun startWebWithExtra(context: Context, title: String, url: String) {
             val intent = Intent(context, OpensourceLicenseActivity::class.java)
