@@ -2,11 +2,11 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField.THIRD_SDK_URL_US_EN
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField.THIRD_SDK_URL_US_ZH
 import kotlinx.android.synthetic.main.activity_web.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -50,7 +50,20 @@ class WebActivity : BaseActivity() {
         wv_web.settings.useWideViewPort = true
         wv_web.settings.loadWithOverviewMode = true
         wv_web.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
-        wv_web.webViewClient = WebViewClient()
+        val mWebViewClient = object : WebViewClient(){
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                if (request?.url.toString().contains(THIRD_SDK_URL_US_ZH)) {
+                    OpensourceLicenseActivity.startWebWithExtra(this@WebActivity, getString(R.string.rule_content_list), THIRD_SDK_URL_US_ZH)
+                    return true
+                } else if (request?.url.toString().contains(THIRD_SDK_URL_US_EN)) {
+                    OpensourceLicenseActivity.startWebWithExtra(this@WebActivity, getString(R.string.rule_content_list), THIRD_SDK_URL_US_EN)
+                    return true
+                } else {
+                    return super.shouldOverrideUrlLoading(view, request)
+                }
+            }
+        }
+        wv_web.webViewClient = mWebViewClient
         wv_web.webChromeClient = WebChromeClient()
         wv_web.visibility = View.VISIBLE
         sv_help.visibility = View.GONE
