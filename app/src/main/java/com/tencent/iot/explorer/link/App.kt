@@ -150,6 +150,8 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         lang = lang.substring(0,2)
         WeatherUtils.defaultLang = lang
         BleConfigService.get().context = this
+
+        loadLastCountryInfo();
     }
 
     /**
@@ -480,6 +482,17 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         L.e("WebSocket已连接")
         if (data.rtcDeviceIdList != null) {
             IoTAuth.registerActivePush(data.rtcDeviceIdList!!, null)
+        }
+    }
+
+    private fun loadLastCountryInfo() {
+        var countryInfo = Utils.getStringValueFromXml(T.getContext(), CommonField.COUNTRY_INFO, CommonField.COUNTRY_INFO)
+        if (TextUtils.isEmpty(countryInfo)) return
+
+        countryInfo!!.split("+").let {
+            val regionId = it[1]
+            App.data.regionId = regionId
+            App.data.region = it[3]
         }
     }
 }

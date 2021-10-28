@@ -59,6 +59,8 @@ class AboutUsActivity : BaseActivity() {
         iv_back.setOnClickListener { finish() }
         tv_title_privacy_policy.setOnClickListener(listener)
         tv_title_user_agreement.setOnClickListener(listener)
+        tv_title_third_party_information.setOnClickListener(listener)
+        tv_title_collected_personal_information.setOnClickListener(listener)
         tv_about_app_version.setOnClickListener(listener)
         tv_title_opensource.setOnClickListener(listener)
     }
@@ -116,6 +118,26 @@ class AboutUsActivity : BaseActivity() {
                         }
                         OpensourceLicenseActivity.startWebWithExtra(this@AboutUsActivity, getString(R.string.register_agree_4), url)
                     }
+                }
+
+                tv_title_third_party_information -> {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.THIRD_SDK_URL_US_ZH
+                    } else {
+                        url = CommonField.THIRD_SDK_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@AboutUsActivity, getString(R.string.rule_content_list), url)
+                }
+
+                tv_title_collected_personal_information -> {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.PERSONAL_INFO_URL_US_ZH
+                    } else {
+                        url = CommonField.PERSONAL_INFO_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@AboutUsActivity, getString(R.string.personal_information_list), url)
                 }
 
                 tv_title_opensource -> {
