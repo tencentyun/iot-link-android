@@ -1,9 +1,10 @@
 package com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback
 
-import android.media.MediaPlayer
-import android.net.Uri
+import android.graphics.SurfaceTexture
 import android.text.TextUtils
 import android.util.Log
+import android.view.Surface
+import android.view.TextureView
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
@@ -44,7 +45,9 @@ import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_all_time
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_current_pos
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_date
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.video_seekbar
+import kotlinx.android.synthetic.main.fragment_video_local_playback.*
 import kotlinx.coroutines.*
+import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.net.URLDecoder
 import java.text.SimpleDateFormat
@@ -52,7 +55,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoCallback, CoroutineScope by MainScope() {
+class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.SurfaceTextureListener, EventView, VideoCallback, CoroutineScope by MainScope() {
     var devInfo: DevInfo? = null
     private var baseUrl = ""
     private var adapter : ActionListAdapter? = null
@@ -62,11 +65,12 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     private var seekBarJob : Job? = null
     @Volatile
     private var isShowing = false
+    private lateinit var surface: Surface
     private var player : IjkMediaPlayer = IjkMediaPlayer()
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        palayback_video?.let {
-            if (!isVisibleToUser && palayback_video.isPlaying) {
+        player?.let {
+            if (!isVisibleToUser && it.isPlaying) {
                 // 滑动该页面时，如果处于播放状态，暂停播放
                 iv_start.performClick()
             }
@@ -97,6 +101,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
             presenter.setDeviceName(devInfo!!.deviceName)
             try2GetRecord(Date())
         }
+        palayback_video.surfaceTextureListener = this
     }
 
     private fun try2GetRecord(date: Date) {
@@ -162,28 +167,31 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         iv_right_go.setOnClickListener { time_line.next() }
         time_line.setTimelineChangeListener(timeLineViewChangeListener)
         playback_control.setOnClickListener {  }
-        palayback_video.setOnInfoListener(onInfoListener)
         video_seekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
-        palayback_video.setOnErrorListener(onErrorListener)
         pause_tip_layout.setOnClickListener { iv_start.performClick() }
 
-        palayback_video.setOnCompletionListener {
-            iv_start.setImageResource(R.mipmap.start)
-            pause_tip_layout.visibility = View.VISIBLE
-        }
-
         iv_start.setOnClickListener {
-            if (palayback_video.isPlaying) {
-                palayback_video.pause()
+            if (player.isPlaying) {
+                player.pause()
                 iv_start.setImageResource(R.mipmap.start)
                 pause_tip_layout.visibility = View.VISIBLE
                 seekBarJob?.cancel()
             } else {
-                palayback_video.start()
+                player.start()
                 iv_start.setImageResource(R.mipmap.stop)
                 pause_tip_layout.visibility = View.GONE
                 startJobRereshTimeAndProgress()
             }
+        }
+    }
+
+    private var onCompletionListener = object: IMediaPlayer.OnCompletionListener {
+        override fun onCompletion(mp: IMediaPlayer?) {
+            iv_start?.setImageResource(R.mipmap.start)
+            pause_tip_layout?.visibility = View.VISIBLE
+            seekBarJob?.cancel()
+            video_seekbar.progress = video_seekbar.max
+            player.seekTo(1)
         }
     }
 
@@ -207,18 +215,16 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         }
     }
 
-    private var onErrorListener = object : MediaPlayer.OnErrorListener {
-        override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-            video_seekbar.progress = 0
-            video_seekbar.max = 0
-            tv_current_pos.setText("00:00:00")
-            tv_all_time.setText("00:00:00")
-            iv_start.setImageResource(R.mipmap.start)
-            pause_tip_layout.visibility = View.GONE
-            Toast.makeText(context, getString(R.string.no_data), Toast.LENGTH_SHORT).show()
-            iv_start.isClickable = false
-            return true
-        }
+    private var onErrorListener = IMediaPlayer.OnErrorListener { mp, what, extra ->
+        video_seekbar.progress = 0
+        video_seekbar.max = 0
+        tv_current_pos.text = "00:00:00"
+        tv_all_time.text = "00:00:00"
+        iv_start.setImageResource(R.mipmap.start)
+        pause_tip_layout.visibility = View.GONE
+        Toast.makeText(context, getString(R.string.no_data), Toast.LENGTH_SHORT).show()
+        iv_start.isClickable = false
+        true
     }
 
     private var onSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
@@ -226,7 +232,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             if (fromUser) {  // 是用户操作的，调整视频到指定的时间点
-                palayback_video.seekTo(progress * 1000)
+                player.seekTo((progress * 1000).toLong())
                 return
             }
         }
@@ -254,9 +260,6 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                         return@onChange
                     }
                 }
-
-                // 如果对应时间段没有视频内容
-                palayback_video.setVideoURI(Uri.parse(""))
             }
         }
     }
@@ -287,20 +290,34 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     }
 
     private fun startVideo(url: String, offset: Long) {
-        palayback_video.setVideoURI(Uri.parse(url))
+        if (TextUtils.isEmpty(url)) return
+        player.reset()
+        player.setSurface(this.surface)
+        player.dataSource = url
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "fastseek")
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024 * 10)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
         seekBarJob?.cancel()
-        palayback_video.setOnPreparedListener {
+        player.prepareAsync()
+        player.setOnErrorListener(onErrorListener)
+        player.setOnInfoListener(onInfoListener)
+        player.setOnCompletionListener(onCompletionListener)
+        player.setOnPreparedListener {
             var realOffset = offset
             if (realOffset >= it.duration) {
-                realOffset = it.duration.toLong()
+                realOffset = it.duration
             }
-            tv_current_pos.setText(CommonUtils.formatTime(realOffset))
-            tv_all_time.setText(CommonUtils.formatTime(it.duration.toLong()))
-            video_seekbar.max = it.duration / 1000
+            tv_current_pos.text = CommonUtils.formatTime(realOffset)
+            tv_all_time.text = CommonUtils.formatTime(it.duration)
+            video_seekbar.max = (it.duration / 1000).toInt()
             startJobRereshTimeAndProgress()
             iv_start.isClickable = true
             it.start()
-            it.seekTo(realOffset.toInt())
+            it.seekTo(realOffset)
             launch(Dispatchers.Main) {
                 delay(10)
                 if (!isShowing) {
@@ -311,26 +328,26 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     }
 
     private fun startJobRereshTimeAndProgress() {
-        seekBarJob = launch {
+        seekBarJob = launch(Dispatchers.Main) {
             while (isActive) {
                 delay(1000)
-                tv_current_pos.setText(CommonUtils.formatTime(palayback_video.currentPosition.toLong()))
-                video_seekbar.progress = palayback_video.currentPosition / 1000
+                tv_current_pos.setText(CommonUtils.formatTime(player.currentPosition))
+                video_seekbar.progress = (player.currentPosition / 1000).toInt()
             }
         }
     }
 
-    private var onInfoListener = object : MediaPlayer.OnInfoListener {
-        override fun onInfo(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+    private var onInfoListener = object : IMediaPlayer.OnInfoListener {
+        override fun onInfo(mp: IMediaPlayer?, what: Int, extra: Int): Boolean {
             mp?.let {
                 if (it.isPlaying) {
-                    iv_start.setImageResource(R.mipmap.stop)
-                    pause_tip_layout.visibility = View.GONE
+                    iv_start?.setImageResource(R.mipmap.stop)
+                    pause_tip_layout?.visibility = View.GONE
                     return true
                 }
             }
-            iv_start.setImageResource(R.mipmap.start)
-            pause_tip_layout.visibility = View.VISIBLE
+            iv_start?.setImageResource(R.mipmap.start)
+            pause_tip_layout?.visibility = View.VISIBLE
             return true
         }
     }
@@ -385,7 +402,6 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                         var url = String.format(URL_FORMAT, baseUrl,
                             (dataList.get(0).startTime.time / 1000).toString(),
                             endtime)
-
                         playVideo(url, 0)
                     }
                 }
@@ -413,5 +429,25 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         videoLayoutParams.marginStart = marginStart
         videoLayoutParams.marginEnd = marginEnd
         palayback_video.layoutParams = videoLayoutParams
+    }
+
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+        surface?.let {
+            this.surface = Surface(surface)
+            player.setSurface(this.surface)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        player?.let {
+            if (it.isPlaying) {
+                iv_start.performClick()
+            }
+        }
     }
 }
