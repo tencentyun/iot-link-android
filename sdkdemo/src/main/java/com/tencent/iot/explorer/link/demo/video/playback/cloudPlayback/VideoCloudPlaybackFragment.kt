@@ -3,9 +3,11 @@ package com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback
 import android.media.MediaPlayer
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
@@ -31,6 +33,17 @@ import com.tencent.iot.video.link.consts.VideoRequestCode
 import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.activity_video_preview.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.iv_left_go
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.iv_right_go
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.iv_start
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.layout_select_date
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.pause_tip_layout
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.playback_control
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.time_line
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_all_time
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_current_pos
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_date
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.video_seekbar
 import kotlinx.coroutines.*
 import java.net.URLDecoder
 import java.text.SimpleDateFormat
@@ -46,6 +59,18 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     private lateinit var presenter: EventPresenter
     private var URL_FORMAT = "%s?starttime_epoch=%s&endtime_epoch=%s"
     private var seekBarJob : Job? = null
+    @Volatile
+    private var isShowing = false
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        palayback_video?.let {
+            if (!isVisibleToUser && palayback_video.isPlaying) {
+                // 滑动该页面时，如果处于播放状态，暂停播放
+                iv_start.performClick()
+            }
+        }
+        isShowing = isVisibleToUser
+    }
 
     override fun startHere(view: View) {
         super.startHere(view)
@@ -138,6 +163,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
         palayback_video.setOnInfoListener(onInfoListener)
         video_seekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
         palayback_video.setOnErrorListener(onErrorListener)
+        pause_tip_layout.setOnClickListener { iv_start.performClick() }
 
         palayback_video.setOnCompletionListener {
             iv_start.setImageResource(R.mipmap.start)
@@ -165,9 +191,15 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                 it.index = pos
                 it.notifyDataSetChanged()
 
+                var endtime = ""
+                if (it.list.get(pos).endTime != 0L) {
+                    endtime = (it.list.get(pos).endTime).toString()
+                } else {
+                    endtime = (System.currentTimeMillis() / 1000).toString()
+                }
                 var url = String.format(URL_FORMAT, presenter.getBaseUrl(),
                     (it.list.get(pos).startTime).toString(),
-                    (it.list.get(pos).endTime).toString())
+                    endtime)
                 playVideo(url, 0)
             }
         }
@@ -204,10 +236,16 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
             date?.let {
                 for (j in 0 until timeLineView!!.timeBlockInfos.size) {
                     var blockTime = timeLineView!!.timeBlockInfos!!.get(j)
-                    if (blockTime.startTime.time <= date.time && blockTime.endTime.time >= date.time) {
+                    if (blockTime.startTime.time <= date.time && (blockTime.endTime.time >= date.time || blockTime.endTime.time == 0L)) {
+                        var endtime = ""
+                        if (blockTime.endTime.time != 0L) {
+                            endtime = (blockTime.endTime.time / 1000).toString()
+                        } else {
+                            endtime = (System.currentTimeMillis() / 1000).toString()
+                        }
                         var url = String.format(URL_FORMAT, baseUrl,
                             (blockTime.startTime.time / 1000).toString(),
-                            (blockTime.endTime.time / 1000).toString())
+                            endtime)
 
                         var offest = date.time - blockTime.startTime.time
                         playVideo(url, offest)
@@ -261,6 +299,12 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
             iv_start.isClickable = true
             it.start()
             it.seekTo(realOffset.toInt())
+            launch(Dispatchers.Main) {
+                delay(10)
+                if (!isShowing) {
+                    iv_start.performClick()
+                }
+            }
         }
     }
 
@@ -330,9 +374,15 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                         time_line.timeBlockInfos = dataList
                         time_line.invalidate()
 
+                        var endtime = ""
+                        if (dataList.get(0).endTime.time != 0L) {
+                            endtime = (dataList.get(0).endTime.time / 1000).toString()
+                        } else {
+                            endtime = (System.currentTimeMillis() / 1000).toString()
+                        }
                         var url = String.format(URL_FORMAT, baseUrl,
                             (dataList.get(0).startTime.time / 1000).toString(),
-                            (dataList.get(0).endTime.time / 1000).toString())
+                            endtime)
 
                         playVideo(url, 0)
                     }
@@ -354,5 +404,12 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
                 ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.no_data), 2000).show()
             }
         }
+    }
+
+    override fun videoViewNeeResize(marginStart: Int, marginEnd: Int) {
+        var videoLayoutParams = palayback_video.layoutParams as ConstraintLayout.LayoutParams
+        videoLayoutParams.marginStart = marginStart
+        videoLayoutParams.marginEnd = marginEnd
+        palayback_video.layoutParams = videoLayoutParams
     }
 }
