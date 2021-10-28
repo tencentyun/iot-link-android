@@ -9,17 +9,23 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.DataHolder
 import com.tencent.iot.explorer.link.T
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.User
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.TipShareDevDialog
 import com.tencent.iot.explorer.link.customview.status.StatusBarUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
+import com.tencent.iot.explorer.link.kitlink.entity.ProductEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductsEntity
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import java.util.*
 
 /**
@@ -325,5 +331,30 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         jumpActivity(DeviceCategoryActivity::class.java)
+    }
+
+    interface OnTypeGeted {
+        fun onType(type: String)
+    }
+
+    fun getDeviceType(productId: String, onTypeGeted: OnTypeGeted) {
+        var productsList = arrayListOf(productId)
+        HttpRequest.instance.deviceProducts(productsList, object: MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {}
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                if (response.isSuccess()) {
+                    if (TextUtils.isEmpty(response.data.toString())) return
+
+                    var products = JSON.parseObject(response.data.toString(), ProductsEntity::class.java)
+                    products?.Products?.let {
+                        var product = JSON.parseObject(it.getString(0), ProductEntity::class.java)
+                        product?.let {
+                            onTypeGeted?.onType(it.NetType)
+                        }
+                    }
+                }
+            }
+        })
     }
 }
