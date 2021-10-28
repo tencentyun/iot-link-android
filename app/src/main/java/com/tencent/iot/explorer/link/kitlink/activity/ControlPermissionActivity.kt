@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.adapter.PermissionsAdapter
@@ -43,7 +44,9 @@ class ControlPermissionActivity : BaseActivity() {
         super.onResume()
         // 刷新当前的权限列表，避免用户手动进入到后台，调整权限的情况
         if (permissionsData.isEmpty()) return
-        for (i in permissionsData.indices) {
+        val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(this@ControlPermissionActivity);
+        permissionsData[0].permissionAccessed = notificationManager.areNotificationsEnabled()
+        for (i in 1 until permissionsData.size) {
             permissionsData[i].permissionAccessed =
                 ActivityCompat.checkSelfPermission(this, permissionsData[i].permission) == PackageManager.PERMISSION_GRANTED
         }
@@ -68,6 +71,33 @@ class ControlPermissionActivity : BaseActivity() {
 
     private var onItemClicked = object: PermissionsAdapter.OnItemActionListener {
         override fun onItemSwitched(pos: Int, permissionAccessInfo: PermissionAccessInfo) {
+            if (pos == 0) { //通知
+                val intent: Intent = Intent()
+                try {
+                    intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+
+                    //8.0及以后版本使用这两个extra.  >=API 26
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                    intent.putExtra(Settings.EXTRA_CHANNEL_ID, applicationInfo.uid)
+
+                    //5.0-7.1 使用这两个extra.  <= API 25, >=API 21
+                    intent.putExtra("app_package", packageName)
+                    intent.putExtra("app_uid", applicationInfo.uid)
+
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+
+                    //其他低版本或者异常情况，走该节点。进入APP设置界面
+                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    intent.putExtra("package", packageName)
+
+                    //val uri = Uri.fromParts("package", packageName, null)
+                    //intent.data = uri
+                    startActivity(intent)
+                }
+                return
+            }
             if (!permissionAccessInfo.permissionAccessed) {  // 没有对应的权限，尝试开启权限
                 ActivityCompat.requestPermissions(this@ControlPermissionActivity, arrayOf(permissionAccessInfo.permission), REQUEST_CODE)
                 return
@@ -79,6 +109,7 @@ class ControlPermissionActivity : BaseActivity() {
     }
 
     private fun checkPermissionsInfo(permissions: Array<String>) {
+        permissionsData.add(checkNotificationPermissions())
         val pm = this@ControlPermissionActivity.packageManager
         for (permission in permissions) {
             var accessInfo = PermissionAccessInfo()
@@ -95,6 +126,14 @@ class ControlPermissionActivity : BaseActivity() {
             }
             permissionsData.add(accessInfo)
         }
+    }
+
+    private fun checkNotificationPermissions() : PermissionAccessInfo {
+        var accessInfo = PermissionAccessInfo()
+        val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(this@ControlPermissionActivity);
+        accessInfo.permissionAccessed = notificationManager.areNotificationsEnabled()
+        accessInfo.permissionName = "通知管理"
+        return accessInfo
     }
 
 }

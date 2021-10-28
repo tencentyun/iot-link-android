@@ -132,6 +132,8 @@ object CommonField {
     const val DELET_ACCOUNT_POLICY_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config6.js"
     const val THIRD_SDK_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config12.js"
     const val THIRD_SDK_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config13.js"
+    const val PERSONAL_INFO_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config14.js"
+    const val PERSONAL_INFO_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config15.js"
 
     /************返回结果通用字段*************/
     const val RESPONSE = "Response"
