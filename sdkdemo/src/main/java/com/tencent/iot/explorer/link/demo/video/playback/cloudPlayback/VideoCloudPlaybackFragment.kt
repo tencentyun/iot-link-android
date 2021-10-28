@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_current_p
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.tv_date
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.video_seekbar
 import kotlinx.coroutines.*
+import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.net.URLDecoder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -61,6 +62,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), EventView, VideoC
     private var seekBarJob : Job? = null
     @Volatile
     private var isShowing = false
+    private var player : IjkMediaPlayer = IjkMediaPlayer()
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         palayback_video?.let {
