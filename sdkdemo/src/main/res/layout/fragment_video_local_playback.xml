@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_F2F2F2"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/v_space"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_video"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintTop_toBottomOf="@id/v_space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextureView
+            android:id="@+id/local_palayback_video"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:padding="16dp"
+            android:background="@drawable/background_black_radius_alpha_cell"
+            android:id="@+id/pause_tip_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@mipmap/stop"
+                />
+
+            <TextView
+                android:layout_marginLeft="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_14"
+                android:text="@string/paused"/>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_control_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/local_palayback_video"
+            app:layout_constraintEnd_toEndOf="@id/local_palayback_video"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/background_black_white_gradient"
+            >
+
+            <ImageView
+                android:id="@+id/iv_video_back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:padding="4dp"
+                app:layout_constraintTop_toTopOf="@id/iv_video_record"
+                app:layout_constraintBottom_toBottomOf="@id/iv_video_record"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="7dp"
+                android:src="@mipmap/back_white"
+                />
+            
+            <ImageView
+                android:id="@+id/iv_video_record"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:src="@mipmap/record_white"
+                />
+
+            <ImageView
+                android:id="@+id/iv_video_photo"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintTop_toTopOf="@id/iv_video_record"
+                app:layout_constraintBottom_toBottomOf="@id/iv_video_record"
+                app:layout_constraintEnd_toStartOf="@id/iv_video_record"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/photo"
+                app:tint="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/play_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/iv_video_photo"
+                app:layout_constraintTop_toTopOf="@id/iv_video_record"
+                app:layout_constraintBottom_toBottomOf="@id/iv_video_record"
+                android:layout_marginEnd="16dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/white"
+                android:background="@color/white_translucent_4DFFFFFF"
+                />
+
+            <TextView
+                android:id="@+id/tv_video_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                app:layout_constraintTop_toTopOf="@id/iv_video_back"
+                app:layout_constraintBottom_toBottomOf="@id/iv_video_back"
+                app:layout_constraintStart_toEndOf="@id/iv_video_back"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toStartOf="@id/play_speed"
+                android:layout_marginStart="20dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recording_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_recording"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:src="@mipmap/recording" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/iv_recording"
+                app:layout_constraintBottom_toBottomOf="@id/iv_recording"
+                app:layout_constraintStart_toEndOf="@id/iv_recording"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_12"
+                android:layout_marginStart="10dp"
+                android:text="@string/recording"
+                android:layout_marginEnd="12dp"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/playback_control"
+            android:layout_width="0dp"
+            android:background="@drawable/background_white_black_gradient"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/local_palayback_video"
+            app:layout_constraintEnd_toEndOf="@id/local_palayback_video"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_start"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:padding="4dp"
+                app:layout_constraintTop_toTopOf="@id/playback_control_orientation"
+                app:layout_constraintBottom_toBottomOf="@id/playback_control_orientation"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@mipmap/start"
+                android:layout_marginStart="7dp" />
+
+            <TextView
+                android:id="@+id/tv_current_pos"
+                android:textColor="@color/white"
+                android:layout_marginStart="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/iv_start"
+                app:layout_constraintTop_toTopOf="@id/playback_control_orientation"
+                app:layout_constraintBottom_toBottomOf="@id/playback_control_orientation" />
+
+            <TextView
+                android:id="@+id/tv_all_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toStartOf="@id/playback_control_orientation"
+                app:layout_constraintTop_toTopOf="@id/playback_control_orientation"
+                app:layout_constraintBottom_toBottomOf="@id/playback_control_orientation" />
+
+            <SeekBar
+                android:id="@+id/video_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/playback_control_orientation"
+                app:layout_constraintBottom_toBottomOf="@id/playback_control_orientation"
+                app:layout_constraintStart_toEndOf="@id/tv_current_pos"
+                app:layout_constraintEnd_toStartOf="@id/tv_all_time"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:thumb="@drawable/thumb_drawable"
+                android:maxHeight="2dp"
+                android:progressDrawable="@drawable/seekbar_background_style"
+                />
+
+            <ImageView
+                android:id="@+id/playback_control_orientation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/orientation"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_control"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_video">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/time_line_layout"
+            android:background="@color/white"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_select_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="@dimen/ts_17"
+                android:textColor="@color/black_15161A"
+                android:gravity="center_vertical"
+                />
+
+            <ImageView
+                android:layout_width="9dp"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tv_date"
+                app:layout_constraintTop_toTopOf="@id/tv_date"
+                app:layout_constraintDimensionRatio="h,1:1"
+                android:src="@mipmap/more_date"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                app:layout_constraintStart_toEndOf="@id/tv_date"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/iv_left_go"
+            android:layout_width="28dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_select_date"
+            app:layout_constraintDimensionRatio="h,1:1"
+            android:src="@mipmap/left_go"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="16dp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_right_go"
+            android:layout_width="28dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_select_date"
+            app:layout_constraintDimensionRatio="h,1:1"
+            android:src="@mipmap/right_go"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            />
+
+        <com.tencent.iot.explorer.link.demo.common.customView.EdgeTransparentView
+            android:id="@+id/time_line_layout"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toEndOf="@id/iv_left_go"
+            app:layout_constraintEnd_toStartOf="@id/iv_right_go"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/layout_select_date"
+            app:edge_width="38dp"
+            app:edge_position="left|right">
+
+            <com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineView
+                android:id="@+id/time_line"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                app:centerlineColor="@color/blue_0052D9"
+                app:timeUnitSize="10dp"
+                app:centerlineWidth="2dp"
+                app:textSize="@dimen/ts_14"
+                app:textColor="@color/gray_A1A7B2"
+                app:lineColor="@color/gray_A1A7B2"
+                app:lineWidth="1dp"
+                app:timeBlockColor="@color/blue_330052D9"
+                app:bottomTextMaginBottom="9dp"
+                />
+
+        </com.tencent.iot.explorer.link.demo.common.customView.EdgeTransparentView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
