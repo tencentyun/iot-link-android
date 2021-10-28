@@ -102,6 +102,7 @@ object CommonField {
     const val USA_USER_REG_TIME_INFO_DAY = "RegTimeInfoDay"
     const val COUNTRY_INFO = "CountryInfo"
     const val COUNTRY_CODE = "CountryCode"
+    const val AGREED_RULE_FLAG = "agreeRule"
     const val AGREE_TAG = "agreeTag"
     const val AGREED_TAG = "agreed"
     const val REGION_ID = "RegionID"
@@ -129,6 +130,8 @@ object CommonField {
     const val SERVICE_AGREEMENT_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config7.js"
     const val SERVICE_AGREEMENT_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config3.js"
     const val DELET_ACCOUNT_POLICY_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config6.js"
+    const val THIRD_SDK_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config12.js"
+    const val THIRD_SDK_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config13.js"
 
     /************返回结果通用字段*************/
     const val RESPONSE = "Response"

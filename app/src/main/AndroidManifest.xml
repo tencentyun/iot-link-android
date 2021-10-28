@@ -78,6 +78,7 @@
         <activity android:name=".kitlink.activity.AddTimerActivity" />
         <activity android:name=".kitlink.activity.FamilyActivity" />
         <activity android:name=".kitlink.activity.RoomListActivity" />
+        <activity android:name=".kitlink.activity.ControlPermissionActivity" />
         <activity android:name=".kitlink.activity.AddRoomActivity" />
         <activity android:name=".kitlink.activity.AddFamilyActivity" />
         <activity android:name=".kitlink.activity.CommentDetailsActivity" />
@@ -163,6 +164,7 @@
         <activity android:name=".kitlink.activity.ForgotPasswordActivity" />
         <activity android:name=".kitlink.activity.CountryCodeActivity" />
         <activity android:name=".kitlink.activity.RegisterActivity" />
+        <activity android:name=".kitlink.activity.ChooseCountryActivity" />
         <activity android:name=".kitlink.activity.MessageActivity" /> <!-- 微信回调 -->
         <activity android:name=".kitlink.activity.DevicePanelActivity" />
         <activity android:name=".kitlink.activity.FeedbackForH5Activity" />

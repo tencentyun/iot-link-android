@@ -26,8 +26,10 @@ class ProductIntroduceActivity : BaseActivity(), MyCallback {
 
     override fun initView() {
         tv_title.setText(getString(R.string.bind_dev))
-        productId = intent.getStringExtra(CommonField.EXTRA_INFO)
-        HttpRequest.instance.getProductsConfig(arrayListOf(productId), this)
+        if (intent.hasExtra(CommonField.PRODUCT_ID)) {
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+            HttpRequest.instance.getProductsConfig(arrayListOf(productId), this)
+        }
     }
 
     private fun loadRemoteRes(productGlobalStr: String) {

@@ -51,6 +51,7 @@
         <activity android:name=".core.activity.QrcodeConfigNetActivity" />
         <activity android:name=".core.activity.ApConfigNetActivity" />
         <activity android:name=".core.activity.WiredConfigNetActivity" />
+        <activity android:name=".core.activity.ShowAllDeviceActivity" />
         <activity android:name=".video.VideoOptionsActivity" />
         <activity android:name=".video.VideoInputAuthorizeActivity" />
         <activity android:name=".video.VideoMainActivity" />
