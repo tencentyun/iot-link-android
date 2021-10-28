@@ -1,5 +1,7 @@
 package com.tencent.iot.explorer.link.demo.video
 
+import java.util.*
+
 // 信令
 class Command {
     companion object {
@@ -44,6 +46,40 @@ class Command {
 
         fun getTwoWayRadio(channel: Int): String {
             return "channel=${channel}"
+        }
+
+        fun getMonthDates(channel: Int, time: String): String {
+            // yyyymm 年月
+            return "action=inner_define&channel=${channel}&cmd=get_month_record&time=${time}"
+        }
+
+        fun getDayTimeBlocks(channel: Int, date: Date): String {
+            var dateStart = Date(date.time)
+            dateStart.hours = 0
+            dateStart.minutes = 0
+            dateStart.seconds = 0
+            var dateEnd = Date(date.time)
+            dateEnd.hours = 23
+            dateEnd.minutes = 59
+            dateEnd.seconds = 59
+            return "action=inner_define&channel=${channel}&cmd=get_record_index" +
+                    "&start_time=${dateStart.time/1000}&end_time=${dateEnd.time/1000}"
+        }
+
+        fun getLocalVideoUrl(channel: Int, startTime: Long, endTime: Long): String {
+            return "ipc.flv?action=playback&channel=${channel}&start_time=${startTime}&end_time=${endTime}"
+        }
+
+        fun pauseLocalVideoUrl(channel: Int): String {
+            return "action=inner_define&channel=${channel}&cmd=playback_pause"
+        }
+
+        fun resumeLocalVideoUrl(channel: Int): String {
+            return "action=inner_define&channel=${channel}&cmd=playback_resume"
+        }
+
+        fun seekLocalVideo(channel: Int, offset: Long): String {
+            return "action=inner_define&channel=${channel}&cmd=playback_seek&time=${offset}}"
         }
     }
 }

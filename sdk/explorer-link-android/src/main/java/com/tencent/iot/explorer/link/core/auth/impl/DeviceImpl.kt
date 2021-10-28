@@ -140,4 +140,9 @@ interface DeviceImpl {
      */
     fun trtcCallDevice(deviceId: String, callback: MyCallback)
 
-}
+    /**
+     * 获取所有设备
+     */
+    fun allDevices(token: String, platformId: String, offset: Int, limit: Int, callback: MyCallback)
+
+    }
