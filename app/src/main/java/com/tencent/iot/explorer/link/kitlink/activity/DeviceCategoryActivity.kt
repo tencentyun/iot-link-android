@@ -38,6 +38,7 @@ import com.tencent.iot.explorer.link.core.link.service.BleConfigService
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.MyScrollView
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.customview.verticaltab.*
 import com.tencent.iot.explorer.link.kitlink.adapter.BleDeviceAdapter
@@ -317,7 +318,18 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
                     startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
                 } else {
-                    requestPermission(permissions)
+                    var dlg = PermissionDialog(this@DeviceCategoryActivity, getString(R.string.permission_of_wifi), getString(R.string.permission_of_wifi_lips))
+                    dlg.show()
+                    dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
+                        override fun OnClickRefuse() {
+
+                        }
+
+                        override fun OnClickOK() {
+                            requestPermission(permissions)
+                        }
+
+                    })
                 }
             }
 //            iv_question -> {
@@ -366,7 +378,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                             productsList.add(productid!!)
                             if (contains("preview=1")) {
                                 var intent = Intent(this@DeviceCategoryActivity, ProductIntroduceActivity::class.java)
-                                intent.putExtra(CommonField.EXTRA_INFO, productid)
+                                intent.putExtra(CommonField.PRODUCT_ID, productid)
                                 startActivity(intent)
                             } else {
                                 HttpRequest.instance.getProductsConfig(productsList, patchProductListener)
@@ -408,7 +420,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
                     if (config != null && !TextUtils.isEmpty(config.Global) && ProductGlobal.isProductGlobalLegal(config.Global)) {
                         var intent = Intent(this@DeviceCategoryActivity, ProductIntroduceActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_INFO, productId)
+                        intent.putExtra(CommonField.PRODUCT_ID, productId)
                         startActivity(intent)
                         return@run
                     }
@@ -473,7 +485,18 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     private fun beginScanning() {
         if (!checkPermissions(blueToothPermissions)) {
-            requestPermission(blueToothPermissions)
+            var dlg = PermissionDialog(this@DeviceCategoryActivity, getString(R.string.permission_of_wifi), getString(R.string.permission_of_wifi_lips))
+            dlg.show()
+            dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
+                override fun OnClickRefuse() {
+
+                }
+
+                override fun OnClickOK() {
+                    requestPermission(blueToothPermissions)
+                }
+
+            })
             return
         }
 
