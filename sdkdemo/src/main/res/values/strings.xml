@@ -16,7 +16,8 @@
 
     <string name="add_device">添加设备</string>
     <string name="device_list">设备列表</string>
-
+    <string name="show_all_device">显示所有设备</string>
+    <string name="no_devices">没有设备</string>
     <string name="scan_add">扫码添加</string>
     <string name="smart_config">智能配网</string>
     <string name="soft_ap">自助配网</string>
@@ -78,6 +79,7 @@
     <string name="checked_date_first">请选择日期</string>
     <string name="talk">对讲</string>
     <string name="record">录像</string>
+    <string name="recording">录像中</string>
     <string name="photo">拍照</string>
     <string name="video_quality_high">1080P</string>
     <string name="video_quality_medium">720P</string>
@@ -100,6 +102,13 @@
     <string name="xp2p_err_version">APP SDK 版本与设备端 SDK 版本号不匹配，版本号需前两位保持一致</string>
     <string name="command_with_error">执行信令 %s 不成功</string>
     <string name="loading">加载中</string>
+    <string name="play_speed_0_5">0.5X</string>
+    <string name="play_speed_0_75">0.75X</string>
+    <string name="play_speed_1">1X</string>
+    <string name="play_speed_1_25">1.25X</string>
+    <string name="play_speed_1_5">1.5X</string>
+    <string name="play_speed_2">2X</string>
+    <string name="play_speed_title">播放倍速</string>
 
     <!--家庭管理-->
     <string name="family_manager">家庭管理</string>

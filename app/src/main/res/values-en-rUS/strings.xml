@@ -26,6 +26,7 @@
     <string name="modify_fail">Failed to edit</string>
     <string name="save">Save</string>
     <string name="refuse">Reject</string>
+    <string name="always_agree">Allow</string>
     <string name="invite">Accept</string>
     <string name="exit">Exit</string>
     <string name="agree">Agree</string>
@@ -680,7 +681,23 @@
     <string name="device_offline_already">The device is offline</string>
     <string name="zero_device">0 devices</string>
     <string name="dialog_title_name">Popup title</string>
-
+    <string name="not_used_temporarily">No</string>
+    <string name="rule_agree">Yes</string>
+    <string name="rule_title_and">and</string>
+    <string name="rule_title_private_protect">Privacy protection</string>
+    <string name="rule_content_list">Third-party information sharing checklist</string>
+    <string name="rule_content_prefix">In order to protect your personal rights and interests, before you use our products, please be sure to carefully read Tencent LLink</string>
+    <string name="rule_content_middle">，to help you understand our collection/storage/use/external provision/protection of your personal information and your rights. \nWe will not actively share or transfer your personal information to a third party. If there are other situations in which your personal information is shared or transferred or you need us to share or transfer that to a third party, we will confirm that the third party obtains your agreement to the above actions. For personal information that needs to be shared with third-party service providers in our products, please refer to</string>
+    <string name="rule_content_suffix">. \nIf you have any questions about the above agreement, you can send the question to the official email fanyi@tencent.com of Tencent LLink or to our dedicated department for personal information protection.The mailing address is：Tencent Building, Keji Zhong Road, Nanshan District, Shenzhen, Guangdong, China. Recipient：Legal Department，Data and Privacy Protection Center\n If you agree to the content of the above agreement, please click "Yes" to accept our product service!</string>
+    <string name="controller_of_permission">Authority management</string>
+    <string name="permission_of_title_tip">Please authorize Tencent LLink the following permissions</string>
+    <string name="country_tip">In order to provide you with the user agreement and privacy policy of your country/region, please select your country/region</string>
+    <string name="permission_of_mic_camera">In order to use the real-time communication of the device, Tencent LLink needs to obtain the following permissions:</string>
+    <string name="permission_of_mic_camera_lips">· camera/microphone</string>
+    <string name="permission_of_wifi">This step will configure the WiFi network for the hardware device to achieve communication, and bind the relationship between the hardware device and the APP user. Therefore, Tencent LLink needs to obtain the following permissions：</string>
+    <string name="permission_of_wifi_lips">· WiFi name、WiFi password\n· the IP of the mobile phone</string>
+    <string name="permission_of_wechat">You will authorize the following personal information to be bound to your WeChat account:</string>
+    <string name="permission_of_wechat_lips">· nickname、profile photo、region、gender\n· device information</string>
 
     <!--international end  -->
 </resources>
