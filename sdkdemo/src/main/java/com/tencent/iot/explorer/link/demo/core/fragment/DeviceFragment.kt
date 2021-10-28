@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.demo.core.fragment
 
+import android.content.Intent
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,7 @@ import com.tencent.iot.explorer.link.demo.core.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.demo.core.adapter.OnItemListener
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.customView.MyDivider
+import com.tencent.iot.explorer.link.demo.core.activity.ShowAllDeviceActivity
 import kotlinx.android.synthetic.main.fragment_device.*
 
 class DeviceFragment : BaseFragment(), MyCallback {
@@ -60,6 +62,9 @@ class DeviceFragment : BaseFragment(), MyCallback {
     }
 
     private fun setListener() {
+        tv_show_all_device.setOnClickListener {
+            jumpActivity(ShowAllDeviceActivity::class.java)
+        }
         tv_add_device.setOnClickListener {
             jumpActivity(AddDeviceActivity::class.java)
         }
