@@ -145,6 +145,41 @@
         android:background="@color/gray_E7E8EB" />
 
     <TextView
+        android:id="@+id/tv_controller_of_permission"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/controller_of_permission"
+        android:textColor="@color/black_15161A"
+        android:textSize="@dimen/ts_14"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/line_location_of_account"
+        tools:layout_editor_absoluteX="0dp" />
+    <ImageView
+        android:id="@+id/iv_modify_controller_of_permission"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="16dp"
+        android:rotation="180"
+        android:src="@mipmap/icon_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/tv_controller_of_permission"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_controller_of_permission"
+        />
+
+    <View
+        android:id="@+id/line_controller_of_permission"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/tv_controller_of_permission"
+        android:background="@color/gray_E7E8EB" />
+
+    <TextView
         android:id="@+id/tv_location_of_account"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -191,7 +226,7 @@
         android:textColor="@color/black_15161A"
         android:textSize="@dimen/ts_14"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/line_location_of_account"
+        app:layout_constraintTop_toBottomOf="@+id/tv_controller_of_permission"
         tools:layout_editor_absoluteX="0dp" />
 
     <ImageView

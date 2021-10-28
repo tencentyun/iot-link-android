@@ -8,6 +8,8 @@ import android.content.pm.ActivityInfo
 import android.graphics.SurfaceTexture
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.text.TextUtils
 import android.util.Log
 import android.view.Surface
@@ -39,6 +41,7 @@ import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
+import kotlinx.android.synthetic.main.dash_board_layout.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
@@ -82,13 +85,20 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     @Volatile
     private var showVideoTime = 0L
     private var volumeChangeObserver: VolumeChangeObserver? = null
+    private val MSG_UPDATE_HUD = 1
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
     }
 
-    override fun initView() {
+    override fun onResume() {
+        super.onResume()
+        XP2P.setCallback(this)
         keepAliveThreadRuning = true
+        startPlayer()
+    }
+
+    override fun initView() {
         presenter = EventPresenter(this@VideoPreviewActivity)
         var bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
         bundle?.let {
@@ -119,11 +129,8 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
             XP2P.setQcloudApiCred(it.accessId, it.accessToken)
-            XP2P.setCallback(this)
             audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000)
         }
-
-        startPlayer()
 
         //实例化对象并设置监听器
         volumeChangeObserver = VolumeChangeObserver(this)
@@ -134,6 +141,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     private fun startPlayer() {
         if (App.data.accessInfo == null || TextUtils.isEmpty(presenter.getDeviceName())) return
         player = IjkMediaPlayer()
+        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
 
         Thread(Runnable {
             var id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
@@ -157,11 +165,13 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
             tmpCountDownLatch.await()
 
-            urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
-            if (!TextUtils.isEmpty(urlPrefix)) {
-                player?.let {
-                    resetPlayer()
-                    keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
+                urlPrefix = it
+                if (!TextUtils.isEmpty(urlPrefix)) {
+                    player?.let {
+                        resetPlayer()
+                        keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+                    }
                 }
             }
         }).start()
@@ -201,8 +211,10 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 tmpCountDownLatch.await()
                 Log.d(tag, "id=${id}, tmpCountDownLatch do not wait any more")
 
-                urlPrefix = XP2P.delegateHttpFlv(id)
-                if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
+                XP2P.delegateHttpFlv(id)?.let {
+                    urlPrefix = it
+                    if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
+                }
             }
         }.start()
     }
@@ -227,7 +239,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             if (able) {
                 var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
                 var repStatus = XP2P.postCommandRequestSync("${accessInfo.productId}/${presenter.getDeviceName()}",
-                    command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                    command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000) ?:""
 
                 launch(Dispatchers.Main) {
                     var retContent = StringBuilder(repStatus).toString()
@@ -287,7 +299,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             var dev = DevInfo()
             dev.deviceName = presenter.getDeviceName()
             VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewActivity, dev)
-            finish()
         }
         radio_photo.setOnClickListener {
             ImageSelect.saveBitmap(this@VideoPreviewActivity, v_preview.bitmap)
@@ -331,7 +342,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 App.data.accessInfo?.let {
                     if (command.length <= 0) return@Runnable
                     var retContent = XP2P.postCommandRequestSync("${it.productId}/${presenter.getDeviceName()}",
-                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)?:""
                     launch(Dispatchers.Main) {
                         if (TextUtils.isEmpty(retContent)) {
                             retContent = getString(R.string.command_with_error, command)
@@ -406,6 +417,13 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     private fun setPlayerUrl(suffix: String) {
         showTip = false
         startShowVideoTime = System.currentTimeMillis()
+        player.release()
+        launch (Dispatchers.Main) {
+            layout_video_preview?.removeView(v_preview)
+            layout_video_preview?.addView(v_preview, 0)
+        }
+
+        player = IjkMediaPlayer()
         player?.let {
             val url = urlPrefix + suffix
             it.reset()
@@ -416,6 +434,9 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
 
             it.setSurface(this.surface)
             it.dataSource = url
@@ -476,7 +497,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
-        if (!showTip) {
+        if (!showTip && startShowVideoTime > 0) {
             showVideoTime = System.currentTimeMillis() - startShowVideoTime
             var content = getString(R.string.time_2_show, connectTime.toString(), showVideoTime.toString())
             TipToastDialog(this, content, 10000).show()
@@ -491,6 +512,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e(tag, "id=${id}, event=${event}")
         if (event == 1003) {
+            startShowVideoTime = 0L
             keepPlayThreadLock?.let {
                 synchronized(it) {
                     it.notify()
@@ -514,9 +536,13 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
+        finishPlayer()
+    }
 
+    private fun finishPlayer() {
+        mHandler.removeMessages(MSG_UPDATE_HUD)
         player?.release()
         if (radio_talk.isChecked) speakAble(false)
         if (radio_record.isChecked) {
@@ -527,7 +553,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         App.data.accessInfo?.let {
             XP2P.stopService("${it.productId}/${presenter.getDeviceName()}")
         }
-        XP2P.setCallback(null)
 
         countDownLatchs.clear()
         // 关闭守护线程
@@ -537,6 +562,12 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 it.notify()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        finishPlayer()
+        XP2P.setCallback(null)
         cancel()
         volumeChangeObserver?.unregisterReceiver();
     }
@@ -560,6 +591,31 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     override fun onVolumeChanged(volume: Int) {
         if (audioAble) {
             player?.setVolume(volume.toFloat(), volume.toFloat())
+        }
+    }
+
+    private val mHandler: Handler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                MSG_UPDATE_HUD -> {
+                    val videoCachedDuration = player?.videoCachedDuration
+                    val audioCachedDuration = player?.audioCachedDuration
+                    val videoCachedBytes = player?.videoCachedBytes
+                    val audioCachedBytes = player?.audioCachedBytes
+                    val tcpSpeed = player?.tcpSpeed
+
+                    tv_a_cache?.text = String.format(Locale.US, "%s, %s",
+                        CommonUtils.formatedDurationMilli(audioCachedDuration),
+                        CommonUtils.formatedSize(audioCachedBytes))
+                    tv_v_cache?.text = String.format(Locale.US, "%s, %s",
+                        CommonUtils.formatedDurationMilli(videoCachedDuration),
+                        CommonUtils.formatedSize(videoCachedBytes))
+                    tv_tcp_speed?.text = String.format(Locale.US, "%s",
+                        CommonUtils.formatedSpeed(tcpSpeed, 1000))
+                    removeMessages(MSG_UPDATE_HUD)
+                    sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
+                }
+            }
         }
     }
 }
