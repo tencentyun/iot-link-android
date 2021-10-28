@@ -681,6 +681,10 @@
     <string name="device_offline_already">The device is offline</string>
     <string name="zero_device">0 devices</string>
     <string name="dialog_title_name">Popup title</string>
+    <string name="scan_ble_and_connect">蓝牙连接中</string>
+    <string name="can_not_connect_connect">无法连接蓝牙设备</string>
+    <string name="break_ble_connect">断开连接</string>
+    <string name="start_bind">开始绑定</string>
     <string name="not_used_temporarily">No</string>
     <string name="rule_agree">Yes</string>
     <string name="rule_title_and">and</string>

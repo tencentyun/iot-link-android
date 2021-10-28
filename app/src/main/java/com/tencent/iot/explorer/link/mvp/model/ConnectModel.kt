@@ -27,6 +27,7 @@ import com.tencent.iot.explorer.link.kitlink.util.*
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
 import kotlinx.coroutines.*
+import java.util.*
 
 /**
  * 配网进度、绑定设备
@@ -240,6 +241,17 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                     return
                 }
 
+                if (BleConfigService.get().currentConnectBleDevice?.type == 1) {
+                    launch {
+                        bluetoothGatt?.let {
+                            delay(3000)
+                            if (BleConfigService.get().sendUNTX(it)) return@launch
+                            bleFailed("send untx failed")
+                        }
+                    }
+                    return
+                }
+
                 launch {
                     bluetoothGatt?.let {
                         delay(500)
@@ -251,6 +263,57 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 }
             }
 
+            override fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition) {
+                this@ConnectModel.view?.connectStep(BleConfigStep.STEP_SEND_TOKEN.ordinal)
+                BleConfigService.get().currentConnectBleDevice?.let {
+                    var deviceInfo = BleSubDeviceInfo()
+                    deviceInfo.signMethod = "hmacsha1"
+                    deviceInfo.deviceName = bleDevBindCondition.deviceName
+                    deviceInfo.signature = bleDevBindCondition.signInfo
+                    deviceInfo.productId = it.productId
+                    deviceInfo.connId = BleConfigService.get().nonceKeep.toString()
+                    deviceInfo.timestamp = BleConfigService.get().unixTimestemp + 60
+                    HttpRequest.instance.sigBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId,
+                        deviceInfo, "bluetooth_sign", object : MyCallback {
+                            override fun fail(msg: String?, reqCode: Int) {
+                                bleFailed(msg)
+                                BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
+                            }
+
+                            override fun success(response: BaseResponse, reqCode: Int) {
+                                if (!response.isSuccess()) {
+                                    bleFailed(response.msg)
+                                    BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
+                                    return
+                                }
+                                launch {
+                                    bluetoothGatt?.let {
+                                        if (BleConfigService.get().sendBindSuccessedResult(it, bleDevBindCondition.deviceName)) {
+                                            this@ConnectModel.view?.connectStep(BleConfigStep.STEP_LINK_SUCCESS.ordinal)
+                                            view?.connectSuccess()
+                                            return@launch
+                                        }
+                                    }
+                                    bleFailed("send bind result failed")
+                                    BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
+                                }
+                            }
+                        })
+                    return
+                }
+
+                bleFailed("param error")
+            }
+            override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {}
+            override fun onBleUnbindSignInfo(signInfo: String) {}
+            override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {}
+            override fun onBleControlPropertyResult(result: Int) {}
+            override fun onBleRequestCurrentProperty() {}
+            override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
+            override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
+            override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+            override fun onBleDeviceMtuSize(size: Int) {}
+            override fun onBleDeviceTimeOut(timeLong: Int) {}
         }
     }
 
