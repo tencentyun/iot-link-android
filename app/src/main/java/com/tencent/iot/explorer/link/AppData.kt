@@ -39,7 +39,7 @@ class AppData private constructor() {
     var userInfo = UserInfo()
     var userSetting = UserSetting()
     var regionId = "1"
-    var conutryCode = "1"  // 当前的登录的国家码
+    var conutryCode = "86"  // 当前的登录的国家码
     var bleDevice: BleDevice? = null  // 用于标记将要被索引的蓝牙设备
     var region = "ap-guangzhou"
     var appLifeCircleId = "0"

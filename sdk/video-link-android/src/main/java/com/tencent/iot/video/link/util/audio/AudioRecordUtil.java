@@ -61,7 +61,9 @@ public class AudioRecordUtil implements EncoderListener {
      */
     public void stop() {
         recorderState = false;
-        audioRecord.stop();
+        if (audioRecord != null) {
+            audioRecord.stop();
+        }
         audioRecord = null;
         pcmEncoder = null;
         flvPacker = null;
