@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <VideoView
+        <TextureView
             android:id="@+id/palayback_video"
             android:layout_width="0dp"
             android:layout_height="0dp"
