@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_layout"
+    android:background="@color/dialog_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/tip_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_failed_cell"
+        android:paddingTop="20dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginStart="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/tip_title"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/black_15161A"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"/>
+
+        <ScrollView
+            android:id="@+id/sv_content"
+            android:layout_width="match_parent"
+            android:layout_height="212dp"
+            android:layout_below="@id/tip_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:id="@+id/tv_tip_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.0"
+                android:textColor="@color/gray_6C7078"
+                android:textSize="@dimen/ts_14" />
+
+        </ScrollView>
+
+        <View
+            android:id="@+id/divid_line"
+            android:layout_width="match_parent"
+            android:layout_below="@id/sv_content"
+            android:layout_centerHorizontal="true"
+            android:background="@color/grey_e5e5e5"
+            android:layout_marginTop="20dp"
+            android:layout_height="1dp"/>
+
+        <View
+            android:id="@+id/divid_line_v"
+            android:layout_below="@id/divid_line"
+            android:layout_width="1dp"
+            android:layout_height="48dp"
+            android:background="@color/grey_e5e5e5"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:id="@+id/tv_confirm"
+            android:layout_below="@id/divid_line"
+            android:text="@string/rule_agree"
+            android:layout_toRightOf="@id/divid_line_v"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/bule_0066ff"
+            android:gravity="center"
+            android:layout_alignTop="@id/divid_line_v"
+            android:layout_alignBottom="@id/divid_line_v"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_below="@id/divid_line"
+            android:text="@string/not_used_temporarily"
+            android:layout_toLeftOf="@id/divid_line_v"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/ts_16"
+            android:textColor="@color/gray_6C7078"
+            android:gravity="center"
+            android:layout_alignTop="@id/divid_line_v"
+            android:layout_alignBottom="@id/divid_line_v"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -119,8 +119,7 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
     }
 
     private fun loadContent() {
-        var extraInfo = intent.getStringExtra(CommonField.EXTRA_INFO)
-
+        val extraInfo = intent.getStringExtra(CommonField.EXTRA_INFO) ?: return
         var uri = Uri.parse(extraInfo)
         if (uri == null) return
 

@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.core.auth.socket
 
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ConnectionCallback
+import com.tencent.iot.explorer.link.core.log.L
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
@@ -16,6 +17,7 @@ class JWebSocketClient(serverUri: URI, handler: DispatchMsgHandler, connectionCa
     }
 
     override fun onClose(code: Int, reason: String, remote: Boolean) {
+        L.e("onClose code:$code, reason:$reason, remote:$remote")
         disconnect()
     }
 
@@ -26,6 +28,7 @@ class JWebSocketClient(serverUri: URI, handler: DispatchMsgHandler, connectionCa
     }
 
     override fun onError(ex: Exception?) {
+        L.e("onError exception:${ex?.message}")
         isConnected = true
         disconnect()
     }
