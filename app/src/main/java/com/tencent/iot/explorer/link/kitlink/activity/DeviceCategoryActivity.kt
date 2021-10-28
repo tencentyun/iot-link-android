@@ -5,12 +5,10 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +25,6 @@ import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.entity.DevModeInfo
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.core.link.entity.*
@@ -42,7 +39,6 @@ import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.customview.verticaltab.*
 import com.tencent.iot.explorer.link.kitlink.adapter.BleDeviceAdapter
-import com.tencent.iot.explorer.link.kitlink.adapter.DeviceAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
@@ -142,6 +138,17 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {}
         override fun onBlePushTokenResult(success: Boolean) {}
         override fun onMtuChanged(mtu: Int, status: Int) {}
+        override fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition) {}
+        override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {}
+        override fun onBleUnbindSignInfo(signInfo: String) {}
+        override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleControlPropertyResult(result: Int) {}
+        override fun onBleRequestCurrentProperty() {}
+        override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+        override fun onBleDeviceMtuSize(size: Int) {}
+        override fun onBleDeviceTimeOut(timeLong: Int) {}
     }
 
     private val runnable = Runnable {
@@ -198,10 +205,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 T.show(getString(R.string.no_product_info))
                 return
             }
-            var intent = Intent(this@DeviceCategoryActivity, BleConfigHardwareActivity::class.java)
-            intent.putExtra(CommonField.PRODUCT_ID, dev.productId)
-            App.data.bleDevice = dev
-            this@DeviceCategoryActivity.startActivity(intent)
+            BleConfigHardwareActivity.startWithProductid(this@DeviceCategoryActivity, dev.productId, dev.type)
             BleConfigService.get().stopScanBluetoothDevices()
         }
     }
