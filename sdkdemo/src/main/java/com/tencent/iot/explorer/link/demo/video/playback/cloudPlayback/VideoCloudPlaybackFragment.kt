@@ -67,6 +67,8 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private var isShowing = false
     private lateinit var surface: Surface
     private var player : IjkMediaPlayer = IjkMediaPlayer()
+    @Volatile
+    private var updateSeekBarAble = true  // 手动拖拽过程的标记
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         player?.let {
@@ -228,14 +230,16 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     private var onSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
-        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            if (fromUser) {  // 是用户操作的，调整视频到指定的时间点
-                player.seekTo((progress * 1000).toLong())
-                return
-            }
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            updateSeekBarAble = false
         }
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            seekBar?.let {
+                player.seekTo(it.progress.toLong() * 1000)
+            }
+            updateSeekBarAble = true
+        }
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
     }
 
     private var timeLineViewChangeListener = object : TimeLineViewChangeListener {
@@ -331,8 +335,10 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         seekBarJob = launch(Dispatchers.Main) {
             while (isActive) {
                 delay(1000)
-                tv_current_pos.setText(CommonUtils.formatTime(player.currentPosition))
-                video_seekbar.progress = (player.currentPosition / 1000).toInt()
+                tv_current_pos.text = CommonUtils.formatTime(player.currentPosition)
+                if (updateSeekBarAble) {  //非拖拽中可以自动刷新进度
+                    video_seekbar.progress = (player.currentPosition / 1000).toInt()
+                }
             }
         }
     }

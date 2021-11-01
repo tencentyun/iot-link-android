@@ -79,6 +79,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private var connected = false
     @Volatile
     private var isShowing = false
+    private var updateSeekBarAble = true  // 手动拖拽过程的标记
 
     private fun sendCmd(id: String, cmd: String): String {
         if (connected)
@@ -207,7 +208,9 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             while (isActive) {
                 delay(1000)
                 tv_current_pos.text = CommonUtils.formatTime(player.currentPosition)
-                video_seekbar.progress = (player.currentPosition / 1000).toInt()
+                if (updateSeekBarAble) {
+                    video_seekbar.progress = (player.currentPosition / 1000).toInt()
+                }
             }
         }
     }
@@ -505,16 +508,17 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     private var onSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            if (fromUser) {  // 是用户操作的，调整视频到指定的时间点
-                playVideo(keepStartTime, keepEndTime, progress.toLong())
-                player.seekTo(progress.toLong() * 1000)
-                return
-            }
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            updateSeekBarAble = false
         }
-
-        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            seekBar?.let {
+                playVideo(keepStartTime, keepEndTime, it.progress.toLong())
+                player.seekTo(it.progress.toLong() * 1000)
+            }
+            updateSeekBarAble = true
+        }
     }
 
     private fun startConnect() {
