@@ -61,8 +61,16 @@ class ChooseCountryActivity : PActivity(), ChooseCountryView, View.OnClickListen
         tv_register_to_country.text = countryName + getString(R.string.conutry_code_num, countryCode)
     }
 
-    private fun shouldShowBirthdayDlg(): Boolean {
-        var lastTimeJson = Utils.getStringValueFromXml(this@ChooseCountryActivity, CommonField.USA_USER_REG_TIME_INFO, CommonField.USA_USER_REG_TIME_INFO)
+    private fun shouldShowBirthdayDlg(countryCode: String): Boolean {
+        var lastTimeJson: String?
+        if (countryCode == "1") {
+            lastTimeJson = Utils.getStringValueFromXml(this@ChooseCountryActivity, CommonField.USA_USER_REG_TIME_INFO, CommonField.USA_USER_REG_TIME_INFO)
+        } else if (countryCode == "86") {
+            lastTimeJson = Utils.getStringValueFromXml(this@ChooseCountryActivity, CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO, CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO)
+        } else {
+            return false
+        }
+
         // 不存在上一次的注册信息
         if (TextUtils.isEmpty(lastTimeJson) || lastTimeJson == "{}") return true
 
@@ -71,9 +79,18 @@ class ChooseCountryActivity : PActivity(), ChooseCountryView, View.OnClickListen
         var currentYear = currentDate.year + 1900
         var currentMonth = currentDate.month + 1
         var currentDay = currentDate.day
-        var tagYear = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_YEAR)
-        var tagMonth = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_MONTH)
-        var tagDay = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_DAY)
+        var tagYear = 0
+        var tagMonth = 0
+        var tagDay = 0
+        if (countryCode == "1") {
+            tagYear = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_YEAR)
+            tagMonth = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_MONTH)
+            tagDay = json.getIntValue(CommonField.USA_USER_REG_TIME_INFO_DAY)
+        } else if (countryCode == "86") {
+            tagYear = json.getIntValue(CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO_YEAR)
+            tagMonth = json.getIntValue(CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO_MONTH)
+            tagDay = json.getIntValue(CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO_DAY)
+        }
         if (currentYear - tagYear > 0 && currentMonth - tagMonth == 0 && currentDay - tagDay == 0) { // 满周年
             return true
         }
@@ -95,14 +112,21 @@ class ChooseCountryActivity : PActivity(), ChooseCountryView, View.OnClickListen
     }
 
     private fun showBirthDayDlg() {
-        if (presenter.getCountryCode() == "1" && shouldShowBirthdayDlg()) {
+        val countryCode = presenter.getCountryCode()
+        if (shouldShowBirthdayDlg(countryCode)) {
             var dlg = InputBirthdayDialog(this@ChooseCountryActivity)
             dlg.show()
             dlg.setOnDismissListener(object: InputBirthdayDialog.OnDismisListener {
                 override fun onOkClicked(year: Int, month: Int, day: Int) {
+                    var age = 0
+                    if (countryCode == "1") {
+                        age = 13
+                    } else if (countryCode == "86") {
+                        age = 18
+                    }
 
-                    // 是否满13周岁
-                    if (!ifOver13YearsOld(year, month, day)) {
+                    // 是否满age周岁
+                    if (!ifOverAge(age, year, month, day)) {
                         T.show(resources.getString(R.string.too_young_to_use))
                         finish()
                         return
@@ -113,12 +137,22 @@ class ChooseCountryActivity : PActivity(), ChooseCountryView, View.OnClickListen
                     var currentYear = currentDate.year + 1900
                     var currentMonth = currentDate.month + 1
                     var currentDay = currentDate.day
-                    // 记录本次使用的日期
-                    timeJson.put(CommonField.USA_USER_REG_TIME_INFO_YEAR, currentYear)
-                    timeJson.put(CommonField.USA_USER_REG_TIME_INFO_MONTH, currentMonth)
-                    timeJson.put(CommonField.USA_USER_REG_TIME_INFO_DAY, currentDay)
-                    Utils.setXmlStringValue(T.getContext(), CommonField.USA_USER_REG_TIME_INFO,
-                        CommonField.USA_USER_REG_TIME_INFO, timeJson.toJSONString())
+
+                    if (countryCode == "1") {
+                        // 记录本次使用的日期
+                        timeJson.put(CommonField.USA_USER_REG_TIME_INFO_YEAR, currentYear)
+                        timeJson.put(CommonField.USA_USER_REG_TIME_INFO_MONTH, currentMonth)
+                        timeJson.put(CommonField.USA_USER_REG_TIME_INFO_DAY, currentDay)
+                        Utils.setXmlStringValue(T.getContext(), CommonField.USA_USER_REG_TIME_INFO,
+                            CommonField.USA_USER_REG_TIME_INFO, timeJson.toJSONString())
+                    } else if (countryCode == "86") {
+                        // 记录本次使用的日期
+                        timeJson.put(CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO_YEAR, currentYear)
+                        timeJson.put(CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO_MONTH, currentMonth)
+                        timeJson.put(CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO_DAY, currentDay)
+                        Utils.setXmlStringValue(T.getContext(), CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO,
+                            CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO, timeJson.toJSONString())
+                    }
                 }
 
                 override fun onCancelClicked() { finish() }
@@ -126,13 +160,13 @@ class ChooseCountryActivity : PActivity(), ChooseCountryView, View.OnClickListen
         }
     }
 
-    private fun ifOver13YearsOld(year: Int, month: Int, day: Int): Boolean {
+    private fun ifOverAge(age: Int,year: Int, month: Int, day: Int): Boolean {
         var currentDate = Date()
         var currentYear = currentDate.year + 1900
         var currentMonth = currentDate.month + 1
         var currentDay = currentDate.day
-        if (currentYear - year < 13 || (currentYear - year == 13 && currentMonth - month < 0) ||
-            (currentYear - year == 13 && currentMonth - month == 0 && currentDay - day < 0)) {
+        if (currentYear - year < age || (currentYear - year == age && currentMonth - month < 0) ||
+            (currentYear - year == age && currentMonth - month == 0 && currentDay - day < 0)) {
             return false
         }
         return true
