@@ -460,7 +460,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
 
                     // 是否满13周岁
                     if (!ifOver13YearsOld(year, month, day)) {
-                        T.show(resources.getString(R.string.too_young_to_use))
+                        T.show(resources.getString(R.string.usa_too_young_to_use))
                         finish()
                         return
                     }

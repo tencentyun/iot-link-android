@@ -171,7 +171,8 @@
     <string name="not_install_wechat_client">WeChat is not installed. Try again after you install WeChat.</string>
     <string name="cancel_wechat">Deauthorize</string>
     <string name="input_birthday_for_better_react">Date of Birth</string>
-    <string name="too_young_to_use"> Sorry. Tencent LianLian is not available.</string>
+    <string name="usa_too_young_to_use">Because you are under 13 years old, you cannot use our products and services temporarily.</string>
+    <string name="mainland_too_young_to_use">Because you are under 18 years old, you cannot use our products and services temporarily.</string>
     <string name="location_failed">Positioning failed </string>
 
     <string name="login">Log In</string>
