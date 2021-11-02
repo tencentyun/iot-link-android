@@ -54,7 +54,7 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
-        android:text="@string/default_country"
+        android:text="@string/please_choose"
         android:gravity="center_vertical"
         android:textColor="@color/gray_6C7078"
         android:textSize="@dimen/ts_14"

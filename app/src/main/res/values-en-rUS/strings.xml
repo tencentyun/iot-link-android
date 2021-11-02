@@ -146,6 +146,7 @@
     <string name="please_enter_pwd">Please enter your password</string>
     <string name="get_code">Get code</string>
     <string name="conutry_code_num">&#160;(+%s)</string>
+    <string name="please_choose">Please choose</string>
 
     <!--登陆注册-->
     <string name="wechat_login">Login with WeChat</string>
