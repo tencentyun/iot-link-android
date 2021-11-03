@@ -75,12 +75,14 @@ class BleConfigService private constructor() {
         var foundedSet: HashMap<String, Boolean> = HashMap() // 用于去重
         scanCallback = object : ScanCallback() {
             override fun onBatchScanResults(results: List<ScanResult?>?) {
+                L.d("onBatchScanResults: " + results.toString())
                 var dev: BleDevice? = null
                 results?.let { ress ->
                     for (result in ress) {
                         result?.scanRecord?.serviceUuids?.let {
                             for (value in it) {
                                 if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFF0")) {
+                                    L.d("onBatchScanResults: " + value.uuid.toString())
                                     dev = BleDevice()
                                     dev?.devName = result?.scanRecord?.deviceName.toString()
                                     dev?.blueDev = result?.device
