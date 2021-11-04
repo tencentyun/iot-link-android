@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92045313_18d6fd1d",
+        "filename": "app/src/main/java/com/tencent/iot/explorer/link/kitlink/activity/DeviceDetailsActivity.kt",
+        "patchSetId": 9
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-11-04T13:46:57Z",
+      "side": 1,
+      "message": "unbind解绑数据写入成功，但提示了R.string.fail",
+      "revId": "42417e3b65747797fcc6be53f8f0f21e1b0d8e39",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd44c1d9_62283498",
+        "filename": "sdk/explorer-link-android/src/main/java/com/tencent/iot/explorer/link/core/link/service/BleConfigService.kt",
+        "patchSetId": 9
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2021-11-04T13:46:57Z",
+      "side": 1,
+      "message": "localPsk需要存储，因为重启app后，再进入连接蓝牙子设备时，需要传入localPsk进行签名校验，传入错误localPsk会造成连接失败，蓝牙子设备会抛出该错误，需要调用AppSetDeviceConfig存入云端，连接时从AppGetDeviceConfig获取存入的localPsk。\n-----------------------------------------------------------------------------\n会在后续change中修复该问题。",
+      "revId": "42417e3b65747797fcc6be53f8f0f21e1b0d8e39",
+      "serverId": "bfd29338-1d98-4536-875c-f9d1fff7ae29",
+      "unresolved": true
+    }
+  ]
+}
