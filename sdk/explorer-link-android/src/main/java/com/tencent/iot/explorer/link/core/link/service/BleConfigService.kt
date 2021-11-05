@@ -8,16 +8,23 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
 import com.tencent.iot.explorer.link.core.log.L
+import java.lang.Exception
 import java.security.InvalidKeyException
 import java.security.MessageDigest
 import java.util.*
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
@@ -576,6 +583,16 @@ class BleConfigService private constructor() {
         if (success) byteArr[3] = 0x02.toByte()
         var intTime = System.currentTimeMillis() / 1000
         localPsk = number2Bytes(intTime, 4)
+        IoTAuth.deviceImpl.setDeviceConfig("${productId}/${devName}",
+            localPsk, object: MyCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    L.d("setDeviceConfig fail")
+                }
+
+                override fun success(response: BaseResponse, reqCode: Int) {
+                    L.d("setDeviceConfig success")
+                }
+            })
         System.arraycopy(localPsk, 0, byteArr, 4, 4)
         var bindTag = getBindTag(productId, devName)
         System.arraycopy(bindTag, 0, byteArr, 8, 8)
@@ -594,7 +611,7 @@ class BleConfigService private constructor() {
         return null
     }
 
-    fun connectSubDevice(connection: BluetoothGatt?): Boolean {
+    fun connectSubDevice(connection: BluetoothGatt?, productId: String?, deviceName: String?): Boolean {
         if (!enableFFE0CharacteristicNotification(connection)) return false
         var byteArr = ByteArray(27)
         byteArr[0] = 0x01.toByte()
@@ -603,6 +620,30 @@ class BleConfigService private constructor() {
         var number = System.currentTimeMillis() / 1000
         var tsBytes = number2Bytes(number, 4)
         System.arraycopy(tsBytes, 0, byteArr, 3, 4)
+        if (productId != null && deviceName != null) {
+            var countDownLatch = CountDownLatch(1)
+            val callback = object: MyCallback{
+                override fun fail(msg: String?, reqCode: Int) {
+                    countDownLatch.countDown()
+                }
+
+                override fun success(response: BaseResponse, reqCode: Int) {
+                    val json = response.data as JSONObject
+                    val configsJson = json.getJSONObject("Configs")
+                    if (configsJson == null || configsJson.isEmpty()) {
+                        return
+                    }
+                    localPsk = configsJson.getBytes("ble_psk_device_ket")
+                    countDownLatch.countDown()
+                }
+            }
+            try {
+                IoTAuth.deviceImpl.getDeviceConfig(productId, deviceName, callback)
+                countDownLatch.await(5, TimeUnit.SECONDS)
+            } catch (e:Exception) {
+
+            }
+        }
         var signData = sign(number.toString(), localPsk)
         signData?:let { return false }
         System.arraycopy(signData, 0, byteArr, 7, 20)

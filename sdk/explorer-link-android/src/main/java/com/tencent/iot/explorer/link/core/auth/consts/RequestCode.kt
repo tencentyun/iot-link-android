@@ -69,6 +69,8 @@ object RequestCode {
     const val check_device_bind_token_state = 3013
     const val trtc_call_device = 3015
     const val all_device = 3016
+    const val set_device_config = 3017
+    const val get_device_config = 3018
     /*************设备接口结束**************/
 
     /*************云端定时接口开始**************/
