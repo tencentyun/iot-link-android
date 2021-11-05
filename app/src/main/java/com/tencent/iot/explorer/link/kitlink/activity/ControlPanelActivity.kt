@@ -181,7 +181,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                     delay(1000)
                     BleConfigService.get().bluetoothGatt?.let {
                         BleConfigService.get().stopScanBluetoothDevices()
-                        if (!BleConfigService.get().connectSubDevice(it)) {
+                        if (!BleConfigService.get().connectSubDevice(it, presenter.getProductId(), presenter.getDeviceName())) {
                             stopScanBleDev(false)
                             return@launch
                         } else {
