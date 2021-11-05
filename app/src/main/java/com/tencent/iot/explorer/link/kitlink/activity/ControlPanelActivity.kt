@@ -148,11 +148,11 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         override fun onBleDeviceFounded(bleDevice: BleDevice) {
             if (bleDevice.productId == deviceEntity?.ProductId && !TextUtils.isEmpty(bleDevice.productId)) {
                 //&& bleDevice.devName == deviceEntity?.DeviceName) {
-                BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+                BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDeviceAndGetLocalPsk(bleDevice, presenter.getProductId(), presenter.getDeviceName())
             } else if (!TextUtils.isEmpty(bleDevice.bindTag)) {
                 deviceEntity?.let {
                     if (bleDevice.bindTag == BleConfigService.bytesToHex(BleConfigService.getBindTag(it.ProductId, it.DeviceName))) {
-                        BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+                        BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDeviceAndGetLocalPsk(bleDevice, presenter.getProductId(), presenter.getDeviceName())
                     }
                 }
             }

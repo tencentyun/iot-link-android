@@ -8,9 +8,13 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
@@ -18,6 +22,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import java.security.InvalidKeyException
 import java.security.MessageDigest
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
@@ -221,8 +226,32 @@ class BleConfigService private constructor() {
         return true
     }
 
+    fun connectBleDeviceAndGetLocalPsk(dev: BleDevice?, productId: String?, deviceName: String?): BluetoothGatt? {
+        getlocalPsk(productId, deviceName)
+        return connectBleDevice(dev)
+    }
+
     fun connectBleDevice(dev: BleDevice?): BluetoothGatt? {
         return connectBleDevice(dev, false)
+    }
+
+    private fun getlocalPsk(productId: String?, deviceName: String?) {
+        if (productId != null && deviceName != null) {
+            IoTAuth.deviceImpl.getDeviceConfig(productId, deviceName, object: MyCallback{
+                override fun fail(msg: String?, reqCode: Int) {
+
+                }
+
+                override fun success(response: BaseResponse, reqCode: Int) {
+                    val json = response.data as JSONObject
+                    val configsJson = json.getJSONObject("Configs")
+                    if (configsJson == null || configsJson.isEmpty()) {
+                        return
+                    }
+                    localPsk = configsJson.getBytes("ble_psk_device_ket")
+                }
+            })
+        }
     }
 
     fun connectBleDevice(dev: BleDevice?, autoConnect: Boolean): BluetoothGatt? {
@@ -576,6 +605,17 @@ class BleConfigService private constructor() {
         if (success) byteArr[3] = 0x02.toByte()
         var intTime = System.currentTimeMillis() / 1000
         localPsk = number2Bytes(intTime, 4)
+        // 保存localPsk到云端
+        IoTAuth.deviceImpl.setDeviceConfig("${productId}/${devName}",
+            localPsk, object: MyCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    L.d("setDeviceConfig fail")
+                }
+
+                override fun success(response: BaseResponse, reqCode: Int) {
+                    L.d("setDeviceConfig success")
+                }
+            })
         System.arraycopy(localPsk, 0, byteArr, 4, 4)
         var bindTag = getBindTag(productId, devName)
         System.arraycopy(bindTag, 0, byteArr, 8, 8)
@@ -603,6 +643,10 @@ class BleConfigService private constructor() {
         var number = System.currentTimeMillis() / 1000
         var tsBytes = number2Bytes(number, 4)
         System.arraycopy(tsBytes, 0, byteArr, 3, 4)
+        if (localPsk == ByteArray(4)) {
+            //无效的localPsk，需要用户重新connect从云端获取localPsk
+            return false
+        }
         var signData = sign(number.toString(), localPsk)
         signData?:let { return false }
         System.arraycopy(signData, 0, byteArr, 7, 20)
