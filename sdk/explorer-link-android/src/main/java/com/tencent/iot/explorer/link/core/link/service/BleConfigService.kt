@@ -8,7 +8,6 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.link.entity.*
@@ -23,6 +22,7 @@ import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.experimental.xor
+
 
 class BleConfigService private constructor() {
 
@@ -370,7 +370,9 @@ class BleConfigService private constructor() {
                 }
                 override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {}
                 override fun onCharacteristicRead(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {}
-                override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {}
+                override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+                    enableCharacteristicNotificationWithUUid(gatt, "FFF0")
+                }
                 override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
                     connetionListener?.onMtuChanged(mtu, status)
                 }
@@ -408,11 +410,21 @@ class BleConfigService private constructor() {
                 if (service.uuid.toString().substring(4, 8).toUpperCase().equals(serviceUuid)) {
                     for (characteristic in service.characteristics) {
                         if (characteristic.uuid.toString().substring(4, 8).toUpperCase().equals("FFE3")) {
-                            return connection.setCharacteristicNotification(characteristic, true)
+                            val success = connection.setCharacteristicNotification(characteristic, true)
+                            if (success) {
+                                val descriptorList = characteristic.descriptors
+                                if (descriptorList != null && descriptorList.size > 0) {
+                                    for (descriptor in descriptorList) {
+                                        descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                                        connection.writeDescriptor(descriptor)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
+            return true
         }
         return false
     }
@@ -460,12 +472,10 @@ class BleConfigService private constructor() {
     }
 
     fun requestConnectWifi(connection: BluetoothGatt?): Boolean {
-        if (!enableCharacteristicNotification(connection)) return false
         return setCharacteristicValue(connection, ByteArray(1){0xE3.toByte()})
     }
 
     fun requestDevInfo(connection: BluetoothGatt?): Boolean {
-        if (!enableCharacteristicNotification(connection)) return false
         currentConnectBleDevice?.let {
             if (it.type == 1) {
                 L.e("纯蓝牙协议流程中，不支持调用该接口")
@@ -476,7 +486,6 @@ class BleConfigService private constructor() {
     }
 
     fun setWifiMode(connection: BluetoothGatt?, mode: BleDeviceWifiMode): Boolean {
-        if (!enableCharacteristicNotification(connection)) return false
         var byteArr = ByteArray(2)
         byteArr[0] = 0xE1.toByte()
         byteArr[1] = mode.getValue()
@@ -484,14 +493,11 @@ class BleConfigService private constructor() {
     }
 
     fun sendWifiInfo(connection: BluetoothGatt?, bleDeviceWifiInfo: BleDeviceWifiInfo): Boolean {
-        if (!enableCharacteristicNotification(connection)) return false
         return setCharacteristicValue(connection, bleDeviceWifiInfo.formatByteArr())
     }
 
     fun configToken(connection: BluetoothGatt?, token: String): Boolean {
         if (TextUtils.isEmpty(token)) return false
-        if (!enableCharacteristicNotification(connection)) return false
-
         var byteArr = ByteArray(3 + token.toByteArray().size)
         byteArr[0] = 0xE4.toByte()
         byteArr[1] = (token.toByteArray().size / Math.pow(2.0, 8.0).toInt()).toByte()
