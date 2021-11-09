@@ -158,7 +158,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                             return@launch // 设置成功则直接退出
                         }
                     }
-                    bleFailed("request device info failed")
+                    bleFailed("set wifi mode failed")
                 }
             }
 
