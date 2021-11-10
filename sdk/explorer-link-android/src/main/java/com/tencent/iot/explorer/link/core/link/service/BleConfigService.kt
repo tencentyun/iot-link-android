@@ -17,6 +17,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import java.security.InvalidKeyException
 import java.security.MessageDigest
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
@@ -121,7 +122,7 @@ class BleConfigService private constructor() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun getScanCallback(): ScanCallback {
-        var foundedSet: HashMap<String, Boolean> = HashMap() // 用于去重
+        var foundedSet: ConcurrentHashMap<String, Boolean> = ConcurrentHashMap() // 用于去重
         scanCallback = object : ScanCallback() {
             override fun onBatchScanResults(results: List<ScanResult?>?) {
                 L.d("onBatchScanResults: " + results.toString())
@@ -154,13 +155,14 @@ class BleConfigService private constructor() {
 
                 dev?.let { bleDev ->
                     if (TextUtils.isEmpty(bleDev.productId) && TextUtils.isEmpty(bleDev.bindTag))  return@let
-
                     L.d(TAG, "productID ${bleDev?.productId} devName ${bleDev.devName} bindTag ${bleDev.bindTag}")
-                    var founded = foundedSet.get(bleDev.productId + bleDev.devName + bleDev.bindTag)
-                    founded?:let { // 不存在对应的元素，第一次发现该设备
-                        connetionListener?.onBleDeviceFounded(bleDev)
-                        L.d(TAG, "onScanResults productId ${bleDev.productId} devName ${bleDev.devName}")
-                        foundedSet.set(bleDev.productId + bleDev.devName, true)
+                    if (!TextUtils.isEmpty(bleDev.devName) && bleDev.devName != "null") {
+                        val founded = foundedSet[bleDev.productId + bleDev.devName + bleDev.bindTag]
+                        founded?:let { // 不存在对应的元素，第一次发现该设备
+                            connetionListener?.onBleDeviceFounded(bleDev)
+                            L.d(TAG, "onScanResults productId ${bleDev.productId} devName ${bleDev.devName}")
+                            foundedSet[bleDev.productId + bleDev.devName] = true
+                        }
                     }
                 }
             }
@@ -250,11 +252,10 @@ class BleConfigService private constructor() {
                         gatt?.discoverServices()
                         gatt?.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
                         connetionListener?.onBleDeviceConnected()
-                        return
+                    } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                        L.d(TAG, "onBleDeviceDisconnected")
+                        connetionListener?.onBleDeviceDisconnected(TCLinkException("diconnected"))
                     }
-
-                    L.d(TAG, "onBleDeviceDisconnected")
-                    connetionListener?.onBleDeviceDisconnected(TCLinkException("diconnected"))
                 }
 
                 override fun onCharacteristicChanged(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?) {
@@ -437,17 +438,19 @@ class BleConfigService private constructor() {
         connection?.let {
             for (service in it.services) {
                 if (service.uuid.toString().substring(4, 8).toUpperCase().equals(serviceUuid)) {
-
                     for (characteristic in service.characteristics) {
                         if (characteristic.uuid.toString().substring(4, 8).toUpperCase().equals(uuid)) {
                             characteristic.value = byteArr
-                            return connection.writeCharacteristic(characteristic)
+                            val success = connection.writeCharacteristic(characteristic)
+                            L.d("setCharacteristicValue success = ${success}")
+                            return success
                         }
                     }
                     break
                 }
             }
         }
+        L.e("setCharacteristicValue error")
         return false
     }
 
