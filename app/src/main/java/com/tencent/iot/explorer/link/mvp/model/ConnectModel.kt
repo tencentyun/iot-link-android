@@ -158,7 +158,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                             return@launch // 设置成功则直接退出
                         }
                     }
-                    bleFailed("set wifi mode failed")
+                    bleFailed("onBleDeviceInfo set wifi mode failed")
                 }
             }
 
@@ -176,7 +176,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             override fun onBleSetWifiModeResult(success: Boolean) {
                 L.d(TAG, "onBleSetWifiModeResult ${success}")
                 if (!success) {
-                    bleFailed("set wifi mode failed")
+                    bleFailed("onBleSetWifiModeResult set wifi mode failed")
                     return
                 }
 
