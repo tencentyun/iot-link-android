@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.core.auth.socket
 
 import android.text.TextUtils
-import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.resp.RespFailMessage
@@ -14,7 +13,6 @@ import com.tencent.iot.explorer.link.core.auth.socket.entity.RequestEntity
 import com.tencent.iot.explorer.link.core.auth.util.WifiUtil
 import com.tencent.iot.explorer.link.core.log.L
 import kotlinx.coroutines.*
-import org.json.JSONObject
 import java.net.URI
 import java.util.*
 
@@ -23,6 +21,7 @@ import java.util.*
  */
 internal class WSClientManager private constructor() {
 
+    private var TAG = WSClientManager.javaClass.simpleName
     private var hasListener = false
     private var job: Job? = null
     private lateinit var heartJob: Job
@@ -340,6 +339,11 @@ internal class WSClientManager private constructor() {
      * 发送消息，不做消息回复确认
      */
     fun sendMessage(message: String) {
+        if (message == null) {   // 空消息不做发送处理，且不入队列
+            L.e(TAG, "empty message")
+            return
+        }
+
         try {
             client?.run {
                 if (isConnected) {
@@ -388,13 +392,19 @@ internal class WSClientManager private constructor() {
     private fun resend() {
         client?.run {
             confirmQueue.forEach {
-                send(it.iotMsg.toString())
+                it.iotMsg.toString()?.let { content ->  // 避免发送空内容
+                    send(content)
+                }
             }
             while (requestQueue.isNotEmpty()) {
-                send(requestQueue.poll()?.iotMsg.toString())
+                requestQueue.poll()?.iotMsg.toString()?.let { content ->  // 避免发送空内容
+                    send(content)
+                }
             }
             while (messageList.isNotEmpty()) {
-                send(messageList.poll())
+                messageList.poll()?.let { content ->  // 避免发送空内容
+                    send(content)
+                }
             }
         }
     }
