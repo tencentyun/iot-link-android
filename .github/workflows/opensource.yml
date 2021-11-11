@@ -45,7 +45,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('../sdk/secring.gpg.asc') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/secring.gpg.asc') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
