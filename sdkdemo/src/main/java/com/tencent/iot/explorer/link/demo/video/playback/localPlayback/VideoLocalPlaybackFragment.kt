@@ -514,6 +514,10 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         }
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             seekBar?.let {
+                if (keepStartTime <= 0 && keepEndTime <= 0) {
+                    seekBar.progress = 0
+                    return
+                }
                 playVideo(keepStartTime, keepEndTime, it.progress.toLong())
                 player.seekTo(it.progress.toLong() * 1000)
             }
