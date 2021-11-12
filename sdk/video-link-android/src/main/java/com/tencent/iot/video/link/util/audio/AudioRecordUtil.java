@@ -27,8 +27,9 @@ public class AudioRecordUtil implements EncoderListener {
         deviceId = id;
         init(sampleRate, channelConfig, audioFormat);
     }
-    public AudioRecordUtil(Context ctx, int sampleRate, int channel, int bitDepth) {
+    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth) {
         context = ctx;
+        deviceId = id;
         init(sampleRate, channel, bitDepth);
     }
 
