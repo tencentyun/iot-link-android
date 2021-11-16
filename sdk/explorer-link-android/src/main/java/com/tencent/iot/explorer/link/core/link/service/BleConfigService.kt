@@ -21,13 +21,14 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.experimental.xor
 
 
 class BleConfigService private constructor() {
 
     private val TAG = this.javaClass.simpleName
+    private val PREFIX_FFE2 = "FFE2"
+    private val PREFIX_FFE3 = "FFE3"
     var connetionListener : BleDeviceConnectionListener? = null
     var context: Context? = null
     var localPsk: ByteArray = ByteArray(4)
@@ -262,7 +263,8 @@ class BleConfigService private constructor() {
                     L.d(TAG, "onCharacteristicChanged characteristic " + JSON.toJSONString(characteristic))
 
                     characteristic?.let {
-                        if (it.uuid.toString().substring(4, 8).toUpperCase().equals("FFE3")) {
+                        val prefix = it.uuid.toString().substring(4, 8).toUpperCase()
+                        if (prefix == PREFIX_FFE2 || prefix == PREFIX_FFE3) {
                             if (it.value.isEmpty()) return
                             L.d(TAG, "characteristic ${bytesToHex(it.value)}")
                             when (it.value[0]) {
@@ -410,13 +412,18 @@ class BleConfigService private constructor() {
             for (service in it.services) {
                 if (service.uuid.toString().substring(4, 8).toUpperCase().equals(serviceUuid)) {
                     for (characteristic in service.characteristics) {
-                        if (characteristic.uuid.toString().substring(4, 8).toUpperCase().equals("FFE3")) {
+                        val prefix = characteristic.uuid.toString().substring(4, 8).toUpperCase()
+                        if (prefix == PREFIX_FFE2 || prefix == PREFIX_FFE3) {
                             val success = connection.setCharacteristicNotification(characteristic, true)
                             if (success) {
                                 val descriptorList = characteristic.descriptors
                                 if (descriptorList != null && descriptorList.size > 0) {
                                     for (descriptor in descriptorList) {
-                                        descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                                        if (prefix == PREFIX_FFE2) {
+                                            descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
+                                        } else {
+                                            descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                                        }
                                         connection.writeDescriptor(descriptor)
                                     }
                                 }
