@@ -123,7 +123,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     private var bleDeviceConnectionListener = object: BleDeviceConnectionListener {
         override fun onBleDeviceFounded(bleDevice: BleDevice) {
             var index = bleDevs.indexOf(bleDevice)
-            if (index < 0) {
+            if (index < 0 && bleDevice.boundState != 2) {//非连接状态的蓝牙设备在此处可以展示出来进行扫描绑定
                 bleDevs.add(bleDevice)
                 refreshDevInfo(bleDevice)
             }

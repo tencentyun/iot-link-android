@@ -145,4 +145,14 @@ interface DeviceImpl {
      */
     fun allDevices(token: String, platformId: String, offset: Int, limit: Int, callback: MyCallback)
 
+    /**
+     * 上传服务器保存用户设备的私有信息 (psk)
+     */
+    fun setDeviceConfig(deviceId: String, deviceValue: ByteArray, callback: MyCallback)
+
+    /**
+     * 读取用户设备的私有信息 (psk)
+     */
+    fun getDeviceConfig(productId: String, deviceName: String, callback: MyCallback)
+
     }
