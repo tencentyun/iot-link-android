@@ -1,12 +1,15 @@
 package com.tencent.iot.explorer.link.kitlink.fragment
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.text.TextUtils
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +37,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.dialog.DevModeSetDialog
 import com.tencent.iot.explorer.link.customview.dialog.entity.KeyBooleanValue
 import com.tencent.iot.explorer.link.customview.dialog.MoreOptionDialog
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.customview.dialog.entity.DevOption
 import com.tencent.iot.explorer.link.customview.dialog.entity.OptionMore
 import com.tencent.iot.explorer.link.kitlink.activity.ControlPanelActivity
@@ -68,6 +72,19 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
     private var roomList: ArrayList<RoomEntity> = ArrayList()
     private var roomsAdapter: RoomsAdapter? = null
     private var handler = Handler()
+    private var permissionDialog: PermissionDialog? = null
+    private var requestCameraPermission = false
+    private var requestStoragePermission = false
+    private var requestRecordAudioPermission = false
+    private var deviceListEnd = false
+    private var shareDeviceListEnd = false
+
+    private var permissions = arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.RECORD_AUDIO
+    )
 
     override fun getContentView(): Int {
         return R.layout.fragment_main
@@ -588,6 +605,73 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
             layout_no_dev_2_show.visibility = View.VISIBLE
         } else {
             layout_no_dev_2_show.visibility = View.GONE
+        }
+        requestCameraPermission = false
+        requestRecordAudioPermission = false
+        requestStoragePermission = false
+
+        if (deviceListEnd) {
+            this.deviceListEnd = true
+        }
+        if (shareDeviceListEnd) {
+            this.shareDeviceListEnd = true
+        }
+        if (this.deviceListEnd && this.shareDeviceListEnd) {
+            requestPermission()
+        }
+    }
+
+    private fun requestPermission() {
+
+        if ((shareDevList.size > 0 || devList.size > 0) && permissionDialog == null) {
+            if (!checkPermissions(Manifest.permission.CAMERA) && !requestCameraPermission) {
+                permissionDialog = PermissionDialog(App.activity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+                permissionDialog!!.show()
+                requestPermissions(arrayOf(Manifest.permission.CAMERA), 103)
+                requestCameraPermission = true
+                return
+            }
+            requestCameraPermission = true
+            if (!checkPermissions(Manifest.permission.RECORD_AUDIO) && !requestRecordAudioPermission) {
+                permissionDialog = PermissionDialog(App.activity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+                permissionDialog!!.show()
+                requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), 104)
+                requestRecordAudioPermission = true
+                return
+            }
+            requestRecordAudioPermission = true
+            if ((!checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE) || !checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)) && !requestStoragePermission) {
+                permissionDialog = PermissionDialog(App.activity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+                permissionDialog!!.show()
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 105)
+                requestStoragePermission = true
+                return
+            }
+            requestStoragePermission = true
+        }
+    }
+
+    private fun checkPermissions(permission: String): Boolean {
+        if (App.activity?.let { ActivityCompat.checkSelfPermission(it, permission) } == PackageManager.PERMISSION_DENIED) {
+            L.e(permission + "被拒绝")
+            return false
+        }
+        L.e(permission + "已经申请成功")
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (permissions.contains(Manifest.permission.CAMERA) || permissions.contains(Manifest.permission.RECORD_AUDIO) || permissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            permissionDialog?.dismiss()
+            permissionDialog = null
+            if (!requestCameraPermission || !requestRecordAudioPermission || !requestStoragePermission) {
+                requestPermission()
+            }
         }
     }
 

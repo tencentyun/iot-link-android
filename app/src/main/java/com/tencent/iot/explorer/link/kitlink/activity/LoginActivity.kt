@@ -3,9 +3,9 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.Manifest
 import android.content.Intent
 import android.os.Handler
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -28,6 +28,7 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.User
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import kotlinx.android.synthetic.main.activity_login2.*
 import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*
 import kotlinx.android.synthetic.main.layout_verify_code_login.view.*
@@ -53,6 +54,10 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         Manifest.permission.SEND_SMS
     )
 
+    private var permissionDialog: PermissionDialog? = null
+    private var agreement = false
+    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
+
     override fun onResume() {
         super.onResume()
         if (!TextUtils.isEmpty(fromTag) && fromTag == CommonField.WAY_SOURCE) {
@@ -73,6 +78,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         App.data.regionId = "1"
         App.data.region = "ap-guangzhou"
         if (!checkPermissions(permissions)) {
+            permissionDialog = PermissionDialog(this@LoginActivity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+            permissionDialog!!.show()
             requestPermission(permissions)
         } else {
             permissionAllGranted()
@@ -98,6 +105,126 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         verifyCodeLoginView.tv_login_to_country_byverifycode.text = getString(R.string.country_china) + getString(R.string.conutry_code_num, presenter.getCountryCode())
 
         loadLastCountryInfo()
+
+        formatTipText()
+
+        iv_login_agreement.setImageResource(R.mipmap.icon_unselected)
+        iv_login_agreement_status.visibility = View.GONE
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 102) {
+            if (permissions.contains(Manifest.permission.READ_SMS)) {
+                permissionDialog?.dismiss()
+                permissionDialog = null
+            }
+        }
+    }
+
+    private fun formatTipText() {
+        val str = resources.getString(R.string.register_agree_1)
+        val partStr1 = resources.getString(R.string.register_agree_2)
+        val partStr2 = resources.getString(R.string.register_agree_3)
+        val partStr3 = resources.getString(R.string.register_agree_4)
+        val partStr4 = resources.getString(R.string.rule_content_list)
+        var showStr = str + partStr1 + partStr2 + partStr3 + partStr4
+        val spannable = SpannableStringBuilder(showStr)
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                if (presenter.getCountryCode() == "86") {
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        val intent = Intent(this@LoginActivity, WebActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
+                        var url = CommonField.POLICY_PREFIX
+                        url += "?uin=$ANDROID_ID"
+                        url += CommonField.SERVICE_POLICY_SUFFIX
+                        intent.putExtra(CommonField.EXTRA_TEXT, url)
+                        startActivity(intent)
+                    } else {
+                        OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.register_agree_2), CommonField.SERVICE_AGREEMENT_URL_CN_EN)
+                    }
+                } else {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.SERVICE_AGREEMENT_URL_US_ZH
+                    } else {
+                        url = CommonField.SERVICE_AGREEMENT_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.register_agree_2), url)
+                }
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+        },
+            str.length, str.length + partStr1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                if (presenter.getCountryCode() == "86") {
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        val intent = Intent(this@LoginActivity, WebActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
+                        var url = CommonField.POLICY_PREFIX
+                        url += "?uin=$ANDROID_ID"
+                        url += CommonField.PRIVACY_POLICY_SUFFIX
+                        intent.putExtra(CommonField.EXTRA_TEXT, url)
+                        startActivity(intent)
+                    } else {
+                        OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.register_agree_4), CommonField.PRIVACY_POLICY_URL_CN_EN)
+                    }
+                } else {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.PRIVACY_POLICY_URL_US_ZH
+                    } else {
+                        url = CommonField.PRIVACY_POLICY_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.register_agree_4), url)
+                }
+
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+
+        },
+            showStr.length - partStr3.length - partStr4.length, showStr.length - partStr4.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                var url = ""
+                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                    url = CommonField.THIRD_SDK_URL_US_ZH
+                } else {
+                    url = CommonField.THIRD_SDK_URL_US_EN
+                }
+                OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.rule_content_list), url)
+
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+
+        },
+            showStr.length - partStr4.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        tv_login_tip.setMovementMethod(LinkMovementMethod.getInstance())
+        tv_login_tip.setText(spannable)
     }
 
     private fun loadLastCountryInfo() {
@@ -158,6 +285,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         verifyCodeLoginView.et_login_phone_or_email_byverifycode.setText("")
         verifyCodeLoginView.et_login_phone_or_email_verifycode.setText("")
         iv_wechat_login.setOnClickListener(this)
+
+        iv_login_agreement.setOnClickListener(this)
     }
 
     private fun pwd2Check() {
@@ -275,11 +404,19 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 val account = accoutPasswdLoginView.et_login_phone_or_email.text.trim().toString()
                 val passwd = accoutPasswdLoginView.et_login_phone_or_email_passwd.text.trim().toString()
                 if (!account.contains("@")) { // 手机登录
-                    presenter.setPhoneData(account, passwd)
-                    presenter.phoneCommit()
+                    if (agreement) {
+                        presenter.setPhoneData(account, passwd)
+                        presenter.phoneCommit()
+                    } else {
+                        T.show(getString(R.string.toast_register_agreement))
+                    }
                 } else { // 邮箱登录
-                    presenter.setEmailData(account, passwd)
-                    presenter.emailCommit()
+                    if (agreement) {
+                        presenter.setEmailData(account, passwd)
+                        presenter.emailCommit()
+                    } else {
+                        T.show(getString(R.string.toast_register_agreement))
+                    }
                 }
                 KeyBoardUtils.hideKeyBoard(this, accoutPasswdLoginView.et_login_phone_or_email_passwd)
             }
@@ -289,16 +426,24 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 if (!account.contains("@")) {// 手机登录
                     presenter.setPhone(account)
                     if (!TextUtils.isEmpty(verifycode)) {
-                        presenter.setVerifyCode(verifycode)
-                        presenter.phoneVerifyCodeCommit()
+                        if (agreement) {
+                            presenter.setVerifyCode(verifycode)
+                            presenter.phoneVerifyCodeCommit()
+                        } else {
+                            T.show(getString(R.string.toast_register_agreement))
+                        }
                     } else {
                         T.show(getString(R.string.phone_verifycode_empty))
                     }
                 } else {// 邮箱登录
                     presenter.setEmail(account)
                     if (!TextUtils.isEmpty(verifycode)) {
-                        presenter.setVerifyCode(verifycode)
-                        presenter.emailVerifyCodeCommit()
+                        if (agreement) {
+                            presenter.setVerifyCode(verifycode)
+                            presenter.emailVerifyCodeCommit()
+                        } else {
+                            T.show(getString(R.string.toast_register_agreement))
+                        }
                     } else {
                         T.show(getString(R.string.email_verifycode_empty))
                     }
@@ -340,6 +485,16 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
             }
             verifyCodeLoginView.tv_login_to_country_byverifycode, verifyCodeLoginView.iv_login_to_country_byverifycode -> {// 验证码登录时选则国家
                 startActivityForResult(Intent(this, RegionActivity::class.java), 100)
+            }
+            iv_login_agreement -> {
+                agreement = !agreement
+                if (agreement) {
+                    iv_login_agreement.setImageResource(R.mipmap.readed)
+                    iv_login_agreement_status.visibility = View.VISIBLE
+                } else {
+                    iv_login_agreement.setImageResource(R.mipmap.icon_unselected)
+                    iv_login_agreement_status.visibility = View.GONE
+                }
             }
         }
     }

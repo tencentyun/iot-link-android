@@ -35,6 +35,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.BleDevice
 import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.kitlink.activity.BleConfigHardwareActivity
 import com.tencent.iot.explorer.link.kitlink.activity.BuleToothActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConfigStepActivity
@@ -63,6 +64,7 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
     @Volatile
     private var conditionPrefix = false
 
+    private var permissionDialog: PermissionDialog? = null
     private var permissions = arrayOf(
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
@@ -221,6 +223,8 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                         isRecommDeviceClicked = false
                     }
                 }
+                permissionDialog = PermissionDialog(App.activity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+                permissionDialog!!.show()
                 requestPermissions(permissions,1)
             } else {
                 when (parent.id) {
@@ -262,6 +266,8 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                 jumpActivity(SmartConfigStepActivity::class.java)
             }
         }
+        permissionDialog?.dismiss()
+        permissionDialog = null
     }
 
     fun setListener() {

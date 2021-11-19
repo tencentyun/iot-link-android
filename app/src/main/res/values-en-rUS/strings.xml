@@ -705,6 +705,8 @@
     <string name="permission_of_wifi_lips">· WiFi name、WiFi password\n· the IP of the mobile phone</string>
     <string name="permission_of_wechat">You will authorize the following personal information to be bound to your WeChat account:</string>
     <string name="permission_of_wechat_lips">· nickname、profile photo、region、gender\n· device information</string>
+    <string name="permission_of_camera">您拒绝使用相机权限，无法修改头像</string>
+    <string name="permission_of_album">您拒绝访问相册权限，无法修改头像</string>
 
     <!--international end  -->
 </resources>

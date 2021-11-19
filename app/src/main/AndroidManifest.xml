@@ -13,8 +13,6 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" /> <!-- 腾讯地图新增开始 -->
-    <!-- Android Q新增权限，允许应用在后台发起定位，如应用target为Q，请添加此权限 -->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- 如果设置了target >= 28 如果需要启动后台定位则必须声明这个权限 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 通过GPS得到精确位置 -->
     <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
     <!-- 通过网络得到粗略位置 -->
@@ -51,6 +49,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity android:name=".kitlink.activity.PrivicyDialogActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".kitlink.activity.OpensourceLicenseActivity" />
         <activity android:name=".kitlink.activity.SmartConfigStepActivity" />
         <activity android:name=".kitlink.activity.DeviceWifiActivity" />
@@ -97,13 +101,7 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".kitlink.activity.GuideActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".kitlink.activity.GuideActivity" />
         <activity android:name=".kitlink.activity.LoginActivity" />
         <activity android:name=".kitlink.activity.AccountAndSafetyActivity" />
         <activity android:name=".kitlink.activity.BindPhoneActivity" />
