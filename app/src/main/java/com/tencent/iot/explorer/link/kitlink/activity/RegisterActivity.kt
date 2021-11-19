@@ -99,11 +99,11 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         phoneView.layout_phone_country.visibility = View.GONE
         emailView.layout_email_country.visibility = View.GONE
 
-        iv_register_agreement.visibility = View.INVISIBLE
+//        iv_register_agreement.visibility = View.INVISIBLE
 
         loadLastCountryInfo()
 //        showBirthDayDlg()
-//        formatTipText()
+        formatTipText()
         checkIfShowAgreeDlg()
     }
 
@@ -199,7 +199,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         val partStr1 = resources.getString(R.string.register_agree_2)
         val partStr2 = resources.getString(R.string.register_agree_3)
         val partStr3 = resources.getString(R.string.register_agree_4)
-        var showStr = str + partStr1 + partStr2 + partStr3
+        val partStr4 = resources.getString(R.string.rule_content_list)
+        var showStr = str + partStr1 + partStr2 + partStr3 + partStr4
         val spannable = SpannableStringBuilder(showStr)
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -267,7 +268,28 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             }
 
         },
-            showStr.length - partStr1.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            showStr.length - partStr3.length - partStr4.length, showStr.length - partStr4.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                var url = ""
+                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                    url = CommonField.THIRD_SDK_URL_US_ZH
+                } else {
+                    url = CommonField.THIRD_SDK_URL_US_EN
+                }
+                OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.rule_content_list), url)
+
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+
+        },
+            showStr.length - partStr4.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         tv_register_tip.setMovementMethod(LinkMovementMethod.getInstance())
         tv_register_tip.setText(spannable)
