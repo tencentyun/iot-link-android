@@ -3,9 +3,9 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.Manifest
 import android.content.Intent
 import android.os.Handler
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -29,6 +29,8 @@ import com.tencent.iot.explorer.link.core.auth.entity.User
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import kotlinx.android.synthetic.main.activity_login2.*
+import kotlinx.android.synthetic.main.activity_login2.tv_register_tip
+import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*
 import kotlinx.android.synthetic.main.layout_verify_code_login.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -52,6 +54,8 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         Manifest.permission.READ_SMS,
         Manifest.permission.SEND_SMS
     )
+
+    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
 
     override fun onResume() {
         super.onResume()
@@ -98,6 +102,111 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         verifyCodeLoginView.tv_login_to_country_byverifycode.text = getString(R.string.country_china) + getString(R.string.conutry_code_num, presenter.getCountryCode())
 
         loadLastCountryInfo()
+
+        formatTipText()
+    }
+
+
+
+    private fun formatTipText() {
+        val str = resources.getString(R.string.register_agree_1)
+        val partStr1 = resources.getString(R.string.register_agree_2)
+        val partStr2 = resources.getString(R.string.register_agree_3)
+        val partStr3 = resources.getString(R.string.register_agree_4)
+        val partStr4 = resources.getString(R.string.rule_content_list)
+        var showStr = str + partStr1 + partStr2 + partStr3 + partStr4
+        val spannable = SpannableStringBuilder(showStr)
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                if (presenter.getCountryCode() == "86") {
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        val intent = Intent(this@LoginActivity, WebActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
+                        var url = CommonField.POLICY_PREFIX
+                        url += "?uin=$ANDROID_ID"
+                        url += CommonField.SERVICE_POLICY_SUFFIX
+                        intent.putExtra(CommonField.EXTRA_TEXT, url)
+                        startActivity(intent)
+                    } else {
+                        OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.register_agree_2), CommonField.SERVICE_AGREEMENT_URL_CN_EN)
+                    }
+                } else {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.SERVICE_AGREEMENT_URL_US_ZH
+                    } else {
+                        url = CommonField.SERVICE_AGREEMENT_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.register_agree_2), url)
+                }
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+        },
+            str.length, str.length + partStr1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                if (presenter.getCountryCode() == "86") {
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        val intent = Intent(this@LoginActivity, WebActivity::class.java)
+                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
+                        var url = CommonField.POLICY_PREFIX
+                        url += "?uin=$ANDROID_ID"
+                        url += CommonField.PRIVACY_POLICY_SUFFIX
+                        intent.putExtra(CommonField.EXTRA_TEXT, url)
+                        startActivity(intent)
+                    } else {
+                        OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.register_agree_4), CommonField.PRIVACY_POLICY_URL_CN_EN)
+                    }
+                } else {
+                    var url = ""
+                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                        url = CommonField.PRIVACY_POLICY_URL_US_ZH
+                    } else {
+                        url = CommonField.PRIVACY_POLICY_URL_US_EN
+                    }
+                    OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.register_agree_4), url)
+                }
+
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+
+        },
+            showStr.length - partStr3.length - partStr4.length, showStr.length - partStr4.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                var url = ""
+                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                    url = CommonField.THIRD_SDK_URL_US_ZH
+                } else {
+                    url = CommonField.THIRD_SDK_URL_US_EN
+                }
+                OpensourceLicenseActivity.startWebWithExtra(this@LoginActivity, getString(R.string.rule_content_list), url)
+
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+
+        },
+            showStr.length - partStr4.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        tv_register_tip.setMovementMethod(LinkMovementMethod.getInstance())
+        tv_register_tip.setText(spannable)
     }
 
     private fun loadLastCountryInfo() {
