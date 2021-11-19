@@ -705,6 +705,8 @@
     <string name="permission_of_wifi_lips">· WiFi名称、WiFi密码\n· 手机IP地址</string>
     <string name="permission_of_wechat">您将授权以下个人信息与微信账号绑定：</string>
     <string name="permission_of_wechat_lips">· 昵称、头像、地区、性别\n· 设备信息</string>
+    <string name="permission_of_camera">您拒绝使用相机权限，无法修改头像</string>
+    <string name="permission_of_album">您拒绝访问相册权限，无法修改头像</string>
 
     <!--international end  -->
 </resources>

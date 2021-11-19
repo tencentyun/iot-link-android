@@ -17,6 +17,7 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.InputBirthdayDialog
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.customview.dialog.UserAgreeDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
@@ -52,6 +53,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     private lateinit var phoneView: View
     private lateinit var emailView: View
 
+    private var permissionDialog: PermissionDialog? = null
     private val ANDROID_ID = Utils.getAndroidID(T.getContext())
 
     override fun getPresenter(): IPresenter? {
@@ -85,6 +87,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                     phoneView.et_register_phone.setText(account)
             }
         }
+        presenter.agreement()
         if (presenter.isAgreement()) {
             iv_register_agreement.setImageResource(R.mipmap.readed)
             iv_register_agreement_status.visibility = View.VISIBLE
@@ -99,12 +102,26 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         phoneView.layout_phone_country.visibility = View.GONE
         emailView.layout_email_country.visibility = View.GONE
 
-        iv_register_agreement.visibility = View.INVISIBLE
+//        iv_register_agreement.visibility = View.INVISIBLE
 
         loadLastCountryInfo()
 //        showBirthDayDlg()
-//        formatTipText()
+        formatTipText()
         checkIfShowAgreeDlg()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 102) {
+            if (permissions.contains(Manifest.permission.READ_SMS)) {
+                permissionDialog?.dismiss()
+                permissionDialog = null
+            }
+        }
     }
 
     private fun checkIfShowAgreeDlg() {
@@ -113,6 +130,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             if (it == "1") {
                 presenter.agreement()
                 if (!checkPermissions(permissions)) {
+                    permissionDialog = PermissionDialog(this@RegisterActivity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+                    permissionDialog!!.show()
                     requestPermission(permissions)
                 } else {
                     permissionAllGranted()
@@ -199,7 +218,8 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         val partStr1 = resources.getString(R.string.register_agree_2)
         val partStr2 = resources.getString(R.string.register_agree_3)
         val partStr3 = resources.getString(R.string.register_agree_4)
-        var showStr = str + partStr1 + partStr2 + partStr3
+        val partStr4 = resources.getString(R.string.rule_content_list)
+        var showStr = str + partStr1 + partStr2 + partStr3 + partStr4
         val spannable = SpannableStringBuilder(showStr)
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -267,7 +287,28 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
             }
 
         },
-            showStr.length - partStr1.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            showStr.length - partStr3.length - partStr4.length, showStr.length - partStr4.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                var url = ""
+                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                    url = CommonField.THIRD_SDK_URL_US_ZH
+                } else {
+                    url = CommonField.THIRD_SDK_URL_US_EN
+                }
+                OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.rule_content_list), url)
+
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_0066FF)
+                ds.setUnderlineText(false);
+            }
+
+        },
+            showStr.length - partStr4.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         tv_register_tip.setMovementMethod(LinkMovementMethod.getInstance())
         tv_register_tip.setText(spannable)

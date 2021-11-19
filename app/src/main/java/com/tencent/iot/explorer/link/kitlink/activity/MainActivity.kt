@@ -72,21 +72,15 @@ class MainActivity : PActivity(), MyCallback {
 
     private var familyPopup: FamilyListPopup? = null
 
-    private var isForceUpgrade = true
+    private var permissionDialog: PermissionDialog? = null
 
-    private var permissions = arrayOf(
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.RECORD_AUDIO
-    )
+    private var isForceUpgrade = true
 
     private var scanPermissions = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.CHANGE_WIFI_STATE,
-            Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.CHANGE_WIFI_MULTICAST_STATE
     )
 
     override fun getContentView(): Int {
@@ -154,20 +148,6 @@ class MainActivity : PActivity(), MyCallback {
         FirebaseAnalytics.getInstance(this).setUserId(userId)
         openXGPush()
         home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
-        if (!checkPermissions(permissions)) {
-            var dlg = PermissionDialog(this@MainActivity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
-            dlg.show()
-            dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
-                override fun OnClickRefuse() {
-
-                }
-
-                override fun OnClickOK() {
-                    requestPermission(permissions)
-                }
-
-            })
-        }
         LogcatHelper.getInstance(this).start()
         home_bottom_view.addMenu(
             BottomItemEntity(
@@ -256,6 +236,8 @@ class MainActivity : PActivity(), MyCallback {
                             intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC, true)
                             startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
                         } else {
+                            permissionDialog = PermissionDialog(App.activity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+                            permissionDialog!!.show()
                             requestPermission(scanPermissions)
                         }
                     }
@@ -308,6 +290,8 @@ class MainActivity : PActivity(), MyCallback {
                 intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
                 startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
             }
+            permissionDialog?.dismiss()
+            permissionDialog = null
         }
     }
 

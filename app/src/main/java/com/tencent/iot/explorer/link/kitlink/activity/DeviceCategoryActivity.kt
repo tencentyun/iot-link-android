@@ -66,9 +66,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         Manifest.permission.CAMERA,
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
-        Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
-        Manifest.permission.ACCESS_FINE_LOCATION
+        Manifest.permission.CHANGE_WIFI_MULTICAST_STATE
     )
+    private var permissionDialog: PermissionDialog? = null
 
     private var blueToothPermissions = arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -308,10 +308,13 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         var intent = Intent(Intent(this, ScannerActivity::class.java))
         intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
         startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
+        permissionDialog?.dismiss()
+        permissionDialog = null
     }
 
     override fun permissionDenied(permission: String) {
-//        requestPermission(arrayOf(permission))
+        permissionDialog?.dismiss()
+        permissionDialog = null
     }
 
     override fun onClick(v: View?) {
@@ -322,18 +325,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
                     startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
                 } else {
-                    var dlg = PermissionDialog(this@DeviceCategoryActivity, getString(R.string.permission_of_wifi), getString(R.string.permission_of_wifi_lips))
-                    dlg.show()
-                    dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
-                        override fun OnClickRefuse() {
-
-                        }
-
-                        override fun OnClickOK() {
-                            requestPermission(permissions)
-                        }
-
-                    })
+                    requestPermission(permissions)
+                    permissionDialog = PermissionDialog(App.activity, getString(R.string.permission_of_mic_camera), getString(R.string.permission_of_mic_camera_lips))
+                    permissionDialog!!.show()
                 }
             }
 //            iv_question -> {
@@ -489,18 +483,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     private fun beginScanning() {
         if (!checkPermissions(blueToothPermissions)) {
-            var dlg = PermissionDialog(this@DeviceCategoryActivity, getString(R.string.permission_of_wifi), getString(R.string.permission_of_wifi_lips))
-            dlg.show()
-            dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
-                override fun OnClickRefuse() {
-
-                }
-
-                override fun OnClickOK() {
-                    requestPermission(blueToothPermissions)
-                }
-
-            })
             return
         }
 

@@ -75,16 +75,6 @@ class AccountAndSafetyActivity : PActivity(), AccountAndSafetyView, View.OnClick
                 } else {
                     var dlg = PermissionDialog(this@AccountAndSafetyActivity, getString(R.string.permission_of_wechat), getString(R.string.permission_of_wechat_lips))
                     dlg.show()
-                    dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
-                        override fun OnClickRefuse() {
-
-                        }
-
-                        override fun OnClickOK() {
-                            WeChatLogin.getInstance().login(this@AccountAndSafetyActivity, this@AccountAndSafetyActivity)
-                        }
-
-                    })
                 }
             }
             tv_modify_passwd -> {// 修改密码
