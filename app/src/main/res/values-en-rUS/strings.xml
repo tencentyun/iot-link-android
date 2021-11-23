@@ -699,12 +699,31 @@
     <string name="controller_of_permission">Authority management</string>
     <string name="permission_of_title_tip">Please authorize Tencent LLink the following permissions</string>
     <string name="country_tip">In order to provide you with the user agreement and privacy policy of your country/region, please select your country/region</string>
-    <string name="permission_of_mic_camera">In order to use the real-time communication of the device, Tencent LLink needs to obtain the following permissions:</string>
-    <string name="permission_of_mic_camera_lips">· camera/microphone</string>
+    <string name="permission_camera">为了便于您扫码添加设备，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_camera_trtc">为了实时接听使用设备的语音/视频通话功能，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_camera_avatar">为了便于您拍照更换头像，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_camera_lips">· 相机</string>
+    <string name="permission_mic_lips">· 麦克风</string>
+    <string name="permission_album_avatar">为了便于您可选择本地图片以更换头像，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_album_lips">· 存储（相册）</string>
+    <string name="permission_storage">为了使用设备的实时语音/视频通话功能，记录运行日志，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_storage_lips">· 存储（日志）</string>
+    <string name="permission_location_ssid">为了便于给设备配网时，自动获取当前手机连接的WiFi名称，向设备发送WiFi信息完成配网，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_location_lips">· GPS 定位</string>
+    <string name="permission_sms">为了方便您注册或登录时自动获取验证码，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_sms_lips">· 短信</string>
     <string name="permission_of_wifi">This step will configure the WiFi network for the hardware device to achieve communication, and bind the relationship between the hardware device and the APP user. Therefore, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_of_wifi_lips">· WiFi name、WiFi password\n· the IP of the mobile phone</string>
     <string name="permission_of_wechat">You will authorize the following personal information to be bound to your WeChat account:</string>
     <string name="permission_of_wechat_lips">· nickname、profile photo、region、gender\n· device information</string>
+    <string name="permission_of_camera_refuse">您拒绝使用相机权限，无法修改头像</string>
+    <string name="permission_of_album_refuse">您拒绝访问相册权限，无法修改头像</string>
+    <string name="permission_of_location_add_device_refuse">您拒绝访问GPS定位，无法完成配网读取WiFi ssid信息</string>
+    <string name="permission_of_sms_refuse">您拒绝使用读取短信权限，无法快速填充短信验证码</string>
+    <string name="permission_of_camera_scan_refuse">您拒绝使用相机权限，无法使用扫描二维码功能</string>
+    <string name="permission_of_camera_trtc_refuse">您拒绝使用相机权限，无法使用实时语音/视频通话功能</string>
+    <string name="permission_of_camera_mic_refuse">您拒绝使用麦克风权限，无法使用实时语音/视频通话功能</string>
+    <string name="permission_of_location_family_address_refuse">您拒绝访问GPS定位，无法定位当前位置</string>
 
     <!--international end  -->
 </resources>

@@ -19,6 +19,7 @@ import android.view.animation.LinearInterpolator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.example.qrcode.Constant
 import com.example.qrcode.ScannerActivity
 import com.tencent.iot.explorer.link.App
@@ -66,9 +67,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         Manifest.permission.CAMERA,
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
-        Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
-        Manifest.permission.ACCESS_FINE_LOCATION
+        Manifest.permission.CHANGE_WIFI_MULTICAST_STATE
     )
+    private var permissionDialog: PermissionDialog? = null
 
     private var blueToothPermissions = arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -308,10 +309,13 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         var intent = Intent(Intent(this, ScannerActivity::class.java))
         intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
         startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
+        permissionDialog?.dismiss()
+        permissionDialog = null
     }
 
     override fun permissionDenied(permission: String) {
-//        requestPermission(arrayOf(permission))
+        permissionDialog?.dismiss()
+        permissionDialog = null
     }
 
     override fun onClick(v: View?) {
@@ -322,18 +326,23 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                     intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
                     startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
                 } else {
-                    var dlg = PermissionDialog(this@DeviceCategoryActivity, getString(R.string.permission_of_wifi), getString(R.string.permission_of_wifi_lips))
-                    dlg.show()
-                    dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
-                        override fun OnClickRefuse() {
+                    // 查看请求camera权限的时间是否大于48小时
+                    var cameraJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA)
+                    var cameraJson: JSONObject? = JSONObject.parse(cameraJsonString) as JSONObject?
+                    val lasttime = cameraJson?.getLong(CommonField.PERMISSION_CAMERA)
+                    if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
+                        T.show(getString(R.string.permission_of_camera_scan_refuse))
+                        return
+                    }
+                    requestPermission(permissions)
+                    permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera))
+                    permissionDialog!!.show()
 
-                        }
+                    // 记录请求camera权限的时间
+                    var json = JSONObject()
+                    json.put(CommonField.PERMISSION_CAMERA, System.currentTimeMillis() / 1000)
+                    Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA, json.toJSONString())
 
-                        override fun OnClickOK() {
-                            requestPermission(permissions)
-                        }
-
-                    })
                 }
             }
 //            iv_question -> {
@@ -489,18 +498,6 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     private fun beginScanning() {
         if (!checkPermissions(blueToothPermissions)) {
-            var dlg = PermissionDialog(this@DeviceCategoryActivity, getString(R.string.permission_of_wifi), getString(R.string.permission_of_wifi_lips))
-            dlg.show()
-            dlg.setOnDismisListener(object : PermissionDialog.OnDismisListener {
-                override fun OnClickRefuse() {
-
-                }
-
-                override fun OnClickOK() {
-                    requestPermission(blueToothPermissions)
-                }
-
-            })
             return
         }
 

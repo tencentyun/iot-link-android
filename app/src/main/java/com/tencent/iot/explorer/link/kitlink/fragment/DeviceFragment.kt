@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.ErrorMessage
@@ -35,6 +36,8 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.BleDevice
 import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.kitlink.activity.BleConfigHardwareActivity
 import com.tencent.iot.explorer.link.kitlink.activity.BuleToothActivity
 import com.tencent.iot.explorer.link.kitlink.activity.SmartConfigStepActivity
@@ -63,6 +66,7 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
     @Volatile
     private var conditionPrefix = false
 
+    private var permissionDialog: PermissionDialog? = null
     private var permissions = arrayOf(
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
@@ -221,7 +225,23 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                         isRecommDeviceClicked = false
                     }
                 }
+                // 查看请求location权限的时间是否大于48小时
+                var locationJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_LOCATION, CommonField.PERMISSION_LOCATION)
+                var locationJson: JSONObject? = JSONObject.parse(locationJsonString) as JSONObject?
+                val lasttime = locationJson?.getLong(CommonField.PERMISSION_LOCATION)
+                if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
+                    T.show(getString(R.string.permission_of_location_add_device_refuse))
+                    return
+                }
+                permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_location ,getString(R.string.permission_location_lips), getString(R.string.permission_location_ssid))
+                permissionDialog!!.show()
                 requestPermissions(permissions,1)
+
+                // 记录请求location权限的时间
+                var json = JSONObject()
+                json.put(CommonField.PERMISSION_LOCATION, System.currentTimeMillis() / 1000)
+                Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_LOCATION, CommonField.PERMISSION_LOCATION, json.toJSONString())
+
             } else {
                 when (parent.id) {
                     R.id.gv_recommend_devices->{ // 根据推荐设备的配网方式，跳转到SmartConfig或者SoftAp配网界面
@@ -262,6 +282,8 @@ class DeviceFragment() : BaseFragment(), MyCallback, AdapterView.OnItemClickList
                 jumpActivity(SmartConfigStepActivity::class.java)
             }
         }
+        permissionDialog?.dismiss()
+        permissionDialog = null
     }
 
     fun setListener() {
