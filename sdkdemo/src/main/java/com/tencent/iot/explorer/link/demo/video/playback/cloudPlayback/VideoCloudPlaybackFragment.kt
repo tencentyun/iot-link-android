@@ -305,6 +305,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
         seekBarJob?.cancel()
         player.prepareAsync()
         player.setOnErrorListener(onErrorListener)
