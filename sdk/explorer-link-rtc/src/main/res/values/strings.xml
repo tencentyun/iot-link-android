@@ -43,4 +43,5 @@
     <string name="trtccalling_video_call">视频通话</string>
     <string name="trtccalling_audio_call">语音通话</string>
     <string name="trtccalling_toast_user_end">%s 结束通话</string>
+    <string name="custom_permisson_error_tip">"用户没有允许需要的权限，加入通话失败"</string>
 </resources>
