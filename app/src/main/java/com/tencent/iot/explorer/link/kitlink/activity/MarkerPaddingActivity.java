@@ -29,12 +29,15 @@ import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
+import com.tencent.iot.explorer.link.App;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.T;
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback;
 import com.tencent.iot.explorer.link.core.auth.http.HttpCallBack;
 import com.tencent.iot.explorer.link.core.auth.http.HttpUtil;
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse;
+import com.tencent.iot.explorer.link.core.utils.Utils;
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog;
 import com.tencent.iot.explorer.link.kitlink.adapter.PostionsAdapter;
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField;
 import com.tencent.iot.explorer.link.kitlink.entity.AdInfo;
@@ -65,7 +68,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class MarkerPaddingActivity extends BaseActivity implements TencentMap.OnCameraChangeListener, View.OnClickListener, TencentLocationListener {
 
     private final int PAGE_SIZE = 20;
-    private final String[] permissions = {permission.ACCESS_COARSE_LOCATION, permission.READ_PHONE_STATE, permission.WRITE_EXTERNAL_STORAGE};
+    private PermissionDialog permissionDialog = null;
+    private final String[] permissions = {permission.ACCESS_COARSE_LOCATION};
     public MapView mMapView;
     private TencentMap mTencentMap;
     private RecyclerView recyclerView;
@@ -131,12 +135,35 @@ public class MarkerPaddingActivity extends BaseActivity implements TencentMap.On
                 tagPostionByAddress(address);
             }
         } else {
+            // 查看请求location权限的时间是否大于48小时
+            String locationJsonString = Utils.INSTANCE.getStringValueFromXml(this, CommonField.PERMISSION_LOCATION, CommonField.PERMISSION_LOCATION);
+            long lasttime = 0L;
+            if (locationJsonString != null) {
+                JSONObject locationJson = JSON.parseObject(locationJsonString);
+                lasttime = locationJson.getLong(CommonField.PERMISSION_LOCATION);
+            }
+            if (locationJsonString != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48 * 60 * 60) {
+                T.show(getString(R.string.permission_of_location_family_address_refuse));
+                return;
+            }
+            if (permissionDialog == null) {
+                permissionDialog = new PermissionDialog(this, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera));
+                permissionDialog.show();
+            }
             requestPermission(permissions);
+
+            // 记录请求location权限的时间
+            JSONObject json = new JSONObject();
+            json.put(CommonField.PERMISSION_LOCATION, System.currentTimeMillis() / 1000);
+            Utils.INSTANCE.setXmlStringValue(this, CommonField.PERMISSION_LOCATION, CommonField.PERMISSION_LOCATION, json.toJSONString());
+
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
+        permissionDialog.dismiss();
+        permissionDialog = null;
         for (int i = 0; i < permissions.length; i++) {
             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                 permissionDenied(permissions[i]);

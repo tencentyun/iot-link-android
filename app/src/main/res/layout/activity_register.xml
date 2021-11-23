@@ -60,8 +60,8 @@
                 android:id="@+id/iv_register_agreement_status"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="4dp"
                 android:layout_centerInParent="true"
+                android:padding="4dp"
                 android:src="@mipmap/success" />
         </RelativeLayout>
 
@@ -102,6 +102,6 @@
             android:text="@string/get_code"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_16"
-            app:layout_constraintTop_toBottomOf="@+id/vp_register" />
+            app:layout_constraintTop_toBottomOf="@+id/ll_register_agreement" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

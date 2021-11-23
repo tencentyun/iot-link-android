@@ -172,7 +172,9 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
             // App enters foreground
             data.isForeground = true
             L.e("App foreground")
-            requestDeviceList()
+            if (!TextUtils.isEmpty(data.getToken())) {
+                requestDeviceList()
+            }
             if (activity is AppLifeCircleListener) {
                 activity.onAppGoforeground()
             }
