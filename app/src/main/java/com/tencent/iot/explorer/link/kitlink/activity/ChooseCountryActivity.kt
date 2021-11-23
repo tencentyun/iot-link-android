@@ -34,7 +34,7 @@ class ChooseCountryActivity : PActivity(), ChooseCountryView, View.OnClickListen
     override fun initView() {
         tv_title.text = getString(R.string.country_or_place)
         presenter = ChooseCountryPresenter(this)
-        loadLastCountryInfo()
+//        loadLastCountryInfo()
     }
 
     override fun setListener() {

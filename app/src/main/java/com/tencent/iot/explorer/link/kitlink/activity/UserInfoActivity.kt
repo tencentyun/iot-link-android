@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
@@ -25,6 +26,7 @@ import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.ListOptionsDialog
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.EditNameValue
 import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.ImageSelectorActivity
@@ -52,12 +54,16 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     private val duration = 3 * 1000.toLong() //规定有效时间
     private val hits = LongArray(counts)
 
+    private var optionDialog: ListOptionsDialog? = null
+    private var permissionDialog: PermissionDialog? = null
+    private var clickCamera = false
+    private var clickAlbum = false
+
     companion object {
         const val TIMEZONE_REQUESTCODE = 100
     }
 
     private var permissions = arrayOf(
-        Manifest.permission.CAMERA,
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
@@ -111,9 +117,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     override fun onClick(v: View?) {
         when (v) {
             tv_title_avatar, iv_avatar, iv_avatar_arrow -> {
-                if (checkPermissions(permissions))
-                    showCameraPopup()
-                else requestPermission(permissions)
+                showCameraPopup()
             }
             tv_title_nick -> {
                 showEditPopup()
@@ -168,13 +172,53 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         var options = ArrayList<String>()
         options.add(getString(R.string.take_photo))
         options.add(getString(R.string.select_local_album))
-        var optionDialog = ListOptionsDialog(this, options)
-        optionDialog.show()
-        optionDialog.setOnDismisListener {
+        optionDialog = ListOptionsDialog(this, options)
+        optionDialog!!.show()
+        optionDialog!!.setOnDismisListener {
             if (it == 0) {
-                ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_SINGLE, true, 1)
+                if (checkPermissions(arrayOf(Manifest.permission.CAMERA)))
+                    ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_SINGLE, true, 1)
+                else {
+                    clickCamera = true
+                    // 查看请求camera权限的时间是否大于48小时
+                    var cameraJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA)
+                    var cameraJson: JSONObject? = JSONObject.parse(cameraJsonString) as JSONObject?
+                    val lasttime = cameraJson?.getLong(CommonField.PERMISSION_CAMERA)
+                    if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
+                        T.show(resources.getString(R.string.permission_of_camera_refuse))
+                        return@setOnDismisListener
+                    }
+                    permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera_avatar))
+                    permissionDialog!!.show()
+                    requestPermission(arrayOf(Manifest.permission.CAMERA))
+
+                    // 记录请求camera权限的时间
+                    var json = JSONObject()
+                    json.put(CommonField.PERMISSION_CAMERA, System.currentTimeMillis() / 1000)
+                    Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA, json.toJSONString())
+                }
             } else if (it == 1) {
-                ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_MULTI, false, 1)
+                if (checkPermissions(permissions))
+                    ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_MULTI, false, 1)
+                else {
+                    clickAlbum = true
+                    // 查看请求album权限的时间是否大于48小时
+                    var albumJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_ALBUM, CommonField.PERMISSION_ALBUM)
+                    var albumJson: JSONObject? = JSONObject.parse(albumJsonString) as JSONObject?
+                    val lasttime = albumJson?.getLong(CommonField.PERMISSION_ALBUM)
+                    if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
+                        T.show(resources.getString(R.string.permission_of_album_refuse))
+                        return@setOnDismisListener
+                    }
+                    permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_album ,getString(R.string.permission_album_lips), getString(R.string.permission_album_avatar))
+                    permissionDialog!!.show()
+                    requestPermission(permissions)
+
+                    // 记录请求album权限的时间
+                    var json = JSONObject()
+                    json.put(CommonField.PERMISSION_ALBUM, System.currentTimeMillis() / 1000)
+                    Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_ALBUM, CommonField.PERMISSION_ALBUM, json.toJSONString())
+                }
             }
         }
     }
@@ -217,11 +261,25 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     }
 
     override fun permissionAllGranted() {
-        showCameraPopup()
+        if (clickCamera) {
+            clickCamera = false
+            ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_SINGLE, true, 1)
+        } else if (clickAlbum) {
+            clickAlbum = false
+            ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_MULTI, false, 1)
+        }
+        permissionDialog?.dismiss()
+        permissionDialog = null
     }
 
     override fun permissionDenied(permission: String) {
-        requestPermission(arrayOf(permission))
+        if (permission.contains(Manifest.permission.CAMERA)) {
+            T.show(resources.getString(R.string.permission_of_camera_refuse))
+        } else if (permissions.contains(permission)) {
+            T.show(resources.getString(R.string.permission_of_album_refuse))
+        }
+        permissionDialog?.dismiss()
+        permissionDialog = null
     }
 
     override fun logout() {

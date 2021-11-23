@@ -226,4 +226,12 @@ object CommonField {
     const val DEFINE_TYPE_TIMESTAMP = "timestamp"
     const val DEFINE_TYPE_STRUCT = "struct"
 
+
+    const val PERMISSION_SMS = "PermissionSms"
+    const val PERMISSION_CAMERA = "PermissionCamera"
+    const val PERMISSION_ALBUM = "PermissionAlbum"
+    const val PERMISSION_LOCATION = "PermissionLocation"
+    const val PERMISSION_MIC = "PermissionMic"
+    const val PERMISSION_STORAGE = "PermissionStorage"
+
 }
