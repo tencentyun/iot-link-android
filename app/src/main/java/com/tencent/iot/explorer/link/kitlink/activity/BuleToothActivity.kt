@@ -65,9 +65,9 @@ class BuleToothActivity: BaseActivity(), View.OnClickListener, MyCallback {
                     val ticketResponse = JSON.parse(response.data.toString()) as JSONObject
                     var url = H5_PANEL_BASE_URL +
                             "?productId=${productId}" +
-                            "&uin=${Utils.getAndroidID(this)}" +
+                            "&uin=${App.uuid}" +
                             "&lid=${App.data.appLifeCircleId}" +
-                            "&quid=${Utils.getAndroidID(this)}" +
+                            "&quid=${App.uuid}" +
                             "&ticket=${ticketResponse[CommonField.TOKEN_TICKET]}" +
                             "&appID=${T.getContext().applicationInfo.packageName}" +
                             "&platform=${HttpRequest.PLATFORM_TAG}" +
