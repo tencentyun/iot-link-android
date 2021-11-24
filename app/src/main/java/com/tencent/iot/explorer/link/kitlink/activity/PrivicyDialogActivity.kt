@@ -13,7 +13,7 @@ import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 class PrivicyDialogActivity : BaseActivity() {
 
     private var dialog: UserAgreeDialog? = null
-    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
+    private val ANDROID_ID = App.uuid
 
     override fun getContentView(): Int {
         return R.layout.activity_privicy_dialog

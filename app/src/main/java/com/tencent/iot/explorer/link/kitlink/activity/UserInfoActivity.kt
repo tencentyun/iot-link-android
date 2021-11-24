@@ -145,7 +145,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
                 if (hits[0] >= SystemClock.uptimeMillis() - duration) {
                     if (hits.size == 5) {
                         // 获取AndroidID，并保存至剪切板
-                        Utils.copy(this, Utils.getAndroidID(T.getContext()))
+                        Utils.copy(this, App.uuid)
                     }
                 }
             }

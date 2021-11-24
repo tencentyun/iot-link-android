@@ -54,7 +54,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     private lateinit var emailView: View
 
     private var permissionDialog: PermissionDialog? = null
-    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
+    private val ANDROID_ID = App.uuid
 
     override fun getPresenter(): IPresenter? {
         return presenter
