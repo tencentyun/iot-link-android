@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.tencent.iot.explorer.link.App;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.T;
 import com.tencent.iot.explorer.link.core.utils.Utils;
@@ -24,7 +25,7 @@ public class TipShareDevDialog extends IosCenterStyleDialog implements View.OnCl
     private ConstraintLayout outsideLayout;
     private ConstraintLayout dialogLayout;
     private TextView moreInfo;
-    private String ANDROID_ID = Utils.INSTANCE.getAndroidID(T.getContext());
+    private String ANDROID_ID = App.Companion.getUuid();
 
     public TipShareDevDialog(Context context) {
         super(context, R.layout.popup_tip_share_dev_layout);
