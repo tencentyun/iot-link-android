@@ -54,7 +54,7 @@ class HttpRequest private constructor() {
         const val BUSI_APP = "studioapp"
         const val BUSI_OPENSOURCE = "studioappOpensource"
 
-        val ANDROID_ID = Utils.getAndroidID(T.getContext())
+        val ANDROID_ID = App.uuid
         val PLATFORM_TAG = "android"
     }
 

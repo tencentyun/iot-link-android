@@ -156,12 +156,6 @@ object Utils {
         return context.resources.configuration.locale.language == "zh"
     }
 
-    fun getAndroidID(context: Context): String {
-        val id = Settings.System.getString(context.contentResolver, Settings.System.ANDROID_ID)
-        return if (TextUtils.isEmpty(id)) ""
-        else id
-    }
-
     fun bmpToByteArray(bitmap: Bitmap?): ByteArray? {
 
         // 要返回的字符串
