@@ -56,7 +56,7 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
 
     private var permissionDialog: PermissionDialog? = null
     private var agreement = false
-    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
+    private val ANDROID_ID =App.uuid
 
     override fun onResume() {
         super.onResume()

@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class AboutUsActivity : BaseActivity() {
 
-    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
+    private val ANDROID_ID = App.uuid
 
     override fun getContentView(): Int {
         return R.layout.activity_about_us
