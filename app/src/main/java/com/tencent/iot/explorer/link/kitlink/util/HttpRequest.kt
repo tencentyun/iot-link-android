@@ -54,7 +54,7 @@ class HttpRequest private constructor() {
         const val BUSI_APP = "studioapp"
         const val BUSI_OPENSOURCE = "studioappOpensource"
 
-        val ANDROID_ID = Utils.getAndroidID(T.getContext())
+        val ANDROID_ID = App.uuid
         val PLATFORM_TAG = "android"
     }
 
@@ -176,6 +176,7 @@ class HttpRequest private constructor() {
         }
         val api:String
         val host:String
+        L.e("HttpRequest===============${App.uuid}===============")
         if (!App.isOEMApp()) {// 公版&开源版
             param["AppID"] = T.getContext().applicationInfo.packageName
             host = STUDIO_BASE_URL_FOR_LOGINED
