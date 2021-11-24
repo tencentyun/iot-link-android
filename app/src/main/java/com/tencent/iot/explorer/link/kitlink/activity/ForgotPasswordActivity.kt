@@ -61,8 +61,8 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
                 false -> showEmailForgot()
             }
         }
-
-        formatTipText()
+        iv_register_agreement.visibility = View.INVISIBLE
+//        formatTipText()
     }
 
     private fun initViewPager() {
