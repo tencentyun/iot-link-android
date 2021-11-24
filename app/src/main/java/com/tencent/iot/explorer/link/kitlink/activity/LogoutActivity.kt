@@ -26,7 +26,7 @@ class LogoutActivity  : PActivity(), LogoutView, View.OnClickListener{
 
     private lateinit var presenter: LogoutPresenter
 
-    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
+    private val ANDROID_ID = App.uuid
 
     override fun getPresenter(): IPresenter? {
         return presenter

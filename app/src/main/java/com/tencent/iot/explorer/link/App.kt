@@ -50,6 +50,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         const val CONFIG = "config"
         const val MUST_UPGRADE_TAG = "master"
         var language: String? = ""
+        val uuid = UUID.randomUUID().toString()
 
         // 根据编译使用的 buildType 类型确定是否是 debug 版本
         // 编译依赖的 buildType 包含 debug 字串即认为是 debug 版本
@@ -128,7 +129,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
     override fun onCreate() {
         super.onCreate()
         MultiDex.install(this)
-        IoTAuth.setWebSocketTag(Utils.getAndroidID(this)) // 设置wss的uin
+        IoTAuth.setWebSocketTag(uuid) // 设置wss的uin
         IoTAuth.setWebSocketCallback(this) // 设置WebSocket连接状态回调
         IoTAuth.init(BuildConfig.TencentIotLinkAppkey, BuildConfig.TencentIotLinkAppSecret)
         //初始化弹框
