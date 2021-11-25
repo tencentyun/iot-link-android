@@ -65,6 +65,16 @@ class PrivicyDialogActivity : BaseActivity() {
                 }
             }
 
+            override fun onOkClickedPersonalInfoList() {
+                var url = ""
+                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
+                    url = CommonField.PERSONAL_INFO_URL_US_ZH
+                } else {
+                    url = CommonField.PERSONAL_INFO_URL_US_EN
+                }
+                OpensourceLicenseActivity.startWebWithExtra(this@PrivicyDialogActivity, getString(R.string.personal_information_list), url)
+            }
+
             override fun onOkClickedThirdSDKList() {
                 var url = ""
                 if (Utils.getLang().contains(CommonField.ZH_TAG)) {
