@@ -147,7 +147,7 @@ public class MarkerPaddingActivity extends BaseActivity implements TencentMap.On
                 return;
             }
             if (permissionDialog == null) {
-                permissionDialog = new PermissionDialog(this, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera));
+                permissionDialog = new PermissionDialog(this, R.mipmap.permission_location ,getString(R.string.permission_location_lips), getString(R.string.permission_location_ssid));
                 permissionDialog.show();
             }
             requestPermission(permissions);
