@@ -241,7 +241,7 @@ class MainActivity : PActivity(), MyCallback {
                             var cameraJson: JSONObject? = JSONObject.parse(cameraJsonString) as JSONObject?
                             val lasttime = cameraJson?.getLong(CommonField.PERMISSION_CAMERA)
                             if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                                T.show(getString(R.string.permission_of_camera_scan_refuse))
+                                T.show(getString(R.string.permission_of_camera_refuse))
                                 return
                             }
                             permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera))

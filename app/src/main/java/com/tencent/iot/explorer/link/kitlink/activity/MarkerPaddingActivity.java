@@ -143,7 +143,7 @@ public class MarkerPaddingActivity extends BaseActivity implements TencentMap.On
                 lasttime = locationJson.getLong(CommonField.PERMISSION_LOCATION);
             }
             if (locationJsonString != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48 * 60 * 60) {
-                T.show(getString(R.string.permission_of_location_family_address_refuse));
+                T.show(getString(R.string.permission_of_location_add_device_refuse));
                 return;
             }
             if (permissionDialog == null) {

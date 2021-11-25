@@ -104,26 +104,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         iv_login_agreement.setImageResource(R.mipmap.icon_unselected)
         iv_login_agreement_status.visibility = View.GONE
 
-        if (!checkPermissions(permissions)) {
-            // 查看请求sms权限的时间是否大于48小时
-            var smsJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS)
-            var smsJson: JSONObject? = JSONObject.parse(smsJsonString) as JSONObject?
-            val lasttime = smsJson?.getLong(CommonField.PERMISSION_SMS)
-            if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                T.show(getString(R.string.permission_of_sms_refuse))
-                return
-            }
-            permissionDialog = PermissionDialog(this@LoginActivity, R.mipmap.permission_sms, getString(R.string.permission_sms_lips), getString(R.string.permission_sms))
-            permissionDialog!!.show()
-            requestPermission(permissions)
-
-            // 记录请求sms权限的时间
-            var json = JSONObject()
-            json.put(CommonField.PERMISSION_SMS, System.currentTimeMillis() / 1000)
-            Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS, json.toJSONString())
-        } else {
-            permissionAllGranted()
-        }
     }
 
     override fun onRequestPermissionsResult(
@@ -509,6 +489,26 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 val account = verifyCodeLoginView.et_login_phone_or_email_byverifycode.text.trim().toString()
                 accountForAutoFill = account
                 if (!account.contains("@")) {
+                    if (!checkPermissions(permissions)) {
+                        // 查看请求sms权限的时间是否大于48小时
+                        var smsJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS)
+                        var smsJson: JSONObject? = JSONObject.parse(smsJsonString) as JSONObject?
+                        val lasttime = smsJson?.getLong(CommonField.PERMISSION_SMS)
+                        if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
+                            T.show(getString(R.string.permission_of_sms_refuse))
+                            return
+                        }
+                        permissionDialog = PermissionDialog(this@LoginActivity, R.mipmap.permission_sms, getString(R.string.permission_sms_lips), getString(R.string.permission_sms))
+                        permissionDialog!!.show()
+                        requestPermission(permissions)
+
+                        // 记录请求sms权限的时间
+                        var json = JSONObject()
+                        json.put(CommonField.PERMISSION_SMS, System.currentTimeMillis() / 1000)
+                        Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS, json.toJSONString())
+                    } else {
+                        permissionAllGranted()
+                    }
                     accountType = true
                     presenter.setPhone(account)
                     presenter.requestPhoneCode()

@@ -22,6 +22,7 @@ import java.util.List;
 public class InputBirthdayDialog extends IosCenterStyleDialog implements View.OnClickListener {
     private TextView okBtn;
     private TextView cancelBtn;
+    private TextView detailTv;
     private WheelPicker yearPicker;
     private WheelPicker monthPicker;
     private WheelPicker dayPicker;
@@ -34,9 +35,15 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
     private int MAX_YEAR_NUM;
     private final int MIN_YEAR = 1900;
     private final int MAX_MONTH_NUM = 12;
+    private String detailString;
 
-    public InputBirthdayDialog(Context context) {
+    public InputBirthdayDialog(Context context, String countryCode) {
         super(context, R.layout.popup_birthday_layout);
+        if (countryCode.equals("1")) {
+            detailString = context.getString(R.string.birthday_detail_usa);
+        } else {
+            detailString = context.getString(R.string.birthday_detail_china);
+        }
 
         Date currentDate = new Date();
         final int year = currentDate.getYear() + MIN_YEAR;
@@ -54,6 +61,7 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
     public void initView() {
         okBtn = view.findViewById(R.id.tv_ok);
         cancelBtn = view.findViewById(R.id.tv_cancel);
+        detailTv = view.findViewById(R.id.tv_detail);
         yearPicker = view.findViewById(R.id.wheel_timer_year_picker);
         monthPicker = view.findViewById(R.id.wheel_timer_month_picker);
         dayPicker = view.findViewById(R.id.wheel_timer_day_picker);
@@ -68,6 +76,8 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
         dialogLayout.setOnClickListener(this);
         monthPicker.setOnItemSelectedListener(yearMonthSelectedListener);
         yearPicker.setOnItemSelectedListener(yearMonthSelectedListener);
+
+        detailTv.setText(detailString);
         initDateView();
     }
 
