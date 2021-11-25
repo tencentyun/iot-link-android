@@ -41,7 +41,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_toEndOf="@+id/iv_logo"
-                android:text="@string/permission_of_wifi"
+                android:text="@string/permission_album_avatar"
                 android:textColor="#99000000"
                 android:textSize="@dimen/ts_14" />
 
@@ -53,7 +53,7 @@
                 android:layout_below="@id/tv_title"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="20dp"
-                android:text="@string/app_logo_name"
+                android:text="@string/permission_album_lips"
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts_14" />
         </RelativeLayout>

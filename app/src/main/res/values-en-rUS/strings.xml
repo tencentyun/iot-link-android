@@ -696,15 +696,18 @@
     <string name="rule_content_prefix">In order to protect your personal rights and interests, before you use our products, please be sure to carefully read Tencent LLink</string>
     <string name="rule_content_middle">，以帮助您了解我们对您的个人信息的收集/保存/使用/对外提供/保护等情况以及您享有的权利。\n为了向您提供我们的服务，我们会要求您提供此类服务所必须的个人信息。如果您不提供个人信，我们无法为您提供相对应的产品或服务。我们不会对外公开披露所收集的个人信息，如必须公开披露时，我们会向您告知此次公开披露的目的、披露信息的类型及可能涉及的敏感信息，请您查阅</string>
     <string name="rule_content_middle2">\n我们不会主动共享或转让您的个人信息至第三方，如存在其他共享或转让您的个人信息或您需要我们将您的个人信息共享或转让至第三方情形时，我们会直接或确认第三方征得您对上述行为的明示同意。我们的产品中需要与第三方服务商共享的个人信息，请您查阅</string>
-    <string name="rule_content_suffix">. \nIf you have any questions about the above agreement, you can send the question to the official email fanyi@tencent.com of Tencent LLink or to our dedicated department for personal information protection.The mailing address is：Tencent Building, Keji Zhong Road, Nanshan District, Shenzhen, Guangdong, China. Recipient：Legal Department，Data and Privacy Protection Center\n If you agree to the content of the above agreement, please click "Yes" to accept our product service!</string>
+    <string name="rule_content_suffix">。\n如您对以上协议有任何疑问，您可将问题发送至腾讯连连官方邮箱Dataprivacy@tencent.com或寄给我们设立的个人信息保护专职部门。邮寄地址为：中国广东省深圳市南山区海天二路33号腾讯滨海大厦 数据隐私保护部（收）\n如您同意以上协议内容，请点击“同意”开始接受我们的产品服务！</string>
     <string name="controller_of_permission">Authority management</string>
-    <string name="permission_of_title_tip">Please authorize Tencent LLink the following permissions</string>
     <string name="country_tip">In order to provide you with the user agreement and privacy policy of your country/region, please select your country/region</string>
     <string name="permission_camera">为了便于您扫码添加设备，因此腾讯连连需获取以下权限：</string>
     <string name="permission_camera_trtc">为了实时接听使用设备的语音/视频通话功能，因此腾讯连连需获取以下权限：</string>
     <string name="permission_camera_avatar">为了便于您拍照更换头像，因此腾讯连连需获取以下权限：</string>
     <string name="permission_camera_lips">· 相机</string>
     <string name="permission_mic_lips">· 麦克风</string>
+    <string name="permission_camera_help_center">为了便于您拍摄照片用以佐证反馈的问题，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_storage_help_center">为了便于您上传相关的截图用以佐证反馈的问题，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_storage_help_center_camera">为了便于您拍摄上传清晰度高的照片用以佐证反馈的问题，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_storage_camera_lips">· 存储</string>
     <string name="permission_album_avatar">为了便于您可选择本地图片以更换头像，因此腾讯连连需获取以下权限：</string>
     <string name="permission_album_lips">· 存储（相册）</string>
     <string name="permission_storage">为了使用设备的实时语音/视频通话功能，记录运行日志，因此腾讯连连需获取以下权限：</string>
@@ -713,18 +716,13 @@
     <string name="permission_location_lips">· GPS 定位</string>
     <string name="permission_sms">为了方便您注册或登录时自动获取验证码，因此腾讯连连需获取以下权限：</string>
     <string name="permission_sms_lips">· 短信</string>
-    <string name="permission_of_wifi">This step will configure the WiFi network for the hardware device to achieve communication, and bind the relationship between the hardware device and the APP user. Therefore, Tencent LLink needs to obtain the following permissions：</string>
-    <string name="permission_of_wifi_lips">· WiFi name、WiFi password\n· the IP of the mobile phone</string>
-    <string name="permission_of_wechat">You will authorize the following personal information to be bound to your WeChat account:</string>
-    <string name="permission_of_wechat_lips">· nickname、profile photo、region、gender\n· device information</string>
-    <string name="permission_of_camera_refuse">您拒绝使用相机权限，无法修改头像</string>
-    <string name="permission_of_album_refuse">您拒绝访问相册权限，无法修改头像</string>
-    <string name="permission_of_location_add_device_refuse">您拒绝访问GPS定位，无法完成配网读取WiFi ssid信息</string>
-    <string name="permission_of_sms_refuse">您拒绝使用读取短信权限，无法快速填充短信验证码</string>
-    <string name="permission_of_camera_scan_refuse">您拒绝使用相机权限，无法使用扫描二维码功能</string>
-    <string name="permission_of_camera_trtc_refuse">您拒绝使用相机权限，无法使用实时语音/视频通话功能</string>
-    <string name="permission_of_camera_mic_refuse">您拒绝使用麦克风权限，无法使用实时语音/视频通话功能</string>
-    <string name="permission_of_location_family_address_refuse">您拒绝访问GPS定位，无法定位当前位置</string>
+    <string name="permission_of_camera_refuse">您已拒绝使用相机权限，请在设置应用权限中开启相机权限</string>
+    <string name="permission_of_album_refuse">您已拒绝访问相册权限，请在设置应用权限中开启相册权限</string>
+    <string name="permission_of_location_add_device_refuse">您已拒绝访问GPS定位，请在设置应用权限中开启定位权限</string>
+    <string name="permission_of_sms_refuse">您拒绝使用读取短信权限，请在设置应用权限中开启读取短信权限</string>
+    <string name="permission_of_camera_mic_refuse">您已拒绝使用麦克风权限，请在设置应用权限中开启麦克风权限</string>
+    <string name="birthday_detail_china">如果您为未满18周岁的未成年人，将暂时无法使用我们的产品服务，请谨慎选择出生日期。</string>
+    <string name="birthday_detail_usa">如果您为未满13周岁的未成年人，将暂时无法使用我们的产品服务，请谨慎选择出生日期。</string>
 
     <!--international end  -->
 </resources>

@@ -26,6 +26,7 @@ import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.FileUtils
 import com.tencent.iot.explorer.link.core.utils.PhotoUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
@@ -47,8 +48,15 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
     private var uploadMessageAboveL: ValueCallback<Array<Uri>>? = null
     private val FILE_CHOOSER_RESULT_CODE = 10000
     private val FILE_CAMERA_RESULT_CODE = 9999
+    private val FILE_CHOOSER_CAMERA_RESULT_CODE = 9998
 
     private var configQuestionList = false
+    private var permissionDialog: PermissionDialog? = null
+
+    private var permissions = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
 
     override fun getContentView(): Int {
         return  R.layout.activity_help_feedback
@@ -204,23 +212,27 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
     }
 
     // 检查相机权限是否开启
-    private fun checkCameraPermission(): Boolean {
+    private fun checkCameraPermission(isCamera: Boolean): Boolean {
 
-        // android M(6.0) 以上检查存储权限以及相机权限
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            (ContextCompat.checkSelfPermission(this@HelpWebViewActivity,
-                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this@HelpWebViewActivity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+        if (isCamera) {//相机
+            // android M(6.0) 以上检查存储权限以及相机权限
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                (ContextCompat.checkSelfPermission(this@HelpWebViewActivity,
+                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(this@HelpWebViewActivity,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
 
-            requestPermissions(arrayOf(Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_SETTINGS,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                FILE_CHOOSER_RESULT_CODE)
-            return false
+                return false
+            }
+            return true
+        } else {//相册
+            // android M(6.0) 以上检查存储权限
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this@HelpWebViewActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                return false
+            }
+            return true
         }
-        return true
     }
 
     override fun onClick(v: View?) {
@@ -235,6 +247,48 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionDialog?.dismiss()
+        permissionDialog = null
+        for (i in permissions.indices) {
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                when (requestCode) {
+                    FILE_CHOOSER_RESULT_CODE -> {
+                        T.show(resources.getString(R.string.permission_of_album_refuse))
+                    }
+                    FILE_CAMERA_RESULT_CODE -> {
+                        T.show(resources.getString(R.string.permission_of_camera_refuse))
+                    }
+                    FILE_CHOOSER_CAMERA_RESULT_CODE -> {
+                        T.show(resources.getString(R.string.permission_of_camera_refuse))
+                    }
+                }
+                return
+            }
+        }
+    }
+
+    //查看请求 permissionName 权限的时间是否大于48小时
+    private fun requestPermissionIsIn48Hours(permissionName: String) :Boolean {
+        // 查看请求camera权限的时间是否大于48小时
+        var cameraJsonString = Utils.getStringValueFromXml(T.getContext(), permissionName, permissionName)
+        var cameraJson: JSONObject? = JSONObject.parse(cameraJsonString) as JSONObject?
+        val lasttime = cameraJson?.getLong(permissionName)
+        return (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60)
+    }
+    //记录请求 permissionName 权限的时间
+    private fun savePermission(permissionName: String) {
+        //
+        var json = JSONObject()
+        json.put(permissionName, System.currentTimeMillis() / 1000)
+        Utils.setXmlStringValue(T.getContext(), permissionName, permissionName, json.toJSONString())
+    }
+
     val webChromeClient = object: WebChromeClient() {
 
         override fun onShowFileChooser (webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams?): Boolean {
@@ -244,17 +298,63 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
 
             if (fileChooserParams.isCaptureEnabled) {
                 isCapture = true;
-                if (checkCameraPermission()) {
+                if (checkCameraPermission(true)) {
                     PhotoUtils.startCamera(this@HelpWebViewActivity)
                 } else {
+
+                    // 检查相机权限
+                    if (ContextCompat.checkSelfPermission(this@HelpWebViewActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        // 查看请求camera权限的时间是否大于48小时
+                        if (requestPermissionIsIn48Hours(CommonField.PERMISSION_CAMERA)) {
+                            T.show(resources.getString(R.string.permission_of_camera_refuse))
+                            return false
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(arrayOf(Manifest.permission.CAMERA), FILE_CAMERA_RESULT_CODE)
+                        }
+                        permissionDialog = PermissionDialog(this@HelpWebViewActivity, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera_help_center))
+                        permissionDialog!!.show()
+
+                        // 记录请求camera权限的时间
+                        savePermission(CommonField.PERMISSION_CAMERA)
+                    } else if (ContextCompat.checkSelfPermission(this@HelpWebViewActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        // 查看请求album权限的时间是否大于48小时
+                        if (requestPermissionIsIn48Hours(CommonField.PERMISSION_ALBUM)) {
+                            T.show(resources.getString(R.string.permission_of_album_refuse))
+                            return false
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(permissions, FILE_CHOOSER_CAMERA_RESULT_CODE)
+                        }
+                        permissionDialog = PermissionDialog(this@HelpWebViewActivity, R.mipmap.permission_album ,getString(R.string.permission_storage_camera_lips), getString(R.string.permission_storage_help_center_camera))
+                        permissionDialog!!.show()
+
+                        // 记录请求album权限的时间
+                        savePermission(CommonField.PERMISSION_ALBUM)
+                    }
+
+
                     return false
                 }
 
             } else {
                 isCapture = false;
-                if (checkCameraPermission()) {
+                if (checkCameraPermission(false)) {
                     PhotoUtils.startAlbum(this@HelpWebViewActivity)
                 } else {
+                    // 查看请求album权限的时间是否大于48小时
+                    if (requestPermissionIsIn48Hours(CommonField.PERMISSION_ALBUM)) {
+                        T.show(resources.getString(R.string.permission_of_album_refuse))
+                        return false
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(permissions, FILE_CHOOSER_RESULT_CODE)
+                    }
+                    permissionDialog = PermissionDialog(this@HelpWebViewActivity, R.mipmap.permission_album ,getString(R.string.permission_album_lips), getString(R.string.permission_storage_help_center))
+                    permissionDialog!!.show()
+
+                    // 记录请求album权限的时间
+                    savePermission(CommonField.PERMISSION_ALBUM)
                     return false
                 }
             }

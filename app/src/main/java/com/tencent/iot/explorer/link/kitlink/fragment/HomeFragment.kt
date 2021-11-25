@@ -644,7 +644,7 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
                 val lasttime = cameraJson?.getLong(CommonField.PERMISSION_CAMERA)
                 if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
                     requestCameraPermission = true
-                    T.show(getString(R.string.permission_of_camera_trtc_refuse))
+                    T.show(getString(R.string.permission_of_camera_refuse))
                     return
                 }
                 permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera_trtc))

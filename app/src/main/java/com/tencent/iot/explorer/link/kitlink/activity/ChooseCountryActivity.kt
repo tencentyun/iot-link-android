@@ -158,7 +158,7 @@ class ChooseCountryActivity : PActivity(), ChooseCountryView, View.OnClickListen
     private fun showBirthDayDlg() {
         val countryCode = presenter.getCountryCode()
         if (shouldShowBirthdayDlg(countryCode)) {
-            var dlg = InputBirthdayDialog(this@ChooseCountryActivity)
+            var dlg = InputBirthdayDialog(this@ChooseCountryActivity, countryCode)
             dlg.show()
             dlg.setOnDismissListener(object: InputBirthdayDialog.OnDismisListener {
                 override fun onOkClicked(year: Int, month: Int, day: Int) {
