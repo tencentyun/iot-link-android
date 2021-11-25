@@ -82,8 +82,9 @@ public class AudioRecordUtil implements EncoderListener {
 
     @Override
     public void encodeAAC(byte[] data, long time) {
-        byte[] flvData = flvPacker.getFLV(data);
-        XP2P.dataSend(deviceId, flvData, flvData.length);
+//        byte[] flvData = flvPacker.getFLV(data);
+        flvPacker.aac2Flv(data, System.currentTimeMillis());
+//        XP2P.dataSend(deviceId, flvData, flvData.length);
     }
 
     @Override
