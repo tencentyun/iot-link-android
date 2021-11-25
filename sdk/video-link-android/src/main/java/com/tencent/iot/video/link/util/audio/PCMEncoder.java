@@ -133,6 +133,7 @@ public class PCMEncoder {
         int profile = 2;  // AAC LC
         int chanCfg = channelCount;
         int freqIdx = samplingFrequencyIndexMap.get(sampleRate);
+        // FFF15C40011FFC
         // filled in ADTS data
         packet[0] = (byte) 0xFF;
         packet[1] = (byte) 0xF9;
