@@ -694,7 +694,8 @@
     <string name="rule_content_list">第三方信息共享清单</string>
     <string name="personal_information_list">收集个人信息明示清单</string>
     <string name="rule_content_prefix">为了更好地保障您的个人权益，在您使用我们的产品前，请务必谨慎阅读腾讯连连</string>
-    <string name="rule_content_middle">，以帮助您了解我们对您的个人信息的收集/保存/使用/对外提供/保护等情况以及您享有的权利。\n我们不会主动共享或转让您的个人信息至第三方，如存在其他共享或转让您的个人信息或您需要我们将您的个人信息共享或转让至第三方情形时，我们会直接或确认第三方征得您对上述行为的明示同意。我们的产品中需要与第三方服务商共享的个人信息，请您查阅</string>
+    <string name="rule_content_middle">，以帮助您了解我们对您的个人信息的收集/保存/使用/对外提供/保护等情况以及您享有的权利。\n为了向您提供我们的服务，我们会要求您提供此类服务所必须的个人信息。如果您不提供个人信，我们无法为您提供相对应的产品或服务。我们不会对外公开披露所收集的个人信息，如必须公开披露时，我们会向您告知此次公开披露的目的、披露信息的类型及可能涉及的敏感信息，请您查阅</string>
+    <string name="rule_content_middle2">\n我们不会主动共享或转让您的个人信息至第三方，如存在其他共享或转让您的个人信息或您需要我们将您的个人信息共享或转让至第三方情形时，我们会直接或确认第三方征得您对上述行为的明示同意。我们的产品中需要与第三方服务商共享的个人信息，请您查阅</string>
     <string name="rule_content_suffix">。\n如您对以上协议有任何疑问，您可将问题发送至腾讯连连官方邮箱fanyi@tencent.com或寄给我们设立的个人信息保护专职部门。邮寄地址为：中国广东省深圳市南山区科技中一路腾讯大厦 法务部 数据及隐私保护中心（收）\n如您同意以上协议内容，请点击“同意”开始接受我们的产品服务！</string>
     <string name="controller_of_permission">权限管理</string>
     <string name="permission_of_title_tip">请授权腾讯连连以下权限</string>
