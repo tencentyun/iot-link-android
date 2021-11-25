@@ -18,7 +18,6 @@ import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.InputBirthdayDialog
 import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
-import com.tencent.iot.explorer.link.customview.dialog.UserAgreeDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -152,78 +151,6 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                 return@checkIfShowAgreeDlg
             }
         }
-        var dlg = UserAgreeDialog(this@RegisterActivity)
-        dlg.show()
-        dlg.setOnDismisListener(object : UserAgreeDialog.OnDismisListener {
-            override fun onDismised() { finish() }
-            override fun onOkClicked() {
-                presenter.agreement()
-                Utils.setXmlStringValue(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG, "1")
-                if (!checkPermissions(permissions)) {
-                    requestPermission(permissions)
-                } else {
-                    permissionAllGranted()
-                }
-            }
-
-            override fun onOkClickedUserAgreement() {
-                if (presenter.getCountryCode() == "86") {
-                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                        val intent = Intent(this@RegisterActivity, WebActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
-                        var url = CommonField.POLICY_PREFIX
-                        url += "?uin=$ANDROID_ID"
-                        url += CommonField.SERVICE_POLICY_SUFFIX
-                        intent.putExtra(CommonField.EXTRA_TEXT, url)
-                        startActivity(intent)
-                    } else {
-                        OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_2), CommonField.SERVICE_AGREEMENT_URL_CN_EN)
-                    }
-                } else {
-                    var url = ""
-                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                        url = CommonField.SERVICE_AGREEMENT_URL_US_ZH
-                    } else {
-                        url = CommonField.SERVICE_AGREEMENT_URL_US_EN
-                    }
-                    OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_2), url)
-                }
-            }
-
-            override fun onOkClickedPrivacyPolicy() {
-                if (presenter.getCountryCode() == "86") {
-                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                        val intent = Intent(this@RegisterActivity, WebActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
-                        var url = CommonField.POLICY_PREFIX
-                        url += "?uin=$ANDROID_ID"
-                        url += CommonField.PRIVACY_POLICY_SUFFIX
-                        intent.putExtra(CommonField.EXTRA_TEXT, url)
-                        startActivity(intent)
-                    } else {
-                        OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_4), CommonField.PRIVACY_POLICY_URL_CN_EN)
-                    }
-                } else {
-                    var url = ""
-                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                        url = CommonField.PRIVACY_POLICY_URL_US_ZH
-                    } else {
-                        url = CommonField.PRIVACY_POLICY_URL_US_EN
-                    }
-                    OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.register_agree_4), url)
-                }
-            }
-
-            override fun onOkClickedThirdSDKList() {
-                var url = ""
-                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                    url = CommonField.THIRD_SDK_URL_US_ZH
-                } else {
-                    url = CommonField.THIRD_SDK_URL_US_EN
-                }
-                OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.rule_content_list), url)
-            }
-        })
     }
 
     private fun formatTipText() {
