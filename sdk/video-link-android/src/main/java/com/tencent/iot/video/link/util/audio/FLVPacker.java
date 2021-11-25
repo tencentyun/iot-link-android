@@ -6,8 +6,16 @@ import java.util.Arrays;
 
 public class FLVPacker {
 
+    static {
+        System.loadLibrary("native-lib");
+    }
+
     private long pts = 0;
     private volatile boolean isHead = false;
+
+    public FLVPacker() {
+        init();
+    }
 
     public synchronized byte[] getFLV(byte[] data) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -115,6 +123,12 @@ public class FLVPacker {
         result[3] = (byte) (value & 0xFF);
         return result;
     }
+
+    public native int init();
+
+    public native void setOnMuxerListener(FLVListener listener);
+
+    public native int aac2Flv(byte[] aac, long timestamp);
 
 }
 
