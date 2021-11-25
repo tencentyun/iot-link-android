@@ -32,13 +32,28 @@
             app:layout_constraintEnd_toEndOf="parent"
             />
 
+        <TextView
+            android:id="@+id/tv_detail"
+            android:text="@string/birthday_detail_usa"
+            android:textSize="@dimen/ts_12"
+            android:textColor="@color/black_15161A"
+            android:layout_width="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tip"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            />
+
         <View
             android:id="@+id/v_line_1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
             android:background="@color/gray_F5F5F5"
-            app:layout_constraintTop_toBottomOf="@id/tv_tip"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail"
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout

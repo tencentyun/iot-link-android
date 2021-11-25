@@ -11,8 +11,11 @@ import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.UploadView
 import com.tencent.iot.explorer.link.mvp.view.UserInfoView
 import com.tencent.cos.xml.exception.CosXmlClientException
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.Utils
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.response.UserSettingResponse
 
 
@@ -36,6 +39,9 @@ class UserInfoModel(view: UserInfoView) : ParentModel<UserInfoView>(view), Uploa
                 RequestCode.logout -> {
                     view?.logout()
                     App.data.setAppUser(null)
+                    Utils.setXmlStringValue(
+                        T.getContext(), CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO,
+                        CommonField.CHINA_MAINLAND_USER_REG_TIME_INFO, "{}")
                 }
                 RequestCode.update_user_info -> {
                     App.data.userInfo.Avatar = avatar
