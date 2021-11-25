@@ -17,7 +17,6 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.InputBirthdayDialog
-import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -34,12 +33,6 @@ import java.util.*
  */
 class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
 
-    private val permissions = arrayOf(
-        Manifest.permission.RECEIVE_SMS,
-        Manifest.permission.READ_SMS,
-        Manifest.permission.SEND_SMS
-    )
-
     companion object {
         const val ACCOUNT_TYPE = "account_type"
         const val ACCOUNT_NUMBER = "account_number"
@@ -52,7 +45,6 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     private lateinit var phoneView: View
     private lateinit var emailView: View
 
-    private var permissionDialog: PermissionDialog? = null
     private val ANDROID_ID = App.uuid
 
     override fun getPresenter(): IPresenter? {
@@ -109,45 +101,11 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         checkIfShowAgreeDlg()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 102) {
-            if (permissions.contains(Manifest.permission.READ_SMS)) {
-                permissionDialog?.dismiss()
-                permissionDialog = null
-            }
-        }
-    }
-
     private fun checkIfShowAgreeDlg() {
         var agreed = Utils.getStringValueFromXml(this@RegisterActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG)
         agreed?.let {
             if (it == "1") {
                 presenter.agreement()
-                if (!checkPermissions(permissions)) {
-                    // 查看请求sms权限的时间是否大于48小时
-                    var smsJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS)
-                    var smsJson: JSONObject? = JSONObject.parse(smsJsonString) as JSONObject?
-                    val lasttime = smsJson?.getLong(CommonField.PERMISSION_SMS)
-                    if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                        T.show(getString(R.string.permission_of_sms_refuse))
-                        return
-                    }
-                    permissionDialog = PermissionDialog(this@RegisterActivity, R.mipmap.permission_sms, getString(R.string.permission_sms_lips), getString(R.string.permission_sms))
-                    permissionDialog!!.show()
-                    requestPermission(permissions)
-
-                    // 记录请求sms权限的时间
-                    var json = JSONObject()
-                    json.put(CommonField.PERMISSION_SMS, System.currentTimeMillis() / 1000)
-                    Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS, json.toJSONString())
-                } else {
-                    permissionAllGranted()
-                }
                 return@checkIfShowAgreeDlg
             }
         }
@@ -458,7 +416,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
 
     private fun showBirthDayDlg() {
         if (presenter.getCountryCode() == "1" && shouldShowBirthdayDlg()) {
-            var dlg = InputBirthdayDialog(this@RegisterActivity)
+            var dlg = InputBirthdayDialog(this@RegisterActivity, presenter.getCountryCode())
             dlg.show()
             dlg.setOnDismissListener(object: InputBirthdayDialog.OnDismisListener {
                 override fun onOkClicked(year: Int, month: Int, day: Int) {
