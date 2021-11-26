@@ -55,9 +55,7 @@ class PrivicyDialogActivity : BaseActivity() {
                 if (Utils.getLang().contains(CommonField.ZH_TAG)) {
                     val intent = Intent(this@PrivicyDialogActivity, WebActivity::class.java)
                     intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
-                    var url = CommonField.POLICY_PREFIX
-                    url += "?uin=$ANDROID_ID"
-                    url += CommonField.PRIVACY_POLICY_SUFFIX
+                    var url = CommonField.PRIVACY_POLICY_URL_CN_ZH
                     intent.putExtra(CommonField.EXTRA_TEXT, url)
                     startActivity(intent)
                 } else {
@@ -66,23 +64,27 @@ class PrivicyDialogActivity : BaseActivity() {
             }
 
             override fun onOkClickedPersonalInfoList() {
-                var url = ""
                 if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                    url = CommonField.PERSONAL_INFO_URL_US_ZH
+                    val intent = Intent(this@PrivicyDialogActivity, WebActivity::class.java)
+                    intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.personal_information_list))
+                    var url = CommonField.PERSONAL_INFO_URL_US_ZH
+                    intent.putExtra(CommonField.EXTRA_TEXT, url)
+                    startActivity(intent)
                 } else {
-                    url = CommonField.PERSONAL_INFO_URL_US_EN
+                    OpensourceLicenseActivity.startWebWithExtra(this@PrivicyDialogActivity, getString(R.string.personal_information_list), CommonField.PERSONAL_INFO_URL_US_EN)
                 }
-                OpensourceLicenseActivity.startWebWithExtra(this@PrivicyDialogActivity, getString(R.string.personal_information_list), url)
             }
 
             override fun onOkClickedThirdSDKList() {
-                var url = ""
                 if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                    url = CommonField.THIRD_SDK_URL_US_ZH
+                    val intent = Intent(this@PrivicyDialogActivity, WebActivity::class.java)
+                    intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.rule_content_list))
+                    var url = CommonField.THIRD_SDK_URL_US_ZH
+                    intent.putExtra(CommonField.EXTRA_TEXT, url)
+                    startActivity(intent)
                 } else {
-                    url = CommonField.THIRD_SDK_URL_US_EN
+                    OpensourceLicenseActivity.startWebWithExtra(this@PrivicyDialogActivity, getString(R.string.rule_content_list), CommonField.THIRD_SDK_URL_US_EN)
                 }
-                OpensourceLicenseActivity.startWebWithExtra(this@PrivicyDialogActivity, getString(R.string.rule_content_list), url)
             }
         })
     }

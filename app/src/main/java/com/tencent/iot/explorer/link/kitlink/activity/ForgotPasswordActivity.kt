@@ -63,7 +63,6 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
             }
         }
         iv_register_agreement.visibility = View.INVISIBLE
-//        formatTipText()
     }
 
     private fun initViewPager() {
@@ -88,84 +87,6 @@ class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickList
 
         phoneView.tv_forgot_to_email.setOnClickListener(this)
         emailView.tv_forgot_to_phone.setOnClickListener(this)
-    }
-
-    private fun formatTipText() {
-        val str = resources.getString(R.string.register_agree_1)
-        val partStr1 = resources.getString(R.string.register_agree_2)
-        val partStr2 = resources.getString(R.string.register_agree_3)
-        val partStr3 = resources.getString(R.string.register_agree_4)
-        var showStr = str + partStr1 + partStr2 + partStr3
-        val spannable = SpannableStringBuilder(showStr)
-        spannable.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                if (presenter.getCountryCode() == "86") {
-                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                        val intent = Intent(this@ForgotPasswordActivity, WebActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_2))
-                        var url = CommonField.POLICY_PREFIX
-                        url += "?uin=$ANDROID_ID"
-                        url += CommonField.SERVICE_POLICY_SUFFIX
-                        intent.putExtra(CommonField.EXTRA_TEXT, url)
-                        startActivity(intent)
-                    } else {
-                        OpensourceLicenseActivity.startWebWithExtra(this@ForgotPasswordActivity, getString(R.string.register_agree_2), CommonField.SERVICE_AGREEMENT_URL_CN_EN)
-                    }
-                } else {
-                    var url = ""
-                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                        url = CommonField.SERVICE_AGREEMENT_URL_US_ZH
-                    } else {
-                        url = CommonField.SERVICE_AGREEMENT_URL_US_EN
-                    }
-                    OpensourceLicenseActivity.startWebWithExtra(this@ForgotPasswordActivity, getString(R.string.register_agree_2), url)
-                }
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = resources.getColor(R.color.blue_0066FF)
-                ds.setUnderlineText(false);
-            }
-        },
-            str.length, str.length + partStr1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        spannable.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                if (presenter.getCountryCode() == "86") {
-                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                        val intent = Intent(this@ForgotPasswordActivity, WebActivity::class.java)
-                        intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
-                        var url = CommonField.POLICY_PREFIX
-                        url += "?uin=$ANDROID_ID"
-                        url += CommonField.PRIVACY_POLICY_SUFFIX
-                        intent.putExtra(CommonField.EXTRA_TEXT, url)
-                        startActivity(intent)
-                    } else {
-                        OpensourceLicenseActivity.startWebWithExtra(this@ForgotPasswordActivity, getString(R.string.register_agree_4), CommonField.PRIVACY_POLICY_URL_CN_EN)
-                    }
-                } else {
-                    var url = ""
-                    if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                        url = CommonField.PRIVACY_POLICY_URL_US_ZH
-                    } else {
-                        url = CommonField.PRIVACY_POLICY_URL_US_EN
-                    }
-                    OpensourceLicenseActivity.startWebWithExtra(this@ForgotPasswordActivity, getString(R.string.register_agree_4), url)
-                }
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = resources.getColor(R.color.blue_0066FF)
-                ds.setUnderlineText(false);
-            }
-
-        },
-            showStr.length - partStr1.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        tv_register_tip_click.setMovementMethod(LinkMovementMethod.getInstance())
-        tv_register_tip_click.setText(spannable)
     }
 
     override fun onClick(v: View?) {

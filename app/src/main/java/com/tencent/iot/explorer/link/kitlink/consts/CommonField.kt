@@ -127,6 +127,7 @@ object CommonField {
     const val OPENSOURCE_LICENSE_URL_EN = OPENSOURCE_LICENSE_URL
     const val OPENSOURCE_LICENSE_URL_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config11.js"
 
+    const val PRIVACY_POLICY_URL_CN_ZH = "https://privacy.qq.com/document/preview/0da010f1b4944e88bf78520d88642513"
     const val PRIVACY_POLICY_URL_CN_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config10.js"
     const val PRIVACY_POLICY_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config8.js"
     const val PRIVACY_POLICY_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config4.js"
@@ -134,9 +135,9 @@ object CommonField {
     const val SERVICE_AGREEMENT_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config7.js"
     const val SERVICE_AGREEMENT_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config3.js"
     const val DELET_ACCOUNT_POLICY_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config6.js"
-    const val THIRD_SDK_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config12.js"
+    const val THIRD_SDK_URL_US_ZH = "https://privacy.qq.com/document/preview/bd3470c6063f4ac6831900edcb60c9bd"
     const val THIRD_SDK_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config13.js"
-    const val PERSONAL_INFO_URL_US_ZH = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config14.js"
+    const val PERSONAL_INFO_URL_US_ZH = "https://privacy.qq.com/document/preview/278bbbbbdd5748999fce491cfa6dd424"
     const val PERSONAL_INFO_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config15.js"
 
     /************返回结果通用字段*************/

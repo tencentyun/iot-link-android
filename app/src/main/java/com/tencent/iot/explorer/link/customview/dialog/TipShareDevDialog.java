@@ -88,9 +88,7 @@ public class TipShareDevDialog extends IosCenterStyleDialog implements View.OnCl
         public void onClick(View widget) {
             Intent intent = new Intent(getContext(), WebActivity.class);
             intent.putExtra(CommonField.EXTRA_TITLE, getContext().getString(R.string.register_agree_4));
-            String url = CommonField.POLICY_PREFIX;
-            url += "?uin=" + ANDROID_ID;
-            url += CommonField.PRIVACY_POLICY_SUFFIX;
+            String url = CommonField.PRIVACY_POLICY_URL_CN_ZH;
             intent.putExtra(CommonField.EXTRA_TEXT, url);
             getContext().startActivity(intent);
         }
