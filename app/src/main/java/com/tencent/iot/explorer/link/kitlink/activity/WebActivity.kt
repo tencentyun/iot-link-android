@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
@@ -53,7 +54,11 @@ class WebActivity : BaseActivity() {
         val mWebViewClient = object : WebViewClient(){
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 if (request?.url.toString().contains(THIRD_SDK_URL_US_ZH)) {
-                    OpensourceLicenseActivity.startWebWithExtra(this@WebActivity, getString(R.string.rule_content_list), THIRD_SDK_URL_US_ZH)
+                    val intent = Intent(this@WebActivity, WebActivity::class.java)
+                    intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.rule_content_list))
+                    var url = THIRD_SDK_URL_US_ZH
+                    intent.putExtra(CommonField.EXTRA_TEXT, url)
+                    startActivity(intent)
                     return true
                 } else if (request?.url.toString().contains(THIRD_SDK_URL_US_EN)) {
                     OpensourceLicenseActivity.startWebWithExtra(this@WebActivity, getString(R.string.rule_content_list), THIRD_SDK_URL_US_EN)
