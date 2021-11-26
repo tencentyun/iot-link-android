@@ -116,10 +116,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
         val partStr1 = resources.getString(R.string.register_agree_2)
         val partStr2 = resources.getString(R.string.register_agree_3)
         val partStr3 = resources.getString(R.string.register_agree_4)
-        val partStr4 = ","
-        val partStr5 = resources.getString(R.string.rule_content_list)
-        val partStr6 = resources.getString(R.string.personal_information_list)
-        var showStr = str + partStr1 + partStr4 + partStr3 + partStr4 + partStr5 + partStr2 + partStr6
+        var showStr = str + partStr1 + partStr2 + partStr3
         val spannable = SpannableStringBuilder(showStr)
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -160,9 +157,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
                     if (Utils.getLang().contains(CommonField.ZH_TAG)) {
                         val intent = Intent(this@RegisterActivity, WebActivity::class.java)
                         intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.register_agree_4))
-                        var url = CommonField.POLICY_PREFIX
-                        url += "?uin=$ANDROID_ID"
-                        url += CommonField.PRIVACY_POLICY_SUFFIX
+                        var url = CommonField.PRIVACY_POLICY_URL_CN_ZH
                         intent.putExtra(CommonField.EXTRA_TEXT, url)
                         startActivity(intent)
                     } else {
@@ -188,49 +183,6 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
 
         },
             str.length + partStr1.length + partStr2.length, str.length + partStr1.length + partStr2.length + partStr3.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        spannable.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                var url = ""
-                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                    url = CommonField.THIRD_SDK_URL_US_ZH
-                } else {
-                    url = CommonField.THIRD_SDK_URL_US_EN
-                }
-                OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.rule_content_list), url)
-
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = resources.getColor(R.color.blue_0066FF)
-                ds.setUnderlineText(false);
-            }
-
-        },
-            showStr.length - partStr6.length - partStr2.length - partStr5.length, showStr.length - partStr6.length - partStr2.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        spannable.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-
-                var url = ""
-                if (Utils.getLang().contains(CommonField.ZH_TAG)) {
-                    url = CommonField.PERSONAL_INFO_URL_US_ZH
-                } else {
-                    url = CommonField.PERSONAL_INFO_URL_US_EN
-                }
-                OpensourceLicenseActivity.startWebWithExtra(this@RegisterActivity, getString(R.string.personal_information_list), url)
-
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = resources.getColor(R.color.blue_0066FF)
-                ds.setUnderlineText(false);
-            }
-
-        },
-            showStr.length - partStr6.length, showStr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         tv_register_tip.setMovementMethod(LinkMovementMethod.getInstance())
         tv_register_tip.setText(spannable)
