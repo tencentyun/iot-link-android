@@ -713,6 +713,7 @@
     <string name="permission_storage">In order to use the real-time voice/video call function of the device and record the operation log, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_storage_lips">· Storage (log)</string>
     <string name="permission_location_ssid">In order to facilitate the automatic acquisition of the WiFi name of the current mobile phone connection when configuring the network for the device, and send the WiFi information to the device to complete the network configuration, Tencent LLink needs to obtain the following permissions：</string>
+    <string name="permission_location_ssid_map">In order to provide you with precise positioning service, it is convenient to set the home location to obtain weather service, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_location_lips">· GPS location</string>
     <string name="permission_sms">In order to make it easier for you to automatically obtain the verification code when you register or log in, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_sms_lips">· SMS</string>
