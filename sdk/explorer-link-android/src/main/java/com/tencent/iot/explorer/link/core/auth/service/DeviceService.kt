@@ -401,6 +401,47 @@ internal class DeviceService : BaseService(), DeviceImpl {
         tokenPost(param, callback, RequestCode.wifi_bind_device)
     }
 
+    /****************************************   LLSync纯蓝牙接口开始  ************************************************/
+
+    /**
+     * 上传服务器保存用户设备的私有信息 (psk)
+     */
+    override fun setDeviceConfig(deviceId: String, deviceValue: ByteArray, callback: MyCallback) {
+        val param = tokenParams("AppSetDeviceConfig")
+        param["DeviceId"] = deviceId
+        param["DeviceValue"] = deviceValue
+        param["DeviceKey"] = "ble_psk_device_ket"
+
+        tokenPost(param, callback, RequestCode.set_device_config)
+    }
+
+    /**
+     * 读取用户设备的私有信息 (psk)
+     */
+    override fun getDeviceConfig(productId: String, deviceName: String, callback: MyCallback) {
+        val param = tokenParams("AppGetDeviceConfig")
+        param["ProductId"] = productId
+        param["DeviceName"] = deviceName
+        param["DeviceKey"] = "ble_psk_device_ket"
+        param["TimestampKey"] = "ble_timestamp_device_ket"
+
+        tokenPost(param, callback, RequestCode.get_device_config)
+    }
+
+    /**
+     * 蓝牙设备上报属性
+     */
+    override fun reportDeviceDataoverride (
+        productId: String, deviceName: String, data: String, callback: MyCallback
+    ) {
+        val param = tokenParams("AppReportDataAsDevice")
+        param["ProductId"] = productId
+        param["DeviceName"] = deviceName
+        param["Data"] = data
+        tokenPost(param, callback, RequestCode.report_device)
+    }
+    /****************************************   LLSync纯蓝牙接口结束  ************************************************/
+
     /**
      * 合并面板及产品数据
      */

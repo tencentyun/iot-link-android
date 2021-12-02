@@ -5,6 +5,7 @@ import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
@@ -21,6 +22,8 @@ import com.tencent.iot.explorer.link.core.auth.response.DeviceDataResponse
 import com.tencent.iot.explorer.link.core.auth.response.DeviceProductResponse
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
+import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.core.link.service.LLSyncTLVEntity
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -46,6 +49,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         IoTAuth.addActivePushCallback(this)
     }
 
+    var netType = ""
     var productId = ""
     var deviceName = ""
     var deviceId = ""
@@ -84,6 +88,17 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     override fun success(payload: Payload) {
         L.e("Payoad", payload.data)
         payload.keySet()?.forEachIndexed { _, id ->
+            propertyList.forEachIndexed { index, it ->
+                var jsonObject = JSON.parseObject(payload.payload)
+                val method = jsonObject.getString(MessageConst.METHOD)
+                if (method.equals(MessageConst.CONTROL) && netType.equals("ble") && id == it.id) { //ble收到控制指令，向ble设备发送 二进制远程控制指令
+                    var byteArr = LLSyncTLVEntity().getControlBleDevicebyteArr(JSON.parseObject(it.define).getString("type"), index, payload.getValue(id), it.define)
+                    BleConfigService.get().bluetoothGatt?.let {
+                        BleConfigService.get().controlBleDevice(it, byteArr)
+                    }
+                    return@forEachIndexed
+                }
+            }
             run set@{
                 devicePropertyList.forEach {
                     if (id == it.id) {
@@ -288,6 +303,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     hasProduct = true
                     mergeData()
                 }
+                netType = Products[0].NetType
 
                 if (uiList.size == 0) {
                     processPropertyList()
@@ -359,8 +375,9 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     }
 
     private fun completeProperty(entity: DevicePropertyEntity) {
-        propertyList.forEach {
+        propertyList.forEachIndexed { index, it ->
             if (it.id == entity.id) {
+                entity.index = index
                 entity.name = it.name
                 entity.desc = it.desc
                 entity.mode = it.mode

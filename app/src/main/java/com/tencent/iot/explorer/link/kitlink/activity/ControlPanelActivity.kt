@@ -132,7 +132,8 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                 retry_connect.setText(R.string.break_ble_connect)
                 retry_connect.setOnClickListener {
                     BleConfigService.get().bluetoothGatt?.let {
-                        it?.disconnect()
+                        it?.close()
+                        stopScanBleDev(false)
                     }
                 }
             } else {
@@ -148,11 +149,11 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         override fun onBleDeviceFounded(bleDevice: BleDevice) {
             if (bleDevice.productId == deviceEntity?.ProductId && !TextUtils.isEmpty(bleDevice.productId)) {
                 //&& bleDevice.devName == deviceEntity?.DeviceName) {
-                BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+                BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDeviceAndGetLocalPsk(bleDevice, presenter.getProductId(), presenter.getDeviceName())
             } else if (!TextUtils.isEmpty(bleDevice.bindTag)) {
                 deviceEntity?.let {
                     if (bleDevice.bindTag == BleConfigService.bytesToHex(BleConfigService.getBindTag(it.ProductId, it.DeviceName))) {
-                        BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+                        BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDeviceAndGetLocalPsk(bleDevice, presenter.getProductId(), presenter.getDeviceName())
                     }
                 }
             }
@@ -167,7 +168,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
             }
         }
         override fun onBleDeviceDisconnected(exception: TCLinkException) {
-            stopScanBleDev(false)
+
         }
         override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {}
         override fun onBleSetWifiModeResult(success: Boolean) {}
@@ -491,7 +492,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         PanelThemeManager.instance.destroy()
         job?.cancel()
         cancel()
-        BleConfigService.get().bluetoothGatt?.disconnect()
+        BleConfigService.get().bluetoothGatt?.close()
         BleConfigService.get().stopScanBluetoothDevices()
         BleConfigService.get().bluetoothGatt = null
 //        App.setEnableEnterRoomCallback(true)
