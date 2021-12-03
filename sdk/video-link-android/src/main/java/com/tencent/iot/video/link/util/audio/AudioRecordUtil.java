@@ -4,12 +4,21 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+
+import com.tencent.iot.thirdparty.flv.FLVListener;
+import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.xnet.XP2P;
 
 
+<<<<<<< HEAD   (bce417 在workflow中添加'将CI结果通知至企微'的功能)
 public class AudioRecordUtil implements EncoderListener {
     private int channelConfig = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
+=======
+public class AudioRecordUtil implements EncoderListener, FLVListener {
+    private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
+    private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
+>>>>>>> CHANGE (f22623 使用media-server的flv工具类封装aac音频)
     private volatile boolean recorderState = true; //录制状态
     private byte[] buffer;
     private AudioRecord audioRecord;
@@ -52,8 +61,13 @@ public class AudioRecordUtil implements EncoderListener {
     private void reset() {
         buffer = new byte[recordMinBufferSize];
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
+<<<<<<< HEAD   (bce417 在workflow中添加'将CI结果通知至企微'的功能)
         pcmEncoder = new PCMEncoder(sampleRate, this, PCMEncoder.AAC_FORMAT);
         flvPacker = new FLVPacker();
+=======
+        pcmEncoder = new PCMEncoder(sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
+        flvPacker = new FLVPacker(this);
+>>>>>>> CHANGE (f22623 使用media-server的flv工具类封装aac音频)
     }
 
     /**
@@ -66,6 +80,7 @@ public class AudioRecordUtil implements EncoderListener {
         }
         audioRecord = null;
         pcmEncoder = null;
+        flvPacker.release();
         flvPacker = null;
     }
 
@@ -75,12 +90,16 @@ public class AudioRecordUtil implements EncoderListener {
 
     @Override
     public void encodeAAC(byte[] data, long time) {
-        byte[] flvData = flvPacker.getFLV(data);
-        XP2P.dataSend(deviceId, flvData, flvData.length);
+        flvPacker.aac2Flv(data, System.currentTimeMillis());
     }
 
     @Override
     public void encodeG711(byte[] data) { }
+
+    @Override
+    public void onAudioFLV(byte[] data) {
+        XP2P.dataSend(deviceId, data, data.length);
+    }
 
     private class RecordThread extends Thread {
         @Override
