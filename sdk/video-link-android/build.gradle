@@ -49,6 +49,7 @@ dependencies {
 //        changing = true
 //    }
     api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.3.0'
+    api 'com.tencent.iot.thirdparty.android:media-server:1.0.0-SNAPSHOT'
 }
 
 configurations.all {
