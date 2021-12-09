@@ -14,6 +14,8 @@ import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.video.link.consts.VideoConst
+import com.tencent.iot.video.link.entity.WlanDetectBody
+import com.tencent.iot.video.link.service.DetectService
 import kotlinx.android.synthetic.main.activity_video_input_authorize.*
 import kotlinx.android.synthetic.main.blue_title_layout.*
 import kotlinx.android.synthetic.main.input_item_layout.view.*
@@ -26,6 +28,7 @@ class VideoInputAuthorizeActivity : VideoBaseActivity() , CoroutineScope by Main
     }
 
     override fun initView() {
+
         tv_title.setText(R.string.iot_demo_name)
         access_id_layout.tv_tip.setText(R.string.access_id)
         access_token_layout.tv_tip.setText(R.string.access_token)
