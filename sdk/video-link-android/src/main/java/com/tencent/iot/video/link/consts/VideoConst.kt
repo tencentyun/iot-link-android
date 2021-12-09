@@ -18,4 +18,10 @@ object VideoConst {
     const val VIDEO_URLS = "VideoUrls"
     const val VIDEO_NVR_INFO = "VideoNvrInfo"
     const val VIDEO_PAGE_INDEX = "VideoPageIndex"
+    const val VIDEO_WLAN_METHOD = "method"
+    const val VIDEO_WLAN_CLIENT_TOKEN = "clientToken"
+    const val VIDEO_WLAN_TIME_STAMP = "timestamp"
+    const val VIDEO_WLAN_TIMEOUT_MS = "timeoutMs"
+    const val VIDEO_WLAN_PARAMS = "params"
+    const val VIDEO_WLAN_DEV_NAMES = "deviceName"
 }
