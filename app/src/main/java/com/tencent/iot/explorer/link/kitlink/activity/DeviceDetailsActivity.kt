@@ -118,7 +118,7 @@ class DeviceDetailsActivity : PActivity(), CoroutineScope by MainScope(), Device
                                 BleConfigService.get()?.let {
                                     BleConfigService.get().connetionListener = bleDeviceConnectionListener
                                     if (BleConfigService.get().unbind(it.bluetoothGatt)) {
-                                        T.show(getString(R.string.fail))
+                                        T.show(getString(R.string.delete_success))
                                     }
                                 }
                             } else {

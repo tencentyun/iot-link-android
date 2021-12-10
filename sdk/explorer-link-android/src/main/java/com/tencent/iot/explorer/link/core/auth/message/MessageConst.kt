@@ -38,6 +38,7 @@ object MessageConst {
     const val ONLINE = "Online"
     const val OFFLINE = "Offline"
     const val METHOD = "method"
+    const val CONTROL = "control"
     const val TRTC_AUDIO_CALL_STATUS = "_sys_audio_call_status"
     const val TRTC_VIDEO_CALL_STATUS = "_sys_video_call_status"
     const val TRTC_PARAMS = "TRTCParams"
