@@ -401,6 +401,110 @@ internal class DeviceService : BaseService(), DeviceImpl {
         tokenPost(param, callback, RequestCode.wifi_bind_device)
     }
 
+    /****************************************   LLSync纯蓝牙接口开始  ************************************************/
+
+    /**
+     * 上传服务器保存用户设备的私有信息 (psk)
+     */
+    override fun setDeviceConfig(deviceId: String, deviceValue: ByteArray, callback: MyCallback) {
+        val param = tokenParams("AppSetDeviceConfig")
+        param["DeviceId"] = deviceId
+        param["DeviceValue"] = deviceValue
+        param["DeviceKey"] = "ble_psk_device_ket"
+
+        tokenPost(param, callback, RequestCode.set_device_config)
+    }
+
+    /**
+     * 读取用户设备的私有信息 (psk)
+     */
+    override fun getDeviceConfig(productId: String, deviceName: String, callback: MyCallback) {
+        val param = tokenParams("AppGetDeviceConfig")
+        param["ProductId"] = productId
+        param["DeviceName"] = deviceName
+        param["DeviceKey"] = "ble_psk_device_ket"
+        param["TimestampKey"] = "ble_timestamp_device_ket"
+
+        tokenPost(param, callback, RequestCode.get_device_config)
+    }
+
+    /**
+     * 蓝牙设备上报属性
+     */
+    override fun reportDeviceDataoverride (
+        productId: String, deviceName: String, data: String, callback: MyCallback
+    ) {
+        val param = tokenParams("AppReportDataAsDevice")
+        param["ProductId"] = productId
+        param["DeviceName"] = deviceName
+        param["Data"] = data
+        tokenPost(param, callback, RequestCode.report_device)
+    }
+
+    /**
+     * 查看固件版本
+     */
+    override fun checkFirmwareUpdate (
+        productId: String, deviceName: String, callback: MyCallback
+    ) {
+        val param = tokenParams("AppCheckFirmwareUpdate")
+        param["ProductId"] = productId
+        param["DeviceName"] = deviceName
+        tokenPost(param, callback, RequestCode.check_firmware_update)
+    }
+
+    /**
+     * 上报固件版本
+     */
+    override fun reportFirmwareVersion (
+        version: String, deviceId: String, callback: MyCallback
+    ) {
+        val param = tokenParams("AppReportFirmwareVersion")
+        param["Version"] = version
+        param["DeviceId"] = deviceId
+        tokenPost(param, callback, RequestCode.report_firmware_version)
+    }
+
+    /**
+     * 查询设备固件升级状态
+     */
+    override fun describeFirmwareUpdateStatus (
+        productId: String, deviceName: String, callback: MyCallback
+    ) {
+        val param = tokenParams("AppDescribeFirmwareUpdateStatus")
+        param["ProductId"] = productId
+        param["DeviceName"] = deviceName
+        tokenPost(param, callback, RequestCode.describe_firmware_update_status)
+    }
+
+    /**
+     * 获取固件升级包URL
+     */
+    override fun getDeviceOTAInfo (
+        deviceId: String, callback: MyCallback
+    ) {
+        val param = tokenParams("AppGetDeviceOTAInfo")
+        param["DeviceId"] = deviceId
+        tokenPost(param, callback, RequestCode.get_device_ota_info)
+    }
+
+    /**
+     * 上报设备OTA状态进度 （下载、更新升级、烧录）  State: downloading updating burning
+     */
+    override fun reportOTAStatus (
+        deviceId: String, state: String, version: String, persent: Int, callback: MyCallback
+    ) {
+        val param = tokenParams("AppReportOTAStatus")
+        param["DeviceId"] = deviceId
+        param["State"] = state
+        param["ResultCode"] = 0
+        param["ResultMsg"] = ""
+        param["Version"] = version
+        param["Persent"] = persent
+        tokenPost(param, callback, RequestCode.report_ota_status)
+    }
+    /****************************************   LLSync纯蓝牙接口结束  ************************************************/
+
     /**
      * 合并面板及产品数据
      */

@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.TRTCAppSessionManager
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
 import com.tencent.iot.explorer.link.core.auth.entity.NavBar
@@ -132,7 +134,8 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                 retry_connect.setText(R.string.break_ble_connect)
                 retry_connect.setOnClickListener {
                     BleConfigService.get().bluetoothGatt?.let {
-                        it?.disconnect()
+                        it?.close()
+                        stopScanBleDev(false)
                     }
                 }
             } else {
@@ -148,11 +151,11 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         override fun onBleDeviceFounded(bleDevice: BleDevice) {
             if (bleDevice.productId == deviceEntity?.ProductId && !TextUtils.isEmpty(bleDevice.productId)) {
                 //&& bleDevice.devName == deviceEntity?.DeviceName) {
-                BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+                BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDeviceAndGetLocalPsk(bleDevice, presenter.getProductId(), presenter.getDeviceName())
             } else if (!TextUtils.isEmpty(bleDevice.bindTag)) {
                 deviceEntity?.let {
                     if (bleDevice.bindTag == BleConfigService.bytesToHex(BleConfigService.getBindTag(it.ProductId, it.DeviceName))) {
-                        BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDevice(bleDevice)
+                        BleConfigService.get().bluetoothGatt = BleConfigService.get().connectBleDeviceAndGetLocalPsk(bleDevice, presenter.getProductId(), presenter.getDeviceName())
                     }
                 }
             }
@@ -162,12 +165,28 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
             launch {
                 BleConfigService.get().bluetoothGatt?.let {
                     delay(3000)
-                    if (BleConfigService.get().setMtuSize(it, 512)) return@launch
+//                    if (BleConfigService.get().setMtuSize(it, 512)) return@launch
+                    launch (Dispatchers.Main) {
+                        delay(1000)
+                        BleConfigService.get().bluetoothGatt?.let {
+                            BleConfigService.get().stopScanBluetoothDevices()
+                            if (!BleConfigService.get().connectSubDevice(it)) {
+                                stopScanBleDev(false)
+                                return@launch
+                            } else {
+                                connectBleJob = launch (Dispatchers.Main) {
+                                    delay(10000)
+                                    stopScanBleDev(false)
+                                }
+                            }
+                        }
+                    }
+                    stopScanBleDev(false)
                 }
             }
         }
         override fun onBleDeviceDisconnected(exception: TCLinkException) {
-            stopScanBleDev(false)
+
         }
         override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {}
         override fun onBleSetWifiModeResult(success: Boolean) {}
@@ -176,25 +195,6 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         override fun onBlePushTokenResult(success: Boolean) {}
         override fun onMtuChanged(mtu: Int, status: Int) {
             L.d(TAG, "onMtuChanged mtu $mtu status $status")
-            if (BluetoothGatt.GATT_SUCCESS == status) {
-                launch (Dispatchers.Main) {
-                    delay(1000)
-                    BleConfigService.get().bluetoothGatt?.let {
-                        BleConfigService.get().stopScanBluetoothDevices()
-                        if (!BleConfigService.get().connectSubDevice(it)) {
-                            stopScanBleDev(false)
-                            return@launch
-                        } else {
-                            connectBleJob = launch (Dispatchers.Main) {
-                                delay(10000)
-                                stopScanBleDev(false)
-                            }
-                        }
-                    }
-                }
-                return
-            }
-            stopScanBleDev(false)
         }
         override fun onBleBindSignInfo(bleDevBindCondition: BleDevBindCondition) {}
         override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {
@@ -202,12 +202,41 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
             connectBleJob?.cancel()
         }
         override fun onBleUnbindSignInfo(signInfo: String) {}
-        override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {}
+        override fun onBlePropertyValue(bleDeviceProperty: BleDeviceProperty) {
+            L.d(TAG, "onBlePropertyValue $bleDeviceProperty ")
+        }
         override fun onBleControlPropertyResult(result: Int) {}
-        override fun onBleRequestCurrentProperty() {}
+        override fun onBleRequestCurrentProperty() {
+            presenter.model?.getBleDeviceStatus()?.let {
+                BleConfigService.get().sendCurrentBleDeviceProperty(BleConfigService.get().bluetoothGatt,
+                    it
+                )
+            }
+        }
         override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
         override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
-        override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+        override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {
+            if (firmwareVersion.mtuFlag == 1) { // 是否设置 mtu 当 mtu flag为 1 时，进行 MTU 设置；当 mtu flag 为 0 时，不设置 MTU
+                BleConfigService.get().setMtuSize(BleConfigService.get().bluetoothGatt, firmwareVersion.mtuSize)
+            }
+
+            deviceEntity?.run {
+                IoTAuth.deviceImpl.checkFirmwareUpdate(ProductId, DeviceName, object: MyCallback{
+                    override fun fail(msg: String?, reqCode: Int) {
+
+                    }
+
+                    override fun success(response: BaseResponse, reqCode: Int) {
+                    val json = response.data as JSONObject
+                        val dstVersion = json.getString("DstVersion")
+                        val currentVersion = json.getString("CurrentVersion")
+                        if (!dstVersion.equals(currentVersion)) {
+
+                        }
+                    }
+                })
+            }
+        }
         override fun onBleDeviceMtuSize(size: Int) {}
         override fun onBleDeviceTimeOut(timeLong: Int) {}
     }
@@ -491,7 +520,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         PanelThemeManager.instance.destroy()
         job?.cancel()
         cancel()
-        BleConfigService.get().bluetoothGatt?.disconnect()
+        BleConfigService.get().bluetoothGatt?.close()
         BleConfigService.get().stopScanBluetoothDevices()
         BleConfigService.get().bluetoothGatt = null
 //        App.setEnableEnterRoomCallback(true)
