@@ -47,6 +47,7 @@ import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.Runnable
+import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
@@ -508,6 +509,11 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
+    override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
+        val s = data?.let { String(it, StandardCharsets.UTF_8) }
+        Log.e("tag", "=============" + s)
+        return "app reply to device"
+    }
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e(tag, "id=${id}, event=${event}")
