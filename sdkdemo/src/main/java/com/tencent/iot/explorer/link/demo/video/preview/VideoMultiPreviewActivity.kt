@@ -307,6 +307,9 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
 
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
+    override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
+        return "app reply to device"
+    }
 
     override fun onPause() {
         super.onPause()
