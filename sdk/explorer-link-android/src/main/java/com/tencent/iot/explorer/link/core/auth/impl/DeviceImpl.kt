@@ -145,4 +145,44 @@ interface DeviceImpl {
      */
     fun allDevices(token: String, platformId: String, offset: Int, limit: Int, callback: MyCallback)
 
+    /**
+     * 上传服务器保存用户设备的私有信息 (psk)
+     */
+    fun setDeviceConfig(deviceId: String, deviceValue: ByteArray, callback: MyCallback)
+
+    /**
+     * 读取用户设备的私有信息 (psk)
+     */
+    fun getDeviceConfig(productId: String, deviceName: String, callback: MyCallback)
+
+    /**
+     * 蓝牙设备上报属性
+     */
+    fun reportDeviceDataoverride(productId: String, deviceName: String, data: String, callback: MyCallback)
+
+    /**
+     * 查看固件版本
+     */
+    fun checkFirmwareUpdate(productId: String, deviceName: String, callback: MyCallback)
+
+    /**
+     * 上报固件版本
+     */
+    fun reportFirmwareVersion(version: String, deviceId: String, callback: MyCallback)
+
+    /**
+     * 查询设备固件升级状态
+     */
+    fun describeFirmwareUpdateStatus(productId: String, deviceName: String, callback: MyCallback)
+
+    /**
+     * 获取固件升级包URL
+     */
+    fun getDeviceOTAInfo(deviceId: String, callback: MyCallback)
+
+    /**
+     * 上报设备OTA状态进度 （下载、更新升级、烧录）  State: downloading updating burning
+     */
+    fun reportOTAStatus(deviceId: String, state: String, version: String, persent: Int, callback: MyCallback)
+
     }

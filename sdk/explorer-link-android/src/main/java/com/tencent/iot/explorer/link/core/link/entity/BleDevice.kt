@@ -7,6 +7,7 @@ class BleDevice {
     var productId = ""
     var productName = ""
     var devName = ""
+    var showedName = ""
     var manufacturerSpecificData: ByteArray? = null
         set(value) {
             field = value
