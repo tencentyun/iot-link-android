@@ -220,4 +220,7 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
     }
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
+    override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
+        return "app reply to device"
+    }
 }
