@@ -15,4 +15,6 @@ class DevUrl2Preview {
     var lock: Object = Object()
     var keepAliveThreadRuning = true
     var surface: Surface? = null
+    var address = ""
+    var port = 0
 }
