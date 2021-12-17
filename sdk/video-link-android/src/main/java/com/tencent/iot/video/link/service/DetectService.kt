@@ -5,6 +5,7 @@ import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.video.link.callback.DetectMesssageCallback
+import com.tencent.iot.video.link.callback.OnWlanDevicesDetectedCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.VideoMessageType
 import com.tencent.iot.video.link.entity.WlanDetectBody
@@ -43,18 +44,14 @@ class DetectService private constructor(): CoroutineScope by MainScope() {
     var groupAddress = "255.255.255.255"
     private val BUFFER_SIZE = 2048
     private val sdkVarsion = XP2P.getVersion()
-    var detectMesssageCallback: DetectMesssageCallback? = null
-    var adapterCallback: DetectMesssageCallback = object: DetectMesssageCallback {
+    var onWlanDevicesDetectedCallback: OnWlanDevicesDetectedCallback? = null
+    private var adapterCallback: DetectMesssageCallback = object: DetectMesssageCallback {
         override fun onMessage(version: String, message: String): Boolean {
             Log.e(TAG, "version $version, message $message")
-            if (detectMesssageCallback?.onMessage(version, message) == true) {  // 使用集成 sdk 方的处理逻辑
-
-            } else { // 使用内部处理逻辑
-                var resp = JSONObject.parseObject(message, WlanRespBody::class.java)
-                resp.let {
-                    if (it.method == "probeMatch" && it.params != null && it.params.isReady()) {
-//                        cancel() // 查询到设备的 IP 地址信息，停止广播发送和接收内容
-                    }
+            var resp = JSONObject.parseObject(message, WlanRespBody::class.java)
+            resp.let {
+                if (it.method == "probeMatch" && it.params != null && it.params.isReady()) {
+                    onWlanDevicesDetectedCallback?.onMessage(version, it)
                 }
             }
             return true
@@ -69,6 +66,10 @@ class DetectService private constructor(): CoroutineScope by MainScope() {
     fun clear() {
         cancel() // 关闭所有的协程
         resetSocket()
+    }
+
+    fun clearAllTask() {
+        cancel()
     }
 
     fun resetSocket() {

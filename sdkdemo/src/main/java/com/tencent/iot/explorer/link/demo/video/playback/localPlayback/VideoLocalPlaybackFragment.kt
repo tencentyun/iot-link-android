@@ -604,6 +604,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
+    override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String { return ""}
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e(TAG, "id=${id}, event=${event}")
