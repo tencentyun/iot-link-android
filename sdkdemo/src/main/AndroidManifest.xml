@@ -54,6 +54,9 @@
         <activity android:name=".core.activity.ShowAllDeviceActivity" />
         <activity android:name=".video.VideoOptionsActivity" />
         <activity android:name=".video.VideoInputAuthorizeActivity" />
+        <activity android:name=".video.VideoWlanDetectActivity" />
+        <activity android:name=".video.preview.WlanVideoPreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name=".video.VideoMainActivity" />
         <activity android:name=".video.nvr.VideoNvrActivity" />
         <activity
