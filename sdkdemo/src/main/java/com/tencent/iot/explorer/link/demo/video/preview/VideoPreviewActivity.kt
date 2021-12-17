@@ -57,35 +57,35 @@ private var keepPlayThreadLock = Object()
 @Volatile
 private var keepAliveThreadRuning = true
 
-class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
+open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener {
 
-    private var tag = VideoPreviewActivity::class.simpleName
-    private var orientationV = true
+    open var tag = VideoPreviewActivity::class.simpleName
+    var orientationV = true
     private var adapter : ActionListAdapter? = null
     private var records : MutableList<ActionRecord> = ArrayList()
-    private lateinit var presenter: EventPresenter
-    private lateinit var player : IjkMediaPlayer
-    private lateinit var surface: Surface
+    lateinit var presenter: EventPresenter
+    lateinit var player : IjkMediaPlayer
+    lateinit var surface: Surface
     @Volatile
-    private var audioAble = true
+    var audioAble = true
     @Volatile
-    private var urlPrefix = ""
-    private var filePath: String? = null
-    private lateinit var audioRecordUtil: AudioRecordUtil
-    private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+    var urlPrefix = ""
+    var filePath: String? = null
+    lateinit var audioRecordUtil: AudioRecordUtil
+    var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
     @Volatile
-    private var showTip = false
+    var showTip = false
     @Volatile
-    private var connectStartTime = 0L
+    var connectStartTime = 0L
     @Volatile
-    private var connectTime = 0L
+    var connectTime = 0L
     @Volatile
-    private var startShowVideoTime = 0L
+    var startShowVideoTime = 0L
     @Volatile
-    private var showVideoTime = 0L
-    private var volumeChangeObserver: VolumeChangeObserver? = null
-    private val MSG_UPDATE_HUD = 1
+    var showVideoTime = 0L
+    var volumeChangeObserver: VolumeChangeObserver? = null
+    val MSG_UPDATE_HUD = 1
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
@@ -138,7 +138,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         volumeChangeObserver?.registerReceiver();
     }
 
-    private fun startPlayer() {
+    open fun startPlayer() {
         if (App.data.accessInfo == null || TextUtils.isEmpty(presenter.getDeviceName())) return
         player = IjkMediaPlayer()
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
@@ -234,7 +234,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         }
     }
 
-    private fun speakAble(able: Boolean): Boolean {
+    open fun speakAble(able: Boolean): Boolean {
         App.data.accessInfo?.let { accessInfo ->
             if (able) {
                 var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
@@ -316,7 +316,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         }
     }
 
-    private fun chgAudioStatus(audioAble: Boolean) {
+    open fun chgAudioStatus(audioAble: Boolean) {
         if (!audioAble) {
             iv_audio.setImageResource(R.mipmap.no_audio)
             player.setVolume(0F, 0F)
@@ -328,7 +328,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         }
     }
 
-    private var controlListener = object : View.OnClickListener {
+    open var controlListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
             var command = ""
             when(v) {
@@ -395,7 +395,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         })
     }
 
-    private fun chgTextState(value: Int) {
+    open fun chgTextState(value: Int) {
         when(value) {
             0 -> {
                 tv_video_quality.setText(R.string.video_quality_high_str)
@@ -414,7 +414,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         chgAudioStatus(audioAble)
     }
 
-    private fun setPlayerUrl(suffix: String) {
+    open fun setPlayerUrl(suffix: String) {
         showTip = false
         startShowVideoTime = System.currentTimeMillis()
         player.release()
