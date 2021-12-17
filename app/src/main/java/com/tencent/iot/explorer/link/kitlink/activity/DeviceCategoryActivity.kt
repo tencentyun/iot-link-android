@@ -124,7 +124,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     private var bleDeviceConnectionListener = object: BleDeviceConnectionListener {
         override fun onBleDeviceFounded(bleDevice: BleDevice) {
             var index = bleDevs.indexOf(bleDevice)
-            if (index < 0) {
+            if (index < 0 && bleDevice.boundState != 2) {//非连接状态的蓝牙设备在此处可以展示出来进行扫描绑定
                 bleDevs.add(bleDevice)
                 refreshDevInfo(bleDevice)
             }
@@ -148,6 +148,11 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
         override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
         override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+        override fun onBleDevOtaUpdateResponse(otaUpdateResponse: BleDevOtaUpdateResponse) {}
+        override fun onBleDevOtaUpdateResult(success: Boolean, errorCode: Int) {}
+
+        override fun onBleDevOtaReceivedProgressResponse(progress: Int) {}
+
         override fun onBleDeviceMtuSize(size: Int) {}
         override fun onBleDeviceTimeOut(timeLong: Int) {}
     }

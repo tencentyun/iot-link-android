@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.core.link.entity
 
 import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import java.io.ByteArrayInputStream
+import java.io.DataInputStream
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -13,7 +15,7 @@ class BleDeviceProperty {
             field?.let {
                 if (it[0] != 0x00.toByte()) return@let
 
-                var size = (it[1].toInt() shl 8) or it[2].toInt()
+                var size = ((it[1].toInt() and 0xFF) shl 8) or (it[2].toInt() and 0xFF)
 
                 var valueDataByteArr = ByteArray(size)
                 System.arraycopy(it, 3, valueDataByteArr, 0, size)
@@ -54,7 +56,7 @@ class BleDeviceProperty {
                         3 -> { // 浮点数
                             var floatnumByteArray = ByteArray(4)
                             System.arraycopy(it, index, floatnumByteArray, 0, 4)
-                            floatMap.put(id, byte2float(floatnumByteArray, 4))
+                            floatMap.put(id, byte2float(floatnumByteArray))
                             index += 4
                         }
                         4 -> { // 枚举
@@ -66,7 +68,7 @@ class BleDeviceProperty {
                         5 -> { // 时间
                             var numByteArray = ByteArray(4)
                             System.arraycopy(it, index, numByteArray, 0, 4)
-                            timestampMap.put(id, bytesToInt(numByteArray).toLong())
+                            timestampMap.put(id, bytesToTimestamp(numByteArray).toLong())
                             index += 4
                         }
                         6 -> { // 结构体
@@ -210,15 +212,19 @@ class BleDeviceProperty {
             return num
         }
 
-        fun byte2float(b: ByteArray, index: Int): Float {
+        fun bytesToTimestamp(bs: ByteArray): Int {
+            return ((bs[0]+0 and 0xFF shl 24) or (bs[1]+0 and 0xFF shl 16) or (bs[2]+0 and 0xFF shl 8) or (bs[3]+0 and 0xFF))
+        }
+
+        fun byte2float(b: ByteArray): Float {
             var tmp: Int
-            tmp = b[index + 0].toInt()
+            tmp = b[0].toInt()
             tmp = tmp and 0xff
-            tmp = tmp or (b[index + 1].toLong() shl 8).toInt()
+            tmp = tmp or (b[1].toLong() shl 8).toInt()
             tmp = tmp and 0xffff
-            tmp = tmp or (b[index + 2].toLong() shl 16).toInt()
+            tmp = tmp or (b[2].toLong() shl 16).toInt()
             tmp = tmp and 0xffffff
-            tmp = tmp or (b[index + 3].toLong() shl 24).toInt()
+            tmp = tmp or (b[3].toLong() shl 24).toInt()
             return java.lang.Float.intBitsToFloat(tmp)
         }
 
