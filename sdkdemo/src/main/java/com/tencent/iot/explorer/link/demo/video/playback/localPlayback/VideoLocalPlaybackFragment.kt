@@ -612,9 +612,13 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
+<<<<<<< HEAD   (83511c 局域网探测)
     override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
         return "app reply to device"
     }
+=======
+    override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String { return ""}
+>>>>>>> CHANGE (aad2bd 局域网探测（UI 入口）)
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e(TAG, "id=${id}, event=${event}")

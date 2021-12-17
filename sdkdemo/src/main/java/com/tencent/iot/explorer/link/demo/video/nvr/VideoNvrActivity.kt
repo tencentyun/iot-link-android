@@ -220,7 +220,11 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
     }
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
+<<<<<<< HEAD   (83511c 局域网探测)
     override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
         return "app reply to device"
     }
+=======
+    override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {return ""}
+>>>>>>> CHANGE (aad2bd 局域网探测（UI 入口）)
 }
