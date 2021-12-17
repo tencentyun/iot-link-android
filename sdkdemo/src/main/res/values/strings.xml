@@ -37,6 +37,9 @@
     <string name="welcome">欢迎使用腾讯云 IoT Video</string>
     <string name="video">IoT Video（消费版）</string>
     <string name="video_pro">IoT Video（行业版）</string>
+    <string name="video_wlan">IoT Video（局域网）</string>
+    <string name="video_client_token">Client token</string>
+    <string name="search_devs">探测设备</string>
     <string name="api_tip">应用端API</string>
     <string name="api_contain">有</string>
     <string name="api_not_contain">无</string>
@@ -48,6 +51,7 @@
     <string name="hint_access_id">请输入Access ID</string>
     <string name="hint_access_token">请输入Access Token</string>
     <string name="hint_product_id">请输入Product ID</string>
+    <string name="hint_client_token">请输入Client Token</string>
     <string name="please_use_sdk">请选择使用多媒体 SDK</string>
     <string name="my_devs">我的设备</string>
     <string name="complete_edit_devs">完成</string>
