@@ -8,14 +8,11 @@ import android.view.View
 import android.widget.Toast
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.BaseActivity
-import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.video.link.consts.VideoConst
-import com.tencent.iot.video.link.entity.WlanDetectBody
-import com.tencent.iot.video.link.service.DetectService
 import kotlinx.android.synthetic.main.activity_video_input_authorize.*
 import kotlinx.android.synthetic.main.blue_title_layout.*
 import kotlinx.android.synthetic.main.input_item_layout.view.*

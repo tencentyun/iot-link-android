@@ -14,6 +14,7 @@ class VideoOptionsActivity : VideoBaseActivity() {
 
     override fun setListener() {
         btn_video.setOnClickListener { jumpActivity(VideoInputAuthorizeActivity::class.java) }
+        btn_video_wlan.setOnClickListener { jumpActivity(VideoWlanDetectActivity::class.java) }
     }
 
 }

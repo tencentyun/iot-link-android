@@ -48,7 +48,12 @@ dependencies {
 //    api('com.tencent.iot.thirdparty.android:xp2p-sdk:latest.integration') {
 //        changing = true
 //    }
+<<<<<<< HEAD   (83511c 局域网探测)
     api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.3.4-SNAPSHOT'
+=======
+    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.3.6-SNAPSHOT'
+    api 'com.tencent.iot.thirdparty.android:media-server:1.0.0-SNAPSHOT'
+>>>>>>> CHANGE (aad2bd 局域网探测（UI 入口）)
 }
 
 configurations.all {
