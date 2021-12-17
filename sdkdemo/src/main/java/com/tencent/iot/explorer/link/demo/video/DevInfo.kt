@@ -11,6 +11,8 @@ class DevInfo {
     var Version = ""
     var channel = 0
     var online = 0
+    var address = ""
+    var port = 0
     set(value) {
         field = value
         Status = field
