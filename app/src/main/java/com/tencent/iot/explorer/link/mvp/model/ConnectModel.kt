@@ -312,6 +312,11 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
             override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
             override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+            override fun onBleDevOtaUpdateResponse(otaUpdateResponse: BleDevOtaUpdateResponse) {}
+            override fun onBleDevOtaUpdateResult(success: Boolean, errorCode: Int) {}
+
+            override fun onBleDevOtaReceivedProgressResponse(progress: Int) {}
+
             override fun onBleDeviceMtuSize(size: Int) {}
             override fun onBleDeviceTimeOut(timeLong: Int) {}
         }

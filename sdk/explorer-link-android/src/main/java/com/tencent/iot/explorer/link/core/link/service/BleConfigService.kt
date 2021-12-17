@@ -10,10 +10,21 @@ import android.os.Build
 import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.message.MessageConst
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
 import com.tencent.iot.explorer.link.core.log.L
+import com.tencent.iot.explorer.link.core.utils.CRC32
+import kotlinx.coroutines.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
 import java.security.InvalidKeyException
 import java.security.MessageDigest
 import java.util.*
@@ -22,6 +33,8 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.suspendCoroutine
 import kotlin.experimental.xor
 
 
@@ -36,8 +49,16 @@ class BleConfigService private constructor() {
     @Volatile
     var unixTimestemp = 0L
     var nonceKeep = 0L
+    private val WRITEINTERVAL: Long = 500
     @Volatile
     var bluetoothGatt: BluetoothGatt? = null
+    @Volatile
+    var connectByteArray: ByteArray? = null
+    @Volatile
+    var reportByteArray: ByteArray? = null
+
+    val otaByteArrList = ArrayList<ByteArray>()
+    var otaTotalFileSize = 0
 
     companion object {
         private var instance: BleConfigService? = null
@@ -111,7 +132,6 @@ class BleConfigService private constructor() {
         var filters = ArrayList<ScanFilter>()
         var scanSettings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-            .setReportDelay(1)
             .build()
 
         bluetoothadapter.bluetoothLeScanner.startScan(filters, scanSettings, getScanCallback())
@@ -126,29 +146,30 @@ class BleConfigService private constructor() {
         scanCallback = object : ScanCallback() {
             override fun onBatchScanResults(results: List<ScanResult?>?) {
                 L.d("onBatchScanResults: " + results.toString())
+            }
+
+            override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 var dev: BleDevice? = null
-                results?.let { ress ->
-                    for (result in ress) {
-                        result?.scanRecord?.serviceUuids?.let {
-                            for (value in it) {
-                                if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFF0")) {
-                                    L.d("onBatchScanResults: " + value.uuid.toString())
-                                    dev = BleDevice()
-                                    dev?.devName = result?.scanRecord?.deviceName.toString()
-                                    dev?.blueDev = result?.device
-                                    result?.scanRecord?.manufacturerSpecificData?.let { msd ->
-                                        if (msd.size() > 0) {
-                                            dev?.manufacturerSpecificData = msd.valueAt(0)
-                                        }
-                                    }
-                                    break
-                                } else if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFE0")) {
-                                    dev = convertManufacturerData2BleDevice(result)
-                                    dev?.blueDev = result?.device
-                                    dev?.type = 1
-                                    break
+                result?.scanRecord?.serviceUuids?.let {
+                    for (value in it) {
+                        if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFF0")) {
+                            L.d("onBatchScanResults: " + value.uuid.toString())
+                            dev = BleDevice()
+                            dev?.devName = result?.scanRecord?.deviceName.toString()
+                            dev?.showedName = result?.scanRecord?.deviceName.toString()
+                            dev?.blueDev = result?.device
+                            result?.scanRecord?.manufacturerSpecificData?.let { msd ->
+                                if (msd.size() > 0) {
+                                    dev?.manufacturerSpecificData = msd.valueAt(0)
                                 }
                             }
+                            break
+                        } else if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFE0")) {
+                            dev = convertManufacturerData2BleDevice(result)
+                            dev?.devName = result?.scanRecord?.deviceName.toString()
+                            dev?.blueDev = result?.device
+                            dev?.type = 1
+                            break
                         }
                     }
                 }
@@ -161,10 +182,14 @@ class BleConfigService private constructor() {
                         founded?:let { // 不存在对应的元素，第一次发现该设备
                             connetionListener?.onBleDeviceFounded(bleDev)
                             L.d(TAG, "onScanResults productId ${bleDev.productId} devName ${bleDev.devName}")
-                            foundedSet[bleDev.productId + bleDev.devName] = true
+                            foundedSet[bleDev.productId + bleDev.devName + bleDev.bindTag] = true
                         }
                     }
                 }
+            }
+
+            override fun onScanFailed(errorCode: Int) {
+                L.d("onScanFailed: errorCode $errorCode")
             }
         }
 
@@ -191,6 +216,10 @@ class BleConfigService private constructor() {
                                 System.arraycopy(manufacturerData, 1, macByteArr, 0, 6)
                                 bytesToHex(macByteArr)?.let {
                                     dev?.mac = it
+                                }
+                                dev?.showedName = result?.scanRecord?.deviceName.toString()
+                                if (!dev.showedName.contains("-")) {
+                                    dev.showedName = "${dev.showedName}_${dev.mac.substring(0, 4).toUpperCase()}"
                                 }
                             }
                             else -> {
@@ -223,8 +252,32 @@ class BleConfigService private constructor() {
         return true
     }
 
+    fun connectBleDeviceAndGetLocalPsk(dev: BleDevice?, productId: String?, deviceName: String?): BluetoothGatt? {
+        getlocalPsk(productId, deviceName)
+        return connectBleDevice(dev)
+    }
+
     fun connectBleDevice(dev: BleDevice?): BluetoothGatt? {
         return connectBleDevice(dev, false)
+    }
+
+    private fun getlocalPsk(productId: String?, deviceName: String?) {
+        if (productId != null && deviceName != null) {
+            IoTAuth.deviceImpl.getDeviceConfig(productId, deviceName, object: MyCallback{
+                override fun fail(msg: String?, reqCode: Int) {
+
+                }
+
+                override fun success(response: BaseResponse, reqCode: Int) {
+                    val json = response.data as JSONObject
+                    val configsJson = json.getJSONObject("Configs")
+                    if (configsJson == null || configsJson.isEmpty()) {
+                        return
+                    }
+                    localPsk = configsJson.getBytes("ble_psk_device_ket")
+                }
+            })
+        }
     }
 
     fun connectBleDevice(dev: BleDevice?, autoConnect: Boolean): BluetoothGatt? {
@@ -242,143 +295,237 @@ class BleConfigService private constructor() {
         }
         currentConnectBleDevice = dev
 
-        return dev?.blueDev?.connectGatt(context, autoConnect,
-            object: BluetoothGattCallback() {
-                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-                override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
-                    L.e(TAG, "onBleDeviceConnected status ${status}, newState ${newState}")
-                    if (newState == BluetoothProfile.STATE_CONNECTED) {
-                        L.d(TAG, "onBleDeviceConnected")
-                        gatt?.discoverServices()
-                        gatt?.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
-                        connetionListener?.onBleDeviceConnected()
-                    } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                        L.d(TAG, "onBleDeviceDisconnected")
-                        connetionListener?.onBleDeviceDisconnected(TCLinkException("diconnected"))
-                    }
-                }
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            dev?.blueDev?.connectGatt(context, autoConnect, bluetoothGattCallback,
+                BluetoothDevice.TRANSPORT_LE
+            )
+        } else {
+            dev?.blueDev?.connectGatt(context, autoConnect, bluetoothGattCallback)
+        }
+    }
 
-                override fun onCharacteristicChanged(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?) {
-                    L.d(TAG, "onCharacteristicChanged characteristic " + JSON.toJSONString(characteristic))
+    private var bluetoothGattCallback =  object: BluetoothGattCallback() {
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+            L.e(TAG, "onBleDeviceConnected status ${status}, newState ${newState}")
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                L.d(TAG, "onBleDeviceConnected")
+                gatt?.discoverServices()
+                gatt?.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
+                connetionListener?.onBleDeviceConnected()
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                L.d(TAG, "onBleDeviceDisconnected")
+                connetionListener?.onBleDeviceDisconnected(TCLinkException("diconnected"))
+            }
+        }
 
-                    characteristic?.let {
-                        if (it.uuid.toString().substring(4, 8).toUpperCase().equals("FFE3")) {
-                            if (it.value.isEmpty()) return
-                            L.d(TAG, "characteristic ${bytesToHex(it.value)}")
-                            when (it.value[0]) {
-                                0x08.toByte() -> {
-                                    L.d(TAG, "0x08")
-                                    // 测试使用
-                                    currentConnectBleDevice?.let {  tmpBleDev ->
-                                        if (tmpBleDev.type == 0) {
-                                            connetionListener?.onBleDeviceInfo(BleDeviceInfo.byteArr2BleDeviceInfo(it.value))
-                                        } else {
-                                            connetionListener?.onBleDeviceFirmwareVersion(BleDeviceFirmwareVersion.byteArr2BleDeviceFirmwareVersion((it.value)))
-                                        }
-                                    }
+        override fun onCharacteristicChanged(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?) {
+            L.d(TAG, "onCharacteristicChanged characteristic " + JSON.toJSONString(characteristic))
 
-                                }
-                                0xE0.toByte() -> {
-                                    L.d(TAG, "0xE0 ${convertData2SetWifiResult(it.value)}")
-                                    connetionListener?.onBleSetWifiModeResult(convertData2SetWifiResult(it.value))
-                                }
-                                0xE1.toByte() -> {
-                                    L.d(TAG, "0xE1 ${convertData2SendWifiResult(it.value)}")
-                                    connetionListener?.onBleSendWifiInfoResult(convertData2SendWifiResult(it.value))
-                                }
-                                0xE2.toByte() -> {
-                                    L.d(TAG, "0xE2 ${BleWifiConnectInfo.byteArr2BleWifiConnectInfo(it.value)}")
-                                    connetionListener?.onBleWifiConnectedInfo(BleWifiConnectInfo.byteArr2BleWifiConnectInfo(it.value))
-                                }
-                                0xE3.toByte() -> {
-                                    L.d(TAG, "0xE3")
-                                    connetionListener?.onBlePushTokenResult(convertData2PushTokenResult(it.value))
-                                }
-                                0x05.toByte() -> {
-                                    L.d(TAG, "0x05")
-                                    connetionListener?.onBleBindSignInfo(BleDevBindCondition.data2BleDevBindCondition(it.value))
-                                }
-                                0x06.toByte() -> {
-                                    L.d(TAG, "0x06")
-                                    connetionListener?.onBleSendSignInfo(BleDevSignResult.data2BleDevSignResult(it.value))
-                                }
-                                0x07.toByte() -> {
-                                    L.d(TAG, "0x07")
-                                    val signInfoByteArr = ByteArray(20)
-                                    System.arraycopy(it.value, 3, signInfoByteArr, 0, 20)
-                                    bytesToHex(signInfoByteArr)?.let {
-                                        connetionListener?.onBleUnbindSignInfo(it)
-                                    }
-                                }
-                                0x00.toByte() -> {
-                                    L.d(TAG, "0x00")
-                                    connetionListener?.onBlePropertyValue(BleDeviceProperty.data2BleDeviceProperty(it.value))
-                                }
-                                0x01.toByte() -> {
-                                    L.d(TAG, "0x01")
-                                    val lenByteArr = ByteArray(2)
-                                    System.arraycopy(it.value, 1, lenByteArr, 0, 2)
-                                    var len = BleDeviceProperty.bytesToInt(lenByteArr)
-                                    val reasonByteArr = ByteArray(len)
-                                    System.arraycopy(it.value, 3, reasonByteArr, 0, len)
-                                    connetionListener?.onBleControlPropertyResult(BleDeviceProperty.bytesToInt(reasonByteArr))
-                                }
-                                0x02.toByte() -> {
-                                    L.d(TAG, "0x02")
-                                    connetionListener?.onBleRequestCurrentProperty()
-                                }
-                                0x03.toByte() -> {
-                                    L.d(TAG, "0x03")
-                                    val lenByteArr = ByteArray(2)
-                                    System.arraycopy(it.value, 1, lenByteArr, 0, 2)
-                                    var len = BleDeviceProperty.bytesToInt(lenByteArr)
-                                    var valueByteArr = ByteArray(len - 1)
-                                    System.arraycopy(it.value, 4, valueByteArr, 0, valueByteArr.size)
-                                    var bleDeviceProperty = BleDeviceProperty()
-                                    bleDeviceProperty.valueData = valueByteArr
-                                    connetionListener?.onBleNeedPushProperty(it.value[3].toInt(), bleDeviceProperty)
-                                }
-                                0x04.toByte() -> {
-                                    L.d(TAG, "0x04")
-                                    val lenByteArr = ByteArray(2)
-                                    System.arraycopy(it.value, 1, lenByteArr, 0, 2)
-                                    var len = BleDeviceProperty.bytesToInt(lenByteArr)
-                                    var reason = it.value[3]
-                                    var actinId = it.value[4]
-                                    val dataBytes = ByteArray(len - 2)
-                                    System.arraycopy(it.value, 5, dataBytes, 0, dataBytes.size)
-                                    var bleDeviceProperty = BleDeviceProperty()
-                                    bleDeviceProperty.valueData = dataBytes
-                                    connetionListener?.onBleReportActionResult(reason.toInt(), actinId.toInt(), bleDeviceProperty)
-                                }
-                                0x0B.toByte() -> {
-                                    L.d(TAG, "0x0B")
-                                    val sizeBytes = ByteArray(2)
-                                    System.arraycopy(it.value, 3, sizeBytes, 0, sizeBytes.size)
-                                    val size = BleDeviceProperty.bytesToInt(sizeBytes)
-                                    connetionListener?.onBleDeviceMtuSize(size)
-                                }
-                                0x0D.toByte() -> {
-                                    L.d(TAG, "0x0D")
-                                    val timeLongBytes = ByteArray(2)
-                                    System.arraycopy(it.value, 3, timeLongBytes, 0, timeLongBytes.size)
-                                    val timeLong = BleDeviceProperty.bytesToInt(timeLongBytes)
-                                    connetionListener?.onBleDeviceTimeOut(timeLong)
+            characteristic?.let {
+                if (it.uuid.toString().substring(4, 8).toUpperCase().equals("FFE3")) {
+                    if (it.value.isEmpty()) return
+                    L.d(TAG, "characteristic ${bytesToHex(it.value)}")
+                    when (it.value[0]) {
+                        0x08.toByte() -> {
+                            L.d(TAG, "0x08")
+                            // 测试使用
+                            currentConnectBleDevice?.let {  tmpBleDev ->
+                                if (tmpBleDev.type == 0) {
+                                    connetionListener?.onBleDeviceInfo(BleDeviceInfo.byteArr2BleDeviceInfo(it.value))
+                                } else {
+                                    connetionListener?.onBleDeviceFirmwareVersion(BleDeviceFirmwareVersion.byteArr2BleDeviceFirmwareVersion((it.value)))
                                 }
                             }
+
+                        }
+                        0xE0.toByte() -> {
+                            L.d(TAG, "0xE0 ${convertData2SetWifiResult(it.value)}")
+                            connetionListener?.onBleSetWifiModeResult(convertData2SetWifiResult(it.value))
+                        }
+                        0xE1.toByte() -> {
+                            L.d(TAG, "0xE1 ${convertData2SendWifiResult(it.value)}")
+                            connetionListener?.onBleSendWifiInfoResult(convertData2SendWifiResult(it.value))
+                        }
+                        0xE2.toByte() -> {
+                            L.d(TAG, "0xE2 ${BleWifiConnectInfo.byteArr2BleWifiConnectInfo(it.value)}")
+                            connetionListener?.onBleWifiConnectedInfo(BleWifiConnectInfo.byteArr2BleWifiConnectInfo(it.value))
+                        }
+                        0xE3.toByte() -> {
+                            L.d(TAG, "0xE3")
+                            connetionListener?.onBlePushTokenResult(convertData2PushTokenResult(it.value))
+                        }
+                        0x05.toByte() -> {
+                            L.d(TAG, "0x05")
+                            connetionListener?.onBleBindSignInfo(BleDevBindCondition.data2BleDevBindCondition(it.value))
+                        }
+                        0x06.toByte() -> {
+                            L.d(TAG, "0x06")
+                            var mtuType = it.value[1]
+                            var tempByteArray = connectByteArray?.copyOf()
+                            if (tempByteArray != null) {
+                                var tempLength = it.value.size - 3 + tempByteArray!!.size
+                                connectByteArray = ByteArray(tempLength)
+                                System.arraycopy(tempByteArray, 0, connectByteArray, 0, tempByteArray.size)
+                                System.arraycopy(it.value, 3, connectByteArray, tempByteArray.size, it.value.size - 3)
+                            } else {
+                                connectByteArray = ByteArray(it.value.size - 3)
+                                System.arraycopy(it.value, 3, connectByteArray, 0, it.value.size - 3)
+                            }
+                            L.d(TAG, "0x06 byteArray ${bytesToHex(connectByteArray)}")
+                            if (mtuType == 0xC0.toByte() && connectByteArray != null) {
+                                var totalByteArr = ByteArray(connectByteArray!!.size+3)
+                                totalByteArr[0] = 0x06.toByte()
+                                var totalLengthBytes = number2Bytes(connectByteArray!!.size.toLong(), 2)
+                                System.arraycopy(totalLengthBytes, 0, totalByteArr, 1, 2)
+                                System.arraycopy(connectByteArray!!, 0, totalByteArr, 3, connectByteArray!!.size)
+                                connetionListener?.onBleSendSignInfo(BleDevSignResult.data2BleDevSignResult(totalByteArr))
+                                sendConnectSubDeviceResult(bluetoothGatt, true)
+                                connectByteArray = null
+                            }
+                        }
+                        0x07.toByte() -> {
+                            L.d(TAG, "0x07")
+                            val signInfoByteArr = ByteArray(20)
+                            System.arraycopy(it.value, 3, signInfoByteArr, 0, 20)
+                            bytesToHex(signInfoByteArr)?.let {
+                                connetionListener?.onBleUnbindSignInfo(it)
+                            }
+                        }
+                        0x00.toByte() -> {
+                            L.d(TAG, "0x00")
+                            var mtuType = (it.value[1].toInt() and 0xC0) shr 6
+                            var tempByteArray = reportByteArray?.copyOf()
+                            if (tempByteArray != null) {
+                                var tempLength = it.value.size - 3 + tempByteArray!!.size
+                                reportByteArray = ByteArray(tempLength)
+                                System.arraycopy(tempByteArray, 0, reportByteArray, 0, tempByteArray.size)
+                                System.arraycopy(it.value, 3, reportByteArray, tempByteArray.size, it.value.size - 3)
+                            } else {
+                                reportByteArray = ByteArray(it.value.size - 3)
+                                System.arraycopy(it.value, 3, reportByteArray, 0, it.value.size - 3)
+                            }
+                            if (mtuType == 3 && reportByteArray != null) {//尾包
+                                var totalByteArr = ByteArray(reportByteArray!!.size+3)
+                                totalByteArr[0] = 0x00.toByte()
+                                var totalLengthBytes = number2Bytes(reportByteArray!!.size.toLong(), 2)
+                                System.arraycopy(totalLengthBytes, 0, totalByteArr, 1, 2)
+                                System.arraycopy(reportByteArray!!, 0, totalByteArr, 3, reportByteArray!!.size)
+                                connetionListener?.onBlePropertyValue(BleDeviceProperty.data2BleDeviceProperty(totalByteArr))
+//                                sendConnectSubDeviceResult(bluetoothGatt, true)
+                                reportByteArray = null
+                            }
+                        }
+                        0x01.toByte() -> {
+                            L.d(TAG, "0x01")
+                            val lenByteArr = ByteArray(2)
+                            System.arraycopy(it.value, 1, lenByteArr, 0, 2)
+                            var len = BleDeviceProperty.bytesToInt(lenByteArr)
+                            val reasonByteArr = ByteArray(len)
+                            System.arraycopy(it.value, 3, reasonByteArr, 0, len)
+                            connetionListener?.onBleControlPropertyResult(BleDeviceProperty.bytesToInt(reasonByteArr))
+                        }
+                        0x02.toByte() -> {
+                            L.d(TAG, "0x02")
+                            connetionListener?.onBleRequestCurrentProperty()
+                        }
+                        0x03.toByte() -> {
+                            L.d(TAG, "0x03")
+                            val lenByteArr = ByteArray(2)
+                            System.arraycopy(it.value, 1, lenByteArr, 0, 2)
+                            var len = BleDeviceProperty.bytesToInt(lenByteArr)
+                            var valueByteArr = ByteArray(len - 1)
+                            System.arraycopy(it.value, 4, valueByteArr, 0, valueByteArr.size)
+                            var bleDeviceProperty = BleDeviceProperty()
+                            bleDeviceProperty.valueData = valueByteArr
+                            connetionListener?.onBleNeedPushProperty(it.value[3].toInt(), bleDeviceProperty)
+                        }
+                        0x04.toByte() -> {
+                            L.d(TAG, "0x04")
+                            val lenByteArr = ByteArray(2)
+                            System.arraycopy(it.value, 1, lenByteArr, 0, 2)
+                            var len = BleDeviceProperty.bytesToInt(lenByteArr)
+                            var reason = it.value[3]
+                            var actinId = it.value[4]
+                            val dataBytes = ByteArray(len - 2)
+                            System.arraycopy(it.value, 5, dataBytes, 0, dataBytes.size)
+                            var bleDeviceProperty = BleDeviceProperty()
+                            bleDeviceProperty.valueData = dataBytes
+                            connetionListener?.onBleReportActionResult(reason.toInt(), actinId.toInt(), bleDeviceProperty)
+                        }
+                        0x0C.toByte() -> {
+                            L.d(TAG, "0x0C")
+                            val sizeBytes = ByteArray(2)
+                            System.arraycopy(it.value, 3, sizeBytes, 0, sizeBytes.size)
+                            val size = BleDeviceProperty.bytesToInt(sizeBytes)
+                            connetionListener?.onBleDeviceMtuSize(size)
+                        }
+                        0x0D.toByte() -> {
+                            L.d(TAG, "0x0D")
+                            val timeLongBytes = ByteArray(2)
+                            System.arraycopy(it.value, 3, timeLongBytes, 0, timeLongBytes.size)
+                            val timeLong = BleDeviceProperty.bytesToInt(timeLongBytes)
+                            connetionListener?.onBleDeviceTimeOut(timeLong)
+                        }
+                        0x09.toByte() -> {
+                            L.d(TAG, "0x09")
+                            connetionListener?.onBleDevOtaUpdateResponse(BleDevOtaUpdateResponse.byteArr2BleDevOtaUpdateResponse(it.value))
+                        }
+                        0x0A.toByte() -> {
+                            L.d(TAG, "0x0A")
+                            val nextSeq = it.value[3].toInt() and 0xFF
+                            val fileSizeBytes = ByteArray(4)
+                            System.arraycopy(it.value, 4, fileSizeBytes, 0, fileSizeBytes.size)
+                            val fileSizeInt = BleDeviceProperty.bytesToTimestamp(fileSizeBytes)
+                            val progress = fileSizeInt*100/otaTotalFileSize
+                            connetionListener?.onBleDevOtaReceivedProgressResponse(progress)
+
+                            startSendOtaFirmwareData(gatt)
+                            if (nextSeq != 0xFF.toInt()) {
+                                L.d(TAG, "ota发送完毕")
+                                var endByteArr = ByteArray(1)
+                                endByteArr[0] = 0x02.toByte() // 升级数据结束通知包
+                                setFFE0CharacteristicValueWithUuidFFE4(gatt, endByteArr)
+                            }
+                        }
+                        0x0B.toByte() -> {
+                            L.d(TAG, "0x0B")
+                            val success = it.value[3].toInt() and 0x80
+                            val errorCode = it.value[3].toInt() and 0x7F
+                            connetionListener?.onBleDevOtaUpdateResult((success == 1), errorCode)
                         }
                     }
                 }
-                override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {}
-                override fun onCharacteristicRead(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {}
-                override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-                    enableCharacteristicNotificationWithUUid(gatt, "FFF0")
+            }
+        }
+        override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {
+            if (characteristic?.uuid.toString().substring(4, 8).toUpperCase().equals("FFE4") && characteristic?.value != null && characteristic.value[0] == 0x01.toByte() && otaByteArrList.size != 0) {
+                val byteArr = otaByteArrList[0]
+                if (byteArr.contentEquals(characteristic.value)) {
+                    if (status == BluetoothGatt.GATT_SUCCESS) { //写入成功后，移除当前帧再发下一帧数据 。不成功就重发当前帧数据，看看是不是能和
+                        otaByteArrList.removeAt(0)
+                    }
+                    if (byteArr[2] != 0xFE.toByte()) {
+                        startSendOtaFirmwareData(gatt)
+                    }
                 }
-                override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
-                    connetionListener?.onMtuChanged(mtu, status)
-                }
-                override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {}
-            })
+//                L.d(TAG, "onCharacteristicFFE4Write gatt:${gatt}, characteristic: ${characteristic}, status：${status} thread:${Thread.currentThread()}")
+
+            }
+//            L.d(TAG, "onCharacteristicWrite gatt:${gatt}, characteristic: ${characteristic}, characteristic value: ${bytesToHex(characteristic?.value)}, status：${status} thread:${Thread.currentThread()}")
+        }
+        override fun onCharacteristicRead(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {
+            L.d(TAG, "onCharacteristicRead gatt:${gatt}, characteristic: ${characteristic}, status：${status}")
+        }
+        override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+            enableCharacteristicNotificationWithUUid(gatt, "FFF0")
+        }
+        override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
+            connetionListener?.onMtuChanged(mtu, status)
+        }
+        override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
+            L.d(TAG, "onDescriptorWrite gatt:${gatt}, descriptor: ${descriptor.toString()}, status：${status}")
+        }
     }
 
     private fun convertData2SetWifiResult(byteArray: ByteArray): Boolean {
@@ -442,7 +589,7 @@ class BleConfigService private constructor() {
                         if (characteristic.uuid.toString().substring(4, 8).toUpperCase().equals(uuid)) {
                             characteristic.value = byteArr
                             val success = connection.writeCharacteristic(characteristic)
-                            L.d("setCharacteristicValue success = ${success}")
+//                            L.d("setCharacteristicValue success = ${success} value: ${bytesToHex(byteArr)}")
                             return success
                         }
                     }
@@ -464,6 +611,10 @@ class BleConfigService private constructor() {
 
     private fun setFFE0CharacteristicValueWithUuid(connection: BluetoothGatt?, uuid: String, byteArr: ByteArray): Boolean {
         return setCharacteristicValue(connection, "FFE0", uuid, byteArr)
+    }
+
+    private fun setFFE0CharacteristicValueWithUuidFFE4(connection: BluetoothGatt?, byteArr: ByteArray): Boolean {
+        return setCharacteristicValue(connection, "FFE0", "FFE4", byteArr)
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -525,6 +676,7 @@ class BleConfigService private constructor() {
 
     fun sendUNTX(connection: BluetoothGatt?): Boolean {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         var byteArr = ByteArray(11)
         byteArr[0] = 0x00.toByte()
         byteArr[1] = 0x00.toByte()
@@ -555,6 +707,7 @@ class BleConfigService private constructor() {
 
     fun sendBindfailedResult(connection: BluetoothGatt?, outTime: Boolean): Boolean {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         var byteArr = ByteArray(2)
         byteArr[0] = 0x0A.toByte()
         if (outTime) {  // 超时
@@ -578,6 +731,7 @@ class BleConfigService private constructor() {
 
     private fun sendBindResult(connection: BluetoothGatt?, productId: String, devName: String, success: Boolean): Boolean  {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         var byteArr = ByteArray(16)
         byteArr[0] = 0x02.toByte()
         var lenByts = number2Bytes(13,2)
@@ -585,6 +739,17 @@ class BleConfigService private constructor() {
         if (success) byteArr[3] = 0x02.toByte()
         var intTime = System.currentTimeMillis() / 1000
         localPsk = number2Bytes(intTime, 4)
+        // 保存localPsk到云端
+        IoTAuth.deviceImpl.setDeviceConfig("${productId}/${devName}",
+            localPsk, object: MyCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    L.d("setDeviceConfig fail")
+                }
+
+                override fun success(response: BaseResponse, reqCode: Int) {
+                    L.d("setDeviceConfig success")
+                }
+            })
         System.arraycopy(localPsk, 0, byteArr, 4, 4)
         var bindTag = getBindTag(productId, devName)
         System.arraycopy(bindTag, 0, byteArr, 8, 8)
@@ -605,21 +770,47 @@ class BleConfigService private constructor() {
 
     fun connectSubDevice(connection: BluetoothGatt?): Boolean {
         if (!enableFFE0CharacteristicNotification(connection)) return false
-        var byteArr = ByteArray(27)
-        byteArr[0] = 0x01.toByte()
-        byteArr[1] = 0x00.toByte()
-        byteArr[2] = 0x18.toByte()
+        Thread.sleep(WRITEINTERVAL)
+        var headByteArr = ByteArray(20)
+        headByteArr[0] = 0x01.toByte()
+        headByteArr[1] = 0x40.toByte()
+        headByteArr[2] = 0x11.toByte()
         var number = System.currentTimeMillis() / 1000
         var tsBytes = number2Bytes(number, 4)
-        System.arraycopy(tsBytes, 0, byteArr, 3, 4)
+        System.arraycopy(tsBytes, 0, headByteArr, 3, 4)
+        if (localPsk == ByteArray(4)) {
+            //无效的localPsk，需要用户重新connect从云端获取localPsk
+            return false
+        }
         var signData = sign(number.toString(), localPsk)
         signData?:let { return false }
-        System.arraycopy(signData, 0, byteArr, 7, 20)
+        System.arraycopy(signData, 0, headByteArr, 7, 13)
+        var lastByteArr = ByteArray(10)
+        lastByteArr[0] = 0x01.toByte()
+        lastByteArr[1] = 0xC0.toByte()
+        lastByteArr[2] = 0x07.toByte()
+        System.arraycopy(signData, 13, lastByteArr, 3, 7)
+        if (!setFFE0CharacteristicValue(connection, headByteArr)) {
+            return false
+        }
+        Thread.sleep(WRITEINTERVAL)
+        return setFFE0CharacteristicValue(connection, lastByteArr)
+    }
+
+    fun sendConnectSubDeviceResult(connection: BluetoothGatt?, success: Boolean): Boolean {
+        Thread.sleep(WRITEINTERVAL)
+        var byteArr = ByteArray(1)
+        if (success) {
+            byteArr[0] = 0x05.toByte()
+        } else {
+            byteArr[0] = 0x06.toByte()
+        }
         return setFFE0CharacteristicValue(connection, byteArr)
     }
 
     fun unbind(connection: BluetoothGatt?): Boolean  {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         var byteArr = ByteArray(23)
         byteArr[0] = 0x04.toByte()
         byteArr[1] = 0x00.toByte()
@@ -632,6 +823,7 @@ class BleConfigService private constructor() {
 
     fun sendUnbindResult(connection: BluetoothGatt?, unbindSuccessed: Boolean): Boolean  {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         var byteArr = ByteArray(1)
         byteArr[0] = if (unbindSuccessed) 0x07.toByte() else 0x08.toByte()
         return setFFE0CharacteristicValue(connection, byteArr)
@@ -644,6 +836,7 @@ class BleConfigService private constructor() {
      */
     fun reportProperty(connection: BluetoothGatt?, reason: Int): Boolean  {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         if (reason < 0 || reason > 2) return false // 没有对应的原因值，跳出当前操作
         var byteArr = ByteArray(2)
         byteArr[0] = 0x20.toByte()
@@ -651,25 +844,32 @@ class BleConfigService private constructor() {
         return setFFE0CharacteristicValueWithUuid(connection, "FFE2", byteArr)
     }
 
-    fun controlBleDevice(connection: BluetoothGatt?, bleDeviceProperty: BleDeviceProperty): Boolean {
+    fun controlBleDevice(connection: BluetoothGatt?, tlvByteArr: ByteArray): Boolean {
         if (!enableFFE0CharacteristicNotification(connection)) return false
-        return setFFE0CharacteristicValueWithUuid(connection, "FFE2", bleDeviceProperty.toData())
+        Thread.sleep(WRITEINTERVAL)
+        var byteArr = ByteArray(1+2+tlvByteArr.size)
+        byteArr[0] = 0x00.toByte()
+        var lengthTLV = number2Bytes(tlvByteArr.size.toLong(), 2)
+        System.arraycopy(lengthTLV, 0, byteArr, 1, lengthTLV.size)
+        System.arraycopy(tlvByteArr, 0, byteArr, 1+lengthTLV.size, tlvByteArr.size)
+        return setFFE0CharacteristicValueWithUuid(connection, "FFE2", byteArr)
     }
 
-    fun sendCurrentBleDeviceProperty(connection: BluetoothGatt?, bleDeviceProperty: BleDeviceProperty): Boolean {
-        if (!enableFFE0CharacteristicNotification(connection)) return false
-        var dataByteArr = bleDeviceProperty.toValueData()
-        var byteArr = ByteArray(4 + dataByteArr.size)
+    fun sendCurrentBleDeviceProperty(connection: BluetoothGatt?, tlvByteArr: ByteArray): Boolean {
+//        if (!enableFFE0CharacteristicNotification(connection)) return false
+//        Thread.sleep(WRITEINTERVAL)
+        var byteArr = ByteArray(4 + tlvByteArr.size)
         byteArr[0] = 0x22.toByte()
         byteArr[1] = 0x00.toByte()
-        var lenBytes = number2Bytes(dataByteArr.size.toLong(), 2)
+        var lenBytes = number2Bytes(tlvByteArr.size.toLong(), 2)
         System.arraycopy(lenBytes, 0, byteArr, 2, 2)
-        System.arraycopy(dataByteArr, 0, byteArr, 4, dataByteArr.size)
+        System.arraycopy(tlvByteArr, 0, byteArr, 4, tlvByteArr.size)
         return setFFE0CharacteristicValueWithUuid(connection, "FFE2", byteArr)
     }
 
     fun pushBleDevicePropertyResult(connection: BluetoothGatt?, eventId: Int, reason: Int): Boolean {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         if (reason < 0 || reason > 2) return false // 没有对应的原因值，跳出当前操作
         var byteArr = ByteArray(2)
         var value = (1 and 0x03 shl 6) or (1 and 0x01 shl 5) or (eventId and 0x1F)
@@ -680,6 +880,7 @@ class BleConfigService private constructor() {
 
     fun pushBleDeviceActionProperty(connection: BluetoothGatt?, actionId: Int, bleDeviceProperty: BleDeviceProperty): Boolean {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         var dataBytes = bleDeviceProperty.toValueData()
         var byteArr = ByteArray(3 + dataBytes.size)
         var value = (2 and 0x03 shl 6) or (0 and 0x01 shl 5) or (actionId and 0x1F)
@@ -692,6 +893,7 @@ class BleConfigService private constructor() {
 
     fun pushSetMtuResult(connection: BluetoothGatt?, successed: Boolean, result: Int): Boolean {
         if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
         var byteArr = ByteArray(3)
         byteArr[0] = 0x09.toByte()
         if (successed) {
@@ -702,5 +904,109 @@ class BleConfigService private constructor() {
             byteArr[2] = 0xFF.toByte()
         }
         return setFFE0CharacteristicValue(connection, byteArr)
+    }
+
+    fun requestOTAInfo(connection: BluetoothGatt?, otaFilePath: String, targetVersion: String): Boolean {
+//        if (!enableFFE0CharacteristicNotification(connection)) return false
+        Thread.sleep(WRITEINTERVAL)
+        var fileByteArr = readFile(File(otaFilePath))
+        otaTotalFileSize = fileByteArr?.size!!
+        var fileSizeArr = fileByteArr?.size?.toLong()?.let { number2Bytes(it, 4) }
+        var fileCRC32Arr = BleConfigService.get().number2Bytes(CRC32.getCRC32(fileByteArr).toLong(), 4)
+        var targetVersionByteArr = targetVersion.toByteArray()
+        var targetVersionLengthArr = number2Bytes(targetVersionByteArr.size.toLong(), 1)
+        if (fileSizeArr == null) return false
+        val valueLength = fileSizeArr.size+fileCRC32Arr.size+targetVersionLengthArr.size+targetVersionByteArr.size
+        var valueLengthArr = number2Bytes(valueLength.toLong(), 2)
+        var byteArr = ByteArray(1 + valueLengthArr.size + valueLength)
+        byteArr[0] = 0x00.toByte()
+        System.arraycopy(valueLengthArr, 0, byteArr, 1, valueLengthArr.size)
+        System.arraycopy(fileSizeArr, 0, byteArr, 1+valueLengthArr.size, fileSizeArr.size)
+        System.arraycopy(fileCRC32Arr, 0, byteArr, 1+valueLengthArr.size+fileSizeArr.size, fileCRC32Arr.size)
+        System.arraycopy(targetVersionLengthArr, 0, byteArr, 1+valueLengthArr.size+fileSizeArr.size+fileCRC32Arr.size, targetVersionLengthArr.size)
+        System.arraycopy(targetVersionByteArr, 0, byteArr, 1+valueLengthArr.size+fileSizeArr.size+fileCRC32Arr.size+targetVersionLengthArr.size, targetVersionByteArr.size)
+        L.d(TAG, "requestOTAInfo ${bytesToHex(byteArr)}")
+        return setFFE0CharacteristicValueWithUuid(connection, "FFE4", byteArr)
+    }
+
+    fun sendOtaFirmwareData(connection: BluetoothGatt?, otaFilePath: String, otaUpdateResponse: BleDevOtaUpdateResponse){
+//        if (!enableFFE0CharacteristicNotification(connection)) return false
+        otaByteArrList.clear()
+        var byteArr = ByteArray(otaUpdateResponse.packageLength)
+        byteArr[0] = 0x01.toByte()
+        var expectedLength = otaUpdateResponse.packageLength - 3
+        var seq = 0
+        val file = File(otaFilePath)
+        if (file.isFile) {
+            var fis: FileInputStream? = null
+            try {
+                fis = FileInputStream(file)
+                // 设置一个，每次读取expectedLength数据长度 装载信息的容器
+                val buffer = ByteArray(expectedLength)
+                val outputStream = ByteArrayOutputStream()
+                // 开始读取数据
+                var len = 0 // 每次读取到的数据的长度
+                while (fis.read(buffer).also { len = it } != -1) { // len值为-1时，表示没有数据了
+                    outputStream.write(buffer, 0, len)
+                    byteArr[1] = (1+len).toByte()
+                    byteArr[2] = seq.toByte()
+                    System.arraycopy(buffer, 0, byteArr, 3, len)
+                    if (expectedLength != len+3) { //最后不满足长度expectedLength的数据包 剪裁一下
+                        val lastByteArr = ByteArray(len+3)
+                        System.arraycopy(byteArr, 0, lastByteArr, 0, len+3)
+                        otaByteArrList.add(lastByteArr.copyOf())
+                    } else {
+                        otaByteArrList.add(byteArr.copyOf())
+                    }
+                    seq += 1
+                    if (seq == otaUpdateResponse.totalPackageNumbers) {
+                        seq = 0
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        startSendOtaFirmwareData(connection)
+    }
+
+    private fun startSendOtaFirmwareData(connection: BluetoothGatt?) {
+        if (otaByteArrList.size != 0) {
+            val byteArr = otaByteArrList[0]
+            if (byteArr[2] == 0x00.toByte()) {
+                Thread.sleep(2000)
+            }
+            setFFE0CharacteristicValueWithUuidFFE4(connection, byteArr)
+        } else {
+        }
+    }
+
+    private fun readFile(file: File): ByteArray? {
+        // 需要读取的文件，参数是文件的路径名加文件名
+        if (file.isFile) {
+            // 以字节流方法读取文件
+            var fis: FileInputStream? = null
+            try {
+                fis = FileInputStream(file)
+                // 设置一个，每次 装载信息的容器
+                val buffer = ByteArray(1024)
+                val outputStream = ByteArrayOutputStream()
+                // 开始读取数据
+                var len = 0 // 每次读取到的数据的长度
+                while (fis.read(buffer).also { len = it } != -1) { // len值为-1时，表示没有数据了
+                    // append方法往sb对象里面添加数据
+                    outputStream.write(buffer, 0, len)
+                }
+                // 输出字符串
+                fis.close()
+                outputStream.close()
+                return outputStream.toByteArray()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        } else {
+            println("文件不存在！")
+        }
+        return null
     }
 }
