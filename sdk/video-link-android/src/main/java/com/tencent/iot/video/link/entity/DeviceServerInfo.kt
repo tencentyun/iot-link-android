@@ -22,4 +22,14 @@ class DeviceServerInfo {
 
         return true
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is DeviceServerInfo) {
+            if (this.deviceName == other.deviceName && other.address == this.address
+                && other.port == this.port) {
+                return true
+            }
+        }
+        return false
+    }
 }
