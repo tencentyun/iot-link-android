@@ -40,20 +40,19 @@
             android:layout_marginTop="20dp"
             >
 
-        <com.skydoves.progressview.ProgressView
-            android:id="@+id/progress_download"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            app:progressView_colorBackground="@color/gray_d0d0d0"
-            app:progressView_colorProgress="@color/complete_progress"
-            app:progressView_min="0"
-            app:progressView_max="100"
-            app:progressView_radius="4dp"
-            app:progressView_labelColorInner="@color/white"
-            app:progressView_labelColorOuter="@color/complete_progress"
-            app:progressView_progressFromPrevious="true"
-            app:progressView_labelSize="@dimen/ts_16"
-        />
+            <com.skydoves.progressview.ProgressView
+                android:id="@+id/progress_download"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                app:progressView_colorBackground="@color/gray_d0d0d0"
+                app:progressView_colorProgress="@color/complete_progress"
+                app:progressView_labelColorInner="@color/white"
+                app:progressView_labelColorOuter="@color/complete_progress"
+                app:progressView_labelSize="@dimen/ts_16"
+                app:progressView_max="100"
+                app:progressView_min="0"
+                app:progressView_progressFromPrevious="true"
+                app:progressView_radius="4dp" />
         </RelativeLayout>
 
     </RelativeLayout>

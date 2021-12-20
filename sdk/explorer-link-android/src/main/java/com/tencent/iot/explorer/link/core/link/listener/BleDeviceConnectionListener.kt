@@ -22,6 +22,9 @@ interface BleDeviceConnectionListener {
     fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty)
     fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty)
     fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion)
+    fun onBleDevOtaUpdateResponse(otaUpdateResponse: BleDevOtaUpdateResponse)
+    fun onBleDevOtaUpdateResult(success: Boolean, errorCode:Int)
+    fun onBleDevOtaReceivedProgressResponse(progress: Int)
     fun onBleDeviceMtuSize(size: Int)
     fun onBleDeviceTimeOut(timeLong: Int)
 }

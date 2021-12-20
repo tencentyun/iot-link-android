@@ -373,6 +373,16 @@
     <string name="share_dev_more_info">有关更多信息，请阅读我们的</string>
     <string name="set_location">设定位置</string>
 
+    <string name="ble_firmware_found">发现新固件</string>
+    <string name="ble_firmware_found_detail">发现设备有新版本(%s)，是否升级？</string>
+    <string name="firmware_update">固件升级</string>
+    <string name="firmware_upgrading">正在更新...</string>
+    <string name="firmware_upgrade_tip">请在更新固件期间保持设备通电并在线</string>
+    <string name="firmware_upgrading_tip">正在下载:%d</string>
+    <string name="firmware_writing">正在往设备写入固件:%d</string>
+    <string name="firmware_update_success">更新成功</string>
+    <string name="firmware_update_success_version">当前固件版本为 %s</string>
+
     <!--云端定时-->
     <string name="cloud_timing">云端定时</string>
     <string name="add_timer">添加定时</string>
@@ -714,6 +724,7 @@
     <string name="permission_storage_lips">· 存储（日志）</string>
     <string name="permission_location_ssid">为了便于给设备配网时，自动获取当前手机连接的WiFi名称，向设备发送WiFi信息完成配网，因此腾讯连连需获取以下权限：</string>
     <string name="permission_location_ssid_map">为了给您提供精确定位服务，便于设置家庭位置获取天气服务，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_location_ssid_ble">为了给您提供精确定位服务，便于搜索操控蓝牙设备，因此腾讯连连需获取以下权限：</string>
     <string name="permission_location_lips">· GPS 定位</string>
     <string name="permission_sms">为了方便您注册或登录时自动获取验证码，因此腾讯连连需获取以下权限：</string>
     <string name="permission_sms_lips">· 短信</string>
