@@ -11,11 +11,13 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
 import com.tencent.iot.explorer.link.core.utils.LocationUtil
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.WifiHelperDialog
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -135,6 +137,16 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
                     T.show(getString(R.string.open_location_tip))
                 }
                 bssid = wifiInfo!!.bssid
+
+                var wifiInfoJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.WIFI_INFO, CommonField.WIFI_INFO)
+                var locationJson: JSONObject? = JSONObject.parse(wifiInfoJsonString) as JSONObject?
+                val savedSsid = locationJson?.getString(CommonField.WIFI_SSID)
+                val savedPwd = locationJson?.getString(CommonField.WIFI_PWD)
+                if (ssid2Set.equals(savedSsid)) {
+                    if (savedPwd != null) {
+                        et_select_wifi_pwd.setText(savedPwd)
+                    }
+                }
             }
             tv_select_wifi.isEnabled = type == ConfigType.SoftAp.id
 

@@ -9,8 +9,8 @@ class BleDeviceFirmwareVersion {
             if (byteArray.get(0) != 0x08.toByte()) return ret
 
             ret.llsyncVersion = byteArray[3].toInt().toString()
-            ret.mtuFlag = if ((byteArray[4].toInt() and 0x80) == 8) 1 else 0
-            ret.mtuSize = (byteArray[4].toInt() and 0x02 shl 8) or (byteArray[5].toInt() and 0xFF)
+            ret.mtuFlag = (byteArray[4].toInt() and 0x80) shr 7
+            ret.mtuSize = (byteArray[4].toInt() and 0x0F shl 8) or (byteArray[5].toInt() and 0xFF)
             ret.versionLen = byteArray[6].toInt()
             val nameByteArr = ByteArray(ret.versionLen)
             System.arraycopy(byteArray, 7, nameByteArr, 0, ret.versionLen)
