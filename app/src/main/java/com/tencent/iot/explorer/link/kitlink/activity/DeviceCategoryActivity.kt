@@ -5,6 +5,7 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
@@ -124,7 +125,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     private var bleDeviceConnectionListener = object: BleDeviceConnectionListener {
         override fun onBleDeviceFounded(bleDevice: BleDevice) {
             var index = bleDevs.indexOf(bleDevice)
-            if (index < 0) {
+            if (index < 0 && bleDevice.boundState != 2) {//非连接状态的蓝牙设备在此处可以展示出来进行扫描绑定
                 bleDevs.add(bleDevice)
                 refreshDevInfo(bleDevice)
             }
@@ -148,6 +149,11 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
         override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
         override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+        override fun onBleDevOtaUpdateResponse(otaUpdateResponse: BleDevOtaUpdateResponse) {}
+        override fun onBleDevOtaUpdateResult(success: Boolean, errorCode: Int) {}
+
+        override fun onBleDevOtaReceivedProgressResponse(progress: Int) {}
+
         override fun onBleDeviceMtuSize(size: Int) {}
         override fun onBleDeviceTimeOut(timeLong: Int) {}
     }
@@ -305,12 +311,28 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         return 0
     }
 
-    override fun permissionAllGranted() {
-        var intent = Intent(Intent(this, ScannerActivity::class.java))
-        intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
-        startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
-        permissionDialog?.dismiss()
-        permissionDialog = null
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 102) {
+            permissionDialog?.dismiss()
+            permissionDialog = null
+            for (i in permissions.indices) {
+                if (permissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION) && grantResults[i] == PackageManager.PERMISSION_GRANTED) { //同意了蓝牙的定位权限
+                    beginScanning()
+                    return
+                }
+            }
+            //同意了相机权限
+            var intent = Intent(Intent(this, ScannerActivity::class.java))
+            intent.putExtra(Constant.EXTRA_IS_ENABLE_SCAN_FROM_PIC,true)
+            startActivityForResult(intent, CommonField.QR_CODE_REQUEST_CODE)
+            permissionDialog?.dismiss()
+            permissionDialog = null
+        }
     }
 
     override fun permissionDenied(permission: String) {
@@ -498,6 +520,25 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
 
     private fun beginScanning() {
         if (!checkPermissions(blueToothPermissions)) {
+            // 查看请求ble location权限的时间是否大于48小时
+            var locationJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_LOCATION, CommonField.PERMISSION_LOCATION)
+            var locationJson: JSONObject? = JSONObject.parse(locationJsonString) as JSONObject?
+            val lasttime = locationJson?.getLong(CommonField.PERMISSION_LOCATION)
+            if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
+                T.show(getString(R.string.permission_of_location_add_device_refuse))
+                scann_fail.visibility = View.VISIBLE
+                scanning.visibility = View.GONE
+                not_found_dev.visibility = View.GONE
+                return
+            }
+            requestPermission(blueToothPermissions)
+            permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_location ,getString(R.string.permission_location_lips), getString(R.string.permission_location_ssid_ble))
+            permissionDialog!!.show()
+
+            // 记录请求camera权限的时间
+            var json = JSONObject()
+            json.put(CommonField.PERMISSION_LOCATION, System.currentTimeMillis() / 1000)
+            Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_LOCATION, CommonField.PERMISSION_LOCATION, json.toJSONString())
             return
         }
 
