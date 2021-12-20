@@ -132,6 +132,26 @@
 |:-|:-|
 | int | 成功：0，失败：错误码 |
 
+13. 初始化xp2p局域网服务接口
+> int startLanService(String id, String product_id, String device_name, String host, String port);
+
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
+| product_id | String | 产品ID |
+| device_name | String | 设备名称 |
+| host | String | 设备在局域网的ip地址 |
+| port | String | 设备在局域网的端口号 |
+
+14. 获取本地请求数据的局域网标准http url,可使用该url请求设备端数据
+> String getLanUrl(String id);
+
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
+
+15. 获取局域网内本地代理的端口号
+> int getLanProxyPort(String id);
 
 ### 废弃接口
 ~~public static String getComandRequestWithSync(String cmd, long timeout);~~
@@ -196,6 +216,9 @@
 |:-|:-|:-|
 | id | String | 回传`startServiceWithXp2pInfo`接口中的`id` |
 | msg | String | 附加说明,json格式 |
+
+5、设备向app发送自定义消息，该回调的返回值表示app向设备端回复的消息
+> override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String
 
 
 ### 附带说明
