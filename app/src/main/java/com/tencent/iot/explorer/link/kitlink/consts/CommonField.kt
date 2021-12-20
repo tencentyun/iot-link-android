@@ -235,4 +235,9 @@ object CommonField {
     const val PERMISSION_MIC = "PermissionMic"
     const val PERMISSION_STORAGE = "PermissionStorage"
 
+    const val WIFI_INFO = "WiFiInfo"
+    const val WIFI_SSID = "WiFiSsid"
+    const val WIFI_PWD = "WiFiPassword"
+    const val CONFIG_NET_ERROR_CODE = "ConfigNetErrorCode"
+
 }

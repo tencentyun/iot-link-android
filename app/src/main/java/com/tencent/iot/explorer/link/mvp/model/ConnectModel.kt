@@ -19,6 +19,7 @@ import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListe
 import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
 import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
 import com.tencent.iot.explorer.link.core.link.service.BleConfigService
+import com.tencent.iot.explorer.link.core.link.service.LLSyncErrorCode
 import com.tencent.iot.explorer.link.core.link.service.SmartConfigService
 import com.tencent.iot.explorer.link.core.link.service.SoftAPService
 import com.tencent.iot.explorer.link.core.log.L
@@ -92,7 +93,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
         // 先关闭当前的扫描
         BleConfigService.get().stopScanBluetoothDevices()
         bleDevice?:let { // 没有解析出内容，直接返回
-            bleFailed("param error")
+            bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_PARAMS_ERROR_CODE,"param error")
             return
         }
 
@@ -114,17 +115,17 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
         Thread {
             job = GlobalScope.launch(Dispatchers.Default) {
                 delay(240000) // 超时
-                bleFailed("time out")
+                bleFailed(LLSyncErrorCode.WIFI_CONFIG_TIMEOUT_ERROR_CODE,"time out")
             }
         }.start()
     }
 
-    private fun bleFailed(msg: String?) {
+    private fun bleFailed(errorCode: String, msg: String?) {
         launch (Dispatchers.Main){
             job?.cancel()  // 结束超时任务
             BleConfigService.get().connetionListener = null
             L.e(TAG, msg?:"")
-            view?.connectFail("bind bluetooth device", msg?:"")
+            view?.connectFail(errorCode, msg?:"")
             bluetoothGatt?.close()
         }
     }
@@ -146,7 +147,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 }
             }
             override fun onBleDeviceDisconnected(exception: TCLinkException) {
-                bleFailed(exception.errorMessage)
+                bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_DISCONNECT_ERROR_CODE, exception.errorMessage)
             }
             override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {
                 L.d(TAG, "onBleDeviceInfo ${JSON.toJSONString(bleDeviceInfo)}")
@@ -158,7 +159,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                             return@launch // 设置成功则直接退出
                         }
                     }
-                    bleFailed("onBleDeviceInfo set wifi mode failed")
+                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_WIFI_MODE_ERROR_CODE,"onBleDeviceInfo set wifi mode failed")
                 }
             }
 
@@ -169,14 +170,14 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                         delay(3000)
                         if (BleConfigService.get().setMtuSize(it, 512)) return@launch
                     }
-                    bleFailed("config mtu failed")
+                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_MTU_ERROR_CODE, "config mtu failed")
                 }
             }
 
             override fun onBleSetWifiModeResult(success: Boolean) {
                 L.d(TAG, "onBleSetWifiModeResult ${success}")
                 if (!success) {
-                    bleFailed("onBleSetWifiModeResult set wifi mode failed")
+                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_WIFI_MODE_RESPONSE_ERROR_CODE, "onBleSetWifiModeResult set wifi mode failed")
                     return
                 }
 
@@ -187,7 +188,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                         L.d(TAG, "bleDeviceWifiInfo ${JSON.toJSONString(bleDeviceWifiInfo)}")
                         this@ConnectModel.view?.connectStep(BleConfigStep.STEP_SEND_WIFI_INFO.ordinal)
                         if (BleConfigService.get().sendWifiInfo(it, bleDeviceWifiInfo)) return@launch
-                        bleFailed("send wifi info failed")
+                        bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_WIFI_INFO_ERROR_CODE, "send wifi info failed")
                     }
                 }
             }
@@ -195,7 +196,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             override fun onBleSendWifiInfoResult(success: Boolean) {
                 L.d(TAG, "onBleSendWifiInfoResult ${success}")
                 if (!success) {
-                    bleFailed("send wifi info failed")
+                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_WIFI_INFO_ERROR_CODE, "send wifi info failed")
                     return
                 }
 
@@ -203,7 +204,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                     delay(500)
                     bluetoothGatt?.let {
                         if (BleConfigService.get().requestConnectWifi(it)) return@launch
-                        bleFailed("connect wifi failed")
+                        bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_REQUEST_WIFI_CONNECT_ERROR_CODE, "connect wifi failed")
                     }
                 }
             }
@@ -211,7 +212,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             override fun onBleWifiConnectedInfo(wifiConnectInfo: BleWifiConnectInfo) {
                 L.d(TAG, "onBleWifiConnectedInfo ${wifiConnectInfo.connected}")
                 if (!wifiConnectInfo.connected) {
-                    bleFailed("connect wifi failed")
+                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_WIFI_CONNECT_RESPONSE_ERROR_CODE, "connect wifi failed")
                     return
                 }
 
@@ -220,7 +221,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                     bluetoothGatt?.let {
                         this@ConnectModel.view?.connectStep(BleConfigStep.STEP_SEND_TOKEN.ordinal)
                         if (BleConfigService.get().configToken(it, App.data.bindDeviceToken)) return@launch
-                        bleFailed("send token failed")
+                        bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_REQUEST_BIND_TOKEN_ERROR_CODE, "send token failed")
                     }
                 }
             }
@@ -230,14 +231,14 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 if (success) {
                     checkDeviceBindTokenState()
                 } else {
-                    bleFailed("send wifi info failed")
+                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_TOKEN_RESPONSE_ERROR_CODE, "send wifi info failed")
                 }
             }
 
             override fun onMtuChanged(mtu: Int, status: Int) {
                 L.d(TAG, "onMtuChanged mtu $mtu status $status")
                 if (BluetoothGatt.GATT_SUCCESS != status) {
-                    bleFailed("config mtu $mtu failed")
+                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_MTU_RESPONSE_ERROR_CODE, "config mtu $mtu failed")
                     return
                 }
 
@@ -246,7 +247,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                         bluetoothGatt?.let {
                             delay(3000)
                             if (BleConfigService.get().sendUNTX(it)) return@launch
-                            bleFailed("send untx failed")
+                            bleFailed(LLSyncErrorCode.PURE_BLE_SET_UNIX_TIMESTAMP_NONCE_ERROR_CODE, "send untx failed")
                         }
                     }
                     return
@@ -259,7 +260,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                             return@launch
                         }
                     }
-                    bleFailed("request device info failed")
+                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_REQUEST_GET_DEVICE_INFO_ERROR_CODE, "request device info failed")
                 }
             }
 
@@ -276,13 +277,13 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                     HttpRequest.instance.sigBindDevice(App.data.getCurrentFamily().FamilyId, App.data.getCurrentRoom().RoomId,
                         deviceInfo, "bluetooth_sign", object : MyCallback {
                             override fun fail(msg: String?, reqCode: Int) {
-                                bleFailed(msg)
+                                bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_BLE_DEVICE_NET_ERROR_CODE , msg)
                                 BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
                             }
 
                             override fun success(response: BaseResponse, reqCode: Int) {
                                 if (!response.isSuccess()) {
-                                    bleFailed(response.msg)
+                                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_BLE_DEVICE_NET_OTHER_ERROR_CODE, response.msg)
                                     BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
                                     return
                                 }
@@ -294,7 +295,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                                             return@launch
                                         }
                                     }
-                                    bleFailed("send bind result failed")
+                                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_BLE_DEVICE_RESPONSE_ERROR_CODE, "send bind result failed")
                                     BleConfigService.get().sendBindfailedResult(bluetoothGatt, false)
                                 }
                             }
@@ -302,7 +303,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                     return
                 }
 
-                bleFailed("param error")
+                bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_PARAMS_ERROR_CODE, "param error")
             }
             override fun onBleSendSignInfo(bleDevSignResult: BleDevSignResult) {}
             override fun onBleUnbindSignInfo(signInfo: String) {}
@@ -312,6 +313,11 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
             override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
             override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+            override fun onBleDevOtaUpdateResponse(otaUpdateResponse: BleDevOtaUpdateResponse) {}
+            override fun onBleDevOtaUpdateResult(success: Boolean, errorCode: Int) {}
+
+            override fun onBleDevOtaReceivedProgressResponse(progress: Int) {}
+
             override fun onBleDeviceMtuSize(size: Int) {}
             override fun onBleDeviceTimeOut(timeLong: Int) {}
         }

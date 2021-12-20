@@ -4,12 +4,14 @@ import android.content.Intent
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.link.entity.BleConfigStep
 import com.tencent.iot.explorer.link.core.link.entity.SmartConfigStep
 import com.tencent.iot.explorer.link.core.link.entity.SoftAPStep
+import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
@@ -205,6 +207,12 @@ class ConnectProgressActivity : PActivity(), ConnectView {
                         tv_init_success.setTextColor(resources.getColor(R.color.black_15161A))
                         App.data.setRefreshLevel(2)
 
+                        // 记录连接成功的wifi ssid和pwd
+                        var json = JSONObject()
+                        json.put(CommonField.WIFI_SSID, ssid)
+                        json.put(CommonField.WIFI_PWD, wifiPassword)
+                        Utils.setXmlStringValue(T.getContext(), CommonField.WIFI_INFO, CommonField.WIFI_INFO, json.toJSONString())
+
                         var successIntent = Intent(this, ConfigNetSuccessActivity::class.java)
                         successIntent.putExtra(CommonField.CONFIG_TYPE, type)
                         if (presenter.model?.deviceInfo?.deviceName != null) {
@@ -298,7 +306,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
     }
 
     override fun deviceConnectToWifiFail() {
-        showfailedReason()
+        showfailedReason("")
     }
 
     override fun softApConnectToWifiFail(ssid: String) {
@@ -308,7 +316,7 @@ class ConnectProgressActivity : PActivity(), ConnectView {
     }
 
     override fun connectFail(code: String, message: String) {
-        showfailedReason()
+        showfailedReason(code)
     }
 
     override fun onBackPressed() {
@@ -339,13 +347,14 @@ class ConnectProgressActivity : PActivity(), ConnectView {
         }
     }
 
-    private fun showfailedReason() {
+    private fun showfailedReason(code: String) {
         run {
             runOnUiThread {
                 if (!quit) {
                     var failedIntent = Intent(this, ConfigNetFailedActivity::class.java)
                     failedIntent.putExtra(CommonField.CONFIG_TYPE, type)
                     failedIntent.putExtra(CommonField.PRODUCT_ID, productId)
+                    failedIntent.putExtra(CommonField.CONFIG_NET_ERROR_CODE, code)
                     startActivity(failedIntent)
                     backToDeviceCategoryActivity()
                 }

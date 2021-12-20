@@ -373,6 +373,16 @@
     <string name="share_dev_more_info">For more information, see</string>
     <string name="set_location">Set Location</string>
 
+    <string name="ble_firmware_found">发现新固件</string>
+    <string name="ble_firmware_found_detail">发现设备有新版本(%s)，是否升级？</string>
+    <string name="firmware_update">固件升级</string>
+    <string name="firmware_upgrading">正在更新...</string>
+    <string name="firmware_upgrade_tip">请在更新固件期间保持设备通电并在线</string>
+    <string name="firmware_upgrading_tip">正在下载:%d</string>
+    <string name="firmware_writing">正在往设备写入固件:%d</string>
+    <string name="firmware_update_success">更新成功</string>
+    <string name="firmware_update_success_version">当前固件版本为 %s</string>
+
     <!--云端定时-->
     <string name="cloud_timing">Cloud timer</string>
     <string name="add_timer">Add timer</string>
@@ -714,6 +724,7 @@
     <string name="permission_storage_lips">· Storage (log)</string>
     <string name="permission_location_ssid">In order to facilitate the automatic acquisition of the WiFi name of the current mobile phone connection when configuring the network for the device, and send the WiFi information to the device to complete the network configuration, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_location_ssid_map">In order to provide you with precise positioning service, it is convenient to set the home location to obtain weather service, Tencent LLink needs to obtain the following permissions：</string>
+    <string name="permission_location_ssid_ble">In order to provide you with precise positioning service, it is convenient to search and control Bluetooth devices, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_location_lips">· GPS location</string>
     <string name="permission_sms">In order to make it easier for you to automatically obtain the verification code when you register or log in, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_sms_lips">· SMS</string>

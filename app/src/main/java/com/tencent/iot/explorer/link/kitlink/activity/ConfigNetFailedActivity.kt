@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.kitlink.activity
 import android.content.Intent
 import android.view.View
 import com.tencent.iot.explorer.link.R
+import com.tencent.iot.explorer.link.core.link.service.LLSyncErrorCode
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import kotlinx.android.synthetic.main.activity_config_net_failed.*
@@ -10,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_config_net_failed.*
 class ConfigNetFailedActivity : BaseActivity() {
     var type = ConfigType.SmartConfig.id
     var productId = ""
+    var bleErrorCode = ""
 
     override fun getContentView(): Int {
         return R.layout.activity_config_net_failed
@@ -18,6 +20,7 @@ class ConfigNetFailedActivity : BaseActivity() {
     override fun initView() {
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         productId = intent.getStringExtra(CommonField.PRODUCT_ID) ?: ""
+        bleErrorCode = intent.getStringExtra(CommonField.CONFIG_NET_ERROR_CODE) ?: ""
 
         when (type) {
 
@@ -35,12 +38,69 @@ class ConfigNetFailedActivity : BaseActivity() {
 
             ConfigType.BleConfig.id -> {
                 tv_config_net_failed_title.setText(getString(R.string.ble_config_network))
-                tv_config_net_failed_reason.setText("")
+                tv_config_net_failed_reason.setText(getErrorTipMessage(bleErrorCode))
                 tv_soft_first_commit.visibility = View.GONE
                 tv_soft_first_commit.setText("")
                 tv_more_reason.visibility = View.GONE
             }
         }
+    }
+
+    private fun getErrorTipMessage(code: String): String {
+        when (code) {
+            LLSyncErrorCode.WIFI_CONFIG_TIMEOUT_ERROR_CODE -> {
+                return "设备配网超时"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_DISCONNECT_ERROR_CODE -> {
+                return "设备和App断开蓝牙连接"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_SET_MTU_ERROR_CODE -> {
+                return "设置MTU失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_SET_WIFI_MODE_ERROR_CODE -> {
+                return "设置设备WiFi模式失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_SET_WIFI_MODE_RESPONSE_ERROR_CODE -> {
+                return "设备反馈设置WiFi模式失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_SET_WIFI_INFO_ERROR_CODE -> {
+                return "向设备发送WIFI信息失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_REQUEST_WIFI_CONNECT_ERROR_CODE -> {
+                return "请求设备连接wifi失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_WIFI_CONNECT_RESPONSE_ERROR_CODE -> {
+                return "设备反馈连接wifi失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_REQUEST_BIND_TOKEN_ERROR_CODE -> {
+                return "请求设备绑定token失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_TOKEN_RESPONSE_ERROR_CODE -> {
+                return "设备反馈绑定token失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_SET_MTU_RESPONSE_ERROR_CODE -> {
+                return "设备反馈设置MTU失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_REQUEST_GET_DEVICE_INFO_ERROR_CODE -> {
+                return "获取蓝牙设备信息失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_BLE_DEVICE_NET_ERROR_CODE -> {
+                return "绑定蓝牙设备接口服务失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_BLE_DEVICE_NET_OTHER_ERROR_CODE -> {
+                return "绑定蓝牙设备接口失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_BLE_DEVICE_RESPONSE_ERROR_CODE -> {
+                return "向蓝牙设备发送绑定设备结果失败"
+            }
+            LLSyncErrorCode.WIFI_CONFIG_BLE_PARAMS_ERROR_CODE -> {
+                return "解析数据失败"
+            }
+            LLSyncErrorCode.PURE_BLE_SET_UNIX_TIMESTAMP_NONCE_ERROR_CODE -> {
+                return "设置unix和随机串失败"
+            }
+        }
+        return ""
     }
 
     override fun setListener() {

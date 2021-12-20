@@ -13,8 +13,16 @@ class ControlPanelPresenter(view: ControlPanelView) : ParentPresenter<ControlPan
         model?.productId = productId
     }
 
+    fun getProductId(): String? {
+        return model?.productId
+    }
+
     fun setDeviceName(deviceName: String) {
         model?.deviceName = deviceName
+    }
+
+    fun getDeviceName(): String? {
+        return model?.deviceName
     }
 
     fun setDeviceId(deviceId: String) {

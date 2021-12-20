@@ -13,6 +13,8 @@ import java.lang.Exception
  */
 class DevicePropertyEntity {
 
+    var index = -1
+
     var id = ""
     var name = ""
 

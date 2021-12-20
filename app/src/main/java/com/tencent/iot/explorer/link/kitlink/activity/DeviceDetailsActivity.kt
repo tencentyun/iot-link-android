@@ -118,7 +118,7 @@ class DeviceDetailsActivity : PActivity(), CoroutineScope by MainScope(), Device
                                 BleConfigService.get()?.let {
                                     BleConfigService.get().connetionListener = bleDeviceConnectionListener
                                     if (BleConfigService.get().unbind(it.bluetoothGatt)) {
-                                        T.show(getString(R.string.fail))
+                                        T.show(getString(R.string.delete_success))
                                     }
                                 }
                             } else {
@@ -178,6 +178,11 @@ class DeviceDetailsActivity : PActivity(), CoroutineScope by MainScope(), Device
         override fun onBleNeedPushProperty(eventId: Int, bleDeviceProperty: BleDeviceProperty) {}
         override fun onBleReportActionResult(reason: Int, actionId: Int, bleDeviceProperty: BleDeviceProperty) {}
         override fun onBleDeviceFirmwareVersion(firmwareVersion: BleDeviceFirmwareVersion) {}
+        override fun onBleDevOtaUpdateResponse(otaUpdateResponse: BleDevOtaUpdateResponse) {}
+        override fun onBleDevOtaUpdateResult(success: Boolean, errorCode: Int) {}
+
+        override fun onBleDevOtaReceivedProgressResponse(progress: Int) {}
+
         override fun onBleDeviceMtuSize(size: Int) {}
         override fun onBleDeviceTimeOut(timeLong: Int) {}
     }
