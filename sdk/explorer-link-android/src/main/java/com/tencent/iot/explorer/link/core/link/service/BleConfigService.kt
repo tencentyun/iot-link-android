@@ -172,7 +172,7 @@ class BleConfigService private constructor() {
                             }
                             dev?.devName = result?.scanRecord?.deviceName.toString()
                             dev?.showedName = result?.scanRecord?.deviceName.toString()
-                            if (!dev?.showedName?.contains("-")!!) {
+                            if (!dev?.showedName?.contains("-")!! && !dev?.showedName?.contains("_")!!) {
                                 dev?.showedName = "${dev?.showedName}_${dev?.mac?.substring(0, 4)?.toUpperCase()}"
 
                             }
@@ -231,7 +231,7 @@ class BleConfigService private constructor() {
                                     dev?.mac = it
                                 }
                                 dev?.showedName = result?.scanRecord?.deviceName.toString()
-                                if (!dev.showedName.contains("-")) {
+                                if (!dev.showedName.contains("-") && !dev.showedName.contains("_")) {
                                     dev.showedName = "${dev.showedName}_${dev.mac.substring(0, 4).toUpperCase()}"
                                 }
                             }
