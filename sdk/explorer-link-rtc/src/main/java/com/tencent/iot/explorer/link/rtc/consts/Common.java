@@ -23,6 +23,10 @@ public class Common {
 
     public static final String TRTC_EXTRA_INFO = "_sys_extra_info";
 
+    public static final String TRTC_CALLEDID = "_sys_called_id";
+
+    public static final String TRTC_CALLERID = "_sys_caller_id";
+
     public static final String TRTC_REJECT_USERID = "rejectUserId";
 
     public static final String TRTC_DEVICE_CHANGE = "DeviceChange";
