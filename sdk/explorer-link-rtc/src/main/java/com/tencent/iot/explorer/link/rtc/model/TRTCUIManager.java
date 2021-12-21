@@ -117,6 +117,15 @@ public class TRTCUIManager {
                     if (payloadParamsJson.has(Common.TRTC_USERID)) {
                         deviceId = payloadParamsJson.getString(Common.TRTC_USERID);
                     }
+                    if (isCalling) { //被叫
+                        if (payloadParamsJson.has(Common.TRTC_CALLEDID)) {
+                            deviceId = payloadParamsJson.getString(Common.TRTC_CALLEDID);
+                        }
+                    } else { //主叫
+                        if (payloadParamsJson.has(Common.TRTC_CALLERID)) {
+                            deviceId = payloadParamsJson.getString(Common.TRTC_CALLERID);
+                        }
+                    }
 
                     String rejectId = "";
                     if (payloadParamsJson.has(Common.TRTC_EXTRA_INFO)) {

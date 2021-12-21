@@ -46,5 +46,7 @@ object MessageConst {
     const val AGENT = "_sys_user_agent"
     const val TRTC_EXTRA_INFO = "_sys_extra_info";
     const val TRTC_REJECT_USERID = "rejectUserId";
+    const val TRTC_CALLEDID = "_sys_called_id"
+    const val TRTC_CALLERID = "_sys_caller_id"
 
 }
