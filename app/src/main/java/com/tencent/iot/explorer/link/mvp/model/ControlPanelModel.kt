@@ -178,7 +178,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 TRTCUIManager.getInstance().callingDeviceId = "$productId/$deviceName" //保存下设备id（productId/deviceName）
                 val userId = SharePreferenceUtil.getString(App.activity, App.CONFIG, CommonField.USER_ID)
                 val agent = "android/1.4.0 (Android" + Build.VERSION.SDK_INT + ";" + Build.BRAND + " " + Build.MODEL + ";" + Locale.getDefault().language + "-" + Locale.getDefault().country + ")"
-                data = "{\"$id\":$value, \"$USERID\":\"$userId\", \"${MessageConst.AGENT}\":\"$agent\"}"
+                data = "{\"$id\":$value, \"$USERID\":\"$userId\", \"${MessageConst.AGENT}\":\"$agent\", \"${MessageConst.TRTC_CALLEDID}\":\"$deviceId\", \"${MessageConst.TRTC_CALLERID}\":\"$userId\"}"
 
             }
         }

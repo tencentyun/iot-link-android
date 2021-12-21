@@ -470,7 +470,16 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
 
         L.d("上报数据:id=$id value=$value")
         var userId = SharePreferenceUtil.getString(activity, CONFIG, CommonField.USER_ID)
-        var data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\"}"
+        var callerId = ""
+        var calledId = ""
+        if (TRTCUIManager.getInstance().callingDeviceId.equals("")) { //被叫
+            callerId = deviceId
+            calledId = userId
+        } else { //主叫
+            callerId = userId
+            calledId = deviceId
+        }
+        var data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\", \"${MessageConst.TRTC_CALLEDID}\":\"$calledId\", \"${MessageConst.TRTC_CALLERID}\":\"$callerId\"}"
         HttpRequest.instance.controlDevice(productId, deviceName, data, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
