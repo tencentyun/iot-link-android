@@ -153,8 +153,63 @@
 15. 获取局域网内本地代理的端口号
 > int getLanProxyPort(String id);
 
+16. 发送一次探测广播, body 为广播内容
+
+> void startSendBroadcast(WlanDetectBody body);
+
+| 参数 | 类型           | 描述         |
+| :--- | :------------- | :----------- |
+| body | WlanDetectBody | 探测包体内容 |
+
+WlanDetectBody 定义如下
+
+| 参数        | 类型            | 描述                              |
+| :---------- | :-------------- | :-------------------------------- |
+| clientToken | String          | 自定义 token 用于验证接收的响应包 |
+| productId   | String          | 发送指定产品 ID 的广播包          |
+| deviceNames | List < String > | 发送指定设备名的广播包            |
+
+17. 发送多次探测广播, body 为广播内容，times 为尝试次数
+
+> void startSendBroadcast(WlanDetectBody body,  int times);
+
+| 参数  | 类型           | 描述                 |
+| :---- | :------------- | :------------------- |
+| body  | WlanDetectBody | 探测包体内容         |
+| times | int            | 尝试发送探测包的次数 |
+
+WlanDetectBody 定义如下
+
+| 参数        | 类型            | 描述                              |
+| :---------- | :-------------- | :-------------------------------- |
+| clientToken | String          | 自定义 token 用于验证接收的响应包 |
+| productId   | String          | 发送指定产品 ID 的广播包          |
+| deviceNames | List < String > | 发送指定设备名的广播包            |
+
+18. 设置广播的端口
+
+> void setPort(int port);
+
+| 参数 | 类型 | 描述   |
+| :--- | :--- | :----- |
+| port | int  | 端口号 |
+
+19. 中断发送广播，用于中断正在发送指定次数的广播
+
+> void clearAllTask();
+
+20. 设置探测响应包监听器
+
+> void setOnWlanDevicesDetectedCallback(OnWlanDevicesDetectedCallback onWlanDevicesDetectedCallback);
+
+| 参数                          | 类型                          | 描述             |
+| :---------------------------- | :---------------------------- | :--------------- |
+| onWlanDevicesDetectedCallback | OnWlanDevicesDetectedCallback | 广播响应包监听器 |
+
 ### 废弃接口
+
 ~~public static String getComandRequestWithSync(String cmd, long timeout);~~
+
 * ~~函数说明:以阻塞方式向设备端发送请求资源或控制命令~~
 * ~~参数说明:~~
     * ~~cmd:命令参数,格式:`action=user_define&cmd=xxx`~~
@@ -217,11 +272,40 @@
 | id | String | 回传`startServiceWithXp2pInfo`接口中的`id` |
 | msg | String | 附加说明,json格式 |
 
-5、设备向app发送自定义消息，该回调的返回值表示app向设备端回复的消息
+5. 设备向app发送自定义消息，该回调的返回值表示app向设备端回复的消息
+
 > override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String
 
+6. 设备对 app 探测包的响应包
+
+> override fun onMessage(version: String, resp: WlanRespBody): Boolean
+
+| 参数    | 类型         | 描述     |
+| :------ | :----------- | :------- |
+| version | String       | 版本号   |
+| resp    | WlanRespBody | 响应包体 |
+
+WlanRespBody 定义如下
+
+| 参数        | 类型             | 描述                     |
+| :---------- | :--------------- | :----------------------- |
+| method      | String           | 消息类型                 |
+| clientToken | String           | 消息标识，与发送消息一致 |
+| timestamp   | long             | 消息发送的时间           |
+| params      | DeviceServerInfo | 设备信息                 |
+| code        | int              | 状态码，一般是0          |
+| status      | String           | 扩展使用                 |
+
+DeviceServerInfo 定义如下
+
+| 参数       | 类型   | 描述           |
+| :--------- | :----- | :------------- |
+| deviceName | String | 设备的名称     |
+| address    | String | 设备的 IP 地址 |
+| port       | int    | 设备的端口号   |
 
 ### 附带说明
+
 * 函数接口调用顺序:
     * setQcloudApiCred
     * setCallback
