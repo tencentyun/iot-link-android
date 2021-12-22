@@ -153,6 +153,27 @@
 15. 获取局域网内本地代理的端口号
 > int getLanProxyPort(String id);
 
+16. 初始化xp2p服务接口
+> void startService(String id, String product_id, String device_name)
+
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
+| product_id | String | 产品ID |
+| device_name | String | 设备名称 |
+
+18. 设置必要参数，目的是获取Xp2pInfo
+> void setParamsForXp2pInfo(String id, String secretId, String secretKey, String xp2pInfo) {
+
+> 说明: secretId和secretKey与xp2pInfo参数二选一即可，要么传入secretId和secretKey，要么传入xp2pInfo
+
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
+| secretId | String | 云API secret_id信息 |
+| secretKey | String | 云API seret_key信息 |
+| xp2pInfo | String | camera端生成的xp2p信息,由接口获取则传入空字符串 |
+
 ### 废弃接口
 ~~public static String getComandRequestWithSync(String cmd, long timeout);~~
 * ~~函数说明:以阻塞方式向设备端发送请求资源或控制命令~~
