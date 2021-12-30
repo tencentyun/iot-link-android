@@ -35,6 +35,7 @@ import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.Runnable
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 
@@ -311,6 +312,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
     override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
+        Log.d(tag, "==onDeviceMsgArrived: ${data?.let { String(it, StandardCharsets.UTF_8) }}")
         return "app reply to device"
     }
 
