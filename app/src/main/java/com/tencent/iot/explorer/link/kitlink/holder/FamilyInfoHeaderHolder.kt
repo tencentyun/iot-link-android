@@ -23,6 +23,7 @@ class FamilyInfoHeaderHolder : CRecyclerView.HeadViewHolder<FamilyEntity> {
             try {
                 var address = JSON.parseObject(Address, com.tencent.iot.explorer.link.kitlink.entity.Address::class.java)
                 itemView.tv_head_family_address.text = address?.name
+                itemView.tv_head_family_address.visibility = if(showAddress) View.VISIBLE else View.GONE
             } catch (e : JSONException) {
                 e.printStackTrace()
             }
