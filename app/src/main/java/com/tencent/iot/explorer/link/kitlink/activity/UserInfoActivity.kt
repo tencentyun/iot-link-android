@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
+import android.widget.Toast
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
@@ -90,6 +91,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
+        iv_user_id_copy.setOnClickListener(this)
         tv_title_nick.setOnClickListener(this)
         tv_user_info_logout.setOnClickListener(this)
         tv_user_id.setOnLongClickListener(this)
@@ -116,6 +118,11 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
     override fun onClick(v: View?) {
         when (v) {
+            iv_user_id_copy -> {
+                // 获取AndroidID，并保存至剪切板
+                Utils.copy(this, App.data.userInfo.UserID)
+                Toast.makeText(App.activity, "内容已复制", Toast.LENGTH_LONG).show()
+            }
             tv_title_avatar, iv_avatar, iv_avatar_arrow -> {
                 showCameraPopup()
             }
