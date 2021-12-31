@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.Manifest.permission
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -45,6 +46,8 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
     private var deleteFamilyPopup: CommonPopupWindow? = null
     private var exitFamilyPopup: CommonPopupWindow? = null
 
+    private val permissions = arrayOf(permission.ACCESS_COARSE_LOCATION)
+
     override fun getModel(): IModel? {
         return model
     }
@@ -79,6 +82,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
      */
     private fun addHeader() {
         headerHolder = FamilyInfoHeaderHolder(this, crv_member_list, R.layout.head_family)
+        familyEntity?.showAddress = checkPermissions(permissions)
         headerHolder.data = familyEntity
         crv_member_list.addHeader(headerHolder)
         headerHolder.headListener = object : CRecyclerView.HeadListener {
