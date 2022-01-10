@@ -99,6 +99,21 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
     }
 
+    @Override
+    public void onSetAttributeResult(Context context, int i, String s) {
+
+    }
+
+    @Override
+    public void onQueryTagsResult(Context context, int i, String s, String s1) {
+
+    }
+
+    @Override
+    public void onDeleteAttributeResult(Context context, int i, String s) {
+
+    }
+
     // 通知点击回调 actionType=1为该消息被清除，actionType=0为该消息被点击
     @Override
     public void onNotificationClickedResult(Context context, XGPushClickedResult message) {
