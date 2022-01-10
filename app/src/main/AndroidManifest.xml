@@ -49,6 +49,22 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <!-- 请您务必确保终端用户首次安装启动应用时，配置不自动启动推送服务,以确保应用首次安装启动时不会自启推送服务，直到调用了推送服务注册接口 XGPushManager.registerPush() 才会开启 -->
+        <meta-data
+            android:name="XG_SERVICE_PULL_UP_OFF"
+            android:value="true" />
+        <!-- 手动集成时该receiver的intent-filter只保留下面3个action -->
+        <receiver
+            android:name="com.tencent.android.tpush.XGPushReceiver"
+            android:exported="false"
+            android:process=":xg_vip_service" >
+            <intent-filter android:priority="0x7fffffff" tools:node="replace" >
+                <!-- 【必须】 信鸽SDK的内部广播 -->
+                <action android:name="com.tencent.android.xg.vip.action.SDK" />
+                <action android:name="com.tencent.android.xg.vip.action.INTERNAL_PUSH_MESSAGE" />
+                <action android:name="com.tencent.android.xg.vip.action.ACTION_SDK_KEEPALIVE" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".kitlink.activity.BleOTADownloadActivity"
             android:exported="false" />
