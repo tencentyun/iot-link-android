@@ -330,19 +330,24 @@ class MainActivity : PActivity(), MyCallback {
             XGPushConfig.setAccessKey(applicationContext, BuildConfig.XgUSAAccessKey)
             XGApiConfig.setServerSuffix(applicationContext, CommonField.XG_ACCESS_POINT_USA)
         }
-        XGPushManager.registerPush(applicationContext, object : XGIOperateCallback {
-            override fun onSuccess(data: Any?, p1: Int) {
-                L.e("注册成功，设备token为：$data")
-                data?.let {
-                    App.data.xg_token = it.toString()
-                    bindXG()
+        Thread{
+            //建议在线程中执行初始化
+            XGPushManager.registerPush(applicationContext, object : XGIOperateCallback {
+                override fun onSuccess(data: Any?, p1: Int) {
+                    L.e("注册成功，设备token为：$data")
+                    data?.let {
+                        runOnUiThread {
+                            App.data.xg_token = it.toString()
+                            bindXG()
+                        }
+                    }
                 }
-            }
 
-            override fun onFail(data: Any?, errCode: Int, msg: String?) {
-                L.e("注册失败，错误码：$errCode ,错误信息：$msg")
-            }
-        })
+                override fun onFail(data: Any?, errCode: Int, msg: String?) {
+                    L.e("注册失败，错误码：$errCode ,错误信息：$msg")
+                }
+            })
+        }.start()
     }
 
     /**
