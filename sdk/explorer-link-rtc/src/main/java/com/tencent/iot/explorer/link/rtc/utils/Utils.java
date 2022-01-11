@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.rtc.ui.utils;
+package com.tencent.iot.explorer.link.rtc.utils;
 
 import android.text.TextUtils;
 
