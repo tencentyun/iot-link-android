@@ -1,4 +1,7 @@
-package com.tencent.iot.explorer.link.rtc.ui.utils;
+package com.tencent.iot.explorer.link.demo.rtc.rtcui.utils;
+
+import static android.net.ConnectivityManager.TYPE_MOBILE;
+import static android.net.ConnectivityManager.TYPE_WIFI;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,9 +13,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.net.ConnectivityManager.TYPE_MOBILE;
-import static android.net.ConnectivityManager.TYPE_WIFI;
 
 public class NetWorkStateReceiver extends BroadcastReceiver {
 

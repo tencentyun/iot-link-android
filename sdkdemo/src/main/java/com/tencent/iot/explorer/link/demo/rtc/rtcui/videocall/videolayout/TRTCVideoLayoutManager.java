@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.rtc.ui.videocall.videolayout;
+package com.tencent.iot.explorer.link.demo.rtc.rtcui.videocall.videolayout;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -162,7 +162,7 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
         boolean onSingleTapUp(MotionEvent e);
     }
 
-    private void initGestureListener(final TRTCVideoLayout layout, String userid) {
+    private void initGestureListener(final TRTCVideoLayout layout, final String userid) {
         final GestureDetector detector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
