@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.rtc.ui.audiocall.audiolayout;
+package com.tencent.iot.explorer.link.demo.rtc.rtcui.audiocall.audiolayout;
 
 import android.content.Context;
 import android.graphics.Bitmap;
