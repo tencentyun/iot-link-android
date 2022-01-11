@@ -33,10 +33,10 @@ import com.tencent.iot.explorer.link.demo.core.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.demo.common.customView.MyDivider
+import com.tencent.iot.explorer.link.demo.rtc.rtcui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.link.demo.rtc.rtcui.videocall.TRTCVideoCallActivity
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
-import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
-import com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 

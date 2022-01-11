@@ -1,4 +1,4 @@
-package com.tencent.iot.explorer.link.rtc.ui.videocall;
+package com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,9 +32,9 @@ import com.tencent.iot.explorer.link.rtc.model.TRTCCallingParamsCallback;
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager;
 import com.tencent.iot.explorer.link.rtc.model.UserInfo;
 import com.tencent.iot.explorer.link.rtc.model.impl.TRTCCallingImpl;
-import com.tencent.iot.explorer.link.rtc.ui.utils.NetWorkStateReceiver;
-import com.tencent.iot.explorer.link.rtc.ui.videocall.videolayout.TRTCVideoLayout;
-import com.tencent.iot.explorer.link.rtc.ui.videocall.videolayout.TRTCVideoLayoutManager;
+import com.tencent.iot.explorer.link.kitlink.activity.rtcui.utils.NetWorkStateReceiver;
+import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.videolayout.TRTCVideoLayout;
+import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.videolayout.TRTCVideoLayoutManager;
 import com.tencent.iot.explorer.link.rtc.model.TRTCCallStatus;
 
 import java.util.ArrayList;
@@ -302,7 +302,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
         UserInfo beingCallUserInfo = new UserInfo();
         beingCallUserInfo.setUserId(beingCallUserId);
         starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserInfo);
-        starter.putExtra(PARAM_OTHER_INVITING_USER, new IntentParams(new ArrayList<>()));
+        starter.putExtra(PARAM_OTHER_INVITING_USER, new IntentParams(new ArrayList<UserInfo>()));
         starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(starter);
         TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_CALLING.getValue();
@@ -340,7 +340,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
         }
     }
 
-    private void checkoutIsEnterRoom60seconds(boolean calling, String message) {
+    private void checkoutIsEnterRoom60seconds(final boolean calling, final String message) {
         if (enterRoomTask == null) {
             enterRoomTask = new TimerTask(){
                 public void run(){
