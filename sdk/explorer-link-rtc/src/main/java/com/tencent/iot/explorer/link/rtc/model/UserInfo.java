@@ -1,6 +1,6 @@
 package com.tencent.iot.explorer.link.rtc.model;
 
-import com.tencent.iot.explorer.link.rtc.ui.utils.Utils;
+import com.tencent.iot.explorer.link.rtc.utils.Utils;
 
 import java.io.Serializable;
 
