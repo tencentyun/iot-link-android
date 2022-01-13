@@ -8,7 +8,6 @@ class ActivePushMessage(deviceIds: ArrayString) : UploadMessage() {
     }
 
     override fun toString(): String {
-        reqId = 1
         return super.toString()
     }
 }

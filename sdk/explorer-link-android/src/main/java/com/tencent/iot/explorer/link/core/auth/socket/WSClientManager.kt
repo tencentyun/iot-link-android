@@ -38,7 +38,7 @@ internal class WSClientManager private constructor() {
     //消息响应分发
     private val handler = DispatchMsgHandler()
 
-    private var host = "wss://iot.cloud.tencent.com/ws/explorer"
+    private var host = "wss://iot.cloud.tencent.com/iotstudio_v2_weapp_1"
     private val messageList = LinkedList<String>()
     private val requestQueue = LinkedList<RequestEntity>()
     private val confirmQueue = LinkedList<RequestEntity>()
