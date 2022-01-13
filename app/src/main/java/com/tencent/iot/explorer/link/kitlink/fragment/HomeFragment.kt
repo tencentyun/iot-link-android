@@ -74,10 +74,6 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
     private var roomList: ArrayList<RoomEntity> = ArrayList()
     private var roomsAdapter: RoomsAdapter? = null
     private var handler = Handler()
-    private var permissionDialog: PermissionDialog? = null
-    private var requestCameraPermission = false
-    private var requestStoragePermission = false
-    private var requestRecordAudioPermission = false
     private var deviceListEnd = false
     private var shareDeviceListEnd = false
 
@@ -619,90 +615,12 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         } else {
             layout_no_dev_2_show.visibility = View.GONE
         }
-        requestCameraPermission = false
-        requestRecordAudioPermission = false
-        requestStoragePermission = false
 
         if (deviceListEnd) {
             this.deviceListEnd = true
         }
         if (shareDeviceListEnd) {
             this.shareDeviceListEnd = true
-        }
-        if (this.deviceListEnd && this.shareDeviceListEnd) {
-            requestPermission()
-        }
-    }
-
-    private fun requestPermission() {
-
-        if ((shareDevList.size > 0 || devList.size > 0) && permissionDialog == null) {
-            if (!checkPermissions(Manifest.permission.CAMERA) && !requestCameraPermission) {
-                // 查看请求camera权限的时间是否大于48小时
-                var cameraJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA)
-                var cameraJson: JSONObject? = JSONObject.parse(cameraJsonString) as JSONObject?
-                val lasttime = cameraJson?.getLong(CommonField.PERMISSION_CAMERA)
-                if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                    requestCameraPermission = true
-                    T.show(getString(R.string.permission_of_camera_refuse))
-                    return
-                }
-                permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera_trtc))
-                permissionDialog!!.show()
-                requestPermissions(arrayOf(Manifest.permission.CAMERA), 103)
-                requestCameraPermission = true
-
-                // 记录请求camera权限的时间
-                var json = JSONObject()
-                json.put(CommonField.PERMISSION_CAMERA, System.currentTimeMillis() / 1000)
-                Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA, json.toJSONString())
-                return
-            }
-            requestCameraPermission = true
-            if (!checkPermissions(Manifest.permission.RECORD_AUDIO) && !requestRecordAudioPermission) {
-                // 查看请求mic权限的时间是否大于48小时
-                var micJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_MIC, CommonField.PERMISSION_MIC)
-                var micJson: JSONObject? = JSONObject.parse(micJsonString) as JSONObject?
-                val lasttime = micJson?.getLong(CommonField.PERMISSION_MIC)
-                if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                    requestRecordAudioPermission = true
-                    T.show(getString(R.string.permission_of_camera_mic_refuse))
-                    return
-                }
-                permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_mic ,getString(R.string.permission_mic_lips), getString(R.string.permission_camera_trtc))
-                permissionDialog!!.show()
-                requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), 104)
-                requestRecordAudioPermission = true
-
-                // 记录请求mic权限的时间
-                var json = JSONObject()
-                json.put(CommonField.PERMISSION_MIC, System.currentTimeMillis() / 1000)
-                Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_MIC, CommonField.PERMISSION_MIC, json.toJSONString())
-                return
-            }
-            requestRecordAudioPermission = true
-            if ((!checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE) || !checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)) && !requestStoragePermission) {
-                // 查看请求storage权限的时间是否大于48小时
-                var storageJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_STORAGE, CommonField.PERMISSION_STORAGE)
-                var storageJson: JSONObject? = JSONObject.parse(storageJsonString) as JSONObject?
-                val lasttime = storageJson?.getLong(CommonField.PERMISSION_STORAGE)
-                if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                    requestStoragePermission = true
-                    T.show(getString(R.string.permission_of_camera_mic_refuse))
-                    return
-                }
-                permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_album ,getString(R.string.permission_storage_lips), getString(R.string.permission_storage))
-                permissionDialog!!.show()
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 105)
-                requestStoragePermission = true
-
-                // 记录请求storage权限的时间
-                var json = JSONObject()
-                json.put(CommonField.PERMISSION_STORAGE, System.currentTimeMillis() / 1000)
-                Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_STORAGE, CommonField.PERMISSION_STORAGE, json.toJSONString())
-                return
-            }
-            requestStoragePermission = true
         }
     }
 
@@ -713,21 +631,6 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         }
         L.e(permission + "已经申请成功")
         return true
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (permissions.contains(Manifest.permission.CAMERA) || permissions.contains(Manifest.permission.RECORD_AUDIO) || permissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            permissionDialog?.dismiss()
-            permissionDialog = null
-            if (!requestCameraPermission || !requestRecordAudioPermission || !requestStoragePermission) {
-                requestPermission()
-            }
-        }
     }
 
     override fun showDeviceOnline() {
