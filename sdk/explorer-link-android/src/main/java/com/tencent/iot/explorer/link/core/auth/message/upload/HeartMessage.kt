@@ -15,7 +15,6 @@ class HeartMessage(deviceIds: ArrayString) : YunMessage() {
     }
 
     override fun toString(): String {
-        reqId = 2
         addValue(MessageConst.DEVICE_IDS, deviceIds)
         return super.toString()
     }

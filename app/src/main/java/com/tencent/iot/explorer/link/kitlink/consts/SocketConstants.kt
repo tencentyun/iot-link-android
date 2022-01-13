@@ -4,7 +4,7 @@ object SocketConstants {
 
 
     //主机
-    const val host = "wss://iot.cloud.tencent.com/ws/explorer"
+    const val host = "wss://iot.cloud.tencent.com/iotstudio_v2_weapp_1"
 
     //获取手机验证码的类型
     const val register = "register"
