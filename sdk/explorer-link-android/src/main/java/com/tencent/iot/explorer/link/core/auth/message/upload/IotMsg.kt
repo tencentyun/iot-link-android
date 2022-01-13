@@ -1,10 +1,11 @@
 package com.tencent.iot.explorer.link.core.auth.message.upload
 
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
+import java.util.*
 
 open class IotMsg {
 
-    var reqId = -1
+    var reqId = UUID.randomUUID().toString()
 
     internal var action = ""
 
