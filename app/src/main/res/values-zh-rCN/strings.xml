@@ -720,8 +720,6 @@
     <string name="permission_storage_camera_lips">· 存储</string>
     <string name="permission_album_avatar">为了便于您可选择本地图片以更换头像，因此腾讯连连需获取以下权限：</string>
     <string name="permission_album_lips">· 存储（相册）</string>
-    <string name="permission_storage">为了使用设备的实时语音/视频通话功能，记录运行日志，因此腾讯连连需获取以下权限：</string>
-    <string name="permission_storage_lips">· 存储（日志）</string>
     <string name="permission_location_ssid">为了便于给设备配网时，自动获取当前手机连接的WiFi名称，向设备发送WiFi信息完成配网，因此腾讯连连需获取以下权限：</string>
     <string name="permission_location_ssid_map">为了给您提供精确定位服务，便于设置家庭位置获取天气服务，因此腾讯连连需获取以下权限：</string>
     <string name="permission_location_ssid_ble">为了给您提供精确定位服务，便于搜索操控蓝牙设备，因此腾讯连连需获取以下权限：</string>
