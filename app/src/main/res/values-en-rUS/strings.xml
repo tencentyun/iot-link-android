@@ -720,8 +720,6 @@
     <string name="permission_storage_camera_lips">· Storage</string>
     <string name="permission_album_avatar">In order to facilitate you to choose a local picture to change your profile picture, Tencent  LLink needs to obtain the following permissions：</string>
     <string name="permission_album_lips">· Storage (photo album)</string>
-    <string name="permission_storage">In order to use the real-time voice/video call function of the device and record the operation log, Tencent LLink needs to obtain the following permissions：</string>
-    <string name="permission_storage_lips">· Storage (log)</string>
     <string name="permission_location_ssid">In order to facilitate the automatic acquisition of the WiFi name of the current mobile phone connection when configuring the network for the device, and send the WiFi information to the device to complete the network configuration, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_location_ssid_map">In order to provide you with precise positioning service, it is convenient to set the home location to obtain weather service, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_location_ssid_ble">In order to provide you with precise positioning service, it is convenient to search and control Bluetooth devices, Tencent LLink needs to obtain the following permissions：</string>
