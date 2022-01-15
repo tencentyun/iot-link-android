@@ -60,8 +60,8 @@ android {
     productFlavors {
         opensource {
             applicationId "com.tencent.iot.explorer.link.opensource"
-            resValue("string" , "app_name_zh", "腾讯连连开源版")
-            resValue("string" , "app_name_en", "Tencent LLink (OSS)")
+            resValue("string", "app_name_zh", "腾讯连连开源版")
+            resValue("string", "app_name_en", "Tencent LLink (OSS)")
         }
         //-tencentOfficial {
         //-    applicationId "com.tencent.iot.explorer.link"
@@ -70,7 +70,7 @@ android {
         //-}
     }
 
-    kotlinOptions { jvmTarget = 1.8}
+    kotlinOptions { jvmTarget = 1.8 }
 
 
     buildTypes {
@@ -102,14 +102,19 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
-            def date = new Date().format("yyyyMMddHH" , TimeZone.getTimeZone("GMT+08"))
-            if(variant.buildType.name == 'debug') {
+            def date = new Date().format("yyyyMMddHH", TimeZone.getTimeZone("GMT+08"))
+            if (variant.buildType.name == 'debug') {
                 outputFileName = "iot-link-android-debug-${date}.apk"
             }
-            if(variant.buildType.name == 'release') {
+            if (variant.buildType.name == 'release') {
                 outputFileName = "iot-link-android-release-${date}.apk"
             }
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -169,12 +174,12 @@ dependencies {
         implementation 'com.tencent.iot.explorer:explorer-link-android:+'
     }
 
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.2'
 
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.6'
 
-    implementation 'com.google.firebase:firebase-perf:19.0.8'
+    implementation 'com.google.firebase:firebase-perf:20.0.4'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 
