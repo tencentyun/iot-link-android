@@ -1,14 +1,12 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.Manifest
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.util.Weak
-import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.mvp.IPresenter
@@ -23,10 +21,9 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
 /**
  * 验证码验证界面
  */
-class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClipChangedListener {
+class GetCodeActivity : PActivity(), GetCodeView {
 
     private lateinit var presenter: GetCodePresenter
-    private lateinit var clipboardManager: ClipboardManager
 
     companion object {
         const val TYPE = "type"
@@ -74,8 +71,6 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
             permissionAllGranted()
         }
         presenter = GetCodePresenter(this)
-        //剪切板
-        clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         tv_title.text = getString(R.string.verification_code)
         presenter.lockResend()
         getInitData()
@@ -96,7 +91,6 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
                 presenter.next()
             }
         }
-        clipboardManager.addPrimaryClipChangedListener(this)
     }
 
     override fun onRequestPermissionsResult(
@@ -109,18 +103,6 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
             if (permissions.contains(Manifest.permission.READ_SMS)) {
                 permissionDialog?.dismiss()
                 permissionDialog = null
-            }
-        }
-    }
-
-    override fun onPrimaryClipChanged() {
-        if (clipboardManager.hasPrimaryClip()) {
-            clipboardManager.primaryClip?.let {
-                if (it.itemCount > 0) {
-                    val code = it.getItemAt(0).text.toString()
-                    L.e("验证码：$code")
-//                        vcv_get_code.text = code
-                }
             }
         }
     }
@@ -210,7 +192,6 @@ class GetCodeActivity : PActivity(), GetCodeView, ClipboardManager.OnPrimaryClip
     }
 
     override fun onDestroy() {
-        clipboardManager.removePrimaryClipChangedListener(this)
         handler?.removeCallbacks(null)
         handler = null
         super.onDestroy()
