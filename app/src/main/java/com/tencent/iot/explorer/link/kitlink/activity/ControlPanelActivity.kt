@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.bluetooth.BluetoothGatt
+import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -23,6 +24,7 @@ import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListe
 import com.tencent.iot.explorer.link.core.link.service.BleConfigService
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProductEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProductsEntity
@@ -296,7 +298,10 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
             }
 
             override fun toFeedback(popupWindow: OfflinePopupWindow) {
-                jumpActivity(FeedbackActivity::class.java, true)
+                var intent = Intent(this@ControlPanelActivity, HelpWebViewActivity::class.java)
+                intent.putExtra(CommonField.FEEDBACK_DEVICE, true)
+                intent.putExtra(CommonField.FEEDBACK_CATEGORY, deviceEntity?.AliasName)
+                startActivity(intent)
             }
         }
         offlinePopup?.setBg(control_panel_bg)
