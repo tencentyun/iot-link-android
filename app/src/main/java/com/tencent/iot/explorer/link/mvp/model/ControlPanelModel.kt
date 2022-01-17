@@ -13,7 +13,6 @@ import com.tencent.iot.explorer.link.core.auth.entity.*
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_AUDIO_CALL_STATUS
 import com.tencent.iot.explorer.link.core.auth.message.MessageConst.TRTC_VIDEO_CALL_STATUS
-import com.tencent.iot.explorer.link.core.auth.message.MessageConst.USERID
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
@@ -178,7 +177,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 TRTCUIManager.getInstance().callingDeviceId = "$productId/$deviceName" //保存下设备id（productId/deviceName）
                 val userId = SharePreferenceUtil.getString(App.activity, App.CONFIG, CommonField.USER_ID)
                 val agent = "android/1.4.0 (Android" + Build.VERSION.SDK_INT + ";" + Build.BRAND + " " + Build.MODEL + ";" + Locale.getDefault().language + "-" + Locale.getDefault().country + ")"
-                data = "{\"$id\":$value, \"$USERID\":\"$userId\", \"${MessageConst.AGENT}\":\"$agent\", \"${MessageConst.TRTC_CALLEDID}\":\"$deviceId\", \"${MessageConst.TRTC_CALLERID}\":\"$userId\"}"
+                data = "{\"$id\":$value, \"${MessageConst.AGENT}\":\"$agent\", \"${MessageConst.TRTC_CALLEDID}\":\"$deviceId\", \"${MessageConst.TRTC_CALLERID}\":\"$userId\"}"
 
             }
         }
