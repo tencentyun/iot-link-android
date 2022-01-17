@@ -206,6 +206,17 @@ WlanDetectBody 定义如下
 | :---------------------------- | :---------------------------- | :--------------- |
 | onWlanDevicesDetectedCallback | OnWlanDevicesDetectedCallback | 广播响应包监听器 |
 
+21. 设置是否输出P2P日志(默认情况下，控制台日志以及日志文件输出是打开状态)
+
+> void setLogEnable(boolean console, boolean file);
+
+> 注意: 在start service之前调用该接口, 可以和XP2P.setCallback(this)接口一起调用
+
+| 参数  | 类型           | 描述                 |
+| :---- | :------------- | :------------------- |
+| console  | boolean | 控制台日志输出开关         |
+| file     | boolean | 日志文件输出开关 |
+
 ### 废弃接口
 
 ~~public static String getComandRequestWithSync(String cmd, long timeout);~~
