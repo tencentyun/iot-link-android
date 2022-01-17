@@ -112,7 +112,7 @@ class TRTCAppSessionManager : TRTCSessionManager() {
             callerId = userId
             calledId = deviceId
         }
-        var data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\", \"${MessageConst.TRTC_CALLEDID}\":\"$calledId\", \"${MessageConst.TRTC_CALLERID}\":\"$callerId\"}"
+        var data = "{\"$id\":$value, \"${MessageConst.TRTC_CALLEDID}\":\"$calledId\", \"${MessageConst.TRTC_CALLERID}\":\"$callerId\"}"
         HttpRequest.instance.controlDevice(productId, deviceName, data, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)

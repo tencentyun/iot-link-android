@@ -190,7 +190,7 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
             if (value == "1") { //并且状态值为1，代表应用正在call设备
                 App.data.callingDeviceId = "${device?.ProductId}/${device?.DeviceName}" //保存下设备id（productId/deviceName）
                 val userId = App.data.userInfo.UserID
-                data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\"}"
+                data = "{\"$id\":$value, \"${MessageConst.TRTC_CALLEDID}\":\"${device?.DeviceId}\", \"${MessageConst.TRTC_CALLERID}\":\"$userId\"}"
             }
         }
         device?.let {

@@ -87,7 +87,16 @@ class TRTCSdkDemoSessionManager : TRTCSessionManager() {
 
         L.d("上报数据:id=$id value=$value")
         val userId = App.data.userInfo.UserID
-        val data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\"}"
+        var callerId = ""
+        var calledId = ""
+        if (TRTCUIManager.getInstance().callingDeviceId.equals("")) { //被叫
+            callerId = deviceId
+            calledId = userId
+        } else { //主叫
+            callerId = userId
+            calledId = deviceId
+        }
+        val data = "{\"$id\":$value, \"${MessageConst.TRTC_CALLEDID}\":\"$calledId\", \"${MessageConst.TRTC_CALLERID}\":\"$callerId\"}"
         IoTAuth.deviceImpl.controlDevice(productId, deviceName, data, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
