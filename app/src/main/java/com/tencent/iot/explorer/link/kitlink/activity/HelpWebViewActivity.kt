@@ -51,6 +51,8 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
     private val FILE_CHOOSER_CAMERA_RESULT_CODE = 9998
 
     private var configQuestionList = false
+    private var feedbackDevice = false
+    private var feedbackCategory = ""
     private var permissionDialog: PermissionDialog? = null
 
     private var permissions = arrayOf(
@@ -66,6 +68,12 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
         webStatus = 0
         if (intent.hasExtra(CommonField.CONFIG_QUESTION_LIST)) {
             configQuestionList = intent.getBooleanExtra(CommonField.CONFIG_QUESTION_LIST, false)
+        }
+        if (intent.hasExtra(CommonField.FEEDBACK_DEVICE)) {
+            feedbackDevice = intent.getBooleanExtra(CommonField.FEEDBACK_DEVICE, false)
+        }
+        if (intent.hasExtra(CommonField.FEEDBACK_CATEGORY)) {
+            feedbackCategory = intent.getStringExtra(CommonField.FEEDBACK_CATEGORY)
         }
         initWebView()
         getAppGetTokenTicket()
@@ -156,6 +164,9 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
                 url += "&lang=${Utils.getLang()}"
                 if (configQuestionList) {
                     url += "/#/pages/Functional/HelpCenter/QnAList/QnAList?genCateID=config7"
+                }
+                if (feedbackDevice) {
+                    url += "#/pages/User/Feedback/Feedback?cate=" + feedbackCategory
                 }
 
                 help_web.loadUrl(url)
