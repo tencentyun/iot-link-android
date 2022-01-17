@@ -42,7 +42,6 @@ object MessageConst {
     const val TRTC_AUDIO_CALL_STATUS = "_sys_audio_call_status"
     const val TRTC_VIDEO_CALL_STATUS = "_sys_video_call_status"
     const val TRTC_PARAMS = "TRTCParams"
-    const val USERID = "_sys_userid"
     const val AGENT = "_sys_user_agent"
     const val TRTC_EXTRA_INFO = "_sys_extra_info";
     const val TRTC_REJECT_USERID = "rejectUserId";

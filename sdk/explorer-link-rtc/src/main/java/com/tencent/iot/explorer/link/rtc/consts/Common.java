@@ -17,8 +17,6 @@ public class Common {
 
     public static final String TRTC_VIDEO_CALL_STATUS = "_sys_video_call_status";
 
-    public static final String TRTC_USERID = "_sys_userid";
-
     public static final String TRTC_AGENT = "_sys_user_agent";
 
     public static final String TRTC_EXTRA_INFO = "_sys_extra_info";
