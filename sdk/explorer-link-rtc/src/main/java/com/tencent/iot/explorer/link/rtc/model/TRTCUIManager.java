@@ -114,9 +114,6 @@ public class TRTCUIManager {
                     }
 
                     String deviceId = "";
-                    if (payloadParamsJson.has(Common.TRTC_USERID)) {
-                        deviceId = payloadParamsJson.getString(Common.TRTC_USERID);
-                    }
                     if (TRTCUIManager.getInstance().callingDeviceId.equals("")) { //被叫
                         if (payloadParamsJson.has(Common.TRTC_CALLEDID)) {
                             deviceId = payloadParamsJson.getString(Common.TRTC_CALLEDID);
@@ -146,6 +143,17 @@ public class TRTCUIManager {
                             callback.busy();
                         }
                         return;
+                    }
+
+                    //判断主动呼叫的时候，又收到了其他的设备的呼叫，拒绝掉其他呼叫的请求
+                    if (!TRTCUIManager.getInstance().callingDeviceId.equals("") && !TRTCUIManager.getInstance().callingDeviceId.equals(payloadDeviceId)) {
+                        if (videoCallStatus == TRTCCallStatus.TYPE_CALLING.getValue()) {
+                            callback.updateCallStatus(Common.TRTC_VIDEO_CALL_STATUS, "0", payloadDeviceId);
+                            return;
+                        } else if (audioCallStatus == TRTCCallStatus.TYPE_CALLING.getValue()) {
+                            callback.updateCallStatus(Common.TRTC_AUDIO_CALL_STATUS, "0", payloadDeviceId);
+                            return;
+                        }
                     }
 
                     // 判断主动呼叫的回调中收到的_sys_userid不为自己的userid则被其他用户抢先呼叫设备了，提示用户 对方正忙...
