@@ -333,8 +333,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                         if (audioCallStatusJson != null) {
                             audioCallStatus = audioCallStatusJson.getInteger("Value")
                         }
-                        val calledUserIdJson =
-                                dataJson.getJSONObject(MessageConst.USERID)
+                        val calledUserIdJson = dataJson.getJSONObject(MessageConst.TRTC_CALLEDID)
                         var calledUserId = ""
                         if (calledUserIdJson != null) {
                             calledUserId = calledUserIdJson.getString("Value")
@@ -505,8 +504,12 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         } else { //主叫
             callerId = userId
             calledId = deviceId
+            if (!TRTCUIManager.getInstance().callingDeviceId.equals(deviceId)) {
+                callerId = deviceId
+                calledId = userId
+            }
         }
-        var data = "{\"$id\":$value, \"${MessageConst.USERID}\":\"$userId\", \"${MessageConst.TRTC_CALLEDID}\":\"$calledId\", \"${MessageConst.TRTC_CALLERID}\":\"$callerId\"}"
+        var data = "{\"$id\":$value, \"${MessageConst.TRTC_CALLEDID}\":\"$calledId\", \"${MessageConst.TRTC_CALLERID}\":\"$callerId\"}"
         HttpRequest.instance.controlDevice(productId, deviceName, data, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
                 if (msg != null) L.e(msg)
