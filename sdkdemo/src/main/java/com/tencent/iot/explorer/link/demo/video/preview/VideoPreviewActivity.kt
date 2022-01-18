@@ -145,6 +145,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
 
         Thread(Runnable {
             var id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
+            connectStartTime = System.currentTimeMillis()
             var started = XP2P.startServiceWithXp2pInfo(id,
                 App.data.accessInfo!!.productId, presenter.getDeviceName(), "")
             if (started != 0) {
@@ -159,11 +160,9 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                 }
                 return@Runnable
             }
-
-            connectStartTime = System.currentTimeMillis()
-            var tmpCountDownLatch = CountDownLatch(1)
-            countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
-            tmpCountDownLatch.await()
+//            var tmpCountDownLatch = CountDownLatch(1)
+//            countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
+//            tmpCountDownLatch.await()
 
             XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
                 urlPrefix = it
