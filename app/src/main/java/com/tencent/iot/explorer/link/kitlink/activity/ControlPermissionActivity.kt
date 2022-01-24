@@ -27,11 +27,7 @@ class ControlPermissionActivity : BaseActivity() {
         Manifest.permission.CHANGE_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.RECEIVE_SMS,
-        Manifest.permission.READ_SMS,
-        Manifest.permission.SEND_SMS,
-        Manifest.permission.WRITE_SETTINGS)
+        Manifest.permission.ACCESS_COARSE_LOCATION)
 
     private var permissionsData: MutableList<PermissionAccessInfo> = ArrayList()
     private var adapter: PermissionsAdapter? = null
