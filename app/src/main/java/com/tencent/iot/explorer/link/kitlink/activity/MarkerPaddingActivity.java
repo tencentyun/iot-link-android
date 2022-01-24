@@ -69,7 +69,7 @@ public class MarkerPaddingActivity extends BaseActivity implements TencentMap.On
 
     private final int PAGE_SIZE = 20;
     private PermissionDialog permissionDialog = null;
-    private final String[] permissions = {permission.ACCESS_COARSE_LOCATION};
+    private final String[] permissions = {permission.ACCESS_COARSE_LOCATION, permission.ACCESS_FINE_LOCATION};
     public MapView mMapView;
     private TencentMap mTencentMap;
     private RecyclerView recyclerView;
@@ -208,7 +208,7 @@ public class MarkerPaddingActivity extends BaseActivity implements TencentMap.On
         //设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         mTencentMap.setMyLocationEnabled(true);
 
-        int err = locationManager.requestLocationUpdates(locationRequest, this, Looper.myLooper());
+        int err = locationManager.requestSingleFreshLocation(locationRequest, this, Looper.myLooper());
         switch (err) {
             case 1:
             case 2:
