@@ -1,6 +1,5 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.Manifest
 import android.content.Intent
 import android.os.Handler
 import android.text.*
@@ -28,7 +27,6 @@ import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.User
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
-import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import kotlinx.android.synthetic.main.activity_login2.*
 import kotlinx.android.synthetic.main.layout_account_passwd_login.view.*
 import kotlinx.android.synthetic.main.layout_verify_code_login.view.*
@@ -48,13 +46,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
     private var canGetCode = true
     private var handler: Handler = Handler()
 
-    private val permissions = arrayOf(
-        Manifest.permission.RECEIVE_SMS,
-        Manifest.permission.READ_SMS,
-        Manifest.permission.SEND_SMS
-    )
-
-    private var permissionDialog: PermissionDialog? = null
     private var agreement = false
     private val ANDROID_ID = App.uuid
 
@@ -104,20 +95,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         iv_login_agreement.setImageResource(R.mipmap.icon_unselected)
         iv_login_agreement_status.visibility = View.GONE
 
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 102) {
-            if (permissions.contains(Manifest.permission.READ_SMS)) {
-                permissionDialog?.dismiss()
-                permissionDialog = null
-            }
-        }
     }
 
     private fun formatTipText() {
@@ -441,26 +418,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 val account = verifyCodeLoginView.et_login_phone_or_email_byverifycode.text.trim().toString()
                 accountForAutoFill = account
                 if (!account.contains("@")) {
-                    if (!checkPermissions(permissions)) {
-                        // 查看请求sms权限的时间是否大于48小时
-                        var smsJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS)
-                        var smsJson: JSONObject? = JSONObject.parse(smsJsonString) as JSONObject?
-                        val lasttime = smsJson?.getLong(CommonField.PERMISSION_SMS)
-                        if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                            T.show(getString(R.string.permission_of_sms_refuse))
-                            return
-                        }
-                        permissionDialog = PermissionDialog(this@LoginActivity, R.mipmap.permission_sms, getString(R.string.permission_sms_lips), getString(R.string.permission_sms))
-                        permissionDialog!!.show()
-                        requestPermission(permissions)
-
-                        // 记录请求sms权限的时间
-                        var json = JSONObject()
-                        json.put(CommonField.PERMISSION_SMS, System.currentTimeMillis() / 1000)
-                        Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS, json.toJSONString())
-                    } else {
-                        permissionAllGranted()
-                    }
                     accountType = true
                     presenter.setPhone(account)
                     presenter.requestPhoneCode()
