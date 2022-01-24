@@ -8,11 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- 读写短信的权限 -->
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.WRITE_SMS" /> <!-- 腾讯地图新增开始 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 腾讯地图新增开始 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 通过GPS得到精确位置 -->
     <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
     <!-- 通过网络得到粗略位置 -->

@@ -1,10 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
-import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.os.Handler
-import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -14,7 +11,6 @@ import com.tencent.iot.explorer.link.mvp.presenter.GetCodePresenter
 import com.tencent.iot.explorer.link.mvp.view.GetCodeView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
-import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import kotlinx.android.synthetic.main.activity_get_code.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -32,13 +28,6 @@ class GetCodeActivity : PActivity(), GetCodeView {
         const val COUNTRY_CODE = "country_code"
     }
 
-    private var permissionDialog: PermissionDialog? = null
-    private val permissions = arrayOf(
-        Manifest.permission.RECEIVE_SMS,
-        Manifest.permission.READ_SMS,
-        Manifest.permission.SEND_SMS
-    )
-
     private var handler by Weak<Handler>()
 
     override fun getContentView(): Int {
@@ -50,26 +39,6 @@ class GetCodeActivity : PActivity(), GetCodeView {
     }
 
     override fun initView() {
-        if (!checkPermissions(permissions)) {
-            // 查看请求sms权限的时间是否大于48小时
-            var smsJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS)
-            var smsJson: JSONObject? = JSONObject.parse(smsJsonString) as JSONObject?
-            val lasttime = smsJson?.getLong(CommonField.PERMISSION_SMS)
-            if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                T.show(getString(R.string.permission_of_sms_refuse))
-                return
-            }
-            permissionDialog = PermissionDialog(this@GetCodeActivity, R.mipmap.permission_sms, getString(R.string.permission_sms_lips), getString(R.string.permission_sms))
-            permissionDialog!!.show()
-            requestPermission(permissions)
-
-            // 记录请求sms权限的时间
-            var json = JSONObject()
-            json.put(CommonField.PERMISSION_SMS, System.currentTimeMillis() / 1000)
-            Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_SMS, CommonField.PERMISSION_SMS, json.toJSONString())
-        } else {
-            permissionAllGranted()
-        }
         presenter = GetCodePresenter(this)
         tv_title.text = getString(R.string.verification_code)
         presenter.lockResend()
@@ -89,20 +58,6 @@ class GetCodeActivity : PActivity(), GetCodeView {
             if (text.length == 6) {
                 presenter.setVerificationCode(text)
                 presenter.next()
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 102) {
-            if (permissions.contains(Manifest.permission.READ_SMS)) {
-                permissionDialog?.dismiss()
-                permissionDialog = null
             }
         }
     }
