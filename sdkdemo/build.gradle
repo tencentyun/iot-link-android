@@ -121,7 +121,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx:20.0.2'
 
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.6'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.7'
 
 //    implementation 'com.google.firebase:firebase-perf:19.0.7'
     implementation 'com.alibaba:fastjson:1.2.73'
