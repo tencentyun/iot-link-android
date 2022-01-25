@@ -177,9 +177,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx:20.0.2'
 
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.6'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.7'
 
-    implementation 'com.google.firebase:firebase-perf:20.0.4'
+//    implementation 'com.google.firebase:firebase-perf:20.0.4'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 
