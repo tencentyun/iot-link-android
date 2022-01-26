@@ -63,7 +63,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         buffer = new byte[recordMinBufferSize];
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
         pcmEncoder = new PCMEncoder(sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
-        flvPacker = new FLVPacker(this);
+        flvPacker = new FLVPacker(this, true, false);
     }
 
     /**
@@ -86,14 +86,14 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
 
     @Override
     public void encodeAAC(byte[] data, long time) {
-        flvPacker.aac2Flv(data, System.currentTimeMillis());
+        flvPacker.encodeFlv(data, FLVPacker.TYPE_AUDIO, System.currentTimeMillis());
     }
 
     @Override
     public void encodeG711(byte[] data) { }
 
     @Override
-    public void onAudioFLV(byte[] data) {
+    public void onFLV(byte[] data) {
         XP2P.dataSend(deviceId, data, data.length);
     }
 
