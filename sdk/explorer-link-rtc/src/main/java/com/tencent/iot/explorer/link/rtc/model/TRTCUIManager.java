@@ -23,6 +23,8 @@ public class TRTCUIManager {
 
     public String callingDeviceId = ""; //主动呼叫的设备的id
 
+    public boolean isP2PCall = false; //是否是p2p的来电通话 是p2p 否trtc
+
     public synchronized static TRTCUIManager getInstance() {
         if (instance == null) {
             instance = new TRTCUIManager();
@@ -194,7 +196,23 @@ public class TRTCUIManager {
                     } else if (videoCallStatus == Common.TRTC_STATUS_CALLING
                             || audioCallStatus == Common.TRTC_STATUS_CALLING) {
                         if (callStatus == TRTCCallStatus.TYPE_CALLING.getValue() && TextUtils.isEmpty(callingDeviceId)) {
-                            callback.otherUserAnswered();
+                            if (!isP2PCall) {
+                                callback.otherUserAnswered();
+                            } else if (isP2PCall && TextUtils.isEmpty(callingDeviceId)) {
+                                if (videoCallStatus == TRTCCallStatus.TYPE_ON_THE_PHONE.getValue()) {
+                                    joinRoom(TRTCCalling.TYPE_VIDEO_CALL, payloadDeviceId, new RoomKey());
+                                } else if (audioCallStatus == TRTCCallStatus.TYPE_ON_THE_PHONE.getValue()) {
+                                    joinRoom(TRTCCalling.TYPE_AUDIO_CALL, payloadDeviceId, new RoomKey());
+                                }
+                            }
+                        } else {
+                            if (callback != null && isP2PCall) {
+                                if (videoCallStatus == TRTCCallStatus.TYPE_ON_THE_PHONE.getValue()) {
+                                    callback.startCall(TRTCCalling.TYPE_VIDEO_CALL, payloadDeviceId);
+                                } else if (audioCallStatus == TRTCCallStatus.TYPE_ON_THE_PHONE.getValue()) {
+                                    callback.startCall(TRTCCalling.TYPE_AUDIO_CALL, payloadDeviceId);
+                                }
+                            }
                         }
                     }
                 }
