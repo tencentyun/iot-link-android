@@ -8,8 +8,6 @@ apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'com.google.firebase.crashlytics'
 
-apply plugin: 'com.google.firebase.firebase-perf'
-
 rootProject.ext.configPath = "../app-config.json"
 
 apply from: "../parse_json.gradle"
@@ -78,13 +76,6 @@ android {
             signingConfig signingConfigs.config
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            FirebasePerformance {
-                // Set this flag to 'false' to disable @AddTrace annotation processing and
-                // automatic monitoring of HTTP/S network requests
-                // for a specific build variant at compile time.
-                instrumentationEnabled false
-            }
         }
         release {
             signingConfig signingConfigs.config
