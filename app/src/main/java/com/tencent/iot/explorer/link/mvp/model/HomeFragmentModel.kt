@@ -120,12 +120,14 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                                 for (devEls in deviceList) {
                                     if (devEls.ProductId == productEntity.ProductId) {
                                         devEls.AliasName = productEntity.Name
+                                        devEls.CategoryId = productEntity.CategoryId
                                     }
                                 }
 
                                 for (devEls in shareDeviceList) {
                                     if (devEls.ProductId == productEntity.ProductId) {
                                         devEls.AliasName = productEntity.Name
+                                        devEls.CategoryId = productEntity.CategoryId
                                     }
                                 }
                             }
