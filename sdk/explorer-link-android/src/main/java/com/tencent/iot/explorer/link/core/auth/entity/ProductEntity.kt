@@ -7,6 +7,7 @@ import com.tencent.iot.explorer.link.core.auth.util.JsonManager
  */
 class ProductEntity {
 
+    var CategoryId = 0
     var ProductId = ""
     var Name = ""
     var Description = ""

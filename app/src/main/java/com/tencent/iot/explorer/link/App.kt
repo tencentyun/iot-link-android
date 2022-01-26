@@ -34,6 +34,7 @@ import com.tencent.iot.explorer.link.kitlink.util.WeatherUtils
 import com.tencent.iot.explorer.link.rtc.model.*
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity
+import com.tencent.iot.explorer.link.kitlink.activity.videoui.RecordVideoActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -120,9 +121,21 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
                 TRTCUIManager.getInstance().deviceId = deviceId
                 if (callingType == TRTCCalling.TYPE_VIDEO_CALL) {
                     TRTCUIManager.getInstance().isCalling = true
+                    for (devEls in data.deviceList) {
+                        if (devEls.DeviceId == deviceId && devEls.CategoryId == 567) { // 消费版视频产品 被呼
+                            RecordVideoActivity.startBeingCall(activity, RoomKey(), deviceId)
+                            return
+                        }
+                    }
                     TRTCVideoCallActivity.startBeingCall(activity, RoomKey(), deviceId)
                 } else if (callingType == TRTCCalling.TYPE_AUDIO_CALL) {
                     TRTCUIManager.getInstance().isCalling = true
+                    for (devEls in data.deviceList) {
+                        if (devEls.DeviceId == deviceId && devEls.CategoryId == 567) { // 消费版视频产品 被呼
+                            RecordVideoActivity.startBeingCall(activity, RoomKey(), deviceId)
+                            return
+                        }
+                    }
                     TRTCAudioCallActivity.startBeingCall(activity, RoomKey(), deviceId)
                 }
             }

@@ -50,6 +50,9 @@ dependencies {
 //    }
     api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.3.6-SNAPSHOT'
     api 'com.tencent.iot.thirdparty.android:media-server:1.0.0'
+    if (findProject('sdk:explorer-link-android') != null) {
+        implementation project('sdk:explorer-link-android')
+    }
 }
 
 configurations.all {
