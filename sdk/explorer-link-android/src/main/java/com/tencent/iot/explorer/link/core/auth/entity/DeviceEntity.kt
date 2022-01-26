@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 open class DeviceEntity {
 
+    var CategoryId = 0
     var DeviceId = ""
     var ProductId = ""
     var DeviceName = ""

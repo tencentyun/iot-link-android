@@ -240,6 +240,7 @@
         <activity android:name=".kitlink.activity.WifiActivity" />
         <activity android:name=".kitlink.activity.SoftApStepActivity" /> <!-- picture end -->
         <activity android:name=".kitlink.activity.EditNameActivity" />
+        <activity android:name=".kitlink.activity.videoui.RecordVideoActivity" />
         <receiver android:name=".MessageReceiver">
             <intent-filter>
                 <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE" />

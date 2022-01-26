@@ -29,6 +29,10 @@ class ControlPanelPresenter(view: ControlPanelView) : ParentPresenter<ControlPan
         model?.deviceId = deviceId
     }
 
+    fun getCategoryId(): Int? {
+        return model?.categoryId
+    }
+
     fun requestDeviceData() {
         model?.requestDeviceData()
     }

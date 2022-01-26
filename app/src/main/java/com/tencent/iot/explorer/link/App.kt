@@ -34,6 +34,7 @@ import com.tencent.iot.explorer.link.kitlink.util.WeatherUtils
 import com.tencent.iot.explorer.link.rtc.model.*
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity
+import com.tencent.iot.explorer.link.kitlink.activity.videoui.RecordVideoActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -115,14 +116,29 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
             L.e("App isForeground ${data.isForeground}")
             L.e("App isCalling ${TRTCUIManager.getInstance().isCalling}")
             if (data.isForeground && !TRTCUIManager.getInstance().isCalling) { //在前台，没有正在通话时，唤起通话页面
-                TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
 
                 TRTCUIManager.getInstance().deviceId = deviceId
                 if (callingType == TRTCCalling.TYPE_VIDEO_CALL) {
                     TRTCUIManager.getInstance().isCalling = true
+                    for (devEls in data.deviceList) {
+                        if (devEls.DeviceId == deviceId && devEls.CategoryId == 567) { // 消费版视频产品-视频 被呼
+                            TRTCUIManager.getInstance().setSessionManager(P2PAppSessionManager())
+                            RecordVideoActivity.startBeingCall(activity, deviceId, true)
+                            return
+                        }
+                    }
+                    TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
                     TRTCVideoCallActivity.startBeingCall(activity, RoomKey(), deviceId)
                 } else if (callingType == TRTCCalling.TYPE_AUDIO_CALL) {
                     TRTCUIManager.getInstance().isCalling = true
+                    for (devEls in data.deviceList) {
+                        if (devEls.DeviceId == deviceId && devEls.CategoryId == 567) { // 消费版视频产品-音频 被呼
+                            TRTCUIManager.getInstance().setSessionManager(P2PAppSessionManager())
+                            RecordVideoActivity.startBeingCall(activity, deviceId, false)
+                            return
+                        }
+                    }
+                    TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
                     TRTCAudioCallActivity.startBeingCall(activity, RoomKey(), deviceId)
                 }
             }
@@ -360,6 +376,16 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
      */
     fun startBeingCall(callingType: Int, deviceId: String) {
         if (TRTCUIManager.getInstance().callingDeviceId != "") { //App主动呼叫
+            for (devEls in data.deviceList) {
+                if (devEls.DeviceId == deviceId && devEls.CategoryId == 567) { // 消费版视频产品-视频 被呼
+                    if (callingType == TRTCCalling.TYPE_VIDEO_CALL) {
+                        TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_VIDEO_CALL, TRTCUIManager.getInstance().callingDeviceId, RoomKey())
+                    } else if (callingType == TRTCCalling.TYPE_AUDIO_CALL) {
+                        TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_AUDIO_CALL, TRTCUIManager.getInstance().callingDeviceId, RoomKey())
+                    }
+                    return
+                }
+            }
             trtcCallDevice(callingType)
         } else { //App被动
             appStartBeingCall(callingType, deviceId)

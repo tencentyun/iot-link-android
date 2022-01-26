@@ -49,6 +49,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         IoTAuth.addActivePushCallback(this)
     }
 
+    var categoryId = 0
     var netType = ""
     var productId = ""
     var deviceName = ""
@@ -324,6 +325,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     mergeData()
                 }
                 netType = Products[0].NetType
+                categoryId = Products[0].CategoryId
 
                 if (uiList.size == 0) {
                     processPropertyList()

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.P2PAppSessionManager
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.TRTCAppSessionManager
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
@@ -37,6 +38,7 @@ import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.utils.NetWorkStateReceiver
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity
+import com.tencent.iot.explorer.link.kitlink.activity.videoui.RecordVideoActivity
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -494,20 +496,34 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                 return
             }
             controlDevice(entity.id, "1")
-            TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
-            TRTCUIManager.getInstance().isCalling = true
-            TRTCUIManager.getInstance().deviceId = TRTCUIManager.getInstance().callingDeviceId
-            TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), TRTCUIManager.getInstance().callingDeviceId)
+            if (presenter?.getCategoryId() == 567) { // 消费版视频平台产品 call
+                TRTCUIManager.getInstance().setSessionManager(P2PAppSessionManager())
+                TRTCUIManager.getInstance().isCalling = true
+                TRTCUIManager.getInstance().deviceId = TRTCUIManager.getInstance().callingDeviceId
+                RecordVideoActivity.startCallSomeone(this, TRTCUIManager.getInstance().callingDeviceId, false)
+            } else { // TRTC产品 call
+                TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
+                TRTCUIManager.getInstance().isCalling = true
+                TRTCUIManager.getInstance().deviceId = TRTCUIManager.getInstance().callingDeviceId
+                TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), TRTCUIManager.getInstance().callingDeviceId)
+            }
             return
         } else if (entity.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
             if (checkTRTCCallStatusIsBusy()) {
                 return
             }
             controlDevice(entity.id, "1")
-            TRTCUIManager.getInstance().isCalling = true
-            TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
-            TRTCUIManager.getInstance().deviceId = TRTCUIManager.getInstance().callingDeviceId
-            TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), TRTCUIManager.getInstance().callingDeviceId)
+            if (presenter?.getCategoryId() == 567) { // 消费版视频平台产品 call
+                TRTCUIManager.getInstance().isCalling = true
+                TRTCUIManager.getInstance().setSessionManager(P2PAppSessionManager())
+                TRTCUIManager.getInstance().deviceId = TRTCUIManager.getInstance().callingDeviceId
+                RecordVideoActivity.startCallSomeone(this, TRTCUIManager.getInstance().callingDeviceId, true)
+            } else { // TRTC产品 call
+                TRTCUIManager.getInstance().isCalling = true
+                TRTCUIManager.getInstance().setSessionManager(TRTCAppSessionManager())
+                TRTCUIManager.getInstance().deviceId = TRTCUIManager.getInstance().callingDeviceId
+                TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), TRTCUIManager.getInstance().callingDeviceId)
+            }
             return
         }
         if (enumPopup == null) {
