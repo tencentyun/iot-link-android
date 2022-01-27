@@ -12,6 +12,8 @@ import android.view.Surface;
 import androidx.annotation.RequiresApi;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tencent.iot.thirdparty.flv.FLVListener;
+import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.iot.video.link.recorder.param.AudioEncodeParam;
 import com.tencent.iot.video.link.recorder.param.CameraParam;
 import com.tencent.iot.video.link.recorder.param.MicParam;
@@ -60,10 +62,12 @@ public class RecordThread extends Thread {
     private File audioDataFile;
     // 记录视频裸流的临时文件，调试使用
     private String path = "/mnt/sdcard/videoTest.flv";
-    private File videoTmpFile = new File(path);
-    private volatile FileOutputStream storeVideoStream;
+//    private File videoTmpFile = new File(path);
+//    private volatile FileOutputStream storeVideoStream;
     private volatile long seq = 0L;
     private volatile long audioSeq = 0L;
+
+    private FLVPacker flvPacker;
 
     // 采样频率对照表
     private static Map<Integer, Integer> samplingFrequencyIndexMap = new HashMap<>();
@@ -199,15 +203,15 @@ public class RecordThread extends Thread {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public RecordThread(RecordThreadParam recordThreadParam) {
+    public RecordThread(RecordThreadParam recordThreadParam, FLVListener listener) {
         this(recordThreadParam.getRecordParam(), recordThreadParam.getMicParam(),
                 recordThreadParam.getAudioEncodeParam(), recordThreadParam.getCameraParam(),
-                recordThreadParam.getVideoEncodeParam());
+                recordThreadParam.getVideoEncodeParam(), listener);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private RecordThread(RecordParam recordParam, MicParam micParam, AudioEncodeParam audioEncodeParam,
-                         CameraParam cameraParam, VideoEncodeParam videoEncodeParam) {
+                         CameraParam cameraParam, VideoEncodeParam videoEncodeParam, FLVListener listener) {
         this.recordParam = recordParam;
         this.micParam = micParam;
         this.audioEncodeParam = audioEncodeParam;
@@ -219,6 +223,7 @@ public class RecordThread extends Thread {
         initMuxer();
         initAudio();
         initVideo();
+        flvPacker = new FLVPacker(listener, true, true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -305,16 +310,16 @@ public class RecordThread extends Thread {
     }
 
     void stopSaveTmpFile(boolean clean) {
-        try {
-            if (storeVideoStream != null) {
-                storeVideoStream.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if (storeVideoStream != null) {
+//                storeVideoStream.close();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         if (clean) {
-            videoTmpFile.deleteOnExit();
+//            videoTmpFile.deleteOnExit();
         }
     }
 
@@ -363,25 +368,22 @@ public class RecordThread extends Thread {
 
     private void sendOriAudioData(ByteBuffer outputBuffer) {
         Log.e(TAG, "sendOriAudioData");
-        try {
-            byte[] bytes = new byte[outputBuffer.remaining()];
-            outputBuffer.get(bytes, 0, bytes.length);
-            byte[] dataBytes = new byte[bytes.length + 7];
-            System.arraycopy(bytes, 0, dataBytes, 7, bytes.length);
-            addADTStoPacket(dataBytes, dataBytes.length);
-            if (dataBytes != null && storeVideoStream != null) {
-                if (startStore && storeAudioDataStream != null) {
-                    storeAudioDataStream.write(dataBytes);
-                    storeAudioDataStream.flush();
-                }
+        byte[] bytes = new byte[outputBuffer.remaining()];
+        outputBuffer.get(bytes, 0, bytes.length);
+        byte[] dataBytes = new byte[bytes.length + 7];
+        System.arraycopy(bytes, 0, dataBytes, 7, bytes.length);
+        addADTStoPacket(dataBytes, dataBytes.length);
+        if (dataBytes != null /*&& storeVideoStream != null*/) {
+//                if (startStore && storeAudioDataStream != null) {
+//                    storeAudioDataStream.write(dataBytes);
+//                    storeAudioDataStream.flush();
+//                }
 
-                if (isStopRecord || isCancelRecord) return;
-                storeVideoStream.write(dataBytes);
-                storeVideoStream.flush();
-                audioSeq++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (isStopRecord || isCancelRecord) return;
+//                storeVideoStream.write(dataBytes);
+//                storeVideoStream.flush();
+            audioSeq++;
+            flvPacker.encodeFlv(dataBytes, FLVPacker.TYPE_AUDIO, System.currentTimeMillis());
         }
     }
 
@@ -409,7 +411,7 @@ public class RecordThread extends Thread {
         try {
             byte[] bytes = new byte[outputBuffer.remaining()];
             outputBuffer.get(bytes, 0, bytes.length);
-            if (bytes != null && storeVideoStream != null) {
+            if (bytes != null /*&& storeVideoStream != null*/) {
                 if (isStopRecord || isCancelRecord) return;
                 if (videoInfo.flags == MediaCodec.BUFFER_FLAG_KEY_FRAME) {  // I 帧的处理逻辑
                     ByteBuffer spsb = videoCodec.getOutputFormat().getByteBuffer("csd-0");
@@ -423,15 +425,14 @@ public class RecordThread extends Thread {
                     System.arraycopy(sps, 0, dataBytes, 0, sps.length);
                     System.arraycopy(pps, 0, dataBytes, sps.length, pps.length);
                     System.arraycopy(bytes, 0, dataBytes, pps.length + sps.length, bytes.length);
-
+                    flvPacker.encodeFlv(dataBytes, FLVPacker.TYPE_VIDEO, System.currentTimeMillis());
                     if (startStore && storeVideoDataStream != null) {
                         storeVideoDataStream.write(dataBytes);
                         storeVideoDataStream.flush();
                         hasIDR = true;
                     }
-
                 } else {
-
+                    flvPacker.encodeFlv(bytes, FLVPacker.TYPE_VIDEO, System.currentTimeMillis());
                     if (startStore && storeVideoDataStream != null && hasIDR) { // 等待存在 IDR 帧以后，再开始添加 P 帧
                         storeVideoDataStream.write(bytes);
                         storeVideoDataStream.flush();
@@ -445,15 +446,11 @@ public class RecordThread extends Thread {
     }
 
     private void restartKeepOriData() {
-        try {
-            if (videoTmpFile.exists()) {
-                videoTmpFile.deleteOnExit();
-            }
-            videoTmpFile.createNewFile();
-            storeVideoStream = new FileOutputStream(videoTmpFile, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //            if (videoTmpFile.exists()) {
+//                videoTmpFile.deleteOnExit();
+//            }
+//            videoTmpFile.createNewFile();
+//            storeVideoStream = new FileOutputStream(videoTmpFile, true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -465,7 +462,7 @@ public class RecordThread extends Thread {
             onRecordError(new IllegalArgumentException("widget is null"));
             return;
         }
-        restartKeepOriData();
+//        restartKeepOriData();
 
         boolean isStartMuxer = false; // 合成是否开始
         seq = 0L;
