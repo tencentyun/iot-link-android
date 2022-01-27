@@ -1,8 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -16,13 +18,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
+import androidx.core.app.ActivityCompat;
 
 //import com.blankj.utilcode.util.CollectionUtils;
 //import com.blankj.utilcode.util.ToastUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.tencent.iot.explorer.link.T;
+import com.tencent.iot.explorer.link.core.utils.Utils;
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog;
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField;
 import com.tencent.iot.explorer.link.rtc.R;
 import com.tencent.iot.explorer.link.rtc.model.IntentParams;
 import com.tencent.iot.explorer.link.rtc.model.RoomKey;
@@ -93,6 +102,9 @@ public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkS
     private TimerTask otherEnterRoomTask = null;
     private TimerTask enterRoomTask = null;
     private NetWorkStateReceiver netWorkStateReceiver;
+
+    private PermissionDialog permissionDialog = null;
+    private boolean requestRecordAudioPermission = false;
 
     /**
      * 拨号的回调
@@ -343,6 +355,58 @@ public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkS
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 103) {
+            permissionDialog.dismiss();
+            permissionDialog = null;
+            if (!requestRecordAudioPermission) {
+                checkAndRequestPermission();
+            } else {
+                boolean calling = initData();
+                initListener();
+                checkoutIsEnterRoom60seconds(calling, getString(R.string.trtccalling_customer_no_resp));
+            }
+        }
+    }
+
+    private void checkAndRequestPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED && !requestRecordAudioPermission) {
+            // 查看请求mic权限的时间是否大于48小时
+            String micJsonString = Utils.INSTANCE.getStringValueFromXml(this, CommonField.PERMISSION_MIC, CommonField.PERMISSION_MIC);
+            long lasttime = 0L;
+            if (micJsonString != null) {
+                JSONObject micJson = JSON.parseObject(micJsonString);
+                lasttime = micJson.getLong(CommonField.PERMISSION_MIC);
+            }
+            if (micJsonString != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48 * 60 * 60) {
+                T.show(getString(com.tencent.iot.explorer.link.R.string.permission_of_camera_mic_refuse));
+                boolean calling = initData();
+                initListener();
+                checkoutIsEnterRoom60seconds(calling, getString(R.string.trtccalling_customer_no_resp));
+                TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
+                removeCallbackAndFinish();
+                return;
+            }
+            if (permissionDialog == null) {
+                permissionDialog = new PermissionDialog(this, com.tencent.iot.explorer.link.R.mipmap.permission_mic ,getString(com.tencent.iot.explorer.link.R.string.permission_mic_lips), getString(com.tencent.iot.explorer.link.R.string.permission_camera_trtc));
+                permissionDialog.show();
+                requestRecordAudioPermission = true;
+            }
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 103);
+
+            // 记录请求mic权限的时间
+            JSONObject json = new JSONObject();
+            json.put(CommonField.PERMISSION_MIC, System.currentTimeMillis() / 1000);
+            Utils.INSTANCE.setXmlStringValue(this, CommonField.PERMISSION_MIC, CommonField.PERMISSION_MIC, json.toJSONString());
+            return;
+        }
+        boolean calling = initData();
+        initListener();
+        checkoutIsEnterRoom60seconds(calling, getString(R.string.trtccalling_customer_no_resp));
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 应用运行时，保持不锁屏、全屏化
@@ -408,9 +472,10 @@ public class TRTCAudioCallActivity extends AppCompatActivity implements NetWorkS
         });
 
         initView();
-        boolean calling = initData();
-        initListener();
-        checkoutIsEnterRoom60seconds(calling, getString(R.string.trtccalling_customer_no_resp));
+        checkAndRequestPermission();
+//        boolean calling = initData();
+//        initListener();
+//        checkoutIsEnterRoom60seconds(calling, getString(R.string.trtccalling_customer_no_resp));
     }
 
     @Override
