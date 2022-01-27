@@ -390,7 +390,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 102 || requestCode == 103 || requestCode == 104) {
+        if (requestCode == 102 || requestCode == 103) {
             permissionDialog.dismiss();
             permissionDialog = null;
             if (!requestCameraPermission || !requestRecordAudioPermission) {
@@ -413,6 +413,15 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
                 lasttime = cameraJson.getLong(CommonField.PERMISSION_CAMERA);
             }
             if (cameraJsonString != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48 * 60 * 60) {
+                boolean calling = initData();
+                initListener();
+                checkoutIsEnterRoom60seconds(calling, getString(R.string.trtccalling_customer_no_resp));
+                if (mSponsorUserInfo == null) {
+                    stopCameraAndFinish();
+                    return;
+                }
+                TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_VIDEO_CALL, mSponsorUserInfo.getUserId());
+                stopCameraAndFinish();
                 T.show(getString(com.tencent.iot.explorer.link.R.string.permission_of_camera_refuse));
                 return;
             }
@@ -438,6 +447,15 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
                 lasttime = micJson.getLong(CommonField.PERMISSION_MIC);
             }
             if (micJsonString != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48 * 60 * 60) {
+                boolean calling = initData();
+                initListener();
+                checkoutIsEnterRoom60seconds(calling, getString(R.string.trtccalling_customer_no_resp));
+                if (mSponsorUserInfo == null) {
+                    stopCameraAndFinish();
+                    return;
+                }
+                TRTCUIManager.getInstance().refuseEnterRoom(TRTCCalling.TYPE_VIDEO_CALL, mSponsorUserInfo.getUserId());
+                stopCameraAndFinish();
                 T.show(getString(com.tencent.iot.explorer.link.R.string.permission_of_camera_mic_refuse));
                 return;
             }
