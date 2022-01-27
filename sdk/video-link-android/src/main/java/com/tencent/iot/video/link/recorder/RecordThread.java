@@ -12,6 +12,8 @@ import android.view.Surface;
 import androidx.annotation.RequiresApi;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tencent.iot.thirdparty.flv.FLVListener;
+import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.iot.video.link.recorder.param.AudioEncodeParam;
 import com.tencent.iot.video.link.recorder.param.CameraParam;
 import com.tencent.iot.video.link.recorder.param.MicParam;
@@ -64,6 +66,8 @@ public class RecordThread extends Thread {
     private volatile FileOutputStream storeVideoStream;
     private volatile long seq = 0L;
     private volatile long audioSeq = 0L;
+
+    private FLVPacker flvPacker;
 
     // 采样频率对照表
     private static Map<Integer, Integer> samplingFrequencyIndexMap = new HashMap<>();
@@ -199,10 +203,11 @@ public class RecordThread extends Thread {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public RecordThread(RecordThreadParam recordThreadParam) {
+    public RecordThread(RecordThreadParam recordThreadParam, FLVListener listener) {
         this(recordThreadParam.getRecordParam(), recordThreadParam.getMicParam(),
                 recordThreadParam.getAudioEncodeParam(), recordThreadParam.getCameraParam(),
                 recordThreadParam.getVideoEncodeParam());
+        flvPacker = new FLVPacker(listener, true, true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -379,6 +384,7 @@ public class RecordThread extends Thread {
                 storeVideoStream.write(dataBytes);
                 storeVideoStream.flush();
                 audioSeq++;
+                flvPacker.encodeFlv(dataBytes, FLVPacker.TYPE_AUDIO, System.currentTimeMillis());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -423,18 +429,18 @@ public class RecordThread extends Thread {
                     System.arraycopy(sps, 0, dataBytes, 0, sps.length);
                     System.arraycopy(pps, 0, dataBytes, sps.length, pps.length);
                     System.arraycopy(bytes, 0, dataBytes, pps.length + sps.length, bytes.length);
-
                     if (startStore && storeVideoDataStream != null) {
                         storeVideoDataStream.write(dataBytes);
                         storeVideoDataStream.flush();
                         hasIDR = true;
+                        flvPacker.encodeFlv(dataBytes, FLVPacker.TYPE_VIDEO, System.currentTimeMillis());
                     }
 
                 } else {
-
                     if (startStore && storeVideoDataStream != null && hasIDR) { // 等待存在 IDR 帧以后，再开始添加 P 帧
                         storeVideoDataStream.write(bytes);
                         storeVideoDataStream.flush();
+                        flvPacker.encodeFlv(bytes, FLVPacker.TYPE_VIDEO, System.currentTimeMillis());
                     }
                 }
                 seq++;
@@ -465,7 +471,7 @@ public class RecordThread extends Thread {
             onRecordError(new IllegalArgumentException("widget is null"));
             return;
         }
-        restartKeepOriData();
+//        restartKeepOriData();
 
         boolean isStartMuxer = false; // 合成是否开始
         seq = 0L;
