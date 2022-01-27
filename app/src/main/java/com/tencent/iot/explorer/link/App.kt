@@ -53,8 +53,6 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         const val MUST_UPGRADE_TAG = "master"
         var language: String? = ""
         var uuid: String = ""
-        var mobileBrand: String = ""
-        var mobileModel: String = ""
 
         // 根据编译使用的 buildType 类型确定是否是 debug 版本
         // 编译依赖的 buildType 包含 debug 字串即认为是 debug 版本
@@ -153,8 +151,6 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
             SharePreferenceUtil.saveString(this, CONFIG, CommonField.UUID, UUID.randomUUID().toString())
             uuid = SharePreferenceUtil.getString(this, CONFIG, CommonField.UUID)
         }
-        mobileBrand = Build.BRAND
-        mobileModel = Build.MODEL
         IoTAuth.setWebSocketTag(uuid) // 设置wss的uin
         IoTAuth.setWebSocketCallback(this) // 设置WebSocket连接状态回调
         IoTAuth.init(BuildConfig.TencentIotLinkAppkey, BuildConfig.TencentIotLinkAppSecret)
