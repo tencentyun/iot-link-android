@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.RequiresApi;
 
+import com.tencent.iot.thirdparty.flv.FLVListener;
 import com.tencent.iot.video.link.recorder.opengles.view.CameraView;
 import com.tencent.iot.video.link.recorder.opengles.view.base.EGLTextureView;
 import com.tencent.iot.video.link.recorder.param.AudioEncodeParam;
@@ -25,7 +26,13 @@ public class VideoRecorder {
     private OnRecordListener onRecordListener; // 记录过程回调
     private CameraView cameraView; // 摄像头预览的内容
     private int recorderType = CallingType.TYPE_VIDEO_CALL;
+    private FLVListener listener;
 
+    public VideoRecorder(FLVListener listener) {
+        this.listener = listener;
+    }
+    public VideoRecorder() {
+    }
     // 获取实际的摄像头预览对象
     public void attachCameraView(CameraView cameraView) {
         this.cameraView = cameraView;
@@ -133,7 +140,7 @@ public class VideoRecorder {
     private int start(RecordThreadParam recordThreadParam) {
         // 清理环境
         cancel();
-        recordThread = new RecordThread(recordThreadParam);
+        recordThread = new RecordThread(recordThreadParam, listener);
         recordThread.setOnRecordListener(onRecordListener);
         recordThread.start();
         return ErrorCode.SUCCESS;
