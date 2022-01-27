@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link
 
 import android.content.Context
+import android.os.Build
 import android.text.TextUtils
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
@@ -80,6 +81,25 @@ class AppData private constructor() {
 
     // 设备的类目数
     var numOfCategories = 0
+
+    // 手机品牌
+    private var mobileBrand = ""
+    // 手机型号
+    private var mobileModel = ""
+
+    fun getMobileBrand(): String {
+        if (TextUtils.isEmpty(mobileBrand)) {
+            mobileBrand = Build.BRAND
+        }
+        return mobileBrand
+    }
+
+    fun getMobileModel(): String {
+        if (TextUtils.isEmpty(mobileModel)) {
+            mobileModel = Build.MODEL
+        }
+        return mobileModel
+    }
 
     /**
      * 重置刷新级别到设备级别
