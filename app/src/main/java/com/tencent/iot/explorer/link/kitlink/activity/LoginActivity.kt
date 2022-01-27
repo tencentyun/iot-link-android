@@ -410,6 +410,10 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 if (!canGetCode) {
                     return
                 }
+                if (!agreement) {
+                    T.show(getString(R.string.toast_register_agreement))
+                    return
+                }
                 Utils.startCountBySeconds(60, secondsCountDownCallback)
                 canGetCode = false
                 enableTextView(verifyCodeLoginView.tv_get_verify_code,
