@@ -7,6 +7,7 @@ import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
+import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.*
@@ -33,6 +34,8 @@ import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
+import com.tencent.xnet.XP2P
+import com.tencent.xnet.XP2PCallback
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashSet
@@ -248,6 +251,19 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     private fun parseDeviceData(response: BaseResponse) {
         if (!response.isSuccess()) return
         response.parse(DeviceDataResponse::class.java)?.run {
+            if (categoryId == 567) {
+                val deviceDatas = parseList()
+                L.e("deviceDatas", JsonManager.toJson(deviceDatas))
+                deviceDatas.forEach {
+                    if (it.id == "_sys_xp2p_info") {
+                        var xp2pInfo = it.value
+                        Log.e("test", "=====${it.id} : ${it.value} ")
+                        XP2P.setCallback(xp2pCallback)
+                        XP2P.startService(deviceId, productId, deviceName)
+                        XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                    }
+                }
+            }
             deviceDataList.clear()
             deviceDataList.addAll(parseList())
             L.e("deviceDataList", JsonManager.toJson(deviceDataList))
@@ -263,6 +279,27 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 }
             }
             view?.showControlPanel(navBar, hasTimerCloud)
+        }
+    }
+
+    val xp2pCallback = object : XP2PCallback {
+        override fun fail(msg: String?, errorCode: Int) {}
+
+        override fun commandRequest(id: String?, msg: String?) {}
+
+        override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
+            if (event == 1004) {
+//                T.show("探测成功")
+                XP2P.runSendService(deviceId, "channel=0", false)
+            }
+        }
+
+        override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
+
+        override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
+
+        override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
+            return ""
         }
     }
 
@@ -325,13 +362,19 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 }
                 netType = Products[0].NetType
                 categoryId = Products[0].CategoryId
-
+                if (categoryId == 567) { //双向音视频类别
+                    requestXp2pInfo()
+                }
                 if (uiList.size == 0) {
                     processPropertyList()
                     mergeData()
                 }
             }
         }
+    }
+
+    private fun requestXp2pInfo() {
+        HttpRequest.instance.deviceData(productId, deviceName, this)
     }
 
     private fun processPropertyList() {
