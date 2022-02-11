@@ -163,6 +163,15 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
 //            var tmpCountDownLatch = CountDownLatch(1)
 //            countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
 //            tmpCountDownLatch.await()
+            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
+                urlPrefix = it
+                if (!TextUtils.isEmpty(urlPrefix)) {
+                    player?.let {
+                        resetPlayer()
+                        keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+                    }
+                }
+            }
         }).start()
     }
 
