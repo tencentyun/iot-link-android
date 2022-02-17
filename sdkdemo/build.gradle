@@ -4,10 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'com.google.gms.google-services'
-
-apply plugin: 'com.google.firebase.crashlytics'
-
 rootProject.ext.configPath = "../sdkdemo-config.json"
 
 apply from: "../parse_json.gradle"
@@ -118,12 +114,6 @@ dependencies {
         implementation 'com.tencent.iot.explorer:explorer-link-android:+'
     }
 
-    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.2'
-
-    // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.7'
-
-//    implementation 'com.google.firebase:firebase-perf:19.0.7'
     implementation 'com.alibaba:fastjson:1.2.73'
     implementation "com.tencent.iot.thirdparty.android:esptouch:0.3.7.2"
     implementation 'com.android.support:multidex:1.0.3'

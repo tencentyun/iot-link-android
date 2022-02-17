@@ -97,7 +97,7 @@ public class LogcatHelper {
                     if (!mRunning) break;
                     if (line.length() == 0) continue;
                     if (out != null && line.contains(mPID) && !line.contains("FA  ")
-                            && !line.contains("Firebase") && !line.contains("zygote")
+                            && !line.contains("zygote")
                             && !line.contains("libEGL") && !line.contains("TPush")
                             && !line.contains("Hw") && !line.contains("OpenGL")
                             && !line.contains("CubicBezier") && !line.contains("PressGestureDetector")
