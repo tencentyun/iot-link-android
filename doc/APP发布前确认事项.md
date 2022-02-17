@@ -24,30 +24,3 @@
   2.  前往 [微信开放平台](https://developers.weixin.qq.com/doc/oplatform/Downloads/Android_Resource.html) 下载签名生成工具，使用该工具生成应用的数字签名(需要将该工具和应用同时安装到手机上，打开签名生成工具输入应用包名即可生成数字签名)
   3. 将该数字签名和应用包名登记到微信开放平台，否则微信授权登录将不可用。
   4. 最后将配置项 WXAccessAppId 设置为在微信开放平台申请并获得的 AppID；**同时请遵从官方建议自建微信接入服务器，保证 App Secret 不被泄露**。
-
-2. 项目配置 **Firebase** 插件。
- - 若用户确认使用 Firebase 功能，需通过 Firebase 官网创建应用并获取 **google-services.json**，替换项目中的 [google-services.json](https://github.com/tencentyun/iot-link-android/blob/master/app/google-services.json) 文件。   
- - 若不使用 Firebase 功能，需要在以下文件中注释掉对应依赖。
-  
-     在项目级 [build.gradle](https://github.com/tencentyun/iot-link-android/blob/master/build.gradle)中注释掉以下三个依赖项    
-     
-   ```
-   dependencies {
-   //        classpath 'com.google.gms:google-services:4.3.3'
-   //        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.1.1'
-   //        classpath 'com.google.firebase:perf-plugin:1.3.1'
-   }
-   ```
-在应用级 [build.gradle](https://github.com/tencentyun/iot-link-android/blob/master/app/build.gradle)中注释掉以下三个应用插件和三个依赖项     
-   
-       ```
-       //apply plugin: 'com.google.gms.google-services'
-       //apply plugin: 'com.google.firebase.crashlytics'
-       //apply plugin: 'com.google.firebase.firebase-perf'
-       
-       dependencies {
-       //    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
-       //    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
-       //    implementation 'com.google.firebase:firebase-perf:19.0.7'
-       }
-       ```
