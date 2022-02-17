@@ -17,8 +17,6 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.example.qrcode.Constant
 import com.example.qrcode.ScannerActivity
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.android.tpush.XGIOperateCallback
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.android.tpush.XGPushManager
@@ -143,9 +141,6 @@ class MainActivity : PActivity(), MyCallback {
     }
 
     override fun initView() {
-        val userId = SharePreferenceUtil.getString(this@MainActivity, App.CONFIG, CommonField.USER_ID)
-        FirebaseCrashlytics.getInstance().setUserId(userId)
-        FirebaseAnalytics.getInstance(this).setUserId(userId)
         openXGPush()
         home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
         LogcatHelper.getInstance(this).start()
