@@ -55,13 +55,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <!-- 如果您出于某些原因（例如为了在收集数据前征得最终用户的同意）希望暂时停用 Analytics 数据收集功能 -->
-        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
-        <provider
-            android:name="com.google.firebase.provider.FirebaseInitProvider"
-            android:authorities="${applicationId}.firebaseinitprovider"
-            tools:node="remove"
-            />
+
         <!-- 请您务必确保终端用户首次安装启动应用时，配置不自动启动推送服务,以确保应用首次安装启动时不会自启推送服务，直到调用了推送服务注册接口 XGPushManager.registerPush() 才会开启 -->
         <meta-data
             android:name="XG_SERVICE_PULL_UP_OFF"
@@ -250,9 +244,6 @@
         <meta-data
             android:name="TencentMapSDK"
             android:value="${MAP_SDK_VALUE}" />
-        <meta-data
-            android:name="firebase_performance_logcat_enabled"
-            android:value="true" />
     </application>
 
 </manifest>

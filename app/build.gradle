@@ -4,10 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'com.google.gms.google-services'
-
-apply plugin: 'com.google.firebase.crashlytics'
-
 rootProject.ext.configPath = "../app-config.json"
 
 apply from: "../parse_json.gradle"
@@ -164,13 +160,6 @@ dependencies {
     } else {
         implementation 'com.tencent.iot.explorer:explorer-link-android:+'
     }
-
-    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.2'
-
-    // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.7'
-
-//    implementation 'com.google.firebase:firebase-perf:20.0.4'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 

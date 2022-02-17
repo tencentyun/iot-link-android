@@ -41,7 +41,6 @@ object CommonField {
     const val CONFIG_QUESTION_LIST = "configQuestionList"
     const val FEEDBACK_DEVICE = "feedbackDevice"
     const val FEEDBACK_CATEGORY = "feedbackCategory"
-    const val FIREBASE_USER_ID = "UserID"
     const val LOAD_VIEW_TXT_TYPE = "loadViewTxtType"
     const val CONFIG_TYPE = "configType"
     const val HARD_WARE_GUIDE = "hardwareGuide"

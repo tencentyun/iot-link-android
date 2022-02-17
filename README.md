@@ -10,7 +10,7 @@
 
 ## 接入的第三方组件
 
-腾讯连连是一个完整的应用项目，集成了业内主流的推送、定位、日志系统、性能统计和微信授权登录等功能。推送集成了信鸽推送，定位使用了腾讯地图，日志系统和性能统计依赖 Firebase，微信授权登录则需要微信的支持。
+腾讯连连是一个完整的应用项目，集成了业内主流的推送、定位、日志系统、性能统计和微信授权登录等功能。推送集成了信鸽推送，定位使用了腾讯地图，微信授权登录则需要微信的支持。
 
 ## 快速开始
 
@@ -52,38 +52,7 @@ app-config.json 需要配置的内容，如下：
 }
 ```
 
-**3、Firebase（可选）**
-
-连连开源体验版集成了 **Firebase** 插件，用于记录应用的异常日志和性能状况。
-
-* 若用户确认使用 Firebase 插件，需通过 [Firebase 官网](https://firebase.google.cn/?hl=zh-cn) 创建应用并获取 **google-services.json** 文件；将 google-services.json 文件放在 app 目录下。
-* 若不依赖 Firebase 插件，需要在以下文件中注释掉对应依赖
-  
-  在项目级 build.gradle（&lt;iot-link-android&gt;/build.gradle）中注释掉dependencies中以下三个依赖项
-  
-  ```
-  dependencies {
-  //        classpath 'com.google.gms:google-services:4.3.3'
-  //        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.1.1'
-  //        classpath 'com.google.firebase:perf-plugin:1.3.1'
-  }
-  ```
-  
-  在应用级 build.gradle（&lt;iot-link-android&gt;/&lt;app&gt;/build.gradle）中注释掉以下三个应用插件和三个依赖项
-  
-  ```
-  //apply plugin: 'com.google.gms.google-services'
-  //apply plugin: 'com.google.firebase.crashlytics'
-  //apply plugin: 'com.google.firebase.firebase-perf'
-  
-  dependencies {
-  //    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
-  //    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
-  //    implementation 'com.google.firebase:firebase-perf:19.0.7'
-  }
-  ```
-
-**4、腾讯地图（可选）**
+**3、腾讯地图（可选）**
 
 连连开源体验版集成了**腾讯地图**，用于实现定位。
 
@@ -91,7 +60,7 @@ app-config.json 需要配置的内容，如下：
 * 若确认使用默认定位功能，无需修改 **TencentMapSDKValue** 配置项内容 。
 * 若不使用定位功能，**TencentMapSDKValue** 设置为**长度为0的字符串**即可。
 
-**5、微信授权登录（可选）**
+**4、微信授权登录（可选）**
 
 连连开源体验版集成了微信授权登录。
 
@@ -108,7 +77,7 @@ app-config.json 需要配置的内容，如下：
   
 * 若不使用微信授权登录功能，**WXAccessAppId** 设置为**长度为0的字符串**即可。
 
-**6、和风天气（可选）**
+**5、和风天气（可选）**
 
 连连开源体验版集成了**和风天气**，用于实现实时天气功能。
 

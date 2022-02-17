@@ -10,8 +10,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.text.isDigitsOnly
 import com.alibaba.fastjson.JSONObject
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tencent.iot.explorer.link.*
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.check.VerifyEdit
@@ -38,7 +36,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
 
     private lateinit var accoutPasswdLoginView: View
     private lateinit var verifyCodeLoginView: View
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
     private var fromTag = ""
     private var accountType = false //true为手机号，false为邮箱
     private var accountForAutoFill = ""
@@ -71,15 +68,11 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
         intent.getStringExtra("from")?.let {
             fromTag = it
         }
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@LoginActivity)
         presenter = LoginPresenter(this)
         tv_title.text = getString(R.string.verify_code_login)
         initViewPager()
 
         if (!TextUtils.isEmpty(App.data.getToken())) {
-            val userId = SharePreferenceUtil.getString(this@LoginActivity, App.CONFIG, CommonField.USER_ID)
-            FirebaseCrashlytics.getInstance().setUserId(userId)
-            mFirebaseAnalytics!!.setUserId(userId)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
@@ -496,8 +489,6 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                     response.parse(UserInfoResponse::class.java)?.Data?.run {
                         App.data.userInfo = this
                         SharePreferenceUtil.saveString(this@LoginActivity, App.CONFIG, CommonField.USER_ID, App.data.userInfo.UserID)
-                        FirebaseCrashlytics.getInstance().setUserId(App.data.userInfo.UserID)
-                        mFirebaseAnalytics?.setUserId(App.data.userInfo.UserID)
                         saveUser(user)
                         T.show(getString(R.string.login_success))
                         if (TextUtils.isEmpty(fromTag)) {

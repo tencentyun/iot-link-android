@@ -2,8 +2,6 @@ package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
 import android.text.TextUtils
-import com.google.firebase.FirebaseApp
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.utils.Utils
@@ -22,8 +20,6 @@ class PrivicyDialogActivity : BaseActivity() {
 
     override fun initView() {
         if (!TextUtils.isEmpty(App.data.getToken())) {
-            FirebaseApp.initializeApp(applicationContext)
-            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true)
             startActivity(Intent(this, MainActivity::class.java))
             return
         }
@@ -36,8 +32,6 @@ class PrivicyDialogActivity : BaseActivity() {
             }
             override fun onOkClicked() {
                 Utils.setXmlStringValue(this@PrivicyDialogActivity, CommonField.AGREED_RULE_FLAG, CommonField.AGREED_RULE_FLAG, "1")
-                FirebaseApp.initializeApp(applicationContext)
-                FirebaseAnalytics.getInstance(this@PrivicyDialogActivity).setAnalyticsCollectionEnabled(true)
                 finish()
                 App.toLogin()
             }
