@@ -338,6 +338,10 @@ class LoginActivity  : PActivity(), LoginView, View.OnClickListener, WeChatLogin
                 showVerifyCodeLogin()
             }
             iv_wechat_login -> {// 微信登录
+                if (!agreement) {
+                    T.show(getString(R.string.toast_register_agreement))
+                    return
+                }
                 WeChatLogin.getInstance().login(this, this)
             }
             accoutPasswdLoginView.btn_account_passwd_login -> {// 密码登录
