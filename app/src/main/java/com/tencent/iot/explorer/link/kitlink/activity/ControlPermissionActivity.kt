@@ -115,7 +115,12 @@ class ControlPermissionActivity : BaseActivity() {
 
             try {
                 var permissionInfo = pm.getPermissionInfo(permission, 0)
-                accessInfo.permissionName = permissionInfo.loadLabel(pm).toString()
+                if (permission.equals("android.permission.READ_EXTERNAL_STORAGE")) {
+                    var storageName = getString(R.string.permission_album_lips)
+                    accessInfo.permissionName = storageName.substring(1)
+                } else {
+                    accessInfo.permissionName = permissionInfo.loadLabel(pm).toString()
+                }
                 accessInfo.permission = permission
             } catch (e: Exception) {
                 e.printStackTrace()
