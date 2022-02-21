@@ -712,6 +712,7 @@
     <string name="permission_camera">为了便于您扫码添加设备，因此腾讯连连需获取以下权限：</string>
     <string name="permission_camera_trtc">为了实时接听使用设备的语音/视频通话功能，因此腾讯连连需获取以下权限：</string>
     <string name="permission_camera_avatar">为了便于您拍照更换头像，因此腾讯连连需获取以下权限：</string>
+    <string name="permission_album_qrcode">为了便于您可选择本地相册二维码图片添加设备，因此腾讯连连需获取以下权限：</string>
     <string name="permission_camera_lips">· 相机</string>
     <string name="permission_mic_lips">· 麦克风</string>
     <string name="permission_camera_help_center">为了便于您拍摄照片用以佐证反馈的问题，因此腾讯连连需获取以下权限：</string>
