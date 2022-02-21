@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.example.qrcode.Constant
-import com.example.qrcode.ScannerActivity
 import com.tencent.android.tpush.XGIOperateCallback
 import com.tencent.android.tpush.XGPushConfig
 import com.tencent.android.tpush.XGPushManager

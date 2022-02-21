@@ -712,6 +712,7 @@
     <string name="permission_camera">In order for you to scan the code to add devices, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_camera_trtc">In order to receive the voice/video call function of the device in real time, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_camera_avatar">In order to make it easier for you to take photos and change your avatar, Tencent LLink needs to obtain the following permissions：</string>
+    <string name="permission_album_qrcode">In order to facilitate you to choose the local album QR code picture to add devices, Tencent LLink needs to obtain the following permissions：</string>
     <string name="permission_camera_lips">· Camera</string>
     <string name="permission_mic_lips">· Microphone</string>
     <string name="permission_camera_help_center">In order to make it easier for you to take photos to support your feedback, Tencent LLink needs to obtain the following permissions：</string>
