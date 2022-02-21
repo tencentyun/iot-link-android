@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.example.qrcode.Constant
-import com.example.qrcode.ScannerActivity
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
@@ -532,7 +531,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 return
             }
             requestPermission(blueToothPermissions)
-            permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_location ,getString(R.string.permission_location_lips), getString(R.string.permission_location_ssid_ble))
+            permissionDialog = PermissionDialog(this@DeviceCategoryActivity, R.mipmap.permission_location ,getString(R.string.permission_location_lips), getString(R.string.permission_location_ssid_ble))
             permissionDialog!!.show()
 
             // 记录请求camera权限的时间
