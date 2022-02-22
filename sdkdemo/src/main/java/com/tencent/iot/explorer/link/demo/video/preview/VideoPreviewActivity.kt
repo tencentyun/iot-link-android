@@ -165,6 +165,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
             tmpCountDownLatch.await()
 
+            XP2P.recordstream("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
             XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
                 urlPrefix = it
                 if (!TextUtils.isEmpty(urlPrefix)) {
