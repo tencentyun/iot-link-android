@@ -122,5 +122,4 @@
         android:textColor="@color/blue_0052D9"
         android:textSize="@dimen/ts_17"
         />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -132,9 +132,95 @@
 |:-|:-|
 | int | 成功：0，失败：错误码 |
 
+13. 初始化xp2p局域网服务接口
+> int startLanService(String id, String product_id, String device_name, String host, String port);
+
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
+| product_id | String | 产品ID |
+| device_name | String | 设备名称 |
+| host | String | 设备在局域网的ip地址 |
+| port | String | 设备在局域网的端口号 |
+
+14. 获取本地请求数据的局域网标准http url,可使用该url请求设备端数据
+> String getLanUrl(String id);
+
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
+
+15. 获取局域网内本地代理的端口号
+> int getLanProxyPort(String id);
+
+16. 发送一次探测广播, body 为广播内容
+
+> void startSendBroadcast(WlanDetectBody body);
+
+| 参数 | 类型           | 描述         |
+| :--- | :------------- | :----------- |
+| body | WlanDetectBody | 探测包体内容 |
+
+WlanDetectBody 定义如下
+
+| 参数        | 类型            | 描述                              |
+| :---------- | :-------------- | :-------------------------------- |
+| clientToken | String          | 自定义 token 用于验证接收的响应包 |
+| productId   | String          | 发送指定产品 ID 的广播包          |
+| deviceNames | List < String > | 发送指定设备名的广播包            |
+
+17. 发送多次探测广播, body 为广播内容，times 为尝试次数
+
+> void startSendBroadcast(WlanDetectBody body,  int times);
+
+| 参数  | 类型           | 描述                 |
+| :---- | :------------- | :------------------- |
+| body  | WlanDetectBody | 探测包体内容         |
+| times | int            | 尝试发送探测包的次数 |
+
+WlanDetectBody 定义如下
+
+| 参数        | 类型            | 描述                              |
+| :---------- | :-------------- | :-------------------------------- |
+| clientToken | String          | 自定义 token 用于验证接收的响应包 |
+| productId   | String          | 发送指定产品 ID 的广播包          |
+| deviceNames | List < String > | 发送指定设备名的广播包            |
+
+18. 设置广播的端口
+
+> void setPort(int port);
+
+| 参数 | 类型 | 描述   |
+| :--- | :--- | :----- |
+| port | int  | 端口号 |
+
+19. 中断发送广播，用于中断正在发送指定次数的广播
+
+> void clearAllTask();
+
+20. 设置探测响应包监听器
+
+> void setOnWlanDevicesDetectedCallback(OnWlanDevicesDetectedCallback onWlanDevicesDetectedCallback);
+
+| 参数                          | 类型                          | 描述             |
+| :---------------------------- | :---------------------------- | :--------------- |
+| onWlanDevicesDetectedCallback | OnWlanDevicesDetectedCallback | 广播响应包监听器 |
+
+21. 设置是否输出P2P日志(默认情况下，控制台日志以及日志文件输出是打开状态)
+
+> void setLogEnable(boolean console, boolean file);
+
+> 注意: 在start service之前调用该接口, 可以和XP2P.setCallback(this)接口一起调用
+
+| 参数  | 类型           | 描述                 |
+| :---- | :------------- | :------------------- |
+| console  | boolean | 控制台日志输出开关         |
+| file     | boolean | 日志文件输出开关 |
 
 ### 废弃接口
+
 ~~public static String getComandRequestWithSync(String cmd, long timeout);~~
+
 * ~~函数说明:以阻塞方式向设备端发送请求资源或控制命令~~
 * ~~参数说明:~~
     * ~~cmd:命令参数,格式:`action=user_define&cmd=xxx`~~
@@ -197,8 +283,40 @@
 | id | String | 回传`startServiceWithXp2pInfo`接口中的`id` |
 | msg | String | 附加说明,json格式 |
 
+5. 设备向app发送自定义消息，该回调的返回值表示app向设备端回复的消息
+
+> override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String
+
+6. 设备对 app 探测包的响应包
+
+> override fun onMessage(version: String, resp: WlanRespBody): Boolean
+
+| 参数    | 类型         | 描述     |
+| :------ | :----------- | :------- |
+| version | String       | 版本号   |
+| resp    | WlanRespBody | 响应包体 |
+
+WlanRespBody 定义如下
+
+| 参数        | 类型             | 描述                     |
+| :---------- | :--------------- | :----------------------- |
+| method      | String           | 消息类型                 |
+| clientToken | String           | 消息标识，与发送消息一致 |
+| timestamp   | long             | 消息发送的时间           |
+| params      | DeviceServerInfo | 设备信息                 |
+| code        | int              | 状态码，一般是0          |
+| status      | String           | 扩展使用                 |
+
+DeviceServerInfo 定义如下
+
+| 参数       | 类型   | 描述           |
+| :--------- | :----- | :------------- |
+| deviceName | String | 设备的名称     |
+| address    | String | 设备的 IP 地址 |
+| port       | int    | 设备的端口号   |
 
 ### 附带说明
+
 * 函数接口调用顺序:
     * setQcloudApiCred
     * setCallback
