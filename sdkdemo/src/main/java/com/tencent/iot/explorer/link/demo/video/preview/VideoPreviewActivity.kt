@@ -145,6 +145,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
 
         Thread(Runnable {
             var id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
+            connectStartTime = System.currentTimeMillis()
             var started = XP2P.startServiceWithXp2pInfo(id,
                 App.data.accessInfo!!.productId, presenter.getDeviceName(), "")
             if (started != 0) {
@@ -159,12 +160,9 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                 }
                 return@Runnable
             }
-
-            connectStartTime = System.currentTimeMillis()
-            var tmpCountDownLatch = CountDownLatch(1)
-            countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
-            tmpCountDownLatch.await()
-
+//            var tmpCountDownLatch = CountDownLatch(1)
+//            countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
+//            tmpCountDownLatch.await()
             XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
                 urlPrefix = it
                 if (!TextUtils.isEmpty(urlPrefix)) {
@@ -206,10 +204,10 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                 connectStartTime = System.currentTimeMillis()
 
                 Log.d(tag, "id=${id}, call startServiceWithXp2pInfo successed")
-                countDownLatchs.put(id!!, tmpCountDownLatch)
-                Log.d(tag, "id=${id}, tmpCountDownLatch start wait")
-                tmpCountDownLatch.await()
-                Log.d(tag, "id=${id}, tmpCountDownLatch do not wait any more")
+//                countDownLatchs.put(id!!, tmpCountDownLatch)
+//                Log.d(tag, "id=${id}, tmpCountDownLatch start wait")
+//                tmpCountDownLatch.await()
+//                Log.d(tag, "id=${id}, tmpCountDownLatch do not wait any more")
 
                 XP2P.delegateHttpFlv(id)?.let {
                     urlPrefix = it
@@ -508,7 +506,9 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
-    override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String { return "" }
+    override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
+        return "app reply to device"
+    }
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e(tag, "id=${id}, event=${event}")
@@ -533,6 +533,15 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
             launch(Dispatchers.Main) {
                 var content = getString(R.string.connected, id)
                 Toast.makeText(this@VideoPreviewActivity, content, Toast.LENGTH_SHORT).show()
+            }
+            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
+                urlPrefix = it
+                if (!TextUtils.isEmpty(urlPrefix)) {
+                    player?.let {
+                        resetPlayer()
+                        keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+                    }
+                }
             }
         }
     }
