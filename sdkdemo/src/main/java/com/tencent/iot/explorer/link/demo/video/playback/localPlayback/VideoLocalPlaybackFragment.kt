@@ -1,15 +1,16 @@
 package com.tencent.iot.explorer.link.demo.video.playback.localPlayback
 
 import android.graphics.SurfaceTexture
+import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
-import android.view.Surface
-import android.view.TextureView
-import android.view.View
+import android.view.*
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.demo.App
@@ -19,7 +20,6 @@ import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineVie
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineViewChangeListener
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
-import com.tencent.iot.explorer.link.demo.core.entity.DevVideoHistory
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.CommandResp
 import com.tencent.iot.explorer.link.demo.video.DevInfo
@@ -28,22 +28,25 @@ import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
+import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.fragment_video_local_playback.*
 import kotlinx.android.synthetic.main.fragment_video_local_playback.iv_left_go
 import kotlinx.android.synthetic.main.fragment_video_local_playback.iv_right_go
 import kotlinx.android.synthetic.main.fragment_video_local_playback.iv_start
 import kotlinx.android.synthetic.main.fragment_video_local_playback.layout_select_date
-import kotlinx.android.synthetic.main.fragment_video_local_playback.local_palayback_video
+import kotlinx.android.synthetic.main.fragment_video_local_playback.layout_video
 import kotlinx.android.synthetic.main.fragment_video_local_playback.pause_tip_layout
 import kotlinx.android.synthetic.main.fragment_video_local_playback.playback_control
 import kotlinx.android.synthetic.main.fragment_video_local_playback.time_line
+import kotlinx.android.synthetic.main.fragment_video_local_playback.tv_all_time
+import kotlinx.android.synthetic.main.fragment_video_local_playback.tv_current_pos
 import kotlinx.android.synthetic.main.fragment_video_local_playback.tv_date
 import kotlinx.android.synthetic.main.fragment_video_local_playback.video_seekbar
-import kotlinx.android.synthetic.main.fragment_video_local_playback.tv_current_pos
-import kotlinx.android.synthetic.main.fragment_video_local_playback.tv_all_time
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
+import java.io.File
+import java.io.FileOutputStream
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,50 +55,74 @@ import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.CountDownLatch
 import kotlin.collections.ArrayList
 
-private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
+private var countDownLatchs: MutableMap<String, CountDownLatch> = ConcurrentHashMap()
 private var keepConnectThreadLock = Object()
+
 @Volatile
 private var keepAliveThreadRuning = true
 
-class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.SurfaceTextureListener, XP2PCallback, CoroutineScope by MainScope() {
+class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.SurfaceTextureListener,
+    XP2PCallback, CoroutineScope by MainScope() {
     private var TAG = VideoLocalPlaybackFragment::class.java.simpleName
     var devInfo: DevInfo? = null
-    private var player : IjkMediaPlayer = IjkMediaPlayer()
+    private var player: IjkMediaPlayer = IjkMediaPlayer()
     private lateinit var surface: Surface
+
     @Volatile
     private var currentPostion = -1L // 小于 0 不需要恢复录像的进度，大于等于 0 需要恢复录像的进度
+
     @Volatile
     private var currentPlayerState = true
-    private var dateDataSet : MutableSet<String> = CopyOnWriteArraySet()
+    private var dateDataSet: MutableSet<String> = CopyOnWriteArraySet()
     private var dlg: CalendarDialog? = null
     private var urlPrefix = ""
+
     @Volatile
     private var recordingState = false
-    private var seekBarJob : Job? = null
+    private var seekBarJob: Job? = null
     private var keepStartTime = 0L
     private var keepEndTime = 0L
     private var filePath: String? = null
+
     @Volatile
     private var connected = false
+
     @Volatile
     private var isShowing = false
     private var updateSeekBarAble = true  // 手动拖拽过程的标记
 
+    private var adapter: LocalPlaybackListAdapter? = null
+    private var playbacks: MutableList<PlaybackFile> = ArrayList()
+
+    private var out: FileOutputStream? = null
+    @Volatile
+    private var isDownloading = false
+    private lateinit var toastDialog: ToastDialog
+
     private fun sendCmd(id: String, cmd: String): String {
         if (connected)
-            XP2P.postCommandRequestSync(id, cmd.toByteArray(), cmd.toByteArray().size.toLong(), 2 * 1000 * 1000)?.let {
+            XP2P.postCommandRequestSync(
+                id,
+                cmd.toByteArray(),
+                cmd.toByteArray().size.toLong(),
+                2 * 1000 * 1000
+            )?.let {
                 return it
             }
         return ""
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        player?.let {
-            if (!isVisibleToUser && currentPlayerState) {
-                Log.d(TAG, "setUserVisibleHint playVideo isVisibleToUser $isVisibleToUser")
-                // 滑动该页面时，如果处于播放状态，暂停播放
-                launch (Dispatchers.Main) {
-                    iv_start.performClick()
+        if (isVisibleToUser) {
+            refreshDateTime(Date())
+        } else {
+            player?.let {
+                if (currentPlayerState) {
+                    Log.d(TAG, "setUserVisibleHint playVideo isVisibleToUser $isVisibleToUser")
+                    // 滑动该页面时，如果处于播放状态，暂停播放
+                    launch(Dispatchers.Main) {
+                        iv_start.performClick()
+                    }
                 }
             }
         }
@@ -107,6 +134,12 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         super.startHere(view)
         IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG)
         tv_date.text = dateFormat.format(System.currentTimeMillis())
+
+        val linearLayoutManager = LinearLayoutManager(context)
+        adapter = LocalPlaybackListAdapter(context, playbacks)
+        list_local_playback.layoutManager = linearLayoutManager
+        list_local_playback.adapter = adapter
+
         setListener()
         launch(Dispatchers.Main) {
             delay(100)  // 延迟一秒再进行连接，保证存在设备信息
@@ -126,19 +159,19 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         time_line.setTimelineChangeListener(timeLineViewChangeListener)
 
         iv_start.setOnClickListener {
-            devInfo?:let { return@setOnClickListener }
+            devInfo ?: let { return@setOnClickListener }
             if (TextUtils.isEmpty(tv_all_time.text.toString())) return@setOnClickListener
 
             var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
             Log.d(TAG, "setOnClickListener currentPlayerState $currentPlayerState")
 
             if (currentPlayerState) {
-                launch (Dispatchers.IO) {
+                launch(Dispatchers.IO) {
                     var stopCommand = Command.pauseLocalVideoUrl(devInfo!!.channel)
                     var resp = sendCmd(id, stopCommand)
                     var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
                     if (commandResp != null && commandResp.status == 0) {
-                        launch (Dispatchers.Main) {
+                        launch(Dispatchers.Main) {
                             iv_start.setImageResource(R.mipmap.start)
                             pause_tip_layout.visibility = View.VISIBLE
                             seekBarJob?.cancel()
@@ -149,12 +182,12 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                 }
 
             } else {
-                launch (Dispatchers.IO) {
+                launch(Dispatchers.IO) {
                     var startCommand = Command.resumeLocalVideoUrl(devInfo!!.channel)
                     var resp = sendCmd(id, startCommand)
                     var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
                     if (commandResp != null && commandResp.status == 0) {
-                        launch (Dispatchers.Main) {
+                        launch(Dispatchers.Main) {
                             iv_start.setImageResource(R.mipmap.stop)
                             pause_tip_layout.visibility = View.GONE
                             startJobRereshTimeAndProgress()
@@ -168,7 +201,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         video_seekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
     }
 
-    private var onCompletionListener = object: IMediaPlayer.OnCompletionListener {
+    private var onCompletionListener = object : IMediaPlayer.OnCompletionListener {
         override fun onCompletion(mp: IMediaPlayer?) {
             Log.d(TAG, "onCompletion")
             iv_start.setImageResource(R.mipmap.start)
@@ -188,10 +221,14 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                     var blockTime = timeLineView!!.timeBlockInfos!!.get(j)
                     if (blockTime.startTime.time <= date.time && blockTime.endTime.time >= date.time) {
                         var offest = date.time - blockTime.startTime.time
-                        playVideo(blockTime.startTime.time/1000, blockTime.endTime.time/1000, offest/1000)
+                        playVideo(
+                            blockTime.startTime.time / 1000,
+                            blockTime.endTime.time / 1000,
+                            offest / 1000
+                        )
                         return@onChange
                     }
-                }                    
+                }
             }
         }
     }
@@ -252,7 +289,8 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             checkedDates?.let {
                 if (it.size <= 0) return@let
                 tv_date.text = CommonUtils.dateConvertionWithSplit(it[0])
-                var parseDate = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN).parse(tv_date.text.toString())
+                var parseDate =
+                    SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN).parse(tv_date.text.toString())
                 launch(Dispatchers.Main) {
                     refreshDateTime(parseDate)
                 }
@@ -268,7 +306,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         }
     }
 
-    private var onMonthChanged = object: CalendarDialog.OnMonthChanged {
+    private var onMonthChanged = object : CalendarDialog.OnMonthChanged {
         override fun onMonthChanged(dlg: CalendarDialog, it: String) {
             // 包含对应数据，不再重新获取当前日期的数据
             if (dateDataSet.contains(it)) return
@@ -308,17 +346,17 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private fun setListener() {
         pause_tip_layout.setOnClickListener { iv_start.performClick() }
         iv_video_back.setOnClickListener { }
-        playback_control.setOnClickListener {  }
+        playback_control.setOnClickListener { }
         iv_left_go.setOnClickListener { time_line.last() }
         iv_right_go.setOnClickListener { time_line.next() }
         layout_select_date.setOnClickListener { showCalendarDialog() }
         play_speed.setOnClickListener {
             if (!portrait) {
-                var dlg = RightPlaySpeedDialog(context, getIndexByText())
+                val dlg = RightPlaySpeedDialog(context, getIndexByText())
                 dlg.setOnDismisListener(rightPlaySpeedDialogListener)
                 dlg.show()
             } else {
-                var dlg = BottomPlaySpeedDialog(context, getString(R.string.play_speed_title), getIndexByText())
+                val dlg = BottomPlaySpeedDialog(context, getString(R.string.play_speed_title), getIndexByText())
                 dlg.setOnDismisListener(bottomPlaySpeedDialogListener)
                 dlg.show()
             }
@@ -343,6 +381,38 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                 }
             }
         }
+        adapter?.setOnDownloadClickedListenter(onDownloadClickedListener)
+        adapter?.setOnItemClickedListener(onItemClickedListener)
+    }
+
+    private var onDownloadClickedListener =
+        object : LocalPlaybackListAdapter.OnDownloadClickedListener {
+            override fun onItemDownloadClicked(pos: Int) {
+                Toast.makeText(context, "${pos} download is clicked.", Toast.LENGTH_SHORT).show()
+                if (!isDownloading) {
+                    val offset = initDownload(playbacks[pos])
+                    if (offset >= 0) {
+                        XP2P.startAvRecvService(
+                            "${App.data.accessInfo!!.productId}/${devInfo?.deviceName}",
+                            "action=download&channel=0&file_name=${playbacks[pos].file_name}&offset=${offset}",
+                            false
+                        )
+                        isDownloading = true
+                        toastDialog = ToastDialog(context, ToastDialog.Type.SUCCESS, getString(R.string.downloading), 600000)
+                        toastDialog.show()
+                    }
+                } else {
+                    Toast.makeText(context, getString(R.string.download_one_at_a_time), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+    private var onItemClickedListener = object : LocalPlaybackListAdapter.OnItemClickedListener {
+        override fun onItemClicked(pos: Int) {
+            Toast.makeText(context, "${pos} item is clicked.", Toast.LENGTH_SHORT).show()
+            currentPlayerState = true
+            playVideo(playbacks[pos].start_time, playbacks[pos].end_time, 0)
+        }
     }
 
     private fun recordView() {
@@ -355,21 +425,22 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         }
     }
 
-    private var rightPlaySpeedDialogListener = object: RightPlaySpeedDialog.OnDismisListener {
+    private var rightPlaySpeedDialogListener = object : RightPlaySpeedDialog.OnDismisListener {
         override fun onItemClicked(pos: Int) {
             play_speed.setText(getTextByIndex(pos))
         }
+
         override fun onDismiss() {}
     }
 
-    private var bottomPlaySpeedDialogListener = object: BottomPlaySpeedDialog.OnDismisListener {
+    private var bottomPlaySpeedDialogListener = object : BottomPlaySpeedDialog.OnDismisListener {
         override fun onItemClicked(pos: Int) {
             play_speed.setText(getTextByIndex(pos))
         }
     }
 
     private fun getTextByIndex(index: Int): String {
-        when(index) {
+        when (index) {
             0 -> return getString(R.string.play_speed_0_5)
             1 -> return getString(R.string.play_speed_0_75)
             2 -> return getString(R.string.play_speed_1)
@@ -381,7 +452,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     private fun getIndexByText(): Int {
-        when(play_speed.text.toString()) {
+        when (play_speed.text.toString()) {
             getString(R.string.play_speed_0_5) -> return 0
             getString(R.string.play_speed_0_75) -> return 1
             getString(R.string.play_speed_1) -> return 2
@@ -403,7 +474,8 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
     private fun requestTagDateInfo(dateStr: String): String {
         if (App.data.accessInfo == null || devInfo == null ||
-            TextUtils.isEmpty(devInfo?.deviceName)) return ""
+            TextUtils.isEmpty(devInfo?.deviceName)
+        ) return ""
 
         var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
         var timeStr = formateDateParam(dateStr)
@@ -415,23 +487,23 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
     private fun refreshDateTime(date: Date) {
         if (App.data.accessInfo == null || devInfo == null ||
-            TextUtils.isEmpty(devInfo?.deviceName)) return
+            TextUtils.isEmpty(devInfo?.deviceName)
+        ) return
 
         var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
         var command = Command.getDayTimeBlocks(devInfo!!.channel, date)
         var resp = sendCmd(id, command)
 
         if (TextUtils.isEmpty(resp)) return
-        var devVideoHistory = JSONObject.parseObject(resp, DevVideoHistory::class.java)
-        devVideoHistory?:let { return@refreshDateTime }
-        if (devVideoHistory?.video_list == null || devVideoHistory.video_list!!.size <= 0) return
-        var formateDatas = CommonUtils.formatTimeData(devVideoHistory.getTimeBlocks())
-        time_line.currentDayTime = Date(formateDatas[0].startTime.time)
-        time_line.setTimeLineTimeDay(Date(formateDatas[0].startTime.time))
-        time_line.timeBlockInfos = formateDatas
-        time_line.invalidate()
-
-        playVideo(formateDatas[0].startTime.time/1000, formateDatas[0].endTime.time/1000, 0)
+        val json = JSON.parseObject(resp)
+        val currentPlaybacks =
+            JSONArray.parseArray(json["file_list"].toString(), PlaybackFile::class.java)
+        playbacks.clear()
+        for (item in currentPlaybacks) {
+            if (item.file_type == 0) playbacks.add(item) //只显示视频文件,0：视频，1：图片，其他：自定义
+        }
+        adapter?.notifyDataSetChanged()
+        playVideo(playbacks[0].start_time, playbacks[0].end_time, 0)
     }
 
     private fun playVideo(startTime: Long, endTime: Long, offset: Long) {
@@ -440,7 +512,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         keepEndTime = endTime
         devInfo?.let {
             Log.d(TAG, "isShowing $isShowing")
-            launch (Dispatchers.Main) {
+            launch(Dispatchers.Main) {
                 delay(1000)
                 if (!isShowing) currentPlayerState = false
                 Log.d(TAG, "playVideo currentPlayerState $currentPlayerState")
@@ -453,7 +525,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
     private fun setPlayerUrl(suffix: String, offset: Long) {
         player.release()
-        launch (Dispatchers.Main) {
+        launch(Dispatchers.Main) {
             layout_video?.removeView(local_palayback_video)
             layout_video?.addView(local_palayback_video, 0)
         }
@@ -477,9 +549,13 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             }
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
-            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
-            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
+            it.setOption(
+                IjkMediaPlayer.OPT_CATEGORY_PLAYER,
+                "mediacodec-handle-resolution-change",
+                1
+            )
 
 
             it.setSurface(this.surface)
@@ -512,6 +588,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
             updateSeekBarAble = false
         }
+
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             seekBar?.let {
                 if (keepStartTime <= 0 && keepEndTime <= 0) {
@@ -527,12 +604,15 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
     private fun startConnect() {
         if (App.data.accessInfo == null || devInfo == null ||
-            TextUtils.isEmpty(devInfo?.deviceName)) return
+            TextUtils.isEmpty(devInfo?.deviceName)
+        ) return
 
         Thread(Runnable {
             var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
-            var started = XP2P.startServiceWithXp2pInfo(id,
-                App.data.accessInfo?.productId, devInfo?.deviceName, "")
+            var started = XP2P.startServiceWithXp2pInfo(
+                id,
+                App.data.accessInfo?.productId, devInfo?.deviceName, ""
+            )
             if (started != 0) {
                 launch(Dispatchers.Main) {
                     var errInfo = getString(R.string.error_with_code, id, started.toString())
@@ -542,15 +622,15 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             }
 
             devInfo?.let {
-                var tmpCountDownLatch = CountDownLatch(1)
-                countDownLatchs.put("${App.data.accessInfo!!.productId}/${it.deviceName}", tmpCountDownLatch)
-                tmpCountDownLatch.await()
-                urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${it.deviceName}")
+//                var tmpCountDownLatch = CountDownLatch(1)
+//                countDownLatchs.put("${App.data.accessInfo!!.productId}/${it.deviceName}", tmpCountDownLatch)
+//                tmpCountDownLatch.await()
+                urlPrefix =
+                    XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${it.deviceName}")
 
                 // 启动成功后，开始开启守护线程
-                keepConnect(id)
+//                keepConnect(id)
             }
-
         }).start()
     }
 
@@ -558,7 +638,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         if (TextUtils.isEmpty(id)) return
 
         // 开启守护线程
-        Thread{
+        Thread {
             var objectLock = Object()
             while (true) {
                 var tmpCountDownLatch = CountDownLatch(1)
@@ -573,7 +653,13 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
                 XP2P.stopService(id)
-                while (XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, devInfo?.deviceName, "") != 0) {
+                while (XP2P.startServiceWithXp2pInfo(
+                        id,
+                        App.data.accessInfo!!.productId,
+                        devInfo?.deviceName,
+                        ""
+                    ) != 0
+                ) {
                     XP2P.stopService(id)
                     synchronized(objectLock) {
                         objectLock.wait(1000)
@@ -598,6 +684,43 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         }.start()
     }
 
+    private fun initDownload(playbackFile: PlaybackFile): Long {
+        var offset = 0L
+        val path: String = if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) { // 优先保存到SD卡中
+            Environment.getExternalStorageDirectory().absolutePath + File.separator + "local_playback"
+        } else { // 如果SD卡不存在，就保存到本应用的目录下
+            context?.filesDir?.absolutePath + File.separator + "local_playback"
+        }
+
+        //创建下载目录
+        val file = File(path)
+        if (!file.exists()) {
+            if (file.mkdirs()) {
+                L.d("创建本地回放存储路径成功")
+            } else {
+                L.e("创建本地回放存储路径失败")
+                Toast.makeText(context, getString(R.string.fail_to_create_path), Toast.LENGTH_SHORT).show()
+                return -1L
+            }
+        }
+
+        //创建video文件
+        val videoName = path + File.separator + playbackFile.file_name
+        val videoFile = File(videoName)
+        if (videoFile.exists()) {
+            offset = if (playbackFile.file_size - videoFile.length() == 0L) {
+                launch(Dispatchers.Main) {
+                    Toast.makeText(context, getString(R.string.do_not_download_repeat), Toast.LENGTH_SHORT).show()
+                }
+                -2L // 已经下载过该文件，不需要重复下载
+            } else {
+                videoFile.length() // 断点续传的偏移量
+            }
+        }
+        out = FileOutputStream(videoFile, true)
+        return offset
+    }
+
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
         surface?.let {
             this.surface = Surface(surface)
@@ -606,11 +729,18 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+        return false
+    }
+
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
     override fun fail(msg: String?, errorCode: Int) {}
     override fun commandRequest(id: String?, msg: String?) {}
-    override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
+    override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {
+        out?.write(data)
+        L.d("==== data len: $len")
+    }
+
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
     override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
         return "app reply to device"
@@ -626,8 +756,12 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             } // 唤醒守护线程
             currentPostion = player.currentPosition / 1000
             L.e(TAG, "xp2pEventNotify currentPostion $currentPostion")
-            launch (Dispatchers.Main) {
-                Toast.makeText(context, getString(R.string.error_with_code, id, msg), Toast.LENGTH_SHORT).show()
+            launch(Dispatchers.Main) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.error_with_code, id, msg),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             connected = false
 
@@ -637,10 +771,18 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                 it.countDown()
             }
 
-            launch (Dispatchers.Main) {
-                Toast.makeText(context, getString(R.string.connected, id), Toast.LENGTH_SHORT).show()
+            launch(Dispatchers.Main) {
+                Toast.makeText(context, getString(R.string.connected, id), Toast.LENGTH_SHORT)
+                    .show()
             }
             connected = true
+        } else if (event == 1009) { //设备停止推流，下载结束
+            launch(Dispatchers.Main) {
+                out?.flush()
+                toastDialog.dismiss()
+                isDownloading = false
+                Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -654,7 +796,7 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         }
         player?.let {
             if (currentPlayerState) {
-                launch (Dispatchers.Main) {
+                launch(Dispatchers.Main) {
                     iv_start.performClick()
                 }
             }
@@ -663,6 +805,8 @@ class VideoLocalPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
     private fun finishAll() {
         player?.release()
+        out?.close()
+        isDownloading =false
 
         if (recordingState) {
             player.stopRecord()
