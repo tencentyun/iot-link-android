@@ -307,6 +307,7 @@
             android:src="@mipmap/left_go"
             android:layout_marginTop="4dp"
             android:layout_marginStart="16dp"
+            android:visibility="gone"
             />
 
         <ImageView
@@ -319,6 +320,7 @@
             android:src="@mipmap/right_go"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
+            android:visibility="gone"
             />
 
         <com.tencent.iot.explorer.link.demo.common.customView.EdgeTransparentView
@@ -345,10 +347,20 @@
                 app:lineColor="@color/gray_A1A7B2"
                 app:lineWidth="1dp"
                 app:timeBlockColor="@color/blue_330052D9"
+                android:visibility="gone"
                 app:bottomTextMaginBottom="9dp"
                 />
 
         </com.tencent.iot.explorer.link.demo.common.customView.EdgeTransparentView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_local_playback"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_select_date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

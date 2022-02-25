@@ -122,11 +122,11 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
                         onClickedListener.onOkClickedWithoutDateChecked();
                         return;
                     }
-                    if (calendar.getCheckedDate() != null && calendar.getCheckedDate().size() > 0 &&
-                            !allDate2Tag.containsAll(calendar.getCheckedDate())) {
-                        onClickedListener.onOkClickedCheckedDateWithoutData();
-                        return;
-                    }
+//                    if (calendar.getCheckedDate() != null && calendar.getCheckedDate().size() > 0 &&
+//                            !allDate2Tag.containsAll(calendar.getCheckedDate())) {
+//                        onClickedListener.onOkClickedCheckedDateWithoutData();
+//                        return;
+//                    }
                     onClickedListener.onOkClicked(calendar.getCheckedDate());
                 }
                 dismiss();
