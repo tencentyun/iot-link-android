@@ -62,8 +62,8 @@ class Command {
             dateEnd.hours = 23
             dateEnd.minutes = 59
             dateEnd.seconds = 59
-            return "action=inner_define&channel=${channel}&cmd=get_record_index" +
-                    "&start_time=${dateStart.time/1000}&end_time=${dateEnd.time/1000}"
+            return "action=inner_define&channel=${channel}&cmd=get_file_list" +
+                    "&start_time=${dateStart.time/1000}&end_time=${dateEnd.time/1000}&file_type=0"
         }
 
         fun getLocalVideoUrl(channel: Int, startTime: Long, endTime: Long): String {
