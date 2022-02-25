@@ -183,4 +183,12 @@
     <string name="share_device">共享设备</string>
     <string name="add_share">添加分享</string>
 
+    <!--p2p下载-->
+    <string name="download_one_at_a_time">同时只支持一个录像下载.</string>
+    <string name="fail_to_create_path">创建本地回放存储路径失败</string>
+    <string name="do_not_download_repeat">已经下载过该文件，不需要重复下载</string>
+    <string name="download_complete">下载完成</string>
+    <string name="download_fail">下载失败</string>
+    <string name="downloading">下载中</string>
+
 </resources>
