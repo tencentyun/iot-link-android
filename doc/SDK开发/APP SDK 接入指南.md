@@ -48,6 +48,9 @@
    softAPService.startConnect(task, softAPListener)
    ```
 
+   LLSync蓝牙辅助配网
+   请参考 [LLSync蓝牙辅助配网简介](LLSync蓝牙辅助配网简介.md)
+
 2. 账户登录相关接口（LoginImpl）
 
    ```kotlin
