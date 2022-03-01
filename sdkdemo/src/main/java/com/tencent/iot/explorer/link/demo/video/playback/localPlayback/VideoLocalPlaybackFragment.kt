@@ -749,6 +749,14 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e(TAG, "id=${id}, event=${event}")
         if (event == 1003) {
+            if (isDownloading) {
+                launch(Dispatchers.Main) {
+                    Toast.makeText(context, getString(R.string.download_fail), Toast.LENGTH_SHORT)
+                        .show()
+                    toastDialog.dismiss()
+                    isDownloading = false
+                }
+            }
             keepConnectThreadLock?.let {
                 synchronized(it) {
                     it.notify()
