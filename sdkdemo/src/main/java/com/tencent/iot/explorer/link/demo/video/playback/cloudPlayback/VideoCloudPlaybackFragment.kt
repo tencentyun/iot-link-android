@@ -1,8 +1,8 @@
 package com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback
 
 import android.graphics.SurfaceTexture
+import android.os.Environment
 import android.text.TextUtils
-import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
@@ -49,6 +50,8 @@ import kotlinx.android.synthetic.main.fragment_video_local_playback.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
+import java.io.*
+import java.net.URL
 import java.net.URLDecoder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -284,13 +287,58 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                             var eventResp = JSONObject.parseObject(it.toJSONString(), SignedUrlResponse::class.java)
                             eventResp?.let {
                                 var url2Play = URLDecoder.decode(it.signedVideoURL)
-                                startVideo(url2Play, offset)
+//                                startVideo(url2Play, offset)
+//                                urlPrefix = url2Play.substring(0, url2Play.lastIndexOf("/"))
+                                urlPrefix = "https://zylcb.iotvideo.tencentcs.com"
+                                L.e("===" + urlPrefix)
+                                Thread {
+                                    val indexFile = getIndexFile(url2Play)
+                                    L.e("=============")
+                                    val path: String = if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) { // 优先保存到SD卡中
+                                        Environment.getExternalStorageDirectory().absolutePath + File.separator + "local_playback"
+                                    } else { // 如果SD卡不存在，就保存到本应用的目录下
+                                        context?.filesDir?.absolutePath + File.separator + "local_playback"
+                                    }
+                                    val filePath = path + File.separator + "cloud.mp4"
+                                    val out = FileOutputStream(filePath, true)
+                                    for (item in list) {
+                                        val url = URL(item)
+                                        val dataInputStream = DataInputStream(url.openStream())
+                                        var len = 0
+                                        val bytes = ByteArray(1024)
+                                        len = dataInputStream.read(bytes)
+                                        while (len != -1) {
+                                            out.write(bytes, 0, len)
+                                            len = dataInputStream.read(bytes)
+                                        }
+                                        dataInputStream.close()
+                                    }
+                                    out.close()
+                                }.start()
                             }
                         }
                     }
                 }
             })
         }
+    }
+
+    private var list = ArrayList<String>()
+    private var urlPrefix = ""
+
+    private fun getIndexFile(urlpath : String) : String {
+        val url = URL(urlpath)
+        val reader = BufferedReader(InputStreamReader(url.openStream(), "UTF-8"))
+        val content = StringBuilder()
+        var line = reader.readLine()
+        while (!TextUtils.isEmpty(line)) {
+            content.append(line + "\n")
+            line = reader.readLine()
+            if (!TextUtils.isEmpty(line) && line.contains(".ts?")) list.add(urlPrefix + line)
+        }
+        reader.close()
+        L.e("===" + content.toString())
+        return content.toString()
     }
 
     private fun startVideo(url: String, offset: Long) {
