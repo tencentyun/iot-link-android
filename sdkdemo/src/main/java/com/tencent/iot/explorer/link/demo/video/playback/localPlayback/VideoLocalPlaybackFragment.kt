@@ -388,7 +388,6 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
     private var onDownloadClickedListener =
         object : LocalPlaybackListAdapter.OnDownloadClickedListener {
             override fun onItemDownloadClicked(pos: Int) {
-                Toast.makeText(context, "${pos} download is clicked.", Toast.LENGTH_SHORT).show()
                 if (!isDownloading) {
                     val offset = initDownload(playbacks[pos])
                     if (offset >= 0) {
@@ -399,6 +398,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
                         )
                         isDownloading = true
                         toastDialog = ToastDialog(context, ToastDialog.Type.SUCCESS, getString(R.string.downloading), 600000)
+                        toastDialog.setCancelable(false)
                         toastDialog.show()
                     }
                 } else {
@@ -409,7 +409,6 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
     private var onItemClickedListener = object : LocalPlaybackListAdapter.OnItemClickedListener {
         override fun onItemClicked(pos: Int) {
-            Toast.makeText(context, "${pos} item is clicked.", Toast.LENGTH_SHORT).show()
             currentPlayerState = true
             playVideo(playbacks[pos].start_time, playbacks[pos].end_time, 0)
         }
@@ -717,6 +716,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
                 videoFile.length() // 断点续传的偏移量
             }
         }
+        Toast.makeText(context, "path: ${videoName}", Toast.LENGTH_LONG).show()
         out = FileOutputStream(videoFile, true)
         return offset
     }
@@ -781,7 +781,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
                 out?.flush()
                 toastDialog.dismiss()
                 isDownloading = false
-                Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show()
+                ToastDialog(context, ToastDialog.Type.SUCCESS, getString(R.string.download_complete), 2000).show()
             }
         }
     }
