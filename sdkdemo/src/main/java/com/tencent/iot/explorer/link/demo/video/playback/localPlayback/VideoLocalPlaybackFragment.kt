@@ -498,11 +498,13 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
         val currentPlaybacks =
             JSONArray.parseArray(json["file_list"].toString(), PlaybackFile::class.java)
         playbacks.clear()
-        for (item in currentPlaybacks) {
-            if (item.file_type == 0) playbacks.add(item) //只显示视频文件,0：视频，1：图片，其他：自定义
+        if (currentPlaybacks != null) {
+            for (item in currentPlaybacks) {
+                if (item.file_type == 0) playbacks.add(item) //只显示视频文件,0：视频，1：图片，其他：自定义
+            }
+            adapter?.notifyDataSetChanged()
+            playVideo(playbacks[0].start_time, playbacks[0].end_time, 0)
         }
-        adapter?.notifyDataSetChanged()
-        playVideo(playbacks[0].start_time, playbacks[0].end_time, 0)
     }
 
     private fun playVideo(startTime: Long, endTime: Long, offset: Long) {
