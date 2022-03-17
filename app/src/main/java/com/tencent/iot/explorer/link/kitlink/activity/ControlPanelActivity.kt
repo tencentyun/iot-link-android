@@ -183,7 +183,6 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                             }
                         }
                     }
-                    stopScanBleDev(false)
                 }
             }
         }
