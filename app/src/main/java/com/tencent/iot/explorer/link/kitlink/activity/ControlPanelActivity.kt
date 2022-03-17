@@ -183,12 +183,11 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                             }
                         }
                     }
-                    stopScanBleDev(false)
                 }
             }
         }
         override fun onBleDeviceDisconnected(exception: TCLinkException) {
-
+            stopScanBleDev(false)
         }
         override fun onBleDeviceInfo(bleDeviceInfo: BleDeviceInfo) {}
         override fun onBleSetWifiModeResult(success: Boolean) {}
