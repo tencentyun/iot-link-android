@@ -168,9 +168,14 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 launch {
                     bluetoothGatt?.let {
                         delay(3000)
-                        if (BleConfigService.get().setMtuSize(it, 512)) return@launch
+                        if (BleConfigService.get().currentConnectBleDevice?.type == 1) {
+                            if (BleConfigService.get().sendUNTX(it)) return@launch
+                            bleFailed(LLSyncErrorCode.PURE_BLE_SET_UNIX_TIMESTAMP_NONCE_ERROR_CODE, "send untx failed")
+                        } else if (BleConfigService.get().currentConnectBleDevice?.type == 0) {//纯蓝牙按照之前的习惯设置一下mtu
+                            if (BleConfigService.get().setMtuSize(it, 512)) return@launch
+                            bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_MTU_ERROR_CODE, "config mtu failed")
+                        }
                     }
-                    bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_MTU_ERROR_CODE, "config mtu failed")
                 }
             }
 
@@ -239,17 +244,6 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 L.d(TAG, "onMtuChanged mtu $mtu status $status")
                 if (BluetoothGatt.GATT_SUCCESS != status) {
                     bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_SET_MTU_RESPONSE_ERROR_CODE, "config mtu $mtu failed")
-                    return
-                }
-
-                if (BleConfigService.get().currentConnectBleDevice?.type == 1) {
-                    launch {
-                        bluetoothGatt?.let {
-                            delay(3000)
-                            if (BleConfigService.get().sendUNTX(it)) return@launch
-                            bleFailed(LLSyncErrorCode.PURE_BLE_SET_UNIX_TIMESTAMP_NONCE_ERROR_CODE, "send untx failed")
-                        }
-                    }
                     return
                 }
 

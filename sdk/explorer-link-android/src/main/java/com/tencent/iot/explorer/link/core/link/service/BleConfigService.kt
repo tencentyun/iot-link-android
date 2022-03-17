@@ -13,7 +13,6 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
-import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.link.entity.*
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
@@ -32,9 +31,6 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.suspendCoroutine
 import kotlin.experimental.xor
 
 
@@ -52,13 +48,14 @@ class BleConfigService private constructor() {
     private val WRITEINTERVAL: Long = 500
     @Volatile
     var bluetoothGatt: BluetoothGatt? = null
-    @Volatile
-    var connectByteArray: ByteArray? = null
-    @Volatile
-    var reportByteArray: ByteArray? = null
 
     val otaByteArrList = ArrayList<ByteArray>()
     var otaTotalFileSize = 0
+
+    private val defaultMtu = 23+3  // 连接鉴权期间LLSync认为设备使用的ATT_MTU固定是23。
+    private val mtu = 23+3  // 默认的mtu size为23
+    @Volatile
+    var tempByteArray: ByteArray? = null
 
     companion object {
         private var instance: BleConfigService? = null
@@ -317,6 +314,29 @@ class BleConfigService private constructor() {
         }
     }
 
+    private fun isMtuEndBlock(blockValue: ByteArray): Boolean {
+        var mtuType = (blockValue[1].toInt() and 0xC0) shr 6
+        if (mtuType == 0 || mtuType == 3) { // 0为不需要分片， 1位首包， 2为中间包， 3为尾包
+            return true
+        }
+        return false
+    }
+
+    private fun appendNewBlock(newBlockValue: ByteArray, lastValue: ByteArray?): ByteArray? {
+        var mtuType = (newBlockValue[1].toInt() and 0xC0) shr 6
+        var tempByteArray: ByteArray? = null
+        if (lastValue != null) {
+            var tempLength = newBlockValue.size - 3 + lastValue.size
+            tempByteArray = ByteArray(tempLength)
+            System.arraycopy(lastValue, 0, tempByteArray, 0, lastValue.size)
+            System.arraycopy(newBlockValue, 3, tempByteArray, lastValue.size, newBlockValue.size - 3)
+        } else {
+            tempByteArray = ByteArray(newBlockValue.size - 3)
+            System.arraycopy(newBlockValue, 3, tempByteArray, 0, newBlockValue.size - 3)
+        }
+        return tempByteArray
+    }
+
     private var bluetoothGattCallback =  object: BluetoothGattCallback() {
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
@@ -370,31 +390,29 @@ class BleConfigService private constructor() {
                         }
                         0x05.toByte() -> {
                             L.d(TAG, "0x05")
-                            connetionListener?.onBleBindSignInfo(BleDevBindCondition.data2BleDevBindCondition(it.value))
+                            tempByteArray = appendNewBlock(it.value, tempByteArray)
+                            if (isMtuEndBlock(it.value) && tempByteArray != null) {
+                                var totalByteArr = ByteArray(tempByteArray!!.size+3)
+                                totalByteArr[0] = 0x05.toByte()
+                                var totalLengthBytes = number2Bytes(tempByteArray!!.size.toLong(), 2)
+                                System.arraycopy(totalLengthBytes, 0, totalByteArr, 1, 2)
+                                System.arraycopy(tempByteArray!!, 0, totalByteArr, 3, tempByteArray!!.size)
+                                connetionListener?.onBleBindSignInfo(BleDevBindCondition.data2BleDevBindCondition(totalByteArr))
+                                tempByteArray = null
+                            }
                         }
                         0x06.toByte() -> {
                             L.d(TAG, "0x06")
-                            var mtuType = it.value[1]
-                            var tempByteArray = connectByteArray?.copyOf()
-                            if (tempByteArray != null) {
-                                var tempLength = it.value.size - 3 + tempByteArray!!.size
-                                connectByteArray = ByteArray(tempLength)
-                                System.arraycopy(tempByteArray, 0, connectByteArray, 0, tempByteArray.size)
-                                System.arraycopy(it.value, 3, connectByteArray, tempByteArray.size, it.value.size - 3)
-                            } else {
-                                connectByteArray = ByteArray(it.value.size - 3)
-                                System.arraycopy(it.value, 3, connectByteArray, 0, it.value.size - 3)
-                            }
-                            L.d(TAG, "0x06 byteArray ${bytesToHex(connectByteArray)}")
-                            if (mtuType == 0xC0.toByte() && connectByteArray != null) {
-                                var totalByteArr = ByteArray(connectByteArray!!.size+3)
+                            tempByteArray = appendNewBlock(it.value, tempByteArray)
+                            if (isMtuEndBlock(it.value) && tempByteArray != null) {
+                                var totalByteArr = ByteArray(tempByteArray!!.size+3)
                                 totalByteArr[0] = 0x06.toByte()
-                                var totalLengthBytes = number2Bytes(connectByteArray!!.size.toLong(), 2)
+                                var totalLengthBytes = number2Bytes(tempByteArray!!.size.toLong(), 2)
                                 System.arraycopy(totalLengthBytes, 0, totalByteArr, 1, 2)
-                                System.arraycopy(connectByteArray!!, 0, totalByteArr, 3, connectByteArray!!.size)
+                                System.arraycopy(tempByteArray!!, 0, totalByteArr, 3, tempByteArray!!.size)
                                 connetionListener?.onBleSendSignInfo(BleDevSignResult.data2BleDevSignResult(totalByteArr))
                                 sendConnectSubDeviceResult(bluetoothGatt, true)
-                                connectByteArray = null
+                                tempByteArray = null
                             }
                         }
                         0x07.toByte() -> {
@@ -407,26 +425,15 @@ class BleConfigService private constructor() {
                         }
                         0x00.toByte() -> {
                             L.d(TAG, "0x00")
-                            var mtuType = (it.value[1].toInt() and 0xC0) shr 6
-                            var tempByteArray = reportByteArray?.copyOf()
-                            if (tempByteArray != null) {
-                                var tempLength = it.value.size - 3 + tempByteArray!!.size
-                                reportByteArray = ByteArray(tempLength)
-                                System.arraycopy(tempByteArray, 0, reportByteArray, 0, tempByteArray.size)
-                                System.arraycopy(it.value, 3, reportByteArray, tempByteArray.size, it.value.size - 3)
-                            } else {
-                                reportByteArray = ByteArray(it.value.size - 3)
-                                System.arraycopy(it.value, 3, reportByteArray, 0, it.value.size - 3)
-                            }
-                            if (mtuType == 3 && reportByteArray != null) {//尾包
-                                var totalByteArr = ByteArray(reportByteArray!!.size+3)
+                            tempByteArray = appendNewBlock(it.value, tempByteArray)
+                            if (isMtuEndBlock(it.value) && tempByteArray != null) {
+                                var totalByteArr = ByteArray(tempByteArray!!.size+3)
                                 totalByteArr[0] = 0x00.toByte()
-                                var totalLengthBytes = number2Bytes(reportByteArray!!.size.toLong(), 2)
+                                var totalLengthBytes = number2Bytes(tempByteArray!!.size.toLong(), 2)
                                 System.arraycopy(totalLengthBytes, 0, totalByteArr, 1, 2)
-                                System.arraycopy(reportByteArray!!, 0, totalByteArr, 3, reportByteArray!!.size)
+                                System.arraycopy(tempByteArray!!, 0, totalByteArr, 3, tempByteArray!!.size)
                                 connetionListener?.onBlePropertyValue(BleDeviceProperty.data2BleDeviceProperty(totalByteArr))
-//                                sendConnectSubDeviceResult(bluetoothGatt, true)
-                                reportByteArray = null
+                                tempByteArray = null
                             }
                         }
                         0x01.toByte() -> {
@@ -525,7 +532,7 @@ class BleConfigService private constructor() {
 //                L.d(TAG, "onCharacteristicFFE4Write gatt:${gatt}, characteristic: ${characteristic}, status：${status} thread:${Thread.currentThread()}")
 
             }
-//            L.d(TAG, "onCharacteristicWrite gatt:${gatt}, characteristic: ${characteristic}, characteristic value: ${bytesToHex(characteristic?.value)}, status：${status} thread:${Thread.currentThread()}")
+            L.d(TAG, "onCharacteristicWrite gatt:${gatt}, characteristic: ${characteristic}, characteristic value: ${bytesToHex(characteristic?.value)}, status：${status} thread:${Thread.currentThread()}")
         }
         override fun onCharacteristicRead(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {
             L.d(TAG, "onCharacteristicRead gatt:${gatt}, characteristic: ${characteristic}, status：${status}")
