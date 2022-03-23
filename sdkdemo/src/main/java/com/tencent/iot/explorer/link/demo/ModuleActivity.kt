@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.demo
 
 import android.Manifest
+import android.os.Bundle
+import com.tencent.iot.explorer.link.demo.common.util.LogcatHelper
 import com.tencent.iot.explorer.link.demo.core.activity.LoginActivity
 import com.tencent.iot.explorer.link.demo.video.VideoOptionsActivity
 import kotlinx.android.synthetic.main.activity_module.*
@@ -14,6 +16,16 @@ class ModuleActivity : BaseActivity() {
 
     override fun getContentView(): Int {
         return R.layout.activity_module
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        LogcatHelper.getInstance(this).start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LogcatHelper.getInstance(this).stop()
     }
 
     override fun initView() {}
