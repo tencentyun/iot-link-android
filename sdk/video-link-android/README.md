@@ -21,3 +21,5 @@ implementation 'com.tencent.iot.video:video-link-android:x.x.x'
 [回音消除](doc/回音消除/回音消除SDK使用说明.md)
 
 [设备交互](doc/设备与APP交互指引.md)
+
+[FLVPacker使用说明](doc/FLVPacker使用说明.md)
