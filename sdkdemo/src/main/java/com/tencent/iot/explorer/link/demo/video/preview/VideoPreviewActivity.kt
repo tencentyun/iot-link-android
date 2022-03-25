@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
+import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.video.Command
@@ -435,6 +436,10 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
 
+                while (!::surface.isInitialized) {
+                    delay(50)
+                    L.e("delay for waiting surface.")
+                }
                 it.setSurface(surface)
                 it.dataSource = url
 
