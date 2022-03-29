@@ -39,6 +39,7 @@ import com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioC
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.utils.NetWorkStateReceiver
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity
 import com.tencent.iot.explorer.link.kitlink.activity.videoui.RecordVideoActivity
+import com.tencent.xnet.XP2P
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -571,6 +572,9 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         BleConfigService.get().stopScanBluetoothDevices()
         BleConfigService.get().bluetoothGatt = null
 //        App.setEnableEnterRoomCallback(true)
+        if (deviceEntity?.CategoryId == 567) {
+            XP2P.stopService(deviceEntity?.DeviceId)
+        }
         super.onDestroy()
     }
 }
