@@ -331,6 +331,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     }
 
     private void stopCameraAndFinish() {
+        XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
         finish();
         TRTCUIManager.getInstance().isCalling = false;
         TRTCUIManager.getInstance().deviceId = "";
@@ -407,6 +408,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
      * 展示通话中的界面
      */
     public void showCallingView() {
+        XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
         if (mIsVideo) { // 需要绘制视频本地和对端画面
             play(CallingType.TYPE_VIDEO_CALL);
         } else { // 需要绘制音频本地和对端画面
