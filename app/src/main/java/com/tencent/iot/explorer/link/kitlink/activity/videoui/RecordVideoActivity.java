@@ -346,7 +346,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         if (mIsVideo) { // 需要绘制视频本地和对端画面
             cameraView.openCamera();
         } else { // 需要绘制音频本地和对端画面
-            
+            btnSwitch.setVisibility(View.INVISIBLE);
+            cameraView.setVisibility(View.INVISIBLE);
         }
 
         //3. 展示电话对应界面
@@ -383,7 +384,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         if (mIsVideo) { // 需要绘制视频本地和对端画面
             cameraView.openCamera();
         } else { // 需要绘制音频本地和对端画面
-
+            btnSwitch.setVisibility(View.INVISIBLE);
+            cameraView.setVisibility(View.INVISIBLE);
         }
         //1. 展示自己的界面
         mHangupLl.setVisibility(View.VISIBLE);
@@ -406,9 +408,10 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
      */
     public void showCallingView() {
         if (mIsVideo) { // 需要绘制视频本地和对端画面
-            play();
+            play(CallingType.TYPE_VIDEO_CALL);
         } else { // 需要绘制音频本地和对端画面
-
+            cameraView.setVisibility(View.INVISIBLE);
+            play(CallingType.TYPE_AUDIO_CALL);
         }
         //2. 底部状态栏
         mHangupLl.setVisibility(View.VISIBLE);
@@ -440,7 +443,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) { }
 
-    private void play() {
+    private void play(int callType) {
         player = new IjkMediaPlayer();
         player.reset();
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000);
@@ -460,7 +463,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         }
         player.prepareAsync();
         player.start();
-        handler.post(this::startRecord);
+        handler.post(() -> startRecord(callType));
     }
 
     private OnRecordListener onRecordListener = new OnRecordListener() {
@@ -476,7 +479,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         public void onRecordError(Exception e) { }
     };
 
-    private void startRecord() {
-        videoRecorder.start(CallingType.TYPE_VIDEO_CALL, onRecordListener);
+    private void startRecord(int callType) {
+        videoRecorder.start(callType, onRecordListener);
     }
 }
