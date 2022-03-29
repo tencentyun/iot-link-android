@@ -257,7 +257,6 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 deviceDatas.forEach {
                     if (it.id == "_sys_xp2p_info") {
                         var xp2pInfo = it.value
-                        Log.e("test", "=====${it.id} : ${it.value} ")
                         XP2P.setCallback(xp2pCallback)
                         XP2P.startService(deviceId, productId, deviceName)
                         XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
@@ -289,8 +288,10 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
 
         override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
             if (event == 1004) {
-//                T.show("探测成功")
-                XP2P.runSendService(deviceId, "channel=0", false)
+                App.activity?.runOnUiThread {
+                    T.show("探测成功")
+                    L.e("=========探测成功")
+                }
             }
         }
 
