@@ -390,7 +390,7 @@ public class RecordThread extends Thread {
     private void addADTStoPacket(byte[] packet, int packetLen) {
         int profile = 2;  // AAC LC
         int chanCfg = 2;  // CPE
-        int freqIdx = samplingFrequencyIndexMap.get(44100);
+        int freqIdx = samplingFrequencyIndexMap.get(micParam.getSampleRateInHz());
         // filled in ADTS data
         packet[0] = (byte) 0xFF;
         packet[1] = (byte) 0xF9;
