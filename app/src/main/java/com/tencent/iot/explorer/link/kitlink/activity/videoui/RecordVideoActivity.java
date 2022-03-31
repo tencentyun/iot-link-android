@@ -134,6 +134,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
         cameraView.closeCamera();
         videoRecorder.cancel();
         videoRecorder.stop();
@@ -331,7 +332,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     }
 
     private void stopCameraAndFinish() {
-        XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
         finish();
         TRTCUIManager.getInstance().isCalling = false;
         TRTCUIManager.getInstance().deviceId = "";
