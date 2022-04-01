@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.iot.explorer.link.T;
 import com.tencent.iot.explorer.link.core.log.L;
@@ -34,6 +35,7 @@ import com.tencent.iot.explorer.link.rtc.model.TRTCCallingParamsCallback;
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager;
 import com.tencent.iot.explorer.link.rtc.model.UserInfo;
 import com.tencent.iot.thirdparty.flv.FLVListener;
+import com.tencent.iot.video.link.entity.DeviceStatus;
 import com.tencent.iot.video.link.recorder.CallingType;
 import com.tencent.iot.video.link.recorder.OnRecordListener;
 import com.tencent.iot.video.link.recorder.VideoRecorder;
@@ -42,6 +44,7 @@ import com.tencent.xnet.XP2P;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -156,6 +159,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         mStatusView = (TextView) findViewById(R.id.tv_status);
         mHangupLl = (LinearLayout) findViewById(R.id.ll_hangup);
         mDialingLl = (LinearLayout) findViewById(R.id.ll_dialing);
+
+        getDeviceStatus();
+
         TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
             @Override
             public void joinRoom(Integer callingType, String deviceId, RoomKey roomKey) {   //设备方接听了电话
@@ -210,6 +216,43 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             }
         });
         checkAndRequestPermission();
+    }
+
+    private void getDeviceStatus() {
+        byte[] command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=standard".getBytes();
+        String repStatus = XP2P.postCommandRequestSync(TRTCUIManager.getInstance().deviceId,
+                command, command.length, 2 * 1000 * 1000);
+        List<DeviceStatus> deviceStatuses = JSONArray.parseArray(repStatus, DeviceStatus.class);
+        // 0   接收请求
+        // 1   拒绝请求
+        // 404 error request message
+        // 405 connect number too many
+        // 406 current command don't support
+        // 407 device process error
+        if (deviceStatuses != null && deviceStatuses.size() > 0) {
+            switch (deviceStatuses.get(0).status) {
+                case 0:
+                    T.show("设备状态正常");
+                    break;
+                case 1:
+                    T.show("设备状态异常, 拒绝请求: " + repStatus);
+                    break;
+                case 404:
+                    T.show("设备状态异常, error request message: " + repStatus);
+                    break;
+                case 405:
+                    T.show("设备状态异常, connect number too many: " + repStatus);
+                    break;
+                case 406:
+                    T.show("设备状态异常, current command don't support: " + repStatus);
+                    break;
+                case 407:
+                    T.show("设备状态异常, device process error: " + repStatus);
+                    break;
+            }
+        } else {
+            T.show("获取设备状态失败");
+        }
     }
 
     @Override
