@@ -3,9 +3,7 @@ package com.tencent.iot.explorer.link.mvp.model
 import android.os.Build
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
@@ -59,6 +57,8 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
 
     private var hasPanel = false
     private var hasProduct = false
+    private var reconnect = false
+    private var firstTime = true
 
     //面板UI列表
     private val uiList = ArrayList<Property>()
@@ -256,10 +256,16 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 L.e("deviceDatas", JsonManager.toJson(deviceDatas))
                 deviceDatas.forEach {
                     if (it.id == "_sys_xp2p_info") {
-                        var xp2pInfo = it.value
-                        XP2P.setCallback(xp2pCallback)
-                        XP2P.startService(deviceId, productId, deviceName)
-                        XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                        val xp2pInfo = it.value
+                        if (firstTime) {
+                            XP2P.setCallback(xp2pCallback)
+                            XP2P.startService(deviceId, productId, deviceName)
+                            XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                            firstTime = false
+                        }
+                        if (reconnect) {//p2p链路断开重连的情况下不需要重新设置回调以及启服务
+                            XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                        }
                     }
                 }
             }
@@ -287,10 +293,29 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         override fun commandRequest(id: String?, msg: String?) {}
 
         override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-            if (event == 1004) {
-                App.activity?.runOnUiThread {
-                    T.show("探测成功")
-                    L.e("=========探测成功")
+            //1003 p2p链路断开
+            //1004 p2p链路初始化成功
+            //1005 p2p链路初始化失败
+            when (event) {
+                1003 -> {
+                    App.activity?.runOnUiThread {
+                        T.show("p2p链路断开，尝试重连")
+                        L.e("=========p2p链路断开，尝试重连")
+                        requestXp2pInfo()
+                        reconnect = true
+                    }
+                }
+                1004 -> {
+                    App.activity?.runOnUiThread {
+                        T.show("p2p链路初始化成功")
+                        L.e("=========p2p链路初始化成功")
+                    }
+                }
+                1005 -> {
+                    App.activity?.runOnUiThread {
+                        T.show("p2p链路初始化失败")
+                        L.e("=========p2p链路初始化失败")
+                    }
                 }
             }
         }
