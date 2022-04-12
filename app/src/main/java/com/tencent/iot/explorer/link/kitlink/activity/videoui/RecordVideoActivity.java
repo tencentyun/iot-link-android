@@ -87,6 +87,10 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private boolean requestCameraPermission = false;
     private boolean requestRecordAudioPermission = false;
 
+    private long lastClickTime = 0L;
+    //两次点击间隔不少于1000ms
+    private static final int FAST_CLICK_DELAY_TIME = 1000;
+
     /**
      * 主动拨打给某个用户
      *
@@ -371,7 +375,12 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
     @Override
     public void setListener() {
-        btnSwitch.setOnClickListener(v -> cameraView.switchCamera());
+        btnSwitch.setOnClickListener(v -> {
+            if (System.currentTimeMillis() - lastClickTime >= FAST_CLICK_DELAY_TIME) {
+                cameraView.switchCamera();
+                lastClickTime = System.currentTimeMillis();
+            }
+        });
     }
 
     private void stopCameraAndFinish() {
