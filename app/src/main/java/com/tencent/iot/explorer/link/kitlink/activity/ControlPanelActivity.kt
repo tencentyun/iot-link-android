@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +24,10 @@ import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListe
 import com.tencent.iot.explorer.link.core.link.service.BleConfigService
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
+import com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioCallActivity
+import com.tencent.iot.explorer.link.kitlink.activity.rtcui.utils.NetWorkStateReceiver
+import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity
+import com.tencent.iot.explorer.link.kitlink.activity.videoui.RecordVideoActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
@@ -35,10 +41,6 @@ import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
-import com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioCallActivity
-import com.tencent.iot.explorer.link.kitlink.activity.rtcui.utils.NetWorkStateReceiver
-import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity
-import com.tencent.iot.explorer.link.kitlink.activity.videoui.RecordVideoActivity
 import com.tencent.xnet.XP2P
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*
@@ -50,7 +52,8 @@ import java.util.*
 /**
  * 控制面板
  */
-class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), ControlPanelView, CRecyclerView.RecyclerItemView {
+class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), ControlPanelView, CRecyclerView.RecyclerItemView,
+    NetWorkStateReceiver.NetworkStateReceiverListener {
     private var TAG = ControlPanelActivity::class.java.simpleName
     private var deviceEntity: DeviceEntity? = null
 
@@ -75,6 +78,12 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     }
 
     override fun onResume() {
+        netWorkStateReceiver?.run {
+            registerReceiver(
+                netWorkStateReceiver,
+                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+            )
+        }
         super.onResume()
         tv_title.text = deviceEntity?.getAlias()
         presenter.requestDeviceData()
@@ -82,10 +91,18 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         BleConfigService.get().connetionListener = bleDeviceConnectionListener
     }
 
+    override fun onPause() {
+        netWorkStateReceiver?.run {
+            unregisterReceiver(netWorkStateReceiver)
+        }
+        super.onPause()
+    }
+
     override fun initView() {
 //        App.setEnableEnterRoomCallback(false)
         presenter = ControlPanelPresenter(this)
         netWorkStateReceiver = NetWorkStateReceiver()
+        netWorkStateReceiver!!.addListener(this)
         deviceEntity = get("device")
         deviceEntity?.run {
             presenter.setProductId(ProductId)
@@ -369,11 +386,25 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     }
 
     override fun refreshDeviceStatus(isOnline: Boolean) {
-        if (!isOnline) {
+        if (!isOnline) { //离线显示离线弹窗
             job = CoroutineScope(Dispatchers.IO).launch {
                 delay(200)
                 CoroutineScope(Dispatchers.Main).launch {
                     showOfflinePopup()
+                }
+            }
+        } else { //上线如果有离线弹窗去掉刷新状态
+            job = CoroutineScope(Dispatchers.IO).launch {
+                delay(200)
+                CoroutineScope(Dispatchers.Main).launch {
+                    offlinePopup?.run {
+                        if (isShowing) {
+                            dismiss()
+
+                            presenter.requestDeviceData()
+                            presenter.getUserSetting()
+                        }
+                    }
                 }
             }
         }
@@ -576,5 +607,16 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
             XP2P.stopService(deviceEntity?.DeviceId)
         }
         super.onDestroy()
+    }
+
+    override fun networkAvailable() {
+        //网络可达
+        presenter.requestDeviceData()
+        presenter.getUserSetting()
+    }
+
+    override fun networkUnavailable() {
+        //网络不可达
+        Toast.makeText(this, "网络异常", Toast.LENGTH_LONG).show()
     }
 }
