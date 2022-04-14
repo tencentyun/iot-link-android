@@ -33,6 +33,14 @@
         android:text="switch"
         android:textAllCaps="false" />
 
+    <include
+        android:id="@+id/ll_dash_board"
+        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_switch"
+        layout="@layout/dash_board_layout" />
+
     <TextView
         android:id="@+id/tv_status"
         android:textColor="@color/black"
