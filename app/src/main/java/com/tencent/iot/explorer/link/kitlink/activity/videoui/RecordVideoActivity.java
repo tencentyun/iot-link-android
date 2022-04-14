@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
@@ -43,8 +44,10 @@ import com.tencent.iot.video.link.recorder.opengles.view.CameraView;
 import com.tencent.xnet.XP2P;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -70,6 +73,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private IjkMediaPlayer player;
     private volatile Surface surface;
     private TextureView playView;
+    private TextView tvTcpSpeed;
+    private TextView tvVCache;
+    private TextView tvACache;
     private final FLVListener flvListener =
             data -> XP2P.dataSend(TRTCUIManager.getInstance().deviceId, data, data.length);
     private final VideoRecorder videoRecorder = new VideoRecorder(flvListener);
@@ -146,6 +152,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         videoRecorder.cancel();
         videoRecorder.stop();
         if (player != null) {
+            mHandler.removeMessages(MSG_UPDATE_HUD);
             player.release();
             player = null;
         }
@@ -163,6 +170,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         mStatusView = (TextView) findViewById(R.id.tv_status);
         mHangupLl = (LinearLayout) findViewById(R.id.ll_hangup);
         mDialingLl = (LinearLayout) findViewById(R.id.ll_dialing);
+        tvTcpSpeed = findViewById(R.id.tv_tcp_speed);
+        tvVCache = findViewById(R.id.tv_v_cache);
+        tvACache = findViewById(R.id.tv_a_cache);
 
         getDeviceStatus();
 
@@ -500,6 +510,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private void play(int callType) {
         player = new IjkMediaPlayer();
         player.reset();
+        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
@@ -536,4 +547,44 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private void startRecord(int callType) {
         videoRecorder.start(callType, onRecordListener);
     }
+
+    public void updateDashboard() {
+        long videoCachedDuration = player.getVideoCachedDuration();
+        long audioCachedDuration = player.getAudioCachedDuration();
+        long videoCachedBytes = player.getVideoCachedBytes();
+        long audioCachedBytes = player.getAudioCachedBytes();
+        long tcpSpeed = player.getTcpSpeed();
+
+        tvACache.setText(String.format(Locale.US, "%s, %s",
+                Utils.INSTANCE.formatedDurationMilli(audioCachedDuration),
+                Utils.INSTANCE.formatedSize(audioCachedBytes)));
+        tvVCache.setText(String.format(Locale.US, "%s, %s",
+                Utils.INSTANCE.formatedDurationMilli(videoCachedDuration),
+                Utils.INSTANCE.formatedSize(videoCachedBytes)));
+        tvTcpSpeed.setText(String.format(Locale.US, "%s",
+                Utils.INSTANCE.formatedSpeed(tcpSpeed, 1000)));
+    }
+
+    private static final int MSG_UPDATE_HUD = 1;
+    private static class MyHandler extends Handler {
+        private final WeakReference<RecordVideoActivity> mActivity;
+
+        public MyHandler(RecordVideoActivity mActivity) {
+            this.mActivity = new WeakReference<>(mActivity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            RecordVideoActivity activity = mActivity.get();
+            if (activity != null) {
+                if (msg.what == MSG_UPDATE_HUD) {
+                    activity.updateDashboard();
+                    removeMessages(MSG_UPDATE_HUD);
+                    sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500);
+                }
+            }
+        }
+    }
+    private final Handler mHandler = new MyHandler(this);
 }
