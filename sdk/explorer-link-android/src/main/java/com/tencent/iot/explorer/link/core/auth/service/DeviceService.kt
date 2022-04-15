@@ -429,6 +429,19 @@ internal class DeviceService : BaseService(), DeviceImpl {
     }
 
     /**
+     * LLSync动态注册
+     */
+    override fun deviceDynamicRegister(deviceId: String, timestamp: Long, nonce: Long, signature: String, callback: MyCallback) {
+        val param = tokenParams("AppDeviceDynamicRegister")
+        param["DeviceId"] = deviceId
+        param["DeviceTimestamp"] = timestamp
+        param["Nonce"] = nonce
+        param["Signature"] = signature
+
+        tokenPost(param, callback, RequestCode.device_dynamic_register)
+    }
+
+    /**
      * 蓝牙设备上报属性
      */
     override fun reportDeviceDataoverride (
