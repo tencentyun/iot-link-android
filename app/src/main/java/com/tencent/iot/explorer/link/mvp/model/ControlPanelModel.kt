@@ -104,6 +104,11 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
             }
             run set@{
                 devicePropertyList.forEach {
+                    var jsonObject = JSON.parseObject(payload.payload)
+                    val method = jsonObject.getString(MessageConst.METHOD)
+                    if (method.equals(MessageConst.CONTROL)) {
+                        return@set   //control消息不在控制面板上变化。
+                    }
                     if (id == it.id) {
                         it.setValue(payload.getValue(id))
                         view?.showControlPanel(navBar, hasTimerCloud)
