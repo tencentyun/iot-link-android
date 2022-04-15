@@ -119,7 +119,9 @@ class HomeFragmentModel(view: HomeFragmentView) : ParentModel<HomeFragmentView>(
                             if (!TextUtils.isEmpty(productEntity.Name) && !TextUtils.isEmpty(productEntity.ProductId)) {
                                 for (devEls in deviceList) {
                                     if (devEls.ProductId == productEntity.ProductId) {
-                                        devEls.AliasName = productEntity.Name
+                                        if (devEls.AliasName.isEmpty()) {
+                                            devEls.AliasName = productEntity.Name
+                                        }
                                         devEls.CategoryId = productEntity.CategoryId
                                     }
                                 }
