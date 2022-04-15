@@ -808,7 +808,7 @@ class BleConfigService private constructor() {
                 byteArrList.add(tempByteArr)
 
                 Thread.sleep(WRITEINTERVAL)
-                setFFE0CharacteristicValueWithUuidFFE4(connection, tempByteArr)
+                setFFE0CharacteristicValue(connection, tempByteArr)
                 break;//不用分片 不用再循环了
             } else { // 需要分片
                 var tempByteArr = ByteArray(3+interval)
@@ -831,7 +831,7 @@ class BleConfigService private constructor() {
                 }
                 byteArrList.add(tempByteArr)
                 Thread.sleep(WRITEINTERVAL)
-                setFFE0CharacteristicValueWithUuidFFE4(connection, tempByteArr)
+                setFFE0CharacteristicValue(connection, tempByteArr)
                 i++
             }
         }
