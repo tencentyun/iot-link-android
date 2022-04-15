@@ -218,6 +218,11 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        requestData()
+    }
+
     private fun initView() {
         var devGridLayoutManager = GridLayoutManager(context, 2)
         roomDevAdapter = RoomDevAdapter(devList)
