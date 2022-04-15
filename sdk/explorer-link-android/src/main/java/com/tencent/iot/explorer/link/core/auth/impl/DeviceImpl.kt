@@ -156,6 +156,11 @@ interface DeviceImpl {
     fun getDeviceConfig(productId: String, deviceName: String, callback: MyCallback)
 
     /**
+     * LLSync动态注册
+     */
+    fun deviceDynamicRegister(deviceId: String, timestamp: Long, nonce: Long, signature: String, callback: MyCallback)
+
+    /**
      * 蓝牙设备上报属性
      */
     fun reportDeviceDataoverride(productId: String, deviceName: String, data: String, callback: MyCallback)

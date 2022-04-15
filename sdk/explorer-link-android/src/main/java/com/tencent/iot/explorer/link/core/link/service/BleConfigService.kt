@@ -401,6 +401,21 @@ class BleConfigService private constructor() {
                                 tempByteArray = null
                             }
                         }
+                        0x0E.toByte() -> {
+                            L.d(TAG, "0x0E")
+                            tempByteArray = appendNewBlock(it.value, tempByteArray)
+                            if (isMtuEndBlock(it.value) && tempByteArray != null) {
+                                var totalByteArr = ByteArray(tempByteArray!!.size+3)
+                                totalByteArr[0] = 0x0E.toByte()
+                                var totalLengthBytes = number2Bytes(tempByteArray!!.size.toLong(), 2)
+                                System.arraycopy(totalLengthBytes, 0, totalByteArr, 1, 2)
+                                System.arraycopy(tempByteArray!!, 0, totalByteArr, 3, tempByteArray!!.size)
+                                val bleDevDynregInfo = BleDevDynregInfo.data2BleDevDynregInfo(totalByteArr)
+//                                connetionListener?.onBleDynRegDeviceInfo(bleDevDynregInfo)
+                                deviceDynamicRegister(gatt, bleDevDynregInfo.deviceName, bleDevDynregInfo.sign)
+                                tempByteArray = null
+                            }
+                        }
                         0x06.toByte() -> {
                             L.d(TAG, "0x06")
                             tempByteArray = appendNewBlock(it.value, tempByteArray)
@@ -609,7 +624,7 @@ class BleConfigService private constructor() {
                         if (characteristic.uuid.toString().substring(4, 8).toUpperCase().equals(uuid)) {
                             characteristic.value = byteArr
                             val success = connection.writeCharacteristic(characteristic)
-//                            L.d("setCharacteristicValue success = ${success} value: ${bytesToHex(byteArr)}")
+                            L.d("setCharacteristicValue success = ${success} value: ${bytesToHex(byteArr)}")
                             return success
                         }
                     }
@@ -747,6 +762,80 @@ class BleConfigService private constructor() {
 
     fun sendBindSuccessedResult(connection: BluetoothGatt?, productId: String, devName: String): Boolean  {
         return sendBindResult(connection, productId, devName, true)
+    }
+
+    private fun deviceDynamicRegister(connection: BluetoothGatt?, devName: String, signature: String) {
+        IoTAuth.deviceImpl.deviceDynamicRegister("${currentConnectBleDevice?.productId}/${devName}",
+            unixTimestemp, nonceKeep, signature, object: MyCallback {
+                override fun fail(msg: String?, reqCode: Int) {
+                    L.d("deviceDynamicRegister fail")
+                }
+
+                override fun success(response: BaseResponse, reqCode: Int) {
+                    L.d("deviceDynamicRegister success")
+                    val json = response.data as JSONObject
+                    val payload = json.getString("Payload")
+                    if (payload == null || payload.isEmpty()) {
+                        return
+                    }
+                    sendDynamicRegisterPayload(connection, payload);
+                }
+
+            })
+    }
+
+    private fun sendDynamicRegisterPayload(connection: BluetoothGatt?, payload: String) {
+        var byteArr = ByteArray(10 + payload.toByteArray().size)
+        // 1 表 成功
+        byteArr[0] = 0x01.toByte()
+        byteArr[1] = payload.toByteArray().size.toByte()
+        System.arraycopy(payload.toByteArray(), 0, byteArr, 2, payload.toByteArray().size)
+        val nonceBytes = number2Bytes(nonceKeep, 4)
+        System.arraycopy(nonceBytes, 0, byteArr, 2+payload.toByteArray().size, nonceBytes.size)
+        val tsBytes = number2Bytes(unixTimestemp, 4)
+        System.arraycopy(tsBytes, 0, byteArr, 2+payload.toByteArray().size+4, tsBytes.size)
+
+        val byteArrList = ArrayList<ByteArray>()
+        var i = 0
+        val interval = 17
+        while (i <= byteArr.size/(interval+1)) {
+            if (byteArr.size/(interval+1) == 0) { //不用分片
+                val tempByteArr = ByteArray(3+byteArr.size)
+                tempByteArr[0] = 0x0B.toByte()
+                tempByteArr[1] = (byteArr.size / Math.pow(2.0, 8.0).toInt()).toByte()
+                tempByteArr[2] = (byteArr.size % Math.pow(2.0, 8.0).toInt()).toByte()
+                System.arraycopy(byteArr, 0, tempByteArr, 3, byteArr.size)
+                byteArrList.add(tempByteArr)
+
+                Thread.sleep(WRITEINTERVAL)
+                setFFE0CharacteristicValueWithUuidFFE4(connection, tempByteArr)
+                break;//不用分片 不用再循环了
+            } else { // 需要分片
+                var tempByteArr = ByteArray(3+interval)
+                tempByteArr[0] = 0x0B.toByte()
+                if (i == 0) { //首包
+                    tempByteArr[1] = (0x40 xor (interval / Math.pow(2.0, 8.0).toInt())).toByte()
+                    tempByteArr[2] = (interval % Math.pow(2.0, 8.0).toInt()).toByte()
+                    System.arraycopy(byteArr, i*interval, tempByteArr, 3, interval)
+                } else if (byteArr.size/(interval*(i+1)+1) == 0) { //尾包
+                    val lastLen = byteArr.size - interval*i
+                    tempByteArr = ByteArray(3+lastLen)
+                    tempByteArr[0] = 0x0B.toByte()
+                    tempByteArr[1] = (0xC0 xor (lastLen / Math.pow(2.0, 8.0).toInt())).toByte()
+                    tempByteArr[2] = (lastLen % Math.pow(2.0, 8.0).toInt()).toByte()
+                    System.arraycopy(byteArr, i*interval, tempByteArr, 3, lastLen)
+                } else { //中间包
+                    tempByteArr[1] = (0x80 xor (interval / Math.pow(2.0, 8.0).toInt())).toByte()
+                    tempByteArr[2] = (interval % Math.pow(2.0, 8.0).toInt()).toByte()
+                    System.arraycopy(byteArr, i*interval, tempByteArr, 3, interval)
+                }
+                byteArrList.add(tempByteArr)
+                Thread.sleep(WRITEINTERVAL)
+                setFFE0CharacteristicValueWithUuidFFE4(connection, tempByteArr)
+                i++
+            }
+        }
+
     }
 
     private fun sendBindResult(connection: BluetoothGatt?, productId: String, devName: String, success: Boolean): Boolean  {

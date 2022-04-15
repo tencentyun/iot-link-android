@@ -77,6 +77,7 @@ object RequestCode {
     const val describe_firmware_update_status = 3022
     const val get_device_ota_info = 3023
     const val report_ota_status = 3024
+    const val device_dynamic_register = 3025
     /*************设备接口结束**************/
 
     /*************云端定时接口开始**************/
