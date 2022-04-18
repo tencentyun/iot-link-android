@@ -24,15 +24,15 @@ class Command {
         }
 
         fun getVideoStandardQualityUrlSuffix(channel: Int): String {
-            return "ipc.flv?action=live&channel=${channel}&quality=standard&_crypto=off"
+            return "ipc.flv?action=live&channel=${channel}&quality=standard"
         }
 
         fun getVideoHightQualityUrlSuffix(channel: Int): String {
-            return "ipc.flv?action=live&channel=${channel}&quality=high&_crypto=off"
+            return "ipc.flv?action=live&channel=${channel}&quality=high"
         }
 
         fun getVideoSuperQualityUrlSuffix(channel: Int): String {
-            return "ipc.flv?action=live&channel=${channel}&quality=super&_crypto=off"
+            return "ipc.flv?action=live&channel=${channel}&quality=super"
         }
 
         fun getNvrIpcStatus(channel: Int, type: Int): String {
