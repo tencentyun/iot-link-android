@@ -13,10 +13,12 @@
 
 ## 保存video直播场景的裸流文件
 
-1. 启动camera端，同时启动SDKDemo
+~~1. 启动camera端，同时启动SDKDemo~~
 
-2. 在SDKDemo输入secret的页面里打开`保存裸流`的开关按钮
+~~2. 在SDKDemo输入secret的页面里打开`保存裸流`的开关按钮~~
 
-3. 切换到[裸流传输模式](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/AndroidSDK%E8%AF%B4%E6%98%8E.md)(参考startAvRecvService接口)，选择设备并观看直播，
+~~3. 切换到[裸流传输模式](https://github.com/tencentyun/iot-link-android/blob/master/sdk/video-link-android/doc/AndroidSDK%E8%AF%B4%E6%98%8E.md)(参考startAvRecvService接口)，选择设备并观看直播，~~
 
-4. 观看结束后打开`文件管理器`，进入`sdcard根目录`，其中`raw_video.data`就是保存的裸流文件（导出方法同上述导出日志的方法）
+~~4. 观看结束后打开`文件管理器`，进入`sdcard根目录`，其中`raw_video.data`就是保存的裸流文件（导出方法同上述导出日志的方法）~~
+
+观看直播的时候会同步存储裸流至sdcard根目录，文件名：raw_video.data（导出方法同上述导出日志的方法）
