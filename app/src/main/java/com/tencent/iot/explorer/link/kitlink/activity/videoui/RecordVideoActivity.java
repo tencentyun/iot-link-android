@@ -511,7 +511,13 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         player = new IjkMediaPlayer();
         player.reset();
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500);
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000);
+        if (!mIsVideo) {
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000);
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 64);
+        } else {
+//        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000);
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024);
+        }
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1);
