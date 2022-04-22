@@ -146,6 +146,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
         Thread(Runnable {
             var id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
             connectStartTime = System.currentTimeMillis()
+
             var started = XP2P.startServiceWithXp2pInfo(id,
                 App.data.accessInfo!!.productId, presenter.getDeviceName(), "")
             if (started != 0) {
