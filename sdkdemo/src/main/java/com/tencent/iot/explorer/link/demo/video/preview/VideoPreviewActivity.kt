@@ -194,13 +194,14 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                 if (!keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
 
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
+                Log.d(tag, "开始尝试重连...")
                 XP2P.stopService(id)
                 while (XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, presenter.getDeviceName(), "") != 0) {
                     XP2P.stopService(id)
                     synchronized(objectLock) {
                         objectLock.wait(1000)
                     }
-                    Log.d(tag, "id=${id}, try to call startServiceWithXp2pInfo")
+                    Log.d(tag, "正在重连...")
                 }
                 connectStartTime = System.currentTimeMillis()
 
@@ -210,6 +211,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
 //                tmpCountDownLatch.await()
 //                Log.d(tag, "id=${id}, tmpCountDownLatch do not wait any more")
 
+                Log.d(tag, "尝试拉流...")
                 XP2P.delegateHttpFlv(id)?.let {
                     urlPrefix = it
                     if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
@@ -521,6 +523,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
             startShowVideoTime = 0L
             keepPlayThreadLock?.let {
                 synchronized(it) {
+                    Log.d(tag, "p2p链路断开, event=$event.")
                     it.notify()
                 }
             } // 唤醒守护线程
@@ -531,23 +534,23 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
 
         } else if (event == 1004 || event == 1005) {
             connectTime = System.currentTimeMillis() - connectStartTime
-            countDownLatchs.get(id)?.let {
-                Log.d(tag, "id=${id}, countDownLatch=${it}, countDownLatch.count=${it.count}")
-                it.countDown()
-            }
-            launch(Dispatchers.Main) {
-                var content = getString(R.string.connected, id)
-                Toast.makeText(this@VideoPreviewActivity, content, Toast.LENGTH_SHORT).show()
-            }
-            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
-                urlPrefix = it
-                if (!TextUtils.isEmpty(urlPrefix)) {
-                    player?.let {
-                        resetPlayer()
-                        keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
-                    }
-                }
-            }
+//            countDownLatchs.get(id)?.let {
+//                Log.d(tag, "countdown try to call startServiceWithXp2pInfo event=$event")
+//                Log.d(tag, "id=${id}, countDownLatch=${it}, countDownLatch.count=${it.count}")
+//                it.countDown()
+//            }
+//            launch(Dispatchers.Main) {
+//                var content = getString(R.string.connected, id)
+//                Toast.makeText(this@VideoPreviewActivity, content, Toast.LENGTH_SHORT).show()
+//            }
+//            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
+//                urlPrefix = it
+//                if (!TextUtils.isEmpty(urlPrefix)) {
+//                    player?.let {
+//                        resetPlayer()
+//                    }
+//                }
+//            }
         }
     }
 
