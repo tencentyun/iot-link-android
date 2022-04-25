@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -526,6 +527,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
+        Toast.makeText(this, url, Toast.LENGTH_LONG).show();
         Log.e(TAG, "======" + url);
         try {
             player.setDataSource(url);
