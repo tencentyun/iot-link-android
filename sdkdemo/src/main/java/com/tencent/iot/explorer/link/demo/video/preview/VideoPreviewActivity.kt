@@ -194,8 +194,11 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
 
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
                 Log.d(tag, "====开始尝试重连...")
-                while (XP2P.setParamsForXp2pInfo(id, accessId, accessToken, "") != 0 ||
-                        getDeviceStatus(id) != 0) {
+                XP2P.stopService(id)
+                while (XP2P.startService(id, App.data.accessInfo!!.productId, presenter.getDeviceName())!=0
+                    || XP2P.setParamsForXp2pInfo(id, accessId, accessToken, "") != 0
+                    || getDeviceStatus(id) != 0) {
+                    XP2P.stopService(id)
                     synchronized(objectLock) {
                         objectLock.wait(1000)
                     }
