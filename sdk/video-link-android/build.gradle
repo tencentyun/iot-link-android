@@ -49,7 +49,7 @@ dependencies {
 //        changing = true
 //    }
     api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.3.5'
-//    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.1-SNAPSHOT'
+//    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.22-SNAPSHOT'
 }
 
 configurations.all {
