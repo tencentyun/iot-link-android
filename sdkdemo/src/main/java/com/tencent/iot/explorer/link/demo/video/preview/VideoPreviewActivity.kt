@@ -38,6 +38,7 @@ import com.tencent.iot.explorer.link.demo.video.utils.TipToastDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.explorer.link.demo.video.utils.VolumeChangeObserver
 import com.tencent.iot.video.link.consts.VideoConst
+import com.tencent.iot.video.link.entity.DeviceStatus
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
@@ -94,7 +95,6 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
 
     override fun onResume() {
         super.onResume()
-        XP2P.setCallback(this)
         keepAliveThreadRuning = true
         startPlayer()
     }
@@ -129,14 +129,18 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
             presenter.getEventsData(Date())
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
-            XP2P.setQcloudApiCred(it.accessId, it.accessToken)
             audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000)
         }
 
+        XP2P.setCallback(this)
+        XP2P.startService("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
+            App.data.accessInfo!!.productId, presenter.getDeviceName()
+        )
+
         //实例化对象并设置监听器
         volumeChangeObserver = VolumeChangeObserver(this)
-        volumeChangeObserver?.setVolumeChangeListener(this)
-        volumeChangeObserver?.registerReceiver();
+        volumeChangeObserver?.volumeChangeListener = this
+        volumeChangeObserver?.registerReceiver()
     }
 
     open fun startPlayer() {
@@ -145,31 +149,28 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
 
         Thread(Runnable {
-            var id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
+            val id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
             connectStartTime = System.currentTimeMillis()
-            var started = XP2P.startServiceWithXp2pInfo(id,
-                App.data.accessInfo!!.productId, presenter.getDeviceName(), "")
-            if (started != 0) {
+            val ret = XP2P.setParamsForXp2pInfo(id, App.data.accessInfo!!.accessId,
+                App.data.accessInfo!!.accessToken, "")
+            if (ret != 0) {
                 launch(Dispatchers.Main) {
-                    var errInfo = ""
-                    if (started.toString() == "-1007") {
+                    val errInfo: String
+                    if (ret.toString() == "-1007") {
                         errInfo = getString(R.string.xp2p_err_version)
                     } else {
-                        errInfo = getString(R.string.error_with_code, id, started.toString())
+                        errInfo = getString(R.string.error_with_code, id, ret.toString())
                     }
                     Toast.makeText(this@VideoPreviewActivity, errInfo, Toast.LENGTH_SHORT).show()
                 }
                 return@Runnable
             }
-//            var tmpCountDownLatch = CountDownLatch(1)
-//            countDownLatchs.put("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", tmpCountDownLatch)
-//            tmpCountDownLatch.await()
-            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
+            XP2P.delegateHttpFlv(id)?.let {
                 urlPrefix = it
                 if (!TextUtils.isEmpty(urlPrefix)) {
-                    player?.let {
+                    player.let {
                         resetPlayer()
-                        keepPlayerplay("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")
+                        keepPlayerplay(id)
                     }
                 }
             }
@@ -178,14 +179,12 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
 
     private fun keepPlayerplay(id: String?) {
         if (TextUtils.isEmpty(id)) return
-
+        val accessId = App.data.accessInfo!!.accessId
+        val accessToken = App.data.accessInfo!!.accessToken
         // 开启守护线程
         Thread{
-            var objectLock = Object()
+            val objectLock = Object()
             while (true) {
-                var tmpCountDownLatch = CountDownLatch(1)
-                countDownLatchs.put(id!!, tmpCountDownLatch)
-
                 Log.d(tag, "id=${id} keepAliveThread wait disconnected msg")
                 synchronized(keepPlayThreadLock) {
                     keepPlayThreadLock.wait()
@@ -194,24 +193,17 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                 if (!keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
 
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
-                Log.d(tag, "开始尝试重连...")
-                XP2P.stopService(id)
-                while (XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, presenter.getDeviceName(), "") != 0) {
-                    XP2P.stopService(id)
+                Log.d(tag, "====开始尝试重连...")
+                while (XP2P.setParamsForXp2pInfo(id, accessId, accessToken, "") != 0 ||
+                        getDeviceStatus(id) != 0) {
                     synchronized(objectLock) {
                         objectLock.wait(1000)
                     }
-                    Log.d(tag, "正在重连...")
+                    Log.d(tag, "====正在重连...")
                 }
                 connectStartTime = System.currentTimeMillis()
 
-                Log.d(tag, "id=${id}, call startServiceWithXp2pInfo successed")
-//                countDownLatchs.put(id!!, tmpCountDownLatch)
-//                Log.d(tag, "id=${id}, tmpCountDownLatch start wait")
-//                tmpCountDownLatch.await()
-//                Log.d(tag, "id=${id}, tmpCountDownLatch do not wait any more")
-
-                Log.d(tag, "尝试拉流...")
+                Log.d(tag, "====尝试拉流...")
                 XP2P.delegateHttpFlv(id)?.let {
                     urlPrefix = it
                     if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
@@ -520,6 +512,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e(tag, "id=${id}, event=${event}")
         if (event == 1003) {
+            Log.e(tag, "====event === 1003")
             startShowVideoTime = 0L
             keepPlayThreadLock?.let {
                 synchronized(it) {
@@ -531,26 +524,11 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                 var content = getString(R.string.disconnected_and_reconnecting, id)
                 Toast.makeText(this@VideoPreviewActivity, content, Toast.LENGTH_SHORT).show()
             }
-
         } else if (event == 1004 || event == 1005) {
             connectTime = System.currentTimeMillis() - connectStartTime
-//            countDownLatchs.get(id)?.let {
-//                Log.d(tag, "countdown try to call startServiceWithXp2pInfo event=$event")
-//                Log.d(tag, "id=${id}, countDownLatch=${it}, countDownLatch.count=${it.count}")
-//                it.countDown()
-//            }
-//            launch(Dispatchers.Main) {
-//                var content = getString(R.string.connected, id)
-//                Toast.makeText(this@VideoPreviewActivity, content, Toast.LENGTH_SHORT).show()
-//            }
-//            XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}")?.let {
-//                urlPrefix = it
-//                if (!TextUtils.isEmpty(urlPrefix)) {
-//                    player?.let {
-//                        resetPlayer()
-//                    }
-//                }
-//            }
+            if (event == 1004) {
+                Log.e(tag, "====event === 1004")
+            }
         }
     }
 
@@ -610,6 +588,66 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
         if (audioAble) {
             player?.setVolume(volume.toFloat(), volume.toFloat())
         }
+    }
+
+    private fun getDeviceStatus(id: String?): Int {
+        var command: ByteArray? = null
+        when (tv_video_quality.text.toString()) {
+            getString(R.string.video_quality_high_str) -> {
+                command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=super".toByteArray()
+            }
+            getString(R.string.video_quality_medium_str) -> {
+                command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=high".toByteArray()
+            }
+            getString(R.string.video_quality_low_str) -> {
+                command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=standard".toByteArray()
+            }
+        }
+        val reponse = XP2P.postCommandRequestSync(id, command, command!!.size.toLong(), 2 * 1000 * 1000)
+        if (!TextUtils.isEmpty(reponse)) {
+            val deviceStatuses: List<DeviceStatus> = JSONArray.parseArray(reponse, DeviceStatus::class.java)
+            // 0   接收请求
+            // 1   拒绝请求
+            // 404 error request message
+            // 405 connect number too many
+            // 406 current command don't support
+            // 407 device process error
+            if (deviceStatuses.isNotEmpty()) {
+                runOnUiThread {
+                    when (deviceStatuses[0].status) {
+                        0 -> Toast.makeText(this, "设备状态正常", Toast.LENGTH_SHORT).show()
+                        1 -> Toast.makeText(this, "设备状态异常, 拒绝请求: $reponse", Toast.LENGTH_SHORT).show()
+                        404 -> Toast.makeText(
+                            this,
+                            "设备状态异常, error request message: $reponse",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        405 -> Toast.makeText(
+                            this,
+                            "设备状态异常, connect number too many: $reponse",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        406 -> Toast.makeText(
+                            this,
+                            "设备状态异常, current command don't support: $reponse",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        407 -> Toast.makeText(
+                            this,
+                            "设备状态异常, device process error: $reponse",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                return deviceStatuses[0].status
+            } else {
+                runOnUiThread {
+                    Toast.makeText(this, "获取设备状态失败", Toast.LENGTH_SHORT).show()
+                }
+                return -1
+            }
+        }
+        return -1
     }
 
     private val mHandler: Handler = object : Handler() {
