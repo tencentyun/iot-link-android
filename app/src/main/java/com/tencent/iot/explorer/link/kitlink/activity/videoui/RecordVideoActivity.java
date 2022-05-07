@@ -77,6 +77,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private TextView tvTcpSpeed;
     private TextView tvVCache;
     private TextView tvACache;
+    private TextView tvVideoWH;
     private final FLVListener flvListener =
             data -> XP2P.dataSend(TRTCUIManager.getInstance().deviceId, data, data.length);
     private final VideoRecorder videoRecorder = new VideoRecorder(flvListener);
@@ -174,6 +175,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         tvTcpSpeed = findViewById(R.id.tv_tcp_speed);
         tvVCache = findViewById(R.id.tv_v_cache);
         tvACache = findViewById(R.id.tv_a_cache);
+        tvVideoWH = findViewById(R.id.tv_v_width_height);
 
         getDeviceStatus();
 
@@ -571,6 +573,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
                 Utils.INSTANCE.formatedSize(videoCachedBytes)));
         tvTcpSpeed.setText(String.format(Locale.US, "%s",
                 Utils.INSTANCE.formatedSpeed(tcpSpeed, 1000)));
+        tvVideoWH.setText(player.getVideoWidth() + " x " + player.getVideoHeight());
     }
 
     private static final int MSG_UPDATE_HUD = 1;
