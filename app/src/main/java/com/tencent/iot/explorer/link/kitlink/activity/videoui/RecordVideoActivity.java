@@ -4,11 +4,17 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
+import android.media.AudioFormat;
+import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
@@ -37,10 +43,19 @@ import com.tencent.iot.explorer.link.rtc.model.TRTCCallingParamsCallback;
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager;
 import com.tencent.iot.explorer.link.rtc.model.UserInfo;
 import com.tencent.iot.thirdparty.flv.FLVListener;
+import com.tencent.iot.thirdparty.flv.FLVPacker;
+import com.tencent.iot.video.link.encoder.AudioEncoder;
+import com.tencent.iot.video.link.encoder.VideoEncoder;
 import com.tencent.iot.video.link.entity.DeviceStatus;
+import com.tencent.iot.video.link.listener.OnEncodeListener;
+import com.tencent.iot.video.link.param.AudioEncodeParam;
+import com.tencent.iot.video.link.param.MicParam;
+import com.tencent.iot.video.link.param.VideoEncodeParam;
 import com.tencent.iot.video.link.recorder.CallingType;
 import com.tencent.iot.video.link.recorder.OnRecordListener;
 import com.tencent.iot.video.link.recorder.VideoRecorder;
+import com.tencent.iot.video.link.recorder.core.camera.CameraConstants;
+import com.tencent.iot.video.link.recorder.core.camera.CameraUtils;
 import com.tencent.iot.video.link.recorder.opengles.view.CameraView;
 import com.tencent.xnet.XP2P;
 
@@ -49,10 +64,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class RecordVideoActivity extends BaseActivity implements TextureView.SurfaceTextureListener {
+public class RecordVideoActivity extends BaseActivity implements TextureView.SurfaceTextureListener, OnEncodeListener, SurfaceHolder.Callback {
     private TextView mStatusView;
     private LinearLayout mHangupLl;
     private LinearLayout mDialingLl;
@@ -67,9 +84,10 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
     private static final String TAG = RecordVideoActivity.class.getSimpleName();
 
-    private CameraView cameraView;
+    private SurfaceView surfaceView;
+    private SurfaceHolder holder;
+    private Camera camera;
     private Button btnSwitch;
-    private String path; // 保存源文件的路径
     private Handler handler = new Handler();
     private IjkMediaPlayer player;
     private volatile Surface surface;
@@ -80,7 +98,15 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private TextView tvVideoWH;
     private final FLVListener flvListener =
             data -> XP2P.dataSend(TRTCUIManager.getInstance().deviceId, data, data.length);
-    private final VideoRecorder videoRecorder = new VideoRecorder(flvListener);
+
+    private AudioEncoder audioEncoder;
+    private VideoEncoder videoEncoder;
+    private FLVPacker flvPacker;
+    private volatile boolean startEncodeVideo = false;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+    private int vw = 320;
+    private int vh = 240;
 
     /**
      * 拨号相关成员变量
@@ -149,10 +175,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopRecord();
+        executor.shutdown();
         XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
-        cameraView.closeCamera();
-        videoRecorder.cancel();
-        videoRecorder.stop();
         if (player != null) {
             mHandler.removeMessages(MSG_UPDATE_HUD);
             player.release();
@@ -162,21 +187,23 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
     @Override
     public void initView() {
-        path = getFilesDir().getAbsolutePath();
         setContentView(R.layout.activity_record_video);
-        cameraView = findViewById(R.id.camera_view);
+        surfaceView = findViewById(R.id.camera_view);
+        holder = surfaceView.getHolder();
+        holder.addCallback(this);
         btnSwitch = findViewById(R.id.btn_switch);
-        videoRecorder.attachCameraView(cameraView);
         playView = findViewById(R.id.v_play);
         playView.setSurfaceTextureListener(this);
-        mStatusView = (TextView) findViewById(R.id.tv_status);
-        mHangupLl = (LinearLayout) findViewById(R.id.ll_hangup);
-        mDialingLl = (LinearLayout) findViewById(R.id.ll_dialing);
+        mStatusView = findViewById(R.id.tv_status);
+        mHangupLl = findViewById(R.id.ll_hangup);
+        mDialingLl = findViewById(R.id.ll_dialing);
         tvTcpSpeed = findViewById(R.id.tv_tcp_speed);
         tvVCache = findViewById(R.id.tv_v_cache);
         tvACache = findViewById(R.id.tv_a_cache);
         tvVideoWH = findViewById(R.id.tv_v_width_height);
 
+        initAudioEncoder();
+        initVideoEncoder();
         getDeviceStatus();
 
         TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
@@ -233,6 +260,24 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             }
         });
         checkAndRequestPermission();
+    }
+
+    private void initAudioEncoder() {
+        MicParam micParam = new MicParam.Builder()
+                .setAudioSource(MediaRecorder.AudioSource.MIC)
+                .setSampleRateInHz(8000) // 采样率
+                .setChannelConfig(AudioFormat.CHANNEL_IN_MONO)
+                .setAudioFormat(AudioFormat.ENCODING_PCM_16BIT) // PCM
+                .build();
+        AudioEncodeParam audioEncodeParam = new AudioEncodeParam.Builder().build();
+        audioEncoder = new AudioEncoder(micParam, audioEncodeParam);
+        audioEncoder.setOnEncodeListener(this);
+    }
+
+    private void initVideoEncoder() {
+        VideoEncodeParam videoEncodeParam = new VideoEncodeParam.Builder().setSize(vw, vh).build();
+        videoEncoder = new VideoEncoder(videoEncodeParam);
+        videoEncoder.setEncoderListener(this);
     }
 
     private void getDeviceStatus() {
@@ -390,7 +435,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     public void setListener() {
         btnSwitch.setOnClickListener(v -> {
             if (System.currentTimeMillis() - lastClickTime >= FAST_CLICK_DELAY_TIME) {
-                cameraView.switchCamera();
+                switchCamera();
                 lastClickTime = System.currentTimeMillis();
             }
         });
@@ -410,10 +455,10 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
      */
     public void showWaitingResponseView() {
         if (mIsVideo) { // 需要绘制视频本地和对端画面
-            cameraView.openCamera();
+            openCamera();
         } else { // 需要绘制音频本地和对端画面
             btnSwitch.setVisibility(View.INVISIBLE);
-            cameraView.setVisibility(View.INVISIBLE);
+            surfaceView.setVisibility(View.INVISIBLE);
         }
 
         //3. 展示电话对应界面
@@ -448,10 +493,10 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
      */
     public void showInvitingView() {
         if (mIsVideo) { // 需要绘制视频本地和对端画面
-            cameraView.openCamera();
+            openCamera();
         } else { // 需要绘制音频本地和对端画面
             btnSwitch.setVisibility(View.INVISIBLE);
-            cameraView.setVisibility(View.INVISIBLE);
+            surfaceView.setVisibility(View.INVISIBLE);
         }
         //1. 展示自己的界面
         mHangupLl.setVisibility(View.VISIBLE);
@@ -477,7 +522,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         if (mIsVideo) { // 需要绘制视频本地和对端画面
             play(CallingType.TYPE_VIDEO_CALL);
         } else { // 需要绘制音频本地和对端画面
-            cameraView.setVisibility(View.INVISIBLE);
+            surfaceView.setVisibility(View.INVISIBLE);
             play(CallingType.TYPE_AUDIO_CALL);
         }
         //2. 底部状态栏
@@ -555,7 +600,121 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     };
 
     private void startRecord(int callType) {
-        videoRecorder.start(callType, onRecordListener);
+        flvPacker = new FLVPacker(flvListener, true, true);
+        if (callType == CallingType.TYPE_VIDEO_CALL) {
+            startEncodeVideo = true;
+        }
+        audioEncoder.start();
+    }
+
+    private void stopRecord() {
+        if (audioEncoder != null) {
+            audioEncoder.stop();
+        }
+        if (videoEncoder != null) {
+            videoEncoder.stop();
+        }
+        startEncodeVideo = false;
+    }
+
+    /**
+     * 打开相机
+     */
+    private void openCamera() {
+        releaseCamera(camera);
+        camera = Camera.open(facing);
+        //获取相机参数
+        Camera.Parameters parameters = camera.getParameters();
+
+        //设置预览格式（也就是每一帧的视频格式）YUV420下的NV21
+        parameters.setPreviewFormat(ImageFormat.NV21);
+
+        if (this.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+        }
+
+        int cameraIndex = -1;
+        if (facing == CameraConstants.facing.BACK) {
+            cameraIndex = Camera.CameraInfo.CAMERA_FACING_BACK;
+        } else if (facing == CameraConstants.facing.FRONT) {
+            cameraIndex = Camera.CameraInfo.CAMERA_FACING_FRONT;
+            camera.setDisplayOrientation(180);
+        }
+
+        try {
+            camera.setDisplayOrientation(CameraUtils.getDisplayOrientation(this, cameraIndex));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        Camera.Size previewSize = getCameraPreviewSize(parameters);
+        //设置预览图像分辨率
+        parameters.setPreviewSize(vw, vh);
+
+        //配置camera参数
+        camera.setParameters(parameters);
+        try {
+            camera.setPreviewDisplay(holder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //设置监听获取视频流的每一帧
+        camera.setPreviewCallback(new Camera.PreviewCallback() {
+            @Override
+            public void onPreviewFrame(byte[] data, Camera camera) {
+                if (startEncodeVideo && videoEncoder != null) {
+                    videoEncoder.encoderH264(data, facing == CameraConstants.facing.FRONT);
+                }
+            }
+        });
+        //调用startPreview()用以更新preview的surface
+        camera.startPreview();
+    }
+
+    /**
+     * 获取设备支持的最大分辨率
+     */
+    private Camera.Size getCameraPreviewSize(Camera.Parameters parameters) {
+        List<Camera.Size> list = parameters.getSupportedPreviewSizes();
+        Camera.Size needSize = null;
+        for (Camera.Size size : list) {
+            Log.e(TAG, "****========== " + size.width + " " + size.height);
+            if (needSize == null) {
+                needSize = size;
+                continue;
+            }
+            if (size.width >= needSize.width) {
+                if (size.height > needSize.height) {
+                    needSize = size;
+                }
+            }
+        }
+        return needSize;
+    }
+
+    // 默认摄像头方向
+    private int facing = CameraConstants.facing.BACK;
+
+    private void switchCamera() {
+        if (facing == CameraConstants.facing.BACK) {
+            facing = CameraConstants.facing.FRONT;
+        } else {
+            facing = CameraConstants.facing.BACK;
+        }
+        openCamera();
+    }
+
+    /**
+     * 关闭相机
+     */
+    public void releaseCamera(Camera camera) {
+        if (camera != null) {
+            camera.setPreviewCallback(null);
+            camera.stopPreview();
+            camera.release();
+            camera = null;
+        }
     }
 
     public void updateDashboard() {
@@ -577,6 +736,34 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     }
 
     private static final int MSG_UPDATE_HUD = 1;
+
+    @Override
+    public void onAudioEncoded(byte[] datas, long pts, long seq) {
+        if (executor.isShutdown()) return;
+        executor.submit(() -> flvPacker.encodeFlv(datas, FLVPacker.TYPE_AUDIO, pts));
+    }
+
+    @Override
+    public void onVideoEncoded(byte[] datas, long pts, long seq) {
+        if (executor.isShutdown()) return;
+        executor.submit(() -> flvPacker.encodeFlv(datas, FLVPacker.TYPE_VIDEO, pts));
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        openCamera();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        releaseCamera(camera);
+    }
+
     private static class MyHandler extends Handler {
         private final WeakReference<RecordVideoActivity> mActivity;
 
