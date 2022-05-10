@@ -8,4 +8,6 @@ interface ControlPanelView : ParentView {
     fun showControlPanel(navBar: NavBar?, timingProject: Boolean)
 
     fun refreshDeviceStatus(isOnline: Boolean)
+
+    fun refreshCategrayId(categoryId: Int)
 }

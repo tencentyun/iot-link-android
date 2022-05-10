@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.tencent.iot.explorer.link.App;
 import com.tencent.iot.explorer.link.T;
 import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.core.utils.Utils;
@@ -201,6 +202,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         tvVCache = findViewById(R.id.tv_v_cache);
         tvACache = findViewById(R.id.tv_a_cache);
         tvVideoWH = findViewById(R.id.tv_v_width_height);
+        vw = App.Companion.getData().getResolutionWidth();
+        vh = App.Companion.getData().getResolutionHeight();
 
         initAudioEncoder();
         initVideoEncoder();
@@ -275,7 +278,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     }
 
     private void initVideoEncoder() {
-        VideoEncodeParam videoEncodeParam = new VideoEncodeParam.Builder().setSize(vw, vh).build();
+        VideoEncodeParam videoEncodeParam = new VideoEncodeParam.Builder().setSize(vw, vh)
+                                                                          .setFrameRate(App.Companion.getData().getFrameRate())
+                                                                          .setBitRate(vw*vh).build();
         videoEncoder = new VideoEncoder(videoEncodeParam);
         videoEncoder.setEncoderListener(this);
     }
