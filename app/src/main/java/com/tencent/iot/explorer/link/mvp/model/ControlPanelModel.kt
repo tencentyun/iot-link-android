@@ -394,6 +394,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 netType = Products[0].NetType
                 categoryId = Products[0].CategoryId
                 if (categoryId == 567) { //双向音视频类别
+                    view?.refreshCategrayId(categoryId)
                     requestXp2pInfo()
                 }
                 if (uiList.size == 0) {
