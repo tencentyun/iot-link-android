@@ -27,6 +27,7 @@ import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.utils.NetWorkStateReceiver
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity
+import com.tencent.iot.explorer.link.kitlink.activity.videoui.ParamSettingActivity
 import com.tencent.iot.explorer.link.kitlink.activity.videoui.RecordVideoActivity
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
@@ -41,6 +42,7 @@ import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
+import com.tencent.tencentmap.mapsdk.maps.interfaces.Visible
 import com.tencent.xnet.XP2P
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*
@@ -406,6 +408,15 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                         }
                     }
                 }
+            }
+        }
+    }
+
+    override fun refreshCategrayId(categoryId: Int) {
+        if (categoryId == 567) { // 消费版视频平台产品
+            tv_param_setting.visibility = View.VISIBLE
+            tv_param_setting.setOnClickListener {
+                jumpActivity(ParamSettingActivity::class.java)
             }
         }
     }
