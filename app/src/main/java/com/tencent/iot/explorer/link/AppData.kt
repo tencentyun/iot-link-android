@@ -86,6 +86,13 @@ class AppData private constructor() {
     private var mobileBrand = ""
     // 手机型号
     private var mobileModel = ""
+    // 分辨率宽 320
+    var resolutionWidth = 320
+    // 分辨率高 320
+    var resolutionHeight = 240
+    // 帧率 7
+    var frameRate = 7
+
 
     fun getMobileBrand(): String {
         if (TextUtils.isEmpty(mobileBrand)) {
