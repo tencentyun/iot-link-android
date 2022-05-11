@@ -11,10 +11,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -89,6 +91,10 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
     var volumeChangeObserver: VolumeChangeObserver? = null
     val MSG_UPDATE_HUD = 1
 
+    var screenWidth = 0
+    var screenHeight = 0
+    var firstIn = true
+
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
     }
@@ -141,6 +147,15 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
         volumeChangeObserver = VolumeChangeObserver(this)
         volumeChangeObserver?.volumeChangeListener = this
         volumeChangeObserver?.registerReceiver()
+
+        val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
+        val dm = DisplayMetrics()
+        wm.defaultDisplay.getMetrics(dm)
+        val width = dm.widthPixels // 屏幕宽度（像素）
+        val height = dm.heightPixels // 屏幕高度（像素）
+        val density = dm.density // 屏幕密度（0.75 / 1.0 / 1.5）
+        screenWidth = (width / density).toInt() // 屏幕宽度(dp)
+        screenHeight = (height / density).toInt() // 屏幕高度(dp)
     }
 
     open fun startPlayer() {
@@ -494,7 +509,17 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
         }
     }
 
-    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
+        val layoutParams = v_preview.layoutParams
+        if (orientationV) {
+            layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
+            layoutParams.height = layoutParams.height
+        } else {
+            layoutParams.width = (player.videoWidth * height) / player.videoHeight
+        }
+        v_preview.layoutParams = layoutParams
+
+    }
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
         if (!showTip && startShowVideoTime > 0) {
@@ -502,6 +527,13 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
             var content = getString(R.string.time_2_show, connectTime.toString(), showVideoTime.toString())
             TipToastDialog(this, content, 10000).show()
             showTip = true
+        }
+        if (orientationV && firstIn) {
+            val layoutParams = v_preview.layoutParams
+            layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
+            layoutParams.height = layoutParams.height
+            v_preview.layoutParams = layoutParams
+            firstIn = false
         }
     }
     override fun fail(msg: String?, errorCode: Int) {}
