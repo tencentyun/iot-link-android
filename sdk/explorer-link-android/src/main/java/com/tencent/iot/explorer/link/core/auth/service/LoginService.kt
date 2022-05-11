@@ -61,7 +61,8 @@ internal class LoginService : BaseService(), LoginImpl {
 
     override fun wechatLogin(code: String, callback: LoginCallback) {
         val param = commonParams("AppGetTokenByWeiXin")
-        param["code"] = code
+//        param["code"] = code
+        param["WxOpenID"] = code
         param["busi"] = "studio"
         postJson(param, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
