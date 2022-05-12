@@ -15,8 +15,6 @@ public class PCMEncoder {
     private static final int KEY_BIT_RATE = 96000;
     //读取数据的最大字节数
     private static final int KEY_MAX_INPUT_SIZE = 1024 * 1024;
-    //声道数
-    private static final int CHANNEL_COUNT = 2;
     public static final int AAC_FORMAT = 0;
     public static final int G711_FORMAT = 1;
     private MediaCodec mediaCodec;
@@ -26,6 +24,8 @@ public class PCMEncoder {
     private EncoderListener encoderListener;
     private int encodeType = 0;
     private int sampleRate = 0;
+    //声道数
+    private int channelCount = 0;
 
     // 采样频率对照表
     private static Map<Integer, Integer> samplingFrequencyIndexMap = new HashMap<>();
@@ -45,10 +45,11 @@ public class PCMEncoder {
         samplingFrequencyIndexMap.put(8000, 11);
     }
 
-    public PCMEncoder(int sampleRate, EncoderListener encoderListener, int encodeFormat) {
+    public PCMEncoder(int sampleRate, int channelCount, EncoderListener encoderListener, int encodeFormat) {
         this.encoderListener = encoderListener;
         this.encodeType = encodeFormat;
         this.sampleRate = sampleRate;
+        this.channelCount = channelCount;
         init();
     }
 
@@ -59,7 +60,7 @@ public class PCMEncoder {
         try {
             //参数对应-> mime type、采样率、声道数
             MediaFormat encodeFormat = MediaFormat.createAudioFormat(MediaFormat.MIMETYPE_AUDIO_AAC,
-                    sampleRate, CHANNEL_COUNT);
+                    sampleRate, channelCount);
             //比特率
             encodeFormat.setInteger(MediaFormat.KEY_BIT_RATE, KEY_BIT_RATE);
             encodeFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
@@ -130,7 +131,7 @@ public class PCMEncoder {
      */
     private void addADTStoPacket(byte[] packet, int packetLen) {
         int profile = 2;  // AAC LC
-        int chanCfg = 2;  // CPE
+        int chanCfg = channelCount;
         int freqIdx = samplingFrequencyIndexMap.get(sampleRate);
         // filled in ADTS data
         packet[0] = (byte) 0xFF;
