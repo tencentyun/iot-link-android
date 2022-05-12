@@ -4,12 +4,15 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+
+import com.tencent.iot.thirdparty.flv.FLVListener;
+import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.xnet.XP2P;
 
 
-public class AudioRecordUtil implements EncoderListener {
-    private int channelConfig = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
-    private int audioFormat = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
+public class AudioRecordUtil implements EncoderListener, FLVListener {
+    private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
+    private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
     private volatile boolean recorderState = true; //录制状态
     private byte[] buffer;
     private AudioRecord audioRecord;
@@ -21,14 +24,16 @@ public class AudioRecordUtil implements EncoderListener {
     private int sampleRate; //音频采样率
     private int channel;
     private int bitDepth;
+    private int channelCount; //声道数
 
     public AudioRecordUtil(Context ctx, String id, int sampleRate) {
         context = ctx;
         deviceId = id;
-        init(sampleRate, channelConfig, audioFormat);
+        init(sampleRate, DEFAULT_CHANNEL_CONFIG, DEFAULT_AUDIO_FORMAT);
     }
-    public AudioRecordUtil(Context ctx, int sampleRate, int channel, int bitDepth) {
+    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth) {
         context = ctx;
+        deviceId = id;
         init(sampleRate, channel, bitDepth);
     }
 
@@ -37,6 +42,11 @@ public class AudioRecordUtil implements EncoderListener {
         this.sampleRate = sampleRate;
         this.channel = channel;
         this.bitDepth = bitDepth;
+        if (channel == AudioFormat.CHANNEL_IN_MONO) {
+            this.channelCount = 1;
+        } else if (channel == AudioFormat.CHANNEL_IN_STEREO) {
+            this.channelCount = 2;
+        }
     }
 
     /**
@@ -52,8 +62,8 @@ public class AudioRecordUtil implements EncoderListener {
     private void reset() {
         buffer = new byte[recordMinBufferSize];
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
-        pcmEncoder = new PCMEncoder(sampleRate, this, PCMEncoder.AAC_FORMAT);
-        flvPacker = new FLVPacker();
+        pcmEncoder = new PCMEncoder(sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
+        flvPacker = new FLVPacker(this, true, false);
     }
 
     /**
@@ -66,6 +76,7 @@ public class AudioRecordUtil implements EncoderListener {
         }
         audioRecord = null;
         pcmEncoder = null;
+        flvPacker.release();
         flvPacker = null;
     }
 
@@ -75,12 +86,16 @@ public class AudioRecordUtil implements EncoderListener {
 
     @Override
     public void encodeAAC(byte[] data, long time) {
-        byte[] flvData = flvPacker.getFLV(data);
-        XP2P.dataSend(deviceId, flvData, flvData.length);
+        flvPacker.encodeFlv(data, FLVPacker.TYPE_AUDIO, System.currentTimeMillis());
     }
 
     @Override
     public void encodeG711(byte[] data) { }
+
+    @Override
+    public void onFLV(byte[] data) {
+        XP2P.dataSend(deviceId, data, data.length);
+    }
 
     private class RecordThread extends Thread {
         @Override
