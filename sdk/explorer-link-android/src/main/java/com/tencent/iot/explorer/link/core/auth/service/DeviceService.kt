@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.auth.service
 
+import com.alibaba.fastjson.util.Base64
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.ControlPanelCallback
 import com.tencent.iot.explorer.link.core.auth.callback.DeviceCallback
@@ -10,6 +11,7 @@ import com.tencent.iot.explorer.link.core.auth.impl.DeviceImpl
 import com.tencent.iot.explorer.link.core.auth.response.*
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
 import com.tencent.iot.explorer.link.core.utils.IPUtil
+import com.tencent.iot.explorer.link.core.utils.Utils
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -235,6 +237,25 @@ internal class DeviceService : BaseService(), DeviceImpl {
         param["DeviceTimestamp"] = deviceInfo.timestamp
 //        param["ConnId"] = deviceInfo.connId
         tokenPost(param, callback, RequestCode.wifi_bind_device)
+    }
+
+    /**
+     * 扫码绑定设备, 蓝牙签名绑定设备
+     */
+    override fun sigBindDevice(
+        familyId: String, roomId: String, productId: String, deviceName: String, signature: String,
+        timestamp: Long, connId: String, signMethod: String, bindType: String, callback: MyCallback
+    ) {
+        val param = tokenParams("AppSigBindDeviceInFamily")
+        param["FamilyId"] = familyId
+        param["RoomId"] = roomId
+        param["DeviceId"] = "${productId}/${deviceName}"
+        param["DeviceTimestamp"] = timestamp
+        param["ConnId"] = connId
+        param["SignMethod"] = signMethod
+        param["BindType"] = bindType
+        param["Signature"] = Utils.bytesToHexString(Base64.decodeFast(signature)).toString()
+        tokenPost(param, callback, RequestCode.scan_for_bind_device)
     }
 
     /**

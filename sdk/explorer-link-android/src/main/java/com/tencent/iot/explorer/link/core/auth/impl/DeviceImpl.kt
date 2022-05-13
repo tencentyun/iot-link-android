@@ -88,6 +88,15 @@ interface DeviceImpl {
      */
     fun wifiBindDevice(familyId: String, deviceInfo: DeviceInfo, callback: MyCallback)
 
+
+    /**
+     * 扫码绑定设备, 蓝牙签名绑定设备
+     */
+    fun sigBindDevice(
+        familyId: String, roomId: String, productId: String, deviceName: String, signature: String,
+        timestamp: Long, connId: String, signMethod: String, bindType: String, callback: MyCallback
+    )
+
     /**
      * 删除设备
      */
