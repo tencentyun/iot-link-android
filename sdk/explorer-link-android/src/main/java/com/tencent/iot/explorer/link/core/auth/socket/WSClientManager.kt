@@ -191,6 +191,7 @@ internal class WSClientManager private constructor() {
             host
         //创建WebSocket
         client = JWebSocketClient(URI(myHost), handler, connectListener)
+        client!!.connectionLostTimeout = 0
         client!!.connect()
     }
 
