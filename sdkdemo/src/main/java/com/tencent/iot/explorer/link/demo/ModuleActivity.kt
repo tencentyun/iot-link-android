@@ -1,7 +1,6 @@
 package com.tencent.iot.explorer.link.demo
 
 import android.Manifest
-import android.widget.Toast
 import com.tencent.iot.explorer.link.demo.core.activity.LoginActivity
 import com.tencent.iot.explorer.link.demo.video.VideoOptionsActivity
 import kotlinx.android.synthetic.main.activity_module.*
@@ -25,17 +24,14 @@ class ModuleActivity : BaseActivity() {
         }
 
         btn_2.setOnClickListener {
-            Toast.makeText(this, "1.5.4sdk合规仅检测core部分", Toast.LENGTH_LONG).show()
-//            if (checkPermissions(permissions)) {
-//                jumpActivity(VideoOptionsActivity::class.java)
-//            } else {
-//                requestPermission(permissions)
-//            }
+            if (checkPermissions(permissions)) {
+                jumpActivity(VideoOptionsActivity::class.java)
+            } else {
+                requestPermission(permissions)
+            }
         }
 
-        btn_3.setOnClickListener {
-            Toast.makeText(this, "1.5.4sdk合规仅检测core部分", Toast.LENGTH_LONG).show()
-        }
+        btn_3.setOnClickListener {}
     }
 
     override fun permissionAllGranted() {
