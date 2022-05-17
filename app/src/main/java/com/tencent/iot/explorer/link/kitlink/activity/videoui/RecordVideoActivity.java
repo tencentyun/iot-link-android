@@ -658,6 +658,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         Camera.Size previewSize = getCameraPreviewSize(parameters);
         //设置预览图像分辨率
         parameters.setPreviewSize(vw, vh);
+        //设置帧率
+        parameters.setPreviewFrameRate(App.Companion.getData().getFrameRate());
 
         //配置camera参数
         camera.setParameters(parameters);

@@ -90,8 +90,8 @@ class AppData private constructor() {
     var resolutionWidth = 320
     // 分辨率高 320
     var resolutionHeight = 240
-    // 帧率 7
-    var frameRate = 7
+    // 帧率 15
+    var frameRate = 15
 
 
     fun getMobileBrand(): String {
