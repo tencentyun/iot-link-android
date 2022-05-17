@@ -98,7 +98,10 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private TextView tvACache;
     private TextView tvVideoWH;
     private final FLVListener flvListener =
-            data -> XP2P.dataSend(TRTCUIManager.getInstance().deviceId, data, data.length);
+            data -> {
+//                Log.e(TAG, "===== dataLen:" + data.length);
+                XP2P.dataSend(TRTCUIManager.getInstance().deviceId, data, data.length);
+            };
 
     private AudioEncoder audioEncoder;
     private VideoEncoder videoEncoder;
@@ -205,6 +208,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         vw = App.Companion.getData().getResolutionWidth();
         vh = App.Companion.getData().getResolutionHeight();
 
+        XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
         initAudioEncoder();
         initVideoEncoder();
         getDeviceStatus();
@@ -523,7 +527,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
      * 展示通话中的界面
      */
     public void showCallingView() {
-        XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
         if (mIsVideo) { // 需要绘制视频本地和对端画面
             play(CallingType.TYPE_VIDEO_CALL);
         } else { // 需要绘制音频本地和对端画面
@@ -605,7 +608,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     };
 
     private void startRecord(int callType) {
-        flvPacker = new FLVPacker(flvListener, true, true);
         if (callType == CallingType.TYPE_VIDEO_CALL) {
             startEncodeVideo = true;
         }
@@ -745,13 +747,19 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     @Override
     public void onAudioEncoded(byte[] datas, long pts, long seq) {
         if (executor.isShutdown()) return;
-        executor.submit(() -> flvPacker.encodeFlv(datas, FLVPacker.TYPE_AUDIO, pts));
+        executor.submit(() -> {
+            if (flvPacker == null) flvPacker = new FLVPacker(flvListener, true, true);
+            flvPacker.encodeFlv(datas, FLVPacker.TYPE_AUDIO, pts);
+        });
     }
 
     @Override
     public void onVideoEncoded(byte[] datas, long pts, long seq) {
         if (executor.isShutdown()) return;
-        executor.submit(() -> flvPacker.encodeFlv(datas, FLVPacker.TYPE_VIDEO, pts));
+        executor.submit(() -> {
+            if (flvPacker == null) flvPacker = new FLVPacker(flvListener, true, true);
+            flvPacker.encodeFlv(datas, FLVPacker.TYPE_VIDEO, pts);
+        });
     }
 
     @Override
