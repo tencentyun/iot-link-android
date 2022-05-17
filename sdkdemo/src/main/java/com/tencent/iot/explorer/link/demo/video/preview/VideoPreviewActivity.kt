@@ -215,7 +215,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                     || getDeviceStatus(id) != 0) {
                     XP2P.stopService(id)
                     synchronized(objectLock) {
-                        objectLock.wait(1000)
+                        objectLock.wait(500)
                     }
                     Log.d(tag, "====正在重连...")
                 }
@@ -439,7 +439,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
                 it.reset()
 
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
@@ -551,7 +551,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
             startShowVideoTime = 0L
             keepPlayThreadLock?.let {
                 synchronized(it) {
-                    Log.d(tag, "p2p链路断开, event=$event.")
+                    Log.d(tag, "====p2p链路断开, event=$event.")
                     it.notify()
                 }
             } // 唤醒守护线程
