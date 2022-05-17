@@ -20,7 +20,9 @@ class DeviceHolder : BaseHolder<DeviceEntity> {
             itemView.tv_device_status.setTextColor(getColor(R.color.gray_cccccc))
             "离线"
         }
-        Picasso.get().load(data.IconUrl).into(itemView.iv_item_device)
+        if (data.IconUrl.isNotEmpty()) {
+            Picasso.get().load(data.IconUrl).into(itemView.iv_item_device)
+        }
         itemView.setOnClickListener {
             clickItem(this, it, position)
         }
