@@ -30,7 +30,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.iot.explorer.link.App;
 import com.tencent.iot.explorer.link.T;
-import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.core.utils.Utils;
 import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog;
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity;
@@ -54,10 +53,8 @@ import com.tencent.iot.video.link.param.MicParam;
 import com.tencent.iot.video.link.param.VideoEncodeParam;
 import com.tencent.iot.video.link.recorder.CallingType;
 import com.tencent.iot.video.link.recorder.OnRecordListener;
-import com.tencent.iot.video.link.recorder.VideoRecorder;
 import com.tencent.iot.video.link.recorder.core.camera.CameraConstants;
 import com.tencent.iot.video.link.recorder.core.camera.CameraUtils;
-import com.tencent.iot.video.link.recorder.opengles.view.CameraView;
 import com.tencent.xnet.XP2P;
 
 import java.io.IOException;
@@ -208,10 +205,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         vw = App.Companion.getData().getResolutionWidth();
         vh = App.Companion.getData().getResolutionHeight();
 
-        XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
+        getDeviceStatus();
         initAudioEncoder();
         initVideoEncoder();
-        getDeviceStatus();
 
         TRTCUIManager.getInstance().addCallingParamsCallback(new TRTCCallingParamsCallback() {
             @Override
@@ -580,6 +576,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
+        getDeviceStatus();
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
         Toast.makeText(this, url, Toast.LENGTH_LONG).show();
@@ -591,6 +588,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         }
         player.prepareAsync();
         player.start();
+
+        // 开始推流
+        XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
         handler.post(() -> startRecord(callType));
     }
 
