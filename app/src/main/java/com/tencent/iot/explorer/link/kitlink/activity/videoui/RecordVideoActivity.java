@@ -179,6 +179,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         stopRecord();
         executor.shutdown();
         XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
+        releaseCamera(camera);
         if (player != null) {
             mHandler.removeMessages(MSG_UPDATE_HUD);
             player.release();
@@ -767,16 +768,17 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         openCamera();
+        Log.d(TAG, "surface created.");
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        Log.d(TAG, "surface changed.");
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        releaseCamera(camera);
+        Log.d(TAG, "surface destroyed.");
     }
 
     private static class MyHandler extends Handler {
