@@ -59,6 +59,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     private var hasProduct = false
     private var reconnect = false
     private var firstTime = true
+    private var needRestartP2P = false
 
     //面板UI列表
     private val uiList = ArrayList<Property>()
@@ -143,6 +144,17 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
      * 设备当前状态(如亮度、开关状态等)
      */
     fun requestDeviceData() {
+        if (hasPanel) {
+            deviceDataList.clear()
+            HttpRequest.instance.deviceData(productId, deviceName, this)
+        }
+    }
+
+    /**
+     * 设备当前状态(如亮度、开关状态等)
+     */
+    fun requestDeviceData(needRestartP2PService: Boolean) {
+        needRestartP2P = needRestartP2PService
         if (hasPanel) {
             deviceDataList.clear()
             HttpRequest.instance.deviceData(productId, deviceName, this)
@@ -269,8 +281,17 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                             firstTime = false
                         }
                         if (reconnect) {//p2p链路断开重连的情况下不需要重新设置回调以及启服务
-                            XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                            if (needRestartP2P) {
+                                XP2P.stopService(deviceId)
+                                XP2P.setCallback(xp2pCallback)
+                                XP2P.startService(deviceId, productId, deviceName)
+                                XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                                needRestartP2P = false;
+                            } else {
+                                XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                            }
                         }
+
                     }
                 }
             }
