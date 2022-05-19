@@ -37,6 +37,10 @@ class ControlPanelPresenter(view: ControlPanelView) : ParentPresenter<ControlPan
         model?.requestDeviceData()
     }
 
+    fun requestDeviceDataRestartP2PService() {
+        model?.requestDeviceData(true)
+    }
+
     fun requestControlPanel() {
         model?.requestControlPanel()
     }

@@ -1,8 +1,10 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
@@ -71,6 +73,8 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
 
     private var mtusize = 0
 
+    private var hostIp = ""
+
     override fun getContentView(): Int {
         return R.layout.activity_control_panel
     }
@@ -105,6 +109,10 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         presenter = ControlPanelPresenter(this)
         netWorkStateReceiver = NetWorkStateReceiver()
         netWorkStateReceiver!!.addListener(this)
+        (applicationContext?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.let {
+            L.e("gateway=${it.dhcpInfo.gateway}")
+            hostIp = intToIp(it.dhcpInfo.gateway)
+        }
         deviceEntity = get("device")
         deviceEntity?.run {
             presenter.setProductId(ProductId)
@@ -135,6 +143,15 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                 }
             }
         }
+    }
+
+    /**
+     * xxxxxxxx 转成 xxx.xxx.xxx.xxx
+     * int转化为ip地址
+     */
+    private fun intToIp(paramInt: Int): String {
+        return ((paramInt and 0xFF).toString() + "." + (0xFF and (paramInt shr 8)) + "." +
+                (0xFF and (paramInt shr 16)) + "." + (0xFF and (paramInt shr 24)))
     }
 
     private fun startScanBleDev() {
@@ -621,9 +638,19 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     }
 
     override fun networkAvailable() {
-        //网络可达
-        presenter.requestDeviceData()
-        presenter.getUserSetting()
+
+        (applicationContext?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.let {
+            val nowHostIp = intToIp(it.dhcpInfo.gateway)
+            L.e("nowHostIp=${nowHostIp}, hostIp=${hostIp}")
+            if (nowHostIp != hostIp) {
+                presenter.requestDeviceDataRestartP2PService()
+                hostIp = nowHostIp
+            } else {
+                //网络可达
+                presenter.requestDeviceData()
+                presenter.getUserSetting()
+            }
+        }
     }
 
     override fun networkUnavailable() {
