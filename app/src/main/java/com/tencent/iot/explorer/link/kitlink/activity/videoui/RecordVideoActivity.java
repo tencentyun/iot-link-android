@@ -51,10 +51,9 @@ import com.tencent.iot.video.link.listener.OnEncodeListener;
 import com.tencent.iot.video.link.param.AudioEncodeParam;
 import com.tencent.iot.video.link.param.MicParam;
 import com.tencent.iot.video.link.param.VideoEncodeParam;
-import com.tencent.iot.video.link.recorder.CallingType;
-import com.tencent.iot.video.link.recorder.OnRecordListener;
-import com.tencent.iot.video.link.recorder.core.camera.CameraConstants;
-import com.tencent.iot.video.link.recorder.core.camera.CameraUtils;
+import com.tencent.iot.video.link.consts.CallingType;
+import com.tencent.iot.video.link.consts.CameraConstants;
+import com.tencent.iot.video.link.util.CameraUtils;
 import com.tencent.xnet.XP2P;
 
 import java.io.IOException;
@@ -594,19 +593,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
         handler.post(() -> startRecord(callType));
     }
-
-    private OnRecordListener onRecordListener = new OnRecordListener() {
-        @Override
-        public void onRecordStart() { }
-        @Override
-        public void onRecordTime(long time) { }
-        @Override
-        public void onRecordComplete(String path) { }
-        @Override
-        public void onRecordCancel() { }
-        @Override
-        public void onRecordError(Exception e) { }
-    };
 
     private void startRecord(int callType) {
         if (callType == CallingType.TYPE_VIDEO_CALL) {

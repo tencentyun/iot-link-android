@@ -1,4 +1,4 @@
-package com.tencent.iot.video.link.recorder;
+package com.tencent.iot.video.link.consts;
 
 public abstract class CallingType {
     public static final int TYPE_UNKNOWN = 0;
