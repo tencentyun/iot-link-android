@@ -59,7 +59,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name=".video.VideoMainActivity" />
         <activity android:name=".video.nvr.VideoNvrActivity" />
-        <activity android:name=".video.preview.RecordVideoActivity" />
         <activity
             android:name=".video.playback.VideoPlaybackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />

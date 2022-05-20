@@ -18,7 +18,7 @@ import com.tencent.iot.explorer.link.kitlink.adapter.FrameRateListAdapter;
 import com.tencent.iot.explorer.link.kitlink.adapter.ResolutionListAdapter;
 import com.tencent.iot.explorer.link.kitlink.entity.FrameRateEntity;
 import com.tencent.iot.explorer.link.kitlink.entity.ResolutionEntity;
-import com.tencent.iot.video.link.recorder.core.camera.CameraConstants;
+import com.tencent.iot.video.link.consts.CameraConstants;
 
 import java.util.ArrayList;
 import java.util.List;
