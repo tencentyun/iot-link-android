@@ -100,7 +100,7 @@ public class VideoEncoder {
 
                     if (bufferInfo.flags == MediaCodec.BUFFER_FLAG_KEY_FRAME) {
                         // I 帧的处理逻辑
-                        Log.e("TAG", "==========I帧==============="+seq);
+//                        Log.e("TAG", "==========I帧==============="+seq);
                         ByteBuffer spsb = mediaCodec.getOutputFormat().getByteBuffer("csd-0");
                         byte[] sps = new byte[spsb.remaining()];
                         spsb.get(sps, 0, sps.length);
@@ -118,7 +118,7 @@ public class VideoEncoder {
                         }
                     } else {
                         //outData就是输出的h264数据
-                        Log.e("TAG", "==========P帧===============" + seq);
+//                        Log.e("TAG", "==========P帧===============" + seq);
                         if (encoderListener != null) {
                             encoderListener.onVideoEncoded(outData, System.currentTimeMillis(), seq);
                             seq++;
