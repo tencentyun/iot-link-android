@@ -1,4 +1,4 @@
-package com.tencent.iot.video.link.recorder.core.camera;
+package com.tencent.iot.video.link.util;
 
 import android.app.Activity;
 import android.hardware.Camera;
