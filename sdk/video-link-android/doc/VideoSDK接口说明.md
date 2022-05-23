@@ -4,17 +4,34 @@
 
 ### 接口说明
 1. 初始化xp2p服务接口
-> void startServiceWithXp2pInfo(String id, String product_id, String device_name, String xp2p_info_attr, String xp2p_info)
+> int startService(String id, String product_id, String device_name)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
 | product_id | String | 产品ID |
 | device_name | String | 设备名称 |
-| xp2p_info_attr | String | xp2p属性，当前版本固定为`_sys_xp2p_info`,若xp2p_info已获取，该参数可传入null |
-| xp2p_info | String | 获取的camera端生成的xp2p信息,由接口获取则传入空 |
 
-2. 获取本地请求数据的标准http url,可使用该url请求设备端数据
+| 返回值 | 描述 |
+|:-|:-|
+| int | 错误码 |
+
+
+2. 设置云API secret_id、secret_key以及xp2pInfo
+> int setParamsForXp2pInfo(String id, String secretId, String secretKey, String xp2pInfo)
+
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
+| secretId | String | 云API secret_id信息 |
+| secretKey | String | 云API seret_key信息 |
+| xp2p_info | String | 获取的camera端生成的xp2p信息,由该接口获取则传入空 |
+
+| 返回值 | 描述 |
+|:-|:-|
+| int | 错误码 |
+
+3. 获取本地请求数据的标准http url,可使用该url请求设备端数据
 > String delegateHttpFlv(String id)
 
 > 说明: 该接口与startAvRecvService的使用互斥,不可同时使用二者
@@ -27,14 +44,14 @@
 |:-|:-|
 | String | 本地代理的url |
 
-3. 退出xp2p并释放对应的资源
+4. 退出xp2p并释放对应的资源
 > void stopService(String id)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
 
-4. 向camera设备发送语音或自定义数据
+5. 向camera设备发送语音或自定义数据
 > void dataSend(String id, byte[] data, int len)
 
 | 参数 | 类型 | 描述 |
@@ -42,14 +59,6 @@
 | id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
 | data | byte[] | 要发送的字节流 |
 | len | int | 要发送的数据长度 |
-
-5. 设置云API secret_id和secret_key
-> void setQcloudApiCred(String id, String key)
-
-| 参数 | 类型 | 描述 |
-|:-|:-|:-|
-| id | String | 云API secret_id信息 |
-| key | String | 云API seret_key信息 |
 
 
 6. 启动向camera设备发送语音或自定义数据服务，异步非阻塞方式
