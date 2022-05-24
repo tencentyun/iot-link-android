@@ -51,6 +51,7 @@ import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.Runnable
+import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
@@ -61,7 +62,7 @@ private var keepPlayThreadLock = Object()
 @Volatile
 private var keepAliveThreadRuning = true
 
-open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
+class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener {
 
     open var tag = VideoPreviewActivity::class.simpleName
@@ -685,28 +686,40 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
         return -1
     }
 
-    private val mHandler: Handler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            when (msg.what) {
-                MSG_UPDATE_HUD -> {
-                    val videoCachedDuration = player?.videoCachedDuration
-                    val audioCachedDuration = player?.audioCachedDuration
-                    val videoCachedBytes = player?.videoCachedBytes
-                    val audioCachedBytes = player?.audioCachedBytes
-                    val tcpSpeed = player?.tcpSpeed
+    private val mHandler = MyHandler(this)
 
-                    tv_a_cache?.text = String.format(Locale.US, "%s, %s",
-                        CommonUtils.formatedDurationMilli(audioCachedDuration),
-                        CommonUtils.formatedSize(audioCachedBytes))
-                    tv_v_cache?.text = String.format(Locale.US, "%s, %s",
-                        CommonUtils.formatedDurationMilli(videoCachedDuration),
-                        CommonUtils.formatedSize(videoCachedBytes))
-                    tv_tcp_speed?.text = String.format(Locale.US, "%s",
-                        CommonUtils.formatedSpeed(tcpSpeed, 1000))
-                    removeMessages(MSG_UPDATE_HUD)
-                    sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
+    private class MyHandler(activity: VideoPreviewActivity) : Handler() {
+        private val mActivity: WeakReference<VideoPreviewActivity>  = WeakReference(activity)
+        override fun handleMessage(msg: Message) {
+            if (mActivity.get() == null) {
+                return
+            }
+            val activity = mActivity.get()
+            when (msg.what) {
+                activity?.MSG_UPDATE_HUD -> {
+                    activity.updateDashboard()
+                    removeMessages(activity.MSG_UPDATE_HUD)
+                    sendEmptyMessageDelayed(activity.MSG_UPDATE_HUD, 500)
                 }
             }
         }
+    }
+
+    private fun updateDashboard() {
+        val videoCachedDuration = player.videoCachedDuration
+        val audioCachedDuration = player.audioCachedDuration
+        val videoCachedBytes = player.videoCachedBytes
+        val audioCachedBytes = player.audioCachedBytes
+        val tcpSpeed = player.tcpSpeed
+
+        tv_a_cache?.text = String.format(Locale.US, "%s, %s",
+            CommonUtils.formatedDurationMilli(audioCachedDuration),
+            CommonUtils.formatedSize(audioCachedBytes))
+        tv_v_cache?.text = String.format(Locale.US, "%s, %s",
+            CommonUtils.formatedDurationMilli(videoCachedDuration),
+            CommonUtils.formatedSize(videoCachedBytes))
+        tv_tcp_speed?.text = String.format(Locale.US, "%s",
+            CommonUtils.formatedSpeed(tcpSpeed, 1000))
+        tv_video_w_h?.text = "${player.videoWidth} x ${player.videoHeight}"
     }
 }
