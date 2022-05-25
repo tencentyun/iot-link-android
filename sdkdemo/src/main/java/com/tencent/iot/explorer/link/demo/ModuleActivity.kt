@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.demo
 
 import android.Manifest
+import android.widget.Toast
 import com.tencent.iot.explorer.link.demo.core.activity.LoginActivity
 import com.tencent.iot.explorer.link.demo.video.VideoOptionsActivity
 import kotlinx.android.synthetic.main.activity_module.*
@@ -20,7 +21,8 @@ class ModuleActivity : BaseActivity() {
 
     override fun setListener() {
         btn_1.setOnClickListener {
-            jumpActivity(LoginActivity::class.java)
+            Toast.makeText(this, "2.4.22sdk合规仅检测video部分", Toast.LENGTH_LONG).show()
+//            jumpActivity(LoginActivity::class.java)
         }
 
         btn_2.setOnClickListener {
@@ -31,7 +33,9 @@ class ModuleActivity : BaseActivity() {
             }
         }
 
-        btn_3.setOnClickListener {}
+        btn_3.setOnClickListener {
+            Toast.makeText(this, "2.4.22sdk合规仅检测video部分", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun permissionAllGranted() {
