@@ -178,6 +178,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         stopRecord();
         executor.shutdown();
         XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
+        TRTCUIManager.getInstance().deviceId = "";
         releaseCamera(camera);
         if (player != null) {
             mHandler.removeMessages(MSG_UPDATE_HUD);
@@ -449,7 +450,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private void stopCameraAndFinish() {
         finish();
         TRTCUIManager.getInstance().isCalling = false;
-        TRTCUIManager.getInstance().deviceId = "";
         TRTCUIManager.getInstance().callStatus = TRTCCallStatus.TYPE_IDLE_OR_REFUSE.getValue();
         TRTCUIManager.getInstance().removeCallingParamsCallback();
         TRTCUIManager.getInstance().isP2PCall = false;
