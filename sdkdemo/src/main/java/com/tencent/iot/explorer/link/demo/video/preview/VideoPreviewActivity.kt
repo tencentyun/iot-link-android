@@ -582,10 +582,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             CommonUtils.refreshVideoList(this@VideoPreviewActivity, filePath)
         }
 
-        App.data.accessInfo?.let {
-            XP2P.stopService("${it.productId}/${presenter.getDeviceName()}")
-        }
-
         countDownLatchs.clear()
         // 关闭守护线程
         keepAliveThreadRuning = false
@@ -599,6 +595,9 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     override fun onDestroy() {
         super.onDestroy()
         finishPlayer()
+        App.data.accessInfo?.let {
+            XP2P.stopService("${it.productId}/${presenter.getDeviceName()}")
+        }
         XP2P.setCallback(null)
         cancel()
         volumeChangeObserver?.unregisterReceiver();
