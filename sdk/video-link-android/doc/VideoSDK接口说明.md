@@ -254,7 +254,7 @@ WlanDetectBody 定义如下
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| id | String | 回传`startServiceWithXp2pInfo`接口中的`id` |
+| id | String | 回传`startService`接口中的`id` |
 | data | ByteArray | 接收到的音视频数据 |
 | len | Int | 接收到的音视频数据的长度 |
 
@@ -266,7 +266,7 @@ WlanDetectBody 定义如下
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| id | String | 回传`startServiceWithXp2pInfo`接口中的`id` |
+| id | String | 回传`startService`接口中的`id` |
 | msg | String | 附加描述信息,当前版本可不用处理 |
 | code | Int | 附加描述信息,当前版本可不用处理 |
 
@@ -278,7 +278,7 @@ WlanDetectBody 定义如下
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| id | String | 回传`startServiceWithXp2pInfo`接口中的`id` |
+| id | String | 回传`startService`接口中的`id` |
 | msg | String | 设备端回应的消息,json数组格式 |
 | len | Int | 设备端回应的消息长度 |
 
@@ -289,7 +289,7 @@ WlanDetectBody 定义如下
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| id | String | 回传`startServiceWithXp2pInfo`接口中的`id` |
+| id | String | 回传`startService`接口中的`id` |
 | msg | String | 附加说明,json格式 |
 
 5. 设备向app发送自定义消息，该回调的返回值表示app向设备端回复的消息
@@ -327,9 +327,9 @@ DeviceServerInfo 定义如下
 ### 附带说明
 
 * 函数接口调用顺序:
-    * setQcloudApiCred
     * setCallback
-    * startServiceWithXp2pInfo
+    * startService
+    * setParamsForXp2pInfo
     * runSendService:如果没有发送需求可不调用该接口
     * dataSend:如果没有发送需求可不调用该接口
     * stopSendService:该接口暂时不用调用
@@ -337,10 +337,11 @@ DeviceServerInfo 定义如下
 
 
 ### APP接入SDK说明
-第三方App在接入Video SDK时，建议将`secretId`和`secretKey`保存到自建后台，不推荐将这两个信息保存至App端; 而SDK需要的xp2p info需要App侧从自己的业务后台获取；获取到xp2p info后，可以通过上述的`startServiceWithXp2pInfo`接口将该info传给SDK，示例代码如下：
+第三方App在接入Video SDK时，建议将`secretId`和`secretKey`保存到自建后台，不推荐将这两个信息保存至App端; 而SDK需要的xp2p info需要App侧从自己的业务后台获取；获取到xp2p info后，可以通过上述的`setParamsForXp2pInfo`接口将该info传给SDK，示例代码如下：
 ```
 ...
 String xp2p_info = getXP2PInfo(...) // 从自建后台获取xp2p info
 XP2P.setCallback(this)
-XP2P.startServiceWithXp2pInfo(id, product_id, device_name, "", xp2p_info)
+XP2P.startService(id, product_id, device_name)
+XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
 ```
