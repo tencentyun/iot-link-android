@@ -62,7 +62,7 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.devName.setText(list.get(position)?.deviceName)
+        holder.devName.setText(list.get(position)?.DeviceName)
 
         videoProductInfo?.let {
             when(it.DeviceType ) {
@@ -83,7 +83,7 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
             tipText?.setText(context?.getString(R.string.devs_checked, checkedIds?.size))
         }
 
-        if (list.get(position)?.Status == 1) {
+        if (list.get(position)?.Online == 1) {
             holder.backgroundLayout.visibility = View.GONE
             holder.statusTv.setText(R.string.online)
             context?.let {
