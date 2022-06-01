@@ -77,11 +77,9 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
             App.data.accessInfo?.productId = product_id_layout.ev_content.text.toString()
 
             var dev = DevInfo()
-            dev.deviceName = datas.get(pos).deviceName
-            dev.channel = 0
+            dev.DeviceName = datas.get(pos).deviceName
+            dev.Channel = 0
             dev.Status = 1
-            dev.address = datas.get(pos).address
-            dev.port = datas.get(pos).port
             WlanVideoPreviewActivity.startPreviewActivity(this@VideoWlanDetectActivity, dev)
         }
     }
