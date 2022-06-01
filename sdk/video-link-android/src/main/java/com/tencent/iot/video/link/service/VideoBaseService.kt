@@ -163,14 +163,13 @@ open class VideoBaseService(secretId: String, secretKey: String) {
      * video获取设备信息列表   DescribeDevices
      */
     fun describeDevices(
-        productId: String, returnModel: Boolean, limit: Int, offset: Int, callback: VideoCallback
+        productId: String, limit: Int, offset: Int, callback: VideoCallback
     ) {
         var headerParams = videoCommonHeaderParams("DescribeDevices")
         val param = TreeMap<String, Any>()
         param["Limit"] = limit
         param["Offset"] = offset
         param["ProductId"] = productId
-        param["ReturnModel"] = returnModel
         val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
         if (authorization != null) {
             headerParams["Authorization"] = authorization
@@ -208,7 +207,7 @@ open class VideoBaseService(secretId: String, secretKey: String) {
 //        param["X-TC-Version"] = "2019-11-26"
 //        param["X-TC-Timestamp"] = (System.currentTimeMillis() / 1000).toString()
 //        return param
-        return videoCommonHeaderParams(action, "2019-11-26")
+        return videoCommonHeaderParams(action, "2021-11-25")
     }
 
     open fun sign(

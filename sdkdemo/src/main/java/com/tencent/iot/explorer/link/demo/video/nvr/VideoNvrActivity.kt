@@ -71,8 +71,8 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
 
             var devInfo = JSON.parseObject(devInfoStr, DevInfo::class.java)
             devInfo?.let {
-                tv_title.setText(it.deviceName)
-                showDev(it.deviceName)
+                tv_title.setText(it.DeviceName)
+                showDev(it.DeviceName)
             }
         }
     }
@@ -106,8 +106,8 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
                     var dev = DevUrl2Preview()
                     dev.devName = tv_title.text.toString()
                     dev.Status = it.list.get(i).Status
-                    dev.channel = it.list.get(i).channel
-                    dev.channel2DevName = it.list.get(i).deviceName
+                    dev.channel = it.list.get(i).Channel
+                    dev.channel2DevName = it.list.get(i).DeviceName
                     allUrl.add(dev)
                 }
             }
@@ -193,9 +193,9 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
 
     override fun onItemClicked(pos: Int, dev: DevInfo) {
         var devInfo = DevInfo()
-        devInfo.deviceName = tv_title.text.toString()
-        devInfo.online = dev.online
-        devInfo.channel = dev.channel
+        devInfo.DeviceName = tv_title.text.toString()
+        devInfo.Online = dev.Online
+        devInfo.Channel = dev.Channel
         var options = arrayListOf(getString(R.string.preview))
         var dlg =
             ListOptionsDialog(
