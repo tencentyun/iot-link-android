@@ -100,7 +100,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             presenter.setAccessId(it.accessId)
             presenter.setAccessToken(it.accessToken)
             presenter.setProductId(it.productId)
-            presenter.setDeviceName(devInfo!!.deviceName)
+            presenter.setDeviceName(devInfo!!.DeviceName)
             try2GetRecord(Date())
         }
         palayback_video.surfaceTextureListener = this
@@ -118,7 +118,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private fun try2GetVideoDateData() {
         App.data.accessInfo?.let { accessInfo ->
             devInfo?.let {
-                VideoBaseService(accessInfo.accessId, accessInfo.accessToken).getIPCDateData(accessInfo.productId, it.deviceName, this)
+                VideoBaseService(accessInfo.accessId, accessInfo.accessToken).getIPCDateData(accessInfo.productId, it.DeviceName, this)
             }
         }
     }
@@ -129,7 +129,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
         App.data.accessInfo?.let {
             if (devInfo == null) return@let
-            VideoBaseService(it.accessId, it.accessToken).getIPCTimeData(it.productId, devInfo!!.deviceName, timeStr!!, this)
+            VideoBaseService(it.accessId, it.accessToken).getIPCTimeData(it.productId, devInfo!!.DeviceName, timeStr!!, this)
         }
     }
 
