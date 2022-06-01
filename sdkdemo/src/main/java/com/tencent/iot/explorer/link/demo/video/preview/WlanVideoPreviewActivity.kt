@@ -372,11 +372,9 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
             var bundle = Bundle()
             intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
             var devInfo = DevUrl2Preview()
-            devInfo.devName = dev.deviceName
+            devInfo.devName = dev.DeviceName
             devInfo.Status = dev.Status
-            devInfo.channel = dev.channel
-            devInfo.address = dev.address
-            devInfo.port = dev.port
+            devInfo.channel = dev.Channel
             bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(devInfo))
             context.startActivity(intent)
         }

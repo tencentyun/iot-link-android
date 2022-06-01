@@ -309,7 +309,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         }
         radio_playback.setOnClickListener {
             var dev = DevInfo()
-            dev.deviceName = presenter.getDeviceName()
+            dev.DeviceName = presenter.getDeviceName()
             VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewActivity, dev)
         }
         radio_photo.setOnClickListener {
@@ -611,9 +611,9 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             var bundle = Bundle()
             intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
             var devInfo = DevUrl2Preview()
-            devInfo.devName = dev.deviceName
+            devInfo.devName = dev.DeviceName
             devInfo.Status = dev.Status
-            devInfo.channel = dev.channel
+            devInfo.channel = dev.Channel
             bundle.putString(VideoConst.VIDEO_CONFIG, JSON.toJSONString(devInfo))
             context.startActivity(intent)
         }
