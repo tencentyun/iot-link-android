@@ -106,7 +106,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
             for (i in 0 until it.list.size) {
                 if (it.checkedIds.contains(i)) {
                     var dev = DevUrl2Preview()
-                    dev.devName = it.list.get(i).deviceName
+                    dev.devName = it.list.get(i).DeviceName
                     dev.Status = it.list.get(i).Status
                     allUrl.add(dev)
                 }
@@ -204,7 +204,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
         videoProductInfo?.let {
             App.data.accessInfo?.let {
                 devs.clear()
-                VideoBaseService(it.accessId, it.accessToken).getDeviceList(it.productId, 0, 99, this)
+                VideoBaseService(it.accessId, it.accessToken).describeDevices(it.productId, 99, 0, this)
             }
         }
     }
