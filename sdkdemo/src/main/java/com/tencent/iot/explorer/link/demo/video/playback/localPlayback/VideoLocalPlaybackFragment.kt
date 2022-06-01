@@ -162,12 +162,12 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
             devInfo ?: let { return@setOnClickListener }
             if (TextUtils.isEmpty(tv_all_time.text.toString())) return@setOnClickListener
 
-            var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
+            var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
             Log.d(TAG, "setOnClickListener currentPlayerState $currentPlayerState")
 
             if (currentPlayerState) {
                 launch(Dispatchers.IO) {
-                    var stopCommand = Command.pauseLocalVideoUrl(devInfo!!.channel)
+                    var stopCommand = Command.pauseLocalVideoUrl(devInfo!!.Channel)
                     var resp = sendCmd(id, stopCommand)
                     var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
                     if (commandResp != null && commandResp.status == 0) {
@@ -183,7 +183,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
             } else {
                 launch(Dispatchers.IO) {
-                    var startCommand = Command.resumeLocalVideoUrl(devInfo!!.channel)
+                    var startCommand = Command.resumeLocalVideoUrl(devInfo!!.Channel)
                     var resp = sendCmd(id, startCommand)
                     var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
                     if (commandResp != null && commandResp.status == 0) {
@@ -392,7 +392,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
                     val offset = initDownload(playbacks[pos])
                     if (offset >= 0) {
                         XP2P.startAvRecvService(
-                            "${App.data.accessInfo!!.productId}/${devInfo?.deviceName}",
+                            "${App.data.accessInfo!!.productId}/${devInfo?.DeviceName}",
                             "action=download&channel=0&file_name=${playbacks[pos].file_name}&offset=${offset}",
                             false
                         )
@@ -473,24 +473,24 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
     private fun requestTagDateInfo(dateStr: String): String {
         if (App.data.accessInfo == null || devInfo == null ||
-            TextUtils.isEmpty(devInfo?.deviceName)
+            TextUtils.isEmpty(devInfo?.DeviceName)
         ) return ""
 
-        var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
+        var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
         var timeStr = formateDateParam(dateStr)
         Log.d(TAG, "request timeStr $timeStr")
-        var command = Command.getMonthDates(devInfo!!.channel, timeStr)
+        var command = Command.getMonthDates(devInfo!!.Channel, timeStr)
         if (TextUtils.isEmpty(command)) return ""
         return sendCmd(id, command)
     }
 
     private fun refreshDateTime(date: Date) {
         if (App.data.accessInfo == null || devInfo == null ||
-            TextUtils.isEmpty(devInfo?.deviceName)
+            TextUtils.isEmpty(devInfo?.DeviceName)
         ) return
 
-        var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
-        var command = Command.getDayTimeBlocks(devInfo!!.channel, date)
+        var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
+        var command = Command.getDayTimeBlocks(devInfo!!.Channel, date)
         var resp = sendCmd(id, command)
 
         if (TextUtils.isEmpty(resp)) return
@@ -517,7 +517,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
                 delay(1000)
                 if (!isShowing) currentPlayerState = false
                 Log.d(TAG, "playVideo currentPlayerState $currentPlayerState")
-                setPlayerUrl(Command.getLocalVideoUrl(it.channel, startTime, endTime), offset)
+                setPlayerUrl(Command.getLocalVideoUrl(it.Channel, startTime, endTime), offset)
                 tv_all_time.text = CommonUtils.formatTime(endTime * 1000 - startTime * 1000)
                 video_seekbar.max = (endTime - startTime).toInt()
             }
@@ -566,8 +566,8 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
             if (offset > 0) {
                 devInfo?.let { dev ->
-                    var seekCommand = Command.seekLocalVideo(dev.channel, offset)
-                    var id = "${App.data.accessInfo?.productId}/${dev.deviceName}"
+                    var seekCommand = Command.seekLocalVideo(dev.Channel, offset)
+                    var id = "${App.data.accessInfo?.productId}/${dev.DeviceName}"
 
                     var seekResp = sendCmd(id, seekCommand)
                     var commandResp = JSON.parseObject(seekResp, CommandResp::class.java)
@@ -605,14 +605,14 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
     private fun startConnect() {
         if (App.data.accessInfo == null || devInfo == null ||
-            TextUtils.isEmpty(devInfo?.deviceName)
+            TextUtils.isEmpty(devInfo?.DeviceName)
         ) return
 
         Thread(Runnable {
-            var id = "${App.data.accessInfo?.productId}/${devInfo?.deviceName}"
+            var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
             var started = XP2P.startServiceWithXp2pInfo(
                 id,
-                App.data.accessInfo?.productId, devInfo?.deviceName, ""
+                App.data.accessInfo?.productId, devInfo?.DeviceName, ""
             )
             if (started != 0) {
                 launch(Dispatchers.Main) {
@@ -627,7 +627,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 //                countDownLatchs.put("${App.data.accessInfo!!.productId}/${it.deviceName}", tmpCountDownLatch)
 //                tmpCountDownLatch.await()
                 urlPrefix =
-                    XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${it.deviceName}")
+                    XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${it.DeviceName}")
 
                 // 启动成功后，开始开启守护线程
 //                keepConnect(id)
@@ -657,7 +657,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
                 while (XP2P.startServiceWithXp2pInfo(
                         id,
                         App.data.accessInfo!!.productId,
-                        devInfo?.deviceName,
+                        devInfo?.DeviceName,
                         ""
                     ) != 0
                 ) {
@@ -827,7 +827,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
         App.data.accessInfo?.let { access ->
             devInfo?.let {
-                XP2P.stopService("${access.productId}/${it.deviceName}")
+                XP2P.stopService("${access.productId}/${it.DeviceName}")
             }
         }
         XP2P.setCallback(null)
