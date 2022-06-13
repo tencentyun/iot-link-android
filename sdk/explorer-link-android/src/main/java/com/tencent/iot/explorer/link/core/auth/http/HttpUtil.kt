@@ -40,7 +40,7 @@ object HttpUtil {
                     }
                     success(listener, response.toString())
                 } else {
-                    fail(listener, "服务器出错：$url")
+                    fail(listener, "服务器出错：${connection.responseCode}, $url")
                 }
             } catch (e: MalformedURLException) {
                 fail(listener, e.message ?: "请求URL不正确：$url")
@@ -94,7 +94,7 @@ object HttpUtil {
                         }
                         success(listener, response.toString())
                     } else {
-                        fail(listener, "服务器出错：$url")
+                        fail(listener, "服务器出错：$responseCode, $url")
                     }
                 }
             } catch (e: MalformedURLException) {
@@ -140,7 +140,7 @@ object HttpUtil {
                         }
                         success(listener, response.toString())
                     } else {
-                        fail(listener, "服务器出错：$url")
+                        fail(listener, "服务器出错：$responseCode, $url")
                     }
                 }
             } catch (e: MalformedURLException) {
