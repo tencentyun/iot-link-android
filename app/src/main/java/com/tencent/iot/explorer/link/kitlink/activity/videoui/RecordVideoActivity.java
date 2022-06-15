@@ -42,6 +42,7 @@ import com.tencent.iot.explorer.link.rtc.model.TRTCCalling;
 import com.tencent.iot.explorer.link.rtc.model.TRTCCallingParamsCallback;
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager;
 import com.tencent.iot.explorer.link.rtc.model.UserInfo;
+import com.tencent.iot.thirdparty.android.device.video.p2p.VideoNativeInteface;
 import com.tencent.iot.thirdparty.flv.FLVListener;
 import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.iot.video.link.encoder.AudioEncoder;
@@ -59,14 +60,19 @@ import com.tencent.xnet.XP2P;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class RecordVideoActivity extends BaseActivity implements TextureView.SurfaceTextureListener, OnEncodeListener, SurfaceHolder.Callback {
+
+    private static Timer bitRateTimer;
     private TextView mStatusView;
     private LinearLayout mHangupLl;
     private LinearLayout mDialingLl;
@@ -284,6 +290,55 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
                                                                           .setBitRate(vw*vh).build();
         videoEncoder = new VideoEncoder(videoEncodeParam);
         videoEncoder.setEncoderListener(this);
+    }
+
+    public class AdapterBitRateTask extends TimerTask {
+        @Override
+        public void run() {
+            System.out.println("检测时间到:" +new Date());
+
+
+            int bufsize = XP2P.getStreamBufSize(TRTCUIManager.getInstance().deviceId);
+//        return String.format(Locale.US, "buf=>%d<=", bufsize);
+
+//            videoEncoder.setVideoBitRate(10000);
+//            RecordVideoActivity.this.videoEncoder.setVideoBitRate(10000);
+
+            int p2p_wl_avg = XP2P.getAvgMaxMin(bufsize);
+
+            int now_video_rate = RecordVideoActivity.this.videoEncoder.getVideoBitRate();
+
+            Log.e(TAG,"send_bufsize==" + bufsize + ",now_video_rate==" + now_video_rate + ",avg_index==" + p2p_wl_avg);
+
+            // 降码率
+            // 当发现p2p的水线超过一定值时，降低视频码率，这是一个经验值，一般来说要大于 [视频码率/2]
+            // 实测设置为 80%视频码率 到 120%视频码率 比较理想
+            // 在10组数据中，获取到平均值，并将平均水位与当前码率比对。
+
+            int video_rate_byte = (now_video_rate / 8) * 3 / 4;
+            if (p2p_wl_avg > video_rate_byte) {
+
+                videoEncoder.setVideoBitRate(video_rate_byte);
+
+            }else if (p2p_wl_avg <  (now_video_rate / 8) / 3) {
+
+                // 升码率
+                // 测试发现升码率的速度慢一些效果更好
+                // p2p水线经验值一般小于[视频码率/2]，网络良好的情况会小于 [视频码率/3] 甚至更低
+                videoEncoder.setVideoBitRate(now_video_rate + 5);
+            }
+        }
+    }
+
+    private void startBitRateAdapter() {
+
+        XP2P.resetAvg();
+        bitRateTimer = new Timer();
+        bitRateTimer.schedule(new AdapterBitRateTask(),3000,1000);
+    }
+
+    private void stopBitRateAdapter() {
+        bitRateTimer.cancel();
     }
 
     private void getDeviceStatus() {
@@ -567,8 +622,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000);
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 64);
         } else {
-//        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000);
-            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024);
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000000);
+//            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024);
         }
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
@@ -576,6 +631,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
+
+        player.setFrameSpeed(1.5f);
         getDeviceStatus();
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
@@ -599,6 +656,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             startEncodeVideo = true;
         }
         audioEncoder.start();
+
+        startBitRateAdapter();
     }
 
     private void stopRecord() {
@@ -609,6 +668,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             videoEncoder.stop();
         }
         startEncodeVideo = false;
+
+        stopBitRateAdapter();
     }
 
     /**
