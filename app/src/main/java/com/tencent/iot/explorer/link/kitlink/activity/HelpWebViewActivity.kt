@@ -117,25 +117,25 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
             getAppGetTokenTicket()
 
         } else if (requestCode == PhotoUtils.RESULT_CODE_CAMERA && resultCode == Activity.RESULT_OK) {
-            if (checkCameraPermission(false)) {
+//            if (checkCameraPermission(false)) {
                 //拍照并确定
                 val bitmap = BitmapFactory.decodeFile(PhotoUtils.PATH_PHOTO)
-                val file = FileUtils.compressImage(bitmap)
+                val file = FileUtils.compressImage(this, bitmap)
                 uploadMessageAboveL?.onReceiveValue(arrayOf(Uri.fromFile(file)))
-            } else {
-                // 查看请求album权限的时间是否大于48小时
-                if (requestPermissionIsIn48Hours(CommonField.PERMISSION_ALBUM)) {
-                    T.show(resources.getString(R.string.permission_of_album_refuse))
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(permissions, FILE_CHOOSER_RESULT_CODE)
-                }
-                permissionDialog = PermissionDialog(this@HelpWebViewActivity, R.mipmap.permission_album ,getString(R.string.permission_album_lips), getString(R.string.permission_storage_help_center))
-                permissionDialog!!.show()
-
-                // 记录请求album权限的时间
-                savePermission(CommonField.PERMISSION_ALBUM)
-            }
+//            } else {
+//                // 查看请求album权限的时间是否大于48小时
+//                if (requestPermissionIsIn48Hours(CommonField.PERMISSION_ALBUM)) {
+//                    T.show(resources.getString(R.string.permission_of_album_refuse))
+//                }
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    requestPermissions(permissions, FILE_CHOOSER_RESULT_CODE)
+//                }
+//                permissionDialog = PermissionDialog(this@HelpWebViewActivity, R.mipmap.permission_album ,getString(R.string.permission_album_lips), getString(R.string.permission_storage_help_center))
+//                permissionDialog!!.show()
+//
+//                // 记录请求album权限的时间
+//                savePermission(CommonField.PERMISSION_ALBUM)
+//            }
 
 
         } else if (requestCode == PhotoUtils.RESULT_CODE_PHOTO && resultCode == Activity.RESULT_OK) {
@@ -281,7 +281,7 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
             if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //拍照并确定
                 val bitmap = BitmapFactory.decodeFile(PhotoUtils.PATH_PHOTO)
-                val file = FileUtils.compressImage(bitmap)
+                val file = FileUtils.compressImage(this, bitmap)
                 uploadMessageAboveL?.onReceiveValue(arrayOf(Uri.fromFile(file)))
             }
         }
