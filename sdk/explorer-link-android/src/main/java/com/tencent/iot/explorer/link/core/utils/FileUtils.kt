@@ -41,11 +41,12 @@ object FileUtils {
 
     fun getSdCardDirectory(context: Context): String {
         var sdDir: File?
-        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            sdDir = Environment.getExternalStorageDirectory()
-        } else {
-            sdDir = context.cacheDir
-        }
+//        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+//            sdDir = Environment.getExternalStorageDirectory()
+//        } else {
+//            sdDir = context.cacheDir
+//        }
+        sdDir = context.cacheDir
         val cacheDir = File(sdDir, folderName)
 
         if (!cacheDir.exists()) {
@@ -147,7 +148,7 @@ object FileUtils {
      *
      * @param image
      */
-    fun compressImage(image: Bitmap): File? {
+    fun compressImage(context: Context, image: Bitmap): File? {
         try {
             ByteArrayOutputStream().use {
                 var tmp = it
@@ -162,7 +163,7 @@ object FileUtils {
                     if (options <= 10) break
                 }
 
-                var path = Environment.getExternalStorageDirectory().toString() + tempFileName
+                var path = context.cacheDir.absolutePath + tempFileName
                 val file = File(path)
                 FileOutputStream(file).use {
                     it.write(tmp.toByteArray())
