@@ -59,7 +59,7 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
     private static final String TAG = "ScannerActivity";
 
     public static final String BARCODE_FORMAT = "support_barcode_format";
-    public final int PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 0X11;
+    public final int PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE = 0X11;
     public final int REQUEST_CODE_GET_PIC_URI = 0X12;
     private final int MESSAGE_DECODE_FROM_BITMAP = 0;
 
@@ -205,7 +205,7 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
         if (itemId == com.example.qrcode.R.id.scan_from_picture) {
             //先申请权限
             int checked = ContextCompat.checkSelfPermission(ScannerActivity.this
-                    , Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    , Manifest.permission.READ_EXTERNAL_STORAGE);
             if (checked == PackageManager.PERMISSION_GRANTED) {
                 goPicture();
             } else {
@@ -225,7 +225,7 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
                     permissionDialog.show();
                 }
                 ActivityCompat.requestPermissions(ScannerActivity.this
-                        , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
+                        , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE);
 
                 // 记录请求album权限的时间
                 JSONObject json = new JSONObject();
@@ -355,7 +355,7 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         permissionDialog.dismiss();
         permissionDialog = null;
-        if (requestCode == PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
+        if (requestCode == PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 goPicture();
                 return;
