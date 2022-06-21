@@ -183,27 +183,28 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
         optionDialog!!.show()
         optionDialog!!.setOnDismisListener {
             if (it == 0) {
-                if (checkPermissions(arrayOf(Manifest.permission.CAMERA)))
-                    ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_SINGLE, true, 1)
-                else {
-                    clickCamera = true
-                    // 查看请求camera权限的时间是否大于48小时
-                    var cameraJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA)
-                    var cameraJson: JSONObject? = JSONObject.parse(cameraJsonString) as JSONObject?
-                    val lasttime = cameraJson?.getLong(CommonField.PERMISSION_CAMERA)
-                    if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
-                        T.show(resources.getString(R.string.permission_of_camera_refuse))
-                        return@setOnDismisListener
-                    }
-                    permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera_avatar))
-                    permissionDialog!!.show()
-                    requestPermission(arrayOf(Manifest.permission.CAMERA))
-
-                    // 记录请求camera权限的时间
-                    var json = JSONObject()
-                    json.put(CommonField.PERMISSION_CAMERA, System.currentTimeMillis() / 1000)
-                    Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA, json.toJSONString())
-                }
+                ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_SINGLE, true, 1)
+//                if (checkPermissions(arrayOf(Manifest.permission.CAMERA)))
+//                    ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_SINGLE, true, 1)
+//                else {
+//                    clickCamera = true
+//                    // 查看请求camera权限的时间是否大于48小时
+//                    var cameraJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA)
+//                    var cameraJson: JSONObject? = JSONObject.parse(cameraJsonString) as JSONObject?
+//                    val lasttime = cameraJson?.getLong(CommonField.PERMISSION_CAMERA)
+//                    if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
+//                        T.show(resources.getString(R.string.permission_of_camera_refuse))
+//                        return@setOnDismisListener
+//                    }
+//                    permissionDialog = PermissionDialog(App.activity, R.mipmap.permission_camera ,getString(R.string.permission_camera_lips), getString(R.string.permission_camera_avatar))
+//                    permissionDialog!!.show()
+//                    requestPermission(arrayOf(Manifest.permission.CAMERA))
+//
+//                    // 记录请求camera权限的时间
+//                    var json = JSONObject()
+//                    json.put(CommonField.PERMISSION_CAMERA, System.currentTimeMillis() / 1000)
+//                    Utils.setXmlStringValue(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA, json.toJSONString())
+//                }
             } else if (it == 1) {
                 if (checkPermissions(permissions))
                     ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_MULTI, false, 1)
@@ -268,10 +269,10 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     }
 
     override fun permissionAllGranted() {
-        if (clickCamera) {
+        /*if (clickCamera) {
             clickCamera = false
             ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_SINGLE, true, 1)
-        } else if (clickAlbum) {
+        } else */if (clickAlbum) {
             clickAlbum = false
             ImageSelectorUtils.show(this, ImageSelectorActivity.Mode.MODE_MULTI, false, 1)
         }
