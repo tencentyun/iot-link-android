@@ -1,10 +1,12 @@
 package com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -27,13 +29,20 @@ import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.iot.explorer.link.R;
+import com.tencent.iot.explorer.link.T;
 import com.tencent.iot.explorer.link.core.log.L;
+import com.tencent.iot.explorer.link.core.utils.Utils;
+import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog;
+import com.tencent.iot.explorer.link.kitlink.consts.CommonField;
 import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.ImageSelectorActivity.Mode;
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager;
 import com.tencent.iot.explorer.link.kitlink.util.picture.utils.FileUtils;
@@ -100,6 +109,8 @@ public class ImageSelectorFragment extends Fragment implements OnClickListener{
 
     private File mTmpFile;
     private String mTmpPath;
+
+    private PermissionDialog permissionDialog;
 
     @Override
     public void onAttach(Activity activity) {
@@ -242,7 +253,28 @@ public class ImageSelectorFragment extends Fragment implements OnClickListener{
                             Toast.makeText(getActivity(), R.string.imageselector_msg_amount_limit, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        showCameraAction();
+                        String[] permissions = { Manifest.permission.CAMERA };
+                        if (checkPermissions(permissions)) {
+                            showCameraAction();
+                        } else {
+                            // 查看请求camera权限的时间是否大于48小时
+                            String cameraJsonString = Utils.INSTANCE.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA);
+                            JSONObject cameraJson = (JSONObject) JSONObject.parse(cameraJsonString);
+                            if (cameraJson != null) {
+                                Long lasttime = cameraJson.getLong(CommonField.PERMISSION_CAMERA);
+                                if (lasttime != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48*60*60) {
+                                    T.show(getResources().getString(R.string.permission_of_camera_refuse));
+                                    return;
+                                }
+                            }
+                            permissionDialog = new PermissionDialog(getActivity(), R.mipmap.permission_camera ,getResources().getString(R.string.permission_camera_lips), getResources().getString(R.string.permission_camera_avatar));
+                            permissionDialog.show();
+                            ActivityCompat.requestPermissions(getActivity(), permissions, 102);
+                            // 记录请求camera权限的时间
+                            JSONObject json = new JSONObject();
+                            json.put(CommonField.PERMISSION_CAMERA, System.currentTimeMillis() / 1000);
+                            Utils.INSTANCE.setXmlStringValue(T.getContext(), CommonField.PERMISSION_CAMERA, CommonField.PERMISSION_CAMERA, json.toJSONString());
+                        }
                     }else{
                         // 正常操作
                     	ImageSelectorImageBean image = (ImageSelectorImageBean) adapterView.getAdapter().getItem(i);
@@ -262,6 +294,32 @@ public class ImageSelectorFragment extends Fragment implements OnClickListener{
 
         if (savedInstanceState != null){
             mTmpPath = savedInstanceState.getString("file");
+        }
+    }
+
+    private boolean checkPermissions(String[] permissions) {
+        for (String ele: permissions) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), ele) == PackageManager.PERMISSION_DENIED) {
+                L.INSTANCE.e(ele + "被拒绝");
+                return false;
+            }
+            L.INSTANCE.e(ele + "已经申请成功");
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 102) {
+            if (permissionDialog != null) {
+                permissionDialog.dismiss();
+            }
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    return;
+                }
+            }
+            showCameraAction();
         }
     }
 
