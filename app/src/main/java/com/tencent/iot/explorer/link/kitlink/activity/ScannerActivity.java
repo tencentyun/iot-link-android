@@ -82,6 +82,8 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
     private boolean hasSurface;
     private MyHandler mHandler;
 
+    private Uri picUri;
+
     private PermissionDialog permissionDialog = null;
 
     private static class MyHandler extends Handler {
@@ -203,36 +205,7 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == com.example.qrcode.R.id.scan_from_picture) {
-            //先申请权限
-            int checked = ContextCompat.checkSelfPermission(ScannerActivity.this
-                    , Manifest.permission.READ_EXTERNAL_STORAGE);
-            if (checked == PackageManager.PERMISSION_GRANTED) {
-                goPicture();
-            } else {
-                // 查看请求album权限的时间是否大于48小时
-                String albumJsonString = Utils.INSTANCE.getStringValueFromXml(this, CommonField.PERMISSION_ALBUM, CommonField.PERMISSION_ALBUM);
-                long lasttime = 0L;
-                if (albumJsonString != null) {
-                    JSONObject albumJson = JSON.parseObject(albumJsonString);
-                    lasttime = albumJson.getLong(CommonField.PERMISSION_ALBUM);
-                }
-                if (albumJsonString != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48 * 60 * 60) {
-                    T.show(getString(R.string.permission_of_album_refuse));
-                    return false;
-                }
-                if (permissionDialog == null) {
-                    permissionDialog = new PermissionDialog(this, R.mipmap.permission_album ,getString(R.string.permission_album_lips), getString(R.string.permission_album_qrcode));
-                    permissionDialog.show();
-                }
-                ActivityCompat.requestPermissions(ScannerActivity.this
-                        , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE);
-
-                // 记录请求album权限的时间
-                JSONObject json = new JSONObject();
-                json.put(CommonField.PERMISSION_ALBUM, System.currentTimeMillis() / 1000);
-                Utils.INSTANCE.setXmlStringValue(this, CommonField.PERMISSION_ALBUM, CommonField.PERMISSION_ALBUM, json.toJSONString());
-
-            }
+            goPicture();
         }
         return true;
     }
@@ -334,17 +307,44 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_GET_PIC_URI:
-                    Uri uri = data.getData();
-                    String imagePath = UriUtils.getPicturePathFromUri(ScannerActivity.this, uri);
+                    picUri = data.getData();
                     //对获取到的二维码照片进行压缩
-                    Bitmap bitmap = CommonUtils.compressPicture(imagePath);
-                    Message message = mHandler.obtainMessage(MESSAGE_DECODE_FROM_BITMAP, bitmap);
-                    mHandler.sendMessage(message);
-                    Log.e(TAG, "onActivityResult: uri:" + uri.toString());
+                    //先申请权限
+                    int checked = ContextCompat.checkSelfPermission(ScannerActivity.this
+                            , Manifest.permission.READ_EXTERNAL_STORAGE);
+                    if (checked == PackageManager.PERMISSION_GRANTED) {
+                        String imagePath = UriUtils.getPicturePathFromUri(ScannerActivity.this, picUri);
+                        Bitmap bitmap = CommonUtils.compressPicture(imagePath);
+                        Message message = mHandler.obtainMessage(MESSAGE_DECODE_FROM_BITMAP, bitmap);
+                        mHandler.sendMessage(message);
+                        Log.e(TAG, "onActivityResult: uri:" + picUri.toString());
+                    } else {
+                        // 查看请求album权限的时间是否大于48小时
+                        String albumJsonString = Utils.INSTANCE.getStringValueFromXml(this, CommonField.PERMISSION_ALBUM, CommonField.PERMISSION_ALBUM);
+                        long lasttime = 0L;
+                        if (albumJsonString != null) {
+                            JSONObject albumJson = JSON.parseObject(albumJsonString);
+                            lasttime = albumJson.getLong(CommonField.PERMISSION_ALBUM);
+                        }
+                        if (albumJsonString != null && lasttime > 0 && System.currentTimeMillis() / 1000 - lasttime < 48 * 60 * 60) {
+                            T.show(getString(R.string.permission_of_album_refuse));
+                        }
+                        if (permissionDialog == null) {
+                            permissionDialog = new PermissionDialog(this, R.mipmap.permission_album ,getString(R.string.permission_album_lips), getString(R.string.permission_album_qrcode));
+                            permissionDialog.show();
+                        }
+                        ActivityCompat.requestPermissions(ScannerActivity.this
+                                , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE);
+
+                        // 记录请求album权限的时间
+                        JSONObject json = new JSONObject();
+                        json.put(CommonField.PERMISSION_ALBUM, System.currentTimeMillis() / 1000);
+                        Utils.INSTANCE.setXmlStringValue(this, CommonField.PERMISSION_ALBUM, CommonField.PERMISSION_ALBUM, json.toJSONString());
+
+                    }
                     break;
             }
         }
@@ -357,11 +357,13 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
         permissionDialog = null;
         if (requestCode == PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                goPicture();
+                String imagePath = UriUtils.getPicturePathFromUri(ScannerActivity.this, picUri);
+                Bitmap bitmap = CommonUtils.compressPicture(imagePath);
+                Message message = mHandler.obtainMessage(MESSAGE_DECODE_FROM_BITMAP, bitmap);
+                mHandler.sendMessage(message);
+                Log.e(TAG, "onActivityResult: uri:" + picUri.toString());
                 return;
             }
         }
     }
-
-
 }
