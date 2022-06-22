@@ -55,10 +55,6 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
     private var feedbackCategory = ""
     private var permissionDialog: PermissionDialog? = null
 
-    private var permissions = arrayOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
-
     override fun getContentView(): Int {
         return  R.layout.activity_help_feedback
     }

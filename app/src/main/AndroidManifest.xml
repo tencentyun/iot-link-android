@@ -27,7 +27,6 @@
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" /> <!-- 访问手机当前状态, 需要某些信息用于网络定位 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- picture start -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -196,9 +195,6 @@
         <activity
             android:name=".kitlink.activity.HelpWebViewActivity"
             android:launchMode="singleTop" />
-        <activity
-            android:name=".kitlink.activity.FeedbackActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".kitlink.activity.UserInfoActivity" />
         <activity android:name=".kitlink.activity.SetPasswordActivity" />
         <activity android:name=".kitlink.activity.GetCodeActivity" />
