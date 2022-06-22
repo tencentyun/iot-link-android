@@ -142,7 +142,7 @@ class MainActivity : PActivity(), MyCallback {
     override fun initView() {
         openXGPush()
         home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
-        LogcatHelper.getInstance(this).start()
+//        LogcatHelper.getInstance(this).start()
         home_bottom_view.addMenu(
             BottomItemEntity(
                 getString(R.string.main_tab_1),
@@ -458,7 +458,7 @@ class MainActivity : PActivity(), MyCallback {
     override fun onDestroy() {
         unbindXG()
         super.onDestroy()
-        LogcatHelper.getInstance(this).stop()
+//        LogcatHelper.getInstance(this).stop()
     }
 
     private var timestamp = 0L

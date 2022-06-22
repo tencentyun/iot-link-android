@@ -68,7 +68,7 @@ class MeFragment : BaseFragment(), View.OnClickListener, MyCallback {
                 jumpActivity(HelpWebViewActivity::class.java)
             }
             tv_me_feedback -> {
-                jumpActivity(FeedbackActivity::class.java)
+//                jumpActivity(FeedbackActivity::class.java)
             }
             tv_me_about -> {
                 jumpActivity(AboutUsActivity::class.java)
