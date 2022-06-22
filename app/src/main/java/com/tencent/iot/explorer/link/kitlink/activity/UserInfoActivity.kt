@@ -65,8 +65,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
     }
 
     private var permissions = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
     override fun getContentView(): Int {
