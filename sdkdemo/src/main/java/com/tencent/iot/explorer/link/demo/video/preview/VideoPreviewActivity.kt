@@ -235,7 +235,7 @@ open class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Su
     open fun speakAble(able: Boolean): Boolean {
         App.data.accessInfo?.let { accessInfo ->
             if (able) {
-                var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
+                var command = Command.getNvrIpcStatus(presenter.getChannel(), 1)
                 var repStatus = XP2P.postCommandRequestSync("${accessInfo.productId}/${presenter.getDeviceName()}",
                     command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000) ?:""
 
