@@ -633,6 +633,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
 
         player.setFrameSpeed(1.5f);
+        player.setMaxPacketNum(2);
         getDeviceStatus();
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
