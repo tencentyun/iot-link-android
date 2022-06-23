@@ -99,6 +99,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private TextView tvVCache;
     private TextView tvACache;
     private TextView tvVideoWH;
+    private volatile long basePts = 0;
+
+
     private final FLVListener flvListener =
             data -> {
 //                Log.e(TAG, "===== dataLen:" + data.length);
@@ -799,8 +802,11 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     public void onAudioEncoded(byte[] datas, long pts, long seq) {
         if (executor.isShutdown()) return;
         executor.submit(() -> {
-            if (flvPacker == null) flvPacker = new FLVPacker(flvListener, true, true);
-            flvPacker.encodeFlv(datas, FLVPacker.TYPE_AUDIO, pts);
+            if (flvPacker == null) {
+                flvPacker = new FLVPacker(flvListener, true, true);
+                basePts = pts;
+            }
+            flvPacker.encodeFlv(datas, FLVPacker.TYPE_AUDIO, pts - basePts);
         });
     }
 
@@ -808,8 +814,11 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     public void onVideoEncoded(byte[] datas, long pts, long seq) {
         if (executor.isShutdown()) return;
         executor.submit(() -> {
-            if (flvPacker == null) flvPacker = new FLVPacker(flvListener, true, true);
-            flvPacker.encodeFlv(datas, FLVPacker.TYPE_VIDEO, pts);
+            if (flvPacker == null) {
+                flvPacker = new FLVPacker(flvListener, true, true);
+                basePts = pts;
+            }
+            flvPacker.encodeFlv(datas, FLVPacker.TYPE_VIDEO, pts - basePts);
         });
     }
 
