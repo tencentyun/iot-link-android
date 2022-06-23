@@ -52,25 +52,38 @@ class UserAgreeDialog(context: Context) : IosCenterStyleDialog(context, R.layout
         val agreeContentStrPrefix = context.getString(R.string.rule_content_prefix)
         val partStr1 = "《${context.getString(R.string.register_agree_2)}》"
         val partStr2 = context.getString(R.string.register_agree_3)
-        val partStr3 = "《${context.getString(R.string.register_agree_4)}》"
+
+        val partStr3 = "《${context.getString(R.string.summary_of_privacy_policy)}》"
+        val partStr4 = context.getString(R.string.pause_mark)
+
+        val partStr5 = "《${context.getString(R.string.register_agree_4)}》"
         val agreeContentStrMiddle = context.getString(R.string.rule_content_middle)
-        val partStr4 = "《${context.getString(R.string.app_logo_name)}App${context.getString(R.string.personal_information_list)}》"
+        val partStr6 = "《${context.getString(R.string.app_logo_name)}App${context.getString(R.string.personal_information_list)}》"
         val agreeContentStrMiddle2 = context.getString(R.string.rule_content_middle2)
-        val partStr5 = "《${context.getString(R.string.rule_content_list)}》"
+        val partStr7 = "《${context.getString(R.string.rule_content_list)}》"
         val agreeContentStrSuffix = context.getString(R.string.rule_content_suffix)
-        var agreeContentStr = agreeContentStrPrefix + partStr1 + partStr2 + partStr3 + agreeContentStrMiddle + partStr4 + agreeContentStrMiddle2 + partStr5 + agreeContentStrSuffix
+        var agreeContentStr = agreeContentStrPrefix + partStr1 + partStr2 + partStr3 + partStr4 + partStr5 + agreeContentStrMiddle + partStr6 + agreeContentStrMiddle2 + partStr7 + agreeContentStrSuffix
         var agreeContentSpannable = SpannableStringBuilder(agreeContentStr)
+
         agreeContentSpannable.setSpan(IndexClickableSpan(context, 1),
             agreeContentStrPrefix.length, agreeContentStrPrefix.length + partStr1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
         val start1 = agreeContentStrPrefix.length + partStr1.length + partStr2.length
         agreeContentSpannable.setSpan(IndexClickableSpan(context, 2),
             start1, start1 + partStr3.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        val start2 = agreeContentStrPrefix.length + partStr1.length + partStr2.length + partStr3.length + agreeContentStrMiddle.length
+
+        val start2 = agreeContentStrPrefix.length + partStr1.length + partStr2.length + partStr3.length + partStr4.length
         agreeContentSpannable.setSpan(IndexClickableSpan(context, 3),
-            start2, start2 + partStr4.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        val start3 = agreeContentStrPrefix.length + partStr1.length + partStr2.length + partStr3.length + agreeContentStrMiddle.length + partStr4.length + agreeContentStrMiddle2.length
+            start2, start2 + partStr5.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val start3 = agreeContentStrPrefix.length + partStr1.length + partStr2.length + partStr3.length + partStr4.length + partStr5.length + agreeContentStrMiddle.length
         agreeContentSpannable.setSpan(IndexClickableSpan(context, 4),
-            start3, start3 + partStr5.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            start3, start3 + partStr6.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val start4 = agreeContentStrPrefix.length + partStr1.length + partStr2.length + partStr3.length + partStr4.length + partStr5.length + agreeContentStrMiddle.length + partStr6.length + agreeContentStrMiddle2.length
+        agreeContentSpannable.setSpan(IndexClickableSpan(context, 5),
+            start4, start4 + partStr7.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
         tv_tip_content?.movementMethod = LinkMovementMethod.getInstance()
         tv_tip_content?.text = agreeContentSpannable
 
@@ -109,6 +122,7 @@ class UserAgreeDialog(context: Context) : IosCenterStyleDialog(context, R.layout
         fun onOkClickedPrivacyPolicy()
         fun onOkClickedPersonalInfoList()
         fun onOkClickedThirdSDKList()
+        fun onClickedPrivacyPolicySummary()
     }
 
     fun setOnDismisListener(onDismisListener: OnDismisListener?) {
@@ -133,10 +147,12 @@ class UserAgreeDialog(context: Context) : IosCenterStyleDialog(context, R.layout
             if (index == 1) {
                 onDismisListener?.onOkClickedUserAgreement()
             } else if (index == 2) {
-                onDismisListener?.onOkClickedPrivacyPolicy()
+                onDismisListener?.onClickedPrivacyPolicySummary()
             } else if (index == 3) {
-                onDismisListener?.onOkClickedPersonalInfoList()
+                onDismisListener?.onOkClickedPrivacyPolicy()
             } else if (index == 4) {
+                onDismisListener?.onOkClickedPersonalInfoList()
+            } else if (index == 5) {
                 onDismisListener?.onOkClickedThirdSDKList()
             }
         }
