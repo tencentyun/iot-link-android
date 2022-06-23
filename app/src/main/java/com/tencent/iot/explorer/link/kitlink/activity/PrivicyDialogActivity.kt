@@ -85,6 +85,14 @@ class PrivicyDialogActivity : BaseActivity() {
                     OpensourceLicenseActivity.startWebWithExtra(this@PrivicyDialogActivity, getString(R.string.rule_content_list), CommonField.THIRD_SDK_URL_US_EN)
                 }
             }
+
+            override fun onClickedPrivacyPolicySummary() {
+                val intent = Intent(this@PrivicyDialogActivity, WebActivity::class.java)
+                intent.putExtra(CommonField.EXTRA_TITLE, getString(R.string.summary_of_privacy_policy))
+                var url = CommonField.PRIVACY_POLICY_SUMMARY_URL_CN_ZH
+                intent.putExtra(CommonField.EXTRA_TEXT, url)
+                startActivity(intent)
+            }
         })
     }
 

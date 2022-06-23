@@ -140,6 +140,8 @@ object CommonField {
     const val THIRD_SDK_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config13.js"
     const val PERSONAL_INFO_URL_US_ZH = "https://privacy.qq.com/document/preview/278bbbbbdd5748999fce491cfa6dd424"
     const val PERSONAL_INFO_URL_US_EN = "http://qzonestyle.gtimg.cn/qzone/qzactStatics/qcloud/data/42/config15.js"
+    const val PRIVACY_POLICY_SUMMARY_URL_CN_ZH = "https://privacy.qq.com/document/preview/4f262b760a4543a7a26409064d1391c2"
+    const val PRIVACY_POLICY_SUMMARY_URL_CN_EN = "https://privacy.qq.com/document/preview/4f262b760a4543a7a26409064d1391c2"
 
     /************返回结果通用字段*************/
     const val RESPONSE = "Response"
