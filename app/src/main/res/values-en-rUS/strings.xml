@@ -164,6 +164,8 @@
     <string name="register_agree_3">&#160;and&#160;</string>
     <string name="register_agree_4">Privacy Policy</string>
     <string name="register_agree_4_low">privacy policy</string>
+    <string name="summary_of_privacy_policy">Summary of Privacy Policy</string>
+    <string name="pause_mark">、</string>
     <string name="register_agree_5">Open-Source Software Info</string>
     <string name="register_get_code">Send</string>
     <string name="get_mobile_code_sent">The verification code has been sent to your phone:</string>
