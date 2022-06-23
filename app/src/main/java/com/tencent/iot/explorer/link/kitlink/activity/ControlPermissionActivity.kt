@@ -93,10 +93,10 @@ class ControlPermissionActivity : BaseActivity() {
                 }
                 return
             }
-            if (!permissionAccessInfo.permissionAccessed) {  // 没有对应的权限，尝试开启权限
-                ActivityCompat.requestPermissions(this@ControlPermissionActivity, arrayOf(permissionAccessInfo.permission), REQUEST_CODE)
-                return
-            }
+//            if (!permissionAccessInfo.permissionAccessed) {  // 没有对应的权限，尝试开启权限
+//                ActivityCompat.requestPermissions(this@ControlPermissionActivity, arrayOf(permissionAccessInfo.permission), REQUEST_CODE)
+//                return
+//            }
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             intent.data = Uri.parse("package:$packageName")
             startActivityForResult(intent, REQUEST_CODE) // 申请权限返回执行
