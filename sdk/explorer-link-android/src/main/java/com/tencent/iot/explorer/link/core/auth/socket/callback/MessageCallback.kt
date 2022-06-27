@@ -5,10 +5,10 @@ import com.tencent.iot.explorer.link.core.auth.message.resp.RespSuccessMessage
 
 interface MessageCallback {
 
-    fun success(reqId: Int, message: String, response: RespSuccessMessage)
+    fun success(reqId: String, message: String, response: RespSuccessMessage)
 
-    fun fail(reqId: Int, message: String, response: RespFailMessage)
+    fun fail(reqId: String, message: String, response: RespFailMessage)
 
-    fun unknownMessage(reqId: Int, message: String)
+    fun unknownMessage(reqId: String, message: String)
 
 }
