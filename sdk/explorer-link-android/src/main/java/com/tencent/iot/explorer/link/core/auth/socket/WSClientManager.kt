@@ -136,14 +136,14 @@ internal class WSClientManager private constructor() {
      * 响应数据解析回调
      */
     private val callback = object : DispatchCallback {
-        override fun yunMessage(reqId: Int, message: String, response: RespSuccessMessage) {
+        override fun yunMessage(reqId: String, message: String, response: RespSuccessMessage) {
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
                 messageCallback?.success(reqId, message, response)
             }
         }
 
-        override fun yunMessageFail(reqId: Int, message: String, response: RespFailMessage) {
+        override fun yunMessageFail(reqId: String, message: String, response: RespFailMessage) {
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
                 messageCallback?.fail(reqId, message, response)
@@ -168,7 +168,7 @@ internal class WSClientManager private constructor() {
             }
         }
 
-        override fun unknownMessage(reqId: Int, json: String) {
+        override fun unknownMessage(reqId: String, json: String) {
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
                 messageCallback?.unknownMessage(reqId, json)
@@ -374,7 +374,8 @@ internal class WSClientManager private constructor() {
     fun sendRequestMessage(iotMsg: IotMsg, messageCallback: MessageCallback?) {
         if (requestSuq >= Int.MAX_VALUE - 1000)
             requestSuq = 0
-        val entity = RequestEntity(requestSuq++, iotMsg)
+        val reqId = UUID.randomUUID().toString()
+        val entity = RequestEntity(reqId, iotMsg)
         entity.messageCallback = messageCallback
         client?.run {
             if (isConnected) {
@@ -414,7 +415,7 @@ internal class WSClientManager private constructor() {
      * 获得请求对象
      */
     @Synchronized
-    private fun getRequestEntity(reqId: Int): RequestEntity? {
+    private fun getRequestEntity(reqId: String): RequestEntity? {
         val iterator = confirmQueue.iterator()
         while (iterator.hasNext()) {
             if (iterator.next().reqId == reqId) {
