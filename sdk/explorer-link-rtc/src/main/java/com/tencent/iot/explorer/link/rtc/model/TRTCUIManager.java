@@ -97,6 +97,9 @@ public class TRTCUIManager {
                 JSONObject paramsObject = jsonObject.getJSONObject(Common.TRTC_PARAM);
                 String subType = paramsObject.getString(Common.TRTC_SUB_TYPE);
                 if (Common.TRTC_REPORT.equals(subType)) { //收到了设备端上报的属性状态改变的wss消息
+                    if (!payload.contains(Common.TRTC_PARAM)) {
+                        return;
+                    }
                     JSONObject payloadParamsObject = new JSONObject(payload);
                     JSONObject payloadParamsJson = payloadParamsObject.getJSONObject(Common.TRTC_PARAM);
                     String method = "";

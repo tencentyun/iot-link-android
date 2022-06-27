@@ -1,8 +1,8 @@
 package com.tencent.iot.explorer.link.core.auth.socket
 
+import android.text.TextUtils
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.util.Base64
-import com.tencent.iot.explorer.link.core.auth.message.MessageConst
 import com.tencent.iot.explorer.link.core.auth.message.resp.HeartMessage
 import com.tencent.iot.explorer.link.core.auth.message.payload.Payload
 import com.tencent.iot.explorer.link.core.auth.message.payload.PayloadMessage
@@ -31,40 +31,43 @@ open class DispatchMsgHandler {
                         parsePayloadMessage(message)
                     }
                     (containsKey("data")) -> {
-                        parseYunMessage(getIntValue("reqId"), message)
+                        val reqId = getString("reqId")
+                        if (!TextUtils.isEmpty(reqId)) {
+                            parseYunMessage(getString("reqId"), message)
+                        } else {
+                            parseYunMessage("hello-world", message)
+                        }
                     }
                     else -> {
-                        dispatchCallback?.unknownMessage(getIntValue("reqId"), message)
+                        dispatchCallback?.unknownMessage(getString("reqId"), message)
                     }
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            dispatchCallback?.unknownMessage(0, message)
+            dispatchCallback?.unknownMessage("unknow", message)
         }
     }
 
-    private fun parseYunMessage(reqId: Int, message: String) {
-        when (reqId) {
-            MessageConst.HEART_ID -> {
-                try {
-                    heartCallback?.response(
-                        reqId, JSON.parseObject(message, HeartMessage::class.java)
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+    private fun parseYunMessage(reqId: String, message: String) {
+        if (message.contains("Response") && message.contains("RequestId")) {
+            try {
+                L.d("HeartMessage", message)
+                heartCallback?.response(
+                    reqId, JSON.parseObject(message, HeartMessage::class.java)
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            else -> {
-                parseRspMessage(reqId, message)
-            }
+        } else {
+            parseRspMessage(reqId, message)
         }
     }
 
     /**
      * 解析请求响应
      */
-    private fun parseRspMessage(reqId: Int, message: String) {
+    private fun parseRspMessage(reqId: String, message: String) {
         var failMessage = RespFailMessage()
         try {
             JSON.parseObject(message, ResponseMessage::class.java)?.run {
