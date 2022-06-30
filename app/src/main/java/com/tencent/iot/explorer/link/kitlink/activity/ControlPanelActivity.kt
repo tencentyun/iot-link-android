@@ -98,8 +98,10 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     }
 
     override fun onPause() {
-        netWorkStateReceiver?.run {
-            unregisterReceiver(netWorkStateReceiver)
+        if (deviceEntity?.CategoryId != 567) { //非双向
+            netWorkStateReceiver?.run {
+                unregisterReceiver(netWorkStateReceiver)
+            }
         }
         super.onPause()
     }
@@ -552,6 +554,8 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         //特殊处理，当设备为trtc设备时。虽然call_status是枚举类型，但产品要求不弹弹窗，点击即拨打语音或视频通话。
         if (entity.id == MessageConst.TRTC_AUDIO_CALL_STATUS) {
             if (checkTRTCCallStatusIsBusy()) {
+                //如果是websocket未收到设备的消息，那么主动通过http刷新一下。
+                presenter.requestDeviceData()
                 return
             }
             controlDevice(entity.id, "1")
@@ -624,6 +628,11 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     }
 
     override fun onDestroy() {
+        if (deviceEntity?.CategoryId == 567) { //非双向
+            netWorkStateReceiver?.run {
+                unregisterReceiver(netWorkStateReceiver)
+            }
+        }
         PanelThemeManager.instance.destroy()
         job?.cancel()
         cancel()
@@ -645,6 +654,8 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
             if (nowHostIp != hostIp) {
                 presenter.requestDeviceDataRestartP2PService()
                 hostIp = nowHostIp
+            } else if (nowHostIp == hostIp && App.activity is RecordVideoActivity) {
+                presenter.requestDeviceData()
             } else {
                 //网络可达
                 presenter.requestDeviceData()

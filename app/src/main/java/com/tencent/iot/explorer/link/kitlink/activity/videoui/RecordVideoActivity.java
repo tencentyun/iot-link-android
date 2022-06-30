@@ -1,14 +1,17 @@
 package com.tencent.iot.explorer.link.kitlink.activity.videoui;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -23,7 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -35,6 +40,7 @@ import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog;
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity;
 import com.tencent.iot.explorer.link.R;
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField;
+import com.tencent.iot.explorer.link.kitlink.util.VideoUtils;
 import com.tencent.iot.explorer.link.rtc.model.IntentParams;
 import com.tencent.iot.explorer.link.rtc.model.RoomKey;
 import com.tencent.iot.explorer.link.rtc.model.TRTCCallStatus;
@@ -113,6 +119,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private FLVPacker flvPacker;
     private volatile boolean startEncodeVideo = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private TimerTask enterRoomTask = null;
 
     private int vw = 320;
     private int vh = 240;
@@ -184,6 +191,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregistVideoOverBrodcast();
         stopRecord();
         executor.shutdown();
         XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
@@ -212,6 +220,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         tvVCache = findViewById(R.id.tv_v_cache);
         tvACache = findViewById(R.id.tv_a_cache);
         tvVideoWH = findViewById(R.id.tv_v_width_height);
+
+        registVideoOverBrodcast();
         vw = App.Companion.getData().getResolutionWidth();
         vh = App.Companion.getData().getResolutionHeight();
 
@@ -341,10 +351,12 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     }
 
     private void stopBitRateAdapter() {
-        bitRateTimer.cancel();
+        if (bitRateTimer != null) {
+            bitRateTimer.cancel();
+        }
     }
 
-    private void getDeviceStatus() {
+    private boolean getDeviceStatus() {
         byte[] command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=standard".getBytes();
         String repStatus = XP2P.postCommandRequestSync(TRTCUIManager.getInstance().deviceId,
                 command, command.length, 2 * 1000 * 1000);
@@ -359,26 +371,29 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             switch (deviceStatuses.get(0).status) {
                 case 0:
                     T.show("设备状态正常");
-                    break;
+                    removeIsEnterRoom60secondsTask();
+                    return true;
                 case 1:
                     T.show("设备状态异常, 拒绝请求: " + repStatus);
-                    break;
+                    return false;
                 case 404:
                     T.show("设备状态异常, error request message: " + repStatus);
-                    break;
+                    return false;
                 case 405:
                     T.show("设备状态异常, connect number too many: " + repStatus);
-                    break;
+                    return false;
                 case 406:
                     T.show("设备状态异常, current command don't support: " + repStatus);
-                    break;
+                    return false;
                 case 407:
                     T.show("设备状态异常, device process error: " + repStatus);
-                    break;
+                    return false;
             }
         } else {
             T.show("获取设备状态失败");
+            return false;
         }
+        return false;
     }
 
     @Override
@@ -618,6 +633,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     public void onSurfaceTextureUpdated(SurfaceTexture surface) { }
 
     private void play(int callType) {
+        if (player != null) {
+            player.release();
+        }
         player = new IjkMediaPlayer();
         player.reset();
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500);
@@ -637,7 +655,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
         player.setFrameSpeed(1.5f);
         player.setMaxPacketNum(2);
-        getDeviceStatus();
+        if (!getDeviceStatus()) return;
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
         Toast.makeText(this, url, Toast.LENGTH_LONG).show();
@@ -733,6 +751,34 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         camera.startPreview();
     }
 
+    private void checkoutIsEnterRoom60seconds(String message) {
+        if (enterRoomTask == null) {
+            enterRoomTask = new TimerTask(){
+                public void run(){
+                    //60秒重连失败退出，进入了就取消timertask
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                            Log.e(TAG, "*========stop send video data over 60");
+                            TRTCUIManager.getInstance().refuseEnterRoom(mIsVideo?TRTCCalling.TYPE_VIDEO_CALL:TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
+                            stopCameraAndFinish();
+                        }
+                    });
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(enterRoomTask, 60000);
+        }
+    }
+
+    private void removeIsEnterRoom60secondsTask() {
+        if (enterRoomTask != null) {
+            enterRoomTask.cancel();
+            enterRoomTask = null;
+        }
+    }
+
     /**
      * 获取设备支持的最大分辨率
      */
@@ -797,6 +843,46 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     }
 
     private static final int MSG_UPDATE_HUD = 1;
+
+    BroadcastReceiver recevier = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int refreshTag = intent.getIntExtra(VideoUtils.VIDEO_RESUME, 0);
+
+            Log.d(TAG, "refreshTag: " + refreshTag);
+            if (refreshTag == 4) {//正在重连
+                stopRecord();
+                checkoutIsEnterRoom60seconds("通话结束...");
+            }
+            if ((refreshTag == 1 || refreshTag == 2) && !isFirst) {
+
+                initAudioEncoder();
+                initVideoEncoder();
+
+                if (mIsVideo) { // 需要绘制视频本地和对端画面
+                    play(CallingType.TYPE_VIDEO_CALL);
+                } else { // 需要绘制音频本地和对端画面
+                    surfaceView.setVisibility(View.INVISIBLE);
+                    play(CallingType.TYPE_AUDIO_CALL);
+                }
+            }
+        }
+    };
+
+    private void registVideoOverBrodcast() {
+        Log.e(TAG, "registVideoOverBrodcast");
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(RecordVideoActivity.this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.intent.action.CART_BROADCAST");
+        broadcastManager.registerReceiver(recevier, intentFilter);
+    }
+
+    private void unregistVideoOverBrodcast() {
+        Log.e(TAG, "unregistVideoOverBrodcast");
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(RecordVideoActivity.this);
+        broadcastManager.unregisterReceiver(recevier);
+    }
 
     @Override
     public void onAudioEncoded(byte[] datas, long pts, long seq) {
