@@ -29,14 +29,13 @@ import com.tencent.iot.explorer.link.kitlink.entity.DevicePropertyEntity
 import com.tencent.iot.explorer.link.kitlink.response.UserSettingResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.util.VideoUtils
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.LinkedHashSet
 
 
 /**
@@ -279,6 +278,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                             XP2P.startService(deviceId, productId, deviceName)
                             XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
                             firstTime = false
+                            VideoUtils.sendVideoBroadcast(App.activity, 3)
                         }
                         if (reconnect) {//p2p链路断开重连的情况下不需要重新设置回调以及启服务
                             if (needRestartP2P) {
@@ -289,6 +289,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                                 needRestartP2P = false;
                             } else {
                                 XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                                VideoUtils.sendVideoBroadcast(App.activity, 1)
                             }
                         }
 
@@ -325,6 +326,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
             when (event) {
                 1003 -> {
                     App.activity?.runOnUiThread {
+                        VideoUtils.sendVideoBroadcast(App.activity, 4)
                         T.show("p2p链路断开，尝试重连")
                         L.e("=========p2p链路断开，尝试重连")
                         requestXp2pInfo()
@@ -335,6 +337,8 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     App.activity?.runOnUiThread {
                         T.show("p2p链路初始化成功")
                         L.e("=========p2p链路初始化成功")
+                        VideoUtils.sendVideoBroadcast(App.activity, 2)
+
                     }
                 }
                 1005 -> {
