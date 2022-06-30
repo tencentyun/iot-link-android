@@ -120,6 +120,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private volatile boolean startEncodeVideo = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private TimerTask enterRoomTask = null;
+    private volatile boolean isCancelAdapterBitRateTask = true;
 
     private int vw = 320;
     private int vh = 240;
@@ -309,6 +310,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         @Override
         public void run() {
             System.out.println("检测时间到:" +new Date());
+            if (isCancelAdapterBitRateTask) return;
 
 
             int bufsize = XP2P.getStreamBufSize(TRTCUIManager.getInstance().deviceId);
@@ -346,13 +348,16 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private void startBitRateAdapter() {
 
         XP2P.resetAvg();
+        isCancelAdapterBitRateTask = false;
         bitRateTimer = new Timer();
         bitRateTimer.schedule(new AdapterBitRateTask(),3000,1000);
     }
 
     private void stopBitRateAdapter() {
+        isCancelAdapterBitRateTask = true;
         if (bitRateTimer != null) {
             bitRateTimer.cancel();
+            bitRateTimer = null;
         }
     }
 
