@@ -48,7 +48,6 @@ import com.tencent.iot.explorer.link.rtc.model.TRTCCalling;
 import com.tencent.iot.explorer.link.rtc.model.TRTCCallingParamsCallback;
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager;
 import com.tencent.iot.explorer.link.rtc.model.UserInfo;
-import com.tencent.iot.thirdparty.android.device.video.p2p.VideoNativeInteface;
 import com.tencent.iot.thirdparty.flv.FLVListener;
 import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.iot.video.link.encoder.AudioEncoder;
@@ -107,11 +106,14 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private TextView tvVideoWH;
     private volatile long basePts = 0;
 
+    private volatile boolean isPause = true;
 
     private final FLVListener flvListener =
             data -> {
 //                Log.e(TAG, "===== dataLen:" + data.length);
-                XP2P.dataSend(TRTCUIManager.getInstance().deviceId, data, data.length);
+                if (!isPause) {
+                    XP2P.dataSend(TRTCUIManager.getInstance().deviceId, data, data.length);
+                }
             };
 
     private AudioEncoder audioEncoder;
@@ -120,7 +122,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private volatile boolean startEncodeVideo = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private TimerTask enterRoomTask = null;
-    private volatile boolean isCancelAdapterBitRateTask = true;
 
     private int vw = 320;
     private int vh = 240;
@@ -193,6 +194,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     protected void onDestroy() {
         super.onDestroy();
         unregistVideoOverBrodcast();
+        isPause = true;
         stopRecord();
         executor.shutdown();
         XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
@@ -310,7 +312,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         @Override
         public void run() {
             System.out.println("检测时间到:" +new Date());
-            if (isCancelAdapterBitRateTask) return;
+            if (isPause) return;
 
 
             int bufsize = XP2P.getStreamBufSize(TRTCUIManager.getInstance().deviceId);
@@ -348,13 +350,12 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private void startBitRateAdapter() {
 
         XP2P.resetAvg();
-        isCancelAdapterBitRateTask = false;
+        isPause = false;
         bitRateTimer = new Timer();
         bitRateTimer.schedule(new AdapterBitRateTask(),3000,1000);
     }
 
     private void stopBitRateAdapter() {
-        isCancelAdapterBitRateTask = true;
         if (bitRateTimer != null) {
             bitRateTimer.cancel();
             bitRateTimer = null;
@@ -639,6 +640,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
     private void play(int callType) {
         if (player != null) {
+            player.stop();
+            player.setDisplay(null);
             player.release();
         }
         player = new IjkMediaPlayer();
@@ -856,8 +859,10 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             int refreshTag = intent.getIntExtra(VideoUtils.VIDEO_RESUME, 0);
 
             Log.d(TAG, "refreshTag: " + refreshTag);
-            if (refreshTag == 4) {//正在重连
+            if (refreshTag == 4 || refreshTag == 5) {//正在重连 || 网络断了
+                isPause = true;
                 stopRecord();
+                XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
                 checkoutIsEnterRoom60seconds("通话结束...");
             }
             if ((refreshTag == 1 || refreshTag == 2) && !isFirst) {

@@ -39,6 +39,7 @@ import com.tencent.iot.explorer.link.kitlink.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.OfflinePopupWindow
 import com.tencent.iot.explorer.link.kitlink.theme.PanelThemeManager
 import com.tencent.iot.explorer.link.kitlink.util.StatusBarUtil
+import com.tencent.iot.explorer.link.kitlink.util.VideoUtils
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
@@ -667,5 +668,6 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     override fun networkUnavailable() {
         //网络不可达
         Toast.makeText(this, "网络异常", Toast.LENGTH_LONG).show()
+        VideoUtils.sendVideoBroadcast(App.activity, 5)
     }
 }
