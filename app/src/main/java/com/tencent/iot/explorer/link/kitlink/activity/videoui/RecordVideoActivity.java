@@ -859,13 +859,14 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             int refreshTag = intent.getIntExtra(VideoUtils.VIDEO_RESUME, 0);
 
             Log.d(TAG, "refreshTag: " + refreshTag);
-            if (refreshTag == 4 || refreshTag == 5) {//正在重连 || 网络断了
+            if (refreshTag == 4 || refreshTag == 5) {//p2p链路断开4 || app网络断了5
                 isPause = true;
+                flvPacker = null;
                 stopRecord();
                 XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
                 checkoutIsEnterRoom60seconds("通话结束...");
             }
-            if ((refreshTag == 1 || refreshTag == 2) && !isFirst) {
+            if ((refreshTag == 1 || refreshTag == 2) && !isFirst) { //非首次连接 连接成功2 || 非首次连接 重新设置xp2oinfo
 
                 initAudioEncoder();
                 initVideoEncoder();
@@ -898,11 +899,13 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     public void onAudioEncoded(byte[] datas, long pts, long seq) {
         if (executor.isShutdown()) return;
         executor.submit(() -> {
-            if (flvPacker == null) {
-                flvPacker = new FLVPacker(flvListener, true, true);
-                basePts = pts;
+            if (!isPause) {
+                if (flvPacker == null) {
+                    flvPacker = new FLVPacker(flvListener, true, true);
+                    basePts = pts;
+                }
+                flvPacker.encodeFlv(datas, FLVPacker.TYPE_AUDIO, pts - basePts);
             }
-            flvPacker.encodeFlv(datas, FLVPacker.TYPE_AUDIO, pts - basePts);
         });
     }
 
@@ -910,11 +913,13 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     public void onVideoEncoded(byte[] datas, long pts, long seq) {
         if (executor.isShutdown()) return;
         executor.submit(() -> {
-            if (flvPacker == null) {
-                flvPacker = new FLVPacker(flvListener, true, true);
-                basePts = pts;
+            if (!isPause) {
+                if (flvPacker == null) {
+                    flvPacker = new FLVPacker(flvListener, true, true);
+                    basePts = pts;
+                }
+                flvPacker.encodeFlv(datas, FLVPacker.TYPE_VIDEO, pts - basePts);
             }
-            flvPacker.encodeFlv(datas, FLVPacker.TYPE_VIDEO, pts - basePts);
         });
     }
 
