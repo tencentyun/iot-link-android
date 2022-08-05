@@ -78,6 +78,8 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     //是否显示云端定时
     private var hasTimerCloud = false
 
+    private var xp2pInfo = ""
+
     /**
      * 断网后重新连上服务器
      */
@@ -273,24 +275,21 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 deviceDatas.forEach {
                     if (it.id == "_sys_xp2p_info") {
                         val xp2pInfo = it.value
+                        this@ControlPanelModel.xp2pInfo = xp2pInfo
                         if (firstTime) {
                             XP2P.setCallback(xp2pCallback)
                             XP2P.startService(deviceId, productId, deviceName)
                             XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
                             firstTime = false
                             VideoUtils.sendVideoBroadcast(App.activity, 3)
-                        }
-                        if (reconnect) {//p2p链路断开重连的情况下不需要重新设置回调以及启服务
-                            if (needRestartP2P) {
-                                XP2P.stopService(deviceId)
-                                XP2P.setCallback(xp2pCallback)
-                                XP2P.startService(deviceId, productId, deviceName)
-                                XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
-                                needRestartP2P = false;
-                            } else {
-                                XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
-                                VideoUtils.sendVideoBroadcast(App.activity, 1)
-                            }
+                        } else if (reconnect) {//p2p链路断开
+                            XP2P.stopService(deviceId)
+                            XP2P.setCallback(xp2pCallback)
+                            XP2P.startService(deviceId, productId, deviceName)
+                            XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                        } else if (needRestartP2P) {//p2p链路没有断开但网络曾经短暂（或小于5s）断开过
+                            XP2P.stopService(deviceId)
+                            handler.postDelayed(restartRunnable, 3000)
                         }
 
                     }
@@ -535,6 +534,13 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         if (waitUpdate) {
             requestDeviceData()
         }
+    }
+    private val restartRunnable = Runnable {
+        XP2P.setCallback(xp2pCallback)
+        XP2P.setLogEnable(false, true)
+        XP2P.startService(deviceId, productId, deviceName)
+        XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+        needRestartP2P = false;
     }
 
     private fun waitUpdate() {
