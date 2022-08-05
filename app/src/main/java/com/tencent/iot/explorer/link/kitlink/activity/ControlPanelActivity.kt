@@ -74,8 +74,6 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
 
     private var mtusize = 0
 
-    private var hostIp = ""
-
     override fun getContentView(): Int {
         return R.layout.activity_control_panel
     }
@@ -112,10 +110,6 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         presenter = ControlPanelPresenter(this)
         netWorkStateReceiver = NetWorkStateReceiver()
         netWorkStateReceiver!!.addListener(this)
-        (applicationContext?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.let {
-            L.e("gateway=${it.dhcpInfo.gateway}")
-            hostIp = intToIp(it.dhcpInfo.gateway)
-        }
         deviceEntity = get("device")
         deviceEntity?.run {
             presenter.setProductId(ProductId)
@@ -422,7 +416,9 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                     offlinePopup?.run {
                         if (isShowing) {
                             dismiss()
-
+                            if (presenter?.getCategoryId() == 567) { // 消费版视频平台产品
+                                delay(1000)
+                            }
                             presenter.requestDeviceData()
                             presenter.getUserSetting()
                         }
@@ -650,13 +646,14 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     override fun networkAvailable() {
 
         (applicationContext?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.let {
-            val nowHostIp = intToIp(it.dhcpInfo.gateway)
-            L.e("nowHostIp=${nowHostIp}, hostIp=${hostIp}")
-            if (nowHostIp != hostIp) {
+            val hostIp = intToIp(it.dhcpInfo.gateway)
+            if (presenter?.getCategoryId() == 567) { // 消费版视频平台产品
+                Toast.makeText(this, hostIp, Toast.LENGTH_SHORT).show()
+            }
+            L.e("hostIp=${hostIp}")
+            if (App.activity is RecordVideoActivity) {
+                VideoUtils.sendVideoBroadcast(App.activity, 5)
                 presenter.requestDeviceDataRestartP2PService()
-                hostIp = nowHostIp
-            } else if (nowHostIp == hostIp && App.activity is RecordVideoActivity) {
-                presenter.requestDeviceData()
             } else {
                 //网络可达
                 presenter.requestDeviceData()
@@ -668,6 +665,5 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     override fun networkUnavailable() {
         //网络不可达
         Toast.makeText(this, "网络异常", Toast.LENGTH_LONG).show()
-        VideoUtils.sendVideoBroadcast(App.activity, 5)
     }
 }
