@@ -449,6 +449,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
 
+                it.setFrameSpeed(1.5f)
                 while (!::surface.isInitialized) {
                     delay(50)
                     L.e("delay for waiting surface.")
