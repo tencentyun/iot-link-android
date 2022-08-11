@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Handler
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
@@ -33,6 +34,7 @@ import com.tencent.iot.explorer.link.kitlink.util.VideoUtils
 import com.tencent.iot.explorer.link.mvp.ParentModel
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
+import com.tencent.iot.video.link.entity.DeviceStatus
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import java.util.*
@@ -46,6 +48,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
 
     init {
         IoTAuth.addActivePushCallback(this)
+        startReconnectCycle()
     }
 
     var categoryId = 0
@@ -56,9 +59,9 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
 
     private var hasPanel = false
     private var hasProduct = false
-    private var reconnect = false
     private var firstTime = true
-    private var needRestartP2P = false
+    private var isP2PConnect = false //p2p是否连接通（包含请求获取设备状态信令成功才算连接通）
+    private var reconnectCycleTask: TimerTask? = null
 
     //面板UI列表
     private val uiList = ArrayList<Property>()
@@ -151,15 +154,9 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         }
     }
 
-    /**
-     * 设备当前状态(如亮度、开关状态等)
-     */
-    fun requestDeviceData(needRestartP2PService: Boolean) {
-        needRestartP2P = needRestartP2PService
-        if (hasPanel) {
-            deviceDataList.clear()
-            HttpRequest.instance.deviceData(productId, deviceName, this)
-        }
+    fun removeReconnectCycleTasktask() {
+        reconnectCycleTask?.cancel()
+        reconnectCycleTask = null
     }
 
     /**
@@ -281,15 +278,11 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                             XP2P.startService(deviceId, productId, deviceName)
                             XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
                             firstTime = false
-                            VideoUtils.sendVideoBroadcast(App.activity, 3)
-                        } else if (reconnect) {//p2p链路断开
+                        } else if (!isP2PConnect) {//p2p链路断开 或者 p2p未断开但给设备发送信令失败
                             XP2P.stopService(deviceId)
                             XP2P.setCallback(xp2pCallback)
                             XP2P.startService(deviceId, productId, deviceName)
                             XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
-                        } else if (needRestartP2P) {//p2p链路没有断开但网络曾经短暂（或小于5s）断开过
-                            XP2P.stopService(deviceId)
-                            handler.postDelayed(restartRunnable, 3000)
                         }
 
                     }
@@ -325,25 +318,26 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
             when (event) {
                 1003 -> {
                     App.activity?.runOnUiThread {
-                        VideoUtils.sendVideoBroadcast(App.activity, 4)
+                        VideoUtils.sendVideoBroadcast(App.activity, 2)
                         T.show("p2p链路断开，尝试重连")
                         L.e("=========p2p链路断开，尝试重连")
                         requestXp2pInfo()
-                        reconnect = true
+                        startReconnectCycle()
+                        isP2PConnect = false
                     }
                 }
                 1004 -> {
                     App.activity?.runOnUiThread {
                         T.show("p2p链路初始化成功")
                         L.e("=========p2p链路初始化成功")
-                        VideoUtils.sendVideoBroadcast(App.activity, 2)
-
+                        getDeviceStatus()
                     }
                 }
                 1005 -> {
                     App.activity?.runOnUiThread {
                         T.show("p2p链路初始化失败")
                         L.e("=========p2p链路初始化失败")
+                        isP2PConnect = false
                     }
                 }
             }
@@ -356,6 +350,79 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
             return ""
         }
+    }
+
+    private fun startReconnectCycle() {
+        L.e("=========startReconnectCycle: $isP2PConnect")
+        if (reconnectCycleTask == null) {
+            L.e("=========reconnectCycleTask: $isP2PConnect")
+            var reconnectTimer = Timer("p2p connect cycle")
+            reconnectCycleTask = object :TimerTask() {
+                override fun run() {
+                    L.e("=========isP2PConnect: $isP2PConnect")
+                    if (!isP2PConnect) {
+                        // 请求最新Xp2pInfo去初始化p2p
+                        requestXp2pInfo()
+                    } else {
+                        removeReconnectCycleTasktask()
+                    }
+                }
+            }
+            reconnectTimer.schedule(reconnectCycleTask, 5000, 5000)
+        }
+    }
+
+    private fun getDeviceStatus(): Boolean {
+        val command =
+            "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=standard".toByteArray()
+        val repStatus = XP2P.postCommandRequestSync(
+            deviceId,
+            command, command.size.toLong(), (2 * 1000 * 1000).toLong()
+        )
+        val deviceStatuses = JSONArray.parseArray(
+            repStatus,
+            DeviceStatus::class.java
+        )
+        // 0   接收请求
+        // 1   拒绝请求
+        // 404 error request message
+        // 405 connect number too many
+        // 406 current command don't support
+        // 407 device process error
+        if (deviceStatuses != null && deviceStatuses.size > 0) {
+            when (deviceStatuses[0].status) {
+                0 -> {
+                    T.show("设备状态正常")
+                    VideoUtils.sendVideoBroadcast(App.activity, 1)
+                    isP2PConnect = true
+                    return true
+                }
+                1 -> {
+                    T.show("设备状态异常, 拒绝请求: $repStatus")
+                    return false
+                }
+                404 -> {
+                    T.show("设备状态异常, error request message: $repStatus")
+                    return false
+                }
+                405 -> {
+                    T.show("设备状态异常, connect number too many: $repStatus")
+                    return false
+                }
+                406 -> {
+                    T.show("设备状态异常, current command don't support: $repStatus")
+                    return false
+                }
+                407 -> {
+                    T.show("设备状态异常, device process error: $repStatus")
+                    return false
+                }
+            }
+        } else {
+            T.show("获取设备状态失败")
+            return false
+        }
+        return false
     }
 
     fun getBleDeviceStatus(): ByteArray? {
@@ -534,13 +601,6 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         if (waitUpdate) {
             requestDeviceData()
         }
-    }
-    private val restartRunnable = Runnable {
-        XP2P.setCallback(xp2pCallback)
-        XP2P.setLogEnable(false, true)
-        XP2P.startService(deviceId, productId, deviceName)
-        XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
-        needRestartP2P = false;
     }
 
     private fun waitUpdate() {

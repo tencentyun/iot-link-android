@@ -639,6 +639,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
 //        App.setEnableEnterRoomCallback(true)
         if (deviceEntity?.CategoryId == 567) {
             XP2P.stopService(deviceEntity?.DeviceId)
+            presenter.removeReconnectCycleTasktask()
         }
         super.onDestroy()
     }
@@ -652,8 +653,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
             }
             L.e("hostIp=${hostIp}")
             if (App.activity is RecordVideoActivity) {
-                VideoUtils.sendVideoBroadcast(App.activity, 5)
-                presenter.requestDeviceDataRestartP2PService()
+                presenter.requestDeviceData()
             } else {
                 //网络可达
                 presenter.requestDeviceData()
