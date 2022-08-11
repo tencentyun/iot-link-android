@@ -37,8 +37,8 @@ class ControlPanelPresenter(view: ControlPanelView) : ParentPresenter<ControlPan
         model?.requestDeviceData()
     }
 
-    fun requestDeviceDataRestartP2PService() {
-        model?.requestDeviceData(true)
+    fun removeReconnectCycleTasktask() {
+        model?.removeReconnectCycleTasktask()
     }
 
     fun requestControlPanel() {

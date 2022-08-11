@@ -194,6 +194,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     protected void onDestroy() {
         super.onDestroy();
         unregistVideoOverBrodcast();
+        removeIsEnterRoom60secondsTask();
         isPause = true;
         stopRecord();
         executor.shutdown();
@@ -228,7 +229,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         vw = App.Companion.getData().getResolutionWidth();
         vh = App.Companion.getData().getResolutionHeight();
 
-        getDeviceStatus();
         initAudioEncoder();
         initVideoEncoder();
 
@@ -360,46 +360,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             bitRateTimer.cancel();
             bitRateTimer = null;
         }
-    }
-
-    private boolean getDeviceStatus() {
-        byte[] command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=standard".getBytes();
-        String repStatus = XP2P.postCommandRequestSync(TRTCUIManager.getInstance().deviceId,
-                command, command.length, 2 * 1000 * 1000);
-        List<DeviceStatus> deviceStatuses = JSONArray.parseArray(repStatus, DeviceStatus.class);
-        // 0   接收请求
-        // 1   拒绝请求
-        // 404 error request message
-        // 405 connect number too many
-        // 406 current command don't support
-        // 407 device process error
-        if (deviceStatuses != null && deviceStatuses.size() > 0) {
-            switch (deviceStatuses.get(0).status) {
-                case 0:
-                    T.show("设备状态正常");
-                    removeIsEnterRoom60secondsTask();
-                    return true;
-                case 1:
-                    T.show("设备状态异常, 拒绝请求: " + repStatus);
-                    return false;
-                case 404:
-                    T.show("设备状态异常, error request message: " + repStatus);
-                    return false;
-                case 405:
-                    T.show("设备状态异常, connect number too many: " + repStatus);
-                    return false;
-                case 406:
-                    T.show("设备状态异常, current command don't support: " + repStatus);
-                    return false;
-                case 407:
-                    T.show("设备状态异常, device process error: " + repStatus);
-                    return false;
-            }
-        } else {
-            T.show("获取设备状态失败");
-            return false;
-        }
-        return false;
     }
 
     @Override
@@ -663,7 +623,6 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
         player.setFrameSpeed(1.5f);
         player.setMaxPacketNum(2);
-        if (!getDeviceStatus()) return;
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
         Toast.makeText(this, url, Toast.LENGTH_LONG).show();
@@ -859,14 +818,14 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             int refreshTag = intent.getIntExtra(VideoUtils.VIDEO_RESUME, 0);
 
             Log.d(TAG, "refreshTag: " + refreshTag);
-            if (refreshTag == 4 || refreshTag == 5) {//p2p链路断开4 || app切网了5
+            if (refreshTag == 2) {//p2p链路断开2
                 isPause = true;
                 flvPacker = null;
                 stopRecord();
 //                XP2P.stopSendService(TRTCUIManager.getInstance().deviceId, null);
                 checkoutIsEnterRoom60seconds("通话结束...");
             }
-            if ((refreshTag == 1 || refreshTag == 2) && !isFirst) { //非首次连接 连接成功2 || 非首次连接 重新设置xp2oinfo
+            if (refreshTag == 1) { //p2p连接成功1
 
                 initAudioEncoder();
                 initVideoEncoder();
@@ -877,6 +836,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
                     surfaceView.setVisibility(View.INVISIBLE);
                     play(CallingType.TYPE_AUDIO_CALL);
                 }
+                removeIsEnterRoom60secondsTask();
             }
         }
     };
