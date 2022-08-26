@@ -4,6 +4,8 @@ import android.media.AudioRecord;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
+import android.media.audiofx.AcousticEchoCanceler;
+import android.media.audiofx.AutomaticGainControl;
 import android.os.Build;
 import android.util.Log;
 
@@ -44,6 +46,8 @@ public class AudioEncoder {
     private final String TAG = AudioEncoder.class.getSimpleName();
     private MediaCodec audioCodec;
     private AudioRecord audioRecord;
+    private AcousticEchoCanceler canceler;
+    private AutomaticGainControl control;
 
     private final MicParam micParam;
     private final AudioEncodeParam audioEncodeParam;
@@ -55,9 +59,21 @@ public class AudioEncoder {
 
 
     public AudioEncoder(MicParam micParam, AudioEncodeParam audioEncodeParam) {
+        this(micParam, audioEncodeParam, false, false);
+    }
+
+
+    public AudioEncoder(MicParam micParam, AudioEncodeParam audioEncodeParam, boolean enableAEC, boolean enableAGC) {
         this.micParam = micParam;
         this.audioEncodeParam = audioEncodeParam;
         initAudio();
+        int audioSessionId = audioRecord.getAudioSessionId();
+        if (enableAEC && audioSessionId != 0) {
+            Log.e(TAG, "=====initAEC result: " + initAEC(audioSessionId));
+        }
+        if (enableAGC && audioSessionId != 0) {
+            Log.e(TAG, "=====initAGC result: " + initAGC(audioSessionId));
+        }
     }
 
     public void setOnEncodeListener(OnEncodeListener listener) {
@@ -82,13 +98,50 @@ public class AudioEncoder {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void start() {
         new Thread(this::record).start();
     }
 
     public void stop() {
         stopEncode = true;
+    }
+
+    public boolean isDevicesSupportAEC() {
+        return AcousticEchoCanceler.isAvailable();
+    }
+
+    private boolean initAEC(int audioSession) {
+
+        boolean isDevicesSupportAEC = isDevicesSupportAEC();
+        Log.e(TAG, "isDevicesSupportAEC: "+isDevicesSupportAEC);
+        if (!isDevicesSupportAEC) {
+            return false;
+        }
+        if (canceler != null) {
+            return false;
+        }
+        canceler = AcousticEchoCanceler.create(audioSession);
+        canceler.setEnabled(true);
+        return canceler.getEnabled();
+    }
+
+    public boolean isDevicesSupportAGC() {
+        return AutomaticGainControl.isAvailable();
+    }
+
+    private boolean initAGC(int audioSession) {
+
+        boolean isDevicesSupportAGC = isDevicesSupportAGC();
+        Log.e(TAG, "isDevicesSupportAGC: "+isDevicesSupportAGC);
+        if (!isDevicesSupportAGC) {
+            return false;
+        }
+        if (control != null) {
+            return false;
+        }
+        control = AutomaticGainControl.create(audioSession);
+        control.setEnabled(true);
+        return control.getEnabled();
     }
 
     private void release() {
@@ -102,6 +155,18 @@ public class AudioEncoder {
             audioCodec.stop();
             audioCodec.release();
             audioCodec = null;
+        }
+
+        if (canceler != null) {
+            canceler.setEnabled(false);
+            canceler.release();
+            canceler = null;
+        }
+
+        if (control != null) {
+            control.setEnabled(false);
+            control.release();
+            control = null;
         }
     }
 
@@ -138,7 +203,6 @@ public class AudioEncoder {
         packet[6] = (byte) 0xFC;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void record() {
         if (audioCodec == null) {
             return;
@@ -156,7 +220,12 @@ public class AudioEncoder {
             // 将 AudioRecord 获取的 PCM 原始数据送入编码器
             int audioInputBufferId = audioCodec.dequeueInputBuffer(0);
             if (audioInputBufferId >= 0) {
-                ByteBuffer inputBuffer = audioCodec.getInputBuffer(audioInputBufferId);
+                ByteBuffer inputBuffer = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    inputBuffer = audioCodec.getInputBuffer(audioInputBufferId);
+                } else {
+                    inputBuffer = audioCodec.getInputBuffers()[audioInputBufferId];
+                }
                 int readSize = -1;
                 if (inputBuffer != null) {
                     readSize = audioRecord.read(inputBuffer, bufferSizeInBytes);
@@ -168,7 +237,12 @@ public class AudioEncoder {
 
             int audioOutputBufferId = audioCodec.dequeueOutputBuffer(audioInfo, 0);
             while (audioOutputBufferId >= 0) {
-                ByteBuffer outputBuffer = audioCodec.getOutputBuffer(audioOutputBufferId);
+                ByteBuffer outputBuffer = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    outputBuffer = audioCodec.getOutputBuffer(audioOutputBufferId);
+                } else {
+                    outputBuffer = audioCodec.getOutputBuffers()[audioOutputBufferId];
+                }
                 outputBuffer.position(audioInfo.offset);
                 outputBuffer.limit(audioInfo.offset + audioInfo.size);
                 addADTStoPacket(outputBuffer);
