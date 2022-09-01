@@ -35,6 +35,10 @@ class Command {
             return "ipc.flv?action=live&channel=${channel}&quality=super"
         }
 
+        fun getVideoMJPEGUrlSuffix(channel: Int): String {
+            return "ipc.flv?action=live-mjpg&channel=${channel}&quality=standard"
+        }
+
         fun getNvrIpcStatus(channel: Int, type: Int): String {
             var typeStr = "live"
             when(type) {
