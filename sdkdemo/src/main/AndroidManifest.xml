@@ -68,6 +68,9 @@
         <activity
             android:name=".video.preview.VideoPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".video.preview.VideoPreviewActivityMJPEG"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name="com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioCallActivity" />
         <activity android:name="com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity" />
         <activity android:name=".core.activity.LoginActivity" />
