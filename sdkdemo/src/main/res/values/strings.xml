@@ -63,6 +63,7 @@
     <string name="edit_devs_2_show">编辑同屏摄像机</string>
     <string name="preview">预览</string>
     <string name="playback">回放</string>
+    <string name="preview_mjpeg">图片流mjpeg</string>
     <string name="cloud_playback">云记录</string>
     <string name="local_playback">本地记录</string>
     <string name="switc_orientation_h">切换横屏</string>
