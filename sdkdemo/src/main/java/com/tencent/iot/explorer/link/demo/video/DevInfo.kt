@@ -10,6 +10,7 @@ class DevInfo {
     var Online = 0
     var EnableState =0
     var Channel = 0
+    var mjpeg = 0
 
     set(value) {
         field = value
