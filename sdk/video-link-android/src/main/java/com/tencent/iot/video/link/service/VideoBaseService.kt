@@ -78,6 +78,20 @@ open class VideoBaseService(secretId: String, secretKey: String) {
             param, headerParams, callback, VideoRequestCode.video_describe_video_url)
     }
 
+    fun getMJPEGVideoUrl(productId: String, devName: String, startTime: kotlin.Long, callback: VideoCallback) {
+        var headerParams = videoCommonHeaderParams("DescribeCloudStorageStreamData", "2021-11-25")
+        val param = TreeMap<String, Any>()
+        param["ProductId"] = productId
+        param["DeviceName"] = devName
+        param["StartTime"] = startTime
+        val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
+        if (authorization != null) {
+            headerParams["Authorization"] = authorization
+        }
+        basePost(VideoHttpUtil.VIDEO_SERVICE + VideoHttpUtil.REST_HOST_URL,
+            param, headerParams, callback, VideoRequestCode.video_describe_video_url)
+    }
+
     fun getIPCRecordData(productId: String, devName: String, startDate: Date, endDate: Date, callback: VideoCallback) {
         var headerParams = videoCommonHeaderParams("DescribeCloudStorageEvents", "2020-12-15")
         val param = TreeMap<String, Any>()
