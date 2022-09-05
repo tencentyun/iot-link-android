@@ -212,6 +212,12 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                 var url = String.format(URL_FORMAT, presenter.getBaseUrl(),
                     (it.list.get(pos).startTime).toString(),
                     endtime)
+
+                if (devInfo!!.mjpeg == 1) {
+//                if (true) {
+                    playMJPEGVideo(url, it.list.get(pos).startTime)
+                    return
+                }
                 playVideo(url, 0)
             }
         }
@@ -290,6 +296,61 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                     }
                 }
             })
+        }
+    }
+
+    private fun playMJPEGVideo(url: String, startTime: Long) {
+        App.data.accessInfo?.let {
+            var expireDate = Date((Date().time + 60 * 60 * 1000))
+            var time = expireDate.time / 1000
+            VideoBaseService(it.accessId, it.accessToken).getMJPEGVideoUrl(it.productId, devInfo!!.DeviceName, startTime, object : VideoCallback{
+                override fun fail(msg: String?, reqCode: Int) {
+                    ToastDialog(context, ToastDialog.Type.WARNING, msg ?: "", 2000).show()
+                }
+
+                override fun success(response: String?, reqCode: Int) {
+                    var json = JSONObject.parseObject(response)
+                    Log.d("响应mjpeg===>url", response)
+                    Log.d(tag, "响应mjpeg===>url=${response} end")
+                    json?.let {
+                        it.getJSONObject("Response")?.let {
+                            var eventResp = JSONObject.parseObject(it.toJSONString(), SignedMJPEGUrlResponse::class.java)
+                            eventResp?.let {
+                                var url1Play = URLDecoder.decode(it.videoStream)
+                                var url2Play = URLDecoder.decode(it.audioStream)
+                                startMJPEGVideo(url1Play, url2Play)
+                            }
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    private fun startMJPEGVideo(vUrl: String, aUrl: String) {
+        player.reset()
+        player.setSurface(this.surface)
+        player.dataSource = vUrl
+
+        seekBarJob?.cancel()
+        player.prepareAsync()
+        player.setOnErrorListener(onErrorListener)
+        player.setOnInfoListener(onInfoListener)
+        player.setOnCompletionListener(onCompletionListener)
+        player.setOnPreparedListener {
+            var realOffset = it.duration
+            tv_current_pos.text = CommonUtils.formatTime(realOffset)
+            tv_all_time.text = CommonUtils.formatTime(it.duration)
+            video_seekbar.max = (it.duration / 1000).toInt()
+            startJobRereshTimeAndProgress()
+            iv_start.isClickable = true
+            it.start()
+            launch(Dispatchers.Main) {
+                delay(10)
+                if (!isShowing) {
+                    iv_start.performClick()
+                }
+            }
         }
     }
 

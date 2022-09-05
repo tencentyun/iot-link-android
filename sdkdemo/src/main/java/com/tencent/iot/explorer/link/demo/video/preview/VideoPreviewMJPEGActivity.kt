@@ -107,6 +107,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
     }
 
     override fun initView() {
+        XP2P.setLogEnable(false, false)
         presenter = EventPresenter(this@VideoPreviewMJPEGActivity)
         var bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
         bundle?.let {
@@ -310,6 +311,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         radio_playback.setOnClickListener {
             var dev = DevInfo()
             dev.DeviceName = presenter.getDeviceName()
+            dev.mjpeg = 1
             VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewMJPEGActivity, dev)
         }
         radio_photo.setOnClickListener {
