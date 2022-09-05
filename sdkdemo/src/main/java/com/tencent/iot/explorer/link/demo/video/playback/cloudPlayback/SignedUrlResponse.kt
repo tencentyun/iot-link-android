@@ -4,3 +4,9 @@ class SignedUrlResponse {
     var requestId = ""
     var signedVideoURL = ""
 }
+
+class SignedMJPEGUrlResponse {
+    var audioStream = ""
+    var videoStream = ""
+    var startTime = ""
+}
