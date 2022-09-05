@@ -137,6 +137,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
             audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000)
+            audioRecordUtil.recordSpeakFlv(true)
         }
 
         XP2P.setCallback(this)
