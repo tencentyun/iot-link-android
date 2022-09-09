@@ -17,9 +17,11 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineViewChangeListener
+import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.core.entity.BaseResponse
 import com.tencent.iot.explorer.link.demo.core.entity.VideoHistory
+import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.playback.CalendarDialog
 import com.tencent.iot.explorer.link.demo.video.playback.CalendarDialog.OnClickedListener
@@ -67,6 +69,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private var isShowing = false
     private lateinit var surface: Surface
     private var player : IjkMediaPlayer = IjkMediaPlayer()
+    var audioPlayer: IjkMediaPlayer? = null
     @Volatile
     private var updateSeekBarAble = true  // 手动拖拽过程的标记
 
@@ -192,8 +195,8 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             iv_start?.setImageResource(R.mipmap.start)
             pause_tip_layout?.visibility = View.VISIBLE
             seekBarJob?.cancel()
-            video_seekbar.progress = video_seekbar.max
-            player.seekTo(1)
+//            video_seekbar.progress = video_seekbar.max
+//            player.seekTo(1)
         }
     }
 
@@ -311,7 +314,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                 override fun success(response: String?, reqCode: Int) {
                     var json = JSONObject.parseObject(response)
                     Log.d("响应mjpeg===>url", response)
-                    Log.d(tag, "响应mjpeg===>url=${response} end")
+
                     json?.let {
                         it.getJSONObject("Response")?.let {
                             var eventResp = JSONObject.parseObject(it.toJSONString(), SignedMJPEGUrlResponse::class.java)
@@ -328,6 +331,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     private fun startMJPEGVideo(vUrl: String, aUrl: String) {
+        Log.d(tag, "响应mjpeg===>vUrl=${vUrl} \nand aURL===>${aUrl}")
         player.reset()
         player.setSurface(this.surface)
         player.dataSource = vUrl
@@ -351,6 +355,34 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
                     iv_start.performClick()
                 }
             }
+        }
+
+        audioPlayer?.release()
+        audioPlayer = IjkMediaPlayer()
+        audioPlayer?.let {
+            val url = aUrl
+            it.reset()
+
+//            it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 512)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
+//
+//            it.setFrameSpeed(1.5f)
+//            while (!::surface.isInitialized) {
+//                delay(50)
+//                L.e("delay for waiting surface.")
+//            }
+            it.setSurface(surface)
+            it.dataSource = url
+
+            it.prepareAsync()
+            it.start()
         }
     }
 
