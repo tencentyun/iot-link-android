@@ -71,6 +71,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
     private var records : MutableList<ActionRecord> = ArrayList()
     lateinit var presenter: EventPresenter
     lateinit var player : IjkMediaPlayer
+    var audioPlayer : IjkMediaPlayer? = null
     lateinit var surface: Surface
     @Volatile
     var audioAble = true
@@ -432,6 +433,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         showTip = false
         startShowVideoTime = System.currentTimeMillis()
         player.release()
+        audioPlayer?.release()
         launch (Dispatchers.Main) {
             layout_video_preview?.removeView(v_preview)
             layout_video_preview?.addView(v_preview, 0)
@@ -443,6 +445,34 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
 
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
+
+                it.setFrameSpeed(1.5f)
+                while (!::surface.isInitialized) {
+                    delay(50)
+                    L.e("delay for waiting surface.")
+                }
+                it.setSurface(surface)
+                it.dataSource = url
+
+                it.prepareAsync()
+                it.start()
+            }
+
+
+            audioPlayer = IjkMediaPlayer()
+            audioPlayer?.let {
+                val url = urlPrefix + Command.getVideoMJPEGAACUrlSuffix()
+                it.reset()
+
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 256)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
@@ -585,6 +615,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
             CommonUtils.refreshVideoList(this@VideoPreviewMJPEGActivity, filePath)
         }
 
+        audioPlayer?.release()
         countDownLatchs.clear()
         // 关闭守护线程
         keepAliveThreadRuning = false
