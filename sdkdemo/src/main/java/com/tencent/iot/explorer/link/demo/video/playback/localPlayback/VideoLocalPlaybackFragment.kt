@@ -827,7 +827,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
         App.data.accessInfo?.let { access ->
             devInfo?.let {
-                XP2P.stopService("${access.productId}/${it.DeviceName}")
+//                XP2P.stopService("${access.productId}/${it.DeviceName}")
             }
         }
         XP2P.setCallback(null)
