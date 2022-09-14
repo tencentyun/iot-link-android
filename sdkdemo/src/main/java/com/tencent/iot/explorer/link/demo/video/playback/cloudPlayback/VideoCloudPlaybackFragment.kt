@@ -70,6 +70,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     private lateinit var surface: Surface
     private var player : IjkMediaPlayer = IjkMediaPlayer()
     var audioPlayer: IjkMediaPlayer? = null
+    var cloudVideoDuration = 0L //当前云存max时长
     @Volatile
     private var updateSeekBarAble = true  // 手动拖拽过程的标记
 
@@ -218,6 +219,8 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
 
                 if (devInfo!!.mjpeg == 1) {
 //                if (true) {
+
+                    cloudVideoDuration = it.list.get(pos).endTime - it.list.get(pos).startTime
                     playMJPEGVideo(url, it.list.get(pos).startTime)
                     return
                 }
@@ -331,7 +334,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
     }
 
     private fun startMJPEGVideo(vUrl: String, aUrl: String) {
-        Log.d(tag, "响应mjpeg===>vUrl=${vUrl} \nand aURL===>${aUrl}")
+        Log.d(tag, "响应mjpeg===>vUrl=${vUrl} \nand aURL===>${aUrl} \nand duration===>${cloudVideoDuration}")
         player.reset()
         player.setSurface(this.surface)
         player.dataSource = vUrl
@@ -342,10 +345,11 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         player.setOnInfoListener(onInfoListener)
         player.setOnCompletionListener(onCompletionListener)
         player.setOnPreparedListener {
-            var realOffset = it.duration
+//            var realOffset = it.duration
+            var realOffset = cloudVideoDuration * 1000
             tv_current_pos.text = CommonUtils.formatTime(realOffset)
-            tv_all_time.text = CommonUtils.formatTime(it.duration)
-            video_seekbar.max = (it.duration / 1000).toInt()
+            tv_all_time.text = CommonUtils.formatTime(realOffset)
+            video_seekbar.max = (realOffset / 1000).toInt()
             startJobRereshTimeAndProgress()
             iv_start.isClickable = true
             it.start()
