@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.SurfaceTexture
+import android.media.AudioFormat
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
@@ -137,6 +138,8 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
             audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000)
+//            //变调可以传入pitch参数
+//            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
             audioRecordUtil.recordSpeakFlv(true)
         }
 
