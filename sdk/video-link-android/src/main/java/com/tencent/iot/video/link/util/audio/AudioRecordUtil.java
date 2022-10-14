@@ -7,6 +7,7 @@ import android.media.MediaRecorder;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.iot.soundtouch.interfaces.SoundTouch;
 import com.tencent.iot.thirdparty.flv.FLVListener;
 import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.xnet.XP2P;
@@ -35,11 +36,14 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     private int channel;
     private int bitDepth;
     private int channelCount; //声道数
+    private int pitch; //变调【-12~12】
 
     private boolean isRecord = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private String speakFlvFilePath = "/storage/emulated/0/speak.flv";
     private FileOutputStream fos;
+
+    private SoundTouch st;
 
     public AudioRecordUtil(Context ctx, String id, int sampleRate) {
         context = ctx;
@@ -50,6 +54,16 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         context = ctx;
         deviceId = id;
         init(sampleRate, channel, bitDepth);
+    }
+    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch) {
+        context = ctx;
+        deviceId = id;
+        this.pitch = pitch;
+        init(sampleRate, channel, bitDepth);
+
+        if (st == null) {
+            st = new SoundTouch(0,channelCount,sampleRate,bitDepth,1.0f, pitch);
+        }
     }
 
     private void init(int sampleRate, int channel, int bitDepth) {
@@ -111,6 +125,13 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         if (audioRecord != null) {
             audioRecord.stop();
         }
+
+        if (st != null) {
+            st.finish();
+            st.clearBuffer(0);
+            st = null;
+        }
+
         executor.shutdown();
         audioRecord = null;
         pcmEncoder = null;
@@ -152,6 +173,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         public void run() {
             while (recorderState) {
                 int read = audioRecord.read(buffer, 0, buffer.length);
+                if (st != null) {
+                    st.putBytes(buffer);
+                    int bytesReceived = st.getBytes(buffer);
+                }
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     pcmEncoder.encodeData(buffer);
