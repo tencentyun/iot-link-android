@@ -36,7 +36,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     private int channel;
     private int bitDepth;
     private int channelCount; //声道数
-    private int pitch; //变调【-12~12】
+    private int pitch = 0; //变调【-12~12】
 
     private boolean isRecord = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -60,10 +60,6 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         deviceId = id;
         this.pitch = pitch;
         init(sampleRate, channel, bitDepth);
-
-        if (st == null) {
-            st = new SoundTouch(0,channelCount,sampleRate,bitDepth,1.0f, pitch);
-        }
     }
 
     private void init(int sampleRate, int channel, int bitDepth) {
@@ -105,6 +101,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
      */
     public void start() {
         reset();
+        if (st == null) {
+            st = new SoundTouch(0,channelCount,sampleRate,bitDepth,1.0f, pitch);
+        }
         recorderState = true;
         audioRecord.startRecording();
         new RecordThread().start();
@@ -173,7 +172,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         public void run() {
             while (recorderState) {
                 int read = audioRecord.read(buffer, 0, buffer.length);
-                if (st != null) {
+                if (pitch != 0 && st != null) {
                     st.putBytes(buffer);
                     int bytesReceived = st.getBytes(buffer);
                 }
