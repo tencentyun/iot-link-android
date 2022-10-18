@@ -52,6 +52,7 @@ dependencies {
 //    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.23'
     api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.28'
     api 'com.tencent.iot.thirdparty.android:media-server:1.0.2'
+    api 'io.github.sundoggynew:iot-soundtouch:1.0.0'
 }
 
 configurations.all {
