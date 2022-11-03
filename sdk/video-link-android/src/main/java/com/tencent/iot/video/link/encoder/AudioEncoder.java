@@ -9,9 +9,6 @@ import android.media.audiofx.AutomaticGainControl;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
-
-
 import com.tencent.iot.video.link.listener.OnEncodeListener;
 import com.tencent.iot.video.link.param.AudioEncodeParam;
 import com.tencent.iot.video.link.param.MicParam;
