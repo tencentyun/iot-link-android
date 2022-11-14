@@ -291,7 +291,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private void initAudioEncoder() {
         MicParam micParam = new MicParam.Builder()
                 .setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION)
-                .setSampleRateInHz(8000) // 采样率
+                .setSampleRateInHz(16000) // 采样率
                 .setChannelConfig(AudioFormat.CHANNEL_IN_MONO)
                 .setAudioFormat(AudioFormat.ENCODING_PCM_16BIT) // PCM
                 .build();
@@ -637,7 +637,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
         // 开始推流
         XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
-        handler.post(() -> startRecord(callType));
+        handler.postDelayed(() -> startRecord(callType), 1000);
     }
 
     private void startRecord(int callType) {
