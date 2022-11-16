@@ -64,6 +64,8 @@
     <string name="preview">预览</string>
     <string name="playback">回放</string>
     <string name="preview_mjpeg">图片流mjpeg</string>
+    <string name="video_without_property">IPC双向通话</string>
+    <string name="video_push_stream">向设备推流</string>
     <string name="cloud_playback">云记录</string>
     <string name="local_playback">本地记录</string>
     <string name="switc_orientation_h">切换横屏</string>
