@@ -21,6 +21,8 @@ import com.tencent.iot.explorer.link.demo.video.nvr.VideoNvrActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoMultiPreviewActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewMJPEGActivity
+import com.tencent.iot.explorer.link.demo.video.preview.VideoWithoutPropertyActivity
+import com.tencent.iot.explorer.link.demo.video.preview.VideoPushStreamActivity
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.callback.VideoCallback
@@ -127,7 +129,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
             return
         }
 
-        var options = arrayListOf(getString(R.string.preview), getString(R.string.playback), getString(R.string.preview_mjpeg))
+        var options = arrayListOf(getString(R.string.preview), getString(R.string.playback), getString(R.string.preview_mjpeg), getString(R.string.video_without_property), getString(R.string.video_push_stream))
         var dlg =
             ListOptionsDialog(
                 context,
@@ -139,6 +141,8 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
                 0 -> { VideoPreviewActivity.startPreviewActivity(context, dev) }
                 1 -> { VideoPlaybackActivity.startPlaybackActivity(context, dev) }
                 2 -> { VideoPreviewMJPEGActivity.startPreviewActivity(context, dev) }
+                3 -> { VideoWithoutPropertyActivity.startPreviewActivity(context, dev) }
+                4 -> { VideoPushStreamActivity.startPreviewActivity(context, dev) }
             }
         }
     }
