@@ -137,9 +137,9 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             presenter.getEventsData(Date())
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
-//            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000)
+            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
 //            //变调可以传入pitch参数
-            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
+//            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
             audioRecordUtil.recordSpeakFlv(true)
         }
 
