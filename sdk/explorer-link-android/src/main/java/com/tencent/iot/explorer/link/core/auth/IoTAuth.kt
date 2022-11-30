@@ -228,6 +228,9 @@ object IoTAuth {
      * @param callback MessageCallback注册监听请求回调，可为null
      */
     fun registerActivePush(deviceIds: ArrayString, callback: MessageCallback?) {
+        if (deviceIds.size() == 0) {
+            return;
+        }
         val msg = ActivePushMessage(deviceIds)
         if (callback == null)
             WSClientManager.instance.sendMessage(msg.toString())
