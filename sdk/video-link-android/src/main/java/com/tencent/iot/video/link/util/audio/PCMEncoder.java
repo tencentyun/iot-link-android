@@ -105,19 +105,21 @@ public class PCMEncoder {
             int bytePacketSize = byteBufSize + 7;
             //拿到输出Buffer
             ByteBuffer outPutBuf = encodeOutputBuffers[outputIndex];
-            outPutBuf.position(encodeBufferInfo.offset);
-            outPutBuf.limit(encodeBufferInfo.offset + encodeBufferInfo.size);
+            if (encodeBufferInfo.size > 2) {
+                outPutBuf.position(encodeBufferInfo.offset);
+                outPutBuf.limit(encodeBufferInfo.offset + encodeBufferInfo.size);
 
-            byte[] aacData = new byte[bytePacketSize];
-            //添加ADTS头部
-            addADTStoPacket(aacData, bytePacketSize);
+                byte[] aacData = new byte[bytePacketSize];
+                //添加ADTS头部
+                addADTStoPacket(aacData, bytePacketSize);
 
-            outPutBuf.get(aacData, 7, byteBufSize);
-            outPutBuf.position(encodeBufferInfo.offset);
+                outPutBuf.get(aacData, 7, byteBufSize);
+                outPutBuf.position(encodeBufferInfo.offset);
 
-            //编码成功
-            if (encoderListener != null) {
-                encoderListener.encodeAAC(aacData, encodeBufferInfo.presentationTimeUs);
+                //编码成功
+                if (encoderListener != null) {
+                    encoderListener.encodeAAC(aacData, encodeBufferInfo.presentationTimeUs);
+                }
             }
 
             //释放
