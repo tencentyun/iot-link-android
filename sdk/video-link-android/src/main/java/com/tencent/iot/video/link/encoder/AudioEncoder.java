@@ -240,9 +240,11 @@ public class AudioEncoder {
                 } else {
                     outputBuffer = audioCodec.getOutputBuffers()[audioOutputBufferId];
                 }
-                outputBuffer.position(audioInfo.offset);
-                outputBuffer.limit(audioInfo.offset + audioInfo.size);
-                addADTStoPacket(outputBuffer);
+                if (audioInfo.size > 2) {
+                    outputBuffer.position(audioInfo.offset);
+                    outputBuffer.limit(audioInfo.offset + audioInfo.size);
+                    addADTStoPacket(outputBuffer);
+                }
                 audioCodec.releaseOutputBuffer(audioOutputBufferId, false);
                 audioOutputBufferId = audioCodec.dequeueOutputBuffer(audioInfo, 0);
             }
