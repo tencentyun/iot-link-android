@@ -96,12 +96,7 @@ public class LogcatHelper {
                 while (mRunning && (line = mReader.readLine()) != null) {
                     if (!mRunning) break;
                     if (line.length() == 0) continue;
-                    if (out != null && line.contains(mPID) && !line.contains("FA  ")
-                            && !line.contains("zygote")
-                            && !line.contains("libEGL") && !line.contains("TPush")
-                            && !line.contains("Hw") && !line.contains("OpenGL")
-                            && !line.contains("CubicBezier") && !line.contains("PressGestureDetector")
-                            && !line.contains("AppCompatDelegate") && !line.contains("VideoCapabilities")) {
+                    if (out != null && line.contains(mPID)) {
                         out.write((line + "\n").getBytes());
                     }
                 }
