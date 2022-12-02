@@ -35,6 +35,7 @@ import com.tencent.iot.explorer.link.rtc.model.*
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.link.kitlink.activity.rtcui.videocall.TRTCVideoCallActivity
 import com.tencent.iot.explorer.link.kitlink.activity.videoui.RecordVideoActivity
+import com.tencent.iot.explorer.link.kitlink.util.LogcatHelper
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -175,6 +176,8 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         BleConfigService.get().context = this
 
         loadLastCountryInfo();
+
+        LogcatHelper.getInstance(this.applicationContext).start()
     }
 
     /**
@@ -182,6 +185,7 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
      */
     override fun onTerminate() {
         super.onTerminate()
+        LogcatHelper.getInstance(this.applicationContext).stop()
         //关闭WebSocket
         IoTAuth.destroy()
         T.setContext(null)
