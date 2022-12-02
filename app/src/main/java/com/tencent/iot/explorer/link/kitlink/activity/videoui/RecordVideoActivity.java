@@ -75,6 +75,8 @@ import java.util.concurrent.Executors;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
+import static com.tencent.iot.video.link.consts.LogConst.RTC_TAG;
+
 public class RecordVideoActivity extends BaseActivity implements TextureView.SurfaceTextureListener, OnEncodeListener, SurfaceHolder.Callback {
 
     private static Timer bitRateTimer;
@@ -105,6 +107,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private TextView tvACache;
     private TextView tvVideoWH;
     private volatile long basePts = 0;
+    private long startShowVideoTime = 0L;
 
     private volatile boolean isPause = true;
 
@@ -562,6 +565,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
      * 展示通话中的界面
      */
     public void showCallingView() {
+        startShowVideoTime = System.currentTimeMillis();
         if (mIsVideo) { // 需要绘制视频本地和对端画面
             play(CallingType.TYPE_VIDEO_CALL);
         } else { // 需要绘制音频本地和对端画面
@@ -596,7 +600,13 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) { return false; }
 
     @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surface) { }
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+        if (startShowVideoTime > 0L) {
+            long showVideoTime = System.currentTimeMillis() - startShowVideoTime;
+            startShowVideoTime = 0L;
+            Log.i(RTC_TAG, "onSurfaceTextureUpdated, first show video time: " + showVideoTime);
+        }
+    }
 
     private void play(int callType) {
         if (player != null) {
@@ -611,8 +621,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000);
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 64);
         } else {
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000000);
-//            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024);
+//            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000000);
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024);
         }
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
