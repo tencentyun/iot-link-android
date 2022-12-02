@@ -345,7 +345,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
                 // 升码率
                 // 测试发现升码率的速度慢一些效果更好
                 // p2p水线经验值一般小于[视频码率/2]，网络良好的情况会小于 [视频码率/3] 甚至更低
-                videoEncoder.setVideoBitRate(now_video_rate + 5);
+                videoEncoder.setVideoBitRate(now_video_rate + 25);
             }
         }
     }
