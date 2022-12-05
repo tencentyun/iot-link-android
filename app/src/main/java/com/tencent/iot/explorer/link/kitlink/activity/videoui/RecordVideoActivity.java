@@ -338,14 +338,14 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             int video_rate_byte = (now_video_rate / 8) * 3 / 4;
             if (p2p_wl_avg > video_rate_byte) {
 
-                videoEncoder.setVideoBitRate(video_rate_byte);
+                videoEncoder.setVideoBitRate(video_rate_byte*8);
 
             }else if (p2p_wl_avg <  (now_video_rate / 8) / 3) {
 
                 // 升码率
                 // 测试发现升码率的速度慢一些效果更好
                 // p2p水线经验值一般小于[视频码率/2]，网络良好的情况会小于 [视频码率/3] 甚至更低
-                videoEncoder.setVideoBitRate(now_video_rate + 25);
+                videoEncoder.setVideoBitRate(now_video_rate + (now_video_rate-p2p_wl_avg*8)/5);
             }
         }
     }
