@@ -679,6 +679,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         camera = Camera.open(facing);
         //获取相机参数
         Camera.Parameters parameters = camera.getParameters();
+        parameters.setRecordingHint(true);
+        parameters.setPreviewFrameRate(App.Companion.getData().getFrameRate());
 
         //设置预览格式（也就是每一帧的视频格式）YUV420下的NV21
         parameters.setPreviewFormat(ImageFormat.NV21);
@@ -808,6 +810,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         long audioCachedBytes = player.getAudioCachedBytes();
         long tcpSpeed = player.getTcpSpeed();
 
+        float vdps = player.getVideoDecodeFramesPerSecond();
+        float vfps = player.getVideoOutputFramesPerSecond();
+
         tvACache.setText(String.format(Locale.US, "%s, %s",
                 Utils.INSTANCE.formatedDurationMilli(audioCachedDuration),
                 Utils.INSTANCE.formatedSize(audioCachedBytes)));
@@ -817,6 +822,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         tvTcpSpeed.setText(String.format(Locale.US, "%s",
                 Utils.INSTANCE.formatedSpeed(tcpSpeed, 1000)));
         tvVideoWH.setText(player.getVideoWidth() + " x " + player.getVideoHeight());
+        Log.i(RTC_TAG, String.format(Locale.US, "player fps : %.2f / %.2f", vdps, vfps));
     }
 
     private static final int MSG_UPDATE_HUD = 1;
