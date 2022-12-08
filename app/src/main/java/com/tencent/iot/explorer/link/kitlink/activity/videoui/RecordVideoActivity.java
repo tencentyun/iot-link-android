@@ -565,13 +565,15 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
      * 展示通话中的界面
      */
     public void showCallingView() {
-        startShowVideoTime = System.currentTimeMillis();
-        if (mIsVideo) { // 需要绘制视频本地和对端画面
-            play(CallingType.TYPE_VIDEO_CALL);
-        } else { // 需要绘制音频本地和对端画面
-            surfaceView.setVisibility(View.INVISIBLE);
-            play(CallingType.TYPE_AUDIO_CALL);
-        }
+
+        handler.postDelayed(() -> {
+            if (mIsVideo) { // 需要绘制视频本地和对端画面
+                play(CallingType.TYPE_VIDEO_CALL);
+            } else { // 需要绘制音频本地和对端画面
+                surfaceView.setVisibility(View.INVISIBLE);
+                play(CallingType.TYPE_AUDIO_CALL);
+            }
+        }, 1000);
         //2. 底部状态栏
         mHangupLl.setVisibility(View.VISIBLE);
         mDialingLl.setVisibility(View.GONE);
@@ -613,6 +615,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             player.stop();
             player.setDisplay(null);
             player.release();
+        } else {
+            startShowVideoTime = System.currentTimeMillis();
         }
         player = new IjkMediaPlayer();
         player.reset();
