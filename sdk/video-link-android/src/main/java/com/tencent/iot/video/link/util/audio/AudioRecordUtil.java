@@ -93,6 +93,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         } else if (channel == AudioFormat.CHANNEL_IN_STEREO) {
             this.channelCount = 2;
         }
+        Log.e(TAG, "AudioRecordUtil init Pitch is: "+ pitch);
     }
 
     public void recordSpeakFlv(boolean isRecord) {
@@ -115,6 +116,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
                 Log.e(TAG, "临时缓存文件未找到");
             }
         }
+    }
+
+    // start之前设置有效 start过程中无法改变本次对讲音调
+    public void setPitch(int pitch) {
+        Log.e(TAG, "setPitch is: "+ pitch);
+        this.pitch = pitch;
     }
 
     /**
