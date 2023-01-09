@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.media.audiofx.AcousticEchoCanceler;
+import android.media.audiofx.AutomaticGainControl;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -27,6 +29,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     private volatile boolean recorderState = true; //录制状态
     private byte[] buffer;
     private AudioRecord audioRecord;
+    private AcousticEchoCanceler canceler;
+    private AutomaticGainControl control;
     private volatile PCMEncoder pcmEncoder;
     private volatile FLVPacker flvPacker;
     private Context context;
@@ -37,6 +41,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     private int bitDepth;
     private int channelCount; //声道数
     private int pitch = 0; //变调【-12~12】
+    private boolean enableAEC = false;
+    private boolean enableAGC = false;
 
     private boolean isRecord = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -59,6 +65,21 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         context = ctx;
         deviceId = id;
         this.pitch = pitch;
+        init(sampleRate, channel, bitDepth);
+    }
+    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, boolean enableAEC, boolean enableAGC) {
+        context = ctx;
+        deviceId = id;
+        this.enableAEC = enableAEC;
+        this.enableAGC = enableAGC;
+        init(sampleRate, channel, bitDepth);
+    }
+    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch, boolean enableAEC, boolean enableAGC) {
+        context = ctx;
+        deviceId = id;
+        this.pitch = pitch;
+        this.enableAEC = enableAEC;
+        this.enableAGC = enableAGC;
         init(sampleRate, channel, bitDepth);
     }
 
@@ -111,9 +132,20 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
 
     private void reset() {
         buffer = new byte[recordMinBufferSize];
-        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
+        if (enableAEC) {
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.VOICE_COMMUNICATION, sampleRate, channel, bitDepth, recordMinBufferSize);
+        } else {
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
+        }
         pcmEncoder = new PCMEncoder(sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
         flvPacker = new FLVPacker(this, true, false);
+        int audioSessionId = audioRecord.getAudioSessionId();
+        if (enableAEC) {
+            Log.e(TAG, "=====initAEC result: " + initAEC(audioSessionId));
+        }
+        if (enableAGC) {
+            Log.e(TAG, "=====initAGC result: " + initAGC(audioSessionId));
+        }
     }
 
     /**
@@ -136,6 +168,16 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         pcmEncoder = null;
         flvPacker.release();
         flvPacker = null;
+        if (canceler != null) {
+            canceler.setEnabled(false);
+            canceler.release();
+            canceler = null;
+        }
+        if (control != null) {
+            control.setEnabled(false);
+            control.release();
+            control = null;
+        }
     }
 
     public void release() {
@@ -182,5 +224,38 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
                 }
             }
         }
+    }
+
+    public boolean isDevicesSupportAEC() {
+        return AcousticEchoCanceler.isAvailable();
+    }
+    private boolean initAEC(int audioSession) {
+        boolean isDevicesSupportAEC = isDevicesSupportAEC();
+        Log.e(TAG, "isDevicesSupportAEC: "+isDevicesSupportAEC);
+        if (!isDevicesSupportAEC) {
+            return false;
+        }
+        if (canceler != null) {
+            return false;
+        }
+        canceler = AcousticEchoCanceler.create(audioSession);
+        canceler.setEnabled(true);
+        return canceler.getEnabled();
+    }
+    public boolean isDevicesSupportAGC() {
+        return AutomaticGainControl.isAvailable();
+    }
+    private boolean initAGC(int audioSession) {
+        boolean isDevicesSupportAGC = isDevicesSupportAGC();
+        Log.e(TAG, "isDevicesSupportAGC: "+isDevicesSupportAGC);
+        if (!isDevicesSupportAGC) {
+            return false;
+        }
+        if (control != null) {
+            return false;
+        }
+        control = AutomaticGainControl.create(audioSession);
+        control.setEnabled(true);
+        return control.getEnabled();
     }
 }
