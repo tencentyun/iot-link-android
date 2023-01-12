@@ -1,9 +1,11 @@
 package com.tencent.iot.explorer.link.kitlink.activity.videoui;
 
 import android.hardware.Camera;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +37,8 @@ public class ParamSettingActivity extends BaseActivity {
     private RecyclerView frameRateRv;
     private FrameRateListAdapter frameRateAdapter = null;
     private ArrayList<FrameRateEntity> frameRateDatas = new ArrayList<>();
+    private EditText frameDropEt;
+    private EditText frameSpeedEt;
     private Button confirm;
 
     @Override
@@ -66,6 +70,8 @@ public class ParamSettingActivity extends BaseActivity {
         frameRateAdapter = new FrameRateListAdapter(ParamSettingActivity.this, frameRateDatas);
         frameRateRv.setAdapter(frameRateAdapter);
 
+        frameDropEt = findViewById(R.id.et_framedrop);
+        frameSpeedEt = findViewById(R.id.et_framespeed);
         confirm = findViewById(R.id.confirm);
     }
 
@@ -79,6 +85,16 @@ public class ParamSettingActivity extends BaseActivity {
                 App.Companion.getData().setResolutionWidth(selectedResolutionEntity.getWidth());
                 App.Companion.getData().setResolutionHeight(selectedResolutionEntity.getHeight());
                 App.Companion.getData().setFrameRate(selectedFrameRateEntity.getRate());
+                String framedrop = frameDropEt.getText().toString();
+                if (!TextUtils.isEmpty(framedrop)) {
+                    int fd = Integer.parseInt(framedrop);
+                    App.Companion.getData().setFrameDrop(fd);
+                }
+                String framespeed = frameSpeedEt.getText().toString();
+                if (!TextUtils.isEmpty(framespeed)) {
+                    float fs = Float.parseFloat(framespeed);
+                    App.Companion.getData().setFrameSpeed(fs);
+                }
                 finish();
             }
         });
