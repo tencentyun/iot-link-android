@@ -24,6 +24,23 @@
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/param_setting_menu">
 
+        <EditText
+            android:id="@+id/et_framedrop"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginTop="2dp"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:hint="播放器framedrop设置" />
+
+        <EditText
+            android:id="@+id/et_framespeed"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:hint="播放器FrameSpeed设置" />
+
         <TextView
             android:layout_width="60dp"
             android:layout_height="40dp"
@@ -35,7 +52,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_resolution"
             android:layout_width="match_parent"
-            android:layout_height="300dp"/>
+            android:layout_height="250dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -53,7 +70,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_frame_rate"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="60dp"/>
     </LinearLayout>
 
     <Button

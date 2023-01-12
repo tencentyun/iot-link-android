@@ -128,6 +128,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
     private int vw = 320;
     private int vh = 240;
+    private int mFrameDrop = 5;
+    private float mFrameSpeed = 1.5f;
 
     /**
      * 拨号相关成员变量
@@ -231,6 +233,8 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         registVideoOverBrodcast();
         vw = App.Companion.getData().getResolutionWidth();
         vh = App.Companion.getData().getResolutionHeight();
+        mFrameDrop = App.Companion.getData().getFrameDrop();
+        mFrameSpeed = App.Companion.getData().getFrameSpeed();
 
         initAudioEncoder();
         initVideoEncoder();
@@ -628,7 +632,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 //            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1000000);
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024);
         }
-        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 5);
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", mFrameDrop);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1);
@@ -636,7 +640,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
 
-        player.setFrameSpeed(1.5f);
+        player.setFrameSpeed(mFrameSpeed);
         player.setMaxPacketNum(2);
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
@@ -649,6 +653,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         }
         player.prepareAsync();
         player.start();
+        Log.e(TAG, "*====== player frameDrop: " + mFrameDrop + ", frameSpeed: " + mFrameSpeed);
 
         // 开始推流
         XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
