@@ -92,8 +92,8 @@ class AppData private constructor() {
     var resolutionHeight = 240
     // 帧率 15
     var frameRate = 15
-    // 播放器参数frameDrop 5
-    var frameDrop = 5
+    // 播放器参数frameDrop -1
+    var frameDrop = -1
     // 播放器追帧参数frameSpeed 1.5
     var frameSpeed : Float = 1.5F
 

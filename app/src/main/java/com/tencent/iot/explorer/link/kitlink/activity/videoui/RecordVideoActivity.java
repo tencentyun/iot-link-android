@@ -128,7 +128,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
     private int vw = 320;
     private int vh = 240;
-    private int mFrameDrop = 5;
+    private int mFrameDrop = -1;
     private float mFrameSpeed = 1.5f;
 
     /**
