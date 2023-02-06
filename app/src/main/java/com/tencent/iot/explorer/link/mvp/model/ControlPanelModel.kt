@@ -275,12 +275,18 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                         this@ControlPanelModel.xp2pInfo = xp2pInfo
                         if (firstTime) {
                             XP2P.setCallback(xp2pCallback)
+                            if (!L.isLog) {
+                                XP2P.setLogEnable(false, false);
+                            }
                             XP2P.startService(deviceId, productId, deviceName)
                             XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
                             firstTime = false
                         } else if (!isP2PConnect) {//p2p链路断开 或者 p2p未断开但给设备发送信令失败
                             XP2P.stopService(deviceId)
                             XP2P.setCallback(xp2pCallback)
+                            if (!L.isLog) {
+                                XP2P.setLogEnable(false, false);
+                            }
                             XP2P.startService(deviceId, productId, deviceName)
                             XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
                         }
