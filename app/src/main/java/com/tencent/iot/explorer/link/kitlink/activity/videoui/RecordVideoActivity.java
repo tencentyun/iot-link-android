@@ -14,6 +14,7 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -34,7 +35,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.iot.explorer.link.App;
 import com.tencent.iot.explorer.link.T;
-import com.tencent.iot.explorer.link.core.log.L;
 import com.tencent.iot.explorer.link.core.utils.Utils;
 import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog;
 import com.tencent.iot.explorer.link.kitlink.activity.BaseActivity;
@@ -113,7 +113,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
     private final FLVListener flvListener =
             data -> {
-//                L.INSTANCE.e(TAG, "===== dataLen:" + data.length);
+//                Log.e(TAG, "===== dataLen:" + data.length);
                 if (!isPause) {
                     XP2P.dataSend(TRTCUIManager.getInstance().deviceId, data, data.length);
                 }
@@ -332,7 +332,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
             int now_video_rate = RecordVideoActivity.this.videoEncoder.getVideoBitRate();
 
-            L.INSTANCE.e(TAG,"send_bufsize==" + bufsize + ",now_video_rate==" + now_video_rate + ",avg_index==" + p2p_wl_avg);
+            Log.e(TAG,"send_bufsize==" + bufsize + ",now_video_rate==" + now_video_rate + ",avg_index==" + p2p_wl_avg);
 
             // 降码率
             // 当发现p2p的水线超过一定值时，降低视频码率，这是一个经验值，一般来说要大于 [视频码率/2]
@@ -610,7 +610,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         if (startShowVideoTime > 0L) {
             long showVideoTime = System.currentTimeMillis() - startShowVideoTime;
             startShowVideoTime = 0L;
-            L.INSTANCE.i(RTC_TAG, "onSurfaceTextureUpdated, first show video time: " + showVideoTime);
+            Log.i(RTC_TAG, "onSurfaceTextureUpdated, first show video time: " + showVideoTime);
         }
     }
 
@@ -645,7 +645,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
         Toast.makeText(this, url, Toast.LENGTH_LONG).show();
-        L.INSTANCE.e(TAG, "======" + url);
+        Log.e(TAG, "======" + url);
         try {
             player.setDataSource(url);
         } catch (IOException e) {
@@ -653,7 +653,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         }
         player.prepareAsync();
         player.start();
-        L.INSTANCE.e(TAG, "*====== player frameDrop: " + mFrameDrop + ", frameSpeed: " + mFrameSpeed);
+        Log.e(TAG, "*====== player frameDrop: " + mFrameDrop + ", frameSpeed: " + mFrameSpeed);
 
         // 开始推流
         XP2P.runSendService(TRTCUIManager.getInstance().deviceId, "channel=0", false);
@@ -749,7 +749,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                            L.INSTANCE.e(TAG, "*========stop send video data over 60");
+                            Log.e(TAG, "*========stop send video data over 60");
                             TRTCUIManager.getInstance().refuseEnterRoom(mIsVideo?TRTCCalling.TYPE_VIDEO_CALL:TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
                             stopCameraAndFinish();
                         }
@@ -775,7 +775,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         List<Camera.Size> list = parameters.getSupportedPreviewSizes();
         Camera.Size needSize = null;
         for (Camera.Size size : list) {
-            L.INSTANCE.e(TAG, "****========== " + size.width + " " + size.height);
+            Log.e(TAG, "****========== " + size.width + " " + size.height);
             if (needSize == null) {
                 needSize = size;
                 continue;
@@ -832,7 +832,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         tvTcpSpeed.setText(String.format(Locale.US, "%s",
                 Utils.INSTANCE.formatedSpeed(tcpSpeed, 1000)));
         tvVideoWH.setText(player.getVideoWidth() + " x " + player.getVideoHeight());
-        L.INSTANCE.i(RTC_TAG, String.format(Locale.US, "player fps : %.2f / %.2f", vdps, vfps));
+        Log.i(RTC_TAG, String.format(Locale.US, "player fps : %.2f / %.2f", vdps, vfps));
     }
 
     private static final int MSG_UPDATE_HUD = 1;
@@ -843,7 +843,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         public void onReceive(Context context, Intent intent) {
             int refreshTag = intent.getIntExtra(VideoUtils.VIDEO_RESUME, 0);
 
-            L.INSTANCE.d(TAG, "refreshTag: " + refreshTag);
+            Log.d(TAG, "refreshTag: " + refreshTag);
             if (refreshTag == 2) {//p2p链路断开2
                 isPause = true;
                 flvPacker = null;
@@ -868,7 +868,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     };
 
     private void registVideoOverBrodcast() {
-        L.INSTANCE.e(TAG, "registVideoOverBrodcast");
+        Log.e(TAG, "registVideoOverBrodcast");
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(RecordVideoActivity.this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.CART_BROADCAST");
@@ -876,7 +876,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     }
 
     private void unregistVideoOverBrodcast() {
-        L.INSTANCE.e(TAG, "unregistVideoOverBrodcast");
+        Log.e(TAG, "unregistVideoOverBrodcast");
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(RecordVideoActivity.this);
         broadcastManager.unregisterReceiver(recevier);
     }
@@ -912,17 +912,17 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         openCamera();
-        L.INSTANCE.d(TAG, "surface created.");
+        Log.d(TAG, "surface created.");
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        L.INSTANCE.d(TAG, "surface changed.");
+        Log.d(TAG, "surface changed.");
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        L.INSTANCE.d(TAG, "surface destroyed.");
+        Log.d(TAG, "surface destroyed.");
     }
 
     private static class MyHandler extends Handler {
