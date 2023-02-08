@@ -112,9 +112,10 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private long startShowVideoTime = 0L;
 
     private volatile boolean isPause = true;
+    private volatile boolean isRenderView = false;
 
-    private long lastAudioCache5Time = 0L;
-//    private long lastPlayerSpeed0Time = 0L;
+    private volatile long lastAudioCache5Time = 0L;
+    private volatile long lastPlayerSpeed0Time = 0L;
 
     private final FLVListener flvListener =
             data -> {
@@ -612,6 +613,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+        isRenderView = true;
         if (startShowVideoTime > 0L) {
             long showVideoTime = System.currentTimeMillis() - startShowVideoTime;
             startShowVideoTime = 0L;
@@ -638,6 +640,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024);
         }
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", mFrameDrop);
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_frame", 32);//保留关键帧跳帧
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1);
@@ -675,6 +678,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     }
 
     private void stopRecord() {
+//        isRenderView = false;
         if (audioEncoder != null) {
             audioEncoder.stop();
         }
@@ -828,18 +832,21 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         float vdps = player.getVideoDecodeFramesPerSecond();
         float vfps = player.getVideoOutputFramesPerSecond();
 
-        if (audioCachedDuration > 5000/1000) { //当前有大于5s的音频缓存
-            if (lastAudioCache5Time == 0) { //之前有清空过lastAudioCache5Time时间，记录一下当前的时间
-                lastAudioCache5Time = System.currentTimeMillis();
+        if (audioCachedDuration > 5000) { //当前有大于5s的音频缓存
+            Log.e(RTC_TAG, "audioCachedDuration:-----" + audioCachedDuration);
+            if (lastAudioCache5Time == 0L) { //之前有清空过lastAudioCache5Time时间，首出图后，再记录一下当前的时间
+                if (isRenderView) {
+                    lastAudioCache5Time = System.currentTimeMillis();
+                }
             } else { //前一次更新时没有清空过lastAudioCache5Time时间，计算并打印一下持续的时间。
-                long tempTime = System.currentTimeMillis() - lastAudioCache5Time;
-                if (tempTime > 20*1000) { //当前有大于5s的音频缓存,已经持续了20s，算作网络不好重新reset P2P服务
-                    Log.e(RTC_TAG, "lastAudioCache5Time:" + lastAudioCache5Time + ", audioCachedDuration" + audioCachedDuration + ", tempTime" + tempTime + ", need to reset P2P");
+                long tempTime1 = System.currentTimeMillis() - lastAudioCache5Time;
+                if (tempTime1 > 999) { //当前有大于5s的音频缓存,已经持续了20s，算作网络不好重新reset P2P服务
+                    Log.e(RTC_TAG, "lastAudioCache5Time:" + lastAudioCache5Time + ", audioCachedDuration" + audioCachedDuration + ", tempTime" + tempTime1 + ", need to reset P2P");
+                    Toast.makeText(getApplicationContext(), "a_cache触发清缓存", Toast.LENGTH_LONG).show();
                     lastAudioCache5Time = 0;
-                    isPause = true;
-                    flvPacker = null;
-                    stopRecord();
-                    VideoUtils.sendNeedResetP2PBroadcast(App.Companion.getActivity(), 100);
+                    if (player != null) {
+                        player.flushCache();
+                    }
                 }
             }
         } else { //小于等于5s的音频缓存，清空一下记录的时间
@@ -847,25 +854,27 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
             Log.e(RTC_TAG, "lastAudioCache5Time:" + lastAudioCache5Time + ", audioCachedDuration" + audioCachedDuration + ", reset 0");
         }
 
-//        if (tcpSpeed == 0) {//没有速度了，可能是播放器没有数据了
-//            if (lastPlayerSpeed0Time == 0) { //记录一下首次没有速度的时间
-//                lastPlayerSpeed0Time = System.currentTimeMillis();
-//            } else { //前一次更新时没有清空过lastPlayerSpeed0Time时间，计算并打印一下持续的时间。
-//                long tempTime = System.currentTimeMillis() - lastPlayerSpeed0Time;
-//                if (tempTime > 20*1000) { //当前播放器没有速度，已经持续了20s，算作网络不好重新reset P2P服务
-//                    Log.e(RTC_TAG, "lastPlayerSpeed0Time:" + lastPlayerSpeed0Time + ", tcpSpeed" + tcpSpeed + ", tempTime" + tempTime + ", need to reset P2P");
-//                    lastPlayerSpeed0Time = 0;
-//                    isPause = true;
-//                    flvPacker = null;
-//                    stopRecord();
-//                    VideoUtils.sendNeedResetP2PBroadcast(App.Companion.getActivity(), 100);
-//                }
-//
-//            }
-//        } else {
-//            lastPlayerSpeed0Time = 0;
-//            Log.e(RTC_TAG, "lastPlayerSpeed0Time:" + lastPlayerSpeed0Time + ", tcpSpeed" + tcpSpeed + ", reset 0");
-//        }
+        if (tcpSpeed == 0) {//没有速度了，可能是播放器没有数据了
+            if (lastPlayerSpeed0Time == 0) { //记录一下首次没有速度的时间
+                if (isRenderView) {
+                    lastPlayerSpeed0Time = System.currentTimeMillis();
+                }
+            } else { //前一次更新时没有清空过lastPlayerSpeed0Time时间，计算并打印一下持续的时间。
+                long tempTime2 = System.currentTimeMillis() - lastPlayerSpeed0Time;
+                if (tempTime2 > 5*1000) { //当前播放器没有速度，已经持续了20s，算作网络不好重新reset P2P服务
+                    Log.e(RTC_TAG, "lastPlayerSpeed0Time:" + lastPlayerSpeed0Time + ", tcpSpeed" + tcpSpeed + ", tempTime" + tempTime2 + ", need to reset P2P");
+                    Toast.makeText(getApplicationContext(), "tcpSpeed触发重连", Toast.LENGTH_LONG).show();
+                    lastPlayerSpeed0Time = 0;
+                    isPause = true;
+                    flvPacker = null;
+                    stopRecord();
+                    VideoUtils.sendNeedResetP2PBroadcast(App.Companion.getActivity(), 100);
+                }
+            }
+        } else {
+            lastPlayerSpeed0Time = 0;
+            Log.e(RTC_TAG, "lastPlayerSpeed0Time:" + lastPlayerSpeed0Time + ", tcpSpeed" + tcpSpeed + ", reset 0");
+        }
 
         tvACache.setText(String.format(Locale.US, "%s, %s",
                 Utils.INSTANCE.formatedDurationMilli(audioCachedDuration),

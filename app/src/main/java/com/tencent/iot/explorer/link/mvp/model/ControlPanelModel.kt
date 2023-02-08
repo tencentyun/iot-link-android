@@ -327,7 +327,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 1003 -> {
                     App.activity?.runOnUiThread {
                         VideoUtils.sendVideoBroadcast(App.activity, 2)
-                        T.show("p2p链路断开，尝试重连")
+                        T.show("1003p2p链路断开，尝试重连")
                         L.e("=========p2p链路断开，尝试重连")
                         requestXp2pInfo()
                         startReconnectCycle()
@@ -336,14 +336,14 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 }
                 1004 -> {
                     App.activity?.runOnUiThread {
-                        T.show("p2p链路初始化成功")
+                        T.show("1004p2p链路初始化成功")
                         L.e("=========p2p链路初始化成功")
                         getDeviceStatus()
                     }
                 }
                 1005 -> {
                     App.activity?.runOnUiThread {
-                        T.show("p2p链路初始化失败")
+                        T.show("1005p2p链路初始化失败")
                         L.e("=========p2p链路初始化失败")
                         isP2PConnect = false
                     }
