@@ -327,7 +327,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 1003 -> {
                     App.activity?.runOnUiThread {
                         VideoUtils.sendVideoBroadcast(App.activity, 2)
-                        T.show("1003p2p链路断开，尝试重连")
+//                        T.show("1003p2p链路断开，尝试重连")
                         L.e("=========p2p链路断开，尝试重连")
                         requestXp2pInfo()
                         startReconnectCycle()
@@ -336,14 +336,14 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                 }
                 1004 -> {
                     App.activity?.runOnUiThread {
-                        T.show("1004p2p链路初始化成功")
+//                        T.show("1004p2p链路初始化成功")
                         L.e("=========p2p链路初始化成功")
                         getDeviceStatus()
                     }
                 }
                 1005 -> {
                     App.activity?.runOnUiThread {
-                        T.show("1005p2p链路初始化失败")
+//                        T.show("1005p2p链路初始化失败")
                         L.e("=========p2p链路初始化失败")
                         isP2PConnect = false
                     }
@@ -400,34 +400,34 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
         if (deviceStatuses != null && deviceStatuses.size > 0) {
             when (deviceStatuses[0].status) {
                 0 -> {
-                    T.show("设备状态正常")
+//                    T.show("设备状态正常")
                     VideoUtils.sendVideoBroadcast(App.activity, 1)
                     isP2PConnect = true
                     return true
                 }
                 1 -> {
-                    T.show("设备状态异常, 拒绝请求: $repStatus")
+//                    T.show("设备状态异常, 拒绝请求: $repStatus")
                     return false
                 }
                 404 -> {
-                    T.show("设备状态异常, error request message: $repStatus")
+//                    T.show("设备状态异常, error request message: $repStatus")
                     return false
                 }
                 405 -> {
-                    T.show("设备状态异常, connect number too many: $repStatus")
+//                    T.show("设备状态异常, connect number too many: $repStatus")
                     return false
                 }
                 406 -> {
-                    T.show("设备状态异常, current command don't support: $repStatus")
+//                    T.show("设备状态异常, current command don't support: $repStatus")
                     return false
                 }
                 407 -> {
-                    T.show("设备状态异常, device process error: $repStatus")
+//                    T.show("设备状态异常, device process error: $repStatus")
                     return false
                 }
             }
         } else {
-            T.show("获取设备状态失败")
+//            T.show("获取设备状态失败")
             return false
         }
         return false
