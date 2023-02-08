@@ -652,7 +652,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         player.setMaxPacketNum(2);
         player.setSurface(surface);
         String url = XP2P.delegateHttpFlv(TRTCUIManager.getInstance().deviceId) + "ipc.flv?action=live";
-        Toast.makeText(this, url, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, url, Toast.LENGTH_LONG).show();
         Log.e(TAG, "======" + url);
         try {
             player.setDataSource(url);
@@ -757,7 +757,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                             Log.e(TAG, "*========stop send video data over 60");
                             TRTCUIManager.getInstance().refuseEnterRoom(mIsVideo?TRTCCalling.TYPE_VIDEO_CALL:TRTCCalling.TYPE_AUDIO_CALL, mSponsorUserInfo.getUserId());
                             stopCameraAndFinish();
@@ -842,7 +842,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
                 long tempTime1 = System.currentTimeMillis() - lastAudioCache5Time;
                 if (tempTime1 > 999) { //当前有大于5s的音频缓存,已经持续了20s，算作网络不好重新reset P2P服务
                     Log.e(RTC_TAG, "lastAudioCache5Time:" + lastAudioCache5Time + ", audioCachedDuration" + audioCachedDuration + ", tempTime" + tempTime1 + ", need to reset P2P");
-                    Toast.makeText(getApplicationContext(), "a_cache触发清缓存", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), "a_cache触发清缓存", Toast.LENGTH_LONG).show();
                     lastAudioCache5Time = 0;
                     if (player != null) {
                         player.flushCache();
@@ -863,7 +863,7 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
                 long tempTime2 = System.currentTimeMillis() - lastPlayerSpeed0Time;
                 if (tempTime2 > 5*1000) { //当前播放器没有速度，已经持续了20s，算作网络不好重新reset P2P服务
                     Log.e(RTC_TAG, "lastPlayerSpeed0Time:" + lastPlayerSpeed0Time + ", tcpSpeed" + tcpSpeed + ", tempTime" + tempTime2 + ", need to reset P2P");
-                    Toast.makeText(getApplicationContext(), "tcpSpeed触发重连", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), "tcpSpeed触发重连", Toast.LENGTH_LONG).show();
                     lastPlayerSpeed0Time = 0;
                     isPause = true;
                     flvPacker = null;
