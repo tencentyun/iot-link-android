@@ -528,7 +528,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
      */
     fun checkTRTCCallStatusIsBusy() : Boolean {
         if (!netWorkStateReceiver!!.isConnected(getApplicationContext())) {
-            Toast.makeText(this, "网络异常请重试", Toast.LENGTH_LONG).show()
+//            Toast.makeText(this, "网络异常请重试", Toast.LENGTH_LONG).show()
             return true;
         }
         var audioCallStatus = "0";
@@ -654,7 +654,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
         (applicationContext?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.let {
             val hostIp = intToIp(it.dhcpInfo.gateway)
             if (presenter?.getCategoryId() == 567) { // 消费版视频平台产品
-                Toast.makeText(this, hostIp, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, hostIp, Toast.LENGTH_SHORT).show()
             }
             L.e("hostIp=${hostIp}")
             if (App.activity is RecordVideoActivity) {
@@ -669,7 +669,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
 
     override fun networkUnavailable() {
         //网络不可达
-        Toast.makeText(this, "网络异常", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, "网络异常", Toast.LENGTH_LONG).show()
     }
 
     fun registVideoOverBrodcast() {
