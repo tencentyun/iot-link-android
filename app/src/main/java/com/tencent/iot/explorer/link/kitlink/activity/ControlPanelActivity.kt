@@ -1,14 +1,18 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.P2PAppSessionManager
@@ -45,7 +49,6 @@ import com.tencent.iot.explorer.link.mvp.presenter.ControlPanelPresenter
 import com.tencent.iot.explorer.link.mvp.view.ControlPanelView
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
-import com.tencent.tencentmap.mapsdk.maps.interfaces.Visible
 import com.tencent.xnet.XP2P
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_and_right.*
@@ -140,6 +143,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
                 }
             }
         }
+        registVideoOverBrodcast()
     }
 
     /**
@@ -641,6 +645,7 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
             XP2P.stopService(deviceEntity?.DeviceId)
             presenter.removeReconnectCycleTasktask()
         }
+        unregistVideoOverBrodcast()
         super.onDestroy()
     }
 
@@ -665,5 +670,30 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
     override fun networkUnavailable() {
         //网络不可达
         Toast.makeText(this, "网络异常", Toast.LENGTH_LONG).show()
+    }
+
+    fun registVideoOverBrodcast() {
+        L.e(TAG, "registVideoOverBrodcast ControlPanelActivity")
+        val broadcastManager = LocalBroadcastManager.getInstance(this@ControlPanelActivity)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("android.intent.action.CART_BROADCAST")
+        broadcastManager.registerReceiver(recevier, intentFilter)
+    }
+
+    fun unregistVideoOverBrodcast() {
+        L.e(TAG, "unregistVideoOverBrodcast ControlPanelActivity")
+        val broadcastManager = LocalBroadcastManager.getInstance(this@ControlPanelActivity)
+        broadcastManager.unregisterReceiver(recevier)
+    }
+
+    var recevier: BroadcastReceiver = object : BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        override fun onReceive(context: Context, intent: Intent) {
+            val refreshTag = intent.getIntExtra(VideoUtils.VIDEO_RESET, 0)
+            L.d(TAG, "ControlPanelActivity refreshTag: $refreshTag")
+            if (refreshTag == 100 && App.activity is RecordVideoActivity) { //拉p2p_info,重启p2p
+                presenter.requestDeviceDataByP2P()
+            }
+        }
     }
 }

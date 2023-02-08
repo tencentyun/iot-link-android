@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.kitlink.activity.videoui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.hardware.Camera;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -110,6 +112,9 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
     private long startShowVideoTime = 0L;
 
     private volatile boolean isPause = true;
+
+    private long lastAudioCache5Time = 0L;
+//    private long lastPlayerSpeed0Time = 0L;
 
     private final FLVListener flvListener =
             data -> {
@@ -817,11 +822,50 @@ public class RecordVideoActivity extends BaseActivity implements TextureView.Sur
         long videoCachedDuration = player.getVideoCachedDuration();
         long audioCachedDuration = player.getAudioCachedDuration();
         long videoCachedBytes = player.getVideoCachedBytes();
-        long audioCachedBytes = player.getAudioCachedBytes();
+        long audioCachedBytes = player.getAudioCachedBytes(); // (long)Math.random()*10;//
         long tcpSpeed = player.getTcpSpeed();
 
         float vdps = player.getVideoDecodeFramesPerSecond();
         float vfps = player.getVideoOutputFramesPerSecond();
+
+        if (audioCachedDuration > 5000/1000) { //当前有大于5s的音频缓存
+            if (lastAudioCache5Time == 0) { //之前有清空过lastAudioCache5Time时间，记录一下当前的时间
+                lastAudioCache5Time = System.currentTimeMillis();
+            } else { //前一次更新时没有清空过lastAudioCache5Time时间，计算并打印一下持续的时间。
+                long tempTime = System.currentTimeMillis() - lastAudioCache5Time;
+                if (tempTime > 20*1000) { //当前有大于5s的音频缓存,已经持续了20s，算作网络不好重新reset P2P服务
+                    Log.e(RTC_TAG, "lastAudioCache5Time:" + lastAudioCache5Time + ", audioCachedDuration" + audioCachedDuration + ", tempTime" + tempTime + ", need to reset P2P");
+                    lastAudioCache5Time = 0;
+                    isPause = true;
+                    flvPacker = null;
+                    stopRecord();
+                    VideoUtils.sendNeedResetP2PBroadcast(App.Companion.getActivity(), 100);
+                }
+            }
+        } else { //小于等于5s的音频缓存，清空一下记录的时间
+            lastAudioCache5Time = 0;
+            Log.e(RTC_TAG, "lastAudioCache5Time:" + lastAudioCache5Time + ", audioCachedDuration" + audioCachedDuration + ", reset 0");
+        }
+
+//        if (tcpSpeed == 0) {//没有速度了，可能是播放器没有数据了
+//            if (lastPlayerSpeed0Time == 0) { //记录一下首次没有速度的时间
+//                lastPlayerSpeed0Time = System.currentTimeMillis();
+//            } else { //前一次更新时没有清空过lastPlayerSpeed0Time时间，计算并打印一下持续的时间。
+//                long tempTime = System.currentTimeMillis() - lastPlayerSpeed0Time;
+//                if (tempTime > 20*1000) { //当前播放器没有速度，已经持续了20s，算作网络不好重新reset P2P服务
+//                    Log.e(RTC_TAG, "lastPlayerSpeed0Time:" + lastPlayerSpeed0Time + ", tcpSpeed" + tcpSpeed + ", tempTime" + tempTime + ", need to reset P2P");
+//                    lastPlayerSpeed0Time = 0;
+//                    isPause = true;
+//                    flvPacker = null;
+//                    stopRecord();
+//                    VideoUtils.sendNeedResetP2PBroadcast(App.Companion.getActivity(), 100);
+//                }
+//
+//            }
+//        } else {
+//            lastPlayerSpeed0Time = 0;
+//            Log.e(RTC_TAG, "lastPlayerSpeed0Time:" + lastPlayerSpeed0Time + ", tcpSpeed" + tcpSpeed + ", reset 0");
+//        }
 
         tvACache.setText(String.format(Locale.US, "%s, %s",
                 Utils.INSTANCE.formatedDurationMilli(audioCachedDuration),
