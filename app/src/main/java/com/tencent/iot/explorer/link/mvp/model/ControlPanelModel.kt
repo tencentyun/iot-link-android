@@ -61,6 +61,7 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
     private var hasProduct = false
     private var firstTime = true
     private var isP2PConnect = false //p2p是否连接通（包含请求获取设备状态信令成功才算连接通）
+    var otherNeedP2PConnect = false //其他类型需要重连p2p
     private var reconnectCycleTask: TimerTask? = null
 
     //面板UI列表
@@ -273,12 +274,19 @@ class ControlPanelModel(view: ControlPanelView) : ParentModel<ControlPanelView>(
                     if (it.id == "_sys_xp2p_info") {
                         val xp2pInfo = it.value
                         this@ControlPanelModel.xp2pInfo = xp2pInfo
+                        L.e("ControlPanel","firstTime: ${firstTime}, isP2PConnect: ${isP2PConnect}")
                         if (firstTime) {
                             XP2P.setCallback(xp2pCallback)
                             XP2P.startService(deviceId, productId, deviceName)
                             XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
                             firstTime = false
                         } else if (!isP2PConnect) {//p2p链路断开 或者 p2p未断开但给设备发送信令失败
+                            XP2P.stopService(deviceId)
+                            XP2P.setCallback(xp2pCallback)
+                            XP2P.startService(deviceId, productId, deviceName)
+                            XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+                        } else if (otherNeedP2PConnect) {
+                            otherNeedP2PConnect = false
                             XP2P.stopService(deviceId)
                             XP2P.setCallback(xp2pCallback)
                             XP2P.startService(deviceId, productId, deviceName)
