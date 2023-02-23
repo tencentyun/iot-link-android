@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.iot.soundtouch.interfaces.SoundTouch;
+import com.iot.voice.changer.VoiceChangerJNIBridge;
 import com.tencent.iot.thirdparty.flv.FLVListener;
 import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.xnet.XP2P;
@@ -40,7 +41,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     private int channel;
     private int bitDepth;
     private int channelCount; //声道数
+    private int encodeBit; //位深
     private int pitch = 0; //变调【-12~12】
+    private VoiceChangerMode mode = VoiceChangerMode.VOICE_CHANGER_MODE_NONE;
     private boolean enableAEC = false;
     private boolean enableAGC = false;
 
@@ -93,6 +96,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         } else if (channel == AudioFormat.CHANNEL_IN_STEREO) {
             this.channelCount = 2;
         }
+        if (bitDepth == AudioFormat.ENCODING_PCM_16BIT) {
+            this.encodeBit = 16;
+        } else if (bitDepth == AudioFormat.ENCODING_PCM_8BIT) {
+            this.encodeBit = 8;
+        }
+        recordMinBufferSize = (sampleRate*this.channelCount*this.encodeBit/8)/1000*20; //20ms数据长度
         Log.e(TAG, "AudioRecordUtil init Pitch is: "+ pitch);
     }
 
@@ -124,13 +133,30 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         this.pitch = pitch;
     }
 
+    public void setMode(VoiceChangerMode mode) {
+        Log.e(TAG, "setMode is: "+ mode);
+        this.mode = mode;
+        if (mode == VoiceChangerMode.VOICE_CHANGER_MODE_MAN) {
+            this.pitch = -6;
+        } else if (mode == VoiceChangerMode.VOICE_CHANGER_MODE_WOMAN) {
+            this.pitch = 6;
+        } else {
+            this.pitch = 0;
+        }
+    }
+
     /**
      * 开始录制
      */
     public void start() {
         reset();
-        if (st == null) {
-            st = new SoundTouch(0,channelCount,sampleRate,bitDepth,1.0f, pitch);
+        if (!VoiceChangerJNIBridge.isAvailable()) {
+            if (st == null) {
+                st = new SoundTouch(0,channelCount,sampleRate,bitDepth,1.0f, pitch);
+            }
+        } else {
+            VoiceChangerJNIBridge.init(sampleRate,channelCount);
+            VoiceChangerJNIBridge.setMode(this.mode.getValue());
         }
         recorderState = true;
         audioRecord.startRecording();
@@ -164,12 +190,6 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
             audioRecord.stop();
         }
 
-        if (st != null) {
-            st.finish();
-            st.clearBuffer(0);
-            st = null;
-        }
-
         executor.shutdown();
         audioRecord = null;
         pcmEncoder = null;
@@ -184,6 +204,16 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
             control.setEnabled(false);
             control.release();
             control = null;
+        }
+
+        if (!VoiceChangerJNIBridge.isAvailable()) {
+            if (st != null) {
+                st.finish();
+                st.clearBuffer(0);
+                st = null;
+            }
+        } else {
+            VoiceChangerJNIBridge.destory();
         }
     }
 
@@ -221,9 +251,15 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         public void run() {
             while (recorderState) {
                 int read = audioRecord.read(buffer, 0, buffer.length);
-                if (pitch != 0 && st != null) {
-                    st.putBytes(buffer);
-                    int bytesReceived = st.getBytes(buffer);
+                if (!VoiceChangerJNIBridge.isAvailable()) {
+                    if (pitch != 0 && st != null) {
+                        st.putBytes(buffer);
+                        int bytesReceived = st.getBytes(buffer);
+                    }
+                } else {
+                    if (pitch != 0) {
+                        VoiceChangerJNIBridge.voiceChangerRun(buffer, buffer, buffer.length/(encodeBit/8));
+                    }
                 }
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
