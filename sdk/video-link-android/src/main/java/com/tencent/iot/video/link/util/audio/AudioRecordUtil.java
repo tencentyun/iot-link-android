@@ -231,19 +231,21 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
 
     @Override
     public void onFLV(byte[] data) {
-        XP2P.dataSend(deviceId, data, data.length);
+        if (recorderState) {
+            XP2P.dataSend(deviceId, data, data.length);
 
-        if (executor.isShutdown()) return;
-        executor.submit(() -> {
-            if (fos != null) {
-                try {
-                    fos.write(data);
-                    fos.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (executor.isShutdown()) return;
+            executor.submit(() -> {
+                if (fos != null) {
+                    try {
+                        fos.write(data);
+                        fos.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private class RecordThread extends Thread {
