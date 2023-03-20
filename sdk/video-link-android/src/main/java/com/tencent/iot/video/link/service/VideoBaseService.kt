@@ -192,6 +192,23 @@ open class VideoBaseService(secretId: String, secretKey: String) {
     }
 
     /**
+     * video获取设备信息列表   DescribeDevices
+     */
+    fun callTRTCDevice(
+        productId: String, devName: String, callback: VideoCallback
+    ) {
+        var headerParams = videoCommonHeaderParams("CallTRTCDevice")
+        val param = TreeMap<String, Any>()
+        param["ProductId"] = productId
+        param["DeviceName"] = devName
+        val authorization = sign(VideoHttpUtil.VIDEO_SERVICE, headerParams, param)
+        if (authorization != null) {
+            headerParams["Authorization"] = authorization
+        }
+        basePost(VideoHttpUtil.VIDEO_SERVICE+VideoHttpUtil.REST_HOST_URL, param, headerParams, callback, VideoRequestCode.video_call_trtc_device)
+    }
+
+    /**
      * explorer header接口公共参数
      */
     fun explorerCommonHeaderParams(action: String): HashMap<String, String> {
