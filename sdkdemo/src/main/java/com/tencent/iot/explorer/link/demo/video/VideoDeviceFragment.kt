@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.demo.video
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,9 +24,11 @@ import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewMJPEGActivity
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
+import com.tencent.iot.explorer.link.demo.video.videocall.RTCVideoCallActivity
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.consts.VideoRequestCode
+import com.tencent.iot.video.link.rtc.RoomKey
 import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.fragment_video_device.*
 import kotlinx.coroutines.*
@@ -127,7 +130,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
             return
         }
 
-        var options = arrayListOf(getString(R.string.preview), getString(R.string.playback), getString(R.string.preview_mjpeg))
+        var options = arrayListOf("拨打设备", getString(R.string.playback), getString(R.string.preview_mjpeg))
         var dlg =
             ListOptionsDialog(
                 context,
@@ -136,7 +139,11 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
         dlg.show()
         dlg.setOnDismisListener {
             when(it) {
-                0 -> { VideoPreviewActivity.startPreviewActivity(context, dev) }
+                0 -> {
+                    App.data.accessInfo?.let {
+                        VideoBaseService(it.accessId, it.accessToken).callTRTCDevice(it.productId, dev.DeviceName, this)
+                    }
+                }
                 1 -> { VideoPlaybackActivity.startPlaybackActivity(context, dev) }
                 2 -> { VideoPreviewMJPEGActivity.startPreviewActivity(context, dev) }
             }
@@ -198,6 +205,14 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
                     videoProductInfo = jsonResponset.getObject("Data", VideoProductInfo::class.java)
                     requestDevs()
                 }
+            }
+
+            VideoRequestCode.video_call_trtc_device -> {
+                if (jsonResponset.containsKey("TRTCParams")) {
+                    val roomKey = jsonResponset.getObject("TRTCParams", RoomKey::class.java)
+                    RTCVideoCallActivity.startCallSomeone(context, roomKey, roomKey.UserId)
+                }
+                Log.d(tag, "video_call_trtc_device: response${jsonResponset}")
             }
         }
     }
