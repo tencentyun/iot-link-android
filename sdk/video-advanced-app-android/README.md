@@ -51,31 +51,31 @@
 
 #### 获取RoomKey，
 
-需先通过 [云API](https://github.com/tencentyun/iot-link-android/blob/video-v2.6.x/sdk/video-link-android/src/main/java/com/tencent/iot/video/link/service/VideoBaseService.kt#L197-L209) 获取到链接房间参数转换成RoomKey模型，RoomKey是VideoNativeInteface中initWithRoomKey所需链接房间参数，
-由于云API需要配置SecretId、SecretKey，该参数直接放在客户端，会有泄漏风险，故建议通过自建服务访问该API获取到链接房间参数，再将链接房间参数传进SDK。
+需先通过 [云API](https://github.com/tencentyun/iot-link-android/blob/video-v2.6.x/sdk/video-link-android/src/main/java/com/tencent/iot/video/link/service/VideoBaseService.kt#L197-L209) 获取到链接通话参数转换成RoomKey模型，RoomKey是TIoTCoreXP2PBridge中initWithRoomKey所需链接通话参数，
+由于云API需要配置SecretId、SecretKey，该参数直接放在客户端，会有泄漏风险，故建议通过自建服务访问该API获取到链接通话参数，再将链接通话参数传进SDK。
 
-#### com.tencent.iot.video.link.rtc.impl.VideoNativeInteface
+#### com.tencent.iot.video.link.rtc.impl.TIoTCoreXP2PBridge
 
-1、初始化开始链接 VideoNativeInteface#initWithRoomKey(Context context, RoomKey roomKey)
+1、初始化开始链接 TIoTCoreXP2PBridge#startAppWith(Context context, RoomKey roomKey)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | context | Context | 上下文 |
-| roomKey | RoomKey | 链接房间参数 |
+| roomKey | RoomKey | 链接通话参数 |
 
 | 返回值 | 描述 |
 |:-|:-|
-| VideoNativeInteface | VideoNativeInteface实例 |
+| TIoTCoreXP2PBridge | TIoTCoreXP2PBridge实例 |
 
-2、设置回调 VideoNativeInteface#setCallback(XP2PCallback callback)
+2、设置回调 TIoTCoreXP2PBridge#setCallback(XP2PCallback callback)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | callback | XP2PCallback | 回调 |
 
-3、释放链接 VideoNativeInteface#release()
+3、释放链接 TIoTCoreXP2PBridge#release()
 
-4、发送信令 VideoNativeInteface#sendMsgToPeer(String msg)
+4、发送信令 TIoTCoreXP2PBridge#sendMsgToPeer(String msg)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
@@ -85,41 +85,41 @@
 |:-|:-|
 | boolean | 发送是否成功 |
 
-5、打开摄像头预览 VideoNativeInteface#openCamera(boolean isFrontCamera, TXCloudVideoView txCloudVideoView)
+5、打开摄像头预览 TIoTCoreXP2PBridge#openCamera(boolean isFrontCamera, TXCloudVideoView txCloudVideoView)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | isFrontCamera | boolean | 是否是前置摄像头 |
 | txCloudVideoView | TXCloudVideoView | 承载视频画面的控件 |
 
-6、开始推流 VideoNativeInteface#sendStreamToServer()
+6、开始推流 TIoTCoreXP2PBridge#sendStreamToServer()
 
-7、绑定远端视频渲染控件 VideoNativeInteface#startRemoteView(String userId, TXCloudVideoView txCloudVideoView)
+7、绑定远端视频渲染控件 TIoTCoreXP2PBridge#startRemoteView(String userId, TXCloudVideoView txCloudVideoView)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | userId | String | 远端用户id |
 | txCloudVideoView | TXCloudVideoView | 承载视频画面的控件 |
 
-8、切换摄像头 VideoNativeInteface#switchCamera(boolean isFrontCamera)
+8、切换摄像头 TIoTCoreXP2PBridge#switchCamera(boolean isFrontCamera)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | isFrontCamera | boolean | 是否是前置摄像头 |
 
-9、设置麦克风是否静音 VideoNativeInteface#setMicMute(boolean isMute)
+9、设置麦克风是否静音 TIoTCoreXP2PBridge#setMicMute(boolean isMute)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | isMute | boolean | 是否静音 |
 
-10、设置是否免提 VideoNativeInteface#setHandsFree(boolean isHandsFree)
+10、设置是否免提 TIoTCoreXP2PBridge#setHandsFree(boolean isHandsFree)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | isHandsFree | boolean | 是否免提 |
 
-11、关闭摄像头预览 VideoNativeInteface#closeCamera()
+11、关闭摄像头预览 TIoTCoreXP2PBridge#closeCamera()
 
 
 ### iot-video-advanced-app-android SDK 回调callback 设计说明

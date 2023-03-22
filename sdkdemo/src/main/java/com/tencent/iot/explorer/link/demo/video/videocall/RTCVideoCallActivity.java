@@ -25,7 +25,7 @@ import com.tencent.iot.explorer.link.demo.video.videocall.videolayout.TRTCVideoL
 import com.tencent.iot.video.link.rtc.XP2PCallback;
 import com.tencent.iot.video.link.rtc.RoomKey;
 import com.tencent.iot.video.link.rtc.UserInfo;
-import com.tencent.iot.video.link.rtc.impl.VideoNativeInteface;
+import com.tencent.iot.video.link.rtc.impl.TIoTCoreXP2PBridge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,7 +142,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             if (layout != null) {
                 layout.setVideoAvailable(isVideoAvailable);
                 if (isVideoAvailable) {
-                    VideoNativeInteface.getInstance().startRemoteView(userId, layout.getVideoView());
+                    TIoTCoreXP2PBridge.getInstance().startRemoteView(userId, layout.getVideoView());
                 }
             }
         }
@@ -176,7 +176,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
                         return;
                     }
                     videoLayout.setVideoAvailable(false);
-                    VideoNativeInteface.getInstance().sendStreamToServer();
+                    TIoTCoreXP2PBridge.getInstance().sendVoiceToServer();
                 } else {
                     Toast.makeText(getApplicationContext(), "对方未进房", Toast.LENGTH_LONG).show();
                 }
@@ -268,8 +268,8 @@ public class RTCVideoCallActivity extends AppCompatActivity {
         //自己的资料
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
         // 初始化成员变量
-        VideoNativeInteface.getInstance().initWithRoomKey(this, roomKey);
-        VideoNativeInteface.getInstance().setCallback(mXP2PCallback);
+        TIoTCoreXP2PBridge.getInstance().startAppWith(this, roomKey);
+        TIoTCoreXP2PBridge.getInstance().setCallback(mXP2PCallback);
         mTimeHandlerThread = new HandlerThread("time-count-thread");
         mTimeHandlerThread.start();
         mTimeHandler = new Handler(mTimeHandlerThread.getLooper());
@@ -288,7 +288,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isMuteMic = !isMuteMic;
-                VideoNativeInteface.getInstance().setMicMute(isMuteMic);
+                TIoTCoreXP2PBridge.getInstance().setMicMute(isMuteMic);
                 mMuteImg.setActivated(isMuteMic);
             }
         });
@@ -296,7 +296,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isHandsFree = !isHandsFree;
-                VideoNativeInteface.getInstance().setHandsFree(isHandsFree);
+                TIoTCoreXP2PBridge.getInstance().setHandsFree(isHandsFree);
                 mHandsfreeImg.setActivated(isHandsFree);
             }
         });
@@ -304,7 +304,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mIsFrontCamera = !mIsFrontCamera;
-                VideoNativeInteface.getInstance().switchCamera(mIsFrontCamera);
+                TIoTCoreXP2PBridge.getInstance().switchCamera(mIsFrontCamera);
                 mSwitchCameraImg.setActivated(mIsFrontCamera);
             }
         });
@@ -327,7 +327,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
     }
 
     private void stopCameraAndFinish() {
-        VideoNativeInteface.getInstance().release();
+        TIoTCoreXP2PBridge.getInstance().release();
         finish();
     }
 
@@ -342,7 +342,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             return;
         }
         videoLayout.setVideoAvailable(true);
-        VideoNativeInteface.getInstance().openCamera(true, videoLayout.getVideoView());
+        TIoTCoreXP2PBridge.getInstance().openCamera(true, videoLayout.getVideoView());
 
         //2. 展示对方的头像和蒙层
         mSponsorGroup.setVisibility(View.VISIBLE);
@@ -379,7 +379,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             return;
         }
         videoLayout.setVideoAvailable(true);
-        VideoNativeInteface.getInstance().openCamera(true, videoLayout.getVideoView());
+        TIoTCoreXP2PBridge.getInstance().openCamera(true, videoLayout.getVideoView());
         mHangupLl.setVisibility(View.VISIBLE);
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override

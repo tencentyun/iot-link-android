@@ -20,8 +20,8 @@ import static com.tencent.trtc.TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG;
 /**
  * 视频/语音通话的具体实现
  */
-public class VideoNativeInteface {
-    private static final String TAG = VideoNativeInteface.class.getSimpleName();
+public class TIoTCoreXP2PBridge {
+    private static final String TAG = TIoTCoreXP2PBridge.class.getSimpleName();
     private Context mContext;
 
     /**
@@ -31,16 +31,16 @@ public class VideoNativeInteface {
     private boolean mIsUseFrontCamera;
     private XP2PCallback mXP2PCallback;
 
-    private static VideoNativeInteface instance = null;
+    private static TIoTCoreXP2PBridge instance = null;
 
-    public static synchronized VideoNativeInteface getInstance() {
+    public static synchronized TIoTCoreXP2PBridge getInstance() {
         if (instance == null) {
-            instance = new VideoNativeInteface();
+            instance = new TIoTCoreXP2PBridge();
         }
         return instance;
     }
 
-    public void initWithRoomKey(Context context, RoomKey roomKey) {
+    public void startAppWith(Context context, RoomKey roomKey) {
         this.mContext = context;
         mRTCCloud = TRTCCloud.sharedInstance(mContext);
         mRTCCloud.setListener(mRTCCloudListener);
@@ -194,7 +194,7 @@ public class VideoNativeInteface {
         mRTCCloud.stopLocalPreview();
     }
 
-    public void sendStreamToServer() {
+    public void sendVoiceToServer() {
         mRTCCloud.muteLocalAudio(false);
         mRTCCloud.muteLocalVideo(0, false);
     }
