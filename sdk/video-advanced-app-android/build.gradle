@@ -87,7 +87,7 @@ publishing {
     publications {
         aar(MavenPublication) {
             groupId 'com.tencent.iot.video'
-            artifactId 'video-link-android'
+            artifactId 'video-advanced-app-android'
             version libVersion
             artifact(androidSourcesJar)
             artifact(androidJavadocsJar)

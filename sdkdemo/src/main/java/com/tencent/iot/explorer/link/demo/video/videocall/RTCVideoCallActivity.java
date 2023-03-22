@@ -19,15 +19,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 
 import com.alibaba.fastjson.JSON;
-import com.squareup.picasso.Picasso;
 import com.tencent.iot.explorer.link.demo.R;
 import com.tencent.iot.explorer.link.demo.video.videocall.videolayout.TRTCVideoLayout;
 import com.tencent.iot.explorer.link.demo.video.videocall.videolayout.TRTCVideoLayoutManager;
-import com.tencent.iot.video.link.rtc.IntentParams;
-import com.tencent.iot.video.link.rtc.RTCCallingDelegate;
+import com.tencent.iot.video.link.rtc.XP2PCallback;
 import com.tencent.iot.video.link.rtc.RoomKey;
 import com.tencent.iot.video.link.rtc.UserInfo;
-import com.tencent.iot.video.link.rtc.impl.RTCCallingImpl;
+import com.tencent.iot.video.link.rtc.impl.VideoNativeInteface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,10 +46,6 @@ public class RTCVideoCallActivity extends AppCompatActivity {
 
     public static final String PARAM_TYPE                = "type";
     public static final String PARAM_SELF_INFO           = "self_info";
-    public static final String PARAM_USER                = "user_model";
-    public static final String PARAM_BEINGCALL_USER      = "beingcall_user_model";
-    public static final String PARAM_OTHER_INVITING_USER = "other_inviting_user_model";
-    private static final int    MAX_SHOW_INVITING_USER    = 4;
 
     private ImageView mMuteImg;
     private LinearLayout mMuteLl;
@@ -82,15 +76,14 @@ public class RTCVideoCallActivity extends AppCompatActivity {
     private UserInfo mSelfModel;
     private List<UserInfo> mCallUserInfoList = new ArrayList<>(); // 呼叫方
     private Map<String, UserInfo> mCallUserModelMap = new HashMap<>();
-    private UserInfo              mSponsorUserInfo;                      // 被叫方
     private List<UserInfo> mOtherInvitingUserInfoList;
     private int                   mCallType;
-    private RTCCallingImpl mTRTCCalling;
     private boolean               isHandsFree       = true;
     private boolean               isMuteMic         = false;
     private boolean               mIsFrontCamera    = true;
     private volatile boolean      mIsEnterRoom      = false;
     private Map<String, Boolean> mUserOfflineMap = new HashMap<>();
+    private String mRtc_uid = null;
     private long showVideoTime ;
     private long startShowVideoTime ;
     private boolean showTip = false;
@@ -98,46 +91,28 @@ public class RTCVideoCallActivity extends AppCompatActivity {
     /**
      * 拨号的回调
      */
-    private RTCCallingDelegate mTRTCCallingDelegate = new RTCCallingDelegate() {
+    private XP2PCallback mXP2PCallback = new XP2PCallback() {
         @Override
         public void onError(int code, String msg) { //发生了错误，报错并退出该页面
             stopCameraAndFinish();
         }
 
         @Override
-        public void onEnterRoom(long result) {
+        public void onConnect(long result) {
 
         }
 
         @Override
-        public void onExitRoom(int reason) {
+        public void onRelease(int reason) {
 
         }
-
-        @Override
-        public void onInvited(String sponsor, List<String> userIdList, boolean isFromGroup, int callType) { }
-
-        @Override
-        public void onGroupCallInviteeListUpdate(List<String> userIdList) { }
 
         @Override
         public void onUserEnter(final String userId) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //1.先造一个虚拟的用户添加到屏幕上
-                    UserInfo model = new UserInfo();
-                    model.setUserId(userId);
-                    model.userName = userId;
-                    model.userAvatar = "";
-                    mCallUserInfoList.add(model);
-                    mCallUserModelMap.put(model.getUserId(), model);
-                    TRTCVideoLayout videoLayout = addUserToManager(model);
-                    if (videoLayout == null) {
-                        return;
-                    }
-                    mIsEnterRoom = true;
-                    videoLayout.setVideoAvailable(false);
+                    mRtc_uid = userId;
                 }
             });
         }
@@ -154,91 +129,10 @@ public class RTCVideoCallActivity extends AppCompatActivity {
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
                     }
-                    Boolean offline = mUserOfflineMap.get(userId);
-                    if (offline != null && offline) {
-                        Toast.makeText(RTCVideoCallActivity.this, R.string.trtccalling_customer_offline, Toast.LENGTH_SHORT).show();
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mStatusView.setText(R.string.trtccalling_customer_hand_up);
-                                mStatusView.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    }
+                    Toast.makeText(getApplicationContext(), "对方已挂断", Toast.LENGTH_LONG).show();
                     stopCameraAndFinish();
                 }
             });
-        }
-
-        @Override
-        public void onReject(final String userId) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mCallUserModelMap.containsKey(userId)) {
-                        // 进入拒绝环节
-                        //1. 回收界面元素
-                        mLayoutManagerTrtc.recyclerCloudViewView(userId);
-                        //2. 删除用户model
-                        UserInfo userInfo = mCallUserModelMap.remove(userId);
-                        if (userInfo != null) {
-                            mCallUserInfoList.remove(userInfo);
-                        }
-                        stopCameraAndFinish();
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onNoResp(final String userId) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mCallUserModelMap.containsKey(userId)) {
-                        // 进入无响应环节
-                        //1. 回收界面元素
-                        mLayoutManagerTrtc.recyclerCloudViewView(userId);
-                        //2. 删除用户model
-                        UserInfo userInfo = mCallUserModelMap.remove(userId);
-                        if (userInfo != null) {
-                            mCallUserInfoList.remove(userInfo);
-                        }
-                        stopCameraAndFinish();
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onLineBusy(String userId) {
-            if (mCallUserModelMap.containsKey(userId)) {
-                // 进入无响应环节
-                //1. 回收界面元素
-                mLayoutManagerTrtc.recyclerCloudViewView(userId);
-                //2. 删除用户model
-                UserInfo userInfo = mCallUserModelMap.remove(userId);
-                if (userInfo != null) {
-                    mCallUserInfoList.remove(userInfo);
-                }
-                stopCameraAndFinish();
-            }
-        }
-
-        @Override
-        public void onCallingCancel() {
-            stopCameraAndFinish();
-        }
-
-        @Override
-        public void onCallingTimeout() {
-            stopCameraAndFinish();
-        }
-
-        @Override
-        public void onCallEnd() {
-            stopCameraAndFinish();
         }
 
         @Override
@@ -248,15 +142,10 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             if (layout != null) {
                 layout.setVideoAvailable(isVideoAvailable);
                 if (isVideoAvailable) {
-                    mTRTCCalling.startRemoteView(userId, layout.getVideoView());
-                } else {
-                    mTRTCCalling.stopRemoteView(userId);
+                    VideoNativeInteface.getInstance().startRemoteView(userId, layout.getVideoView());
                 }
             }
         }
-
-        @Override
-        public void onUserAudioAvailable(String userId, boolean isVideoAvailable) { }
 
         @Override
         public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
@@ -270,19 +159,32 @@ public class RTCVideoCallActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onRecvCustomCmdMsg(String userId, int cmdID, int seq, byte[] message) {
-            String msg = new String(message);
-            if (!msg.isEmpty() && msg.equals("1001")) { // 设备接听了，信令可双方协商自定义
+        public void onRecvCustomCmdMsg(String rtc_uid, String message) {
+            if (!message.isEmpty() && message.equals("1001")) { // 设备接听了，信令可双方协商自定义
                 showCallingView();
-                mStatusView.setText(R.string.trtccalling_dialed_is_busy_vedio);
-                mStatusView.setVisibility(View.INVISIBLE);
-                mTRTCCalling.muteLocalVideo();
                 startShowVideoTime = System.currentTimeMillis();
+                if (mRtc_uid != null && !mRtc_uid.isEmpty()) {
+                    //1.将对方用户mtrtc_uid添加到屏幕上
+                    UserInfo model = new UserInfo();
+                    model.setUserId(mRtc_uid);
+                    model.userName = mRtc_uid;
+                    model.userAvatar = "";
+                    mCallUserInfoList.add(model);
+                    mCallUserModelMap.put(model.getUserId(), model);
+                    TRTCVideoLayout videoLayout = addUserToManager(model);
+                    if (videoLayout == null) {
+                        return;
+                    }
+                    videoLayout.setVideoAvailable(false);
+                    VideoNativeInteface.getInstance().sendStreamToServer();
+                } else {
+                    Toast.makeText(getApplicationContext(), "对方未进房", Toast.LENGTH_LONG).show();
+                }
             }
         }
 
         @Override
-        public void onFirstVideoFrame(String userId, int streamType, int width, int height) {
+        public void onFirstVideoFrame(String userId, int width, int height) {
             if (!showTip  && startShowVideoTime > 0) {
                 showVideoTime = System.currentTimeMillis() - startShowVideoTime;
                 Toast.makeText(getApplicationContext(), String.format("出图: %s(ms)", showVideoTime), Toast.LENGTH_LONG).show();
@@ -297,13 +199,10 @@ public class RTCVideoCallActivity extends AppCompatActivity {
      * @param context
      * @param roomKey
      */
-    public static void startCallSomeone(Context context, RoomKey roomKey, String beingCallUserId) {
+    public static void startCallSomeone(Context context, RoomKey roomKey) {
         Intent starter = new Intent(context, RTCVideoCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_CALL);
         starter.putExtra(PARAM_SELF_INFO, JSON.toJSONString(roomKey));
-        UserInfo beingCallUserInfo = new UserInfo();
-        beingCallUserInfo.setUserId(beingCallUserId);
-        starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserInfo);
         context.startActivity(starter);
     }
 
@@ -311,16 +210,12 @@ public class RTCVideoCallActivity extends AppCompatActivity {
      * 作为用户被叫
      *
      * @param context
-     * @param beingCallUserId
+     * @param roomKey
      */
-    public static void startBeingCall(Context context, RoomKey roomKey, String beingCallUserId) {
+    public static void startBeingCall(Context context, RoomKey roomKey) {
         Intent starter = new Intent(context, RTCVideoCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_BEING_CALLED);
         starter.putExtra(PARAM_SELF_INFO, JSON.toJSONString(roomKey));
-        UserInfo beingCallUserInfo = new UserInfo();
-        beingCallUserInfo.setUserId(beingCallUserId);
-        starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserInfo);
-        starter.putExtra(PARAM_OTHER_INVITING_USER, new IntentParams(new ArrayList<>()));
         starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(starter);
     }
@@ -335,113 +230,8 @@ public class RTCVideoCallActivity extends AppCompatActivity {
         setContentView(R.layout.trtccalling_videocall_activity_call_main);
 
         initView();
-        boolean calling = initData();
+        initData();
         initListener();
-    }
-
-    @Override
-    public void onBackPressed() {
-        stopCameraAndFinish();
-        super.onBackPressed();
-    }
-
-    private void stopCameraAndFinish() {
-        mTRTCCalling.exitRoom();
-        mTRTCCalling.closeCamera();
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopTimeCount();
-        mTimeHandlerThread.quit();
-    }
-
-    private void initListener() {
-        mMuteLl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isMuteMic = !isMuteMic;
-                mTRTCCalling.setMicMute(isMuteMic);
-                mMuteImg.setActivated(isMuteMic);
-            }
-        });
-        mHandsfreeLl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isHandsFree = !isHandsFree;
-                mTRTCCalling.setHandsFree(isHandsFree);
-                mHandsfreeImg.setActivated(isHandsFree);
-            }
-        });
-        mSwitchCameraLl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIsFrontCamera = !mIsFrontCamera;
-                mTRTCCalling.switchCamera(mIsFrontCamera);
-                mSwitchCameraImg.setActivated(mIsFrontCamera);
-            }
-        });
-        mMuteImg.setActivated(isMuteMic);
-        mHandsfreeImg.setActivated(isHandsFree);
-        mSwitchCameraImg.setActivated(mIsFrontCamera);
-    }
-
-    private boolean initData() {
-        // 初始化成员变量
-        mTRTCCalling = new RTCCallingImpl(this);
-        mTRTCCalling.setTRTCCallingDelegate(mTRTCCallingDelegate);
-        mTimeHandlerThread = new HandlerThread("time-count-thread");
-        mTimeHandlerThread.start();
-        mTimeHandler = new Handler(mTimeHandlerThread.getLooper());
-        // 初始化从外界获取的数据
-        Intent intent = getIntent();
-
-        String roomKeyStr = intent.getStringExtra(PARAM_SELF_INFO);
-        if (TextUtils.isEmpty(roomKeyStr)) {
-            finish();
-        }
-        RoomKey roomKey = JSON.parseObject(roomKeyStr, RoomKey.class);
-        mTRTCCalling.enterRTCRoom(roomKey);
-        mSelfModel = new UserInfo();
-        mSelfModel.setUserId(roomKey.getUserId());
-        //自己的资料
-        mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
-        mSponsorUserInfo = (UserInfo) intent.getSerializableExtra(PARAM_BEINGCALL_USER);
-        if (mCallType == TYPE_BEING_CALLED) {
-            // 作为被叫
-            IntentParams params = (IntentParams) intent.getSerializableExtra(PARAM_OTHER_INVITING_USER);
-            if (params != null) {
-                mOtherInvitingUserInfoList = params.mUserInfos;
-            }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mStatusView.setText(R.string.trtccalling_customer_calling_vedio);
-                    mStatusView.setVisibility(View.VISIBLE);
-                }
-            });
-            showWaitingResponseView();
-            return false;
-        } else {
-            // 主叫方
-            if (roomKey != null) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mStatusView.setText(R.string.trtccalling_waiting_to_hear_vedio);
-                        mStatusView.setVisibility(View.VISIBLE);
-                    }
-                });
-                showInvitingView();
-            }
-            return true;
-        }
-    }
-
-    private void startInviting(RoomKey roomKey) {
-        mTRTCCalling.enterRTCRoom(roomKey);
     }
 
     private void initView() {
@@ -465,6 +255,82 @@ public class RTCVideoCallActivity extends AppCompatActivity {
         mStatusView = (TextView) findViewById(R.id.tv_status);
     }
 
+    private void initData() {
+        // 初始化从外界获取的数据
+        Intent intent = getIntent();
+        String roomKeyStr = intent.getStringExtra(PARAM_SELF_INFO);
+        if (TextUtils.isEmpty(roomKeyStr)) {
+            finish();
+        }
+        RoomKey roomKey = JSON.parseObject(roomKeyStr, RoomKey.class);
+        mSelfModel = new UserInfo();
+        mSelfModel.setUserId(roomKey.getUserId());
+        //自己的资料
+        mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
+        // 初始化成员变量
+        VideoNativeInteface.getInstance().initWithRoomKey(this, roomKey);
+        VideoNativeInteface.getInstance().setCallback(mXP2PCallback);
+        mTimeHandlerThread = new HandlerThread("time-count-thread");
+        mTimeHandlerThread.start();
+        mTimeHandler = new Handler(mTimeHandlerThread.getLooper());
+        //calltype主叫和被叫处理
+        if (mCallType == TYPE_BEING_CALLED) {
+            // 被叫 展示等待对方回应的视图
+            showWaitingResponseView();
+        } else {
+            // 主叫 展示邀请对方的视图
+            showInvitingView();
+        }
+    }
+
+    private void initListener() {
+        mMuteLl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isMuteMic = !isMuteMic;
+                VideoNativeInteface.getInstance().setMicMute(isMuteMic);
+                mMuteImg.setActivated(isMuteMic);
+            }
+        });
+        mHandsfreeLl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isHandsFree = !isHandsFree;
+                VideoNativeInteface.getInstance().setHandsFree(isHandsFree);
+                mHandsfreeImg.setActivated(isHandsFree);
+            }
+        });
+        mSwitchCameraLl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIsFrontCamera = !mIsFrontCamera;
+                VideoNativeInteface.getInstance().switchCamera(mIsFrontCamera);
+                mSwitchCameraImg.setActivated(mIsFrontCamera);
+            }
+        });
+        mMuteImg.setActivated(isMuteMic);
+        mHandsfreeImg.setActivated(isHandsFree);
+        mSwitchCameraImg.setActivated(mIsFrontCamera);
+    }
+
+    @Override
+    public void onBackPressed() {
+        stopCameraAndFinish();
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopTimeCount();
+        mTimeHandlerThread.quit();
+    }
+
+    private void stopCameraAndFinish() {
+        VideoNativeInteface.getInstance().release();
+        finish();
+    }
+
     /**
      * 等待接听界面
      */
@@ -476,13 +342,11 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             return;
         }
         videoLayout.setVideoAvailable(true);
-        mTRTCCalling.openCamera(true, videoLayout.getVideoView());
+        VideoNativeInteface.getInstance().openCamera(true, videoLayout.getVideoView());
 
         //2. 展示对方的头像和蒙层
         mSponsorGroup.setVisibility(View.VISIBLE);
         mSponsorGroup.setVisibility(View.INVISIBLE);
-        mSponsorUserNameTv.setText(mSponsorUserInfo.userName);
-        mSponsorUserNameTv.setVisibility(View.INVISIBLE);
 
         //3. 展示电话对应界面
         mHangupLl.setVisibility(View.VISIBLE);
@@ -493,20 +357,13 @@ public class RTCVideoCallActivity extends AppCompatActivity {
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSponsorUserInfo == null) {
-                    stopCameraAndFinish();
-                    return;
-                }
                 stopCameraAndFinish();
             }
         });
         mDialingLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSponsorUserInfo == null) {
-                    stopCameraAndFinish();
-                    return;
-                }
+
             }
         });
     }
@@ -522,15 +379,11 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             return;
         }
         videoLayout.setVideoAvailable(true);
-        mTRTCCalling.openCamera(true, videoLayout.getVideoView());
+        VideoNativeInteface.getInstance().openCamera(true, videoLayout.getVideoView());
         mHangupLl.setVisibility(View.VISIBLE);
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSponsorUserInfo == null) {
-                    stopCameraAndFinish();
-                    return;
-                }
                 stopCameraAndFinish();
             }
         });
@@ -558,12 +411,13 @@ public class RTCVideoCallActivity extends AppCompatActivity {
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTRTCCalling.exitRoom();
                 stopCameraAndFinish();
             }
         });
         showTimeCount();
         hideOtherInvitingUserView();
+        mStatusView.setText(R.string.trtccalling_dialed_is_busy_vedio);
+        mStatusView.setVisibility(View.INVISIBLE);
     }
 
     private void showTimeCount() {
@@ -599,26 +453,6 @@ public class RTCVideoCallActivity extends AppCompatActivity {
 
     private String getShowTime(int count) {
         return getString(R.string.trtccalling_called_time_format, count / 60, count % 60);
-    }
-
-    private void showOtherInvitingUserView() {
-        if (mOtherInvitingUserInfoList == null || mOtherInvitingUserInfoList.size() == 0) {
-            return;
-        }
-        mInvitingGroup.setVisibility(View.VISIBLE);
-        int squareWidth = getResources().getDimensionPixelOffset(R.dimen.trtccalling_small_image_size);
-        int leftMargin  = getResources().getDimensionPixelOffset(R.dimen.trtccalling_small_image_left_margin);
-        for (int index = 0; index < mOtherInvitingUserInfoList.size() && index < MAX_SHOW_INVITING_USER; index++) {
-            UserInfo userInfo     = mOtherInvitingUserInfoList.get(index);
-            ImageView imageView    = new ImageView(this);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(squareWidth, squareWidth);
-            if (index != 0) {
-                layoutParams.leftMargin = leftMargin;
-            }
-            imageView.setLayoutParams(layoutParams);
-            Picasso.get().load(userInfo.userAvatar).into(imageView);
-            mImgContainerLl.addView(imageView);
-        }
     }
 
     private void hideOtherInvitingUserView() {

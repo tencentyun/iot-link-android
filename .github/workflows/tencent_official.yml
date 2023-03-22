@@ -83,11 +83,11 @@ jobs:
       - name: Video-->Build Video with Gradle
         if: ${{contains(env.curr_tag, 'video')}}
         run: |
-          ./gradlew :sdk:video-link-android:build :sdkdemo:build
+          ./gradlew :sdk:video-advanced-app-android:build :sdkdemo:build
 
       - name: Video-->Publish aar to Maven
         if: ${{contains(env.curr_tag, 'video')}}
-        run: ./gradlew :sdk:video-link-android:publish
+        run: ./gradlew :sdk:video-advanced-app-android:publish
 
       - name: Link-->Build Link with Gradle
         if: ${{!contains(env.curr_tag, 'video')}}

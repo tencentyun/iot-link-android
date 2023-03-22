@@ -133,8 +133,8 @@ dependencies {
         implementation 'com.tencent.iot.explorer:explorer-link-rtc:+'
     }
 
-    if (findProject(':sdk:video-link-android') != null) {
-        api project(path: ':sdk:video-link-android')
+    if (findProject(':sdk:video-advanced-app-android') != null) {
+        api project(path: ':sdk:video-advanced-app-android')
     }
 
 //    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-java:1.0.7'
