@@ -210,7 +210,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
             VideoRequestCode.video_call_trtc_device -> {
                 if (jsonResponset.containsKey("TRTCParams")) {
                     val roomKey = jsonResponset.getObject("TRTCParams", RoomKey::class.java)
-                    RTCVideoCallActivity.startCallSomeone(context, roomKey, roomKey.UserId)
+                    RTCVideoCallActivity.startCallSomeone(context, roomKey)
                 }
                 Log.d(tag, "video_call_trtc_device: response${jsonResponset}")
             }

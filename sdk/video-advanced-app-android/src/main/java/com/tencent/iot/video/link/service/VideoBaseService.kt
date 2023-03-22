@@ -192,7 +192,7 @@ open class VideoBaseService(secretId: String, secretKey: String) {
     }
 
     /**
-     * video获取设备信息列表   DescribeDevices
+     * 获取到链接房间参数   CallTRTCDevice
      */
     fun callTRTCDevice(
         productId: String, devName: String, callback: VideoCallback
