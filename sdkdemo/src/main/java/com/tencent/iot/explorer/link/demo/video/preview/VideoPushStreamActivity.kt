@@ -196,7 +196,7 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
             XP2P.delegateHttpFlv(id)?.let {
                 urlPrefix = it
                 if (!TextUtils.isEmpty(urlPrefix)) {
-                    setPlayerUrl(Command.getVideoHightQualityUrlSuffix(presenter.getChannel()))
+                    setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
                     keepPlayerplay(id)
                 }
             }
@@ -235,7 +235,7 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
                 Log.d(tag, "====尝试拉流...")
                 XP2P.delegateHttpFlv(id)?.let {
                     urlPrefix = it
-                    if (!TextUtils.isEmpty(urlPrefix)) setPlayerUrl(Command.getVideoHightQualityUrlSuffix(presenter.getChannel()))
+                    if (!TextUtils.isEmpty(urlPrefix)) setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
                 }
             }
         }.start()
