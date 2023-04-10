@@ -232,7 +232,7 @@ class VideoWithoutPropertyActivity : VideoBaseActivity(), EventView, TextureView
                 urlPrefix = it
                 if (!TextUtils.isEmpty(urlPrefix)) {
                     player.let {
-                        setPlayerUrl(Command.getVideoHightQualityUrlSuffix(presenter.getChannel()))
+                        setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
                         keepPlayerplay(id)
                     }
                 }
@@ -272,7 +272,7 @@ class VideoWithoutPropertyActivity : VideoBaseActivity(), EventView, TextureView
                 Log.d(tag, "====尝试拉流...")
                 XP2P.delegateHttpFlv(id)?.let {
                     urlPrefix = it
-                    if (!TextUtils.isEmpty(urlPrefix)) setPlayerUrl(Command.getVideoHightQualityUrlSuffix(presenter.getChannel()))
+                    if (!TextUtils.isEmpty(urlPrefix)) setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
                 }
             }
         }.start()
