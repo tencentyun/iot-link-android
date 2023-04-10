@@ -51,7 +51,7 @@
 
 #### 获取RoomKey，
 
-需先通过 [云API](https://github.com/tencentyun/iot-link-android/blob/video-v2.6.x/sdk/video-link-android/src/main/java/com/tencent/iot/video/link/service/VideoBaseService.kt#L197-L209) 获取到链接通话参数转换成RoomKey模型，RoomKey是TIoTCoreXP2PBridge中initWithRoomKey所需链接通话参数，
+需先通过 [云API]( https://github.com/tencentyun/iot-link-android/blob/video-v2.6.x/sdk/video-advanced-app-android/src/main/java/com/tencent/iot/video/link/service/VideoBaseService.kt#L197-L209) 获取到链接通话参数转换成RoomKey模型，RoomKey是TIoTCoreXP2PBridge中initWithRoomKey所需链接通话参数，
 由于云API需要配置SecretId、SecretKey，该参数直接放在客户端，会有泄漏风险，故建议通过自建服务访问该API获取到链接通话参数，再将链接通话参数传进SDK。
 
 #### com.tencent.iot.video.link.rtc.impl.TIoTCoreXP2PBridge
