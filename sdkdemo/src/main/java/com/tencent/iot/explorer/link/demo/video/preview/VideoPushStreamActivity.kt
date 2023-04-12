@@ -132,25 +132,23 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
         )
 
         holder = sv_camera_view.holder
-        initAudioEncoder()
-        initVideoEncoder()
     }
 
     private fun initAudioEncoder() {
         val micParam: MicParam = MicParam.Builder()
-            .setAudioSource(MediaRecorder.AudioSource.MIC)
+            .setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION)
             .setSampleRateInHz(16000) // 采样率
             .setChannelConfig(AudioFormat.CHANNEL_IN_MONO)
             .setAudioFormat(AudioFormat.ENCODING_PCM_16BIT) // PCM
             .build()
         val audioEncodeParam: AudioEncodeParam = AudioEncodeParam.Builder().build()
-        audioEncoder = AudioEncoder(micParam, audioEncodeParam)
+        audioEncoder = AudioEncoder(micParam, audioEncodeParam, true, true)
         audioEncoder!!.setOnEncodeListener(this)
     }
 
     private fun initVideoEncoder() {
         val videoEncodeParam: VideoEncodeParam =
-            VideoEncodeParam.Builder().setSize(vw, vh).setFrameRate(frameRate).setBitRate(vw * vh).build()
+            VideoEncodeParam.Builder().setSize(vw, vh).setFrameRate(frameRate).setBitRate(vw * vh * 4).build()
         videoEncoder = VideoEncoder(videoEncodeParam)
         videoEncoder!!.setEncoderListener(this)
     }
@@ -217,7 +215,8 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
                 }
                 Log.d(tag, "id=${id} keepAliveThread do not wait and keepAliveThreadRuning=${keepAliveThreadRuning}")
                 if (!keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
-
+                flvPacker = null
+                stopRecord()
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
                 Log.d(tag, "====开始尝试重连...")
                 XP2P.stopService(id)
@@ -265,6 +264,8 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
             XP2P.runSendService("${App.data.accessInfo?.productId}/${presenter.getDeviceName()}", "channel=0", false)
             handler.post(Runnable {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    initAudioEncoder()
+                    initVideoEncoder()
                     startRecord()
                 }
             })
