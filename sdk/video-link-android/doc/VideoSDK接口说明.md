@@ -51,7 +51,7 @@
 |:-|:-|:-|
 | id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
 
-5. 向camera设备发送语音或自定义数据
+5. 向camera设备发送语音flv数据或音视频flv数据
 > void dataSend(String id, byte[] data, int len)
 
 | 参数 | 类型 | 描述 |
