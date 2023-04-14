@@ -92,7 +92,7 @@
 | isFrontCamera | boolean | 是否是前置摄像头 |
 | txCloudVideoView | TXCloudVideoView | 承载视频画面的控件 |
 
-6、开始推流 TIoTCoreXP2PBridge#sendStreamToServer()
+6、开始推流 TIoTCoreXP2PBridge#sendVoiceToServer()
 
 7、绑定远端视频渲染控件 TIoTCoreXP2PBridge#startRemoteView(String userId, TXCloudVideoView txCloudVideoView)
 
