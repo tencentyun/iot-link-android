@@ -268,8 +268,9 @@ public class RTCVideoCallActivity extends AppCompatActivity {
         //自己的资料
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
         // 初始化成员变量
-        TIoTCoreXP2PBridge.getInstance().startAppWith(this, roomKey);
+        TIoTCoreXP2PBridge.getInstance().startAppWith(this);
         TIoTCoreXP2PBridge.getInstance().setCallback(mXP2PCallback);
+        TIoTCoreXP2PBridge.getInstance().enterRoom(roomKey);
         mTimeHandlerThread = new HandlerThread("time-count-thread");
         mTimeHandlerThread.start();
         mTimeHandler = new Handler(mTimeHandlerThread.getLooper());

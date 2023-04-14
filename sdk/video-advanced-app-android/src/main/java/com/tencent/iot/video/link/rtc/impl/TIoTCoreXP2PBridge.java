@@ -40,11 +40,10 @@ public class TIoTCoreXP2PBridge {
         return instance;
     }
 
-    public void startAppWith(Context context, RoomKey roomKey) {
+    public void startAppWith(Context context) {
         this.mContext = context;
         mRTCCloud = TRTCCloud.sharedInstance(mContext);
         mRTCCloud.setListener(mRTCCloudListener);
-        enterRTCRoom(roomKey);
     }
 
     public void setCallback(XP2PCallback mXP2PCallback) {
@@ -139,7 +138,7 @@ public class TIoTCoreXP2PBridge {
     /**
      * rtc 进房
      */
-    public void enterRTCRoom(RoomKey roomKey) {
+    public void enterRoom(RoomKey roomKey) {
         if (roomKey == null) return;
 
         // 进房前需要设置一下关键参数
