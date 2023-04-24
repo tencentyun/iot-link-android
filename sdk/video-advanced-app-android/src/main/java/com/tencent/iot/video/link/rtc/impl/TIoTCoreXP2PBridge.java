@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.tencent.trtc.TRTCCloudDef.TRTC_GSENSOR_MODE_DISABLE;
 import static com.tencent.trtc.TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG;
 
 /**
@@ -155,6 +156,7 @@ public class TIoTCoreXP2PBridge {
                 roomKey.getUserId(), roomKey.getUserSig(), roomKey.getStrRoomId(), "", "");
         TRTCParams.role = TRTCCloudDef.TRTCRoleAnchor;
         mRTCCloud.enableAudioVolumeEvaluation(300);
+        mRTCCloud.setGSensorMode(TRTC_GSENSOR_MODE_DISABLE);
         mRTCCloud.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER);
         mRTCCloud.startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_SPEECH);
         // 收到来电，开始监听 trtc 的消息
