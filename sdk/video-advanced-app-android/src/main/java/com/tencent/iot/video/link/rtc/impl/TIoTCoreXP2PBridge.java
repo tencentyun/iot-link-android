@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tencent.trtc.TRTCCloudDef.TRTC_GSENSOR_MODE_DISABLE;
+import static com.tencent.trtc.TRTCCloudDef.TRTC_GSENSOR_MODE_UIAUTOLAYOUT;
 import static com.tencent.trtc.TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG;
 
 /**
@@ -135,6 +136,14 @@ public class TIoTCoreXP2PBridge {
             }
         }
     };
+
+    public void setEnableGSensor(boolean enable) {
+        if (enable) {
+            mRTCCloud.setGSensorMode(TRTC_GSENSOR_MODE_UIAUTOLAYOUT);
+        } else {
+            mRTCCloud.setGSensorMode(TRTC_GSENSOR_MODE_DISABLE);
+        }
+    }
 
     /**
      * rtc 进房
