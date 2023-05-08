@@ -22,10 +22,11 @@ import com.alibaba.fastjson.JSON;
 import com.tencent.iot.explorer.link.demo.R;
 import com.tencent.iot.explorer.link.demo.video.videocall.videolayout.TRTCVideoLayout;
 import com.tencent.iot.explorer.link.demo.video.videocall.videolayout.TRTCVideoLayoutManager;
-import com.tencent.iot.video.link.rtc.XP2PCallback;
-import com.tencent.iot.video.link.rtc.RoomKey;
+import com.tencent.iot.video.link.rtc.IoTVideoCloudListener;
+import com.tencent.iot.video.link.rtc.IoTVideoParams;
+import com.tencent.iot.video.link.rtc.RTCParams;
 import com.tencent.iot.video.link.rtc.UserInfo;
-import com.tencent.iot.video.link.rtc.impl.TIoTCoreXP2PBridge;
+import com.tencent.iot.video.link.rtc.impl.IoTVideoCloud;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,7 +92,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
     /**
      * 拨号的回调
      */
-    private XP2PCallback mXP2PCallback = new XP2PCallback() {
+    private IoTVideoCloudListener mIoTVideoCloudListener = new IoTVideoCloudListener() {
         @Override
         public void onError(int code, String msg) { //发生了错误，报错并退出该页面
             stopCameraAndFinish();
@@ -142,7 +143,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             if (layout != null) {
                 layout.setVideoAvailable(isVideoAvailable);
                 if (isVideoAvailable) {
-                    TIoTCoreXP2PBridge.getInstance().startRemoteView(userId, layout.getVideoView());
+                    IoTVideoCloud.sharedInstance(RTCVideoCallActivity.this).startRemoteView(userId, layout.getVideoView());
                 }
             }
         }
@@ -176,11 +177,21 @@ public class RTCVideoCallActivity extends AppCompatActivity {
                         return;
                     }
                     videoLayout.setVideoAvailable(false);
-                    TIoTCoreXP2PBridge.getInstance().sendVoiceToServer();
+                    IoTVideoCloud.sharedInstance(RTCVideoCallActivity.this).startLocalStream("");
                 } else {
                     Toast.makeText(getApplicationContext(), "对方未进房", Toast.LENGTH_LONG).show();
                 }
             }
+        }
+
+        @Override
+        public void getVideoPacketWithID(String id, byte[] data, int len) {
+
+        }
+
+        @Override
+        public String reviceDeviceMsgWithID(String id, byte[] data) {
+            return "";
         }
 
         @Override
@@ -191,18 +202,23 @@ public class RTCVideoCallActivity extends AppCompatActivity {
                 showTip = true;
             }
         }
+
+        @Override
+        public void reviceEventMsgWithID(String id, int eventType) {
+
+        }
     };
 
     /**
      * 主动拨打给某个用户
      *
      * @param context
-     * @param roomKey
+     * @param RTCParams
      */
-    public static void startCallSomeone(Context context, RoomKey roomKey) {
+    public static void startCallSomeone(Context context, RTCParams RTCParams) {
         Intent starter = new Intent(context, RTCVideoCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_CALL);
-        starter.putExtra(PARAM_SELF_INFO, JSON.toJSONString(roomKey));
+        starter.putExtra(PARAM_SELF_INFO, JSON.toJSONString(RTCParams));
         context.startActivity(starter);
     }
 
@@ -210,12 +226,12 @@ public class RTCVideoCallActivity extends AppCompatActivity {
      * 作为用户被叫
      *
      * @param context
-     * @param roomKey
+     * @param RTCParams
      */
-    public static void startBeingCall(Context context, RoomKey roomKey) {
+    public static void startBeingCall(Context context, RTCParams RTCParams) {
         Intent starter = new Intent(context, RTCVideoCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_BEING_CALLED);
-        starter.putExtra(PARAM_SELF_INFO, JSON.toJSONString(roomKey));
+        starter.putExtra(PARAM_SELF_INFO, JSON.toJSONString(RTCParams));
         starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(starter);
     }
@@ -262,15 +278,16 @@ public class RTCVideoCallActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(roomKeyStr)) {
             finish();
         }
-        RoomKey roomKey = JSON.parseObject(roomKeyStr, RoomKey.class);
+        RTCParams RTCParams = JSON.parseObject(roomKeyStr, RTCParams.class);
         mSelfModel = new UserInfo();
-        mSelfModel.setUserId(roomKey.getUserId());
+        mSelfModel.setUserId(RTCParams.getUserId());
         //自己的资料
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
         // 初始化成员变量
-        TIoTCoreXP2PBridge.getInstance().startAppWith(this);
-        TIoTCoreXP2PBridge.getInstance().setCallback(mXP2PCallback);
-        TIoTCoreXP2PBridge.getInstance().enterRoom(roomKey);
+        IoTVideoParams videoParams = new IoTVideoParams();
+        videoParams.setRtcParams(RTCParams);
+        IoTVideoCloud.sharedInstance(this).startAppWith(videoParams);
+        IoTVideoCloud.sharedInstance(this).setListener(mIoTVideoCloudListener);
         mTimeHandlerThread = new HandlerThread("time-count-thread");
         mTimeHandlerThread.start();
         mTimeHandler = new Handler(mTimeHandlerThread.getLooper());
@@ -289,7 +306,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isMuteMic = !isMuteMic;
-                TIoTCoreXP2PBridge.getInstance().setMicMute(isMuteMic);
+                IoTVideoCloud.sharedInstance(RTCVideoCallActivity.this).muteLocalAudio(isMuteMic);
                 mMuteImg.setActivated(isMuteMic);
             }
         });
@@ -297,7 +314,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isHandsFree = !isHandsFree;
-                TIoTCoreXP2PBridge.getInstance().setHandsFree(isHandsFree);
+                IoTVideoCloud.sharedInstance(RTCVideoCallActivity.this).setHandsFree(isHandsFree);
                 mHandsfreeImg.setActivated(isHandsFree);
             }
         });
@@ -305,7 +322,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mIsFrontCamera = !mIsFrontCamera;
-                TIoTCoreXP2PBridge.getInstance().switchCamera(mIsFrontCamera);
+                IoTVideoCloud.sharedInstance(RTCVideoCallActivity.this).changeCameraPositon(mIsFrontCamera);
                 mSwitchCameraImg.setActivated(mIsFrontCamera);
             }
         });
@@ -328,7 +345,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
     }
 
     private void stopCameraAndFinish() {
-        TIoTCoreXP2PBridge.getInstance().release();
+        IoTVideoCloud.sharedInstance(this).stopAppService("");
         finish();
     }
 
@@ -343,7 +360,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             return;
         }
         videoLayout.setVideoAvailable(true);
-        TIoTCoreXP2PBridge.getInstance().openCamera(true, videoLayout.getVideoView());
+        IoTVideoCloud.sharedInstance(this).openCamera(true, videoLayout.getVideoView());
 
         //2. 展示对方的头像和蒙层
         mSponsorGroup.setVisibility(View.VISIBLE);
@@ -380,7 +397,7 @@ public class RTCVideoCallActivity extends AppCompatActivity {
             return;
         }
         videoLayout.setVideoAvailable(true);
-        TIoTCoreXP2PBridge.getInstance().openCamera(true, videoLayout.getVideoView());
+        IoTVideoCloud.sharedInstance(this).openCamera(true, videoLayout.getVideoView());
         mHangupLl.setVisibility(View.VISIBLE);
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override

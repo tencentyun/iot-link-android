@@ -54,7 +54,7 @@
 需先通过 [云API]( https://github.com/tencentyun/iot-link-android/blob/video-v2.6.x/sdk/video-advanced-app-android/src/main/java/com/tencent/iot/video/link/service/VideoBaseService.kt#L197-L209) 获取到链接通话参数转换成RoomKey模型，RoomKey是TIoTCoreXP2PBridge中initWithRoomKey所需链接通话参数，
 由于云API需要配置SecretId、SecretKey，该参数直接放在客户端，会有泄漏风险，故建议通过自建服务访问该API获取到链接通话参数，再将链接通话参数传进SDK。
 
-#### com.tencent.iot.video.link.rtc.impl.TIoTCoreXP2PBridge
+#### com.tencent.iot.video.link.rtc.impl.IoTVideoCloud
 
 1、初始化 TIoTCoreXP2PBridge#startAppWith(Context context)
 
@@ -129,7 +129,7 @@
 
 ### iot-video-advanced-app-android SDK 回调callback 设计说明
 
-com.tencent.iot.video.link.rtc.XP2PCallback 回调callback说明如下：
+com.tencent.iot.video.link.rtc.IoTVideoCloudListener 回调callback说明如下：
 
 | 回调接口 | 功能 |
 | ----------------------- | ---------- |

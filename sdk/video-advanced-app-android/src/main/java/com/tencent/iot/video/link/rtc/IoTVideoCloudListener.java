@@ -2,7 +2,7 @@ package com.tencent.iot.video.link.rtc;
 
 import java.util.Map;
 
-public interface XP2PCallback {
+public interface IoTVideoCloudListener {
 
     /**
      * sdk内部发生了错误
@@ -56,11 +56,32 @@ public interface XP2PCallback {
     void onRecvCustomCmdMsg(String rtc_uid, String message);
 
     /**
+     * 裸流接口使用方式  客户端拉取到的裸流数据对应 data 参数  谨慎！！！ === 此接口切勿执行耗时操作，耗时操作请切换线程，切勿卡住当前线程
+     * @param id 用户标识
+     * @param data 裸流数据
+     */
+    void getVideoPacketWithID(String id, byte[] data, int len);
+
+    /**
+     * 收到自定义消息的事件回调
+     * @param id 用户标识
+     * @param data 消息数据
+     */
+    String reviceDeviceMsgWithID(String id, byte[] data);
+
+    /**
      * SDK 开始渲染自己本地或远端用户的首帧画面
      * @param rtc_uid 用户标识
      * @param width 画面的宽度
      * @param height 画面的高度
      */
     void onFirstVideoFrame(String rtc_uid, int width, int height);
+
+    /**
+     * sdk 事件消息,事件对应类型与意义详见 XP2PType 类型说明
+     * @param id 对端标识
+     * @param eventType XP2PType 类型说明
+     */
+    void reviceEventMsgWithID(String id, int eventType);
 
 }

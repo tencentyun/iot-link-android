@@ -1,6 +1,6 @@
 package com.tencent.iot.video.link.rtc
 
-open class RoomKey {
+open class RTCParams {
     var SdkAppId = 0
     var StrRoomId = ""
     var callType = RTCCalling.TYPE_AUDIO_CALL
