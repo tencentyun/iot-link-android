@@ -20,7 +20,6 @@ import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.demo.video.preview.DevUrl2Preview
 import com.tencent.iot.explorer.link.demo.video.nvr.VideoNvrActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoMultiPreviewActivity
-import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewMJPEGActivity
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
@@ -28,7 +27,7 @@ import com.tencent.iot.explorer.link.demo.video.videocall.RTCVideoCallActivity
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.consts.VideoRequestCode
-import com.tencent.iot.video.link.rtc.RoomKey
+import com.tencent.iot.video.link.rtc.RTCParams
 import com.tencent.iot.video.link.service.VideoBaseService
 import kotlinx.android.synthetic.main.fragment_video_device.*
 import kotlinx.coroutines.*
@@ -209,7 +208,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
 
             VideoRequestCode.video_call_trtc_device -> {
                 if (jsonResponset.containsKey("TRTCParams")) {
-                    val roomKey = jsonResponset.getObject("TRTCParams", RoomKey::class.java)
+                    val roomKey = jsonResponset.getObject("TRTCParams", RTCParams::class.java)
                     RTCVideoCallActivity.startCallSomeone(context, roomKey)
                 }
                 Log.d(tag, "video_call_trtc_device: response${jsonResponset}")
