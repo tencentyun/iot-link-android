@@ -127,6 +127,15 @@ public class IoTVideoCloud implements com.tencent.xnet.XP2PCallback {
     }
 
     /**
+     *  开始推送本地音视频流
+     *  @param deviceName 要推给某个设备的名称。
+     */
+    public void startLocalStream(String deviceName) {
+        mRTCCloud.muteLocalAudio(false);
+        mRTCCloud.muteLocalVideo(0, false);
+    }
+
+    /**
      *  停止推送本地音视频流
      */
     public void stopLocalStream() {
@@ -192,15 +201,6 @@ public class IoTVideoCloud implements com.tencent.xnet.XP2PCallback {
     }
 
     /**
-     *  开始推送本地音视频流
-     *  @param deviceName 要推给某个设备的名称。
-     */
-    public void startLocalStream(String deviceName) {
-        mRTCCloud.muteLocalAudio(false);
-        mRTCCloud.muteLocalVideo(0, false);
-    }
-
-    /**
      *  开始渲染远端音视频流
      *  @param userId 渲染设备的userid。
      *  @param txCloudVideoView 承载视频画面的控件。
@@ -210,18 +210,6 @@ public class IoTVideoCloud implements com.tencent.xnet.XP2PCallback {
             return;
         }
         mRTCCloud.startRemoteView(userId, TRTC_VIDEO_STREAM_TYPE_BIG, txCloudVideoView);
-    }
-
-    /**
-     *  设置是否适配重力感应
-     *  @param enable true：适配重力感应；false：不适配重力感应。
-     */
-    public void setEnableGSensor(boolean enable) {
-        if (enable) {
-            mRTCCloud.setGSensorMode(TRTC_GSENSOR_MODE_UIAUTOLAYOUT);
-        } else {
-            mRTCCloud.setGSensorMode(TRTC_GSENSOR_MODE_DISABLE);
-        }
     }
 
     /**
@@ -237,7 +225,7 @@ public class IoTVideoCloud implements com.tencent.xnet.XP2PCallback {
     }
 
     /**
-     *  暂停/恢复发布本地的音频流
+     *  设置关闭打开麦克风
      *  @param mute true：静音；false：恢复。
      */
     public void muteLocalAudio(boolean mute) {
@@ -253,6 +241,18 @@ public class IoTVideoCloud implements com.tencent.xnet.XP2PCallback {
             mRTCCloud.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER);
         } else {
             mRTCCloud.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_EARPIECE);
+        }
+    }
+
+    /**
+     *  设置是否适配重力感应
+     *  @param enable true：适配重力感应；false：不适配重力感应。
+     */
+    public void setEnableGSensor(boolean enable) {
+        if (enable) {
+            mRTCCloud.setGSensorMode(TRTC_GSENSOR_MODE_UIAUTOLAYOUT);
+        } else {
+            mRTCCloud.setGSensorMode(TRTC_GSENSOR_MODE_DISABLE);
         }
     }
 
