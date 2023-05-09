@@ -51,85 +51,88 @@
 
 #### 获取RoomKey，
 
-需先通过 [云API]( https://github.com/tencentyun/iot-link-android/blob/video-v2.6.x/sdk/video-advanced-app-android/src/main/java/com/tencent/iot/video/link/service/VideoBaseService.kt#L197-L209) 获取到链接通话参数转换成RoomKey模型，RoomKey是TIoTCoreXP2PBridge中initWithRoomKey所需链接通话参数，
+需先通过 [云API]( https://github.com/tencentyun/iot-link-android/blob/video-v2.6.x/sdk/video-advanced-app-android/src/main/java/com/tencent/iot/video/link/service/VideoBaseService.kt#L197-L209) 获取到链接对端参数转换成RTCParams模型，RoomKey是IoTVideoCloud中startAppWith所需链接通话参数IoTVideoParams->RTCParams，
 由于云API需要配置SecretId、SecretKey，该参数直接放在客户端，会有泄漏风险，故建议通过自建服务访问该API获取到链接通话参数，再将链接通话参数传进SDK。
 
 #### com.tencent.iot.video.link.rtc.impl.IoTVideoCloud
 
-1、初始化 TIoTCoreXP2PBridge#startAppWith(Context context)
+1、链接对端 IoTVideoCloud#startAppWith(IoTVideoParams params)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| context | Context | 上下文 |
+| params | IoTVideoParams | p2p模式 必传参数xp2pinfo、productid、devicename    rtc模式 必传参数RTCParams |
 
-| 返回值 | 描述 |
-|:-|:-|
-| TIoTCoreXP2PBridge | TIoTCoreXP2PBridge实例 |
-
-2、开始进房 TIoTCoreXP2PBridge#enterRoom(RoomKey roomKey)
+2、设置事件回调 IoTVideoCloud#setListener(IoTVideoCloudListener mIoTVideoCloudListener)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| roomKey | RoomKey | 链接通话参数 |
+| mIoTVideoCloudListener | IoTVideoCloudListener | 获得来自 SDK 的各类事件通知（比如：错误码，警告码，音视频状态参数等）。 |
 
-3、设置回调 TIoTCoreXP2PBridge#setCallback(XP2PCallback callback)
-
-| 参数 | 类型 | 描述 |
-|:-|:-|:-|
-| callback | XP2PCallback | 回调 |
-
-4、释放链接 TIoTCoreXP2PBridge#release()
-
-5、发送信令 TIoTCoreXP2PBridge#sendMsgToPeer(String msg)
+3、开始推送本地音视频流 IoTVideoCloud#startLocalStream(String deviceName)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| msg | String | 信令消息 |
+| deviceName | String | 要推给某个设备的名称。 |
 
-| 返回值 | 描述 |
-|:-|:-|
-| boolean | 发送是否成功 |
+4、停止推送本地音视频流 IoTVideoCloud#stopLocalStream()
 
-6、打开摄像头预览 TIoTCoreXP2PBridge#openCamera(boolean isFrontCamera, TXCloudVideoView txCloudVideoView)
+5、断开链接 IoTVideoCloud#stopAppService(String deviceName)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| isFrontCamera | boolean | 是否是前置摄像头 |
-| txCloudVideoView | TXCloudVideoView | 承载视频画面的控件 |
+| deviceName | String | 断开链接设备的名称。 |
 
-7、开始推流 TIoTCoreXP2PBridge#sendVoiceToServer()
+6、使用通道发送自定义消息给链接中的设备 IoTVideoCloud#sendCustomCmdMsg(String deviceName, String msg, long timeout_us)
 
-8、绑定远端视频渲染控件 TIoTCoreXP2PBridge#startRemoteView(String userId, TXCloudVideoView txCloudVideoView)
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| deviceName | String | 设备的名称。 |
+| msg | String | 待发送的消息，rtc单个消息的最大长度被限制为 1KB。p2p 可以为任意格式字符或二进制数据(格式必须为`action=user_define&cmd=xxx`,需要传输的数据跟在`cmd=`后面)，长度由cmd_len提供，建议在16KB以内，否则会影响实时性。 |
+| timeout_us | long | rtc忽略此参数。 p2p命令超时时间，单位为微秒，值为0时采用默认超时(7500ms左右) 。 |
+
+7、打开摄像头预览 IoTVideoCloud#openCamera(boolean isFrontCamera, TXCloudVideoView txCloudVideoView)
+
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| isFrontCamera | boolean | true：前置摄像头；false：后置摄像头。 |
+| txCloudVideoView | TXCloudVideoView | 承载视频画面的控件。 |
+
+8、关闭摄像头预览 IoTVideoCloud#closeCamera()
+
+9、绑定远端视频渲染控件 IoTVideoCloud#startRemoteView(String userId, TXCloudVideoView txCloudVideoView)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | userId | String | 远端用户id |
 | txCloudVideoView | TXCloudVideoView | 承载视频画面的控件 |
 
-9、切换摄像头 TIoTCoreXP2PBridge#switchCamera(boolean isFrontCamera)
+10、切换摄像头 IoTVideoCloud#changeCameraPositon(boolean isFrontCamera)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| isFrontCamera | boolean | 是否是前置摄像头 |
+| isFrontCamera | boolean | true：前置摄像头；false：后置摄像头。 |
 
-10、设置麦克风是否静音 TIoTCoreXP2PBridge#setMicMute(boolean isMute)
-
-| 参数 | 类型 | 描述 |
-|:-|:-|:-|
-| isMute | boolean | 是否静音 |
-
-11、设置是否免提 TIoTCoreXP2PBridge#setHandsFree(boolean isHandsFree)
+11、设置关闭打开麦克风 IoTVideoCloud#muteLocalAudio(boolean mute)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
-| isHandsFree | boolean | 是否免提 |
+| mute | boolean | true：静音；false：恢复。 |
 
-12、关闭摄像头预览 TIoTCoreXP2PBridge#closeCamera()
+12、设置是否免提 IoTVideoCloud#setHandsFree(boolean isHandsFree)
 
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| isHandsFree | boolean | true：免提（扬声器）；false：听筒。 |
 
-### iot-video-advanced-app-android SDK 回调callback 设计说明
+13、设置是否适配重力感应 IoTVideoCloud#setEnableGSensor(boolean enable)
 
-com.tencent.iot.video.link.rtc.IoTVideoCloudListener 回调callback说明如下：
+| 参数 | 类型 | 描述 |
+|:-|:-|:-|
+| enable | boolean | true：适配重力感应；false：不适配重力感应。 |
+
+### iot-video-advanced-app-android SDK 回调listener 设计说明
+
+com.tencent.iot.video.link.rtc.IoTVideoCloudListener 回调listener说明如下：
 
 | 回调接口 | 功能 |
 | ----------------------- | ---------- |
