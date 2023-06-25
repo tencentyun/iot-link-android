@@ -265,7 +265,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
                 }
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
-                    if (buffer != null) {
+                    if (buffer != null && pcmEncoder != null) {
                         pcmEncoder.encodeData(buffer);
                     }
                 }
