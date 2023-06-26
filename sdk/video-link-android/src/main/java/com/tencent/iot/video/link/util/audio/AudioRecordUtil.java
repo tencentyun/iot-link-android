@@ -193,8 +193,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         executor.shutdown();
         audioRecord = null;
         pcmEncoder = null;
-        flvPacker.release();
-        flvPacker = null;
+        if (flvPacker != null) {
+            flvPacker.release();
+            flvPacker = null;
+        }
         if (canceler != null) {
             canceler.setEnabled(false);
             canceler.release();
@@ -223,7 +225,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
 
     @Override
     public void encodeAAC(byte[] data, long time) {
-        flvPacker.encodeFlv(data, FLVPacker.TYPE_AUDIO, System.currentTimeMillis());
+        if (flvPacker != null && data != null && data.length != 0) {
+            flvPacker.encodeFlv(data, FLVPacker.TYPE_AUDIO, System.currentTimeMillis());
+        }
     }
 
     @Override
