@@ -194,4 +194,8 @@
     <string name="download_fail">下载失败</string>
     <string name="downloading">下载中</string>
 
+    <!-- 多通道选择 -->
+    <string name="multiple_channel_choose">多通道选择</string>
+    <string name="channel_choose">通道选择: </string>
+
 </resources>
