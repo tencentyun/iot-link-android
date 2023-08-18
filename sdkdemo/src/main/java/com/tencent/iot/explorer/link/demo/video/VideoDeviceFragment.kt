@@ -15,15 +15,11 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
-import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
-import com.tencent.iot.explorer.link.demo.video.preview.DevUrl2Preview
 import com.tencent.iot.explorer.link.demo.video.nvr.VideoNvrActivity
-import com.tencent.iot.explorer.link.demo.video.preview.VideoMultiPreviewActivity
-import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewActivity
-import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewMJPEGActivity
-import com.tencent.iot.explorer.link.demo.video.preview.VideoWithoutPropertyActivity
-import com.tencent.iot.explorer.link.demo.video.preview.VideoPushStreamActivity
+import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
+import com.tencent.iot.explorer.link.demo.video.preview.*
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
+import com.tencent.iot.explorer.link.demo.video.utils.MultipleChannelChooseDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
@@ -129,20 +125,36 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
             return
         }
 
-        var options = arrayListOf(getString(R.string.preview), getString(R.string.playback), getString(R.string.preview_mjpeg), getString(R.string.video_without_property), getString(R.string.video_push_stream))
+        var options = arrayListOf(getString(R.string.preview), getString(R.string.playback), getString(R.string.preview_mjpeg), getString(R.string.video_without_property), getString(R.string.video_push_stream), getString(R.string.multiple_channel_choose))
         var dlg =
             ListOptionsDialog(
                 context,
                 options
             )
         dlg.show()
-        dlg.setOnDismisListener {
+        dlg.setOnDismisListener { it ->
             when(it) {
                 0 -> { VideoPreviewActivity.startPreviewActivity(context, dev) }
                 1 -> { VideoPlaybackActivity.startPlaybackActivity(context, dev) }
                 2 -> { VideoPreviewMJPEGActivity.startPreviewActivity(context, dev) }
                 3 -> { VideoWithoutPropertyActivity.startPreviewActivity(context, dev) }
                 4 -> { VideoPushStreamActivity.startPreviewActivity(context, dev) }
+                5 -> {
+                    val multipleChannelChooseDialog = MultipleChannelChooseDialog(context)
+                    multipleChannelChooseDialog.show()
+                    multipleChannelChooseDialog.setOnDismisListener { selectChannels ->
+                        var allUrl = ArrayList<DevUrl2Preview>()
+                        for (i in 0 until selectChannels.size) {
+                            var device = DevUrl2Preview()
+                            device.devName = dev.DeviceName
+                            device.Status = 1
+                            device.channel = selectChannels[i]
+                            allUrl.add(device)
+                        }
+
+                        VideoMultiPreviewActivity.startMultiPreviewActivity(context, allUrl)
+                    }
+                }
             }
         }
     }
