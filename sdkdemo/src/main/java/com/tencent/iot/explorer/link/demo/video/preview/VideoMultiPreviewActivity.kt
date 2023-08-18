@@ -214,18 +214,23 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
         var holders = getHolderById(id)
         for (i in 0 until holders.size) {
             Thread(Runnable {
-                App.data.accessInfo?.let {
-                    var command = Command.getNvrIpcStatus(holders.get(i).channel, 0)
-                    var repStatus = XP2P.postCommandRequestSync("${it.productId}/${holders.get(i).devName}",
-                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
-                    JSONArray.parseArray(repStatus, DevStatus::class.java)?.let {
-                        if (it.size == 1 && it.get(0).status == 0) {
-                            countDownLatchs.get("${id}/${holders.get(i).channel}")?.let {
-                                it.countDown()
+                Timer().schedule(object : TimerTask() {
+                    override fun run() {
+                        App.data.accessInfo?.let {
+                            var command = Command.getNvrIpcStatus(holders.get(i).channel, 0)
+                            var repStatus = XP2P.postCommandRequestSync("${it.productId}/${holders.get(i).devName}",
+                                command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)
+                            JSONArray.parseArray(repStatus, DevStatus::class.java)?.let {
+                                if (it.size == 1 && it.get(0).status == 0) {
+                                    countDownLatchs.get("${id}/${holders.get(i).channel}")?.let {
+                                        it.countDown()
+                                    }
+                                }
                             }
                         }
                     }
-                }
+
+                }, 500)
             }).start()
         }
     }
