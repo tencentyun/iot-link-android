@@ -185,8 +185,8 @@ dependencies {
     if (findProject(':sdk:video-link-android') != null) {
         api project(path: ':sdk:video-link-android')
     }
-    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-java:2.0.8-SNAPSHOT'
-    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-armv7a:2.0.8-SNAPSHOT'
-    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-arm64:2.0.8-SNAPSHOT'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-java:2.0.8'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-armv7a:2.0.8'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-arm64:2.0.8'
 
 }
