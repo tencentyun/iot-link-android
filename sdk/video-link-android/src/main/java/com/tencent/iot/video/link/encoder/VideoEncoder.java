@@ -48,7 +48,7 @@ public class VideoEncoder {
             //描述视频格式的帧速率（以帧/秒为单位）的键。帧率，一般在15至30之内，太小容易造成视频卡顿。
             mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, videoEncodeParam.getFrameRate());
             //色彩格式，具体查看相关API，不同设备支持的色彩格式不尽相同
-            mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar);
+            mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar);
             //关键帧间隔时间，单位是秒
             mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, videoEncodeParam.getiFrameInterval());
             mediaFormat.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_VBR);
@@ -96,14 +96,24 @@ public class VideoEncoder {
     public void encoderH264(byte[] data, boolean mirror) {
         if (executor.isShutdown()) return;
         executor.submit(() -> {
-            //将NV21编码成NV12
-            byte[] bytes = NV21ToNV12(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
+            byte[] rotateBytes;
             //视频顺时针旋转90度
-            byte[] nv12 = rotateNV290(bytes, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
-
             if (mirror) {
-                verticalMirror(nv12, videoEncodeParam.getHeight(), videoEncodeParam.getWidth());
+                rotateBytes = nv21Rotate270(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
+            } else {
+                rotateBytes = nv21Rotate90(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
             }
+            //将NV21编码成I420
+            byte[] i420 = toI420(rotateBytes, videoEncodeParam.getHeight(), videoEncodeParam.getWidth());
+
+//            //将NV21编码成NV12
+//            byte[] bytes = NV21ToNV12(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
+//            //视频顺时针旋转90度
+//            byte[] nv12 = rotateNV290(bytes, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
+//
+//            if (mirror) {
+//                verticalMirror(nv12, videoEncodeParam.getHeight(), videoEncodeParam.getWidth());
+//            }
 
             try {
                 //拿到输入缓冲区,用于传送数据进行编码
@@ -116,9 +126,9 @@ public class VideoEncoder {
                     ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
                     inputBuffer.clear();
                     //往输入缓冲区写入数据
-                    inputBuffer.put(nv12);
+                    inputBuffer.put(i420);
                     //五个参数，第一个是输入缓冲区的索引，第二个数据是输入缓冲区起始索引，第三个是放入的数据大小，第四个是时间戳，保证递增就是
-                    mediaCodec.queueInputBuffer(inputBufferIndex, 0, nv12.length, System.nanoTime() / 1000, 0);
+                    mediaCodec.queueInputBuffer(inputBufferIndex, 0, i420.length, System.nanoTime() / 1000, 0);
                 }
                 MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
                 //拿到输出缓冲区的索引
@@ -186,6 +196,61 @@ public class VideoEncoder {
             nv12[frameSize + j] = nv21[j + frameSize - 1];
         }
         return nv12;
+    }
+
+    public byte[] toI420(byte[] input, int width, int height) {
+        byte[] preAllocatedBufferColor = new byte[width * height * 3 / 2];
+        final int frameSize = width * height;
+        final int qFrameSize = frameSize / 4;
+        System.arraycopy(input, 0, preAllocatedBufferColor, 0, frameSize); // Y
+        for (int i = 0; i < qFrameSize; i++) {
+            preAllocatedBufferColor[frameSize + i] = input[frameSize + i * 2 + 1]; // Cb (U)
+            preAllocatedBufferColor[frameSize + i + qFrameSize] = input[frameSize + i * 2]; // Cr (V)
+        }
+        return preAllocatedBufferColor;
+    }
+
+    public byte[] nv21Rotate90(byte[] data, int imageWidth, int imageHeight) {
+        byte[] preAllocatedBufferRotate = new byte[imageWidth * imageHeight * 3 / 2];
+        // Rotate the Y luma
+        int i = 0;
+        for (int x = 0; x < imageWidth; x++) {
+            for (int y = imageHeight - 1; y >= 0; y--) {
+                preAllocatedBufferRotate[i++] = data[y * imageWidth + x];
+            }
+        }
+        // Rotate the U and V color components
+        int size = imageWidth * imageHeight;
+        i = size * 3 / 2 - 1;
+        for (int x = imageWidth - 1; x > 0; x = x - 2) {
+            for (int y = 0; y < imageHeight / 2; y++) {
+                preAllocatedBufferRotate[i--] = data[size + (y * imageWidth) + x];
+                preAllocatedBufferRotate[i--] = data[size + (y * imageWidth) + (x - 1)];
+            }
+        }
+        return preAllocatedBufferRotate;
+    }
+
+    public byte[] nv21Rotate270(byte[] data, int imageWidth, int imageHeight) {
+        byte[] preAllocatedBufferRotate = new byte[imageWidth * imageHeight * 3 / 2];
+        // Rotate the Y luma
+        int i = 0;
+        for (int x = imageWidth - 1; x >= 0; x--) {
+            for (int y = 0; y < imageHeight; y++) {
+                preAllocatedBufferRotate[i++] = data[y * imageWidth + x];
+            }
+        }
+
+        // Rotate the U and V color components
+        i = imageWidth * imageHeight;
+        int uvHeight = imageHeight / 2;
+        for (int x = imageWidth - 1; x >= 0; x -= 2) {
+            for (int y = imageHeight; y < uvHeight + imageHeight; y++) {
+                preAllocatedBufferRotate[i++] = data[y * imageWidth + x - 1];
+                preAllocatedBufferRotate[i++] = data[y * imageWidth + x];
+            }
+        }
+        return preAllocatedBufferRotate;
     }
 
     /**
