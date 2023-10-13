@@ -17,7 +17,6 @@ import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.DeviceServerInfo
 import com.tencent.iot.video.link.entity.WlanDetectBody
 import com.tencent.iot.video.link.entity.WlanRespBody
-import com.tencent.iot.video.link.service.DetectService
 import kotlinx.android.synthetic.main.activity_video_detect_devs.*
 import kotlinx.android.synthetic.main.activity_video_detect_devs.product_id_layout
 import kotlinx.android.synthetic.main.activity_video_input_authorize.*
@@ -96,7 +95,6 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
 
     override fun onPause() {
         super.onPause()
-        DetectService.getInstance().clearAllTask()
     }
 
     var searchClickedListener = object : View.OnClickListener {
@@ -123,8 +121,6 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
             var detectBody = WlanDetectBody()
             detectBody.productId = accessInfo.productId
             detectBody.clientToken = accessInfo.accessToken
-            DetectService.getInstance().onWlanDevicesDetectedCallback = detectMesssageCallback
-            DetectService.getInstance().startSendBroadcast(detectBody, 30)
         }
     }
 
