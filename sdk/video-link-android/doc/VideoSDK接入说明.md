@@ -211,7 +211,7 @@ setUserCallbackToXp2p(_av_data_recv, _msg_notify);
 * 接口描述:
 初始化xp2p服务。
 ```
-int startServiceWithXp2pInfo(const char* id, const char *product_id, const char *device_name, const char* xp2p_info);
+int startServiceWithXp2pInfo(const char* id, const char *product_id, const char *device_name, const char* xp2p_info, int sensor_timeout);
 ```
 
 | 参数 | 类型 | 描述 | 输入/输出 |
@@ -233,7 +233,7 @@ const char* xp2p_info = getXP2PInfo(...);
 /* 设置回调函数 */
 setUserCallbackToXp2p(_av_data_recv, _msg_notify);
 /* 初始化p2p */
-startServiceWithXp2pInfo($id, $product_id, $device_name, xp2p_info);
+startServiceWithXp2pInfo($id, $product_id, $device_name, xp2p_info, sensor_timeout);
 ```
 
 ##### 2.1.3 P2P通道传输音视频裸流
@@ -562,7 +562,7 @@ void sample() {
     int ret = 0;
 
 START:
-    ret = startServiceWithXp2pInfo($id, $product_id, $device_name, $xp2p_info);
+    ret = startServiceWithXp2pInfo($id, $product_id, $device_name, $xp2p_info $sensor_timeout);
     if (ret < 0>) {
         printf("p2p start error\n");
         return;
@@ -617,7 +617,7 @@ void sample() {
     int ret = 0;
 
 START:
-    ret = startServiceWithXp2pInfo($id, $product_id, $device_name, $xp2p_info);
+    ret = startServiceWithXp2pInfo($id, $product_id, $device_name, $xp2p_info, $sensor_timeout);
     if (ret < 0>) {
         printf("p2p start error\n");
         return;
@@ -774,7 +774,7 @@ class VideoActivity : XP2PCallback {
 * 接口描述:
 初始化xp2p服务。
 ```
-public static void startServiceWithXp2pInfo(String id, String product_id, String device_name, String xp2p_info)
+public static void startServiceWithXp2pInfo(String id, String product_id, String device_name, String xp2p_info, int sensor_timeout)
 ```
 
 | 参数 | 类型 | 描述 | 输入/输出 |
@@ -783,6 +783,7 @@ public static void startServiceWithXp2pInfo(String id, String product_id, String
 | product_id | String | 目标camera产品信息 | 输入 |
 | device_name | String | 目标camera设备名称 | 输入 |
 | xp2p_info | String | xp2p信息 | 输入 |
+| sensor_timeout | int | 超时tcp切换时间 | 输入 |
 
 | 返回值 | 描述 |
 |:-|:-|
@@ -795,7 +796,7 @@ String xp2p_info = getXP2PInfo(...)
 /* 设置回调 */
 XP2P.setCallback(this)
 /* 初始化p2p */
-XP2P.startServiceWithXp2pInfo($id, $product_id, $device_name, xp2p_info)
+XP2P.startServiceWithXp2pInfo($id, $product_id, $device_name, xp2p_info, sensor_timeout)
 ```
 
 ##### 2.2.3 P2P通道传输音视频裸流
@@ -1032,5 +1033,5 @@ override fun onDestroy() {
 
 String xp2p_info = getXP2PInfo(...) // 从自建后台获取xp2p info
 XP2P.setCallback(this)
-XP2P.startServiceWithXp2pInfo(id, product_id, device_name, xp2p_info)
+XP2P.startServiceWithXp2pInfo(id, product_id, device_name, xp2p_info, sensor_timeout)
 ```

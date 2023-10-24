@@ -612,7 +612,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
             var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
             var started = XP2P.startServiceWithXp2pInfo(
                 id,
-                App.data.accessInfo?.productId, devInfo?.DeviceName, ""
+                App.data.accessInfo?.productId, devInfo?.DeviceName, "",5
             )
             if (started != 0) {
                 launch(Dispatchers.Main) {
@@ -658,7 +658,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
                         id,
                         App.data.accessInfo!!.productId,
                         devInfo?.DeviceName,
-                        ""
+                        "", 5
                     ) != 0
                 ) {
                     XP2P.stopService(id)
