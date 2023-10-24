@@ -4,13 +4,14 @@
 
 ### 接口说明
 1. 初始化xp2p服务接口
-> int startService(String id, String product_id, String device_name)
+> int startService(String id, String product_id, String device_name, int sensor_timeout)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
 | product_id | String | 产品ID |
 | device_name | String | 设备名称 |
+| sensor_timeout | int | 超时tcp切换时间 |
 
 | 返回值 | 描述 |
 |:-|:-|
@@ -342,6 +343,6 @@ DeviceServerInfo 定义如下
 ...
 String xp2p_info = getXP2PInfo(...) // 从自建后台获取xp2p info
 XP2P.setCallback(this)
-XP2P.startService(id, product_id, device_name)
+XP2P.startService(id, product_id, device_name, sensor_timeout)
 XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
 ```
