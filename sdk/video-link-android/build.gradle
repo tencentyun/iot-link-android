@@ -48,7 +48,7 @@ dependencies {
 //        changing = true
 //    }
 //    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.23'
-    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.38'
+    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.40'
     api 'com.tencent.iot.thirdparty.android:media-server:1.0.5'
     api 'io.github.sundoggynew:iot-soundtouch:1.0.0'
     api 'io.github.sundoggynew:iot-voice-changer:1.0.0'
