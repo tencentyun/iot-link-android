@@ -113,7 +113,7 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
         Thread(Runnable {
             var id = "${App.data.accessInfo!!.productId}/${devName}"
             var started = XP2P.startServiceWithXp2pInfo(id,
-                App.data.accessInfo!!.productId, devName, "")
+                App.data.accessInfo!!.productId, devName, "", 5)
             // 已经启动过，或者第一次启动，继续进行
             if (started != 0 && started != -1011) {
                 launch(Dispatchers.Main) {
@@ -281,13 +281,13 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
                 if (!playerHolder.keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
 
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
-                var flag = XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, playerHolder.devName, "")
+                var flag = XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, playerHolder.devName, "", 5)
                 while (flag != 0 && flag != -1011) {
                     // XP2P.stopService(id)
                     synchronized(objectLock) {
                         objectLock.wait(1000)
                     }
-                    flag = XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, playerHolder.devName, "")
+                    flag = XP2P.startServiceWithXp2pInfo(id, App.data.accessInfo!!.productId, playerHolder.devName, "", 5)
                 }
 
                 Log.d(tag, "index=${id!!}/${channel} keepPlayerplay countDownLatch wait ")
