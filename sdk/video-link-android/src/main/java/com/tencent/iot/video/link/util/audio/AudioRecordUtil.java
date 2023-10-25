@@ -236,6 +236,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     @Override
     public void onFLV(byte[] data) {
         if (recorderState) {
+            Log.d(TAG, "===== XP2P.dataSend dataLen:" + data.length);
             XP2P.dataSend(deviceId, data, data.length);
 
             if (executor.isShutdown()) return;
