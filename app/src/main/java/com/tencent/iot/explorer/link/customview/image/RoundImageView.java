@@ -72,6 +72,9 @@ public class RoundImageView extends AppCompatImageView {
         if (drawable.getClass() == NinePatchDrawable.class)
             return;
         Bitmap b = drawableToBitmap(drawable, getMeasuredWidth(), getMeasuredHeight());
+        if (b == null) {
+            return;
+        }
         Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
         if (defaultWidth == 0) {
             defaultWidth = getWidth();
