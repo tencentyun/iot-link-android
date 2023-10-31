@@ -381,7 +381,7 @@ class BleConfigService private constructor() {
                             connetionListener?.onBleSendWifiInfoResult(convertData2SendWifiResult(it.value))
                         }
                         0xE2.toByte() -> {
-                            L.d(TAG, "0xE2 ${BleWifiConnectInfo.byteArr2BleWifiConnectInfo(it.value)}")
+                            L.d(TAG, "0xE2")
                             tempByteArray = appendNewBlock(it.value, tempByteArray)
                             if (isMtuEndBlock(it.value) && tempByteArray != null) {
                                 var totalByteArr = ByteArray(tempByteArray!!.size+3)
