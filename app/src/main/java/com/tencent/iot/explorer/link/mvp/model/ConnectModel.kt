@@ -54,6 +54,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
     @Volatile
     var job: Job? = null
     var bleDevice: BleDevice? = null
+    var needToCheckBleState = true
 
     fun initService(type: Int, context: Context) {
         this.type = type
@@ -122,11 +123,14 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
 
     private fun bleFailed(errorCode: String, msg: String?) {
         launch (Dispatchers.Main){
-            job?.cancel()  // 结束超时任务
-            BleConfigService.get().connetionListener = null
-            L.e(TAG, msg?:"")
-            view?.connectFail(errorCode, msg?:"")
-            bluetoothGatt?.close()
+            if (needToCheckBleState) {
+                job?.cancel()  // 结束超时任务
+                BleConfigService.get().connetionListener = null
+                L.e(TAG, msg?:"")
+                view?.connectFail(errorCode, msg?:"")
+                bluetoothGatt?.close()
+                needToCheckBleState = true
+            }
         }
     }
 
@@ -234,6 +238,7 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
             override fun onBlePushTokenResult(success: Boolean) {
                 L.d(TAG, "onBlePushTokenResult ${success}")
                 if (success) {
+                    needToCheckBleState = false
                     checkDeviceBindTokenState()
                 } else {
                     bleFailed(LLSyncErrorCode.WIFI_CONFIG_BLE_BIND_TOKEN_RESPONSE_ERROR_CODE, "send wifi info failed")
@@ -466,8 +471,10 @@ class ConnectModel(view: ConnectView) : ParentModel<ConnectView>(view), MyCallba
                 }
             }
             view?.connectSuccess()
+            needToCheckBleState = true
         } else {
             view?.connectFail("bind_fail", response.msg)
+            needToCheckBleState = true
         }
         //绑定操作响应后，不论结果如何，一律停止监听。
         Reconnect.instance.stop(connectionListener)
