@@ -382,7 +382,16 @@ class BleConfigService private constructor() {
                         }
                         0xE2.toByte() -> {
                             L.d(TAG, "0xE2 ${BleWifiConnectInfo.byteArr2BleWifiConnectInfo(it.value)}")
-                            connetionListener?.onBleWifiConnectedInfo(BleWifiConnectInfo.byteArr2BleWifiConnectInfo(it.value))
+                            tempByteArray = appendNewBlock(it.value, tempByteArray)
+                            if (isMtuEndBlock(it.value) && tempByteArray != null) {
+                                var totalByteArr = ByteArray(tempByteArray!!.size+3)
+                                totalByteArr[0] = 0xE2.toByte()
+                                var totalLengthBytes = number2Bytes(tempByteArray!!.size.toLong(), 2)
+                                System.arraycopy(totalLengthBytes, 0, totalByteArr, 1, 2)
+                                System.arraycopy(tempByteArray!!, 0, totalByteArr, 3, tempByteArray!!.size)
+                                connetionListener?.onBleWifiConnectedInfo(BleWifiConnectInfo.byteArr2BleWifiConnectInfo(totalByteArr))
+                                tempByteArray = null
+                            }
                         }
                         0xE3.toByte() -> {
                             L.d(TAG, "0xE3")
