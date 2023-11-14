@@ -375,7 +375,6 @@ class BleConfigService private constructor() {
                                         connetionListener?.onBleDeviceInfo(BleDeviceInfo.byteArr2BleDeviceInfo(totalByteArr))
                                         tempByteArray = null
                                     }
-                                    connetionListener?.onBleDeviceInfo(BleDeviceInfo.byteArr2BleDeviceInfo(it.value))
                                 } else {
                                     connetionListener?.onBleDeviceFirmwareVersion(BleDeviceFirmwareVersion.byteArr2BleDeviceFirmwareVersion((it.value)))
                                 }
