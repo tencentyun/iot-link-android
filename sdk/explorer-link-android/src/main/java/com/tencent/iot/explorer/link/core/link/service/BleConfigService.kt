@@ -365,6 +365,16 @@ class BleConfigService private constructor() {
                             // 测试使用
                             currentConnectBleDevice?.let {  tmpBleDev ->
                                 if (tmpBleDev.type == 0) {
+                                    tempByteArray = appendNewBlock(it.value, tempByteArray)
+                                    if (isMtuEndBlock(it.value) && tempByteArray != null) {
+                                        var totalByteArr = ByteArray(tempByteArray!!.size+3)
+                                        totalByteArr[0] = 0x08.toByte()
+                                        var totalLengthBytes = number2Bytes(tempByteArray!!.size.toLong(), 2)
+                                        System.arraycopy(totalLengthBytes, 0, totalByteArr, 1, 2)
+                                        System.arraycopy(tempByteArray!!, 0, totalByteArr, 3, tempByteArray!!.size)
+                                        connetionListener?.onBleDeviceInfo(BleDeviceInfo.byteArr2BleDeviceInfo(totalByteArr))
+                                        tempByteArray = null
+                                    }
                                     connetionListener?.onBleDeviceInfo(BleDeviceInfo.byteArr2BleDeviceInfo(it.value))
                                 } else {
                                     connetionListener?.onBleDeviceFirmwareVersion(BleDeviceFirmwareVersion.byteArr2BleDeviceFirmwareVersion((it.value)))
