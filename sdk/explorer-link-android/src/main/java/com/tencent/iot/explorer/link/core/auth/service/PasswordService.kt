@@ -42,7 +42,7 @@ internal class PasswordService : BaseService(), PasswordImpl {
     override fun resetPhonePassword(
         countryCode: String, phone: String, code: String, pwd: String, callback: MyCallback
     ) {
-        val param = tokenParams("AppResetPasswordByCellphone")
+        val param = commonParams("AppResetPasswordByCellphone")
         param["CountryCode"] = countryCode
         param["PhoneNumber"] = phone
         param["VerificationCode"] = code
