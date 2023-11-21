@@ -454,6 +454,15 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
             pause_tip_layout?.visibility = View.VISIBLE
             return true
         }
+
+        override fun onInfoSEI(
+            mp: IMediaPlayer?,
+            what: Int,
+            extra: Int,
+            sei_content: String?
+        ): Boolean {
+            return false
+        }
     }
 
     override fun onDestroy() {

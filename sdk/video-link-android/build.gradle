@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
+apply plugin: 'com.kezong.fat-aar'
 
 android {
     compileSdkVersion 29
@@ -33,10 +34,14 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    repositories {
+        flatDir { dirs 'libs' }
+    }
 }
 
 dependencies {
-    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+//    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    embed (name:'android_gvoice-release',ext:'aar')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
