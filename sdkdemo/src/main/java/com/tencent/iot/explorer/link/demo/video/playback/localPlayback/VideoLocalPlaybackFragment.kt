@@ -282,6 +282,15 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
             currentPlayerState = false
             return true
         }
+
+        override fun onInfoSEI(
+            mp: IMediaPlayer?,
+            what: Int,
+            extra: Int,
+            sei_content: String?
+        ): Boolean {
+            return false
+        }
     }
 
     private var dlgOnClickedListener = object : CalendarDialog.OnClickedListener {
