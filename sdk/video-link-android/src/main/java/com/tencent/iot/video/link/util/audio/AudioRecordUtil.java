@@ -6,6 +6,8 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.media.audiofx.AcousticEchoCanceler;
 import android.media.audiofx.AutomaticGainControl;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -15,12 +17,18 @@ import com.tencent.iot.thirdparty.flv.FLVListener;
 import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.xnet.XP2P;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 
 
 public class AudioRecordUtil implements EncoderListener, FLVListener {
@@ -51,8 +59,60 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private String speakFlvFilePath = "/storage/emulated/0/speak.flv";
     private FileOutputStream fos;
+    private FileOutputStream fos1;
+    private FileOutputStream fos2;
+    private FileOutputStream fos3;
+    private String speakPcmFilePath = "/storage/emulated/0/speak_pcm";
 
     private SoundTouch st;
+
+    private AtomicInteger mClientTokenNum = new AtomicInteger(0);
+
+    private static final int MSG_SAVE_NEAR_PCM = 1;
+    private static final int MSG_SAVE_FAR_PCM = 2;
+    private static final int MSG_SAVE_AEC_PCM = 3;
+
+    private OnReadAECProcessedPcmListener mAECProcessedPcmListener;
+
+    private class MyHandler extends Handler {
+
+        public MyHandler() {
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            try {
+                if (msg.what == MSG_SAVE_NEAR_PCM && fos1 != null) {
+                    JSONObject jsonObject = (JSONObject) msg.obj;
+                    byte[] nearBytesData = (byte[]) jsonObject.get("nearPcmBytes");
+                    fos1.write(nearBytesData);
+                    fos1.flush();
+                }
+                if (msg.what == MSG_SAVE_FAR_PCM && fos2 != null) {
+                    JSONObject jsonObject = (JSONObject) msg.obj;
+                    byte[] playerPcmBytes = (byte[]) jsonObject.get("playerPcmBytes");
+                    fos2.write(playerPcmBytes);
+                    fos2.flush();
+                }
+                if (msg.what == MSG_SAVE_AEC_PCM && fos3 != null) {
+                    JSONObject jsonObject = (JSONObject) msg.obj;
+                    byte[] aecPcmBytes = (byte[]) jsonObject.get("aecPcmBytes");
+                    fos3.write(aecPcmBytes);
+                    fos3.flush();
+                }
+
+            } catch (IOException e) {
+                Log.e(TAG, "*======== IOException: " + e);
+                e.printStackTrace();
+            } catch (JSONException e) {
+                Log.e(TAG, "*======== JSONException: " + e);
+                e.printStackTrace();
+            }
+        }
+    }
+    private final Handler mHandler = new MyHandler();
 
     public AudioRecordUtil(Context ctx, String id, int sampleRate) {
         context = ctx;
@@ -85,6 +145,15 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         this.enableAGC = enableAGC;
         init(sampleRate, channel, bitDepth);
     }
+    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch, boolean enableAEC, boolean enableAGC, OnReadAECProcessedPcmListener listener) {
+        context = ctx;
+        deviceId = id;
+        this.pitch = pitch;
+        this.enableAEC = enableAEC;
+        this.enableAGC = enableAGC;
+        mAECProcessedPcmListener = listener;
+        init(sampleRate, channel, bitDepth);
+    }
 
     private void init(int sampleRate, int channel, int bitDepth) {
         recordMinBufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, bitDepth);
@@ -101,7 +170,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         } else if (bitDepth == AudioFormat.ENCODING_PCM_8BIT) {
             this.encodeBit = 8;
         }
+        Log.e(TAG, "recordMinBufferSize is: "+ recordMinBufferSize);
         recordMinBufferSize = (sampleRate*this.channelCount*this.encodeBit/8)/1000*20; //20ms数据长度
+        Log.e(TAG, "20ms recordMinBufferSize is: "+ recordMinBufferSize);
         Log.e(TAG, "AudioRecordUtil init Pitch is: "+ pitch);
     }
 
@@ -127,6 +198,32 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         }
     }
 
+    private FileOutputStream createFiles(String format) {
+
+        if (!TextUtils.isEmpty(speakPcmFilePath)) {
+            File file1 = new File(speakPcmFilePath+mClientTokenNum.getAndIncrement()+format+".pcm");
+            Log.i(TAG, "speak cache pcm file path:" + speakPcmFilePath);
+            if (file1.exists()) {
+                file1.delete();
+            }
+            try {
+                file1.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            try {
+                FileOutputStream fos = new FileOutputStream(file1);
+                return fos;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Log.e(TAG, "临时缓存文件未找到");
+                return null;
+            }
+        }
+        return null;
+    }
+
     // start之前设置有效 start过程中无法改变本次对讲音调
     public void setPitch(int pitch) {
         Log.e(TAG, "setPitch is: "+ pitch);
@@ -149,9 +246,13 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
      * 开始录制
      */
     public void start() {
+        fos1 = createFiles("near");
+        fos2 = createFiles("far");
+        fos3 = createFiles("aec");
+        GvoiceJNIBridge.init();
         reset();
         if (!VoiceChangerJNIBridge.isAvailable()) {
-            if (st == null) {
+            if (st == null && pitch != 0) {
                 st = new SoundTouch(0,channelCount,sampleRate,bitDepth,1.0f, pitch);
             }
         } else {
@@ -217,6 +318,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         } else {
             VoiceChangerJNIBridge.destory();
         }
+
+        GvoiceJNIBridge.destory();
     }
 
     public void release() {
@@ -253,11 +356,56 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         }
     }
 
+    private void writeNearPcmBytesToFile(byte[] nearPcmBytes) {
+        if (mHandler != null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("nearPcmBytes", nearPcmBytes);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Message message = mHandler.obtainMessage(MSG_SAVE_NEAR_PCM, jsonObject);
+            message.arg1 = nearPcmBytes.length;
+            mHandler.sendMessage(message);
+        }
+    }
+
+    private void writePlayerPcmBytesToFile(byte[] playerPcmBytes) {
+        if (mHandler != null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("playerPcmBytes", playerPcmBytes);
+//                jsonObject.put("cancellBytesData", cancell);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Message message = mHandler.obtainMessage(MSG_SAVE_FAR_PCM, jsonObject);
+            message.arg1 = playerPcmBytes.length;
+            mHandler.sendMessage(message);
+        }
+    }
+
+    private void writeAecPcmBytesToFile(byte[] aecPcmBytes) {
+        if (mHandler != null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("aecPcmBytes", aecPcmBytes);
+//                jsonObject.put("cancellBytesData", cancell);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Message message = mHandler.obtainMessage(MSG_SAVE_AEC_PCM, jsonObject);
+            message.arg1 = aecPcmBytes.length;
+            mHandler.sendMessage(message);
+        }
+    }
+
     private class RecordThread extends Thread {
         @Override
         public void run() {
             while (recorderState) {
                 int read = audioRecord.read(buffer, 0, buffer.length);
+                Log.e(TAG, "audioRecord.read: "+read + "， buffer.length： " + buffer.length);
                 if (!VoiceChangerJNIBridge.isAvailable()) {
                     if (pitch != 0 && st != null) {
                         st.putBytes(buffer);
@@ -271,7 +419,16 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     if (buffer != null && pcmEncoder != null) {
-                        pcmEncoder.encodeData(buffer);
+                        writeNearPcmBytesToFile(buffer);
+                        if (mAECProcessedPcmListener != null) {
+                            byte [] playerPcmBytes = mAECProcessedPcmListener.onReadAECProcessedPcmListener(buffer.length);
+                            writePlayerPcmBytesToFile(playerPcmBytes);
+                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
+                            writeAecPcmBytesToFile(aecPcmBytes);
+                            pcmEncoder.encodeData(aecPcmBytes);
+                        } else {
+                            pcmEncoder.encodeData(buffer);
+                        }
                     }
                 }
             }
