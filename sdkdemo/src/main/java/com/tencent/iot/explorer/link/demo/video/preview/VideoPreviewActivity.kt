@@ -43,6 +43,7 @@ import com.tencent.iot.explorer.link.demo.video.utils.VolumeChangeObserver
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.DeviceStatus
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
+import com.tencent.iot.video.link.util.audio.OnReadAECProcessedPcmListener
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
@@ -56,6 +57,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.LinkedBlockingDeque
 
 
 private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
@@ -64,7 +66,8 @@ private var keepPlayThreadLock = Object()
 private var keepAliveThreadRuning = true
 
 class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
-    XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener {
+    XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener,
+    OnReadAECProcessedPcmListener {
 
     open var tag = VideoPreviewActivity::class.simpleName
     var orientationV = true
@@ -90,12 +93,16 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     var startShowVideoTime = 0L
     @Volatile
     var showVideoTime = 0L
+    @Volatile
+    var recorderState = false //录制状态
     var volumeChangeObserver: VolumeChangeObserver? = null
     val MSG_UPDATE_HUD = 1
 
     var screenWidth = 0
     var screenHeight = 0
     var firstIn = true
+
+    var playPcmData = LinkedBlockingDeque<Byte>() // 内存队列，用于缓存获取到的播放器音频pcm
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
@@ -137,9 +144,9 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             presenter.getEventsData(Date())
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
-            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
+//            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
 //            //变调可以传入pitch参数
-//            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
+            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, false, false, this)
             audioRecordUtil.recordSpeakFlv(true)
         }
 
@@ -268,12 +275,18 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 JSONArray.parseArray(repStatus, DevStatus::class.java)?.let {
                     if (it.size == 1 && it.get(0).status == 0) {
                         XP2P.runSendService("${accessInfo.productId}/${presenter.getDeviceName()}", Command.getTwoWayRadio(presenter.getChannel()), true)
+                        recorderState = true
+                        if (!playPcmData.isEmpty()) {
+                            playPcmData.clear()
+                        }
                         audioRecordUtil.start()
+                        writerThread.start()
                         return true
                     }
                 }
 
             } else {
+                recorderState = false
                 audioRecordUtil.stop()
                 XP2P.stopSendService("${accessInfo.productId}/${presenter.getDeviceName()}", null)
                 return true
@@ -439,6 +452,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             layout_video_preview?.addView(v_preview, 0)
 
             player = IjkMediaPlayer()
+            player._setApmStatus(true)
             player?.let {
                 val url = urlPrefix + suffix
                 it.reset()
@@ -580,6 +594,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
 
     private fun finishPlayer() {
         mHandler.removeMessages(MSG_UPDATE_HUD)
+        player?._setApmStatus(false);
         player?.release()
         if (radio_talk.isChecked) speakAble(false)
         if (radio_record.isChecked) {
@@ -725,5 +740,46 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         tv_tcp_speed?.text = String.format(Locale.US, "%s",
             CommonUtils.formatedSpeed(tcpSpeed, 1000))
         tv_video_w_h?.text = "${player.videoWidth} x ${player.videoHeight}"
+    }
+
+    override fun onReadAECProcessedPcmListener(length: Int): ByteArray? {
+        return onReadPlayerPlayPcm(length)
+    }
+
+    private fun onReadPlayerPlayPcm(length: Int): ByteArray? {
+        if (player != null && player.isPlaying) {
+            return if (playPcmData.size > length) {
+                val res = ByteArray(length)
+                try {
+                    for (i in 0 until length) {
+                        res[i] = playPcmData.take()
+                    }
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+                res
+            } else {
+                ByteArray(length)
+            }
+        }
+        return ByteArray(length)
+    }
+
+    val writerThread = Thread {
+        while (recorderState) {
+            if (player != null && player.isPlaying) {
+                val data = ByteArray(204800)
+                var len = player._getPcmData(data)
+                if (len > 0) {
+                    val playerBytes = ByteArray(len)
+                    System.arraycopy(data, 0, playerBytes, 0, len)
+                    val tmpList: MutableList<Byte> = ArrayList()
+                    for (b in playerBytes) {
+                        tmpList.add(b)
+                    }
+                    playPcmData.addAll(tmpList)
+                }
+            }
+        }
     }
 }
