@@ -54,6 +54,9 @@ dependencies {
 //    }
 //    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.23'
     api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.41-SNAPSHOT'
+    api 'com.tencent.iot.thirdparty.android:ijkplayer-java:2.0.11'
+    api 'com.tencent.iot.thirdparty.android:ijkplayer-armv7a:2.0.11'
+    api 'com.tencent.iot.thirdparty.android:ijkplayer-arm64:2.0.11'
     api 'com.tencent.iot.thirdparty.android:media-server:1.0.5'
     api 'io.github.sundoggynew:iot-soundtouch:1.0.0'
     api 'io.github.sundoggynew:iot-voice-changer:1.0.0'

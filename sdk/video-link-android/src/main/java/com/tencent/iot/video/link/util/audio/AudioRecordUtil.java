@@ -24,11 +24,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.iot.gvoice.interfaces.GvoiceJNIBridge;
+
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 
 public class AudioRecordUtil implements EncoderListener, FLVListener {
@@ -68,7 +73,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
 
     private static final int SAVE_PCM_DATA = 1;
 
-    private OnReadAECProcessedPcmListener mAECProcessedPcmListener;
+    private IjkMediaPlayer player;
+    private LinkedBlockingDeque<Byte> playPcmData = new LinkedBlockingDeque<>();  // 内存队列，用于缓存获取到的播放器音频pcm
 
     private class MyHandler extends Handler {
 
@@ -133,15 +139,6 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         this.pitch = pitch;
         this.enableAEC = enableAEC;
         this.enableAGC = enableAGC;
-        init(sampleRate, channel, bitDepth);
-    }
-    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch, boolean enableAEC, boolean enableAGC, OnReadAECProcessedPcmListener listener) {
-        context = ctx;
-        deviceId = id;
-        this.pitch = pitch;
-        this.enableAEC = enableAEC;
-        this.enableAGC = enableAGC;
-        mAECProcessedPcmListener = listener;
         init(sampleRate, channel, bitDepth);
     }
 
@@ -232,6 +229,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         }
     }
 
+    public void setPlayer(IjkMediaPlayer player) {
+        this.player = player;
+    }
+
     /**
      * 开始录制
      */
@@ -240,6 +241,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
             fos1 = createFiles("near");
             fos2 = createFiles("far");
             fos3 = createFiles("aec");
+        }
+        if (!playPcmData.isEmpty()) {
+            playPcmData.clear();
         }
         GvoiceJNIBridge.init();
         reset();
@@ -254,6 +258,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         recorderState = true;
         audioRecord.startRecording();
         new RecordThread().start();
+        new WriteThread().start();
     }
 
     private void reset() {
@@ -382,8 +387,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     if (buffer != null && pcmEncoder != null) {
-                        if (mAECProcessedPcmListener != null) {
-                            byte [] playerPcmBytes = mAECProcessedPcmListener.onReadAECProcessedPcmListener(buffer.length);
+                        if (player != null && player.isPlaying()) {
+                            byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
                             byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
                             if (isRecord) {
                                 writePcmBytesToFile(buffer, playerPcmBytes, aecPcmBytes);
@@ -429,5 +434,46 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         control = AutomaticGainControl.create(audioSession);
         control.setEnabled(true);
         return control.getEnabled();
+    }
+
+    private byte[] onReadPlayerPlayPcm(int length) {
+        if (playPcmData.size() > length) {
+            byte[] res = new byte[length];
+            try {
+                for (int i = 0 ; i < length ; i++) {
+                    res[i] = playPcmData.take();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Log.e(TAG, "onReadPlayerPlayPcm  playPcmData.length： " + playPcmData.size());
+            if (playPcmData.size()>20000) {
+                playPcmData.clear();
+            }
+            return res;
+        } else {
+            return new byte[length];
+        }
+    }
+
+    private class WriteThread extends Thread {
+        @Override
+        public void run() {
+            while (recorderState) {
+                if (player != null && player.isPlaying()) {
+                    byte[] data = new byte[204800];
+                    int len = player._getPcmData(data);
+                    if (len > 0) {
+                        byte[] playerBytes = new byte[len];
+                        System.arraycopy(data, 0, playerBytes, 0, len);
+                        List<Byte> tmpList = new ArrayList<>();
+                        for (byte b : playerBytes) {
+                            tmpList.add(b);
+                        }
+                        playPcmData.addAll(tmpList);
+                    }
+                }
+            }
+        }
     }
 }
