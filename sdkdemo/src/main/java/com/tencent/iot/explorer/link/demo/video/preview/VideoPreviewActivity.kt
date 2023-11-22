@@ -280,7 +280,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                             playPcmData.clear()
                         }
                         audioRecordUtil.start()
-                        writerThread.start()
+                        startWriterThread()
                         return true
                     }
                 }
@@ -765,21 +765,23 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         return ByteArray(length)
     }
 
-    val writerThread = Thread {
-        while (recorderState) {
-            if (player != null && player.isPlaying) {
-                val data = ByteArray(204800)
-                var len = player._getPcmData(data)
-                if (len > 0) {
-                    val playerBytes = ByteArray(len)
-                    System.arraycopy(data, 0, playerBytes, 0, len)
-                    val tmpList: MutableList<Byte> = ArrayList()
-                    for (b in playerBytes) {
-                        tmpList.add(b)
+    private fun startWriterThread() {
+        Thread {
+            while (recorderState) {
+                if (player != null && player.isPlaying) {
+                    val data = ByteArray(204800)
+                    var len = player._getPcmData(data)
+                    if (len > 0) {
+                        val playerBytes = ByteArray(len)
+                        System.arraycopy(data, 0, playerBytes, 0, len)
+                        val tmpList: MutableList<Byte> = ArrayList()
+                        for (b in playerBytes) {
+                            tmpList.add(b)
+                        }
+                        playPcmData.addAll(tmpList)
                     }
-                    playPcmData.addAll(tmpList)
                 }
             }
-        }
+        }.start()
     }
 }
