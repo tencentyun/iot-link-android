@@ -62,15 +62,11 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     private FileOutputStream fos1;
     private FileOutputStream fos2;
     private FileOutputStream fos3;
-    private String speakPcmFilePath = "/storage/emulated/0/speak_pcm";
+    private String speakPcmFilePath = "/storage/emulated/0/speak_pcm_";
 
     private SoundTouch st;
 
-    private AtomicInteger mClientTokenNum = new AtomicInteger(0);
-
-    private static final int MSG_SAVE_NEAR_PCM = 1;
-    private static final int MSG_SAVE_FAR_PCM = 2;
-    private static final int MSG_SAVE_AEC_PCM = 3;
+    private static final int SAVE_PCM_DATA = 1;
 
     private OnReadAECProcessedPcmListener mAECProcessedPcmListener;
 
@@ -84,20 +80,14 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
             super.handleMessage(msg);
 
             try {
-                if (msg.what == MSG_SAVE_NEAR_PCM && fos1 != null) {
+                if (msg.what == SAVE_PCM_DATA && fos1 != null && fos2 != null && fos3 != null) {
                     JSONObject jsonObject = (JSONObject) msg.obj;
                     byte[] nearBytesData = (byte[]) jsonObject.get("nearPcmBytes");
                     fos1.write(nearBytesData);
                     fos1.flush();
-                }
-                if (msg.what == MSG_SAVE_FAR_PCM && fos2 != null) {
-                    JSONObject jsonObject = (JSONObject) msg.obj;
                     byte[] playerPcmBytes = (byte[]) jsonObject.get("playerPcmBytes");
                     fos2.write(playerPcmBytes);
                     fos2.flush();
-                }
-                if (msg.what == MSG_SAVE_AEC_PCM && fos3 != null) {
-                    JSONObject jsonObject = (JSONObject) msg.obj;
                     byte[] aecPcmBytes = (byte[]) jsonObject.get("aecPcmBytes");
                     fos3.write(aecPcmBytes);
                     fos3.flush();
@@ -201,7 +191,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     private FileOutputStream createFiles(String format) {
 
         if (!TextUtils.isEmpty(speakPcmFilePath)) {
-            File file1 = new File(speakPcmFilePath+mClientTokenNum.getAndIncrement()+format+".pcm");
+            File file1 = new File(speakPcmFilePath+format+".pcm");
             Log.i(TAG, "speak cache pcm file path:" + speakPcmFilePath);
             if (file1.exists()) {
                 file1.delete();
@@ -246,9 +236,11 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
      * 开始录制
      */
     public void start() {
-        fos1 = createFiles("near");
-        fos2 = createFiles("far");
-        fos3 = createFiles("aec");
+        if (isRecord) {
+            fos1 = createFiles("near");
+            fos2 = createFiles("far");
+            fos3 = createFiles("aec");
+        }
         GvoiceJNIBridge.init();
         reset();
         if (!VoiceChangerJNIBridge.isAvailable()) {
@@ -356,46 +348,17 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         }
     }
 
-    private void writeNearPcmBytesToFile(byte[] nearPcmBytes) {
+    private void writePcmBytesToFile(byte[] nearPcmBytes, byte[] playerPcmBytes, byte[] aecPcmBytes) {
         if (mHandler != null) {
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("nearPcmBytes", nearPcmBytes);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Message message = mHandler.obtainMessage(MSG_SAVE_NEAR_PCM, jsonObject);
-            message.arg1 = nearPcmBytes.length;
-            mHandler.sendMessage(message);
-        }
-    }
-
-    private void writePlayerPcmBytesToFile(byte[] playerPcmBytes) {
-        if (mHandler != null) {
-            JSONObject jsonObject = new JSONObject();
-            try {
                 jsonObject.put("playerPcmBytes", playerPcmBytes);
-//                jsonObject.put("cancellBytesData", cancell);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Message message = mHandler.obtainMessage(MSG_SAVE_FAR_PCM, jsonObject);
-            message.arg1 = playerPcmBytes.length;
-            mHandler.sendMessage(message);
-        }
-    }
-
-    private void writeAecPcmBytesToFile(byte[] aecPcmBytes) {
-        if (mHandler != null) {
-            JSONObject jsonObject = new JSONObject();
-            try {
                 jsonObject.put("aecPcmBytes", aecPcmBytes);
-//                jsonObject.put("cancellBytesData", cancell);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Message message = mHandler.obtainMessage(MSG_SAVE_AEC_PCM, jsonObject);
-            message.arg1 = aecPcmBytes.length;
+            Message message = mHandler.obtainMessage(SAVE_PCM_DATA, jsonObject);
             mHandler.sendMessage(message);
         }
     }
@@ -419,12 +382,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     if (buffer != null && pcmEncoder != null) {
-                        writeNearPcmBytesToFile(buffer);
                         if (mAECProcessedPcmListener != null) {
                             byte [] playerPcmBytes = mAECProcessedPcmListener.onReadAECProcessedPcmListener(buffer.length);
-                            writePlayerPcmBytesToFile(playerPcmBytes);
                             byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
-                            writeAecPcmBytesToFile(aecPcmBytes);
+                            if (isRecord) {
+                                writePcmBytesToFile(buffer, playerPcmBytes, aecPcmBytes);
+                            }
                             pcmEncoder.encodeData(aecPcmBytes);
                         } else {
                             pcmEncoder.encodeData(buffer);
