@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -73,7 +74,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
 
     private static final int SAVE_PCM_DATA = 1;
 
-    private IjkMediaPlayer player;
+    private WeakReference<IjkMediaPlayer> player;
     private LinkedBlockingDeque<Byte> playPcmData = new LinkedBlockingDeque<>();  // 内存队列，用于缓存获取到的播放器音频pcm
 
     private class MyHandler extends Handler {
@@ -230,7 +231,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     }
 
     public void setPlayer(IjkMediaPlayer player) {
-        this.player = player;
+        this.player = new WeakReference<>(player);
     }
 
     /**
@@ -387,7 +388,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     if (buffer != null && pcmEncoder != null) {
-                        if (player != null && player.isPlaying()) {
+                        if (player != null && player.get().isPlaying()) {
                             byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
                             byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
                             if (isRecord) {
@@ -460,9 +461,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         @Override
         public void run() {
             while (recorderState) {
-                if (player != null && player.isPlaying()) {
+                if (player != null && player.get().isPlaying()) {
                     byte[] data = new byte[204800];
-                    int len = player._getPcmData(data);
+                    int len = player.get()._getPcmData(data);
                     if (len > 0) {
                         byte[] playerBytes = new byte[len];
                         System.arraycopy(data, 0, playerBytes, 0, len);
