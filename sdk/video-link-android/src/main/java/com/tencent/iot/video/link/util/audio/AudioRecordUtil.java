@@ -461,9 +461,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         @Override
         public void run() {
             while (recorderState) {
-                if (player != null && player.get().isPlaying()) {
+                if (player != null && player.get() != null && player.get().isPlaying()) {
                     byte[] data = new byte[204800];
-                    int len = player.get()._getPcmData(data);
+                    int len = 0;
+                    if (player != null && player.get() != null) {
+                        len = player.get()._getPcmData(data);
+                    }
                     if (len > 0) {
                         byte[] playerBytes = new byte[len];
                         System.arraycopy(data, 0, playerBytes, 0, len);
