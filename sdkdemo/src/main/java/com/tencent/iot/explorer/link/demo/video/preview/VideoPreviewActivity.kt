@@ -320,7 +320,8 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewActivity, dev)
         }
         radio_photo.setOnClickListener {
-            ImageSelect.saveBitmap(this@VideoPreviewActivity, v_preview.bitmap)
+            val bitmap = v_preview.getBitmap(player.videoWidth, player.videoHeight)
+            ImageSelect.saveBitmap(this@VideoPreviewActivity, bitmap)
             ToastDialog(this, ToastDialog.Type.SUCCESS, getString(R.string.capture_successed), 2000).show()
         }
         iv_up.setOnClickListener(controlListener)
