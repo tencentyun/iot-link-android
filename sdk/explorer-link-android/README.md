@@ -1,6 +1,25 @@
 ## 概述
 为进一步构建物联网开放生态，由腾讯云物联网平台打造的腾讯连连 App SDK，集成通用版 App 的多功能模块。设备厂商可通过 SDK 将设备接入腾讯云物联网平台进行设备管理，涵盖安防告警、家用电器、运动健康、网络设备等众多设备。
 
+## SDK 功能配置优先级
+
+您应确保在获得用户的同意后再初始化SDK，SDK的初始化创建引导参见 [APP SDK 创建引导](../../doc/SDK开发/APP%20SDK%20创建引导.md)
+个性化推荐 无
+热更新 无
+自启动与关联启动，需要看您是否引用腾讯移动推送作为消息离线通知，可选择的，具体可参考 [腾讯移动推送 SDK 合规使用指南](https://cloud.tencent.com/document/product/548/57361)。
+个人信息复制,可选择SDK中提供了复制信息到剪贴板的功能，在demo中也使用了该功能去复制userId和uuid方便查后台日志排查问题的，需要拿uuid排查问题的方式也可以用其他方式去实现，如您的日志中记录并告诉给我们。
+
+SDK功能所需权限
+
+| 权限名称                                     | 使用目的                                                | 是否可选         |
+|---------------------------------------------|-------------------------------------------------------|-----------------|
+| android.permission.ACCESS_FINE_LOCATION android.permission.ACCESS_COARSE_LOCATION | 允许获取当前定位，显示当地天气和城市信息，获取WiFi参数、列表、IP | 如不使用目的的方式就可选 |
+| android.permission.CAMERA | 允许拍摄上传图片和音视频通话，扫码绑定设备 | 如不使用目的的方式就可选 |
+| android.permission.RECORD_AUDIO | 允许语音通话 | 如不使用目的的方式就可选 |
+| android.permission.WRITE_EXTERNAL_STORAGE android.permission.READ_EXTERNAL_STORAGE | 允许从相册上传图片 | 如不使用目的的方式就可选 |
+| android.permission.WRITE_EXTERNAL_STORAGE android.permission.READ_EXTERNAL_STORAGE | 允许从相册上传图片，保存日志 | 如不使用目的的方式就可选 |
+| android.permission.BLUETOOTH android.permission.BLUETOOTH_ADMIN android.permission.ACCESS_COARSE_LOCATION | 扫描蓝牙设备、蓝牙辅助配网，允许设备配网，和纯蓝牙设备通信 | 如不使用目的的方式就可选 |
+
 ## Android 接入流程
 
 1、在 App module下的build.gradle中添加依赖项
