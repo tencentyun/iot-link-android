@@ -127,8 +127,8 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
         }
 
         XP2P.setCallback(this)
-        XP2P.startService("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
-            App.data.accessInfo!!.productId, presenter.getDeviceName(), 5
+        XP2P.startService(this@VideoPushStreamActivity, "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
+            App.data.accessInfo!!.productId, presenter.getDeviceName()
         )
 
         holder = sv_camera_view.holder
@@ -220,7 +220,7 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
                 Log.d(tag, "====开始尝试重连...")
                 XP2P.stopService(id)
-                while (XP2P.startService(id, App.data.accessInfo!!.productId, presenter.getDeviceName(), 5)!=0
+                while (XP2P.startService(this@VideoPushStreamActivity, id, App.data.accessInfo!!.productId, presenter.getDeviceName())!=0
                     || XP2P.setParamsForXp2pInfo(id, accessId, accessToken, "") != 0
                     || getDeviceStatus(id) != 0) {
                     XP2P.stopService(id)

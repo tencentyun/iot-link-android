@@ -87,8 +87,8 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
 
                 App.data.accessInfo?.let {
                     countDownLatch = CountDownLatch(1)
-                    var started = XP2P.startServiceWithXp2pInfo("${it.productId}/${devName}",
-                        it.productId, devName, "", 5)
+                    var started = XP2P.startServiceWithXp2pInfo(this@VideoNvrActivity, "${it.productId}/${devName}",
+                        it.productId, devName, "")
                     if (started != 0) return@launch
 
                     countDownLatch.await(5, TimeUnit.SECONDS)
