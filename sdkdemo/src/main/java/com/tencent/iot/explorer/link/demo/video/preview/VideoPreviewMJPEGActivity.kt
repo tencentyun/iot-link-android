@@ -142,8 +142,8 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         }
 
         XP2P.setCallback(this)
-        XP2P.startService("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
-            App.data.accessInfo!!.productId, presenter.getDeviceName(), 5
+        XP2P.startService(this@VideoPreviewMJPEGActivity, "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
+            App.data.accessInfo!!.productId, presenter.getDeviceName()
         )
 
         //实例化对象并设置监听器
@@ -213,7 +213,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
                 Log.d(tag, "====开始尝试重连...")
                 XP2P.stopService(id)
-                while (XP2P.startService(id, App.data.accessInfo!!.productId, presenter.getDeviceName(), 5)!=0
+                while (XP2P.startService(this@VideoPreviewMJPEGActivity, id, App.data.accessInfo!!.productId, presenter.getDeviceName())!=0
                     || XP2P.setParamsForXp2pInfo(id, accessId, accessToken, "") != 0
                     || getDeviceStatus(id) != 0) {
                     XP2P.stopService(id)
