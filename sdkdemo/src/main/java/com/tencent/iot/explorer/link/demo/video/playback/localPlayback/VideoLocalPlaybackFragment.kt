@@ -619,9 +619,9 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
         Thread(Runnable {
             var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
-            var started = XP2P.startServiceWithXp2pInfo(
+            var started = XP2P.startServiceWithXp2pInfo(context,
                 id,
-                App.data.accessInfo?.productId, devInfo?.DeviceName, "",5
+                App.data.accessInfo?.productId, devInfo?.DeviceName, ""
             )
             if (started != 0) {
                 launch(Dispatchers.Main) {
@@ -663,11 +663,11 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
                 XP2P.stopService(id)
-                while (XP2P.startServiceWithXp2pInfo(
+                while (XP2P.startServiceWithXp2pInfo(context,
                         id,
                         App.data.accessInfo!!.productId,
                         devInfo?.DeviceName,
-                        "", 5
+                        ""
                     ) != 0
                 ) {
                     XP2P.stopService(id)
