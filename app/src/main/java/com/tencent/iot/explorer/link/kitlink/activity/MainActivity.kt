@@ -16,9 +16,6 @@ import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.example.qrcode.Constant
-import com.tencent.android.tpush.XGIOperateCallback
-import com.tencent.android.tpush.XGPushConfig
-import com.tencent.android.tpush.XGPushManager
 import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.R
@@ -54,7 +51,6 @@ import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.LogcatHelper
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import com.tencent.tpns.baseapi.XGApiConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.system.exitProcess
@@ -140,7 +136,6 @@ class MainActivity : PActivity(), MyCallback {
     }
 
     override fun initView() {
-        openXGPush()
         home_bottom_view.addUnclickAbleItem(2) // 限定2号位置不可选中
 //        LogcatHelper.getInstance(this).start()
         home_bottom_view.addMenu(
@@ -309,39 +304,6 @@ class MainActivity : PActivity(), MyCallback {
         } else if (it == 1) {
             jumpActivity(AddAutoicTaskActivity::class.java)
         }
-    }
-
-    private fun openXGPush() {
-        XGPushConfig.init(applicationContext)
-        if (App.data.regionId == "1") {// 中国大陆
-            XGPushConfig.setAccessId(applicationContext,
-                if (BuildConfig.XgAccessId.toLongOrNull() == null) 0 else BuildConfig.XgAccessId.toLong())
-            XGPushConfig.setAccessKey(applicationContext, BuildConfig.XgAccessKey)
-            XGApiConfig.setServerSuffix(applicationContext, CommonField.XG_ACCESS_POINT_CHINA)
-        } else if (App.data.regionId == "22") {// 美国
-            XGPushConfig.setAccessId(applicationContext,
-                if (BuildConfig.XgUSAAccessId.toLongOrNull() == null) 0 else BuildConfig.XgUSAAccessId.toLong())
-            XGPushConfig.setAccessKey(applicationContext, BuildConfig.XgUSAAccessKey)
-            XGApiConfig.setServerSuffix(applicationContext, CommonField.XG_ACCESS_POINT_USA)
-        }
-        Thread{
-            //建议在线程中执行初始化
-            XGPushManager.registerPush(applicationContext, object : XGIOperateCallback {
-                override fun onSuccess(data: Any?, p1: Int) {
-                    L.e("注册成功，设备token为：$data")
-                    data?.let {
-                        runOnUiThread {
-                            App.data.xg_token = it.toString()
-                            bindXG()
-                        }
-                    }
-                }
-
-                override fun onFail(data: Any?, errCode: Int, msg: String?) {
-                    L.e("注册失败，错误码：$errCode ,错误信息：$msg")
-                }
-            })
-        }.start()
     }
 
     /**

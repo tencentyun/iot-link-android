@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.multidex.MultiDex
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import com.tencent.android.tpush.XGPushConfig
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
@@ -161,9 +160,6 @@ class App : Application(), Application.ActivityLifecycleCallbacks, PayloadMessag
         L.isLog = DEBUG_VERSION
         //日志等级
         L.LOG_LEVEL = L.LEVEL_DEBUG
-        //信鸽推送日志开关
-        XGPushConfig.enableDebug(applicationContext, DEBUG_VERSION)
-        XGPushConfig.enablePullUpOtherApp(applicationContext, PULL_OTHER)
         language = SharePreferenceUtil.getString(this, CONFIG, "language")
         data.readLocalUser(this)
         data.appLifeCircleId = UUID.randomUUID().toString()
