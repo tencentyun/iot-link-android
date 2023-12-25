@@ -36,15 +36,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove"/>
 
-    <!-- 移动推送TPNS自定义权限，用于发送接收广播权限校验（必选）-->
-    <permission
-        android:name="${applicationId}.permission.XGPUSH_RECEIVE"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.permission.XGPUSH_RECEIVE" />
-
-    <!-- 移动推送TPNS 网络权限 （必选）-->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-
     <application
         android:name=".App"
         android:allowBackup="false"
@@ -56,39 +47,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-
-        <!-- 请您务必确保终端用户首次安装启动应用时，配置不自动启动推送服务,以确保应用首次安装启动时不会自启推送服务，直到调用了推送服务注册接口 XGPushManager.registerPush() 才会开启 -->
-        <meta-data
-            android:name="XG_SERVICE_PULL_UP_OFF"
-            android:value="true" />
-        <!-- 手动集成时该receiver的intent-filter只保留下面3个action -->
-        <receiver
-            android:name="com.tencent.android.tpush.XGPushReceiver"
-            android:exported="false"
-            android:process=":xg_vip_service" >
-            <intent-filter android:priority="0x7fffffff" tools:node="replace" >
-                <!-- 【必须】 信鸽SDK的内部广播 -->
-                <action android:name="com.tencent.android.xg.vip.action.SDK" />
-                <action android:name="com.tencent.android.xg.vip.action.INTERNAL_PUSH_MESSAGE" />
-                <action android:name="com.tencent.android.xg.vip.action.ACTION_SDK_KEEPALIVE" />
-            </intent-filter>
-        </receiver>
-
-        <!-- 在自身应用的AndroidManifest.xml文件中添加如下结点 -->
-        <!-- 关闭与 移动推送TPNS 应用的联合保活功能，请配置 -->
-        <provider
-            android:name="com.tencent.android.tpush.XGPushProvider"
-            tools:replace="android:authorities"
-            android:authorities="${applicationId}.link.XGVIP_PUSH_AUTH"
-            android:enabled="false"
-            android:exported="false" />
-        <!-- 关闭与 移动推送TPNS 应用的联合保活功能，请配置 -->
-        <provider
-            android:name="com.tencent.android.tpush.XGVipPushKAProvider"
-            tools:replace="android:authorities"
-            android:authorities="${applicationId}.AUTH_XGPUSH_KEEPALIVE"
-            android:enabled="false"
-            android:exported="false" />
 
         <activity
             android:name=".kitlink.activity.BleOTADownloadActivity"
@@ -234,13 +192,7 @@
         <activity android:name=".kitlink.activity.SoftApStepActivity" /> <!-- picture end -->
         <activity android:name=".kitlink.activity.EditNameActivity" />
         <activity android:name=".kitlink.activity.videoui.RecordVideoActivity" />
-        <activity android:name=".kitlink.activity.videoui.ParamSettingActivity" />
-        <receiver android:name=".MessageReceiver">
-            <intent-filter>
-                <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE" />
-                <action android:name="com.tencent.android.xg.vip.action.FEEDBACK" />
-            </intent-filter>
-        </receiver> <!-- 腾讯地地图 meta-data -->
+        <activity android:name=".kitlink.activity.videoui.ParamSettingActivity" /><!-- 腾讯地地图 meta-data -->
         <meta-data
             android:name="TencentMapSDK"
             android:value="${MAP_SDK_VALUE}" />
