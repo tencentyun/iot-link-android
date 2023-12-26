@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -592,6 +593,8 @@ public class TRTCVideoCallActivity extends AppCompatActivity implements NetWorkS
 
     public void startNetworkBroadcastReceiver(Context currentContext) {
         netWorkStateReceiver = new NetWorkStateReceiver();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkStateReceiver, filter);
         netWorkStateReceiver.addListener((NetWorkStateReceiver.NetworkStateReceiverListener) currentContext);
         registerNetworkBroadcastReceiver(currentContext);
     }

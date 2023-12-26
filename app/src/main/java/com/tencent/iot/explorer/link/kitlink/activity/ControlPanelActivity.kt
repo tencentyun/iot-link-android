@@ -112,6 +112,8 @@ class ControlPanelActivity : PActivity(), CoroutineScope by MainScope(), Control
 //        App.setEnableEnterRoomCallback(false)
         presenter = ControlPanelPresenter(this)
         netWorkStateReceiver = NetWorkStateReceiver()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(netWorkStateReceiver, filter)
         netWorkStateReceiver!!.addListener(this)
         deviceEntity = get("device")
         deviceEntity?.run {
