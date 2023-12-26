@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.kitlink.activity
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiInfo
@@ -13,7 +14,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
-import com.tencent.iot.explorer.link.core.utils.LocationUtil
 import com.tencent.iot.explorer.link.customview.dialog.WifiHelperDialog
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
@@ -95,6 +95,8 @@ class DeviceWifiActivity : PActivity() {
         showWifiInfo()
     }
 
+    private val permissions = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
+
     /**
      * 展示wifi
      */
@@ -110,7 +112,7 @@ class DeviceWifiActivity : PActivity() {
                 openWifiDialog?.show()
             } else {
                 var ssid2Set = wifiManager.connectionInfo.ssid.replace("\"", "")
-                if (!LocationUtil.isLocationServiceEnable(this)) {
+                if (!checkPermissions(permissions)) {
                     tv_select_wifi.hint = getString(R.string.open_location_tip)
                     ssid2Set = ""
                     openLocationServiceDialog?.show()

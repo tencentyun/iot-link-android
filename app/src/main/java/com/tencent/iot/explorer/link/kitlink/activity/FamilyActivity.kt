@@ -101,13 +101,6 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
                         jumpActivity(RoomListActivity::class.java)
                     }
                     2 -> {
-                        val intent = Intent(this@FamilyActivity, MarkerPaddingActivity::class.java)
-                        var bundle = Bundle()
-                        bundle.putString(CommonField.ADDRESS, headerHolder.data?.Address)
-                        bundle.putString(CommonField.FAMILY_ID, familyEntity?.FamilyId)
-                        bundle.putString(CommonField.FAMILY_NAME, familyEntity?.FamilyName)
-                        intent.putExtra(CommonField.ADDRESS, bundle)
-                        startActivityForResult(intent, CommonField.MAP_LOCATION_REQ_CODE)
                     }
                     3 -> {
                         jumpActivity(InviteMemberActivity::class.java)
