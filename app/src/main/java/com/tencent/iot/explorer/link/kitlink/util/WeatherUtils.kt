@@ -4,12 +4,9 @@ import android.content.Context
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.BuildConfig
 import com.tencent.iot.explorer.link.T
-import com.tencent.iot.explorer.link.core.utils.LocationUtil
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.CityInfo
 import com.tencent.iot.explorer.link.kitlink.entity.WeatherInfo
-import com.tencent.map.geolocation.TencentLocation
-import com.tencent.map.geolocation.TencentLocationListener
 import okhttp3.*
 import java.io.IOException
 
@@ -65,25 +62,7 @@ object WeatherUtils {
     }
 
     fun getLocalCurrentWeatherInfo(context: Context, listener: OnWeatherListener) {
-        LocationUtil.getCurrentLocation(context, object : TencentLocationListener {
-            override fun onStatusUpdate(p0: String?, p1: Int, p2: String?) {}
 
-            override fun onLocationChanged(p0: TencentLocation?, p1: Int, p2: String?) {
-                if (p0 == null || p1 != 0) {
-                    if (listener != null) {
-                        listener.onWeatherFailed(p1)
-                    }
-                    return
-                }
-
-                var cityInfo = CityInfo()
-                cityInfo.lat = p0.latitude.toString()
-                cityInfo.lon = p0.longitude.toString()
-                cityInfo.name = p0.district
-                getWeatherInfo(cityInfo, listener)
-            }
-
-        })
     }
 
     fun getWeatherInfoByLocation(lat: Double, lon: Double, listener: OnWeatherListener) {
