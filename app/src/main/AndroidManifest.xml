@@ -124,13 +124,6 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".kitlink.activity.rtcui.videocall.TRTCVideoCallActivity"
             android:screenOrientation="portrait"/>
-        <receiver android:name=".kitlink.activity.rtcui.utils.NetWorkStateReceiver">
-            <intent-filter>
-                <!--检测网络变化的acton-->
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
         <activity
             android:name=".kitlink.activity.ConfigNetFailedActivity"
             android:launchMode="singleTask" />
