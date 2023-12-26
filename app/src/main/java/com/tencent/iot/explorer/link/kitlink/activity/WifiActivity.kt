@@ -16,7 +16,6 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
-import com.tencent.iot.explorer.link.core.utils.LocationUtil
 import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.WifiHelperDialog
 import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
@@ -45,6 +44,7 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
+    private val permissions = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
 
     var openWifiDialog: WifiHelperDialog? = null
     var openLocationServiceDialog: WifiHelperDialog? = null
@@ -127,7 +127,7 @@ class WifiActivity : PActivity(), GetBindDeviceTokenView {
                 openWifiDialog?.show()
             } else {
                 var ssid2Set = wifiManager.connectionInfo.ssid.replace("\"", "")
-                if (!LocationUtil.isLocationServiceEnable(this)) {
+                if (!checkPermissions(permissions)) {
                     tv_select_wifi.hint = getString(R.string.open_location_tip)
                     ssid2Set = ""
                     openLocationServiceDialog?.show()
