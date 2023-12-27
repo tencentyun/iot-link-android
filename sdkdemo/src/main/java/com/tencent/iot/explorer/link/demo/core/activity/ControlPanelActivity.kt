@@ -22,7 +22,6 @@ import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.rtc.TRTCSdkDemoSessionManager
 import com.tencent.iot.explorer.link.demo.core.adapter.ControlPanelAdapter
 import com.tencent.iot.explorer.link.demo.core.adapter.OnItemListener
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
@@ -33,10 +32,6 @@ import com.tencent.iot.explorer.link.demo.core.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.demo.common.customView.MyDivider
-import com.tencent.iot.explorer.link.rtc.model.RoomKey
-import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
-import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
-import com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity
 import kotlinx.android.synthetic.main.activity_control_panel.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -357,20 +352,12 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
                 return
             }
             controlDevice(entity.id, "1")
-            TRTCUIManager.getInstance().setSessionManager(TRTCSdkDemoSessionManager())
-            TRTCUIManager.getInstance().isCalling = true
-            TRTCUIManager.getInstance().deviceId = App.data.callingDeviceId
-            TRTCAudioCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
             return
         } else if (entity.id == MessageConst.TRTC_VIDEO_CALL_STATUS) {
             if (checkTRTCCallStatusIsBusy()) {
                 return
             }
             controlDevice(entity.id, "1")
-            TRTCUIManager.getInstance().isCalling = true
-            TRTCUIManager.getInstance().setSessionManager(TRTCSdkDemoSessionManager())
-            TRTCUIManager.getInstance().deviceId = App.data.callingDeviceId
-            TRTCVideoCallActivity.startCallSomeone(this, RoomKey(), App.data.callingDeviceId)
             return
         }
         if (enumPopup == null) {

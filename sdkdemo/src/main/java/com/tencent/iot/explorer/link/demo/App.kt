@@ -1,10 +1,7 @@
 package com.tencent.iot.explorer.link.demo
 
 import android.app.Application
-import android.text.TextUtils
-import android.widget.Toast
 import androidx.multidex.MultiDex
-import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.User
@@ -15,31 +12,12 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCallback
 import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.demo.common.log.L
-import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
-import com.tencent.iot.explorer.link.demo.rtc.TRTCSdkDemoSessionManager
-import com.tencent.iot.explorer.link.rtc.model.*
-import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
-import com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity
 
 class App : Application(), PayloadMessageCallback {
 
     companion object {
         val data = AppData.instance
         var activity by Weak<BaseActivity>()
-        fun appStartBeingCall(callingType: Int, deviceId: String) {
-            if (!TRTCUIManager.getInstance().isCalling) { //没有正在通话时，唤起通话页面
-                TRTCUIManager.getInstance().setSessionManager(TRTCSdkDemoSessionManager())
-
-                TRTCUIManager.getInstance().deviceId = deviceId
-                if (callingType == TRTCCalling.TYPE_VIDEO_CALL) {
-                    TRTCUIManager.getInstance().isCalling = true
-                    TRTCVideoCallActivity.startBeingCall(activity, RoomKey(), deviceId)
-                } else if (callingType == TRTCCalling.TYPE_AUDIO_CALL) {
-                    TRTCUIManager.getInstance().isCalling = true
-                    TRTCAudioCallActivity.startBeingCall(activity, RoomKey(), deviceId)
-                }
-            }
-        }
     }
 
     private val APP_KEY = BuildConfig.TencentIotLinkSDKDemoAppkey
@@ -69,107 +47,8 @@ class App : Application(), PayloadMessageCallback {
         super.onTerminate()
     }
 
-    fun startBeingCall(callingType: Int, deviceId: String) {
-        if (data.callingDeviceId != "") { //App主动呼叫
-            trtcCallDevice(callingType)
-        } else { //App被动呼叫
-            appStartBeingCall(callingType, deviceId)
-        }
-    }
-
-    /**
-     * 呼叫设备获取trtc参数信息
-     */
-    private fun trtcCallDevice(callingType: Int) {
-        IoTAuth.deviceImpl.trtcCallDevice(data.callingDeviceId, object: MyCallback {
-            override fun fail(msg: String?, reqCode: Int) {
-                if (msg != null) L.e(msg)
-            }
-
-            override fun success(response: BaseResponse, reqCode: Int) {
-                // 解析房间参数，并呼叫页面
-                val json = response.data as com.alibaba.fastjson.JSONObject
-                if (json == null || !json.containsKey(MessageConst.TRTC_PARAMS)) {
-                    activity?.runOnUiThread {
-                        Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
-                    }
-                    TRTCUIManager.getInstance().exitRoom()
-                } else {
-                    val data = json.getString(MessageConst.TRTC_PARAMS)
-                    if (TextUtils.isEmpty(data)) return;
-                    val params = JSON.parseObject(data, TRTCParamsEntity::class.java)
-
-                    var room = RoomKey()
-                    room.userId = params.UserId
-                    room.appId = params.SdkAppId
-                    room.userSig = params.UserSig
-                    room.roomId = params.StrRoomId
-                    room.callType = callingType
-                    enterRoom(room)
-                }
-            }
-        })
-    }
-
-    /**
-     * 呼叫设备进入trtc房间通话
-     */
-    fun enterRoom(room: RoomKey) {
-        activity?.runOnUiThread {
-            if (room.callType == TRTCCalling.TYPE_VIDEO_CALL) {
-                TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_VIDEO_CALL, data.callingDeviceId, room)
-                data.callingDeviceId = ""
-            } else if (room.callType == TRTCCalling.TYPE_AUDIO_CALL) {
-                TRTCUIManager.getInstance().joinRoom(TRTCCalling.TYPE_AUDIO_CALL, data.callingDeviceId, room)
-                data.callingDeviceId = ""
-            }
-        }
-    }
-
     override fun payloadMessage(payload: Payload) {
-        val userId = data.userInfo.UserID
-        val trtcPayload = TRTCPayload(payload.json, payload.payload, payload.deviceId)
-        TRTCUIManager.getInstance().payloadMessage(trtcPayload, userId, object:
-            TRTCCallback {
-            override fun busy() {
-                TRTCUIManager.getInstance().userBusy()
-                TRTCUIManager.getInstance().exitRoom()
-                activity?.runOnUiThread {
-                    Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
-                }
-            }
 
-            override fun updateCallStatus(key: String?, value: String?, deviceId: String?) {
-                controlDevice(key!!, value!!, deviceId!!)
-            }
-
-            override fun startCall(type: Int, deviceId: String?) {
-                startBeingCall(type, deviceId!!)
-            }
-
-            override fun otherUserAnswered() {
-                activity?.runOnUiThread {
-                    Toast.makeText(activity, "其他用户已接听...", Toast.LENGTH_LONG).show()
-                }
-                TRTCUIManager.getInstance().otherUserAccept()
-                TRTCUIManager.getInstance().exitRoom()
-            }
-
-            override fun hungUp() {
-                if (TRTCUIManager.getInstance().callStatus == TRTCCallStatus.TYPE_CALLING.value) {
-                    if (TRTCUIManager.getInstance().callingDeviceId == "") { //被动呼叫
-                        activity?.runOnUiThread {
-                            Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
-                        }
-                    } else { //主动呼叫
-                        activity?.runOnUiThread {
-                            Toast.makeText(activity, "对方正忙...", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
-                TRTCUIManager.getInstance().exitRoom()
-            }
-        })
     }
 
     /**
