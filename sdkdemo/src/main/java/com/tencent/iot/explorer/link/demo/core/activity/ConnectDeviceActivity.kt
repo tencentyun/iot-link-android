@@ -67,28 +67,28 @@ class ConnectDeviceActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        (applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.connectionInfo?.let {
-            L.d("当前WIFI名：${it.ssid}")
-            var ssidName = it.ssid.replace("\"", "")
-            tv_select_wifi.text = ssidName
-            if (type == 1) {
-                task.mSsid = ssidName
-                task.mBssid = it.bssid ?: ""
-                task.mAccessToken = App.data.bindDeviceToken
-            } else {
-                if (tv_select_hotspot.visibility == View.VISIBLE) {
-                    task.mSsid = ssidName
-                    task.mBssid = it.bssid ?: ""
-                    task.mAccessToken = App.data.bindDeviceToken
-                } else {
-                    tv_reselect_hotspot.visibility = View.VISIBLE
-                    tv_start_connect.visibility = View.VISIBLE
-                    iv_select_wifi.visibility = View.GONE
-                    et_select_wifi_pwd.visibility = View.INVISIBLE
-                    smart_second_wifi_pwd.visibility = View.INVISIBLE
-                }
-            }
-        }
+//        (applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.connectionInfo?.let {
+//            L.d("当前WIFI名：${it.ssid}")
+//            var ssidName = it.ssid.replace("\"", "")
+//            tv_select_wifi.text = ssidName
+//            if (type == 1) {
+//                task.mSsid = ssidName
+//                task.mBssid = it.bssid ?: ""
+//                task.mAccessToken = App.data.bindDeviceToken
+//            } else {
+//                if (tv_select_hotspot.visibility == View.VISIBLE) {
+//                    task.mSsid = ssidName
+//                    task.mBssid = it.bssid ?: ""
+//                    task.mAccessToken = App.data.bindDeviceToken
+//                } else {
+//                    tv_reselect_hotspot.visibility = View.VISIBLE
+//                    tv_start_connect.visibility = View.VISIBLE
+//                    iv_select_wifi.visibility = View.GONE
+//                    et_select_wifi_pwd.visibility = View.INVISIBLE
+//                    smart_second_wifi_pwd.visibility = View.INVISIBLE
+//                }
+//            }
+//        }
     }
 
     override fun setListener() {
