@@ -72,11 +72,11 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
                     var url = H5_PANEL_BASE_URL +
                             "?deviceId=${deviceEntity?.DeviceId}" +
                             "&familyId=${deviceEntity?.FamilyId}" +
-                            "&uin=${Utils.getAndroidID(this)}" +
+                            "&uin=${App.uuid}" +
                             "&roomId=${deviceEntity?.RoomId}" +
                             "&familyType=${App.data.getCurrentFamily().FamilyType}" +
                             "&lid=${App.data.appLifeCircleId}" +
-                            "&quid=${Utils.getAndroidID(this)}" +
+                            "&quid=${App.uuid}" +
                             "&ticket=${ticketResponse[CommonField.TOKEN_TICKET]}" +
                             "&appID=${T.getContext().applicationInfo.packageName}" +
                             "&platform=android" +

@@ -8,6 +8,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.kitlink.consts.SocketConstants
@@ -31,7 +32,7 @@ import kotlinx.android.synthetic.main.menu_back_layout.*
  */
 class ForgotPasswordActivity : PActivity(), ForgotPasswordView, View.OnClickListener {
 
-    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
+    private val ANDROID_ID = App.uuid
     private lateinit var presenter: ForgotPasswordPresenter
     private var forgotType = true
 
