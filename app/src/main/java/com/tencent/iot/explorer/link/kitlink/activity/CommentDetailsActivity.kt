@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
+import com.tencent.iot.explorer.link.App
 import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
@@ -113,7 +114,7 @@ class CommentDetailsActivity: BaseActivity(), View.OnClickListener, MyCallback {
             return
         }
         var js = JSON.parse(response.data.toString()) as JSONObject
-        var weburl = CommonField.H5_BASE_URL + "?uin=${Utils.getAndroidID(this)}#" +
+        var weburl = CommonField.H5_BASE_URL + "?uin=${App.uuid}#" +
                 pathUrl + "&ticket=${js[CommonField.TOKEN_TICKET]}" + "&lang=${Utils.getLang()}"
         comment_detail_web.loadUrl(weburl)
     }

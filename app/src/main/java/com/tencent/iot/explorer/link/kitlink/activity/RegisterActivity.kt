@@ -52,7 +52,7 @@ class RegisterActivity : PActivity(), RegisterView, View.OnClickListener {
     private lateinit var phoneView: View
     private lateinit var emailView: View
 
-    private val ANDROID_ID = Utils.getAndroidID(T.getContext())
+    private val ANDROID_ID = App.uuid
 
     override fun getPresenter(): IPresenter? {
         return presenter
