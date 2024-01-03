@@ -34,7 +34,7 @@ class ModuleActivity : BaseActivity() {
 
     override fun setListener() {
         btn_1.setOnClickListener {
-            jumpActivity(LoginActivity::class.java)
+//            jumpActivity(LoginActivity::class.java)
         }
 
         btn_2.setOnClickListener {
