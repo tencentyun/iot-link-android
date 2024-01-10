@@ -347,6 +347,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private void stopInternal() {
         recorderState = false;
         Log.e(TAG, "turn recorderState : " + recorderState);
+        try {
+            Thread.sleep(200);
+            Log.e(TAG, "Thread.sleep 200 turn recorderState : " + recorderState);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (audioRecord != null) {
             audioRecord.stop();
         }
