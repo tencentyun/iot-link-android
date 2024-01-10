@@ -347,42 +347,36 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private void stopInternal() {
         recorderState = false;
         Log.e(TAG, "turn recorderState : " + recorderState);
-        mReadHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.e(TAG, "mReadHandler.postDelayed 200 turn recorderState : " + recorderState);
-                if (audioRecord != null) {
-                    audioRecord.stop();
-                }
-                executor.shutdown();
-                audioRecord = null;
-                pcmEncoder = null;
-                if (flvPacker != null) {
-                    flvPacker.release();
-                    flvPacker = null;
-                }
-                if (canceler != null) {
-                    canceler.setEnabled(false);
-                    canceler.release();
-                    canceler = null;
-                }
-                if (control != null) {
-                    control.setEnabled(false);
-                    control.release();
-                    control = null;
-                }
-                if (!VoiceChangerJNIBridge.isAvailable()) {
-                    if (st != null) {
-                        st.finish();
-                        st.clearBuffer(0);
-                        st = null;
-                    }
-                } else {
-                    VoiceChangerJNIBridge.destory();
-                }
-//                GvoiceJNIBridge.destory();
+        if (audioRecord != null) {
+            audioRecord.stop();
+        }
+        executor.shutdown();
+        audioRecord = null;
+        pcmEncoder = null;
+        if (flvPacker != null) {
+            flvPacker.release();
+            flvPacker = null;
+        }
+        if (canceler != null) {
+            canceler.setEnabled(false);
+            canceler.release();
+            canceler = null;
+        }
+        if (control != null) {
+            control.setEnabled(false);
+            control.release();
+            control = null;
+        }
+        if (!VoiceChangerJNIBridge.isAvailable()) {
+            if (st != null) {
+                st.finish();
+                st.clearBuffer(0);
+                st = null;
             }
-        }, 200);
+        } else {
+            VoiceChangerJNIBridge.destory();
+        }
+//                GvoiceJNIBridge.destory();
     }
 
     public void release() {
