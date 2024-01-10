@@ -43,7 +43,7 @@ import com.tencent.iot.explorer.link.demo.video.utils.VolumeChangeObserver
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.DeviceStatus
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
-import com.tencent.iot.video.link.util.audio.OnReadAECProcessedPcmListener
+import com.tencent.iot.video.link.util.audio.AudioRecordUtilListener
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
@@ -66,7 +66,8 @@ private var keepPlayThreadLock = Object()
 private var keepAliveThreadRuning = true
 
 class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
-    XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener{
+    XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener,
+    AudioRecordUtilListener {
 
     open var tag = VideoPreviewActivity::class.simpleName
     var orientationV = true
@@ -139,9 +140,11 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             presenter.getEventsData(Date())
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
-            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
+//            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
 //            //变调可以传入pitch参数
 //            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
+            // 变调可以传入pitch参数
+            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
             audioRecordUtil.recordSpeakFlv(true)
         }
 
@@ -270,7 +273,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                 JSONArray.parseArray(repStatus, DevStatus::class.java)?.let {
                     if (it.size == 1 && it.get(0).status == 0) {
                         XP2P.runSendService("${accessInfo.productId}/${presenter.getDeviceName()}", Command.getTwoWayRadio(presenter.getChannel()), true)
-                        audioRecordUtil.setPlayer(player)
                         audioRecordUtil.start()
                         return true
                     }
@@ -585,13 +587,14 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
 
     private fun finishPlayer() {
         mHandler.removeMessages(MSG_UPDATE_HUD)
-        player?._setApmStatus(false);
-        player?.release()
         if (radio_talk.isChecked) speakAble(false)
         if (radio_record.isChecked) {
             player.stopRecord()
             CommonUtils.refreshVideoList(this@VideoPreviewActivity, filePath)
         }
+
+        player?._setApmStatus(false);
+        player?.release()
 
         countDownLatchs.clear()
         // 关闭守护线程
@@ -731,5 +734,17 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         tv_tcp_speed?.text = String.format(Locale.US, "%s",
             CommonUtils.formatedSpeed(tcpSpeed, 1000))
         tv_video_w_h?.text = "${player.videoWidth} x ${player.videoHeight}"
+    }
+
+    override fun onReadPlayerPcmByte(): ByteArray? {
+        val data = ByteArray(10240)
+        val len = player._getPcmData(data)
+        return if (len > 0) {
+            val playerBytes = ByteArray(len)
+            System.arraycopy(data, 0, playerBytes, 0, len);
+            playerBytes
+        } else {
+            null
+        }
     }
 }

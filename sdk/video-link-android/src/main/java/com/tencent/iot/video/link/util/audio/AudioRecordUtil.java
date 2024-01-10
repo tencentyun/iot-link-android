@@ -7,6 +7,8 @@ import android.media.MediaRecorder;
 import android.media.audiofx.AcousticEchoCanceler;
 import android.media.audiofx.AutomaticGainControl;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +19,7 @@ import com.tencent.iot.thirdparty.flv.FLVListener;
 import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.xnet.XP2P;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,25 +29,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 
-import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-
-public class AudioRecordUtil implements EncoderListener, FLVListener {
+public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Callback {
     private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
     private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
-    private static final String TAG = AudioRecordUtil.class.getName();;
+    private static final String TAG = AudioRecordUtil.class.getName();
+    private static final int MSG_START = 1;
+    private static final int MSG_STOP = 2;
+    private static final int MSG_ENCODE = 3;
+    private static final int MSG_RELEASE = 4;
+    private final HandlerThread readThread;
+    private final ReadHandler mReadHandler;
     private volatile boolean recorderState = true; //录制状态
     private byte[] buffer;
     private AudioRecord audioRecord;
-    private AcousticEchoCanceler canceler;
-    private AutomaticGainControl control;
+    private volatile AcousticEchoCanceler canceler;
+    private volatile AutomaticGainControl control;
     private volatile PCMEncoder pcmEncoder;
     private volatile FLVPacker flvPacker;
     private Context context;
@@ -73,8 +80,27 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
 
     private static final int SAVE_PCM_DATA = 1;
 
-    private IjkMediaPlayer player;
     private LinkedBlockingDeque<Byte> playPcmData = new LinkedBlockingDeque<>();  // 内存队列，用于缓存获取到的播放器音频pcm
+    private AudioRecordUtilListener audioRecordUtilListener = null;
+
+    @Override
+    public boolean handleMessage(@NotNull Message msg) {
+        switch (msg.what) {
+            case MSG_START:
+                startInternal();
+                break;
+            case MSG_STOP:
+                stopInternal();
+                break;
+            case MSG_ENCODE:
+//                renderInternal((TRTCCloudDef.TRTCVideoFrame) msg.obj);
+                break;
+            case MSG_RELEASE:
+                releaseInternal();
+                break;
+        }
+        return false;
+    }
 
     private class MyHandler extends Handler {
 
@@ -114,17 +140,26 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         context = ctx;
         deviceId = id;
         init(sampleRate, DEFAULT_CHANNEL_CONFIG, DEFAULT_AUDIO_FORMAT);
+        readThread = new HandlerThread(TAG);
+        readThread.start();
+        mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
     public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth) {
         context = ctx;
         deviceId = id;
         init(sampleRate, channel, bitDepth);
+        readThread = new HandlerThread(TAG);
+        readThread.start();
+        mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
     public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch) {
         context = ctx;
         deviceId = id;
         this.pitch = pitch;
         init(sampleRate, channel, bitDepth);
+        readThread = new HandlerThread(TAG);
+        readThread.start();
+        mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
     public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, boolean enableAEC, boolean enableAGC) {
         context = ctx;
@@ -132,6 +167,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         this.enableAEC = enableAEC;
         this.enableAGC = enableAGC;
         init(sampleRate, channel, bitDepth);
+        readThread = new HandlerThread(TAG);
+        readThread.start();
+        mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
     public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch, boolean enableAEC, boolean enableAGC) {
         context = ctx;
@@ -140,6 +178,21 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         this.enableAEC = enableAEC;
         this.enableAGC = enableAGC;
         init(sampleRate, channel, bitDepth);
+        readThread = new HandlerThread(TAG);
+        readThread.start();
+        mReadHandler = new ReadHandler(readThread.getLooper(), this);
+    }
+    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch, AudioRecordUtilListener audioRecordUtilListener) {
+        context = ctx;
+        deviceId = id;
+        this.pitch = pitch;
+        this.enableAEC = false;
+        this.enableAGC = false;
+        this.audioRecordUtilListener = audioRecordUtilListener;
+        init(sampleRate, channel, bitDepth);
+        readThread = new HandlerThread(TAG);
+        readThread.start();
+        mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
 
     private void init(int sampleRate, int channel, int bitDepth) {
@@ -229,14 +282,15 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         }
     }
 
-    public void setPlayer(IjkMediaPlayer player) {
-        this.player = player;
-    }
-
     /**
      * 开始录制
      */
     public void start() {
+        Log.i(TAG, "start");
+        mReadHandler.obtainMessage(MSG_START).sendToTarget();
+    }
+
+    private void startInternal() {
         if (isRecord) {
             fos1 = createFiles("near");
             fos2 = createFiles("far");
@@ -256,9 +310,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
             VoiceChangerJNIBridge.setMode(this.mode.getValue());
         }
         recorderState = true;
+        Log.e(TAG, "turn recorderState : " + recorderState);
         audioRecord.startRecording();
         new RecordThread().start();
-        new WriteThread().start();
+        if (audioRecordUtilListener != null) {
+            new WriteThread().start();
+        }
     }
 
     private void reset() {
@@ -283,43 +340,57 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
      * 停止录制
      */
     public void stop() {
+        Log.i(TAG, "stop");
+        mReadHandler.obtainMessage(MSG_STOP).sendToTarget();
+    }
+
+    private void stopInternal() {
         recorderState = false;
-        if (audioRecord != null) {
-            audioRecord.stop();
-        }
-
-        executor.shutdown();
-        audioRecord = null;
-        pcmEncoder = null;
-        if (flvPacker != null) {
-            flvPacker.release();
-            flvPacker = null;
-        }
-        if (canceler != null) {
-            canceler.setEnabled(false);
-            canceler.release();
-            canceler = null;
-        }
-        if (control != null) {
-            control.setEnabled(false);
-            control.release();
-            control = null;
-        }
-
-        if (!VoiceChangerJNIBridge.isAvailable()) {
-            if (st != null) {
-                st.finish();
-                st.clearBuffer(0);
-                st = null;
+        Log.e(TAG, "turn recorderState : " + recorderState);
+        mReadHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG, "mReadHandler.postDelayed 200 turn recorderState : " + recorderState);
+                if (audioRecord != null) {
+                    audioRecord.stop();
+                }
+                executor.shutdown();
+                audioRecord = null;
+                pcmEncoder = null;
+                if (flvPacker != null) {
+                    flvPacker.release();
+                    flvPacker = null;
+                }
+                if (canceler != null) {
+                    canceler.setEnabled(false);
+                    canceler.release();
+                    canceler = null;
+                }
+                if (control != null) {
+                    control.setEnabled(false);
+                    control.release();
+                    control = null;
+                }
+                if (!VoiceChangerJNIBridge.isAvailable()) {
+                    if (st != null) {
+                        st.finish();
+                        st.clearBuffer(0);
+                        st = null;
+                    }
+                } else {
+                    VoiceChangerJNIBridge.destory();
+                }
+//                GvoiceJNIBridge.destory();
             }
-        } else {
-            VoiceChangerJNIBridge.destory();
-        }
-
-        GvoiceJNIBridge.destory();
+        }, 200);
     }
 
     public void release() {
+        Log.i(TAG, "release");
+        mReadHandler.obtainMessage(MSG_STOP).sendToTarget();
+    }
+
+    private void releaseInternal() {
         audioRecord.release();
     }
 
@@ -336,7 +407,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
     @Override
     public void onFLV(byte[] data) {
         if (recorderState) {
-            Log.d(TAG, "===== XP2P.dataSend dataLen:" + data.length);
+//            Log.d(TAG, "===== XP2P.dataSend dataLen:" + data.length);
             XP2P.dataSend(deviceId, data, data.length);
 
             if (executor.isShutdown()) return;
@@ -373,7 +444,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         public void run() {
             while (recorderState) {
                 int read = audioRecord.read(buffer, 0, buffer.length);
-                Log.e(TAG, "audioRecord.read: "+read + "， buffer.length： " + buffer.length);
+                Log.e(TAG, "audioRecord.read: "+read + "， buffer.length： " + buffer.length + ", recorderState: " + recorderState);
                 if (!VoiceChangerJNIBridge.isAvailable()) {
                     if (pitch != 0 && st != null) {
                         st.putBytes(buffer);
@@ -387,7 +458,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     if (buffer != null && pcmEncoder != null) {
-                        if (player != null && player.isPlaying()) {
+                        if (audioRecordUtilListener != null) {
                             byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
                             byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
                             if (isRecord) {
@@ -460,19 +531,38 @@ public class AudioRecordUtil implements EncoderListener, FLVListener {
         @Override
         public void run() {
             while (recorderState) {
-                if (player != null && player.isPlaying()) {
-                    byte[] data = new byte[204800];
-                    int len = player._getPcmData(data);
-                    if (len > 0) {
-                        byte[] playerBytes = new byte[len];
-                        System.arraycopy(data, 0, playerBytes, 0, len);
+                if (audioRecordUtilListener != null) {
+                    byte[] data = audioRecordUtilListener.onReadPlayerPcmByte();
+                    if (data != null && data.length > 0) {
+                        Log.e(TAG, "data.length： " + data.length + " , recorderState : " + recorderState);
                         List<Byte> tmpList = new ArrayList<>();
-                        for (byte b : playerBytes) {
+                        for (byte b : data) {
                             tmpList.add(b);
                         }
                         playPcmData.addAll(tmpList);
                     }
                 }
+            }
+        }
+    }
+
+    public static class ReadHandler extends Handler {
+
+        public ReadHandler(Looper looper, Callback callback) {
+            super(looper, callback);
+        }
+
+        public void runAndWaitDone(final Runnable runnable) {
+            final CountDownLatch countDownLatch = new CountDownLatch(1);
+            post(() -> {
+                runnable.run();
+                countDownLatch.countDown();
+            });
+
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
