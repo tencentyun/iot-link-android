@@ -186,8 +186,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         context = ctx;
         deviceId = id;
         this.pitch = pitch;
-        this.enableAEC = false;
-        this.enableAGC = false;
+        this.enableAEC = true;
+        this.enableAGC = true;
         this.audioRecordUtilListener = audioRecordUtilListener;
         init(sampleRate, channel, bitDepth);
         readThread = new HandlerThread(TAG);
