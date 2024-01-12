@@ -145,7 +145,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
 //            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
             // 变调可以传入pitch参数
 //            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
-            audioRecordUtil.recordSpeakFlv(true)
+//            audioRecordUtil.recordSpeakFlv(true)
         }
 
         XP2P.setCallback(this)
