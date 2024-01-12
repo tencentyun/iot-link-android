@@ -140,11 +140,11 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             presenter.getEventsData(Date())
             tv_event_status.visibility = View.VISIBLE
             tv_event_status.setText(R.string.loading)
-//            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
+            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
 //            //变调可以传入pitch参数
 //            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
             // 变调可以传入pitch参数
-            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
+//            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
             audioRecordUtil.recordSpeakFlv(true)
         }
 
@@ -445,7 +445,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             layout_video_preview?.addView(v_preview, 0)
 
             player = IjkMediaPlayer()
-            player._setApmStatus(true)
+//            player._setApmStatus(true)
             player?.let {
                 val url = urlPrefix + suffix
                 it.reset()
@@ -593,7 +593,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             CommonUtils.refreshVideoList(this@VideoPreviewActivity, filePath)
         }
 
-        player?._setApmStatus(false);
+//        player?._setApmStatus(false);
         player?.release()
 
         countDownLatchs.clear()
@@ -737,14 +737,14 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     }
 
     override fun onReadPlayerPcmByte(): ByteArray? {
-        val data = ByteArray(10240)
-        val len = player._getPcmData(data)
-        return if (len > 0) {
-            val playerBytes = ByteArray(len)
-            System.arraycopy(data, 0, playerBytes, 0, len);
-            playerBytes
-        } else {
-            null
-        }
+//        val data = ByteArray(10240)
+//        val len = player._getPcmData(data)
+//        return if (len > 0) {
+//            val playerBytes = ByteArray(len)
+//            System.arraycopy(data, 0, playerBytes, 0, len);
+//            playerBytes
+//        } else {
+        return null
+//        }
     }
 }
