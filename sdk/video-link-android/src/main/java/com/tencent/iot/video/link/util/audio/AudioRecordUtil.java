@@ -487,8 +487,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             return false;
         }
         canceler = AcousticEchoCanceler.create(audioSession);
-        canceler.setEnabled(true);
-        return canceler.getEnabled();
+        if (canceler != null) {
+            canceler.setEnabled(true);
+            return canceler.getEnabled();
+        } else {
+            return false;
+        }
     }
     public boolean isDevicesSupportAGC() {
         return AutomaticGainControl.isAvailable();
@@ -503,8 +507,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             return false;
         }
         control = AutomaticGainControl.create(audioSession);
-        control.setEnabled(true);
-        return control.getEnabled();
+        if (control != null) {
+            control.setEnabled(true);
+            return control.getEnabled();
+        } else {
+            return false;
+        }
     }
 
     private byte[] onReadPlayerPlayPcm(int length) {
