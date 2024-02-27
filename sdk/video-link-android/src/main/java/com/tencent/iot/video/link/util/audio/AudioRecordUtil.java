@@ -326,6 +326,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
         }
         pcmEncoder = new PCMEncoder(sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
+        Log.e(TAG, "reset new FLVPacker");
         flvPacker = new FLVPacker(this, true, false);
         int audioSessionId = audioRecord.getAudioSessionId();
         if (enableAEC) {
