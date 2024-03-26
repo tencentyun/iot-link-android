@@ -802,6 +802,8 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
                 isDownloading = false
                 ToastDialog(context, ToastDialog.Type.SUCCESS, getString(R.string.download_complete), 2000).show()
             }
+        } else if (event == 1010) {
+            Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
         }
     }
 
