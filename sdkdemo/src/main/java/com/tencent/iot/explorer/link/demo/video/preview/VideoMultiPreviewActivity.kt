@@ -207,7 +207,11 @@ class VideoMultiPreviewActivity : VideoBaseActivity(), XP2PCallback, CoroutineSc
             }
 
             tryReleaseLock(id)
-        } else if (event == 1005) { }
+        } else if (event == 1005) {
+
+        } else if (event == 1010) {
+            Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
+        }
     }
 
     private fun tryReleaseLock(id: String?) {

@@ -119,6 +119,11 @@ enum XP2PType {
     XP2PTypeDisconnect  = 1003, //p2p链路断开
     XP2PTypeDetectReady  = 1004, //p2p链路初始化成功,该事件回调触发后才能进行后续操作(直播、语音对讲、信令等)
     XP2PTypeDetectError  = 1005, //p2p链路初始化失败
+    XP2PTypeDeviceMsgArrievd = 1006, //设备端向App发消息
+    XP2PTypeCmdNOReturn  = 1007, //设备未返回app自定义信令
+    XP2PTypeStreamEnd    = 1008, //设备停止推流，或者由于达到设备最大连接数，拒绝推流
+    XP2PTypeDownloadEnd  = 1009, //设备停止推流，下载结束
+    XP2PTypeStreamRefush = 1010, //设备拒绝推流，请求的devicename不一致
     XP2PTypeSaveFileOn  = 8000, //获取保存音视频流开关状态
     XP2PTypeSaveFileUrl = 8001 //获取音视频流保存路径
 };
