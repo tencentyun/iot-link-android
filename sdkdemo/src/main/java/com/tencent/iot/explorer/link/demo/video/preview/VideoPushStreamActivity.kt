@@ -306,6 +306,8 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
             if (event == 1004) {
                 Log.e(tag, "====event === 1004")
             }
+        } else if (event == 1010) {
+            Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
         }
     }
 
