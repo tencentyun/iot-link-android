@@ -758,8 +758,8 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     }
 
     override fun onInfoAudioPcmData(mp: IMediaPlayer?, arrPcm: ByteArray?, length: Int) {
-        if (audioRecordUtil != null && length > 0 && speakAble) {
-            audioRecordUtil.setPlayerPcmData(arrPcm);
-        }
+//        if (audioRecordUtil != null && length > 0 && speakAble) {
+//            audioRecordUtil.setPlayerPcmData(arrPcm);
+//        }
     }
 }
