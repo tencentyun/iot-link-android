@@ -43,7 +43,6 @@ import com.tencent.iot.explorer.link.demo.video.utils.VolumeChangeObserver
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.DeviceStatus
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
-import com.tencent.iot.video.link.util.audio.AudioRecordUtilListener
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
@@ -51,13 +50,13 @@ import kotlinx.android.synthetic.main.dash_board_layout.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
 import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
+import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.Runnable
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.LinkedBlockingDeque
 
 
 private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
@@ -67,7 +66,7 @@ private var keepAliveThreadRuning = true
 
 class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener,
-    AudioRecordUtilListener {
+    IMediaPlayer.OnInfoListener {
 
     open var tag = VideoPreviewActivity::class.simpleName
     var orientationV = true
@@ -99,6 +98,8 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     var screenWidth = 0
     var screenHeight = 0
     var firstIn = true
+    @Volatile
+    var speakAble = false
 
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
@@ -171,6 +172,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
     open fun startPlayer() {
         if (App.data.accessInfo == null || TextUtils.isEmpty(presenter.getDeviceName())) return
         player = IjkMediaPlayer()
+        player.setOnInfoListener(this)
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
 
         Thread(Runnable {
@@ -274,16 +276,19 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
                     if (it.size == 1 && it.get(0).status == 0) {
                         XP2P.runSendService("${accessInfo.productId}/${presenter.getDeviceName()}", Command.getTwoWayRadio(presenter.getChannel()), true)
                         audioRecordUtil.start()
+                        speakAble = true
                         return true
                     }
                 }
 
             } else {
+                speakAble = false
                 audioRecordUtil.stop()
                 XP2P.stopSendService("${accessInfo.productId}/${presenter.getDeviceName()}", null)
                 return true
             }
         }
+        speakAble = false
         return false
     }
 
@@ -445,6 +450,7 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             layout_video_preview?.addView(v_preview, 0)
 
             player = IjkMediaPlayer()
+            player.setOnInfoListener(this@VideoPreviewActivity)
 //            player._setApmStatus(true)
             player?.let {
                 val url = urlPrefix + suffix
@@ -738,15 +744,22 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
         tv_video_w_h?.text = "${player.videoWidth} x ${player.videoHeight}"
     }
 
-    override fun onReadPlayerPcmByte(): ByteArray? {
-//        val data = ByteArray(10240)
-//        val len = player._getPcmData(data)
-//        return if (len > 0) {
-//            val playerBytes = ByteArray(len)
-//            System.arraycopy(data, 0, playerBytes, 0, len);
-//            playerBytes
-//        } else {
-        return null
-//        }
+    override fun onInfo(mp: IMediaPlayer?, what: Int, extra: Int): Boolean {
+        return true
+    }
+
+    override fun onInfoSEI(
+        mp: IMediaPlayer?,
+        what: Int,
+        extra: Int,
+        sei_content: String?
+    ): Boolean {
+        return false
+    }
+
+    override fun onInfoAudioPcmData(mp: IMediaPlayer?, arrPcm: ByteArray?, length: Int) {
+        if (audioRecordUtil != null && length > 0 && speakAble) {
+            audioRecordUtil.setPlayerPcmData(arrPcm);
+        }
     }
 }
