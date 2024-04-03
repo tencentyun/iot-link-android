@@ -451,7 +451,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
 
             player = IjkMediaPlayer()
             player.setOnInfoListener(this@VideoPreviewActivity)
-//            player._setApmStatus(true)
             player?.let {
                 val url = urlPrefix + suffix
                 it.reset()
@@ -601,7 +600,6 @@ class VideoPreviewActivity : VideoBaseActivity(), EventView, TextureView.Surface
             CommonUtils.refreshVideoList(this@VideoPreviewActivity, filePath)
         }
 
-//        player?._setApmStatus(false);
         player?.release()
 
         countDownLatchs.clear()
