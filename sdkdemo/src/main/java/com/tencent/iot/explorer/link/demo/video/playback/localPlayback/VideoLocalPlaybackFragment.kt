@@ -291,6 +291,10 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
         ): Boolean {
             return false
         }
+
+        override fun onInfoAudioPcmData(mp: IMediaPlayer?, arrPcm: ByteArray?, length: Int) {
+
+        }
     }
 
     private var dlgOnClickedListener = object : CalendarDialog.OnClickedListener {
