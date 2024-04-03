@@ -463,6 +463,11 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment(), TextureView.Surfa
         ): Boolean {
             return false
         }
+
+        override fun onInfoAudioPcmData(mp: IMediaPlayer?, arrPcm: ByteArray?, length: Int) {
+
+        }
+
     }
 
     override fun onDestroy() {
