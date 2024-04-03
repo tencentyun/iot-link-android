@@ -43,7 +43,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private static final String TAG = AudioRecordUtil.class.getName();
     private static final int MSG_START = 1;
     private static final int MSG_STOP = 2;
-    private static final int MSG_ENCODE = 3;
+    private static final int MSG_REC_PLAY_PCM = 3;
     private static final int MSG_RELEASE = 4;
     private final HandlerThread readThread;
     private final ReadHandler mReadHandler;
@@ -81,7 +81,6 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private static final int SAVE_PCM_DATA = 1;
 
     private LinkedBlockingDeque<Byte> playPcmData = new LinkedBlockingDeque<>();  // 内存队列，用于缓存获取到的播放器音频pcm
-    private AudioRecordUtilListener audioRecordUtilListener = null;
 
     @Override
     public boolean handleMessage(@NotNull Message msg) {
@@ -92,8 +91,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             case MSG_STOP:
                 stopInternal();
                 break;
-            case MSG_ENCODE:
-//                renderInternal((TRTCCloudDef.TRTCVideoFrame) msg.obj);
+            case MSG_REC_PLAY_PCM:
+                recPlayPcmInternal((byte[]) msg.obj);
                 break;
             case MSG_RELEASE:
                 releaseInternal();
@@ -182,18 +181,6 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         readThread.start();
         mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
-    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch, AudioRecordUtilListener audioRecordUtilListener) {
-        context = ctx;
-        deviceId = id;
-        this.pitch = pitch;
-        this.enableAEC = true;
-        this.enableAGC = true;
-        this.audioRecordUtilListener = audioRecordUtilListener;
-        init(sampleRate, channel, bitDepth);
-        readThread = new HandlerThread(TAG);
-        readThread.start();
-        mReadHandler = new ReadHandler(readThread.getLooper(), this);
-    }
 
     private void init(int sampleRate, int channel, int bitDepth) {
         recordMinBufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, bitDepth);
@@ -214,6 +201,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         recordMinBufferSize = (sampleRate*this.channelCount*this.encodeBit/8)/1000*20; //20ms数据长度
         Log.e(TAG, "20ms recordMinBufferSize is: "+ recordMinBufferSize);
         Log.e(TAG, "AudioRecordUtil init Pitch is: "+ pitch);
+        GvoiceJNIBridge.init(context);
     }
 
     public void recordSpeakFlv(boolean isRecord) {
@@ -282,6 +270,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         }
     }
 
+    public void setPlayerPcmData(byte[] pcmData) {
+        mReadHandler.obtainMessage(MSG_REC_PLAY_PCM, pcmData).sendToTarget();
+    }
+
     /**
      * 开始录制
      */
@@ -299,7 +291,6 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         if (!playPcmData.isEmpty()) {
             playPcmData.clear();
         }
-        GvoiceJNIBridge.init();
         reset();
         if (!VoiceChangerJNIBridge.isAvailable()) {
             if (st == null && pitch != 0) {
@@ -313,9 +304,6 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         Log.e(TAG, "turn recorderState : " + recorderState);
         audioRecord.startRecording();
         new RecordThread().start();
-        if (audioRecordUtilListener != null) {
-            new WriteThread().start();
-        }
     }
 
     private void reset() {
@@ -459,8 +447,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     if (buffer != null && pcmEncoder != null) {
-                        if (audioRecordUtilListener != null) {
-                            byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
+                        byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
+                        if (playerPcmBytes != null && playerPcmBytes.length > 0) {
                             byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
                             if (isRecord) {
                                 writePcmBytesToFile(buffer, playerPcmBytes, aecPcmBytes);
@@ -536,22 +524,13 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         }
     }
 
-    private class WriteThread extends Thread {
-        @Override
-        public void run() {
-            while (recorderState) {
-                if (audioRecordUtilListener != null) {
-                    byte[] data = audioRecordUtilListener.onReadPlayerPcmByte();
-                    if (data != null && data.length > 0) {
-                        Log.e(TAG, "data.length： " + data.length + " , recorderState : " + recorderState);
-                        List<Byte> tmpList = new ArrayList<>();
-                        for (byte b : data) {
-                            tmpList.add(b);
-                        }
-                        playPcmData.addAll(tmpList);
-                    }
-                }
+    private void recPlayPcmInternal(byte [] pcmData) {
+        if (pcmData != null && pcmData.length > 0 && recorderState) {
+            List<Byte> tmpList = new ArrayList<>();
+            for (byte b : pcmData) {
+                tmpList.add(b);
             }
+            playPcmData.addAll(tmpList);
         }
     }
 
