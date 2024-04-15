@@ -39,7 +39,9 @@ jobs:
         run: |
           cmake --version
       - name: Common-->install fir
-        run: sudo gem install fir-cli
+        run: |
+          sudo gem uninstall fastlane
+          sudo gem install fir-cli
 
       - name: Common-->Fix App Version
         run: |
