@@ -40,7 +40,7 @@ import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Callback {
     private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
     private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
-    private static final String TAG = AudioRecordUtil.class.getName();
+    private static final String TAG = AudioRecordUtil.class.getName() + "[IOT-XP2P]";
     private static final int MSG_START = 1;
     private static final int MSG_STOP = 2;
     private static final int MSG_REC_PLAY_PCM = 3;
@@ -396,7 +396,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     @Override
     public void onFLV(byte[] data) {
         if (recorderState) {
-//            Log.d(TAG, "===== XP2P.dataSend dataLen:" + data.length);
+            Log.i(TAG, "===== XP2P.dataSend dataLen:" + data.length);
             XP2P.dataSend(deviceId, data, data.length);
 
             if (executor.isShutdown()) return;
@@ -433,7 +433,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         public void run() {
             while (recorderState) {
                 int read = audioRecord.read(buffer, 0, buffer.length);
-                Log.e(TAG, "audioRecord.read: "+read + "， buffer.length： " + buffer.length + ", recorderState: " + recorderState);
+                Log.i(TAG, "audioRecord.read: "+read + "， buffer.length： " + buffer.length + ", recorderState: " + recorderState);
                 if (!VoiceChangerJNIBridge.isAvailable()) {
                     if (pitch != 0 && st != null) {
                         st.putBytes(buffer);
