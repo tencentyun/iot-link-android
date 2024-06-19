@@ -53,7 +53,10 @@ jobs:
             ${{ runner.os }}-
 
       - name: install fir
-        run: sudo gem install fir-cli
+        run: |
+          sudo gem uninstall fastlane
+          sudo gem install fir-cli
+
       - name: Setup NDK
         run: echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;22.1.7171670"
       - name: Fix App Version
