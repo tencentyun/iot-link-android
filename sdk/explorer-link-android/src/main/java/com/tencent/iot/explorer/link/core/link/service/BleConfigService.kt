@@ -170,14 +170,8 @@ class BleConfigService private constructor() {
                             dev?.devName = result?.scanRecord?.deviceName.toString()
                             dev?.showedName = result?.scanRecord?.deviceName.toString()
                             if (!dev?.showedName?.contains("-")!! && !dev?.showedName?.contains("_")!!) {
-                                var interceptMacName: String? = ""
-                                if (dev?.mac?.isNotEmpty() == true) {
-                                    val macEndIndex =
-                                        if (dev?.mac?.length!! > 4) 4 else dev?.mac!!.length - 1
-                                    interceptMacName =
-                                        dev?.mac?.substring(0, macEndIndex)?.toUpperCase()
-                                }
-                                dev?.showedName = "${dev?.showedName}_${interceptMacName ?: ""}"
+                                dev?.showedName = "${dev?.showedName}_${dev?.mac?.substring(0, 4)?.toUpperCase()}"
+
                             }
                             break
                         } else if (value.uuid.toString().substring(4, 8).toUpperCase().equals("FFE0")) {
