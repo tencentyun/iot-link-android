@@ -26,8 +26,6 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
-          echo ${{ secrets.IOT_SONATYPE_USERNAME }}
-          echo ${{ secrets.IOT_SONATYPE_PASSWORD }}
           rm -rf sdkdemo-config.json
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdkdemo/sdkdemo-config.json.asc > sdkdemo-config.json
       - name: set up JDK 11
