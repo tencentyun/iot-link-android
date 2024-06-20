@@ -27,6 +27,7 @@ import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.Utils
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.DeviceDetailPresenter
 import com.tencent.iot.explorer.link.mvp.view.DeviceDetailView
@@ -191,7 +192,7 @@ class DeviceDetailsActivity : PActivity(), CoroutineScope by MainScope(), Device
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CommonField.EDIT_NAME_REQ_CODE &&
             resultCode == Activity.RESULT_OK && data != null) {
-            var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
+            val extraInfo = data.getStringExtra(CommonField.EXTRA_TEXT).safe()
             commitAlias(extraInfo)
         }
     }
