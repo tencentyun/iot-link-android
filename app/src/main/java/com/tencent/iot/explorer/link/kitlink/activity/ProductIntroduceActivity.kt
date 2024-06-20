@@ -13,6 +13,7 @@ import com.tencent.iot.explorer.link.kitlink.entity.*
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import kotlinx.android.synthetic.main.activity_product_introducation.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -27,7 +28,7 @@ class ProductIntroduceActivity : BaseActivity(), MyCallback {
     override fun initView() {
         tv_title.setText(getString(R.string.bind_dev))
         if (intent.hasExtra(CommonField.PRODUCT_ID)) {
-            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID).safe()
             HttpRequest.instance.getProductsConfig(arrayListOf(productId), this)
         }
     }

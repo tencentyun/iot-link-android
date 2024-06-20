@@ -16,6 +16,7 @@ import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import com.tencent.iot.explorer.link.mvp.presenter.ConnectPresenter
 import com.tencent.iot.explorer.link.mvp.view.ConnectView
@@ -110,13 +111,13 @@ class ConnectProgressActivity : PActivity(), ConnectView {
         productId = intent.getStringExtra(CommonField.PRODUCT_ID) ?: ""
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         if (intent.hasExtra(CommonField.SSID)) {
-            ssid = intent.getStringExtra(CommonField.SSID)
+            ssid = intent.getStringExtra(CommonField.SSID).safe()
         }
         if (intent.hasExtra(CommonField.BSSID)) {
-            bssid = intent.getStringExtra(CommonField.BSSID)
+            bssid = intent.getStringExtra(CommonField.BSSID).safe()
         }
         if (intent.hasExtra(CommonField.PWD)) {
-            wifiPassword = intent.getStringExtra(CommonField.PWD)
+            wifiPassword = intent.getStringExtra(CommonField.PWD).safe()
         }
 
         refreshTypeView()

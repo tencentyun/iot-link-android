@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
@@ -28,8 +29,16 @@ import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
-import com.tencent.iot.explorer.link.core.link.entity.*
+import com.tencent.iot.explorer.link.core.link.entity.BleDevBindCondition
+import com.tencent.iot.explorer.link.core.link.entity.BleDevOtaUpdateResponse
+import com.tencent.iot.explorer.link.core.link.entity.BleDevSignResult
+import com.tencent.iot.explorer.link.core.link.entity.BleDevice
+import com.tencent.iot.explorer.link.core.link.entity.BleDeviceFirmwareVersion
+import com.tencent.iot.explorer.link.core.link.entity.BleDeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.BleDeviceProperty
+import com.tencent.iot.explorer.link.core.link.entity.BleWifiConnectInfo
 import com.tencent.iot.explorer.link.core.link.entity.DeviceInfo
+import com.tencent.iot.explorer.link.core.link.entity.TrtcDeviceInfo
 import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.BleDeviceConnectionListener
 import com.tencent.iot.explorer.link.core.link.service.BleConfigService
@@ -38,23 +47,45 @@ import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.MyScrollView
 import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.customview.recyclerview.CRecyclerView
-import com.tencent.iot.explorer.link.customview.verticaltab.*
+import com.tencent.iot.explorer.link.customview.verticaltab.ITabView
+import com.tencent.iot.explorer.link.customview.verticaltab.TabAdapter
+import com.tencent.iot.explorer.link.customview.verticaltab.TabView
+import com.tencent.iot.explorer.link.customview.verticaltab.VerticalTabLayout
 import com.tencent.iot.explorer.link.kitlink.adapter.BleDeviceAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
-import com.tencent.iot.explorer.link.kitlink.entity.*
+import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
+import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
+import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductEntity
+import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
+import com.tencent.iot.explorer.link.kitlink.entity.ProductsEntity
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.kitlink.holder.DeviceListViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryListResponse
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
-import com.tencent.iot.explorer.link.kitlink.util.*
+import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.mvp.IPresenter
-import kotlinx.android.synthetic.main.activity_device_category.*
-import kotlinx.android.synthetic.main.bluetooth_adapter_invalid.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import kotlinx.android.synthetic.main.activity_device_category.container_normal
+import kotlinx.android.synthetic.main.activity_device_category.container_top
+import kotlinx.android.synthetic.main.activity_device_category.gray_line_0
+import kotlinx.android.synthetic.main.activity_device_category.gray_line_1
+import kotlinx.android.synthetic.main.activity_device_category.iv_scann
+import kotlinx.android.synthetic.main.activity_device_category.linearlayout_scann
+import kotlinx.android.synthetic.main.activity_device_category.my_scroll_view
+import kotlinx.android.synthetic.main.activity_device_category.not_found_dev
+import kotlinx.android.synthetic.main.activity_device_category.scann_fail
+import kotlinx.android.synthetic.main.activity_device_category.scanning
+import kotlinx.android.synthetic.main.activity_device_category.vtab_device_category
+import kotlinx.android.synthetic.main.bluetooth_adapter_invalid.retry_to_scann01
+import kotlinx.android.synthetic.main.menu_back_layout.iv_back
 import kotlinx.android.synthetic.main.menu_cancel_layout.tv_title
-import kotlinx.android.synthetic.main.not_found_device.*
-import kotlinx.android.synthetic.main.scanned_devices.*
-import kotlinx.android.synthetic.main.scanning.*
+import kotlinx.android.synthetic.main.not_found_device.retry_to_scann02
+import kotlinx.android.synthetic.main.not_found_device.tv_tag
+import kotlinx.android.synthetic.main.scanned_devices.scanned_device_list
+import kotlinx.android.synthetic.main.scanned_devices.tv_devs_tip
+import kotlinx.android.synthetic.main.scanning.iv_loading_cirecle
+import kotlinx.android.synthetic.main.scanning.tv_scanning_ble_devs
 
 
 class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerItemView, View.OnClickListener, VerticalTabLayout.OnTabSelectedListener{
@@ -76,6 +107,14 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.BLUETOOTH
     )
+
+    private val android12BluetoothPermissions = arrayOf(
+        Manifest.permission.BLUETOOTH_SCAN,
+        Manifest.permission.BLUETOOTH_CONNECT,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+    )
+
+    private var hasPermission = false
 
     override fun getPresenter(): IPresenter? {
         return null
@@ -167,7 +206,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         } else {
             tv_tag.setText(R.string.not_found_device)
         }
-        BleConfigService.get().stopScanBluetoothDevices()
+        if (hasPermission) {
+            BleConfigService.get().stopScanBluetoothDevices()
+        }
     }
 
     override fun onResume() {
@@ -178,7 +219,9 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     override fun onDestroy() {
         super.onDestroy()
         iv_loading_cirecle.clearAnimation()
-        BleConfigService.get().stopScanBluetoothDevices()
+        if (hasPermission){
+            BleConfigService.get().stopScanBluetoothDevices()
+        }
     }
 
     override fun setListener() {
@@ -338,6 +381,11 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     override fun permissionDenied(permission: String) {
         permissionDialog?.dismiss()
         permissionDialog = null
+    }
+
+    override fun permissionAllGranted() {
+        super.permissionAllGranted()
+        hasPermission = true
     }
 
     override fun onClick(v: View?) {
@@ -519,7 +567,10 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
     }
 
     private fun beginScanning() {
-        if (!checkPermissions(blueToothPermissions)) {
+        val permissions =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) android12BluetoothPermissions else blueToothPermissions
+        hasPermission = checkPermissions(permissions)
+        if (!hasPermission) {
             // 查看请求ble location权限的时间是否大于48小时
             var locationJsonString = Utils.getStringValueFromXml(T.getContext(), CommonField.PERMISSION_LOCATION, CommonField.PERMISSION_LOCATION)
             var locationJson: JSONObject? = JSONObject.parse(locationJsonString) as JSONObject?
@@ -531,7 +582,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 not_found_dev.visibility = View.GONE
                 return
             }
-            requestPermission(blueToothPermissions)
+            requestPermission(permissions, 103)
             permissionDialog = PermissionDialog(this@DeviceCategoryActivity, R.mipmap.permission_location ,getString(R.string.permission_location_lips), getString(R.string.permission_location_ssid_ble))
             permissionDialog!!.show()
 
