@@ -253,8 +253,8 @@ abstract class BaseActivity : AppCompatActivity() {
         return true
     }
 
-    protected fun requestPermission(permissions: Array<String>) {
-        ActivityCompat.requestPermissions(this, permissions, 102)
+    protected fun requestPermission(permissions: Array<String>, requestCode: Int = 102) {
+        ActivityCompat.requestPermissions(this, permissions, requestCode)
     }
 
     override fun onRequestPermissionsResult(
@@ -263,7 +263,7 @@ abstract class BaseActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 102) {
+        if (requestCode == 102 || requestCode == 103) {
             for (i in permissions.indices) {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                     permissionDenied(permissions[i])

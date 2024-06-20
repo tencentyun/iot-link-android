@@ -27,6 +27,7 @@ import com.tencent.iot.explorer.link.kitlink.adapter.touch.OnItemTouchListener
 import com.tencent.iot.explorer.link.kitlink.adapter.touch.TaskItemTouchHelper
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import com.tencent.iot.explorer.link.kitlink.util.Utils
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import kotlinx.android.synthetic.main.activity_add_manual_task.*
 import kotlinx.android.synthetic.main.activity_complete_task_info.iv_smart_background
 import kotlinx.android.synthetic.main.activity_complete_task_info.layout_smart_name
@@ -271,11 +272,11 @@ class EditManualTaskActivity : BaseActivity(), MyCallback {
 
         if (requestCode == CommonField.REQUEST_PIC_REQ_CODE &&  // 添加任务
             resultCode == Activity.RESULT_OK && data != null) {
-            var picUrl = data?.getStringExtra(CommonField.EXTRA_PIC_URL)
+            var picUrl = data?.getStringExtra(CommonField.EXTRA_PIC_URL).safe()
             smartPicUrl = picUrl
         } else if (requestCode == CommonField.REQUEST_TASK_NAME_REQ_CODE &&  // 添加任务
             resultCode == Activity.RESULT_OK && data != null) {
-            var name = data?.getStringExtra(CommonField.EXYRA_TASK_NAME)
+            var name = data?.getStringExtra(CommonField.EXYRA_TASK_NAME).safe()
             smartName = name.trim()
         }
 

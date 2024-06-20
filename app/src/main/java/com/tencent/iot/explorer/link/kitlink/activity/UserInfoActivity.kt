@@ -34,6 +34,7 @@ import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.I
 import com.tencent.iot.explorer.link.kitlink.util.picture.imageselectorbrowser.ImageSelectorConstant.REQUEST_IMAGE
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageManager
 import com.tencent.iot.explorer.link.kitlink.util.picture.imp.ImageSelectorUtils
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import kotlinx.android.synthetic.main.activity_user_info.*
 import kotlinx.android.synthetic.main.dialog_temperature.view.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -382,7 +383,7 @@ class UserInfoActivity : PActivity(), UserInfoView, View.OnClickListener, View.O
 
         if (requestCode == CommonField.EDIT_NAME_REQ_CODE &&
             resultCode == Activity.RESULT_OK && data != null) {
-            var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
+            val extraInfo = data.getStringExtra(CommonField.EXTRA_TEXT).safe()
             presenter.modifyNick(extraInfo)
         }
     }

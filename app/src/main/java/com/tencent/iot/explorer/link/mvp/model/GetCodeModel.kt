@@ -160,7 +160,7 @@ class GetCodeModel(view: GetCodeView) : ParentModel<GetCodeView>(view), MyCallba
     }
 
     override fun onDestroy() {
-        handler?.removeCallbacks(runnable)
+        runnable?.let { handler?.removeCallbacks(it) }
         handler = null
         runnable = null
         super.onDestroy()

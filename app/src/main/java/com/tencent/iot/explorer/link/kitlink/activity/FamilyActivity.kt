@@ -20,6 +20,7 @@ import com.tencent.iot.explorer.link.kitlink.holder.FamilyInfoHeaderHolder
 import com.tencent.iot.explorer.link.kitlink.holder.MemberListViewHolder
 import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.mvp.IModel
 import com.tencent.iot.explorer.link.mvp.model.FamilyModel
 import com.tencent.iot.explorer.link.mvp.view.FamilyView
@@ -217,7 +218,7 @@ class FamilyActivity : MActivity(), FamilyView, CRecyclerView.RecyclerItemView {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CommonField.EDIT_NAME_REQ_CODE &&
             resultCode == Activity.RESULT_OK && data != null) {
-            var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
+            var extraInfo = data.getStringExtra(CommonField.EXTRA_TEXT).safe()
             model.modifyFamilyName(extraInfo)
         } else if (requestCode == CommonField.MAP_LOCATION_REQ_CODE && resultCode == RESULT_OK) {
             var ret = data?.getStringExtra(CommonField.ADDRESS) ?: ""

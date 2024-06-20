@@ -18,6 +18,7 @@ import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_soft_ap_step.*
 import java.util.ArrayList
@@ -60,7 +61,7 @@ class SoftApStepActivity : PActivity() {
     override fun initView() {
         loadViewTextType = intent.getIntExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadLocalViewTxt.ordinal)
         if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
-            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID).safe()
         }
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SoftAp.id)
         if (loadViewTextType == LoadViewTxtType.LoadLocalViewTxt.ordinal) {

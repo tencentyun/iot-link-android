@@ -19,6 +19,7 @@ import com.tencent.iot.explorer.link.customview.progress.bean.StepBean
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.consts.LoadViewTxtType
 import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_device_wifi.*
 import kotlinx.android.synthetic.main.smart_config_second.*
@@ -67,17 +68,17 @@ class DeviceWifiActivity : PActivity() {
     override fun initView() {
         loadViewTextType = intent.getIntExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadLocalViewTxt.ordinal)
         if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
-            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID).safe()
         }
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         if (intent.hasExtra(CommonField.SSID)) {
-            extraSsid = intent.getStringExtra(CommonField.SSID)
+            extraSsid = intent.getStringExtra(CommonField.SSID).safe()
         }
         if (intent.hasExtra(CommonField.BSSID)) {
-            extraBssid = intent.getStringExtra(CommonField.BSSID)
+            extraBssid = intent.getStringExtra(CommonField.BSSID).safe()
         }
         if (intent.hasExtra(CommonField.PWD)) {
-            extraPwd = intent.getStringExtra(CommonField.PWD)
+            extraPwd = intent.getStringExtra(CommonField.PWD).safe()
         }
         refreshTypeView()
 

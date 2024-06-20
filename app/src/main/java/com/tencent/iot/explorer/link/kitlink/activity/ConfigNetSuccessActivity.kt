@@ -6,6 +6,7 @@ import com.tencent.iot.explorer.link.R
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.kitlink.util.Utils
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import kotlinx.android.synthetic.main.activity_config_net_success.*
 
 class ConfigNetSuccessActivity : BaseActivity() {
@@ -18,7 +19,7 @@ class ConfigNetSuccessActivity : BaseActivity() {
 
     override fun initView() {
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
-        deviceName = intent.getStringExtra(CommonField.DEVICE_NAME)
+        deviceName = intent.getStringExtra(CommonField.DEVICE_NAME).safe()
         var str2Show = resources.getString(R.string.device_name) +
                 resources.getString(R.string.splite_from_name) + deviceName
         tv_config_net_sucess_reason_tip.setText(str2Show)

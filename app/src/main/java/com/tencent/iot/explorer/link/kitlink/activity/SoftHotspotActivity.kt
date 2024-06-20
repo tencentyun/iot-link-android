@@ -18,6 +18,7 @@ import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_soft_hotspot.*
 import java.util.*
@@ -49,16 +50,16 @@ class SoftHotspotActivity : PActivity() {
     override fun initView() {
         loadViewTextType = intent.getIntExtra(CommonField.LOAD_VIEW_TXT_TYPE, LoadViewTxtType.LoadLocalViewTxt.ordinal)
         if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
-            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID).safe()
         }
         if (intent.hasExtra(CommonField.SSID)) {
-            extraSsid = intent.getStringExtra(CommonField.SSID)
+            extraSsid = intent.getStringExtra(CommonField.SSID).safe()
         }
         if (intent.hasExtra(CommonField.BSSID)) {
-            extraBssid = intent.getStringExtra(CommonField.BSSID)
+            extraBssid = intent.getStringExtra(CommonField.BSSID).safe()
         }
         if (intent.hasExtra(CommonField.PWD)) {
-            extraPwd = intent.getStringExtra(CommonField.PWD)
+            extraPwd = intent.getStringExtra(CommonField.PWD).safe()
         }
         if (loadViewTextType == LoadViewTxtType.LoadLocalViewTxt.ordinal) {
             loadViewStandradInfo()

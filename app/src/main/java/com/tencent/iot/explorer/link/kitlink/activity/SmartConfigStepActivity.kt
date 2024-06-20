@@ -18,6 +18,7 @@ import com.tencent.iot.explorer.link.kitlink.entity.HardwareGuide
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_smart_config_step.*
 import java.util.*
@@ -63,7 +64,7 @@ class SmartConfigStepActivity : PActivity() {
             LoadViewTxtType.LoadLocalViewTxt.ordinal
         )
         if (loadViewTextType != LoadViewTxtType.LoadLocalViewTxt.ordinal) {
-            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID).safe()
         }
         type = intent.getIntExtra(CommonField.CONFIG_TYPE, ConfigType.SmartConfig.id)
         if (loadViewTextType == LoadViewTxtType.LoadLocalViewTxt.ordinal) {

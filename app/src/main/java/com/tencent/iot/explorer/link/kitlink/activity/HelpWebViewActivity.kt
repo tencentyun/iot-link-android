@@ -29,6 +29,7 @@ import com.tencent.iot.explorer.link.core.utils.Utils
 import com.tencent.iot.explorer.link.customview.dialog.PermissionDialog
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.kitlink.webview.BridgeImpl
 import com.tencent.iot.explorer.link.kitlink.webview.JSBridgeKt
 import com.tencent.iot.explorer.link.kitlink.webview.WebCallBack
@@ -68,7 +69,7 @@ class HelpWebViewActivity: BaseActivity(), MyCallback, View.OnClickListener {
             feedbackDevice = intent.getBooleanExtra(CommonField.FEEDBACK_DEVICE, false)
         }
         if (intent.hasExtra(CommonField.FEEDBACK_CATEGORY)) {
-            feedbackCategory = intent.getStringExtra(CommonField.FEEDBACK_CATEGORY)
+            feedbackCategory = intent.getStringExtra(CommonField.FEEDBACK_CATEGORY).safe()
         }
         initWebView()
         getAppGetTokenTicket()

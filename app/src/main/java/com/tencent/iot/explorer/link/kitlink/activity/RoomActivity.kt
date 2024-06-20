@@ -17,6 +17,7 @@ import com.tencent.iot.explorer.link.kitlink.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.kitlink.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import kotlinx.android.synthetic.main.activity_room.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -145,7 +146,7 @@ class RoomActivity : BaseActivity(), MyCallback {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CommonField.EDIT_NAME_REQ_CODE &&
             resultCode == Activity.RESULT_OK && data != null) {
-            var extraInfo = data?.getStringExtra(CommonField.EXTRA_TEXT)
+            val extraInfo = data.getStringExtra(CommonField.EXTRA_TEXT).safe()
             modifyRoomName = extraInfo
             modifyRoomName()
         }

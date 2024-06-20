@@ -22,6 +22,7 @@ import com.tencent.iot.explorer.link.kitlink.entity.RouteType
 import com.tencent.iot.explorer.link.kitlink.entity.SceneEntity
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.Utils
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import kotlinx.android.synthetic.main.activity_complete_task_info.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -233,11 +234,11 @@ class CompleteTaskInfoActivity : BaseActivity(),MyCallback {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CommonField.REQUEST_PIC_REQ_CODE &&  // 添加任务
             resultCode == Activity.RESULT_OK && data != null) {
-            var picUrl = data?.getStringExtra(CommonField.EXTRA_PIC_URL)
+            val picUrl = data.getStringExtra(CommonField.EXTRA_PIC_URL).safe()
             smartPicUrl = picUrl
         } else if (requestCode == CommonField.REQUEST_TASK_NAME_REQ_CODE &&  // 添加任务
             resultCode == Activity.RESULT_OK && data != null) {
-            var name = data?.getStringExtra(CommonField.EXYRA_TASK_NAME)
+            val name = data.getStringExtra(CommonField.EXYRA_TASK_NAME).safe()
             smartName = name.trim()
         }
 

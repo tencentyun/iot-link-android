@@ -35,3 +35,19 @@ class Utils {
         }
     }
 }
+
+fun Int?.asBoolean(): Boolean = if (this == null) false else this != 0
+
+fun Int?.safe(default: Int = 0): Int = this ?: default
+
+fun Long?.safe(default: Long = 0): Long = this ?: default
+
+fun Double?.safe(default: Double = 0.0): Double = this ?: default
+
+fun Float?.safe(default: Float = 0.0f): Float = this ?: default
+
+fun Boolean?.safe(default: Boolean = false): Boolean = this ?: default
+
+fun String?.safe(): String = this ?: ""
+
+fun String?.safe(default: String): String = this ?: default
