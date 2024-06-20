@@ -11,6 +11,7 @@ import com.tencent.iot.explorer.link.mvp.presenter.GetCodePresenter
 import com.tencent.iot.explorer.link.mvp.view.GetCodeView
 import com.tencent.iot.explorer.link.T
 import com.tencent.iot.explorer.link.core.utils.KeyBoardUtils
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import kotlinx.android.synthetic.main.activity_get_code.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
@@ -27,8 +28,6 @@ class GetCodeActivity : PActivity(), GetCodeView {
         const val EMAIL = "email"
         const val COUNTRY_CODE = "country_code"
     }
-
-    private var handler by Weak<Handler>()
 
     override fun getContentView(): Int {
         return R.layout.activity_get_code
@@ -69,7 +68,7 @@ class GetCodeActivity : PActivity(), GetCodeView {
         intent?.let {
             val action = it.getIntExtra(SetPasswordActivity.ACTION, -1)
             presenter.setCommonData(
-                it.getStringExtra(TYPE),
+                it.getStringExtra(TYPE).safe(),
                 action
             )
             when (action) {
@@ -147,8 +146,6 @@ class GetCodeActivity : PActivity(), GetCodeView {
     }
 
     override fun onDestroy() {
-        handler?.removeCallbacks(null)
-        handler = null
         super.onDestroy()
     }
 

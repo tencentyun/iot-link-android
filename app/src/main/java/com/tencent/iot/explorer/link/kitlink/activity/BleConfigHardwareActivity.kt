@@ -21,6 +21,7 @@ import com.tencent.iot.explorer.link.kitlink.entity.ConfigType
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
+import com.tencent.iot.explorer.link.kitlink.util.safe
 import com.tencent.iot.explorer.link.mvp.IPresenter
 import kotlinx.android.synthetic.main.activity_ble_config_hardware.*
 import java.util.*
@@ -76,7 +77,7 @@ class BleConfigHardwareActivity : PActivity() {
         tipInfo.content = getString(R.string.reset_ble_dev_content)
         sv_content.visibility = View.GONE
         if (intent.hasExtra(CommonField.PRODUCT_ID)) {
-            productId = intent.getStringExtra(CommonField.PRODUCT_ID)
+            productId = intent.getStringExtra(CommonField.PRODUCT_ID).safe()
         }
         if (intent.hasExtra(CommonField.TYPE)) {
             type = intent.getIntExtra(CommonField.TYPE, 0)
