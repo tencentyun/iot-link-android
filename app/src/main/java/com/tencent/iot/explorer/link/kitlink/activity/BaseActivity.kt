@@ -253,7 +253,10 @@ abstract class BaseActivity : AppCompatActivity() {
         return true
     }
 
-    protected fun requestPermission(permissions: Array<String>, requestCode: Int = 102) {
+    protected fun requestPermission(
+        permissions: Array<String>,
+        requestCode: Int = DEFAULT_REQUEST_PERMISSIONS_CODE
+    ) {
         ActivityCompat.requestPermissions(this, permissions, requestCode)
     }
 
@@ -263,7 +266,7 @@ abstract class BaseActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 102 || requestCode == 103) {
+        if (requestCode == DEFAULT_REQUEST_PERMISSIONS_CODE || requestCode == REQUEST_BLUETOOTH_PERMISSIONS_CODE) {
             for (i in permissions.indices) {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                     permissionDenied(permissions[i])
@@ -356,5 +359,10 @@ abstract class BaseActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    companion object{
+        const val DEFAULT_REQUEST_PERMISSIONS_CODE = 102 //默认权限申请code码
+        const val REQUEST_BLUETOOTH_PERMISSIONS_CODE = 104 //蓝牙权限申请code码
     }
 }

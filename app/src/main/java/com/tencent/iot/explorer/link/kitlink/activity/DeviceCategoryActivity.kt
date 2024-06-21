@@ -360,7 +360,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 102) {
+        if (requestCode == DEFAULT_REQUEST_PERMISSIONS_CODE) {
             permissionDialog?.dismiss()
             permissionDialog = null
             for (i in permissions.indices) {
@@ -582,7 +582,7 @@ class DeviceCategoryActivity  : PActivity(), MyCallback, CRecyclerView.RecyclerI
                 not_found_dev.visibility = View.GONE
                 return
             }
-            requestPermission(permissions, 103)
+            requestPermission(permissions, REQUEST_BLUETOOTH_PERMISSIONS_CODE)
             permissionDialog = PermissionDialog(this@DeviceCategoryActivity, R.mipmap.permission_location ,getString(R.string.permission_location_lips), getString(R.string.permission_location_ssid_ble))
             permissionDialog!!.show()
 
