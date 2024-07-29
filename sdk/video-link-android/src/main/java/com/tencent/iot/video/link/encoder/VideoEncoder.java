@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 
 public class VideoEncoder {
 
+    private final String TAG = VideoEncoder.class.getSimpleName();
     private final VideoEncodeParam videoEncodeParam;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private MediaCodec mediaCodec;
@@ -27,6 +28,8 @@ public class VideoEncoder {
     private long seq = 0L;
     private int MAX_BITRATE_LENGTH = 1000000;
     private int beginBitRate = 0;
+
+    private boolean isSupportNV21 = false;
 
     private String firstSupportColorFormatCodecName = "";  //  OMX.qcom.video.encoder.avc 和 c2.android.avc.encoder 过滤，这两个h264编码性能好一些。如果都不支持COLOR_FormatYUV420Planar，就用默认的方式。
 
@@ -38,6 +41,8 @@ public class VideoEncoder {
 
     private void initMediaCodec() {
         try {
+            checkSupportedColorFormats("video/avc"); // H.264 编码器
+
             if (!firstSupportColorFormatCodecName.isEmpty()) {
                 mediaCodec = MediaCodec.createByCodecName(firstSupportColorFormatCodecName);
             } else {
@@ -55,8 +60,13 @@ public class VideoEncoder {
             mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
             //描述视频格式的帧速率（以帧/秒为单位）的键。帧率，一般在15至30之内，太小容易造成视频卡顿。
             mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, videoEncodeParam.getFrameRate());
-            //色彩格式，具体查看相关API，不同设备支持的色彩格式不尽相同
-            mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar);
+            if (isSupportNV21) {
+                //色彩格式，具体查看相关API，不同设备支持的色彩格式不尽相同
+                mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar);
+            } else {
+                //色彩格式，具体查看相关API，不同设备支持的色彩格式不尽相同
+                mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar);
+            }
             //关键帧间隔时间，单位是秒
             mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, videoEncodeParam.getiFrameInterval());
             mediaFormat.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_VBR);
@@ -71,6 +81,44 @@ public class VideoEncoder {
             mediaCodec.start();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkSupportedColorFormats(String mimeType) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            MediaCodecList codecList = null;
+            codecList = new MediaCodecList(MediaCodecList.ALL_CODECS);
+            MediaCodecInfo[] codecInfos = codecList.getCodecInfos();
+
+            for (MediaCodecInfo codecInfo : codecInfos) {
+                if (!codecInfo.isEncoder()) {
+                    continue;
+                }
+
+                String[] supportedTypes = codecInfo.getSupportedTypes();
+                for (String type : supportedTypes) {
+                    if (type.equalsIgnoreCase(mimeType)) {
+                        MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType(type);
+                        int[] colorFormats = capabilities.colorFormats;
+
+                        for (int colorFormat : colorFormats) {
+                            switch (colorFormat) {
+                                case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar:
+                                    Log.e(TAG, "Supported color format: COLOR_FormatYUV420Planar");
+                                    isSupportNV21 = false;
+                                    return;
+                                case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar:
+                                    Log.e(TAG, "Supported color format: COLOR_FormatYUV420SemiPlanar");
+                                    isSupportNV21 = true;
+                                    return;
+                                default:
+                                    Log.e(TAG, "Supported color format: " + colorFormat);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -91,7 +139,7 @@ public class VideoEncoder {
             mediaCodec.setParameters(params);
 
         } catch (IllegalStateException e) {
-            Log.e("TAG", "updateBitrate failed", e);
+            Log.e(TAG, "updateBitrate failed", e);
         }
     }
 
@@ -104,24 +152,30 @@ public class VideoEncoder {
     public void encoderH264(byte[] data, boolean mirror) {
         if (executor.isShutdown()) return;
         executor.submit(() -> {
-            byte[] rotateBytes;
-            //视频顺时针旋转90度
-            if (mirror) {
-                rotateBytes = nv21Rotate270(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
-            } else {
-                rotateBytes = nv21Rotate90(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
-            }
-            //将NV21编码成I420
-            byte[] i420 = toI420(rotateBytes, videoEncodeParam.getHeight(), videoEncodeParam.getWidth());
+            byte[] readyToProcessBytes;
+            if (isSupportNV21) {
+                //将NV21编码成NV12
+                byte[] bytes = NV21ToNV12(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
+                //视频顺时针旋转90度
+                byte[] nv12 = rotateNV290(bytes, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
 
-//            //将NV21编码成NV12
-//            byte[] bytes = NV21ToNV12(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
-//            //视频顺时针旋转90度
-//            byte[] nv12 = rotateNV290(bytes, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
-//
-//            if (mirror) {
-//                verticalMirror(nv12, videoEncodeParam.getHeight(), videoEncodeParam.getWidth());
-//            }
+                if (mirror) {
+                    verticalMirror(nv12, videoEncodeParam.getHeight(), videoEncodeParam.getWidth());
+                }
+                readyToProcessBytes = nv12;
+            } else {
+                byte[] rotateBytes;
+                //视频顺时针旋转90度
+                if (mirror) {
+                    rotateBytes = nv21Rotate270(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
+                } else {
+                    rotateBytes = nv21Rotate90(data, videoEncodeParam.getWidth(), videoEncodeParam.getHeight());
+                }
+                //将NV21编码成I420
+                byte[] i420 = toI420(rotateBytes, videoEncodeParam.getHeight(), videoEncodeParam.getWidth());
+                readyToProcessBytes = i420;
+            }
+
 
             try {
                 //拿到输入缓冲区,用于传送数据进行编码
@@ -134,9 +188,9 @@ public class VideoEncoder {
                     ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
                     inputBuffer.clear();
                     //往输入缓冲区写入数据
-                    inputBuffer.put(i420);
+                    inputBuffer.put(readyToProcessBytes);
                     //五个参数，第一个是输入缓冲区的索引，第二个数据是输入缓冲区起始索引，第三个是放入的数据大小，第四个是时间戳，保证递增就是
-                    mediaCodec.queueInputBuffer(inputBufferIndex, 0, i420.length, System.nanoTime() / 1000, 0);
+                    mediaCodec.queueInputBuffer(inputBufferIndex, 0, readyToProcessBytes.length, System.nanoTime() / 1000, 0);
                 }
                 MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
                 //拿到输出缓冲区的索引
@@ -152,7 +206,7 @@ public class VideoEncoder {
 
                     if (bufferInfo.flags == MediaCodec.BUFFER_FLAG_KEY_FRAME) {
                         // I 帧的处理逻辑
-//                        Log.e("TAG", "==========I帧==============="+seq);
+//                        Log.e(TAG, "==========I帧==============="+seq);
                         ByteBuffer spsb = mediaCodec.getOutputFormat().getByteBuffer("csd-0");
                         byte[] sps = new byte[spsb.remaining()];
                         spsb.get(sps, 0, sps.length);
@@ -170,7 +224,7 @@ public class VideoEncoder {
                         }
                     } else {
                         //outData就是输出的h264数据
-//                        Log.e("TAG", "==========P帧===============" + seq);
+//                        Log.e(TAG, "==========P帧===============" + seq);
                         if (encoderListener != null) {
                             encoderListener.onVideoEncoded(outData, System.currentTimeMillis(), seq);
                             seq++;
@@ -356,7 +410,7 @@ public class VideoEncoder {
                             for (int colorFormat : colorFormats) {
 
                                 if (colorFormat == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar) {
-                                    Log.d("TAG", "Video encoder: " + codecInfo.getName() + ", supported color format: " + colorFormat);
+                                    Log.d(TAG, "Video encoder: " + codecInfo.getName() + ", supported color format: " + colorFormat);
                                     firstSupportColorFormatCodecName = codecInfo.getName();
                                     return;
                                 }
