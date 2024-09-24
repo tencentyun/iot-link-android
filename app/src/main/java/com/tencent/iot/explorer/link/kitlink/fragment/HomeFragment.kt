@@ -701,8 +701,10 @@ class HomeFragment : BaseFragment(), HomeFragmentView, MyCallback, PayloadMessag
                             jumpActivity(ControlPanelActivity::class.java)
                         } else {
                             val panelInfo = JSON.parseObject(config.Panel)
-                            if (panelInfo != null && panelInfo["type"] == "h5") {
-                                jumpActivity(DevicePanelActivity::class.java)
+                            if (panelInfo != null && (panelInfo["type"] == DevicePanelActivity.PANEL_TYPE_H5 || panelInfo["type"] == DevicePanelActivity.PANEL_TYPE_FREE)) {
+                                val intent = Intent(requireContext(),DevicePanelActivity::class.java)
+                                intent.putExtra("type",panelInfo["type"].toString())
+                                startActivity(intent)
                             } else {
                                 jumpActivity(ControlPanelActivity::class.java)
                             }

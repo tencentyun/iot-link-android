@@ -41,6 +41,7 @@ import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
 import com.tencent.iot.explorer.link.kitlink.fragment.CommentFragment
+import com.tencent.iot.explorer.link.kitlink.fragment.DeviceCategoryFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.HomeFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.MeFragment
 import com.tencent.iot.explorer.link.kitlink.fragment.SmartFragment
@@ -162,7 +163,7 @@ class MainActivity : PActivity(), MyCallback {
             )
             .addMenu(
                 BottomItemEntity(
-                    getString(R.string.main_tab_4),
+                    getString(R.string.add_device),
                     resources.getColor(R.color.main_tab_normal), resources.getColor(R.color.main_tab_hover),
                     R.mipmap.commet_unpressed, R.mipmap.commet_pressed
                 )
@@ -178,7 +179,11 @@ class MainActivity : PActivity(), MyCallback {
         fragments.clear()
         fragments.add(HomeFragment())
         fragments.add(SmartFragment())
-        fragments.add(CommentFragment())
+        fragments.add(DeviceCategoryFragment().apply {
+            setToMainListener {
+                home_bottom_view.performClickAtItem(0)
+            }
+        })
         fragments.add(MeFragment())
         this.supportFragmentManager.beginTransaction()
             .add(R.id.main_container, fragments[0])

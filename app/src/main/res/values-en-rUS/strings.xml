@@ -736,6 +736,10 @@
     <string name="permission_of_camera_mic_refuse">You refuse to use the microphone permission, Please enable microphone permission in setting app permissions</string>
     <string name="birthday_detail_china">If you are a minor under the age of 18, you will temporarily be unable to use our products and services, please choose your date of birth carefully.</string>
     <string name="birthday_detail_usa">If you are a minor under the age of 13, you will temporarily be unable to use our products and services, please choose your date of birth carefully.</string>
-
+    <string name="code_text" >QR code/barcode</string>
+    <string name="scanner_view_tip_text">Put the QR code/barcode into the box &#10; and it will be scanned automatically</string>
+    <string name="select_qrcode" >Select QR code from album </string>
+    <string name="execute_success_text">Execute Success</string>
+    <string name="execute_failed_text">Execute Failed</string>
     <!--international end  -->
 </resources>

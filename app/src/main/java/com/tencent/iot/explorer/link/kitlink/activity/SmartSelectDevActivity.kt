@@ -19,6 +19,7 @@ import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.customview.verticaltab.TabView
 import com.tencent.iot.explorer.link.customview.verticaltab.VerticalTabLayout
+import com.tencent.iot.explorer.link.kitlink.fragment.DeviceCategoryFragment
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
 import kotlinx.android.synthetic.main.activity_smart_sel_dev.vtab_device_category
 import kotlinx.android.synthetic.main.menu_back_layout.*
@@ -107,7 +108,7 @@ class SmartSelectDevActivity : BaseActivity(), MyCallback, VerticalTabLayout.OnT
                         if (!roomListEnd) {
                             loadRoomList()
                         } else {        // 没有数据了，开始加载所有房间的列表数据
-                            val adapter = DeviceCategoryActivity.MyTabAdapter(this@SmartSelectDevActivity)
+                            val adapter = DeviceCategoryFragment.MyTabAdapter(this@SmartSelectDevActivity)
                             for (item in roomList) {
                                 if (TextUtils.isEmpty(item.RoomId)) {
                                     adapter.titleList.add(getString(R.string.all_devices))

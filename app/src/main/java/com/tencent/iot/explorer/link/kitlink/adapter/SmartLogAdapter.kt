@@ -91,7 +91,8 @@ class SmartLogAdapter(context: Context, list: MutableList<LogMessage>) : Recycle
             holder.taskName.setText(list.get(position).automationName)
         }
 
-        holder.taskDesc.setText(list.get(position).time + " " + list.get(position).result)
+        val result = if (list.get(position).resultCode == 0) context?.getString(R.string.execute_success_text) else context?.getString(R.string.execute_failed_text)
+        holder.taskDesc.setText(list.get(position).time + " " + result)
         holder.failedDetail.adapter = ActionResultAdapter(context, list.get(position).actionResults)
 
         holder.allLayout.setOnClickListener{

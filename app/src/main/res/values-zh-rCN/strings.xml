@@ -736,6 +736,10 @@
     <string name="permission_of_camera_mic_refuse">您已拒绝使用麦克风权限，请在设置应用权限中开启麦克风权限</string>
     <string name="birthday_detail_china">如果您为未满18周岁的未成年人，将暂时无法使用我们的产品服务，请谨慎选择出生日期。</string>
     <string name="birthday_detail_usa">如果您为未满13周岁的未成年人，将暂时无法使用我们的产品服务，请谨慎选择出生日期。</string>
-
+    <string name="code_text" >二维码/条形码</string>
+    <string name="scanner_view_tip_text">将二维码/条形码放入框内，即可自动扫描</string>
+    <string name="select_qrcode" >从相册选取二维码</string>
+    <string name="execute_success_text">执行成功</string>
+    <string name="execute_failed_text">执行失败</string>
     <!--international end  -->
 </resources>

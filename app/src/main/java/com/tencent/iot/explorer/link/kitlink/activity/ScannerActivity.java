@@ -219,7 +219,7 @@ public class ScannerActivity extends com.example.qrcode.ScannerActivity implemen
 
     private void initView() {
         mToolBar = (Toolbar) findViewById(com.example.qrcode.R.id.tool_bar);
-        mToolBar.setTitle("二维码/条形码");
+        mToolBar.setTitle(getString(R.string.code_text));
         mToolBar.setTitleTextColor(Color.WHITE);
         mToolBar.setBackgroundColor(Color.DKGRAY);
         setSupportActionBar(mToolBar);

@@ -30,16 +30,18 @@ import com.tencent.iot.explorer.link.kitlink.webview.WebCallBack
 import kotlinx.android.synthetic.main.activity_device_panel.*
 import kotlinx.android.synthetic.main.menu_back_layout.*
 
-class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, AppLifeCircleListener {
+class DevicePanelActivity : BaseActivity(), View.OnClickListener, MyCallback,
+    AppLifeCircleListener {
 
     private val H5_PANEL_BASE_URL = "https://iot.cloud.tencent.com/scf/h5panel/"
     private var callback: WebCallBack? = null
     private var deviceEntity: DeviceEntity? = null
     private var editPopupWindow: EditPopupWindow? = null
     private var onEventCallback: OnEventCallback? = null
+    private val type: String by lazy { intent.getStringExtra("type") ?: PANEL_TYPE_H5 }
 
     override fun getContentView(): Int {
-        return  R.layout.activity_device_panel
+        return R.layout.activity_device_panel
     }
 
     override fun initView() {
@@ -69,26 +71,42 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
                 if (response.isSuccess()) {
                     JSBridgeKt.register("help_center_bridge", BridgeImpl::class.java)
                     val ticketResponse = JSON.parse(response.data.toString()) as JSONObject
-                    var url = H5_PANEL_BASE_URL +
-                            "?deviceId=${deviceEntity?.DeviceId}" +
-                            "&familyId=${deviceEntity?.FamilyId}" +
-                            "&uin=${App.uuid}" +
-                            "&roomId=${deviceEntity?.RoomId}" +
-                            "&familyType=${App.data.getCurrentFamily().FamilyType}" +
-                            "&lid=${App.data.appLifeCircleId}" +
-                            "&quid=${App.uuid}" +
-                            "&ticket=${ticketResponse[CommonField.TOKEN_TICKET]}" +
-                            "&appID=${T.getContext().applicationInfo.packageName}" +
-                            "&platform=android" +
-                            "&regionId=${App.data.regionId}"
-                    if (deviceEntity?.shareDevice != null && deviceEntity?.shareDevice!!) {
-                        url += "&isShareDevice=true"
-                    }
+                    val url = buildUrl(type, ticketResponse[CommonField.TOKEN_TICKET].toString())
                     showUrl(url)
                 } else {
                     T.show(response.msg)
                 }
             }
+        }
+    }
+
+    private fun buildUrl(type: String, ticket: String): String {
+        return if (type == PANEL_TYPE_FREE) {
+            H5_PANEL_BASE_URL +
+                    "?deviceId=${deviceEntity?.DeviceId}" +
+                    "&familyId=${deviceEntity?.FamilyId}" +
+                    "&roomId=${deviceEntity?.RoomId}" +
+                    "&isShareDevice=${deviceEntity?.shareDevice != null && deviceEntity?.shareDevice!!}" +
+                    "&ticket=${ticket}" +
+                    "&isFreePanel=true" +
+                    "&lang=${Utils.getLang()}"
+        } else {
+            var url = H5_PANEL_BASE_URL +
+                    "?deviceId=${deviceEntity?.DeviceId}" +
+                    "&familyId=${deviceEntity?.FamilyId}" +
+                    "&uin=${App.uuid}" +
+                    "&roomId=${deviceEntity?.RoomId}" +
+                    "&familyType=${App.data.getCurrentFamily().FamilyType}" +
+                    "&lid=${App.data.appLifeCircleId}" +
+                    "&quid=${App.uuid}" +
+                    "&ticket=${ticket}" +
+                    "&appID=${T.getContext().applicationInfo.packageName}" +
+                    "&platform=android" +
+                    "&regionId=${App.data.regionId}"
+            if (deviceEntity?.shareDevice != null && deviceEntity?.shareDevice!!) {
+                url += "&isShareDevice=true"
+            }
+            url
         }
     }
 
@@ -131,7 +149,8 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
         device_panel_webview.settings.allowContentAccess = true
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            device_panel_webview.settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE;
+            device_panel_webview.settings.mixedContentMode =
+                WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE;
         }
         device_panel_webview.settings.blockNetworkImage = false
         device_panel_webview.loadUrl(url)
@@ -141,11 +160,12 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
         callback = WebCallBack(device_panel_webview)
     }
 
-    private val webChromeClient = object: WebChromeClient() {
-        override fun onShowFileChooser (
+    private val webChromeClient = object : WebChromeClient() {
+        override fun onShowFileChooser(
             webView: WebView,
             filePathCallback: ValueCallback<Array<Uri>>,
-            fileChooserParams: FileChooserParams?): Boolean {
+            fileChooserParams: FileChooserParams?
+        ): Boolean {
             return true
         }
 
@@ -154,9 +174,15 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
             tv_title.text = title
         }
 
-        override fun onReceivedTouchIconUrl(view: WebView?, url: String?, precomposed: Boolean) { }
+        override fun onReceivedTouchIconUrl(view: WebView?, url: String?, precomposed: Boolean) {}
 
-        override fun onJsPrompt(view: WebView, url: String, message: String, defaultValue: String, result: JsPromptResult): Boolean {
+        override fun onJsPrompt(
+            view: WebView,
+            url: String,
+            message: String,
+            defaultValue: String,
+            result: JsPromptResult
+        ): Boolean {
             result.confirm(JSBridgeKt.callNative(view, message))
             return true
         }
@@ -169,7 +195,7 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
         }
     }
 
-    private val webViewClient = object: WebViewClient() {
+    private val webViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             L.e("shouldOverrideUrlLoading: " + url)
             when {
@@ -177,44 +203,55 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
                     jumpActivity(DeviceDetailsActivity::class.java)
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("goFeedBackPage") -> {
                     jumpActivity(FeedbackForH5Activity::class.java)
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("goDeviceInfoPage") -> {
                     jumpActivity(DeviceInfoActivity::class.java)
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("goEditDeviceNamePage") -> {
                     showEditPopup()
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("goRoomSettingPage") -> {
                     jumpActivity(SelectRoomActivity::class.java)
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("goShareDevicePage") -> {
                     jumpActivity(ShareUserListActivity::class.java)
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("navBack") -> {
                     App.data.setRefreshLevel(2) // 2: 刷新设备列表
                     backToMain()
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("reloadAfterUnmount") -> {
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("setShareConfig") -> {
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("goFirmwareUpgradePage") -> {
                     callBackToH5(getCallbackId(url))
                 }
+
                 url.contains("openBluetoothAdapter") -> {
                     JSBridgeKt.callNative(view, url)
                     onEventCallback = JSBridgeKt.onEventCallback
                 }
+
                 else -> {
                     JSBridgeKt.callNative(view, url)
                 }
@@ -290,5 +327,10 @@ class DevicePanelActivity: BaseActivity(), View.OnClickListener, MyCallback, App
         jsonObject1[CommonField.HANDLER_NAME] = "emitEvent"
         jsonObject1["data"] = jsonObject2
         return jsonObject1
+    }
+
+    companion object {
+        const val PANEL_TYPE_H5 = "h5"
+        const val PANEL_TYPE_FREE = "free"
     }
 }
