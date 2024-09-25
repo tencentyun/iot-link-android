@@ -118,6 +118,10 @@ object RequestCode {
     const val get_recommend_device_list = 7001
     const val get_products_config = 7002
     const val describe_product_config = 7003
+    const val get_first_level_category_list = 7004
+    const val get_second_level_category_list = 7005
+    const val get_category_device_list = 7006
+
     /*************设备推荐接口结束**************/
 
     /*************场景联动接口开始**************/

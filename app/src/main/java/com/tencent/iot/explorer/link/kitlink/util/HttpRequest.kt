@@ -1369,14 +1369,54 @@ class HttpRequest private constructor() {
     /**
      * 获取产品推荐父类别列表
      */
+    @Deprecated(
+        message = "This method is deprecated and will be removed in the future.",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith("getFirstLevelCategoryList(callback)")
+    )
     fun getParentCategoryList(callback: MyCallback) {
         val param = tokenParams("AppGetParentCategoryList")
         tokenPost(param, callback, RequestCode.get_parent_category_list)
     }
 
     /**
+     * 获取产品一级类别列表
+     */
+    fun getFirstLevelCategoryList(callback: MyCallback) {
+        val param = tokenParams("AppGetAppProductCategoryList")
+        tokenPost(param, callback, RequestCode.get_first_level_category_list)
+    }
+
+    /**
+     *  获取产品二级类别
+     */
+    fun getSecondLevelCategoryList(categoryKey: String, callback: MyCallback) {
+        val param = tokenParams("AppGetAppProductSubCategoryList")
+        param["CategoryKey"] = categoryKey
+        param["Limit"] = 100
+        param["Offset"] = 0
+        tokenPost(param, callback, RequestCode.get_second_level_category_list)
+    }
+
+    /**
+     *  获取二级类别产品设备
+     */
+    fun getCategoryDeviceList(subCategoryKey: String, callback: MyCallback) {
+        val param = tokenParams("AppGetAppProductSubCategoryProductList")
+        param["SubCategoryKey"] = subCategoryKey
+        param["Limit"] = 100
+        param["Offset"] = 0
+        tokenPost(param, callback, RequestCode.get_category_device_list)
+    }
+
+    /**
      * 推荐产品子类别列表
      */
+    @Deprecated(
+        message = "This method is deprecated and will be removed in the future.",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith("getSecondLevelCategoryList(callback)")
+    )
     fun getRecommList(
         categoryKey: String,
         callback: MyCallback

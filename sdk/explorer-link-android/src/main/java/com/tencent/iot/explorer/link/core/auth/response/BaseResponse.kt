@@ -1,5 +1,6 @@
 package com.tencent.iot.explorer.link.core.auth.response
 
+import com.google.gson.Gson
 import com.tencent.iot.explorer.link.core.auth.util.JsonManager
 
 /**
@@ -23,5 +24,9 @@ class BaseResponse {
      */
     fun <T> parse(clazz: Class<T>): T? {
         return JsonManager.parseJson(data.toString(), clazz)
+    }
+
+    fun <T> jsonParse(clazz: Class<T>): T? {
+        return Gson().fromJson(data.toString(), clazz)
     }
 }

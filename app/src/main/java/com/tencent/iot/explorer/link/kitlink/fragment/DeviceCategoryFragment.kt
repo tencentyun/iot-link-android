@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.annotation.IntDef
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -64,6 +65,7 @@ import com.tencent.iot.explorer.link.kitlink.activity.SoftApStepActivity
 import com.tencent.iot.explorer.link.kitlink.adapter.BleDeviceAdapter
 import com.tencent.iot.explorer.link.kitlink.consts.CommonField
 import com.tencent.iot.explorer.link.kitlink.entity.BindDevResponse
+import com.tencent.iot.explorer.link.kitlink.entity.DeviceCategoryEntity
 import com.tencent.iot.explorer.link.kitlink.entity.GatewaySubDevsResp
 import com.tencent.iot.explorer.link.kitlink.entity.ProdConfigDetailEntity
 import com.tencent.iot.explorer.link.kitlink.entity.ProductEntity
@@ -71,6 +73,8 @@ import com.tencent.iot.explorer.link.kitlink.entity.ProductGlobal
 import com.tencent.iot.explorer.link.kitlink.entity.ProductsEntity
 import com.tencent.iot.explorer.link.kitlink.holder.DeviceListViewHolder
 import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryListResponse
+import com.tencent.iot.explorer.link.kitlink.response.DeviceCategoryResponse
+import com.tencent.iot.explorer.link.kitlink.response.FirstLevelCategoryInfo
 import com.tencent.iot.explorer.link.kitlink.response.ProductsConfigResponse
 import com.tencent.iot.explorer.link.kitlink.util.HttpRequest
 import com.tencent.iot.explorer.link.kitlink.util.RequestCode
@@ -81,7 +85,6 @@ import kotlinx.android.synthetic.main.fragment_device_category.gray_line_0
 import kotlinx.android.synthetic.main.fragment_device_category.gray_line_1
 import kotlinx.android.synthetic.main.fragment_device_category.iv_scann
 import kotlinx.android.synthetic.main.fragment_device_category.linearlayout_scann
-import kotlinx.android.synthetic.main.fragment_device_category.my_scroll_view
 import kotlinx.android.synthetic.main.fragment_device_category.not_found_dev
 import kotlinx.android.synthetic.main.fragment_device_category.scann_fail
 import kotlinx.android.synthetic.main.fragment_device_category.scanning
@@ -136,8 +139,8 @@ class DeviceCategoryFragment : BaseFragment(), MyCallback, CRecyclerView.Recycle
     @IntDef(FormSourceType.FROM_MAIN_ACTIVITY, FormSourceType.FROM_DEVICE_CATEGORY_ACTIVITY)
     annotation class FormSourceType {
         companion object {
-            public final const val FROM_MAIN_ACTIVITY = 1
-            public final const val FROM_DEVICE_CATEGORY_ACTIVITY = 2
+            public const val FROM_MAIN_ACTIVITY = 1
+            public const val FROM_DEVICE_CATEGORY_ACTIVITY = 2
         }
     }
 
@@ -160,12 +163,10 @@ class DeviceCategoryFragment : BaseFragment(), MyCallback, CRecyclerView.Recycle
         bleDevAdapter = BleDeviceAdapter(bleDevs)
         bleDevAdapter?.scaningTxt = tv_scanning_ble_devs
         bleDevAdapter?.titleTxt = tv_devs_tip
-        val layoutManager = GridLayoutManager(requireContext(), 4)
-        scanned_device_list.setLayoutManager(layoutManager)
         scanned_device_list.adapter = bleDevAdapter
         App.data.tabPosition = 0  // Reset the position of vertical tab
         App.data.screenWith = getScreenWidth()
-        HttpRequest.instance.getParentCategoryList(this)
+        HttpRequest.instance.getFirstLevelCategoryList(this)
         BleConfigService.get().connetionListener = bleDeviceConnectionListener
         beginScanning()
         setListener()
@@ -269,27 +270,6 @@ class DeviceCategoryFragment : BaseFragment(), MyCallback, CRecyclerView.Recycle
         vtab_device_category.addOnTabSelectedListener(this)
         retry_to_scann01.setOnClickListener(this)
         retry_to_scann02.setOnClickListener(this)
-        my_scroll_view.setScrollChangedListener(object : MyScrollView.ScrollChangedListener {
-            override fun onScrollChanged(
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-                val height = gray_line_0.height + gray_line_1.height + linearlayout_scann.height
-                if (scrollY >= height && vtab_device_category.parent == container_normal) {
-                    container_normal.removeView(vtab_device_category)
-                    gray_line_1.visibility = View.GONE
-                    container_top.visibility = View.VISIBLE
-                    container_top.addView(vtab_device_category)
-                } else if (scrollY < height && vtab_device_category.parent == container_top) {
-                    gray_line_1.visibility = View.VISIBLE
-                    container_top.visibility = View.GONE
-                    container_top.removeView(vtab_device_category)
-                    container_normal.addView(vtab_device_category, 0)
-                }
-            }
-        })
         bleDevAdapter?.setOnItemClicked(onBleDevSeclectedListener)
     }
 
@@ -323,6 +303,25 @@ class DeviceCategoryFragment : BaseFragment(), MyCallback, CRecyclerView.Recycle
                             fragmentManager,
                             R.id.devce_fragment_container,
                             generateFragments(),
+                            adapter
+                        )
+                    }
+                }
+            }
+            RequestCode.get_first_level_category_list ->{
+                if (response.isSuccess()) {
+                    response.jsonParse(DeviceCategoryResponse::class.java)?.let {
+                        val adapter = MyTabAdapter(requireActivity())
+                        for (item in it.Infos) {
+                            val categoryName =
+                                if (Utils.getLang() == "zh-CN") item.CategoryName else item.CategoryEnName
+                            adapter.titleList.add(categoryName)
+                        }
+                        vtab_device_category.layoutParams.width = App.data.screenWith / 4
+                        vtab_device_category.setupWithFragment(
+                            fragmentManager,
+                            R.id.devce_fragment_container,
+                            generateFragments(it.Infos),
                             adapter
                         )
                     }
@@ -680,14 +679,22 @@ class DeviceCategoryFragment : BaseFragment(), MyCallback, CRecyclerView.Recycle
         )
     }
 
-    private fun generateFragments(): List<Fragment> {
-        val fragmentList = arrayListOf<Fragment>()
-        for (item in App.data.recommendDeviceCategoryList) {
-            val fragment = DeviceFragment(requireContext(), DeviceFragment.CHECK_H5_CONDITION)
-            val bundle = Bundle()
-            bundle.putString("CategoryKey", item.CategoryKey)
-            fragment.arguments = bundle
-            fragmentList.add(fragment)
+    private fun generateFragments(Infos: List<FirstLevelCategoryInfo>? = null): List<Fragment> {
+        val fragmentList: List<Fragment> = if (Infos.isNullOrEmpty()) {
+            App.data.recommendDeviceCategoryList.map { deviceCategoryEntity ->
+                DeviceFragment(requireContext(), DeviceFragment.CHECK_H5_CONDITION).apply {
+                    arguments = bundleOf("CategoryKey" to deviceCategoryEntity.CategoryKey)
+                }
+            }
+        } else {
+            Infos.map { categoryInfo ->
+                SecondDeviceCategoryFragment(
+                    requireContext(),
+                    DeviceFragment.CHECK_H5_CONDITION
+                ).apply {
+                    arguments = bundleOf("CategoryKey" to categoryInfo.CategoryKey)
+                }
+            }
         }
         App.data.numOfCategories = fragmentList.size
         return fragmentList
