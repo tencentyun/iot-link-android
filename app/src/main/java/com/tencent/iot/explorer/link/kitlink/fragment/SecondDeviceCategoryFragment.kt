@@ -444,7 +444,9 @@ class SecondDeviceCategoryFragment() : BaseFragment(), MyCallback {
                 itemView.setOnClickListener {
                     itemClickListener.onItemClick(layoutPosition, entity)
                 }
-                text?.text = entity.ProductName
+                val productName =
+                    if (Utils.getLang() == "zh-CN") entity.ProductName else entity.ProductEnName
+                text?.text = productName
                 val url = entity.ProductUrl
                 if (TextUtils.isEmpty(url)) {
                     Picasso.get().load(R.mipmap.device_placeholder)

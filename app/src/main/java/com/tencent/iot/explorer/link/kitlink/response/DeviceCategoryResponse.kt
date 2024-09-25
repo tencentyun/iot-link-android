@@ -37,6 +37,7 @@ data class CategoryDeviceInfo(
     val IsRelatedProduct: Boolean = false,
     val ProductId: String = "",
     val ProductName: String = "",
+    val ProductEnName: String = "",
     val ProductUrl: String = "",
     val IsRecommend: Int = 0,
     val Type: String = "",
