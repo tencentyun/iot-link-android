@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -112,7 +113,7 @@ class SecondDeviceCategoryFragment() : BaseFragment(), MyCallback {
         HttpRequest.instance.getSecondLevelCategoryList(categoryKey, this)
     }
 
-    var bleToGoView = object : BleToGoView {
+    private val bleToGoView = object : BleToGoView {
         override fun onGoH5Ble(productId: String) {
             var bundle = Bundle()
             bundle.putString(CommonField.EXTRA_INFO, productId)
@@ -238,11 +239,17 @@ class SecondDeviceCategoryFragment() : BaseFragment(), MyCallback {
             llTitleLp.rightMargin = Utils.dp2px(requireContext(), 10)
             mLlTitleMap[it.SubCategoryKey] = llTitle
             second_category_container.addView(llTitle, llTitleLp)
-            val deviceGridView = RecyclerView(requireContext())
+            val deviceGridView = object : RecyclerView(requireContext()) {
+                override fun onTouchEvent(e: MotionEvent?) = false
+            }
+            deviceGridView.overScrollMode = View.OVER_SCROLL_NEVER
             deviceGridView.tag = "${it.SubCategoryKey}_gridview_tag"
             val gridAdapter = GridAdapter(onItemClickListener)
             deviceGridView.adapter = gridAdapter
-            deviceGridView.layoutManager = GridLayoutManager(requireContext(), 3)
+            deviceGridView.layoutManager = object : GridLayoutManager(requireContext(), 3) {
+                override fun canScrollHorizontally() = false
+                override fun canScrollVertically() = false
+            }
             deviceGridView.isVisible = false
             mGridAdapterMap[it.SubCategoryKey] = deviceGridView
             second_category_container.addView(deviceGridView)
@@ -331,7 +338,11 @@ class SecondDeviceCategoryFragment() : BaseFragment(), MyCallback {
 
     private val onItemClickListener = object : OnItemClickListener<CategoryDeviceInfo> {
         override fun onItemClick(position: Int, data: CategoryDeviceInfo) {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 clickDeviceInfo = data
                 // 查看请求location权限的时间是否大于48小时
                 var locationJsonString = Utils.getStringValueFromXml(
@@ -365,7 +376,7 @@ class SecondDeviceCategoryFragment() : BaseFragment(), MyCallback {
                 )
 
             } else {
-                if (data.IsRelatedProduct){// 根据推荐设备的配网方式，跳转到SmartConfig或者SoftAp配网界面
+                if (data.IsRelatedProduct) {// 根据推荐设备的配网方式，跳转到SmartConfig或者SoftAp配网界面
                     if (goBleH5Presenter != null) {
                         conditionPrefix = false
                         goBleH5Presenter!!.checkProductConfig(data.ProductId)
@@ -374,7 +385,7 @@ class SecondDeviceCategoryFragment() : BaseFragment(), MyCallback {
                             listOf(data.ProductId), this@SecondDeviceCategoryFragment
                         )
                     }
-                }else{
+                } else {
                     startActivityWithExtra(SmartConfigStepActivity::class.java, "")
                 }
             }
