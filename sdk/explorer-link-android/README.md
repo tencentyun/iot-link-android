@@ -671,7 +671,7 @@ Didn't find class "org.java_websocket.client.WebSocketClient"
 
 dependencies {
 
-implementation "org.java-websocket:Java-WebSocket:1.4.0"
+implementation "org.java-websocket:Java-WebSocket:1.5.6"
 
 }
 
