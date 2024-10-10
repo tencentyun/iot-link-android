@@ -129,7 +129,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     //WebSocket
-    implementation "org.java-websocket:Java-WebSocket:1.4.0"
+    implementation "org.java-websocket:Java-WebSocket:1.5.7"
     //EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
 
@@ -180,10 +180,10 @@ dependencies {
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     
-    implementation 'com.squareup.retrofit2:retrofit:2.0.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
 
     implementation 'com.yangy:YZxing-lib:2.2'
-    implementation 'com.alibaba:fastjson:1.2.73'
+    implementation 'com.alibaba:fastjson:2.0.31'
     implementation "com.tencent.iot.thirdparty.android:esptouch:0.3.7.2"
     implementation "com.github.skydoves:progressview:1.1.2"
     implementation 'com.belerweb:pinyin4j:2.5.0'
