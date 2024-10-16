@@ -12,25 +12,26 @@ class StringCallAdapterFactory private constructor() : CallAdapter.Factory() {
         type: Type?,
         array: Array<out Annotation>?,
         retrofit: Retrofit?
-    ): CallAdapter<*>? {
+    ): CallAdapter<Any, String>? {
         if (type == String::class.java)
             return StringCallAdapter()
         return null
     }
 
-    inner class StringCallAdapter : CallAdapter<String> {
-        override fun <R : Any?> adapt(call: Call<R>?): String {
+    inner class StringCallAdapter : CallAdapter<Any, String> {
+        override fun responseType(): Type {
+            return String::class.java
+        }
+
+        override fun adapt(call: Call<Any>): String {
             try {
-                return call?.execute()?.body().toString()
+                return call.execute().body().toString()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
             return ""
         }
 
-        override fun responseType(): Type {
-            return String::class.java
-        }
     }
 
     companion object {
