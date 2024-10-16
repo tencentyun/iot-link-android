@@ -180,7 +180,7 @@ dependencies {
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     
-    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
     implementation 'com.yangy:YZxing-lib:2.2'
     implementation 'com.alibaba:fastjson:2.0.31'
