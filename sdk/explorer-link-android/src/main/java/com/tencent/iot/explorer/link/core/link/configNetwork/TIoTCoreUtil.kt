@@ -24,7 +24,7 @@ import java.util.*
 
 class TIoTCoreUtil {
     @Volatile
-    var groupAddress = "239.0.0.255"
+    var groupAddress = ""
 
     var softAPService: SoftAPService? = null
     var softAPConfigNetListener: SoftAPConfigNetListener? = null
