@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/v_title"
+        layout="@layout/title_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_video_preview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_title">
+
+        <TextureView
+            android:id="@+id/v_preview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btn_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <include
+                android:id="@+id/ll_dash_board"
+                layout="@layout/dash_board_layout"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/iv_orientation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.tencent.iot.explorer.link.demo.common.customView.RoundImageView
+                android:id="@+id/iv_orientation_back"
+                android:layout_width="32dp"
+                android:layout_height="0dp"
+                android:src="@color/black_B3000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_orientation"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="8dp"
+                android:src="@mipmap/orientation"
+                app:layout_constraintBottom_toBottomOf="@id/iv_orientation_back"
+                app:layout_constraintEnd_toEndOf="@id/iv_orientation_back"
+                app:layout_constraintStart_toStartOf="@id/iv_orientation_back"
+                app:layout_constraintTop_toTopOf="@id/iv_orientation_back" />
+
+            <com.tencent.iot.explorer.link.demo.common.customView.RoundImageView
+                android:id="@+id/iv_audio_back"
+                android:layout_width="32dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="10dp"
+                android:src="@color/black_B3000000"
+                app:layout_constraintBottom_toBottomOf="@id/iv_orientation_back"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintEnd_toStartOf="@id/iv_orientation_back" />
+
+            <ImageView
+                android:id="@+id/iv_audio"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="8dp"
+                android:src="@mipmap/audio"
+                app:layout_constraintBottom_toBottomOf="@id/iv_audio_back"
+                app:layout_constraintEnd_toEndOf="@id/iv_audio_back"
+                app:layout_constraintStart_toStartOf="@id/iv_audio_back"
+                app:layout_constraintTop_toTopOf="@id/iv_audio_back" />
+
+            <com.tencent.iot.explorer.link.demo.common.customView.RoundImageView
+                android:id="@+id/iv_video_quality_back"
+                android:layout_width="32dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="10dp"
+                android:src="@color/black_B3000000"
+                app:layout_constraintBottom_toBottomOf="@id/iv_audio_back"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintEnd_toStartOf="@id/iv_audio_back" />
+
+            <TextView
+                android:id="@+id/tv_video_quality"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:src="@mipmap/no_audio"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_12"
+                app:layout_constraintBottom_toBottomOf="@id/iv_video_quality_back"
+                app:layout_constraintEnd_toEndOf="@id/iv_video_quality_back"
+                app:layout_constraintStart_toStartOf="@id/iv_video_quality_back"
+                app:layout_constraintTop_toTopOf="@id/iv_video_quality_back" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_video_preview">
+
+        <TextView
+            android:id="@+id/tv_product_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="productId:"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_24"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <EditText
+            android:id="@+id/et_product_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_product_id" />
+
+        <TextView
+            android:id="@+id/tv_device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="deviceName:"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_24"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_id" />
+
+        <EditText
+            android:id="@+id/et_device_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_device_name"
+            app:layout_constraintTop_toBottomOf="@+id/et_product_id" />
+
+
+        <TextView
+            android:id="@+id/tv_p2p_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="P2PInfo:"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_24"
+            app:layout_constraintTop_toBottomOf="@+id/tv_device_name" />
+
+        <EditText
+            android:id="@+id/et_p2p_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_p2p_info"
+            app:layout_constraintTop_toBottomOf="@+id/et_device_name" />
+
+        <Button
+            android:id="@+id/btn_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="连接设备"
+            app:layout_constraintTop_toBottomOf="@+id/tv_p2p_info" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

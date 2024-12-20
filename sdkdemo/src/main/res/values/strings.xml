@@ -38,6 +38,7 @@
     <string name="video">IoT Video（消费版）</string>
     <string name="video_pro">IoT Video（行业版）</string>
     <string name="video_wlan">IoT Video（局域网）</string>
+    <string name="video_test">IoT Video Test</string>
     <string name="video_client_token">Client token</string>
     <string name="search_devs">探测设备</string>
     <string name="api_tip">应用端API</string>
