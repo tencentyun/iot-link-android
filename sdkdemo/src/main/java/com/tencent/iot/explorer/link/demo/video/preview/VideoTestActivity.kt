@@ -87,8 +87,14 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     override fun initView() {
         productId = intent.getStringExtra("productId")?.toString() ?: ""
         deviceName = intent.getStringExtra("deviceName")?.toString() ?: ""
-        xp2pInfo = intent.getStringExtra("p2pInfo")?.toString() ?:  ""
-        audioRecordUtil = AudioRecordUtil(this, "${productId}/${deviceName}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
+        xp2pInfo = intent.getStringExtra("p2pInfo")?.toString() ?: ""
+        audioRecordUtil = AudioRecordUtil(
+            this,
+            "${productId}/${deviceName}",
+            16000,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT
+        )
         XP2P.setCallback(this)
         XP2P.startService(this, "${productId}/${deviceName}", productId, deviceName)
 
@@ -304,10 +310,33 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
         Log.e("VideoTestActivity", "xp2pEventNotify id:$id  msg:$msg  event:$event")
-        if (event == 1004 || event == 1005) {
+        if (event == 1003) {
+            XP2P.stopService("${productId}/${deviceName}")
+            XP2P.startService(this, "${productId}/${deviceName}", productId, deviceName)
+            val ret = XP2P.setParamsForXp2pInfo(
+                "${productId}/${deviceName}", "", "", xp2pInfo
+            )
+            if (ret != 0) {
+                launch(Dispatchers.Main) {
+                    val errInfo: String
+                    if (ret.toString() == "-1007") {
+                        errInfo = getString(R.string.xp2p_err_version)
+                    } else {
+                        errInfo = getString(
+                            R.string.error_with_code,
+                            "${productId}/${deviceName}",
+                            ret.toString()
+                        )
+                    }
+                    Toast.makeText(this@VideoTestActivity, errInfo, Toast.LENGTH_SHORT).show()
+                }
+            }
+            resetPlayer()
+        } else if (event == 1004 || event == 1005) {
             if (event == 1004) {
                 Log.e("VideoTestActivity", "====event === 1004")
                 XP2P.delegateHttpFlv(id)?.let {
+                    XP2P.recordstream(id)
                     urlPrefix = it
                     if (!TextUtils.isEmpty(urlPrefix)) {
                         resetPlayer()
