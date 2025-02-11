@@ -118,74 +118,152 @@
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_video_preview">
 
-        <TextView
-            android:id="@+id/tv_product_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="productId:"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ts_24"
+        <View
+            android:id="@+id/v_btn_back"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@mipmap/video_control_btn_background"
+            app:layout_constraintDimensionRatio="h, 343:158"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <EditText
-            android:id="@+id/et_product_id"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_product_id" />
-
-        <TextView
-            android:id="@+id/tv_device_name"
+        <CheckBox
+            android:id="@+id/radio_talk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="deviceName:"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ts_24"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_id" />
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@drawable/background_talk_radio_style"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
+            android:text="@string/talk"
+            android:textSize="@dimen/ts_15"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintHorizontal_bias="0.08"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.14" />
 
-        <EditText
-            android:id="@+id/et_device_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_device_name"
-            app:layout_constraintTop_toBottomOf="@+id/et_product_id" />
-
-
-        <TextView
-            android:id="@+id/tv_p2p_info"
+        <CheckBox
+            android:id="@+id/radio_record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="P2PInfo:"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ts_24"
-            app:layout_constraintTop_toBottomOf="@+id/tv_device_name" />
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@drawable/background_record_radio_style"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
+            android:text="@string/record"
+            android:textSize="@dimen/ts_15"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintHorizontal_bias="0.92"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.14" />
 
-        <EditText
-            android:id="@+id/et_p2p_info"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_p2p_info"
-            app:layout_constraintTop_toBottomOf="@+id/et_device_name" />
-
-        <Button
-            android:id="@+id/btn_connect"
+        <CheckBox
+            android:id="@+id/radio_playback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="连接设备"
-            app:layout_constraintTop_toBottomOf="@+id/tv_p2p_info" />
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@mipmap/playback"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
+            android:text="@string/playback"
+            android:textSize="@dimen/ts_15"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintHorizontal_bias="0.08"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.86" />
+
+        <CheckBox
+            android:id="@+id/radio_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@mipmap/photo"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
+            android:text="@string/photo"
+            android:textSize="@dimen/ts_15"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintHorizontal_bias="0.92"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.86" />
+
+        <ImageView
+            android:id="@+id/iv_left"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="15dp"
+            android:src="@mipmap/ic_arrow_left_gray"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintHorizontal_bias="0.35"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back" />
+
+        <ImageView
+            android:id="@+id/iv_right"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="15dp"
+            android:rotation="180"
+            android:src="@mipmap/ic_arrow_left_gray"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintHorizontal_bias="0.65"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back" />
+
+        <ImageView
+            android:id="@+id/iv_up"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="15dp"
+            android:rotation="90"
+            android:src="@mipmap/ic_arrow_left_gray"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.12" />
+
+        <ImageView
+            android:id="@+id/iv_down"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="15dp"
+            android:rotation="-90"
+            android:src="@mipmap/ic_arrow_left_gray"
+            app:layout_constraintBottom_toBottomOf="@id/v_btn_back"
+            app:layout_constraintEnd_toEndOf="@id/v_btn_back"
+            app:layout_constraintStart_toStartOf="@id/v_btn_back"
+            app:layout_constraintTop_toTopOf="@id/v_btn_back"
+            app:layout_constraintVertical_bias="0.88" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

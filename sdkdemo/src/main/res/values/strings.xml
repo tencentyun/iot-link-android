@@ -34,6 +34,7 @@
     <string name="select_local_album">选择图库</string>
     <string name="demo_name">IoT Video</string>
     <string name="iot_demo_name">IoT Video Demo</string>
+    <string name="iot_test_demo_name">IoT Video TEST</string>
     <string name="welcome">欢迎使用腾讯云 IoT Video</string>
     <string name="video">IoT Video（消费版）</string>
     <string name="video_pro">IoT Video（行业版）</string>
@@ -49,9 +50,13 @@
     <string name="access_id">Access ID</string>
     <string name="access_token">Access Token</string>
     <string name="product_id">Product ID</string>
+    <string name="device_name">Device Name</string>
+    <string name="p2p_info">P2P INFO</string>
     <string name="hint_access_id">请输入Access ID</string>
     <string name="hint_access_token">请输入Access Token</string>
     <string name="hint_product_id">请输入Product ID</string>
+    <string name="hint_device_name">请输入Device Name</string>
+    <string name="hint_p2p_info">请输入P2P INFO</string>
     <string name="hint_client_token">请输入Client Token</string>
     <string name="please_use_sdk">请选择使用多媒体 SDK</string>
     <string name="my_devs">我的设备</string>

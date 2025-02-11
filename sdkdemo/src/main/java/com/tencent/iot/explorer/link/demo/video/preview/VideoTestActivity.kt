@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.demo.video.preview
 
+import android.Manifest
 import android.graphics.SurfaceTexture
+import android.media.AudioFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -9,23 +11,35 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Surface
 import android.view.TextureView
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import com.alibaba.fastjson.JSONArray
+import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
+import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.video.Command
+import com.tencent.iot.explorer.link.demo.video.DevInfo
+import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.demo.video.utils.TipToastDialog
+import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
+import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
+import kotlinx.android.synthetic.main.activity_video_preview.iv_down
+import kotlinx.android.synthetic.main.activity_video_preview.iv_left
+import kotlinx.android.synthetic.main.activity_video_preview.iv_right
+import kotlinx.android.synthetic.main.activity_video_preview.iv_up
 import kotlinx.android.synthetic.main.activity_video_preview.layout_video_preview
+import kotlinx.android.synthetic.main.activity_video_preview.radio_photo
+import kotlinx.android.synthetic.main.activity_video_preview.radio_playback
+import kotlinx.android.synthetic.main.activity_video_preview.radio_record
+import kotlinx.android.synthetic.main.activity_video_preview.radio_talk
 import kotlinx.android.synthetic.main.activity_video_preview.tv_video_quality
 import kotlinx.android.synthetic.main.activity_video_preview.v_preview
-import kotlinx.android.synthetic.main.activity_video_test.btn_connect
-import kotlinx.android.synthetic.main.activity_video_test.et_device_name
-import kotlinx.android.synthetic.main.activity_video_test.et_p2p_info
-import kotlinx.android.synthetic.main.activity_video_test.et_product_id
 import kotlinx.android.synthetic.main.dash_board_layout.tv_a_cache
 import kotlinx.android.synthetic.main.dash_board_layout.tv_tcp_speed
 import kotlinx.android.synthetic.main.dash_board_layout.tv_v_cache
@@ -59,22 +73,46 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     var showTip = false
     var firstIn = true
     val MSG_UPDATE_HUD = 1
+    var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+    var filePath: String? = null
+    var audioRecordUtil: AudioRecordUtil? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        XP2P.setCallback(this)
-    }
+    @Volatile
+    var speakAble = false
 
     override fun getContentView(): Int {
         return R.layout.activity_video_test
     }
 
     override fun initView() {
+        productId = intent.getStringExtra("productId")?.toString() ?: ""
+        deviceName = intent.getStringExtra("deviceName")?.toString() ?: ""
+        xp2pInfo = intent.getStringExtra("p2pInfo")?.toString() ?:  ""
+        audioRecordUtil = AudioRecordUtil(this, "${productId}/${deviceName}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
+        XP2P.setCallback(this)
+        XP2P.startService(this, "${productId}/${deviceName}", productId, deviceName)
+
+        val ret = XP2P.setParamsForXp2pInfo(
+            "${productId}/${deviceName}", "", "", xp2pInfo
+        )
+        if (ret != 0) {
+            launch(Dispatchers.Main) {
+                val errInfo: String
+                if (ret.toString() == "-1007") {
+                    errInfo = getString(R.string.xp2p_err_version)
+                } else {
+                    errInfo = getString(
+                        R.string.error_with_code,
+                        "${productId}/${deviceName}",
+                        ret.toString()
+                    )
+                }
+                Toast.makeText(this@VideoTestActivity, errInfo, Toast.LENGTH_SHORT).show()
+            }
+        }
+
         tv_video_quality.text = "高清"
         v_preview.surfaceTextureListener = this
-        et_product_id.setText(productId)
-        et_device_name.setText(deviceName)
-        et_p2p_info.setText(xp2pInfo)
         val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()
         wm.defaultDisplay.getMetrics(dm)
@@ -86,44 +124,117 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     }
 
     override fun setListener() {
-        btn_connect.setOnClickListener {
-            if (et_product_id.text.isNullOrEmpty()) {
-                show("请输入productId")
-                return@setOnClickListener
-            }
-            if (et_device_name.text.isNullOrEmpty()) {
-                show("请输入deviceName")
-                return@setOnClickListener
-            }
-            if (et_p2p_info.text.isNullOrEmpty()) {
-                show("请输入P2PInfo")
-                return@setOnClickListener
-            }
-            productId = et_product_id.text.toString()
-            deviceName = et_device_name.text.toString()
-            xp2pInfo = et_p2p_info.text.toString()
-            XP2P.startService(
-                this@VideoTestActivity, "${productId}/${deviceName}", productId, deviceName
-            )
-            val ret = XP2P.setParamsForXp2pInfo(
-                "${productId}/${deviceName}", "", "", xp2pInfo
-            )
-            if (ret != 0) {
-                launch(Dispatchers.Main) {
-                    val errInfo: String
-                    if (ret.toString() == "-1007") {
-                        errInfo = getString(R.string.xp2p_err_version)
-                    } else {
-                        errInfo = getString(
-                            R.string.error_with_code,
-                            "${productId}/${deviceName}",
-                            ret.toString()
-                        )
-                    }
-                    Toast.makeText(this@VideoTestActivity, errInfo, Toast.LENGTH_SHORT).show()
-                }
+        radio_talk.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked && checkPermissions(permissions)) {
+                if (!speakAble(true)) radio_talk.isChecked = false
+            } else if (isChecked && !checkPermissions(permissions)) {
+                requestPermission(permissions)
+            } else {
+                speakAble(false)
             }
         }
+        radio_record.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                filePath = CommonUtils.generateFileDefaultPath()
+                var ret = player.startRecord(filePath)
+                if (ret != 0) {
+                    ToastDialog(
+                        this,
+                        ToastDialog.Type.WARNING,
+                        getString(R.string.record_failed),
+                        2000
+                    ).show()
+                    radio_record.isChecked = false
+                }
+            } else {
+                player.stopRecord()
+                CommonUtils.refreshVideoList(this@VideoTestActivity, filePath)
+            }
+        }
+        radio_playback.setOnClickListener {
+            val dev = DevInfo()
+            dev.DeviceName = deviceName
+            VideoPlaybackActivity.startPlaybackActivity(this@VideoTestActivity, dev)
+        }
+        radio_photo.setOnClickListener {
+            val bitmap = v_preview.getBitmap(player.videoWidth, player.videoHeight)
+            ImageSelect.saveBitmap(this@VideoTestActivity, bitmap)
+            ToastDialog(
+                this,
+                ToastDialog.Type.SUCCESS,
+                getString(R.string.capture_successed),
+                2000
+            ).show()
+        }
+        iv_up.setOnClickListener(controlListener)
+        iv_down.setOnClickListener(controlListener)
+        iv_right.setOnClickListener(controlListener)
+        iv_left.setOnClickListener(controlListener)
+    }
+
+    open var controlListener = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            var command = ""
+            when (v) {
+                iv_up -> command = Command.getPtzUpCommand(0)
+                iv_down -> command = Command.getPtzDownCommand(0)
+                iv_right -> command = Command.getPtzRightCommand(0)
+                iv_left -> command = Command.getPtzLeftCommand(0)
+            }
+
+            Thread(Runnable {
+                if (command.length <= 0) return@Runnable
+                var retContent = XP2P.postCommandRequestSync(
+                    "${productId}/${deviceName}",
+                    command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000
+                ) ?: ""
+                launch(Dispatchers.Main) {
+                    if (TextUtils.isEmpty(retContent)) {
+                        retContent = getString(R.string.command_with_error, command)
+                    }
+                    Toast.makeText(this@VideoTestActivity, retContent, Toast.LENGTH_SHORT).show()
+                }
+            }).start()
+        }
+    }
+
+    open fun speakAble(able: Boolean): Boolean {
+        if (able) {
+            val command = Command.getNvrIpcStatus(0, 0)
+            val repStatus = XP2P.postCommandRequestSync(
+                "${productId}/${deviceName}",
+                command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000
+            ) ?: ""
+
+            launch(Dispatchers.Main) {
+                var retContent = StringBuilder(repStatus).toString()
+                if (TextUtils.isEmpty(retContent)) {
+                    retContent = getString(R.string.command_with_error, command)
+                }
+                Toast.makeText(this@VideoTestActivity, retContent, Toast.LENGTH_SHORT).show()
+            }
+
+            JSONArray.parseArray(repStatus, DevStatus::class.java)?.let {
+                if (it.size == 1 && it.get(0).status == 0) {
+                    XP2P.runSendService(
+                        "${productId}/${deviceName}",
+                        Command.getTwoWayRadio(0),
+                        true
+                    )
+                    audioRecordUtil?.start()
+                    speakAble = true
+                    return true
+                }
+            }
+
+        } else {
+            speakAble = false
+            audioRecordUtil?.stop()
+            XP2P.stopSendService("${productId}/${deviceName}", null)
+            return true
+        }
+        speakAble = false
+        return false
     }
 
     private fun resetPlayer() {
