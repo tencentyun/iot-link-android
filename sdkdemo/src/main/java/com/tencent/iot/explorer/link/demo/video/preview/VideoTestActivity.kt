@@ -3,7 +3,6 @@ package com.tencent.iot.explorer.link.demo.video.preview
 import android.Manifest
 import android.graphics.SurfaceTexture
 import android.media.AudioFormat
-import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
@@ -15,7 +14,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import com.alibaba.fastjson.JSONArray
-import com.tencent.iot.explorer.link.demo.App
+import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.common.log.L
@@ -28,7 +27,9 @@ import com.tencent.iot.explorer.link.demo.video.utils.TipToastDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
+import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
+import com.tencent.xnet.annotations.XP2PProtocolType
 import kotlinx.android.synthetic.main.activity_video_preview.iv_down
 import kotlinx.android.synthetic.main.activity_video_preview.iv_left
 import kotlinx.android.synthetic.main.activity_video_preview.iv_right
@@ -80,6 +81,18 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     @Volatile
     var speakAble = false
 
+    private val xP2PAppConfig = XP2PAppConfig().also { appConfig ->
+        appConfig.appKey =
+            BuildConfig.TencentIotLinkSDKDemoAppkey //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
+        appConfig.appSecret =
+            BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
+        appConfig.userId =
+            ""  //用户纬度（每个手机区分开）使用用户自有的账号系统userid；若无请配置为[TIoTCoreXP2PBridge sharedInstance].getAppUUID; 查找日志是需提供此userid字段
+        appConfig.autoConfigFromDevice = true
+        appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
+        appConfig.crossStunTurn = false
+    }
+
     override fun getContentView(): Int {
         return R.layout.activity_video_test
     }
@@ -96,26 +109,6 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
             AudioFormat.ENCODING_PCM_16BIT
         )
         XP2P.setCallback(this)
-        XP2P.startService(this, "${productId}/${deviceName}", productId, deviceName)
-
-        val ret = XP2P.setParamsForXp2pInfo(
-            "${productId}/${deviceName}", "", "", xp2pInfo
-        )
-        if (ret != 0) {
-            launch(Dispatchers.Main) {
-                val errInfo: String
-                if (ret.toString() == "-1007") {
-                    errInfo = getString(R.string.xp2p_err_version)
-                } else {
-                    errInfo = getString(
-                        R.string.error_with_code,
-                        "${productId}/${deviceName}",
-                        ret.toString()
-                    )
-                }
-                Toast.makeText(this@VideoTestActivity, errInfo, Toast.LENGTH_SHORT).show()
-            }
-        }
 
         tv_video_quality.text = "高清"
         v_preview.surfaceTextureListener = this
@@ -127,6 +120,35 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         val density = dm.density // 屏幕密度（0.75 / 1.0 / 1.5）
         screenWidth = (width / density).toInt() // 屏幕宽度(dp)
         screenHeight = (height / density).toInt() // 屏幕高度(dp)
+    }
+
+    private fun startService() {
+        XP2P.startService(
+            this,
+            productId,
+            deviceName,
+            xp2pInfo,
+            xP2PAppConfig
+        )
+    }
+
+    private fun restartService() {
+        val id = "${productId}/${deviceName}"
+        XP2P.stopService(id)
+    }
+
+    private fun delegateHttpFlv() {
+        val id = "${productId}/${deviceName}"
+//        XP2P.recordstreamPath("/storage/emulated/0/data_video.flv") //自定义采集裸流路径
+//        XP2P.recordstream(id) //开启自定义采集裸流
+        val prefix = XP2P.delegateHttpFlv(id)
+        if (prefix.isNotEmpty()) {
+            urlPrefix = prefix
+            resetPlayer()
+        } else {
+            Toast.makeText(this, "get urlPrefix is empty", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     override fun setListener() {
@@ -312,36 +334,17 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         Log.e("VideoTestActivity", "xp2pEventNotify id:$id  msg:$msg  event:$event")
         if (event == 1003) {
             XP2P.stopService("${productId}/${deviceName}")
-            XP2P.startService(this, "${productId}/${deviceName}", productId, deviceName)
-            val ret = XP2P.setParamsForXp2pInfo(
-                "${productId}/${deviceName}", "", "", xp2pInfo
+            XP2P.startService(
+                this,
+                productId,
+                deviceName,
+                xp2pInfo,
+                xP2PAppConfig
             )
-            if (ret != 0) {
-                launch(Dispatchers.Main) {
-                    val errInfo: String
-                    if (ret.toString() == "-1007") {
-                        errInfo = getString(R.string.xp2p_err_version)
-                    } else {
-                        errInfo = getString(
-                            R.string.error_with_code,
-                            "${productId}/${deviceName}",
-                            ret.toString()
-                        )
-                    }
-                    Toast.makeText(this@VideoTestActivity, errInfo, Toast.LENGTH_SHORT).show()
-                }
-            }
-            resetPlayer()
         } else if (event == 1004 || event == 1005) {
             if (event == 1004) {
                 Log.e("VideoTestActivity", "====event === 1004")
-                XP2P.delegateHttpFlv(id)?.let {
-                    XP2P.recordstream(id)
-                    urlPrefix = it
-                    if (!TextUtils.isEmpty(urlPrefix)) {
-                        resetPlayer()
-                    }
-                }
+                delegateHttpFlv()
             }
         }
     }

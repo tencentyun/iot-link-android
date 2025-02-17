@@ -11,7 +11,7 @@ import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
-import com.tencent.iot.explorer.link.demo.video.preview.WlanVideoPreviewActivity
+//import com.tencent.iot.explorer.link.demo.video.preview.WlanVideoPreviewActivity
 import com.tencent.iot.video.link.callback.OnWlanDevicesDetectedCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.DeviceServerInfo
@@ -79,7 +79,7 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
             dev.DeviceName = datas.get(pos).deviceName
             dev.Channel = 0
             dev.Status = 1
-            WlanVideoPreviewActivity.startPreviewActivity(this@VideoWlanDetectActivity, dev)
+//            WlanVideoPreviewActivity.startPreviewActivity(this@VideoWlanDetectActivity, dev)
         }
     }
 

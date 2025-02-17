@@ -111,7 +111,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
                 }
             }
 
-            VideoMultiPreviewActivity.startMultiPreviewActivity(context, allUrl)
+//            VideoMultiPreviewActivity.startMultiPreviewActivity(context, allUrl)
         }
     }
 
@@ -137,24 +137,24 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
                 0 -> { VideoPreviewActivity.startPreviewActivity(context, dev) }
                 1 -> { VideoPlaybackActivity.startPlaybackActivity(context, dev) }
                 2 -> { VideoPreviewMJPEGActivity.startPreviewActivity(context, dev) }
-                3 -> { VideoWithoutPropertyActivity.startPreviewActivity(context, dev) }
+//                3 -> { VideoWithoutPropertyActivity.startPreviewActivity(context, dev) }
                 4 -> { VideoPushStreamActivity.startPreviewActivity(context, dev) }
-                5 -> {
-                    val multipleChannelChooseDialog = MultipleChannelChooseDialog(context)
-                    multipleChannelChooseDialog.show()
-                    multipleChannelChooseDialog.setOnDismisListener { selectChannels ->
-                        var allUrl = ArrayList<DevUrl2Preview>()
-                        for (i in 0 until selectChannels.size) {
-                            var device = DevUrl2Preview()
-                            device.devName = dev.DeviceName
-                            device.Status = 1
-                            device.channel = selectChannels[i]
-                            allUrl.add(device)
-                        }
-
-                        VideoMultiPreviewActivity.startMultiPreviewActivity(context, allUrl)
-                    }
-                }
+//                5 -> {
+//                    val multipleChannelChooseDialog = MultipleChannelChooseDialog(context)
+//                    multipleChannelChooseDialog.show()
+//                    multipleChannelChooseDialog.setOnDismisListener { selectChannels ->
+//                        var allUrl = ArrayList<DevUrl2Preview>()
+//                        for (i in 0 until selectChannels.size) {
+//                            var device = DevUrl2Preview()
+//                            device.devName = dev.DeviceName
+//                            device.Status = 1
+//                            device.channel = selectChannels[i]
+//                            allUrl.add(device)
+//                        }
+//
+//                        VideoMultiPreviewActivity.startMultiPreviewActivity(context, allUrl)
+//                    }
+//                }
             }
         }
     }

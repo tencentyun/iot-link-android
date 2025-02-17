@@ -26,6 +26,7 @@ import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.playback.*
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.xnet.XP2P
+import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.activity_video_preview.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
@@ -623,16 +624,13 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
         Thread(Runnable {
             var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
-            var started = XP2P.startServiceWithXp2pInfo(context,
+            var started = XP2P.startService(context,
                 id,
-                App.data.accessInfo?.productId, devInfo?.DeviceName, ""
+                App.data.accessInfo?.productId, devInfo?.DeviceName, XP2PAppConfig()
             )
-            if (started != 0) {
                 launch(Dispatchers.Main) {
                     var errInfo = getString(R.string.error_with_code, id, started.toString())
                     Toast.makeText(context, errInfo, Toast.LENGTH_SHORT).show()
-                }
-                return@Runnable
             }
 
             devInfo?.let {
@@ -667,19 +665,20 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment(), TextureView.Surf
 
                 // 发现断开尝试恢复视频，每隔一秒尝试一次
                 XP2P.stopService(id)
-                while (XP2P.startServiceWithXp2pInfo(context,
-                        id,
-                        App.data.accessInfo!!.productId,
-                        devInfo?.DeviceName,
-                        ""
-                    ) != 0
-                ) {
-                    XP2P.stopService(id)
-                    synchronized(objectLock) {
-                        objectLock.wait(1000)
-                    }
-                    Log.d(TAG, "id=${id}, try to call startServiceWithXp2pInfo")
-                }
+//                XP2P.startService(context,
+//                    id,
+//                    App.data.accessInfo!!.productId,
+//                    devInfo?.DeviceName,
+//                    XP2PAppConfig()
+//                )
+//                while (
+//                ) {
+//                    XP2P.stopService(id)
+//                    synchronized(objectLock) {
+//                        objectLock.wait(1000)
+//                    }
+//                    Log.d(TAG, "id=${id}, try to call startServiceWithXp2pInfo")
+//                }
 
                 Log.d(TAG, "id=${id}, call startServiceWithXp2pInfo successed")
                 countDownLatchs.put(id!!, tmpCountDownLatch)

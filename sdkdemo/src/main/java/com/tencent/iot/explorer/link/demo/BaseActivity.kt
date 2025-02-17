@@ -42,11 +42,14 @@ abstract class BaseActivity : AppCompatActivity() {
 
     abstract fun getContentView(): Int
 
+    open fun performInitView(){}
+
     abstract fun initView()
 
     abstract fun setListener()
 
     open fun startHere() {
+        performInitView()
         initView()
         setListener()
     }

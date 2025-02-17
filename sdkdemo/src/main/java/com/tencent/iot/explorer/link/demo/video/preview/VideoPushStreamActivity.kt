@@ -12,18 +12,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.DisplayMetrics
 import android.util.Log
-import android.view.*
+import android.view.Surface
+import android.view.SurfaceHolder
+import android.view.TextureView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
+import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
+import com.tencent.iot.explorer.link.demo.video.VideoPreviewBaseActivity
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionRecord
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventPresenter
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventView
@@ -40,33 +42,31 @@ import com.tencent.iot.video.link.param.MicParam
 import com.tencent.iot.video.link.param.VideoEncodeParam
 import com.tencent.iot.video.link.util.CameraUtils
 import com.tencent.xnet.XP2P
+import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
-import kotlinx.android.synthetic.main.activity_video_push_stream.*
-import kotlinx.android.synthetic.main.dash_board_layout.*
-import kotlinx.android.synthetic.main.title_layout.*
-import kotlinx.coroutines.*
+import com.tencent.xnet.annotations.XP2PProtocolType
+import kotlinx.android.synthetic.main.activity_video_push_stream.sv_camera_view
+import kotlinx.android.synthetic.main.title_layout.iv_back
+import kotlinx.android.synthetic.main.title_layout.tv_title
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.io.IOException
-import java.lang.Runnable
-import java.util.*
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CountDownLatch
+import java.util.Date
 import java.util.concurrent.Executors
 
-
-private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
-private var keepPlayThreadLock = Object()
-@Volatile
-private var keepAliveThreadRuning = true
-
-class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
+class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
+    TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), SurfaceHolder.Callback, OnEncodeListener {
 
     open var tag = VideoPushStreamActivity::class.simpleName
-    lateinit var presenter: EventPresenter
     lateinit var surface: Surface
 
     var holder: SurfaceHolder? = null
     var camera: Camera? = null
+
     // 默认摄像头方向
     var facing: Int = CameraConstants.facing.BACK
     val vw = 320
@@ -74,11 +74,16 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
     val frameRate = 15
     val flvListener = FLVListener { data: ByteArray ->
 //                Log.e(TAG, "===== dataLen:" + data.size);
-        XP2P.dataSend("${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}", data, data.size)
+        XP2P.dataSend(
+            "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
+            data,
+            data.size
+        )
     }
     var audioEncoder: AudioEncoder? = null
     var videoEncoder: VideoEncoder? = null
     var flvPacker: FLVPacker? = null
+
     @Volatile
     var startEncodeVideo = false
     var executor = Executors.newSingleThreadExecutor()
@@ -87,11 +92,24 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
     @Volatile
     var urlPrefix = ""
     var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+
     @Volatile
     var connectStartTime = 0L
+
     @Volatile
     var connectTime = 0L
     val MSG_UPDATE_HUD = 1
+    private val xP2PAppConfig = XP2PAppConfig().also { appConfig ->
+        appConfig.appKey =
+            BuildConfig.TencentIotLinkSDKDemoAppkey //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
+        appConfig.appSecret =
+            BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
+        appConfig.userId =
+            ""  //用户纬度（每个手机区分开）使用用户自有的账号系统userid；若无请配置为[TIoTCoreXP2PBridge sharedInstance].getAppUUID; 查找日志是需提供此userid字段
+        appConfig.autoConfigFromDevice = true
+        appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
+        appConfig.crossStunTurn = false
+    }
 
     override fun getContentView(): Int {
         return R.layout.activity_video_push_stream
@@ -99,39 +117,41 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
 
     override fun onResume() {
         super.onResume()
-        keepAliveThreadRuning = true
-        startPlayer()
         holder?.addCallback(this)
     }
 
     override fun initView() {
-        presenter = EventPresenter(this@VideoPushStreamActivity)
-        var bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
-        bundle?.let {
-            var videoConfig = bundle.getString(VideoConst.VIDEO_CONFIG)
-            if (TextUtils.isEmpty(videoConfig)) return@let
-
-            var devInfo = JSON.parseObject(videoConfig, DevUrl2Preview::class.java)
-            devInfo?.let {
-                tv_title.setText(it.devName)
-                presenter.setDeviceName(it.devName)
-                presenter.setChannel(it.channel)
-            }
-        }
-
-        App.data.accessInfo?.let {
-            presenter.setAccessId(it.accessId)
-            presenter.setAccessToken(it.accessToken)
-            presenter.setProductId(it.productId)
-            presenter.getEventsData(Date())
-        }
-
+        tv_title.setText(presenter.getDeviceName())
         XP2P.setCallback(this)
-        XP2P.startService(this@VideoPushStreamActivity, "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
-            App.data.accessInfo!!.productId, presenter.getDeviceName()
-        )
 
         holder = sv_camera_view.holder
+    }
+
+    private fun startService() {
+        XP2P.startService(
+            this,
+            presenter.getProductId(),
+            presenter.getDeviceName(),
+            xp2pInfo,
+            xP2PAppConfig
+        )
+    }
+
+    private fun restartService() {
+        val id = "${presenter.getProductId()}/${presenter.getDeviceName()}"
+        XP2P.stopService(id)
+        getDeviceP2PInfo()
+    }
+
+    private fun delegateHttpFlv() {
+        val id = "${presenter.getProductId()}/${presenter.getDeviceName()}"
+        val prefix = XP2P.delegateHttpFlv(id)
+        if (prefix.isNotEmpty()) {
+            setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
+        } else {
+            Toast.makeText(this, "get urlPrefix is empty", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     private fun initAudioEncoder() {
@@ -148,7 +168,8 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
 
     private fun initVideoEncoder() {
         val videoEncodeParam: VideoEncodeParam =
-            VideoEncodeParam.Builder().setSize(vw, vh).setFrameRate(frameRate).setBitRate(vw * vh * 4).build()
+            VideoEncodeParam.Builder().setSize(vw, vh).setFrameRate(frameRate)
+                .setBitRate(vw * vh * 4).build()
         videoEncoder = VideoEncoder(videoEncodeParam)
         videoEncoder!!.setEncoderListener(this)
     }
@@ -156,7 +177,7 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun startRecord() {
 //        if (callType == CallingType.TYPE_VIDEO_CALL) {
-            startEncodeVideo = true
+        startEncodeVideo = true
 //        }
         audioEncoder!!.start()
     }
@@ -171,74 +192,60 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
         startEncodeVideo = false
     }
 
-    open fun startPlayer() {
-        if (App.data.accessInfo == null || TextUtils.isEmpty(presenter.getDeviceName())) return
 
-        Thread(Runnable {
-            val id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
-            connectStartTime = System.currentTimeMillis()
-            val ret = XP2P.setParamsForXp2pInfo(id, App.data.accessInfo!!.accessId,
-                App.data.accessInfo!!.accessToken, "")
-            if (ret != 0) {
-                launch(Dispatchers.Main) {
-                    val errInfo: String
-                    if (ret.toString() == "-1007") {
-                        errInfo = getString(R.string.xp2p_err_version)
-                    } else {
-                        errInfo = getString(R.string.error_with_code, id, ret.toString())
-                    }
-                    Toast.makeText(this@VideoPushStreamActivity, errInfo, Toast.LENGTH_SHORT).show()
-                }
-                return@Runnable
-            }
-            XP2P.delegateHttpFlv(id)?.let {
-                urlPrefix = it
-                if (!TextUtils.isEmpty(urlPrefix)) {
-                    setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
-                    keepPlayerplay(id)
-                }
-            }
-        }).start()
-    }
-
-    private fun keepPlayerplay(id: String?) {
-        if (TextUtils.isEmpty(id)) return
-        val accessId = App.data.accessInfo!!.accessId
-        val accessToken = App.data.accessInfo!!.accessToken
-        // 开启守护线程
-        Thread{
-            val objectLock = Object()
-            while (true) {
-                Log.d(tag, "id=${id} keepAliveThread wait disconnected msg")
-                synchronized(keepPlayThreadLock) {
-                    keepPlayThreadLock.wait()
-                }
-                Log.d(tag, "id=${id} keepAliveThread do not wait and keepAliveThreadRuning=${keepAliveThreadRuning}")
-                if (!keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
-                flvPacker = null
-                stopRecord()
-                // 发现断开尝试恢复视频，每隔一秒尝试一次
-                Log.d(tag, "====开始尝试重连...")
-                XP2P.stopService(id)
-                while (XP2P.startService(this@VideoPushStreamActivity, id, App.data.accessInfo!!.productId, presenter.getDeviceName())!=0
-                    || XP2P.setParamsForXp2pInfo(id, accessId, accessToken, "") != 0
-                    || getDeviceStatus(id) != 0) {
-                    XP2P.stopService(id)
-                    synchronized(objectLock) {
-                        objectLock.wait(500)
-                    }
-                    Log.d(tag, "====正在重连...")
-                }
-                connectStartTime = System.currentTimeMillis()
-
-                Log.d(tag, "====尝试拉流...")
-                XP2P.delegateHttpFlv(id)?.let {
-                    urlPrefix = it
-                    if (!TextUtils.isEmpty(urlPrefix)) setPlayerUrl(Command.getVideoStandardQualityUrlSuffix(presenter.getChannel()))
-                }
-            }
-        }.start()
-    }
+//    private fun keepPlayerplay(id: String?) {
+//        if (TextUtils.isEmpty(id)) return
+//        val accessId = App.data.accessInfo!!.accessId
+//        val accessToken = App.data.accessInfo!!.accessToken
+//        // 开启守护线程
+//        Thread {
+//            val objectLock = Object()
+//            while (true) {
+//                Log.d(tag, "id=${id} keepAliveThread wait disconnected msg")
+//                synchronized(keepPlayThreadLock) {
+//                    keepPlayThreadLock.wait()
+//                }
+//                Log.d(
+//                    tag,
+//                    "id=${id} keepAliveThread do not wait and keepAliveThreadRuning=${keepAliveThreadRuning}"
+//                )
+//                if (!keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
+//                flvPacker = null
+//                stopRecord()
+//                // 发现断开尝试恢复视频，每隔一秒尝试一次
+//                Log.d(tag, "====开始尝试重连...")
+//                XP2P.stopService(id)
+//                XP2P.startService(
+//                    this@VideoPushStreamActivity,
+//                    id,
+//                    App.data.accessInfo!!.productId,
+//                    presenter.getDeviceName(),
+//                    xP2PAppConfig
+//                )
+//                while (XP2P.setParamsForXp2pInfo(id, "") != 0
+//                    || getDeviceStatus(id) != 0
+//                ) {
+//                    XP2P.stopService(id)
+//                    synchronized(objectLock) {
+//                        objectLock.wait(500)
+//                    }
+//                    Log.d(tag, "====正在重连...")
+//                }
+//                connectStartTime = System.currentTimeMillis()
+//
+//                Log.d(tag, "====尝试拉流...")
+//                XP2P.delegateHttpFlv(id)?.let {
+//                    urlPrefix = it
+//                    if (!TextUtils.isEmpty(urlPrefix)) setPlayerUrl(
+//                        Command.getVideoStandardQualityUrlSuffix(
+//                            presenter.getChannel()
+//                        )
+//                    )
+//                }
+//
+//            }
+//        }.start()
+//    }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {}
 
@@ -247,10 +254,12 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
     }
 
     open fun setPlayerUrl(suffix: String) {
-        launch (Dispatchers.Main) {
+        launch(Dispatchers.Main) {
             var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
-            var repStatus = XP2P.postCommandRequestSync("${App.data.accessInfo?.productId}/${presenter.getDeviceName()}",
-                command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000) ?:""
+            var repStatus = XP2P.postCommandRequestSync(
+                "${App.data.accessInfo?.productId}/${presenter.getDeviceName()}",
+                command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000
+            ) ?: ""
 
             launch(Dispatchers.Main) {
                 var retContent = StringBuilder(repStatus).toString()
@@ -261,7 +270,11 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
             }
 
             // 开始推流
-            XP2P.runSendService("${App.data.accessInfo?.productId}/${presenter.getDeviceName()}", "channel=0", false)
+            XP2P.runSendService(
+                "${App.data.accessInfo?.productId}/${presenter.getDeviceName()}",
+                "channel=0",
+                false
+            )
             handler.post(Runnable {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     initAudioEncoder()
@@ -277,9 +290,19 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+        return false
+    }
+
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
     override fun fail(msg: String?, errorCode: Int) {}
+    override fun updateXp2pInfo(xp2pInfo: String) {
+        startService()
+    }
+
+    override fun success(response: String?, reqCode: Int) {
+    }
+
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
@@ -291,20 +314,16 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
         Log.e(tag, "id=${id}, event=${event}")
         if (event == 1003) {
             Log.e(tag, "====event === 1003")
-            keepPlayThreadLock?.let {
-                synchronized(it) {
-                    Log.d(tag, "====p2p链路断开, event=$event.")
-                    it.notify()
-                }
-            } // 唤醒守护线程
             launch(Dispatchers.Main) {
                 var content = getString(R.string.disconnected_and_reconnecting, id)
                 Toast.makeText(this@VideoPushStreamActivity, content, Toast.LENGTH_SHORT).show()
             }
+            restartService()
         } else if (event == 1004 || event == 1005) {
             connectTime = System.currentTimeMillis() - connectStartTime
             if (event == 1004) {
                 Log.e(tag, "====event === 1004")
+                delegateHttpFlv()
             }
         } else if (event == 1010) {
             Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
@@ -313,36 +332,20 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
 
     override fun onPause() {
         super.onPause()
-        finishPlayer()
-    }
-
-    private fun finishPlayer() {
-
-        countDownLatchs.clear()
-        // 关闭守护线程
-        keepAliveThreadRuning = false
-        keepPlayThreadLock?.let {
-            synchronized(it) {
-                it.notify()
-            }
-        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         stopRecord()
         executor.shutdown()
-        finishPlayer()
-        App.data.accessInfo?.let {
-            XP2P.stopService("${it.productId}/${presenter.getDeviceName()}")
-        }
+        XP2P.stopService("${presenter.getProductId()}/${presenter.getDeviceName()}")
         XP2P.setCallback(null)
         cancel()
     }
 
     companion object {
         fun startPreviewActivity(context: Context?, dev: DevInfo) {
-            context?:let { return }
+            context ?: let { return }
 
             var intent = Intent(context, VideoPushStreamActivity::class.java)
             var bundle = Bundle()
@@ -358,10 +361,13 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
 
     private fun getDeviceStatus(id: String?): Int {
         var command: ByteArray? = null
-        command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=high".toByteArray()
-        val reponse = XP2P.postCommandRequestSync(id, command, command!!.size.toLong(), 2 * 1000 * 1000)
+        command =
+            "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=high".toByteArray()
+        val reponse =
+            XP2P.postCommandRequestSync(id, command, command!!.size.toLong(), 2 * 1000 * 1000)
         if (!TextUtils.isEmpty(reponse)) {
-            val deviceStatuses: List<DeviceStatus> = JSONArray.parseArray(reponse, DeviceStatus::class.java)
+            val deviceStatuses: List<DeviceStatus> =
+                JSONArray.parseArray(reponse, DeviceStatus::class.java)
             // 0   接收请求
             // 1   拒绝请求
             // 404 error request message
@@ -372,22 +378,30 @@ class VideoPushStreamActivity : VideoBaseActivity(), EventView, TextureView.Surf
                 runOnUiThread {
                     when (deviceStatuses[0].status) {
                         0 -> Toast.makeText(this, "设备状态正常", Toast.LENGTH_SHORT).show()
-                        1 -> Toast.makeText(this, "设备状态异常, 拒绝请求: $reponse", Toast.LENGTH_SHORT).show()
+                        1 -> Toast.makeText(
+                            this,
+                            "设备状态异常, 拒绝请求: $reponse",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
                         404 -> Toast.makeText(
                             this,
                             "设备状态异常, error request message: $reponse",
                             Toast.LENGTH_SHORT
                         ).show()
+
                         405 -> Toast.makeText(
                             this,
                             "设备状态异常, connect number too many: $reponse",
                             Toast.LENGTH_SHORT
                         ).show()
+
                         406 -> Toast.makeText(
                             this,
                             "设备状态异常, current command don't support: $reponse",
                             Toast.LENGTH_SHORT
                         ).show()
+
                         407 -> Toast.makeText(
                             this,
                             "设备状态异常, device process error: $reponse",

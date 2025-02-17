@@ -112,6 +112,10 @@ class EventModel(view: EventView) : ParentModel<EventView>(view), VideoCallback 
         this.productId = productId
     }
 
+    fun getProductId() : String {
+        return this.productId
+    }
+
     fun setDeviceName(deviceName : String) {
         this.deviceName = deviceName
     }

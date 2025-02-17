@@ -23,6 +23,13 @@ class EventPresenter : ParentPresenter<EventModel, EventView> {
         model?.setProductId(productId)
     }
 
+    fun getProductId() : String {
+        model?.let {
+            return it.getProductId()
+        }
+        return ""
+    }
+
     fun setDeviceName(deviceName : String) {
         model?.setDeviceName(deviceName)
     }

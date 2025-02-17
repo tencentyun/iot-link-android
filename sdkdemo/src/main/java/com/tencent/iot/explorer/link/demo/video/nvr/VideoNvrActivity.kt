@@ -17,10 +17,11 @@ import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.preview.DevUrl2Preview
 import com.tencent.iot.explorer.link.demo.video.VideoProductInfo
-import com.tencent.iot.explorer.link.demo.video.preview.VideoMultiPreviewActivity
+//import com.tencent.iot.explorer.link.demo.video.preview.VideoMultiPreviewActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewActivity
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
+import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
 import kotlinx.android.synthetic.main.fragment_video_device.*
 import kotlinx.android.synthetic.main.title_layout.*
@@ -87,9 +88,9 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
 
                 App.data.accessInfo?.let {
                     countDownLatch = CountDownLatch(1)
-                    var started = XP2P.startServiceWithXp2pInfo(this@VideoNvrActivity, "${it.productId}/${devName}",
-                        it.productId, devName, "")
-                    if (started != 0) return@launch
+                    XP2P.startService(this@VideoNvrActivity, "${it.productId}/${devName}",
+                        it.productId, devName, XP2PAppConfig()
+                    )
 
                     countDownLatch.await(5, TimeUnit.SECONDS)
                     queryNvrDev(devName)
@@ -112,7 +113,7 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
                 }
             }
 
-            VideoMultiPreviewActivity.startMultiPreviewActivity(this@VideoNvrActivity, allUrl)
+//            VideoMultiPreviewActivity.startMultiPreviewActivity(this@VideoNvrActivity, allUrl)
         }
     }
 

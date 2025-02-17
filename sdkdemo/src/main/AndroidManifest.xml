@@ -58,25 +58,25 @@
         <activity android:name=".video.VideoWlanDetectActivity" />
         <activity android:name=".video.preview.VideoTestActivity" />
         <activity android:name=".video.VideoTestInputActivity" />
-        <activity android:name=".video.preview.WlanVideoPreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+<!--        <activity android:name=".video.preview.WlanVideoPreviewActivity"-->
+<!--            android:configChanges="orientation|keyboardHidden|screenSize"/>-->
         <activity android:name=".video.VideoMainActivity" />
         <activity android:name=".video.nvr.VideoNvrActivity" />
         <activity
             android:name=".video.playback.VideoPlaybackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".video.preview.VideoMultiPreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+<!--        <activity-->
+<!--            android:name=".video.preview.VideoMultiPreviewActivity"-->
+<!--            android:configChanges="orientation|keyboardHidden|screenSize" />-->
         <activity
             android:name=".video.preview.VideoPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".video.preview.VideoPreviewMJPEGActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".video.preview.VideoWithoutPropertyActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+<!--        <activity-->
+<!--            android:name=".video.preview.VideoWithoutPropertyActivity"-->
+<!--            android:configChanges="orientation|keyboardHidden|screenSize" />-->
         <activity
             android:name=".video.preview.VideoPushStreamActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />

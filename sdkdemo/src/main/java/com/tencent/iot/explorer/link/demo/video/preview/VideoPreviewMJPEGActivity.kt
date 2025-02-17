@@ -23,13 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
+import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
+import com.tencent.iot.explorer.link.demo.video.VideoPreviewBaseActivity
 import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionListAdapter
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionRecord
@@ -43,7 +44,9 @@ import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.DeviceStatus
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
+import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
+import com.tencent.xnet.annotations.XP2PProtocolType
 import kotlinx.android.synthetic.main.activity_video_preview.*
 import kotlinx.android.synthetic.main.dash_board_layout.*
 import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
@@ -53,41 +56,41 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.Runnable
 import java.lang.ref.WeakReference
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CountDownLatch
 
 
-private var countDownLatchs : MutableMap<String, CountDownLatch> = ConcurrentHashMap()
-private var keepPlayThreadLock = Object()
-@Volatile
-private var keepAliveThreadRuning = true
-
-class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.SurfaceTextureListener,
+class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
+    TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener {
 
     open var tag = VideoPreviewMJPEGActivity::class.simpleName
     var orientationV = true
-    private var adapter : ActionListAdapter? = null
-    private var records : MutableList<ActionRecord> = ArrayList()
-    lateinit var presenter: EventPresenter
-    lateinit var player : IjkMediaPlayer
-    var audioPlayer : IjkMediaPlayer? = null
+    private var adapter: ActionListAdapter? = null
+    private var records: MutableList<ActionRecord> = ArrayList()
+    lateinit var player: IjkMediaPlayer
+    var audioPlayer: IjkMediaPlayer? = null
     lateinit var surface: Surface
+
     @Volatile
     var audioAble = true
+
     @Volatile
     var urlPrefix = ""
     var filePath: String? = null
     lateinit var audioRecordUtil: AudioRecordUtil
     var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+
     @Volatile
     var showTip = false
+
     @Volatile
     var connectStartTime = 0L
+
     @Volatile
     var connectTime = 0L
+
     @Volatile
     var startShowVideoTime = 0L
+
     @Volatile
     var showVideoTime = 0L
     var volumeChangeObserver: VolumeChangeObserver? = null
@@ -97,54 +100,37 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
     var screenHeight = 0
     var firstIn = true
 
+    private val xP2PAppConfig = XP2PAppConfig().also { appConfig ->
+        appConfig.appKey =
+            BuildConfig.TencentIotLinkSDKDemoAppkey //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
+        appConfig.appSecret =
+            BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
+        appConfig.userId =
+            ""  //用户纬度（每个手机区分开）使用用户自有的账号系统userid；若无请配置为[TIoTCoreXP2PBridge sharedInstance].getAppUUID; 查找日志是需提供此userid字段
+        appConfig.autoConfigFromDevice = true
+        appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
+        appConfig.crossStunTurn = false
+    }
+
     override fun getContentView(): Int {
         return R.layout.activity_video_preview
     }
-
-    override fun onResume() {
-        super.onResume()
-        keepAliveThreadRuning = true
-        startPlayer()
-    }
-
     override fun initView() {
         XP2P.setLogEnable(false, false)
-        presenter = EventPresenter(this@VideoPreviewMJPEGActivity)
-        var bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
-        bundle?.let {
-            var videoConfig = bundle.getString(VideoConst.VIDEO_CONFIG)
-            if (TextUtils.isEmpty(videoConfig)) return@let
+        tv_title.setText(presenter.getDeviceName())
 
-            var devInfo = JSON.parseObject(videoConfig, DevUrl2Preview::class.java)
-            devInfo?.let {
-                tv_title.setText(it.devName)
-                presenter.setDeviceName(it.devName)
-                presenter.setChannel(it.channel)
-            }
-        }
-
-        var linearLayoutManager = LinearLayoutManager(this@VideoPreviewMJPEGActivity)
         adapter = ActionListAdapter(this@VideoPreviewMJPEGActivity, records)
-        list_event.layoutManager = linearLayoutManager
         list_event.adapter = adapter
 
         tv_video_quality.setText(R.string.video_quality_medium_str)
         today_tip.setText(getString(R.string.today) + " " + CommonUtils.getWeekDay(this@VideoPreviewMJPEGActivity))
         records.clear()
-        App.data.accessInfo?.let {
-            presenter.setAccessId(it.accessId)
-            presenter.setAccessToken(it.accessToken)
-            presenter.setProductId(it.productId)
-            presenter.getEventsData(Date())
-            tv_event_status.visibility = View.VISIBLE
-            tv_event_status.setText(R.string.loading)
-            audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000)
-        }
-
+        tv_event_status.visibility = View.VISIBLE
+        tv_event_status.setText(R.string.loading)
+        audioRecordUtil =
+            AudioRecordUtil(this, "${presenter.getProductId()}/${presenter.getDeviceName()}", 16000)
+        getDeviceP2PInfo()
         XP2P.setCallback(this)
-        XP2P.startService(this@VideoPreviewMJPEGActivity, "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}",
-            App.data.accessInfo!!.productId, presenter.getDeviceName()
-        )
 
         //实例化对象并设置监听器
         volumeChangeObserver = VolumeChangeObserver(this)
@@ -159,85 +145,62 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         val density = dm.density // 屏幕密度（0.75 / 1.0 / 1.5）
         screenWidth = (width / density).toInt() // 屏幕宽度(dp)
         screenHeight = (height / density).toInt() // 屏幕高度(dp)
+        startPlayer()
+    }
+
+    private fun startService() {
+        XP2P.startService(
+            this,
+            presenter.getProductId(),
+            presenter.getDeviceName(),
+            xp2pInfo,
+            xP2PAppConfig
+        )
+    }
+
+    private fun restartService() {
+        val id = "${presenter.getProductId()}/${presenter.getDeviceName()}"
+        XP2P.stopService(id)
+        getDeviceP2PInfo()
+    }
+
+    private fun delegateHttpFlv() {
+        val id = "${presenter.getProductId()}/${presenter.getDeviceName()}"
+        val prefix = XP2P.delegateHttpFlv(id)
+        if (prefix.isNotEmpty()) {
+            urlPrefix = prefix
+            resetPlayer()
+        } else {
+            Toast.makeText(this, "get urlPrefix is empty", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     open fun startPlayer() {
         if (App.data.accessInfo == null || TextUtils.isEmpty(presenter.getDeviceName())) return
         player = IjkMediaPlayer()
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
-
-        Thread(Runnable {
-            val id = "${App.data.accessInfo!!.productId}/${presenter.getDeviceName()}"
-            connectStartTime = System.currentTimeMillis()
-            val ret = XP2P.setParamsForXp2pInfo(id, App.data.accessInfo!!.accessId,
-                App.data.accessInfo!!.accessToken, "")
-            if (ret != 0) {
-                launch(Dispatchers.Main) {
-                    val errInfo: String
-                    if (ret.toString() == "-1007") {
-                        errInfo = getString(R.string.xp2p_err_version)
-                    } else {
-                        errInfo = getString(R.string.error_with_code, id, ret.toString())
-                    }
-                    Toast.makeText(this@VideoPreviewMJPEGActivity, errInfo, Toast.LENGTH_SHORT).show()
-                }
-                return@Runnable
-            }
-            XP2P.delegateHttpFlv(id)?.let {
-                urlPrefix = it
-                if (!TextUtils.isEmpty(urlPrefix)) {
-                    player.let {
-                        resetPlayer()
-                        keepPlayerplay(id)
-                    }
-                }
-            }
-        }).start()
-    }
-
-    private fun keepPlayerplay(id: String?) {
-        if (TextUtils.isEmpty(id)) return
-        val accessId = App.data.accessInfo!!.accessId
-        val accessToken = App.data.accessInfo!!.accessToken
-        // 开启守护线程
-        Thread{
-            val objectLock = Object()
-            while (true) {
-                Log.d(tag, "id=${id} keepAliveThread wait disconnected msg")
-                synchronized(keepPlayThreadLock) {
-                    keepPlayThreadLock.wait()
-                }
-                Log.d(tag, "id=${id} keepAliveThread do not wait and keepAliveThreadRuning=${keepAliveThreadRuning}")
-                if (!keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
-
-                // 发现断开尝试恢复视频，每隔一秒尝试一次
-                Log.d(tag, "====开始尝试重连...")
-                XP2P.stopService(id)
-                while (XP2P.startService(this@VideoPreviewMJPEGActivity, id, App.data.accessInfo!!.productId, presenter.getDeviceName())!=0
-                    || XP2P.setParamsForXp2pInfo(id, accessId, accessToken, "") != 0
-                    || getDeviceStatus(id) != 0) {
-                    XP2P.stopService(id)
-                    synchronized(objectLock) {
-                        objectLock.wait(500)
-                    }
-                    Log.d(tag, "====正在重连...")
-                }
-                connectStartTime = System.currentTimeMillis()
-
-                Log.d(tag, "====尝试拉流...")
-                XP2P.delegateHttpFlv(id)?.let {
-                    urlPrefix = it
-                    if (!TextUtils.isEmpty(urlPrefix)) resetPlayer()
-                }
-            }
-        }.start()
     }
 
     private fun resetPlayer() {
         when (tv_video_quality.text.toString()) {
-            getString(R.string.video_quality_high_str) -> setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
-            getString(R.string.video_quality_medium_str) -> setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
-            getString(R.string.video_quality_low_str) -> setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
+            getString(R.string.video_quality_high_str) -> setPlayerUrl(
+                Command.getVideoMJPEGUrlSuffix(
+                    presenter.getChannel()
+                )
+            )
+
+            getString(R.string.video_quality_medium_str) -> setPlayerUrl(
+                Command.getVideoMJPEGUrlSuffix(
+                    presenter.getChannel()
+                )
+            )
+
+            getString(R.string.video_quality_low_str) -> setPlayerUrl(
+                Command.getVideoMJPEGUrlSuffix(
+                    presenter.getChannel()
+                )
+            )
         }
     }
 
@@ -252,20 +215,27 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         App.data.accessInfo?.let { accessInfo ->
             if (able) {
                 var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
-                var repStatus = XP2P.postCommandRequestSync("${accessInfo.productId}/${presenter.getDeviceName()}",
-                    command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000) ?:""
+                var repStatus = XP2P.postCommandRequestSync(
+                    "${accessInfo.productId}/${presenter.getDeviceName()}",
+                    command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000
+                ) ?: ""
 
                 launch(Dispatchers.Main) {
                     var retContent = StringBuilder(repStatus).toString()
                     if (TextUtils.isEmpty(retContent)) {
                         retContent = getString(R.string.command_with_error, command)
                     }
-                    Toast.makeText(this@VideoPreviewMJPEGActivity, retContent, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@VideoPreviewMJPEGActivity, retContent, Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 JSONArray.parseArray(repStatus, DevStatus::class.java)?.let {
                     if (it.size == 1 && it.get(0).status == 0) {
-                        XP2P.runSendService("${accessInfo.productId}/${presenter.getDeviceName()}", Command.getTwoWayRadio(presenter.getChannel()), true)
+                        XP2P.runSendService(
+                            "${accessInfo.productId}/${presenter.getDeviceName()}",
+                            Command.getTwoWayRadio(presenter.getChannel()),
+                            true
+                        )
                         audioRecordUtil.start()
                         return true
                     }
@@ -301,7 +271,12 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
                 filePath = CommonUtils.generateFileDefaultPath()
                 var ret = player.startRecord(filePath)
                 if (ret != 0) {
-                    ToastDialog(this, ToastDialog.Type.WARNING, getString(R.string.record_failed), 2000).show()
+                    ToastDialog(
+                        this,
+                        ToastDialog.Type.WARNING,
+                        getString(R.string.record_failed),
+                        2000
+                    ).show()
                     radio_record.isChecked = false
                 }
             } else {
@@ -317,7 +292,12 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         }
         radio_photo.setOnClickListener {
             ImageSelect.saveBitmap(this@VideoPreviewMJPEGActivity, v_preview.bitmap)
-            ToastDialog(this, ToastDialog.Type.SUCCESS, getString(R.string.capture_successed), 2000).show()
+            ToastDialog(
+                this,
+                ToastDialog.Type.SUCCESS,
+                getString(R.string.capture_successed),
+                2000
+            ).show()
         }
         iv_up.setOnClickListener(controlListener)
         iv_down.setOnClickListener(controlListener)
@@ -346,7 +326,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
     open var controlListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
             var command = ""
-            when(v) {
+            when (v) {
                 iv_up -> command = Command.getPtzUpCommand(presenter.getChannel())
                 iv_down -> command = Command.getPtzDownCommand(presenter.getChannel())
                 iv_right -> command = Command.getPtzRightCommand(presenter.getChannel())
@@ -356,13 +336,19 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
             Thread(Runnable {
                 App.data.accessInfo?.let {
                     if (command.length <= 0) return@Runnable
-                    var retContent = XP2P.postCommandRequestSync("${it.productId}/${presenter.getDeviceName()}",
-                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000)?:""
+                    var retContent = XP2P.postCommandRequestSync(
+                        "${it.productId}/${presenter.getDeviceName()}",
+                        command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000
+                    ) ?: ""
                     launch(Dispatchers.Main) {
                         if (TextUtils.isEmpty(retContent)) {
                             retContent = getString(R.string.command_with_error, command)
                         }
-                        Toast.makeText(this@VideoPreviewMJPEGActivity, retContent, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@VideoPreviewMJPEGActivity,
+                            retContent,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }).start()
@@ -386,9 +372,11 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
     }
 
     private fun showVVideoQualityDialog() {
-        var options = arrayListOf(getString(R.string.video_quality_high_str) + " " + getString(R.string.video_quality_high),
-                getString(R.string.video_quality_medium_str) + " " + getString(R.string.video_quality_medium),
-                getString(R.string.video_quality_low_str) + " " + getString(R.string.video_quality_low))
+        var options = arrayListOf(
+            getString(R.string.video_quality_high_str) + " " + getString(R.string.video_quality_high),
+            getString(R.string.video_quality_medium_str) + " " + getString(R.string.video_quality_medium),
+            getString(R.string.video_quality_low_str) + " " + getString(R.string.video_quality_low)
+        )
         var dlg = ListOptionsDialog(this@VideoPreviewMJPEGActivity, options)
         dlg.show()
         dlg.setOnDismisListener { chgTextState(it) }
@@ -396,7 +384,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
 
     private fun showHVideoQualityDialog() {
         var pos = -1
-        when(tv_video_quality.text.toString()) {
+        when (tv_video_quality.text.toString()) {
             getString(R.string.video_quality_high_str) -> pos = 2
             getString(R.string.video_quality_medium_str) -> pos = 1
             getString(R.string.video_quality_low_str) -> pos = 0
@@ -405,21 +393,28 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         dlg.show()
         btn_layout.visibility = View.GONE
         dlg.setOnDismisListener(object : VideoQualityDialog.OnDismisListener {
-            override fun onItemClicked(pos: Int) { chgTextState(pos) }
-            override fun onDismiss() { btn_layout.visibility = View.VISIBLE }
+            override fun onItemClicked(pos: Int) {
+                chgTextState(pos)
+            }
+
+            override fun onDismiss() {
+                btn_layout.visibility = View.VISIBLE
+            }
         })
     }
 
     open fun chgTextState(value: Int) {
-        when(value) {
+        when (value) {
             0 -> {
                 tv_video_quality.setText(R.string.video_quality_high_str)
                 setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
             }
+
             1 -> {
                 tv_video_quality.setText(R.string.video_quality_medium_str)
                 setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
             }
+
             2 -> {
                 tv_video_quality.setText(R.string.video_quality_low_str)
                 setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
@@ -434,12 +429,12 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         startShowVideoTime = System.currentTimeMillis()
         player.release()
         audioPlayer?.release()
-        launch (Dispatchers.Main) {
+        launch(Dispatchers.Main) {
             layout_video_preview?.removeView(v_preview)
             layout_video_preview?.addView(v_preview, 0)
 
             player = IjkMediaPlayer()
-            player?.let {
+            player.let {
                 val url = urlPrefix + suffix
                 it.reset()
 
@@ -449,9 +444,13 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
+                it.setOption(
+                    IjkMediaPlayer.OPT_CATEGORY_PLAYER,
+                    "mediacodec-handle-resolution-change",
+                    1
+                )
 
                 it.setFrameSpeed(1.5f)
                 while (!::surface.isInitialized) {
@@ -477,9 +476,13 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec",1)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1)
+                it.setOption(
+                    IjkMediaPlayer.OPT_CATEGORY_PLAYER,
+                    "mediacodec-handle-resolution-change",
+                    1
+                )
 
                 it.setFrameSpeed(1.5f)
                 while (!::surface.isInitialized) {
@@ -495,7 +498,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         }
     }
 
-    private fun switchOrientation(orientation : Boolean) {
+    private fun switchOrientation(orientation: Boolean) {
         var marginWidth = 0
         var layoutParams = layout_video_preview.layoutParams as ConstraintLayout.LayoutParams
         var fitSize = 0
@@ -529,7 +532,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
     }
 
     override fun eventReady(events: MutableList<ActionRecord>) {
-        if (events == null || events.size <= 0) {
+        if (events.size <= 0) {
             launch(Dispatchers.Main) {
                 tv_event_status.setText(R.string.no_data)
             }
@@ -554,11 +557,16 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         v_preview.layoutParams = layoutParams
 
     }
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean { return false }
+
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+        return false
+    }
+
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
         if (!showTip && startShowVideoTime > 0) {
             showVideoTime = System.currentTimeMillis() - startShowVideoTime
-            var content = getString(R.string.time_2_show, connectTime.toString(), showVideoTime.toString())
+            var content =
+                getString(R.string.time_2_show, connectTime.toString(), showVideoTime.toString())
             TipToastDialog(this, content, 10000).show()
             showTip = true
         }
@@ -570,7 +578,11 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
             firstIn = false
         }
     }
+
     override fun fail(msg: String?, errorCode: Int) {}
+    override fun updateXp2pInfo(xp2pInfo: String) {
+        startService()
+    }
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
@@ -583,20 +595,16 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         if (event == 1003) {
             Log.e(tag, "====event === 1003")
             startShowVideoTime = 0L
-            keepPlayThreadLock?.let {
-                synchronized(it) {
-                    Log.d(tag, "====p2p链路断开, event=$event.")
-                    it.notify()
-                }
-            } // 唤醒守护线程
             launch(Dispatchers.Main) {
-                var content = getString(R.string.disconnected_and_reconnecting, id)
+                val content = getString(R.string.disconnected_and_reconnecting, id)
                 Toast.makeText(this@VideoPreviewMJPEGActivity, content, Toast.LENGTH_SHORT).show()
             }
+            resetPlayer()
         } else if (event == 1004 || event == 1005) {
             connectTime = System.currentTimeMillis() - connectStartTime
             if (event == 1004) {
                 Log.e(tag, "====event === 1004")
+                delegateHttpFlv()
             }
         } else if (event == 1010) {
             Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
@@ -610,7 +618,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
 
     private fun finishPlayer() {
         mHandler.removeMessages(MSG_UPDATE_HUD)
-        player?.release()
+        player.release()
         if (radio_talk.isChecked) speakAble(false)
         if (radio_record.isChecked) {
             player.stopRecord()
@@ -618,14 +626,6 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         }
 
         audioPlayer?.release()
-        countDownLatchs.clear()
-        // 关闭守护线程
-        keepAliveThreadRuning = false
-        keepPlayThreadLock?.let {
-            synchronized(it) {
-                it.notify()
-            }
-        }
     }
 
     override fun onDestroy() {
@@ -641,7 +641,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
 
     companion object {
         fun startPreviewActivity(context: Context?, dev: DevInfo) {
-            context?:let { return }
+            context ?: let { return }
 
             var intent = Intent(context, VideoPreviewMJPEGActivity::class.java)
             var bundle = Bundle()
@@ -665,18 +665,25 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         var command: ByteArray? = null
         when (tv_video_quality.text.toString()) {
             getString(R.string.video_quality_high_str) -> {
-                command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=super".toByteArray()
+                command =
+                    "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=super".toByteArray()
             }
+
             getString(R.string.video_quality_medium_str) -> {
-                command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=high".toByteArray()
+                command =
+                    "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=high".toByteArray()
             }
+
             getString(R.string.video_quality_low_str) -> {
-                command = "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=standard".toByteArray()
+                command =
+                    "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=standard".toByteArray()
             }
         }
-        val reponse = XP2P.postCommandRequestSync(id, command, command!!.size.toLong(), 2 * 1000 * 1000)
+        val reponse =
+            XP2P.postCommandRequestSync(id, command, command!!.size.toLong(), 2 * 1000 * 1000)
         if (!TextUtils.isEmpty(reponse)) {
-            val deviceStatuses: List<DeviceStatus> = JSONArray.parseArray(reponse, DeviceStatus::class.java)
+            val deviceStatuses: List<DeviceStatus> =
+                JSONArray.parseArray(reponse, DeviceStatus::class.java)
             // 0   接收请求
             // 1   拒绝请求
             // 404 error request message
@@ -687,22 +694,30 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
                 runOnUiThread {
                     when (deviceStatuses[0].status) {
                         0 -> Toast.makeText(this, "设备状态正常", Toast.LENGTH_SHORT).show()
-                        1 -> Toast.makeText(this, "设备状态异常, 拒绝请求: $reponse", Toast.LENGTH_SHORT).show()
+                        1 -> Toast.makeText(
+                            this,
+                            "设备状态异常, 拒绝请求: $reponse",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
                         404 -> Toast.makeText(
                             this,
                             "设备状态异常, error request message: $reponse",
                             Toast.LENGTH_SHORT
                         ).show()
+
                         405 -> Toast.makeText(
                             this,
                             "设备状态异常, connect number too many: $reponse",
                             Toast.LENGTH_SHORT
                         ).show()
+
                         406 -> Toast.makeText(
                             this,
                             "设备状态异常, current command don't support: $reponse",
                             Toast.LENGTH_SHORT
                         ).show()
+
                         407 -> Toast.makeText(
                             this,
                             "设备状态异常, device process error: $reponse",
@@ -724,7 +739,7 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
     private val mHandler = MyHandler(this)
 
     private class MyHandler(activity: VideoPreviewMJPEGActivity) : Handler() {
-        private val mActivity: WeakReference<VideoPreviewMJPEGActivity>  = WeakReference(activity)
+        private val mActivity: WeakReference<VideoPreviewMJPEGActivity> = WeakReference(activity)
         override fun handleMessage(msg: Message) {
             if (mActivity.get() == null) {
                 return
@@ -747,14 +762,20 @@ class VideoPreviewMJPEGActivity : VideoBaseActivity(), EventView, TextureView.Su
         val audioCachedBytes = player.audioCachedBytes
         val tcpSpeed = player.tcpSpeed
 
-        tv_a_cache?.text = String.format(Locale.US, "%s, %s",
+        tv_a_cache?.text = String.format(
+            Locale.US, "%s, %s",
             CommonUtils.formatedDurationMilli(audioCachedDuration),
-            CommonUtils.formatedSize(audioCachedBytes))
-        tv_v_cache?.text = String.format(Locale.US, "%s, %s",
+            CommonUtils.formatedSize(audioCachedBytes)
+        )
+        tv_v_cache?.text = String.format(
+            Locale.US, "%s, %s",
             CommonUtils.formatedDurationMilli(videoCachedDuration),
-            CommonUtils.formatedSize(videoCachedBytes))
-        tv_tcp_speed?.text = String.format(Locale.US, "%s",
-            CommonUtils.formatedSpeed(tcpSpeed, 1000))
+            CommonUtils.formatedSize(videoCachedBytes)
+        )
+        tv_tcp_speed?.text = String.format(
+            Locale.US, "%s",
+            CommonUtils.formatedSpeed(tcpSpeed, 1000)
+        )
         tv_video_w_h?.text = "${player.videoWidth} x ${player.videoHeight}"
     }
 }
