@@ -1,7 +1,7 @@
 package com.tencent.iot.explorer.video
 
 import android.util.Log
-import com.alibaba.fastjson.JSON
+import com.google.gson.Gson
 import junit.framework.TestCase
 import org.junit.Test
 import java.lang.Long
@@ -114,7 +114,7 @@ class SignForV3Test {
      */
     fun toJson(clazz: Any?): String? {
         return try {
-            JSON.toJSONString(clazz)
+            Gson().toJson(clazz)
         } catch (e: Exception) {
             Log.e("ToJsonEntity", "fastjson转换错误：${e.message} \n原因是：${e.cause}")
             null
