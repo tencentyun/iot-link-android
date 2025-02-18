@@ -4,7 +4,7 @@
 
 ### 接口说明
 1. 初始化xp2p服务接口
-> int startService(String id, String product_id, String device_name, int sensor_timeout)
+> public static void startService(Context context, String product_id, String device_name, String xp2pInfo, XP2PAppConfig xp2PAppConfig)
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
@@ -13,26 +13,11 @@
 | device_name | String | 设备名称 |
 | sensor_timeout | int | 超时tcp切换时间 |
 
-| 返回值 | 描述 |
-|:-|:-|
-| int | 错误码 |
+| 返回值  | 描述 |
+|:-----|:-|
+| void |  |
 
-
-2. 设置云API secret_id、secret_key以及xp2pInfo
-> int setParamsForXp2pInfo(String id, String secretId, String secretKey, String xp2pInfo)
-
-| 参数 | 类型 | 描述 |
-|:-|:-|:-|
-| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
-| secretId | String | 云API secret_id信息 |
-| secretKey | String | 云API seret_key信息 |
-| xp2p_info | String | 获取的camera端生成的xp2p信息,由该接口获取则传入空 |
-
-| 返回值 | 描述 |
-|:-|:-|
-| int | 错误码 |
-
-3. 获取本地请求数据的标准http url,可使用该url请求设备端数据
+2. 获取本地请求数据的标准http url,可使用该url请求设备端数据
 > String delegateHttpFlv(String id)
 
 > 说明: 该接口与startAvRecvService的使用互斥,不可同时使用二者
@@ -104,21 +89,7 @@
 | String | 设备端响应请求返回的数据(失败则返回空字符串) |
 
 
-10. 发送信令消息给camera设备,camera回复的数据由注册的回调函数返回,异步非阻塞方式;使用该方法首先需调用setCallback()注册回调
-> int postCommandRequestWithAsync(String id, byte[] command, long cmd_len)
-
-| 参数 | 类型 | 描述 |
-|:-|:-|:-|
-| id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
-| command | byte[] | 可以为任意格式字符或二进制数据(格式必须为`action=user_define&cmd=xxx`,需要传输的数据跟在`cmd=`后面)，长度由cmd_len提供，建议在16KB以内，否则会影响实时性 |
-| cmd_len | long | command长度 |
-
-| 返回值 | 描述 |
-|:-|:-|
-| int | 成功：0，失败：错误码 |
-
-
-11. 向camera设备请求媒体流,异步回调方式;使用该方法首先需调用setCallback()注册回调
+10. 向camera设备请求媒体流,异步回调方式;使用该方法首先需调用setCallback()注册回调
 > void startAvRecvService(String id, String params, boolean crypto)
 
 > 说明: 调用该接口需要在其回调函数中处理接收的数据,且该接口与接口`delegateHttpFlv()`的使用互斥,不可同时使用二者
@@ -130,7 +101,7 @@
 | crypto | boolean | 是否开启传输层加密，如果关闭(crypto=false)，则建议用户在应用层加密，否则有安全风险 |
 
 
-12. 关闭媒体流传输
+11. 关闭媒体流传输
 > int stopAvRecvService(String id, byte[] data);
 
 | 参数 | 类型 | 描述 |
@@ -142,7 +113,7 @@
 |:-|:-|
 | int | 成功：0，失败：错误码 |
 
-13. 初始化xp2p局域网服务接口
+12. 初始化xp2p局域网服务接口
 > int startLanService(String id, String product_id, String device_name, String host, String port);
 
 | 参数 | 类型 | 描述 |
@@ -153,70 +124,17 @@
 | host | String | 设备在局域网的ip地址 |
 | port | String | 设备在局域网的端口号 |
 
-14. 获取本地请求数据的局域网标准http url,可使用该url请求设备端数据
+13. 获取本地请求数据的局域网标准http url,可使用该url请求设备端数据
 > String getLanUrl(String id);
 
 | 参数 | 类型 | 描述 |
 |:-|:-|:-|
 | id | String | 目标camera在app端的唯一标识符,可以使用产品信息和设备名称组合,如:"$product/$device_name" |
 
-15. 获取局域网内本地代理的端口号
+14. 获取局域网内本地代理的端口号
 > int getLanProxyPort(String id);
 
-16. 发送一次探测广播, body 为广播内容
-
-> void startSendBroadcast(WlanDetectBody body);
-
-| 参数 | 类型           | 描述         |
-| :--- | :------------- | :----------- |
-| body | WlanDetectBody | 探测包体内容 |
-
-WlanDetectBody 定义如下
-
-| 参数        | 类型            | 描述                              |
-| :---------- | :-------------- | :-------------------------------- |
-| clientToken | String          | 自定义 token 用于验证接收的响应包 |
-| productId   | String          | 发送指定产品 ID 的广播包          |
-| deviceNames | List < String > | 发送指定设备名的广播包            |
-
-17. 发送多次探测广播, body 为广播内容，times 为尝试次数
-
-> void startSendBroadcast(WlanDetectBody body,  int times);
-
-| 参数  | 类型           | 描述                 |
-| :---- | :------------- | :------------------- |
-| body  | WlanDetectBody | 探测包体内容         |
-| times | int            | 尝试发送探测包的次数 |
-
-WlanDetectBody 定义如下
-
-| 参数        | 类型            | 描述                              |
-| :---------- | :-------------- | :-------------------------------- |
-| clientToken | String          | 自定义 token 用于验证接收的响应包 |
-| productId   | String          | 发送指定产品 ID 的广播包          |
-| deviceNames | List < String > | 发送指定设备名的广播包            |
-
-18. 设置广播的端口
-
-> void setPort(int port);
-
-| 参数 | 类型 | 描述   |
-| :--- | :--- | :----- |
-| port | int  | 端口号 |
-
-19. 中断发送广播，用于中断正在发送指定次数的广播
-
-> void clearAllTask();
-
-20. 设置探测响应包监听器
-
-> void setOnWlanDevicesDetectedCallback(OnWlanDevicesDetectedCallback onWlanDevicesDetectedCallback);
-
-| 参数                          | 类型                          | 描述             |
-| :---------------------------- | :---------------------------- | :--------------- |
-| onWlanDevicesDetectedCallback | OnWlanDevicesDetectedCallback | 广播响应包监听器 |
-
-21. 设置是否输出P2P日志(默认情况下，控制台日志以及日志文件输出是打开状态)
+15. 设置是否输出P2P日志(默认情况下，控制台日志以及日志文件输出是打开状态)
 
 > void setLogEnable(boolean console, boolean file);
 
@@ -283,47 +201,9 @@ WlanDetectBody 定义如下
 | msg | String | 设备端回应的消息,json数组格式 |
 | len | Int | 设备端回应的消息长度 |
 
-4. p2p通道关闭通知回调
-> override fun xp2pLinkError(id: String?, msg: String?)
-
-> 注意: 该回调中不可做耗时操作
-
-| 参数 | 类型 | 描述 |
-|:-|:-|:-|
-| id | String | 回传`startService`接口中的`id` |
-| msg | String | 附加说明,json格式 |
-
-5. 设备向app发送自定义消息，该回调的返回值表示app向设备端回复的消息
+4. 设备向app发送自定义消息，该回调的返回值表示app向设备端回复的消息
 
 > override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String
-
-6. 设备对 app 探测包的响应包
-
-> override fun onMessage(version: String, resp: WlanRespBody): Boolean
-
-| 参数    | 类型         | 描述     |
-| :------ | :----------- | :------- |
-| version | String       | 版本号   |
-| resp    | WlanRespBody | 响应包体 |
-
-WlanRespBody 定义如下
-
-| 参数        | 类型             | 描述                     |
-| :---------- | :--------------- | :----------------------- |
-| method      | String           | 消息类型                 |
-| clientToken | String           | 消息标识，与发送消息一致 |
-| timestamp   | long             | 消息发送的时间           |
-| params      | DeviceServerInfo | 设备信息                 |
-| code        | int              | 状态码，一般是0          |
-| status      | String           | 扩展使用                 |
-
-DeviceServerInfo 定义如下
-
-| 参数       | 类型   | 描述           |
-| :--------- | :----- | :------------- |
-| deviceName | String | 设备的名称     |
-| address    | String | 设备的 IP 地址 |
-| port       | int    | 设备的端口号   |
 
 ### 附带说明
 
@@ -343,6 +223,11 @@ DeviceServerInfo 定义如下
 ...
 String xp2p_info = getXP2PInfo(...) // 从自建后台获取xp2p info
 XP2P.setCallback(this)
-XP2P.startService(id, product_id, device_name, sensor_timeout)
-XP2P.setParamsForXp2pInfo(deviceId, "", "", xp2pInfo)
+XP2PAppConfig xP2PAppConfig = new XP2PAppConfig();
+appConfig.appKey = BuildConfig.TencentIotLinkSDKDemoAppkey //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
+appConfig.appSecret = BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
+appConfig.userId = ""  //用户纬度（每个手机区分开）使用用户自有的账号系统userid；查找日志是需提供此userid字段
+appConfig.autoConfigFromDevice = false //是否启动跟随配置，需要控制台配置
+appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO //配置使用auto、udp、tcp
+XP2P.startService(this,product_id,device_name,xp2p_info,xP2PAppConfig)
 ```
