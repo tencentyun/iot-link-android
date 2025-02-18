@@ -41,7 +41,7 @@ android {
 dependencies {
 //    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     embed (name:'android_gvoice-release',ext:'aar')
-    implementation 'com.google.code.gson:gson:2.12.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
     testImplementation 'junit:junit:4.+'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //kotlin协程
