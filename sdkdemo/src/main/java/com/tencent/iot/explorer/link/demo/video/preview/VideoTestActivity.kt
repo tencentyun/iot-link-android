@@ -88,7 +88,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
             BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
         appConfig.userId =
             ""  //用户纬度（每个手机区分开）使用用户自有的账号系统userid；若无请配置为[TIoTCoreXP2PBridge sharedInstance].getAppUUID; 查找日志是需提供此userid字段
-        appConfig.autoConfigFromDevice = true
+        appConfig.autoConfigFromDevice = false
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
         appConfig.crossStunTurn = false
     }
@@ -110,7 +110,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         )
         XP2P.setCallback(this)
 
-        tv_video_quality.text = "高清"
+        tv_video_quality.text = "标清"
         v_preview.surfaceTextureListener = this
         val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()
@@ -120,6 +120,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         val density = dm.density // 屏幕密度（0.75 / 1.0 / 1.5）
         screenWidth = (width / density).toInt() // 屏幕宽度(dp)
         screenHeight = (height / density).toInt() // 屏幕高度(dp)
+        startService()
     }
 
     private fun startService() {
@@ -135,6 +136,28 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     private fun restartService() {
         val id = "${productId}/${deviceName}"
         XP2P.stopService(id)
+    }
+
+    private fun checkDeviceState() {
+        Log.d("VideoTestActivity", "====检测设备状态===")
+        launch(Dispatchers.IO) {
+            val command = "action=user_define&channel=0&cmd=device_state"
+            val retContent = XP2P.postCommandRequestSync(
+                "${productId}/${deviceName}",
+                command.toByteArray(), command.toByteArray().size.toLong(), 1 * 1000 * 1000
+            ) ?: ""
+            Log.d("VideoTestActivity", "device_state back content:$retContent")
+
+//            if (retContent.isEmpty()) {
+//                launch(Dispatchers.Main) {
+//                    restartService()
+//                }
+//            } else {
+                launch(Dispatchers.Main) {
+                    delegateHttpFlv()
+                }
+//            }
+        }
     }
 
     private fun delegateHttpFlv() {
@@ -307,7 +330,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
                 it.setOption(
                     IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1
                 )
-
+//                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 50*1024)
                 it.setFrameSpeed(1.5f)
                 while (!::surface.isInitialized) {
                     delay(50)
@@ -344,6 +367,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         } else if (event == 1004 || event == 1005) {
             if (event == 1004) {
                 Log.e("VideoTestActivity", "====event === 1004")
+//                checkDeviceState()
                 delegateHttpFlv()
             }
         }
