@@ -6,11 +6,10 @@ import com.alibaba.fastjson.JSONObject
 import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.video.link.consts.VideoConst
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.title_layout.*
+import kotlinx.android.synthetic.main.activity_main.tb_bottom
+import kotlinx.android.synthetic.main.title_layout.tv_title
 
 class VideoMainActivity : VideoBaseActivity() {
     private val fragments = arrayListOf<Fragment>()

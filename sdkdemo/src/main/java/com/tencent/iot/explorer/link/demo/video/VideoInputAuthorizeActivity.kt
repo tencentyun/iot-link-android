@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.blue_title_layout.*
 import kotlinx.android.synthetic.main.input_item_layout.view.*
 import kotlinx.coroutines.*
 
-class VideoInputAuthorizeActivity : VideoBaseActivity() , CoroutineScope by MainScope() {
+class VideoInputAuthorizeActivity : VideoBaseActivity(), CoroutineScope by MainScope() {
 
     override fun getContentView(): Int {
         return R.layout.activity_video_input_authorize
@@ -37,20 +37,24 @@ class VideoInputAuthorizeActivity : VideoBaseActivity() , CoroutineScope by Main
         access_token_layout.iv_more.visibility = View.GONE
         product_id_layout.iv_more.visibility = View.GONE
 
-        launch (Dispatchers.Main) {
-            var jsonArrStr = SharePreferenceUtil.getString(this@VideoInputAuthorizeActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_ACCESS_INFOS)
+        launch(Dispatchers.Main) {
+            val jsonArrStr = SharePreferenceUtil.getString(
+                this@VideoInputAuthorizeActivity,
+                VideoConst.VIDEO_CONFIG,
+                VideoConst.VIDEO_ACCESS_INFOS
+            )
             jsonArrStr?.let {
-                var accessInfos = JSONArray.parseArray(jsonArrStr, AccessInfo::class.java)
+                val accessInfos = JSONArray.parseArray(jsonArrStr, AccessInfo::class.java)
                 accessInfos?.let {
                     if (accessInfos.size > 0) {
-                        var accessInfo = accessInfos.get(accessInfos.size - 1)
+                        val accessInfo = accessInfos.get(accessInfos.size - 1)
                         access_id_layout.ev_content.setText(accessInfo.accessId)
                         access_token_layout.ev_content.setText(accessInfo.accessToken)
                         product_id_layout.ev_content.setText(accessInfo.productId)
                         access_id_layout.ev_content.setSelection(accessInfo.accessId.length)
                     }
 
-                }?:let{
+                } ?: let {
                     access_id_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretId)
                     access_token_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretKey)
                     product_id_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoProductId)
@@ -64,10 +68,7 @@ class VideoInputAuthorizeActivity : VideoBaseActivity() , CoroutineScope by Main
         iv_back.setOnClickListener { finish() }
         btn_login.setOnClickListener(loginClickedListener)
         access_id_layout.setOnClickListener {
-            var dlg =
-                HistoryAccessInfoDialog(
-                    this@VideoInputAuthorizeActivity
-                )
+            val dlg = HistoryAccessInfoDialog(this@VideoInputAuthorizeActivity)
             dlg.show()
             dlg.setOnDismissListener(onDlgDismissListener)
         }
@@ -78,7 +79,7 @@ class VideoInputAuthorizeActivity : VideoBaseActivity() , CoroutineScope by Main
         cancel()
     }
 
-    var loginClickedListener = object : View.OnClickListener {
+    private var loginClickedListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
             if (!btn_use_sdk.isChecked) {
                 Toast.makeText(
@@ -113,17 +114,17 @@ class VideoInputAuthorizeActivity : VideoBaseActivity() , CoroutineScope by Main
                 return
             }
 
-            var accessInfo = AccessInfo()
+            val accessInfo = AccessInfo()
             accessInfo.accessId = access_id_layout.ev_content.text.toString()
             accessInfo.accessToken = access_token_layout.ev_content.text.toString()
             accessInfo.productId = product_id_layout.ev_content.text.toString()
 
-            launch (Dispatchers.Main) {
+            launch(Dispatchers.Main) {
                 checkAccessInfo(accessInfo)
             }
 
-            var intent = Intent(this@VideoInputAuthorizeActivity, VideoMainActivity::class.java)
-            var bundle = Bundle()
+            val intent = Intent(this@VideoInputAuthorizeActivity, VideoMainActivity::class.java)
+            val bundle = Bundle()
             bundle.putString(VideoConst.VIDEO_CONFIG, JSONObject.toJSONString(accessInfo))
             intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
             startActivity(intent)
@@ -132,14 +133,16 @@ class VideoInputAuthorizeActivity : VideoBaseActivity() , CoroutineScope by Main
 
     private fun checkAccessInfo(accessInfo: AccessInfo) {
 
-        var jsonArrStr = SharePreferenceUtil.getString(this@VideoInputAuthorizeActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_ACCESS_INFOS)
+        val jsonArrStr = SharePreferenceUtil.getString(
+            this@VideoInputAuthorizeActivity,
+            VideoConst.VIDEO_CONFIG,
+            VideoConst.VIDEO_ACCESS_INFOS
+        )
         var accessInfos: MutableList<AccessInfo> = ArrayList()
         jsonArrStr?.let {
             try {
                 accessInfos = JSONArray.parseArray(it, AccessInfo::class.java)
-                accessInfos?.let {
-                    if(it.contains(accessInfo)) it.remove(accessInfo)
-                }
+                accessInfos.let { info -> if (info.contains(accessInfo)) info.remove(accessInfo) }
             } catch (e: Exception) {
                 e.printStackTrace()
                 accessInfos = ArrayList()
@@ -148,10 +151,15 @@ class VideoInputAuthorizeActivity : VideoBaseActivity() , CoroutineScope by Main
 
         // 保证最后一条是最新使用过的数据
         accessInfos.add(accessInfo)
-        SharePreferenceUtil.saveString(this@VideoInputAuthorizeActivity, VideoConst.VIDEO_CONFIG, VideoConst.VIDEO_ACCESS_INFOS, JSONArray.toJSONString(accessInfos))
+        SharePreferenceUtil.saveString(
+            this@VideoInputAuthorizeActivity,
+            VideoConst.VIDEO_CONFIG,
+            VideoConst.VIDEO_ACCESS_INFOS,
+            JSONArray.toJSONString(accessInfos)
+        )
     }
 
-    var onDlgDismissListener = object : HistoryAccessInfoDialog.OnDismisListener {
+    private var onDlgDismissListener = object : HistoryAccessInfoDialog.OnDismisListener {
         override fun onOkClicked(accessInfo: AccessInfo?) {
             accessInfo?.let {
                 access_id_layout.ev_content.setText(accessInfo.accessId)

@@ -17,22 +17,33 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
 import com.tencent.iot.explorer.link.demo.video.nvr.VideoNvrActivity
 import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
-import com.tencent.iot.explorer.link.demo.video.preview.*
+import com.tencent.iot.explorer.link.demo.video.preview.DevUrl2Preview
+import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewActivity
+import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewMJPEGActivity
+import com.tencent.iot.explorer.link.demo.video.preview.VideoPushStreamActivity
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
-import com.tencent.iot.explorer.link.demo.video.utils.MultipleChannelChooseDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.consts.VideoRequestCode
 import com.tencent.iot.video.link.service.VideoBaseService
-import kotlinx.android.synthetic.main.fragment_video_device.*
-import kotlinx.coroutines.*
+import kotlinx.android.synthetic.main.fragment_video_device.gv_devs
+import kotlinx.android.synthetic.main.fragment_video_device.radio_complete
+import kotlinx.android.synthetic.main.fragment_video_device.radio_edit
+import kotlinx.android.synthetic.main.fragment_video_device.rg_edit_dev
+import kotlinx.android.synthetic.main.fragment_video_device.smart_refresh_layout
+import kotlinx.android.synthetic.main.fragment_video_device.tv_tip_txt
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemClicked,
     CoroutineScope by MainScope() {
-    private var devs : MutableList<DevInfo> = ArrayList()
-    private var adapter : DevsAdapter? = null
-    private var videoProductInfo : VideoProductInfo? = null
+    private var devs: MutableList<DevInfo> = ArrayList()
+    private var adapter: DevsAdapter? = null
+    private var videoProductInfo: VideoProductInfo? = null
 
     override fun getContentView(): Int {
         return R.layout.fragment_video_device
@@ -41,7 +52,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
     override fun startHere(view: View) {
         setListener()
 
-        var devGridLayoutManager = GridLayoutManager(context, 2)
+        val devGridLayoutManager = GridLayoutManager(context, 2)
         context?.let {
             adapter = DevsAdapter(it, devs)
             adapter?.let {
@@ -50,8 +61,8 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
             }
             adapter?.radioComplete = radio_complete
             adapter?.radioEdit = radio_edit
-            gv_devs.setLayoutManager(devGridLayoutManager)
-            gv_devs.setAdapter(adapter)
+            gv_devs.layoutManager = devGridLayoutManager
+            gv_devs.adapter = adapter
             loadAllVideoInfo()
         }
         adapter?.switchBtnStatus(false)
@@ -64,12 +75,8 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
 
     private fun setListener() {
         radio_edit.setOnClickListener {
-            var options = arrayListOf(getString(R.string.edit_devs_2_show))
-            var dlg =
-                ListOptionsDialog(
-                    context,
-                    options
-                )
+            val options = arrayListOf(getString(R.string.edit_devs_2_show))
+            val dlg = ListOptionsDialog(context, options)
             dlg.show()
             dlg.setOnDismisListener {
                 adapter?.switchBtnStatus(true)
@@ -101,10 +108,10 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
         }
 
         adapter?.let {
-            var allUrl = ArrayList<DevUrl2Preview>()
+            val allUrl = ArrayList<DevUrl2Preview>()
             for (i in 0 until it.list.size) {
                 if (it.checkedIds.contains(i)) {
-                    var dev = DevUrl2Preview()
+                    val dev = DevUrl2Preview()
                     dev.devName = it.list.get(i).DeviceName
                     dev.Status = it.list.get(i).Status
                     allUrl.add(dev)
@@ -117,28 +124,45 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
 
     override fun onItemClicked(pos: Int, dev: DevInfo) {
         if (videoProductInfo?.DeviceType == VideoProductInfo.DEV_TYPE_NVR) {
-            var intent = Intent(context, VideoNvrActivity::class.java)
-            var bundle = Bundle()
+            val intent = Intent(context, VideoNvrActivity::class.java)
+            val bundle = Bundle()
             bundle.putString(VideoConst.VIDEO_NVR_INFO, JSON.toJSONString(dev))
             intent.putExtra(VideoConst.VIDEO_NVR_INFO, bundle)
             startActivity(intent)
             return
         }
 
-        var options = arrayListOf(getString(R.string.preview), getString(R.string.playback), getString(R.string.preview_mjpeg), getString(R.string.video_without_property), getString(R.string.video_push_stream), getString(R.string.multiple_channel_choose))
-        var dlg =
+        val options = arrayListOf(
+            getString(R.string.preview),
+            getString(R.string.playback),
+            getString(R.string.preview_mjpeg),
+            getString(R.string.video_without_property),
+            getString(R.string.video_push_stream),
+            getString(R.string.multiple_channel_choose)
+        )
+        val dlg =
             ListOptionsDialog(
                 context,
                 options
             )
         dlg.show()
         dlg.setOnDismisListener { it ->
-            when(it) {
-                0 -> { VideoPreviewActivity.startPreviewActivity(context, dev) }
-                1 -> { VideoPlaybackActivity.startPlaybackActivity(context, dev) }
-                2 -> { VideoPreviewMJPEGActivity.startPreviewActivity(context, dev) }
+            when (it) {
+                0 -> {
+                    VideoPreviewActivity.startPreviewActivity(context, dev)
+                }
+
+                1 -> {
+                    VideoPlaybackActivity.startPlaybackActivity(context, dev)
+                }
+
+                2 -> {
+                    VideoPreviewMJPEGActivity.startPreviewActivity(context, dev)
+                }
 //                3 -> { VideoWithoutPropertyActivity.startPreviewActivity(context, dev) }
-                4 -> { VideoPushStreamActivity.startPreviewActivity(context, dev) }
+                4 -> {
+                    VideoPushStreamActivity.startPreviewActivity(context, dev)
+                }
 //                5 -> {
 //                    val multipleChannelChooseDialog = MultipleChannelChooseDialog(context)
 //                    multipleChannelChooseDialog.show()
@@ -158,6 +182,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
             }
         }
     }
+
     override fun onItemMoreClicked(pos: Int, dev: DevInfo) {}
     override fun onItemCheckedClicked(pos: Int, checked: Boolean) {}
     override fun onItemCheckedLimited() {
@@ -176,7 +201,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        launch (Dispatchers.Main) {
+        launch(Dispatchers.Main) {
             adapter?.notifyDataSetChanged()
             smart_refresh_layout?.finishRefresh()
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
@@ -192,12 +217,12 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
                 if (jsonResponset.containsKey("Devices")) {
                     val dataArray: JSONArray = jsonResponset.getJSONArray("Devices")
                     for (i in 0 until dataArray.size) {
-                        var dev = JSON.parseObject(dataArray.getString(i), DevInfo::class.java)
+                        val dev = JSON.parseObject(dataArray.getString(i), DevInfo::class.java)
                         devs.add(dev)
                     }
                 }
 
-                launch (Dispatchers.Main) {
+                launch(Dispatchers.Main) {
                     adapter?.videoProductInfo = videoProductInfo
                     adapter?.notifyDataSetChanged()
                     if (adapter?.videoProductInfo?.DeviceType == VideoProductInfo.DEV_TYPE_IPC) {
@@ -222,7 +247,12 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
         videoProductInfo?.let {
             App.data.accessInfo?.let {
                 devs.clear()
-                VideoBaseService(it.accessId, it.accessToken).describeDevices(it.productId, 99, 0, this)
+                VideoBaseService(it.accessId, it.accessToken).describeDevices(
+                    it.productId,
+                    99,
+                    0,
+                    this
+                )
             }
         }
     }

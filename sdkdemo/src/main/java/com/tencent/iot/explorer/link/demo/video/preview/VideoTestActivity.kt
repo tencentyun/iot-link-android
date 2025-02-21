@@ -56,6 +56,7 @@ import kotlinx.android.synthetic.main.dash_board_layout.tv_tcp_speed
 import kotlinx.android.synthetic.main.dash_board_layout.tv_v_cache
 import kotlinx.android.synthetic.main.dash_board_layout.tv_video_w_h
 import kotlinx.android.synthetic.main.title_layout.iv_back
+import kotlinx.android.synthetic.main.title_layout.tv_title
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -114,6 +115,7 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         deviceName = intent.getStringExtra("deviceName")?.toString() ?: ""
         xp2pInfo = intent.getStringExtra("p2pInfo")?.toString() ?: ""
         xP2PAppConfig.autoConfigFromDevice = intent.getBooleanExtra("isStartCross", false)
+        tv_title.text = deviceName
         val protocol = intent.getStringExtra("protocol")?.toString() ?: "auto"
         if (protocol == "udp") {
             xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_UDP
