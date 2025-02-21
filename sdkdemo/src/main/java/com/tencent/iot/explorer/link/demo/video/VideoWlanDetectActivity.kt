@@ -2,10 +2,8 @@ package com.tencent.iot.explorer.link.demo.video
 
 import android.text.InputType
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.App
@@ -25,7 +23,6 @@ import kotlinx.android.synthetic.main.fragment_video_device.*
 import kotlinx.android.synthetic.main.input_item_layout.view.*
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScope() {
 
@@ -50,12 +47,12 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
         client_token_layout.iv_more.visibility = View.GONE
 
         launch (Dispatchers.Main) {
-            var jsonArrStr = SharePreferenceUtil.getString(this@VideoWlanDetectActivity, VideoConst.VIDEO_WLAN_CONFIG, VideoConst.VIDEO_ACCESS_INFOS)
+            val jsonArrStr = SharePreferenceUtil.getString(this@VideoWlanDetectActivity, VideoConst.VIDEO_WLAN_CONFIG, VideoConst.VIDEO_ACCESS_INFOS)
             jsonArrStr?.let {
-                var accessInfos = JSONArray.parseArray(jsonArrStr, AccessInfo::class.java)
+                val accessInfos = JSONArray.parseArray(jsonArrStr, AccessInfo::class.java)
                 accessInfos?.let {
                     if (accessInfos.size > 0) {
-                        var accessInfo = accessInfos.get(accessInfos.size - 1)
+                        val accessInfo = accessInfos.get(accessInfos.size - 1)
                         client_token_layout.ev_content.setText(accessInfo.accessToken)
                         product_id_layout.ev_content.setText(accessInfo.productId)
                     }
@@ -63,10 +60,8 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
             }
         }
 
-        var layoutManager = LinearLayoutManager(this@VideoWlanDetectActivity)
         adapter = WlanDevsAdapter(this@VideoWlanDetectActivity, datas)
-        devs_lv.setLayoutManager(layoutManager)
-        devs_lv.setAdapter(adapter)
+        devs_lv.adapter = adapter
         adapter?.setOnItemClicked(onItemClicked)
     }
 
@@ -97,7 +92,7 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
         super.onPause()
     }
 
-    var searchClickedListener = object : View.OnClickListener {
+    private var searchClickedListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
             if (TextUtils.isEmpty(product_id_layout.ev_content.text)) {
                 Toast.makeText(this@VideoWlanDetectActivity, R.string.hint_product_id, Toast.LENGTH_SHORT).show()
@@ -109,7 +104,7 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
                 return
             }
 
-            var accessInfo = AccessInfo()
+            val accessInfo = AccessInfo()
             accessInfo.accessToken = client_token_layout.ev_content.text.toString()
             accessInfo.productId = product_id_layout.ev_content.text.toString()
 
@@ -118,7 +113,7 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
             }
 
             datas.clear()
-            var detectBody = WlanDetectBody()
+            val detectBody = WlanDetectBody()
             detectBody.productId = accessInfo.productId
             detectBody.clientToken = accessInfo.accessToken
         }
@@ -137,7 +132,7 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
     }
 
     private fun checkAccessInfo(accessInfo: AccessInfo) {
-        var accessInfos: MutableList<AccessInfo> = ArrayList()
+        val accessInfos: MutableList<AccessInfo> = ArrayList()
         accessInfos.add(accessInfo)
         SharePreferenceUtil.saveString(this@VideoWlanDetectActivity, VideoConst.VIDEO_WLAN_CONFIG, VideoConst.VIDEO_ACCESS_INFOS, JSONArray.toJSONString(accessInfos))
     }

@@ -41,7 +41,7 @@
 //import java.util.*
 //
 //
-//class WlanVideoPreviewActivity : VideoPreviewBaseActivity(), TextureView.SurfaceTextureListener,
+//class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTextureListener,
 //    XP2PCallback, CoroutineScope by MainScope() {
 //
 //    var tag = WlanVideoPreviewActivity::class.simpleName
@@ -71,9 +71,6 @@
 //    var port = 0
 //    var address = ""
 //    var channel = 0
-//    override fun updateXp2pInfo(xp2pInfo: String) {
-//        TODO("Not yet implemented")
-//    }
 //
 //    override fun getContentView(): Int {
 //        return R.layout.activity_video_preview

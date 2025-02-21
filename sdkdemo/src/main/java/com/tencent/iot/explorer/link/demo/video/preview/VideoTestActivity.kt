@@ -68,9 +68,9 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.ref.WeakReference
 import java.util.Locale
 
-open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by MainScope(),
-    TextureView.SurfaceTextureListener,
-    IMediaPlayer.OnInfoListener {
+class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by MainScope(),
+    TextureView.SurfaceTextureListener, IMediaPlayer.OnInfoListener {
+
     private val player = IjkMediaPlayer()
     lateinit var surface: Surface
     private var productId: String = ""
@@ -78,6 +78,8 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     private var xp2pInfo: String = ""
     private val channel: Int = 0
     private var urlPrefix = ""
+    private var audioRecordUtil: AudioRecordUtil? = null
+
     private var screenWidth = 0
     private var screenHeight = 0
     private var startShowVideoTime = 0L
@@ -88,9 +90,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     private val MSG_UPDATE_HUD = 1
     private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
     private var filePath: String? = null
-    private var audioRecordUtil: AudioRecordUtil? = null
 
-    @Volatile
     private var speakAble = false
     private var audioAble = true
     private var orientationV = true
@@ -100,8 +100,6 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
             BuildConfig.TencentIotLinkSDKDemoAppkey //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
         appConfig.appSecret =
             BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
-        appConfig.userId =
-            ""  //用户纬度（每个手机区分开）使用用户自有的账号系统userid；若无请配置为[TIoTCoreXP2PBridge sharedInstance].getAppUUID; 查找日志是需提供此userid字段
         appConfig.autoConfigFromDevice = false
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
         appConfig.crossStunTurn = false
@@ -220,7 +218,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         radio_record.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 filePath = CommonUtils.generateFileDefaultPath()
-                var ret = player.startRecord(filePath)
+                val ret = player.startRecord(filePath)
                 if (ret != 0) {
                     ToastDialog(
                         this,

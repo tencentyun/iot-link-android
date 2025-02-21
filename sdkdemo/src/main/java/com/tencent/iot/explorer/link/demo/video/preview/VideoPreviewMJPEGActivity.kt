@@ -105,8 +105,6 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
             BuildConfig.TencentIotLinkSDKDemoAppkey //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
         appConfig.appSecret =
             BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
-        appConfig.userId =
-            ""  //用户纬度（每个手机区分开）使用用户自有的账号系统userid；若无请配置为[TIoTCoreXP2PBridge sharedInstance].getAppUUID; 查找日志是需提供此userid字段
         appConfig.autoConfigFromDevice = true
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
         appConfig.crossStunTurn = false
