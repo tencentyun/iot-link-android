@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
+import android.widget.RadioButton
 import androidx.core.content.ContextCompat
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.R
@@ -16,6 +17,8 @@ import kotlinx.android.synthetic.main.activity_video_input_authorize.product_id_
 import kotlinx.android.synthetic.main.activity_video_test_input.btn_paste
 import kotlinx.android.synthetic.main.activity_video_test_input.device_name_layout
 import kotlinx.android.synthetic.main.activity_video_test_input.p2p_info_layout
+import kotlinx.android.synthetic.main.activity_video_test_input.rg_protocol
+import kotlinx.android.synthetic.main.activity_video_test_input.swt_cross
 import kotlinx.android.synthetic.main.blue_title_layout.iv_back
 import kotlinx.android.synthetic.main.blue_title_layout.tv_title
 import kotlinx.android.synthetic.main.input_item_layout.view.ev_content
@@ -25,6 +28,8 @@ import kotlinx.coroutines.MainScope
 
 class VideoTestInputActivity : VideoBaseActivity(), CoroutineScope by MainScope() {
 
+    private var isStartCross = false
+    private var protocol = "auto"
     override fun getContentView(): Int {
         return R.layout.activity_video_test_input
     }
@@ -82,9 +87,15 @@ class VideoTestInputActivity : VideoBaseActivity(), CoroutineScope by MainScope(
                     }
             }
         }
+        swt_cross.setOnCheckedChangeListener { _, checked ->
+            isStartCross = checked
+        }
+        rg_protocol.setOnCheckedChangeListener { group, checkedId ->
+            protocol = group.findViewById<RadioButton>(checkedId).tag.toString()
+        }
     }
 
-    var loginClickedListener = object : View.OnClickListener {
+    private var loginClickedListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
             if (product_id_layout.ev_content.text.isNullOrEmpty()) {
                 show(getString(R.string.hint_product_id))
@@ -120,8 +131,8 @@ class VideoTestInputActivity : VideoBaseActivity(), CoroutineScope by MainScope(
             intent.putExtra("productId", product_id_layout.ev_content.text.toString())
             intent.putExtra("deviceName", device_name_layout.ev_content.text.toString())
             intent.putExtra("p2pInfo", p2p_info_layout.ev_content.text.toString())
-            val bundle = Bundle()
-            intent.putExtra(VideoConst.VIDEO_CONFIG, bundle)
+            intent.putExtra("isStartCross", isStartCross)
+            intent.putExtra("protocol", protocol)
             startActivity(intent)
         }
     }

@@ -77,23 +77,23 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     private var deviceName: String = ""
     private var xp2pInfo: String = ""
     private val channel: Int = 0
-    var urlPrefix = ""
-    var screenWidth = 0
-    var screenHeight = 0
-    var startShowVideoTime = 0L
-    var showVideoTime = 0L
-    var connectTime = 0L
-    var showTip = false
-    var firstIn = true
-    val MSG_UPDATE_HUD = 1
-    var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
-    var filePath: String? = null
-    var audioRecordUtil: AudioRecordUtil? = null
+    private var urlPrefix = ""
+    private var screenWidth = 0
+    private var screenHeight = 0
+    private var startShowVideoTime = 0L
+    private var showVideoTime = 0L
+    private var connectTime = 0L
+    private var showTip = false
+    private var firstIn = true
+    private val MSG_UPDATE_HUD = 1
+    private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+    private var filePath: String? = null
+    private var audioRecordUtil: AudioRecordUtil? = null
 
     @Volatile
-    var speakAble = false
-    var audioAble = true
-    var orientationV = true
+    private var speakAble = false
+    private var audioAble = true
+    private var orientationV = true
 
     private val xP2PAppConfig = XP2PAppConfig().also { appConfig ->
         appConfig.appKey =
@@ -115,6 +115,15 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         productId = intent.getStringExtra("productId")?.toString() ?: ""
         deviceName = intent.getStringExtra("deviceName")?.toString() ?: ""
         xp2pInfo = intent.getStringExtra("p2pInfo")?.toString() ?: ""
+        xP2PAppConfig.autoConfigFromDevice = intent.getBooleanExtra("isStartCross", false)
+        val protocol = intent.getStringExtra("protocol")?.toString() ?: "auto"
+        if (protocol == "udp") {
+            xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_UDP
+        } else if (protocol == "tcp") {
+            xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_TCP
+        } else {
+            xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
+        }
         audioRecordUtil = AudioRecordUtil(
             this,
             "${productId}/${deviceName}",

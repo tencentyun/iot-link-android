@@ -13,6 +13,7 @@
         android:id="@+id/btn_paste"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:background="@drawable/btn_rad4_color_e6e6e6"
         android:text="粘贴"
         android:textStyle="bold"
@@ -46,12 +47,72 @@
         android:layout_height="56dp"
         app:layout_constraintTop_toBottomOf="@id/device_name_layout" />
 
+    <TextView
+        android:id="@+id/tv_cross"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="是否开启双中转:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/p2p_info_layout" />
+
+    <Switch
+        android:id="@+id/swt_cross"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_cross"
+        app:layout_constraintStart_toEndOf="@+id/tv_cross"
+        app:layout_constraintTop_toTopOf="@+id/tv_cross" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="选择协议："
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_cross" />
+
+    <RadioGroup
+        android:id="@+id/rg_protocol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView">
+
+        <RadioButton
+            android:id="@+id/rb_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:tag="auto"
+            android:text="auto" />
+
+        <RadioButton
+            android:id="@+id/rb_udp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="udp"
+            android:text="udp" />
+
+        <RadioButton
+            android:id="@+id/rb_tcp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="tcp"
+            android:text="tcp" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/background_blue_btn"
         android:text="@string/login"
@@ -59,7 +120,7 @@
         android:textSize="@dimen/ts_17"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/p2p_info_layout" />
+        app:layout_constraintTop_toBottomOf="@id/tv_cross" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
