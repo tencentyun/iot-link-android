@@ -9,20 +9,27 @@ import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
-//import com.tencent.iot.explorer.link.demo.video.preview.WlanVideoPreviewActivity
+import com.tencent.iot.explorer.link.demo.video.preview.WlanVideoPreviewActivity
 import com.tencent.iot.video.link.callback.OnWlanDevicesDetectedCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.DeviceServerInfo
 import com.tencent.iot.video.link.entity.WlanDetectBody
 import com.tencent.iot.video.link.entity.WlanRespBody
-import kotlinx.android.synthetic.main.activity_video_detect_devs.*
+import kotlinx.android.synthetic.main.activity_video_detect_devs.btn_detect
+import kotlinx.android.synthetic.main.activity_video_detect_devs.client_token_layout
+import kotlinx.android.synthetic.main.activity_video_detect_devs.devs_lv
 import kotlinx.android.synthetic.main.activity_video_detect_devs.product_id_layout
-import kotlinx.android.synthetic.main.activity_video_input_authorize.*
-import kotlinx.android.synthetic.main.blue_title_layout.*
-import kotlinx.android.synthetic.main.fragment_video_device.*
-import kotlinx.android.synthetic.main.input_item_layout.view.*
-import kotlinx.coroutines.*
-import java.util.*
+import kotlinx.android.synthetic.main.blue_title_layout.iv_back
+import kotlinx.android.synthetic.main.blue_title_layout.tv_title
+import kotlinx.android.synthetic.main.input_item_layout.view.ev_content
+import kotlinx.android.synthetic.main.input_item_layout.view.iv_more
+import kotlinx.android.synthetic.main.input_item_layout.view.tv_tip
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScope() {
 
@@ -70,11 +77,11 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
             App.data.accessInfo = AccessInfo()
             App.data.accessInfo?.productId = product_id_layout.ev_content.text.toString()
 
-            var dev = DevInfo()
+            val dev = DevInfo()
             dev.DeviceName = datas.get(pos).deviceName
             dev.Channel = 0
             dev.Status = 1
-//            WlanVideoPreviewActivity.startPreviewActivity(this@VideoWlanDetectActivity, dev)
+            WlanVideoPreviewActivity.startPreviewActivity(this@VideoWlanDetectActivity, dev)
         }
     }
 
