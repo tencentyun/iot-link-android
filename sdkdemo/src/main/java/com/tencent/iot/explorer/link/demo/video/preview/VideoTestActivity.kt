@@ -1,8 +1,11 @@
 package com.tencent.iot.explorer.link.demo.video.preview
 
 import android.Manifest
+import android.app.Service
+import android.content.pm.ActivityInfo
 import android.graphics.SurfaceTexture
 import android.media.AudioFormat
+import android.media.AudioManager
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
@@ -13,6 +16,7 @@ import android.view.TextureView
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
@@ -23,6 +27,7 @@ import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
+import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
 import com.tencent.iot.explorer.link.demo.video.utils.TipToastDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
@@ -30,10 +35,14 @@ import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
 import com.tencent.xnet.annotations.XP2PProtocolType
+import kotlinx.android.synthetic.main.activity_video_preview.btn_layout
+import kotlinx.android.synthetic.main.activity_video_preview.iv_audio
 import kotlinx.android.synthetic.main.activity_video_preview.iv_down
 import kotlinx.android.synthetic.main.activity_video_preview.iv_left
+import kotlinx.android.synthetic.main.activity_video_preview.iv_orientation
 import kotlinx.android.synthetic.main.activity_video_preview.iv_right
 import kotlinx.android.synthetic.main.activity_video_preview.iv_up
+import kotlinx.android.synthetic.main.activity_video_preview.layout_content
 import kotlinx.android.synthetic.main.activity_video_preview.layout_video_preview
 import kotlinx.android.synthetic.main.activity_video_preview.radio_photo
 import kotlinx.android.synthetic.main.activity_video_preview.radio_playback
@@ -41,10 +50,12 @@ import kotlinx.android.synthetic.main.activity_video_preview.radio_record
 import kotlinx.android.synthetic.main.activity_video_preview.radio_talk
 import kotlinx.android.synthetic.main.activity_video_preview.tv_video_quality
 import kotlinx.android.synthetic.main.activity_video_preview.v_preview
+import kotlinx.android.synthetic.main.activity_video_preview.v_title
 import kotlinx.android.synthetic.main.dash_board_layout.tv_a_cache
 import kotlinx.android.synthetic.main.dash_board_layout.tv_tcp_speed
 import kotlinx.android.synthetic.main.dash_board_layout.tv_v_cache
 import kotlinx.android.synthetic.main.dash_board_layout.tv_video_w_h
+import kotlinx.android.synthetic.main.title_layout.iv_back
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -62,9 +73,10 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     IMediaPlayer.OnInfoListener {
     private val player = IjkMediaPlayer()
     lateinit var surface: Surface
-    private var productId = ""
-    private var deviceName = ""
-    private var xp2pInfo = ""
+    private var productId: String = ""
+    private var deviceName: String = ""
+    private var xp2pInfo: String = ""
+    private val channel: Int = 0
     var urlPrefix = ""
     var screenWidth = 0
     var screenHeight = 0
@@ -80,6 +92,8 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
 
     @Volatile
     var speakAble = false
+    var audioAble = true
+    var orientationV = true
 
     private val xP2PAppConfig = XP2PAppConfig().also { appConfig ->
         appConfig.appKey =
@@ -141,7 +155,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     private fun checkDeviceState() {
         Log.d("VideoTestActivity", "====检测设备状态===")
         launch(Dispatchers.IO) {
-            val command = "action=user_define&channel=0&cmd=device_state"
+            val command = "action=user_define&channel=${channel}&cmd=device_state"
             val retContent = XP2P.postCommandRequestSync(
                 "${productId}/${deviceName}",
                 command.toByteArray(), command.toByteArray().size.toLong(), 1 * 1000 * 1000
@@ -153,9 +167,9 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
 //                    restartService()
 //                }
 //            } else {
-                launch(Dispatchers.Main) {
-                    delegateHttpFlv()
-                }
+            launch(Dispatchers.Main) {
+                delegateHttpFlv()
+            }
 //            }
         }
     }
@@ -175,6 +189,16 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
     }
 
     override fun setListener() {
+        iv_back.setOnClickListener { finish() }
+        iv_orientation.setOnClickListener {
+            orientationV = !orientationV
+            switchOrientation(orientationV)
+        }
+        tv_video_quality.setOnClickListener(switchVideoQualityListener)
+        iv_audio.setOnClickListener {
+            audioAble = !audioAble
+            chgAudioStatus(audioAble)
+        }
         radio_talk.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked && checkPermissions(permissions)) {
                 if (!speakAble(true)) radio_talk.isChecked = false
@@ -223,14 +247,122 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         iv_left.setOnClickListener(controlListener)
     }
 
+    private fun chgAudioStatus(audioAble: Boolean) {
+        if (!audioAble) {
+            iv_audio.setImageResource(R.mipmap.no_audio)
+            player.setVolume(0F, 0F)
+        } else {
+            iv_audio.setImageResource(R.mipmap.audio)
+            val audioManager = getSystemService(Service.AUDIO_SERVICE) as AudioManager
+            val volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+            player.setVolume(volume.toFloat(), volume.toFloat())
+        }
+    }
+
+    private var switchVideoQualityListener = View.OnClickListener {
+        if (orientationV) {
+            showVVideoQualityDialog()
+        } else {
+            showHVideoQualityDialog()
+        }
+    }
+
+    private fun showVVideoQualityDialog() {
+        val options = arrayListOf(
+            getString(R.string.video_quality_high_str) + " " + getString(R.string.video_quality_high),
+            getString(R.string.video_quality_medium_str) + " " + getString(R.string.video_quality_medium),
+            getString(R.string.video_quality_low_str) + " " + getString(R.string.video_quality_low)
+        )
+        val dlg = ListOptionsDialog(this, options)
+        dlg.show()
+        dlg.setOnDismisListener { chgTextState(it) }
+    }
+
+    private fun showHVideoQualityDialog() {
+        var pos = -1
+        when (tv_video_quality.text.toString()) {
+            getString(R.string.video_quality_high_str) -> pos = 2
+            getString(R.string.video_quality_medium_str) -> pos = 1
+            getString(R.string.video_quality_low_str) -> pos = 0
+        }
+        val dlg = VideoQualityDialog(this, pos)
+        dlg.show()
+        btn_layout.visibility = View.GONE
+        dlg.setOnDismisListener(object : VideoQualityDialog.OnDismisListener {
+            override fun onItemClicked(pos: Int) {
+                chgTextState(pos)
+            }
+
+            override fun onDismiss() {
+                btn_layout.visibility = View.VISIBLE
+            }
+        })
+    }
+
+    private fun switchOrientation(orientation: Boolean) {
+        var marginWidth = 0
+        val layoutParams = layout_video_preview.layoutParams as ConstraintLayout.LayoutParams
+        var fitSize = 0
+        var visibility = View.VISIBLE
+        var moreSpace = 10
+        if (orientation) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+            visibility = View.GONE
+            fitSize = ConstraintLayout.LayoutParams.MATCH_PARENT
+            marginWidth = 73
+            moreSpace = 32
+        }
+
+        v_title.visibility = visibility
+        layout_content.visibility = visibility
+
+        layoutParams.height = fitSize
+        layoutParams.width = fitSize
+        layout_video_preview.layoutParams = layoutParams
+
+        val videoLayoutParams = v_preview.layoutParams as ConstraintLayout.LayoutParams
+        videoLayoutParams.marginStart = dp2px(marginWidth)
+        videoLayoutParams.marginEnd = dp2px(marginWidth)
+        v_preview.layoutParams = videoLayoutParams
+
+        val btnLayoutParams = btn_layout.layoutParams as ConstraintLayout.LayoutParams
+        btnLayoutParams.bottomMargin = dp2px(moreSpace)
+        btn_layout.layoutParams = btnLayoutParams
+    }
+
+    private fun chgTextState(value: Int) {
+        val url = when (value) {
+            0 -> {
+                tv_video_quality.setText(R.string.video_quality_high_str)
+                Command.getVideoSuperQualityUrlSuffix(channel)
+            }
+
+            1 -> {
+                tv_video_quality.setText(R.string.video_quality_medium_str)
+                Command.getVideoHightQualityUrlSuffix(channel)
+            }
+
+            2 -> {
+                tv_video_quality.setText(R.string.video_quality_low_str)
+                Command.getVideoStandardQualityUrlSuffix(channel)
+            }
+
+            else -> ""
+        }
+        setPlayerUrl(url)
+        chgAudioStatus(audioAble)
+    }
+
     open var controlListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
             var command = ""
             when (v) {
-                iv_up -> command = Command.getPtzUpCommand(0)
-                iv_down -> command = Command.getPtzDownCommand(0)
-                iv_right -> command = Command.getPtzRightCommand(0)
-                iv_left -> command = Command.getPtzLeftCommand(0)
+                iv_up -> command = Command.getPtzUpCommand(channel)
+                iv_down -> command = Command.getPtzDownCommand(channel)
+                iv_right -> command = Command.getPtzRightCommand(channel)
+                iv_left -> command = Command.getPtzLeftCommand(channel)
             }
 
             Thread(Runnable {
@@ -251,7 +383,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
 
     open fun speakAble(able: Boolean): Boolean {
         if (able) {
-            val command = Command.getNvrIpcStatus(0, 0)
+            val command = Command.getNvrIpcStatus(channel, 0)
             val repStatus = XP2P.postCommandRequestSync(
                 "${productId}/${deviceName}",
                 command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000
@@ -269,7 +401,7 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
                 if (it.size == 1 && it.get(0).status == 0) {
                     XP2P.runSendService(
                         "${productId}/${deviceName}",
-                        Command.getTwoWayRadio(0),
+                        Command.getTwoWayRadio(channel),
                         true
                     )
                     audioRecordUtil?.start()
@@ -292,19 +424,19 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
         when (tv_video_quality.text.toString()) {
             getString(R.string.video_quality_high_str) -> setPlayerUrl(
                 Command.getVideoSuperQualityUrlSuffix(
-                    0
+                    channel
                 )
             )
 
             getString(R.string.video_quality_medium_str) -> setPlayerUrl(
                 Command.getVideoHightQualityUrlSuffix(
-                    0
+                    channel
                 )
             )
 
             getString(R.string.video_quality_low_str) -> setPlayerUrl(
                 Command.getVideoStandardQualityUrlSuffix(
-                    0
+                    channel
                 )
             )
         }
@@ -322,16 +454,16 @@ open class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope
                 val url = urlPrefix + suffix
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 2)
+//                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 30*1024)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
                 it.setOption(
                     IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1
                 )
-//                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 50*1024)
-                it.setFrameSpeed(1.5f)
+                it.setFrameSpeed(1.8f)
                 while (!::surface.isInitialized) {
                     delay(50)
                     L.e("delay for waiting surface.")

@@ -1,9 +1,11 @@
 package com.tencent.iot.explorer.link.demo.video
 
+import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
@@ -11,6 +13,7 @@ import com.tencent.iot.explorer.link.demo.video.preview.VideoTestActivity
 import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.android.synthetic.main.activity_video_input_authorize.btn_login
 import kotlinx.android.synthetic.main.activity_video_input_authorize.product_id_layout
+import kotlinx.android.synthetic.main.activity_video_test_input.btn_paste
 import kotlinx.android.synthetic.main.activity_video_test_input.device_name_layout
 import kotlinx.android.synthetic.main.activity_video_test_input.p2p_info_layout
 import kotlinx.android.synthetic.main.blue_title_layout.iv_back
@@ -66,6 +69,19 @@ class VideoTestInputActivity : VideoBaseActivity(), CoroutineScope by MainScope(
     override fun setListener() {
         iv_back.setOnClickListener { finish() }
         btn_login.setOnClickListener(loginClickedListener)
+        btn_paste.setOnClickListener {
+            val clipboard = ContextCompat.getSystemService(this, ClipboardManager::class.java);
+            if (clipboard != null && clipboard.hasPrimaryClip()) {
+                clipboard.primaryClip?.getItemAt(0)?.text.toString().split("\n")
+                    .forEachIndexed { index, s ->
+                        when (index) {
+                            0 -> product_id_layout.ev_content.setText(s)
+                            1 -> device_name_layout.ev_content.setText(s)
+                            2 -> p2p_info_layout.ev_content.setText(s)
+                        }
+                    }
+            }
+        }
     }
 
     var loginClickedListener = object : View.OnClickListener {

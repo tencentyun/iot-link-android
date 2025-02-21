@@ -9,6 +9,16 @@
         android:id="@+id/v_title"
         layout="@layout/title_layout" />
 
+    <Button
+        android:id="@+id/btn_paste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_rad4_color_e6e6e6"
+        android:text="粘贴"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_title" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -20,7 +30,7 @@
         layout="@layout/input_item_layout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        app:layout_constraintTop_toBottomOf="@id/v_title" />
+        app:layout_constraintTop_toBottomOf="@id/btn_paste" />
 
     <include
         android:id="@+id/device_name_layout"
