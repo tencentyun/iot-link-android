@@ -461,18 +461,20 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             player.setOnInfoListener(this@VideoTestActivity)
             player.let {
                 val url = urlPrefix + suffix
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 2)
-//                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 30*1024)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 5)
+                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 512 * 1024)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
                 it.setOption(
                     IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1
                 )
-                it.setFrameSpeed(1.8f)
+                it.setFrameSpeed(1.5f)
+                it.setMaxPacketNum(2)
                 while (!::surface.isInitialized) {
                     delay(50)
                     L.e("delay for waiting surface.")
