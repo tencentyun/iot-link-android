@@ -248,6 +248,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+        Log.d(tag,"onSurfaceTextureAvailable")
         surface?.let {
             this.surface = Surface(surface)
             player.setSurface(this.surface)
@@ -547,6 +548,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
+        Log.d(tag,"onSurfaceTextureSizeChanged")
         val layoutParams = v_preview.layoutParams
         if (orientationV) {
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
@@ -559,6 +561,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+        Log.d(tag,"onSurfaceTextureDestroyed")
         return false
     }
 
@@ -645,6 +648,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
             CommonUtils.refreshVideoList(this@VideoPreviewActivity, filePath)
         }
         player.release()
+        surface.release()
     }
 
     override fun onDestroy() {

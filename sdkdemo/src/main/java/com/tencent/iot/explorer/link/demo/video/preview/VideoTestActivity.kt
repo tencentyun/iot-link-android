@@ -72,8 +72,10 @@ import java.util.Locale
 class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by MainScope(),
     TextureView.SurfaceTextureListener, IMediaPlayer.OnInfoListener {
 
-    private val player = IjkMediaPlayer()
-    lateinit var surface: Surface
+    private val tag = VideoTestActivity::class.simpleName
+
+    private lateinit var player: IjkMediaPlayer
+    private lateinit var surface: Surface
     private var productId: String = ""
     private var deviceName: String = ""
     private var xp2pInfo: String = ""
@@ -81,19 +83,22 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
     private var urlPrefix = ""
     private var audioRecordUtil: AudioRecordUtil? = null
 
-    private var screenWidth = 0
-    private var screenHeight = 0
+    private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+    private var showTip = false
+    private var connectStartTime = 0L
+    private var connectTime = 0L
     private var startShowVideoTime = 0L
     private var showVideoTime = 0L
-    private var connectTime = 0L
-    private var showTip = false
-    private var firstIn = true
-    private val MSG_UPDATE_HUD = 1
-    private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
-    private var filePath: String? = null
 
+
+    private val MSG_UPDATE_HUD = 1
+    private var screenWidth = 0
+    private var screenHeight = 0
+
+    private var firstIn = true
     private var speakAble = false
     private var audioAble = true
+    private var filePath: String? = null
     private var orientationV = true
 
     private val xP2PAppConfig = XP2PAppConfig().also { appConfig ->
@@ -103,7 +108,6 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
         appConfig.autoConfigFromDevice = false
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
-        appConfig.crossStunTurn = false
     }
 
     override fun getContentView(): Int {
@@ -115,7 +119,6 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         deviceName = intent.getStringExtra("deviceName")?.toString() ?: ""
         xp2pInfo = intent.getStringExtra("p2pInfo")?.toString() ?: ""
         xP2PAppConfig.autoConfigFromDevice = intent.getBooleanExtra("isStartCross", false)
-        tv_title.text = deviceName
         val protocol = intent.getStringExtra("protocol")?.toString() ?: "auto"
         if (protocol == "udp") {
             xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_UDP
@@ -124,6 +127,10 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         } else {
             xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
         }
+
+        tv_title.text = deviceName
+        tv_video_quality.text = getString(R.string.video_quality_medium_str)
+
         audioRecordUtil = AudioRecordUtil(
             this,
             "${productId}/${deviceName}",
@@ -131,10 +138,13 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT
         )
-        XP2P.setCallback(this)
+//        //变调可以传入pitch参数
+//        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
+//        //变调可以传入pitch参数
+//        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
+//        audioRecordUtil.recordSpeakFlv(true)
 
-        tv_video_quality.text = "标清"
-        v_preview.surfaceTextureListener = this
+        XP2P.setCallback(this)
         val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()
         wm.defaultDisplay.getMetrics(dm)
@@ -143,7 +153,15 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         val density = dm.density // 屏幕密度（0.75 / 1.0 / 1.5）
         screenWidth = (width / density).toInt() // 屏幕宽度(dp)
         screenHeight = (height / density).toInt() // 屏幕高度(dp)
+
+        startPlayer()
         startService()
+    }
+
+    private fun startPlayer() {
+        player = IjkMediaPlayer()
+        player.setOnInfoListener(this)
+        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
     }
 
     private fun startService() {
@@ -162,14 +180,14 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
     }
 
     private fun checkDeviceState() {
-        Log.d("VideoTestActivity", "====检测设备状态===")
+        Log.d(tag, "====检测设备状态===")
         launch(Dispatchers.IO) {
             val command = "action=user_define&channel=${channel}&cmd=device_state"
             val retContent = XP2P.postCommandRequestSync(
                 "${productId}/${deviceName}",
                 command.toByteArray(), command.toByteArray().size.toLong(), 1 * 1000 * 1000
             ) ?: ""
-            Log.d("VideoTestActivity", "device_state back content:$retContent")
+            Log.d(tag, "device_state back content:$retContent")
 
 //            if (retContent.isEmpty()) {
 //                launch(Dispatchers.Main) {
@@ -204,10 +222,6 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             switchOrientation(orientationV)
         }
         tv_video_quality.setOnClickListener(switchVideoQualityListener)
-        iv_audio.setOnClickListener {
-            audioAble = !audioAble
-            chgAudioStatus(audioAble)
-        }
         radio_talk.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked && checkPermissions(permissions)) {
                 if (!speakAble(true)) radio_talk.isChecked = false
@@ -254,6 +268,11 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         iv_down.setOnClickListener(controlListener)
         iv_right.setOnClickListener(controlListener)
         iv_left.setOnClickListener(controlListener)
+        v_preview.surfaceTextureListener = this
+        iv_audio.setOnClickListener {
+            audioAble = !audioAble
+            chgAudioStatus(audioAble)
+        }
     }
 
     private fun chgAudioStatus(audioAble: Boolean) {
@@ -360,11 +379,11 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
 
             else -> ""
         }
-        setPlayerUrl(url)
+        setPlayerUrl(urlPrefix + url)
         chgAudioStatus(audioAble)
     }
 
-    open var controlListener = object : View.OnClickListener {
+    private var controlListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
             var command = ""
             when (v) {
@@ -390,7 +409,7 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         }
     }
 
-    open fun speakAble(able: Boolean): Boolean {
+    private fun speakAble(able: Boolean): Boolean {
         if (able) {
             val command = Command.getNvrIpcStatus(channel, 0)
             val repStatus = XP2P.postCommandRequestSync(
@@ -430,102 +449,102 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
     }
 
     private fun resetPlayer() {
-        when (tv_video_quality.text.toString()) {
-            getString(R.string.video_quality_high_str) -> setPlayerUrl(
-                Command.getVideoSuperQualityUrlSuffix(
-                    channel
-                )
+        val url = when (tv_video_quality.text.toString()) {
+            getString(R.string.video_quality_high_str) ->
+                Command.getVideoSuperQualityUrlSuffix(channel)
+
+            getString(R.string.video_quality_medium_str) -> Command.getVideoHightQualityUrlSuffix(
+                channel
             )
 
-            getString(R.string.video_quality_medium_str) -> setPlayerUrl(
-                Command.getVideoHightQualityUrlSuffix(
-                    channel
-                )
+            getString(R.string.video_quality_low_str) -> Command.getVideoStandardQualityUrlSuffix(
+                channel
             )
 
-            getString(R.string.video_quality_low_str) -> setPlayerUrl(
-                Command.getVideoStandardQualityUrlSuffix(
-                    channel
-                )
-            )
+            else -> ""
         }
+        setPlayerUrl(urlPrefix + url)
     }
 
-    open fun setPlayerUrl(suffix: String) {
-        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
+    private fun setPlayerUrl(url: String) {
         showTip = false
         startShowVideoTime = System.currentTimeMillis()
         launch(Dispatchers.Main) {
-            layout_video_preview?.removeView(v_preview)
-            layout_video_preview?.addView(v_preview, 0)
+//            layout_video_preview?.removeView(v_preview)
+//            layout_video_preview?.addView(v_preview, 0)
             player.setOnInfoListener(this@VideoTestActivity)
-            player.let {
-                val url = urlPrefix + suffix
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 2)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 5)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 512 * 1024)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
-                it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
-                it.setOption(
-                    IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1
-                )
-                it.setFrameSpeed(1.5f)
-                it.setMaxPacketNum(2)
-                while (!::surface.isInitialized) {
-                    delay(50)
-                    L.e("delay for waiting surface.")
-                }
-                it.setSurface(surface)
-                it.dataSource = url
-
-                it.prepareAsync()
-                it.start()
+            player.reset()
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 2)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 5)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 512 * 1024)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
+            player.setOption(
+                IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1
+            )
+            player.setFrameSpeed(1.5f)
+            player.setMaxPacketNum(2)
+            while (!::surface.isInitialized) {
+                delay(50)
+                L.e("delay for waiting surface.")
             }
+            player.setSurface(surface)
+            player.dataSource = url
+            player.prepareAsync()
+            player.start()
         }
     }
 
-    override fun fail(msg: String?, errorCode: Int) {
-
-    }
+    override fun fail(msg: String?, errorCode: Int) {}
 
     override fun commandRequest(id: String?, msg: String?) {
-        Log.e("VideoTestActivity", "xp2pEventNotify id:$id  msg:$msg")
+        Log.e(tag, "xp2pEventNotify id:$id  msg:$msg")
     }
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-        Log.e("VideoTestActivity", "xp2pEventNotify id:$id  msg:$msg  event:$event")
+        Log.e(tag, "xp2pEventNotify id:$id  msg:$msg  event:$event")
         if (event == 1003) {
-            XP2P.stopService("${productId}/${deviceName}")
-            XP2P.startService(
-                this,
-                productId,
-                deviceName,
-                xp2pInfo,
-                xP2PAppConfig
-            )
+            Log.e(tag, "====event === 1003")
+            startShowVideoTime = 0L
+            launch(Dispatchers.Main) {
+                val content = getString(R.string.disconnected_and_reconnecting, id)
+                Toast.makeText(this@VideoTestActivity, content, Toast.LENGTH_SHORT).show()
+                XP2P.stopService("${productId}/${deviceName}")
+                XP2P.startService(
+                    this@VideoTestActivity,
+                    productId,
+                    deviceName,
+                    xp2pInfo,
+                    xP2PAppConfig
+                )
+            }
         } else if (event == 1004 || event == 1005) {
+            connectTime = System.currentTimeMillis() - connectStartTime
             if (event == 1004) {
-                Log.e("VideoTestActivity", "====event === 1004")
+                Log.e(tag, "====event === 1004")
 //                checkDeviceState()
                 delegateHttpFlv()
             }
+        } else if (event == 1010) {
+            Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
         }
     }
 
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {
-        Log.e("VideoTestActivity", "avDataRecvHandle id:$id  data:$data  len:$data")
+        Log.e(tag, "avDataRecvHandle id:$id  data:$data  len:$data")
     }
 
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {
-        Log.e("VideoTestActivity", "avDataCloseHandle id:$id  msg:$msg  errorCode:$errorCode")
+        Log.e(tag, "avDataCloseHandle id:$id  msg:$msg  errorCode:$errorCode")
     }
 
     override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
-        Log.e("VideoTestActivity", "onDeviceMsgArrived id:$id  data:$data  len:$len")
+        Log.e(tag, "onDeviceMsgArrived id:$id  data:$data  len:$len")
         val reply = JSONObject()
         reply.put("code", "0")
         reply.put("msg", "test command reply")
@@ -540,13 +559,19 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
+        Log.d(tag, "onSurfaceTextureSizeChanged")
         val layoutParams = v_preview.layoutParams
-        layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
-        layoutParams.height = layoutParams.height
+        if (orientationV) {
+            layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
+            layoutParams.height = layoutParams.height
+        } else {
+            layoutParams.width = (player.videoWidth * height) / player.videoHeight
+        }
         v_preview.layoutParams = layoutParams
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+        Log.d(tag, "onSurfaceTextureDestroyed")
         return false
     }
 
@@ -558,7 +583,7 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             TipToastDialog(this, content, 10000).show()
             showTip = true
         }
-        if (firstIn) {
+        if (orientationV && firstIn) {
             val layoutParams = v_preview.layoutParams
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
             layoutParams.height = layoutParams.height
@@ -631,6 +656,12 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
 
     private fun finishPlayer() {
         mHandler.removeMessages(MSG_UPDATE_HUD)
+        if (radio_talk.isChecked) speakAble(false)
+        if (radio_record.isChecked) {
+            player.stopRecord()
+            CommonUtils.refreshVideoList(this, filePath)
+        }
         player.release()
+        surface.release()
     }
 }
