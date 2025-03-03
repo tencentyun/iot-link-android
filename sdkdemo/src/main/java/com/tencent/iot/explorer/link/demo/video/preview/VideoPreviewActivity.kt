@@ -200,21 +200,15 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
     private fun checkDeviceState() {
         Log.d(tag, "====检测设备状态===")
         launch(Dispatchers.IO) {
-            val command = "action=user_define&channel=${presenter.getChannel()}&cmd=device_state"
-            val retContent = XP2P.postCommandRequestSync(
-                "${presenter.getProductId()}/${presenter.getDeviceName()}",
-                command.toByteArray(), command.toByteArray().size.toLong(), 1 * 1000 * 1000
-            ) ?: ""
-            Log.d(tag, "device_state back content:$retContent")
-
-            if (retContent.isEmpty()) {
+            getDeviceStatus("${presenter.getProductId()}/${presenter.getDeviceName()}") { isOnline, msg ->
                 launch(Dispatchers.Main) {
-                    restartService()
-                }
-            } else {
-                launch(Dispatchers.Main) {
-                    isRestart = false
-                    delegateHttpFlv()
+                    Toast.makeText(this@VideoPreviewActivity, msg, Toast.LENGTH_SHORT).show()
+                    if (isOnline) {
+                        isRestart = false
+                        delegateHttpFlv()
+                    } else {
+                        restartService()
+                    }
                 }
             }
         }
@@ -248,18 +242,18 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
-        Log.d(tag,"onSurfaceTextureAvailable")
+        Log.d(tag, "onSurfaceTextureAvailable")
         surface?.let {
             this.surface = Surface(surface)
             player.setSurface(this.surface)
         }
     }
 
-    open fun speakAble(able: Boolean): Boolean {
+    private fun speakAble(able: Boolean): Boolean {
         App.data.accessInfo?.let { accessInfo ->
             if (able) {
-                var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
-                var repStatus = XP2P.postCommandRequestSync(
+                val command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
+                val repStatus = XP2P.postCommandRequestSync(
                     "${accessInfo.productId}/${presenter.getDeviceName()}",
                     command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000
                 ) ?: ""
@@ -314,7 +308,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
         radio_record.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 filePath = CommonUtils.generateFileDefaultPath()
-                var ret = player.startRecord(filePath)
+                val ret = player.startRecord(filePath)
                 if (ret != 0) {
                     ToastDialog(
                         this,
@@ -330,7 +324,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
             }
         }
         radio_playback.setOnClickListener {
-            var dev = DevInfo()
+            val dev = DevInfo()
             dev.DeviceName = presenter.getDeviceName()
             VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewActivity, dev)
         }
@@ -548,7 +542,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
-        Log.d(tag,"onSurfaceTextureSizeChanged")
+        Log.d(tag, "onSurfaceTextureSizeChanged")
         val layoutParams = v_preview.layoutParams
         if (orientationV) {
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
@@ -561,7 +555,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-        Log.d(tag,"onSurfaceTextureDestroyed")
+        Log.d(tag, "onSurfaceTextureDestroyed")
         return false
     }
 
@@ -682,7 +676,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
         }
     }
 
-    private fun getDeviceStatus(id: String?): Int {
+    private fun getDeviceStatus(id: String?, block: ((Boolean, String) -> Unit)? = null) {
         var command: ByteArray? = null
         when (tv_video_quality.text.toString()) {
             getString(R.string.video_quality_high_str) -> {
@@ -711,50 +705,23 @@ class VideoPreviewActivity : VideoPreviewBaseActivity(), EventView,
             // 405 connect number too many
             // 406 current command don't support
             // 407 device process error
+            var deviceState: Int = -1
+            var msg: String = ""
             if (deviceStatuses.isNotEmpty()) {
-                runOnUiThread {
-                    when (deviceStatuses[0].status) {
-                        0 -> Toast.makeText(this, "设备状态正常", Toast.LENGTH_SHORT).show()
-                        1 -> Toast.makeText(
-                            this,
-                            "设备状态异常, 拒绝请求: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        404 -> Toast.makeText(
-                            this,
-                            "设备状态异常, error request message: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        405 -> Toast.makeText(
-                            this,
-                            "设备状态异常, connect number too many: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        406 -> Toast.makeText(
-                            this,
-                            "设备状态异常, current command don't support: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        407 -> Toast.makeText(
-                            this,
-                            "设备状态异常, device process error: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                msg = when (deviceStatuses[0].status) {
+                    0 -> "设备状态正常"
+                    404 -> "设备状态异常, error request message: $reponse"
+                    405 -> "设备状态异常, connect number too many: $reponse"
+                    406 -> "设备状态异常, current command don't support: $reponse"
+                    407 -> "设备状态异常, device process error: $reponse"
+                    else -> "设备状态异常, 拒绝请求: $reponse"
                 }
-                return deviceStatuses[0].status
+                deviceState = deviceStatuses[0].status
             } else {
-                runOnUiThread {
-                    Toast.makeText(this, "获取设备状态失败", Toast.LENGTH_SHORT).show()
-                }
-                return -1
+                msg = "获取设备状态失败"
             }
+            block?.invoke(deviceState == 0, msg)
         }
-        return -1
     }
 
     private val mHandler = MyHandler(this)

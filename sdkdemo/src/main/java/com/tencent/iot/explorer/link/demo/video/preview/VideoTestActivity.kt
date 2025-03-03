@@ -30,6 +30,7 @@ import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
 import com.tencent.iot.explorer.link.demo.video.utils.TipToastDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
+import com.tencent.iot.video.link.entity.DeviceStatus
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
@@ -182,22 +183,16 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
     private fun checkDeviceState() {
         Log.d(tag, "====检测设备状态===")
         launch(Dispatchers.IO) {
-            val command = "action=user_define&channel=${channel}&cmd=device_state"
-            val retContent = XP2P.postCommandRequestSync(
-                "${productId}/${deviceName}",
-                command.toByteArray(), command.toByteArray().size.toLong(), 1 * 1000 * 1000
-            ) ?: ""
-            Log.d(tag, "device_state back content:$retContent")
-
-//            if (retContent.isEmpty()) {
-//                launch(Dispatchers.Main) {
-//                    restartService()
-//                }
-//            } else {
-            launch(Dispatchers.Main) {
-                delegateHttpFlv()
+            getDeviceStatus("${productId}/${deviceName}") { isOnline, msg ->
+                launch(Dispatchers.Main) {
+                    Toast.makeText(this@VideoTestActivity, msg, Toast.LENGTH_SHORT).show()
+                    if (isOnline) {
+                        delegateHttpFlv()
+                    } else {
+                        restartService()
+                    }
+                }
             }
-//            }
         }
     }
 
@@ -527,8 +522,8 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             connectTime = System.currentTimeMillis() - connectStartTime
             if (event == 1004) {
                 Log.e(tag, "====event === 1004")
-//                checkDeviceState()
-                delegateHttpFlv()
+                checkDeviceState()
+//                delegateHttpFlv()
             }
         } else if (event == 1010) {
             Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
@@ -601,6 +596,54 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
     }
 
     override fun onInfoAudioPcmData(p0: IMediaPlayer?, p1: ByteArray?, p2: Int) {
+    }
+
+    private fun getDeviceStatus(id: String?, block: ((Boolean, String) -> Unit)? = null) {
+        var command: ByteArray? = null
+        when (tv_video_quality.text.toString()) {
+            getString(R.string.video_quality_high_str) -> {
+                command =
+                    "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=super".toByteArray()
+            }
+
+            getString(R.string.video_quality_medium_str) -> {
+                command =
+                    "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=high".toByteArray()
+            }
+
+            getString(R.string.video_quality_low_str) -> {
+                command =
+                    "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=standard".toByteArray()
+            }
+        }
+        val reponse =
+            XP2P.postCommandRequestSync(id, command, command!!.size.toLong(), 2 * 1000 * 1000)
+        if (!TextUtils.isEmpty(reponse)) {
+            val deviceStatuses: List<DeviceStatus> =
+                JSONArray.parseArray(reponse, DeviceStatus::class.java)
+            // 0   接收请求
+            // 1   拒绝请求
+            // 404 error request message
+            // 405 connect number too many
+            // 406 current command don't support
+            // 407 device process error
+            var deviceState: Int = -1
+            var msg: String = ""
+            if (deviceStatuses.isNotEmpty()) {
+                msg = when (deviceStatuses[0].status) {
+                    0 -> "设备状态正常"
+                    404 -> "设备状态异常, error request message: $reponse"
+                    405 -> "设备状态异常, connect number too many: $reponse"
+                    406 -> "设备状态异常, current command don't support: $reponse"
+                    407 -> "设备状态异常, device process error: $reponse"
+                    else -> "设备状态异常, 拒绝请求: $reponse"
+                }
+                deviceState = deviceStatuses[0].status
+            } else {
+                msg = "获取设备状态失败"
+            }
+            block?.invoke(deviceState == 0, msg)
+        }
     }
 
     private val mHandler = MyHandler(this)
