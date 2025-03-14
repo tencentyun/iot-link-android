@@ -106,7 +106,6 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
             BuildConfig.TencentIotLinkSDKDemoAppSecret //为explorer平台注册的应用信息(https://console.cloud.tencent.com/iotexplorer/v2/instance/app/detai) explorer控制台- 应用开发 - 选对应的应用下的 appkey/appsecret
         appConfig.autoConfigFromDevice = true
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
-        appConfig.crossStunTurn = false
     }
 
     override fun getContentView(): Int {
