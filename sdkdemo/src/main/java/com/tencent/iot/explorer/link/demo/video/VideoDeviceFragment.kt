@@ -21,6 +21,7 @@ import com.tencent.iot.explorer.link.demo.video.preview.DevUrl2Preview
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewMJPEGActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPushStreamActivity
+import com.tencent.iot.explorer.link.demo.video.preview.VideoWithoutPropertyActivity
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.callback.VideoCallback
@@ -159,7 +160,11 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
                 2 -> {
                     VideoPreviewMJPEGActivity.startPreviewActivity(context, dev)
                 }
-//                3 -> { VideoWithoutPropertyActivity.startPreviewActivity(context, dev) }
+
+                3 -> {
+                    VideoWithoutPropertyActivity.startPreviewActivity(context, dev)
+                }
+
                 4 -> {
                     VideoPushStreamActivity.startPreviewActivity(context, dev)
                 }
