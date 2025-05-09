@@ -22,7 +22,7 @@ android {
             keyPassword '111222'
         }
     }
-    ndkVersion "27.2.12479018"
+    ndkVersion "25.1.8937393"
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
