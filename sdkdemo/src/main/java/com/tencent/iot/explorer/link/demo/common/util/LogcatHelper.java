@@ -30,10 +30,12 @@ public class LogcatHelper {
         File file = new File(PATH_LOGCAT);
         if (!file.exists()) {
             if (file.mkdirs()) {
-                Log.e(TAG, "创建日志目录成功");
+                Log.e(TAG, "创建日志目录成功，目录为：" + PATH_LOGCAT);
             } else {
                 Log.e(TAG, "创建日志目录失败");
             }
+        }else {
+            Log.e(TAG, "日志目录已存在，目录为：" + PATH_LOGCAT);
         }
     }
 
@@ -96,7 +98,7 @@ public class LogcatHelper {
                 while (mRunning && (line = mReader.readLine()) != null) {
                     if (!mRunning) break;
                     if (line.length() == 0) continue;
-                    if (out != null && line.contains(mPID) && line.contains("IOT-XP2P")) {
+                    if (out != null && line.contains(mPID) && (line.contains("XP2P") || line.contains("id:msg") || line.contains("VideoTestActivity") || line.contains("VideoPreviewActivity"))) {
                         out.write((line + "\n").getBytes());
                     }
                 }
