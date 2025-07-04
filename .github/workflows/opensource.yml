@@ -32,8 +32,7 @@ jobs:
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdkdemo/sdkdemo-config.json.asc > sdkdemo-config.json
           # 解密GPG密钥环文件
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdk/secring.gpg.asc > secring.gpg
-          # 设置文件权限
-          chmod 600 secring.gpg
+
       - name: set up JDK 11
         uses: actions/setup-java@v1
         with:
@@ -61,6 +60,12 @@ jobs:
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i 's#def versionSDKDemoName.*#def versionSDKDemoName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i "s#xxx#$rb+git.$rc#g" config.gradle
+
+      - name: Common-->Update Values of Signing
+        run: |
+#          export KEY_ID_OF_SIGN=$IOT_GPG_KEYNAME
+#          export PASSWORD_OF_SIGN=$IOT_GPG_PASSPHRASE
+          sh .github/scripts/updateValuesForSign.sh
 
       - name: Update SDK Version
         run: |
