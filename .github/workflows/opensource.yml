@@ -31,7 +31,7 @@ jobs:
           rm -rf sdkdemo-config.json
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdkdemo/sdkdemo-config.json.asc > sdkdemo-config.json
           # 解密GPG密钥环文件
-          gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/secring.gpg.asc > secring.gpg
+          gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdk/secring.gpg.asc > secring.gpg
           # 设置文件权限
           chmod 600 secring.gpg
       - name: set up JDK 11
