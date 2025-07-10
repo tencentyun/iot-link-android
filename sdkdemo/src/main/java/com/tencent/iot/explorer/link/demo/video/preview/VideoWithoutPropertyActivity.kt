@@ -146,7 +146,7 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
         tv_title.setText(presenter.getDeviceName())
 
         XP2P.setCallback(this)
-
+        getDeviceP2PInfo()
         val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()
         wm.defaultDisplay.getMetrics(dm)

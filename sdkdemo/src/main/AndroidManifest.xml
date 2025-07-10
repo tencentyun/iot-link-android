@@ -75,9 +75,9 @@
         <activity
             android:name=".video.preview.VideoPreviewMJPEGActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <!--        <activity-->
-        <!--            android:name=".video.preview.VideoWithoutPropertyActivity"-->
-        <!--            android:configChanges="orientation|keyboardHidden|screenSize" />-->
+        <activity
+            android:name=".video.preview.VideoWithoutPropertyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".video.preview.VideoPushStreamActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
