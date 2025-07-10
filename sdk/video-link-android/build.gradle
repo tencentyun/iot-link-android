@@ -1,13 +1,17 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'com.kezong.fat-aar'
-    id "com.vanniktech.maven.publish" version "0.25.3"
+    id "com.vanniktech.maven.publish" version "0.33.0"
 }
 
 android {
+    namespace 'com.tencent.iot.video.link'
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
+
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         minSdkVersion 21
@@ -41,7 +45,6 @@ android {
 
 dependencies {
 //    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-    embed (name:'android_gvoice-release',ext:'aar')
     implementation 'com.google.code.gson:gson:2.8.9'
     testImplementation 'junit:junit:4.+'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -50,7 +53,8 @@ dependencies {
 //    api('com.tencent.iot.thirdparty.android:xp2p-sdk:latest.integration') {
 //        changing = true
 //    }
-    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.54'
+    api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.55-SNAPSHOT'
+    api 'com.tencent.iot.thirdparty.android:iot-gvoice-android:1.0.0'
     api 'com.tencent.iot.thirdparty.android:media-server:1.0.7'
     api 'io.github.sundoggynew:iot-soundtouch:1.0.0'
     api 'io.github.sundoggynew:iot-voice-changer:1.0.0'

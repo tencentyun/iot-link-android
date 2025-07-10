@@ -102,35 +102,26 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.btn_last_month:
-                last();
-                break;
-            case R.id.btn_next_month:
-                next();
-                break;
-            case R.id.inside_layout:
-                return;
-            case R.id.tv_cancel:
-            case R.id.outside_dialog_layout:
-                dismiss();
-                break;
-            case R.id.tv_ok:
-                if (onClickedListener != null) {
-                    if (calendar.getCheckedDate() == null || calendar.getCheckedDate().size() <= 0) {
-                        onClickedListener.onOkClickedWithoutDateChecked();
-                        return;
-                    }
+        if (v.getId() == R.id.btn_last_month) {
+            last();
+        } else if (v.getId() == R.id.btn_next_month) {
+            next();
+        } else if (v.getId() == R.id.tv_cancel || v.getId() == R.id.outside_dialog_layout) {
+            dismiss();
+        } else if (v.getId() == R.id.tv_ok) {
+            if (onClickedListener != null) {
+                if (calendar.getCheckedDate() == null || calendar.getCheckedDate().size() <= 0) {
+                    onClickedListener.onOkClickedWithoutDateChecked();
+                    return;
+                }
 //                    if (calendar.getCheckedDate() != null && calendar.getCheckedDate().size() > 0 &&
 //                            !allDate2Tag.containsAll(calendar.getCheckedDate())) {
 //                        onClickedListener.onOkClickedCheckedDateWithoutData();
 //                        return;
 //                    }
-                    onClickedListener.onOkClicked(calendar.getCheckedDate());
-                }
-                dismiss();
-                break;
+                onClickedListener.onOkClicked(calendar.getCheckedDate());
+            }
+            dismiss();
         }
     }
 

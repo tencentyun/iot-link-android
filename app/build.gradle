@@ -15,6 +15,7 @@ rootProject.ext.configPath = "../app-config.json"
 apply from: "../parse_json.gradle"
 
 android {
+    namespace "com.tencent.iot.explorer.link"
     signingConfigs {
         config {
             storeFile file('../opensource_keystore.jks')
@@ -26,6 +27,11 @@ android {
     ndkVersion "27.2.12479018"
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+
+    buildFeatures {
+        buildConfig true
+    }
+
     defaultConfig {
         applicationId "com.tencent.iot.explorer.link.opensource"
         minSdkVersion 26

@@ -61,9 +61,8 @@ public class RightPlaySpeedDialog extends IosCenterStyleDialog {
     };
 
     private View.OnClickListener onClickListener = v -> {
-        switch (v.getId()) {
-            case R.id.inside_layout:
-                return;
+        if (v.getId() == R.id.inside_layout) {
+            return;
         }
         dismiss();
         if (onDismisListener != null) {

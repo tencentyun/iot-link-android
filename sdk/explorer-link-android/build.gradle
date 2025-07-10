@@ -1,10 +1,12 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id "com.vanniktech.maven.publish" version "0.33.0"
+}
 
 android {
+    namespace 'com.tenext'
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
@@ -48,102 +50,35 @@ dependencies {
     implementation 'com.google.zxing:core:3.0.1'
 }
 
-task androidJavadocs(type: Javadoc) {
-    failOnError false
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    android.libraryVariants.all { variant ->
-        if (variant.name == 'release') {
-            owner.classpath += variant.javaCompile.classpath
-        }
-    }
-    exclude '**/R.html', '**/R.*.html', '**/index.html'
-}
-
-task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    classifier = 'javadoc'
-    from androidJavadocs.destinationDir
-}
-
-task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
-
 def libVersion = rootProject.ext.android.sdkSnapshotVersion + '-SNAPSHOT'
 ext.isReleaseVersion = !libVersion.endsWith("SNAPSHOT")
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId 'com.tencent.iot.explorer'
-            artifactId 'explorer-link-android'
-            version libVersion
-            artifact(androidSourcesJar)
-            artifact(androidJavadocsJar)
-            artifact file('build/outputs/aar/explorer-link-android-release.aar')
+mavenPublishing {
 
-            pom {
-                name = 'explorer link android'
-                description = 'Tencent Link Android library'
-                url = 'https://github.com/tencentyun/iot-link-android/tree/master/explorer-link-android'
-                licenses {
-                    license {
-                        name = 'Tencent Binary License'
-                        url = 'https://github.com/tencentyun/iot-link-android/blob/master/explorer-link-android/LICENSE'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'tencent_archurtan'
-                        name = 'Tencent archurtan'
-                        email = 'archurtan@tencent.com'
-                    }
-                }
-                scm {
-                    url = 'scm:git@github.com:tencentyun/iot-link-android.git'
-                    connection = 'scm:git@github.com:tencentyun/iot-link-android.git'
-                    developerConnection = 'scm:git@github.com:tencentyun/iot-link-android.git'
-                }
-            }
+    coordinates("com.tencent.iot.explorer", "explorer-link-android", libVersion)
+    publishToMavenCentral()
+    signAllPublications()
 
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-                configurations.implementation.allDependencies.withType(ModuleDependency) { ModuleDependency dp ->
-                    if (dp.version != "unspecified") { // 过滤项目内library引用
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dp.group)
-                        dependencyNode.appendNode('artifactId', dp.name)
-                        dependencyNode.appendNode('version', dp.version)
-
-                        // for exclusions
-                        if (dp.excludeRules.size() > 0) {
-                            def exclusions = dependencyNode.appendNode('exclusions')
-                            dp.excludeRules.each { ExcludeRule ex ->
-                                def exclusion = exclusions.appendNode('exclusion')
-                                exclusion.appendNode('groupId', ex.group)
-                                exclusion.appendNode('artifactId', ex.module)
-                            }
-                        }
-                    }
-                }
+    pom {
+        name = 'explorer link android'
+        description = 'Tencent Link Android library'
+        url = 'https://github.com/tencentyun/iot-link-android/tree/master/explorer-link-android'
+        licenses {
+            license {
+                name = 'Tencent Binary License'
+                url = 'https://github.com/tencentyun/iot-link-android/blob/master/explorer-link-android/LICENSE'
             }
         }
-    }
-    repositories {
-        maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-            url = libVersion.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = System.getenv("IOT_SONATYPE_USERNAME")
-                password = System.getenv("IOT_SONATYPE_PASSWORD")
+        developers {
+            developer {
+                id = 'tencent_archurtan'
+                name = 'Tencent archurtan'
+                email = 'archurtan@tencent.com'
             }
         }
-    }
-}
-
-signing {
-    if (isReleaseVersion) {
-        sign publishing.publications.aar
+        scm {
+            url = 'scm:git@github.com:tencentyun/iot-link-android.git'
+            connection = 'scm:git@github.com:tencentyun/iot-link-android.git'
+            developerConnection = 'scm:git@github.com:tencentyun/iot-link-android.git'
+        }
     }
 }
