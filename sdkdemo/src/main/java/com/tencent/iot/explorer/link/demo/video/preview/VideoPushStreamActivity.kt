@@ -27,7 +27,6 @@ import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.VideoPreviewBaseActivity
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.ActionRecord
-import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventPresenter
 import com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback.event.EventView
 import com.tencent.iot.thirdparty.flv.FLVListener
 import com.tencent.iot.thirdparty.flv.FLVPacker
@@ -120,7 +119,7 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
     override fun initView() {
         tv_title.setText(presenter.getDeviceName())
         XP2P.setCallback(this)
-
+        getDeviceP2PInfo()
         holder = sv_camera_view.holder
     }
 
@@ -132,6 +131,22 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
             xp2pInfo,
             xP2PAppConfig
         )
+    }
+
+    private fun checkDeviceState() {
+        Log.d(tag, "====检测设备状态===")
+        launch(Dispatchers.IO) {
+            getDeviceStatus("${presenter.getProductId()}/${presenter.getDeviceName()}") { isOnline, msg ->
+                launch(Dispatchers.Main) {
+                    Toast.makeText(this@VideoPushStreamActivity, msg, Toast.LENGTH_SHORT).show()
+                    if (isOnline) {
+                        delegateHttpFlv()
+                    } else {
+                        restartService()
+                    }
+                }
+            }
+        }
     }
 
     private fun restartService() {
@@ -297,9 +312,6 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
         startService()
     }
 
-    override fun success(response: String?, reqCode: Int) {
-    }
-
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
@@ -320,7 +332,7 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
             connectTime = System.currentTimeMillis() - connectStartTime
             if (event == 1004) {
                 Log.e(tag, "====event === 1004")
-                delegateHttpFlv()
+                checkDeviceState()
             }
         } else if (event == 1010) {
             Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
@@ -356,7 +368,7 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
         }
     }
 
-    private fun getDeviceStatus(id: String?): Int {
+    private fun getDeviceStatus(id: String?, block: ((Boolean, String) -> Unit)? = null) {
         var command: ByteArray? = null
         command =
             "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=high".toByteArray()
@@ -371,50 +383,23 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
             // 405 connect number too many
             // 406 current command don't support
             // 407 device process error
+            var deviceState: Int = -1
+            var msg: String = ""
             if (deviceStatuses.isNotEmpty()) {
-                runOnUiThread {
-                    when (deviceStatuses[0].status) {
-                        0 -> Toast.makeText(this, "设备状态正常", Toast.LENGTH_SHORT).show()
-                        1 -> Toast.makeText(
-                            this,
-                            "设备状态异常, 拒绝请求: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        404 -> Toast.makeText(
-                            this,
-                            "设备状态异常, error request message: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        405 -> Toast.makeText(
-                            this,
-                            "设备状态异常, connect number too many: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        406 -> Toast.makeText(
-                            this,
-                            "设备状态异常, current command don't support: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        407 -> Toast.makeText(
-                            this,
-                            "设备状态异常, device process error: $reponse",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                msg = when (deviceStatuses[0].status) {
+                    0 -> "设备状态正常"
+                    404 -> "设备状态异常, error request message: $reponse"
+                    405 -> "设备状态异常, connect number too many: $reponse"
+                    406 -> "设备状态异常, current command don't support: $reponse"
+                    407 -> "设备状态异常, device process error: $reponse"
+                    else -> "设备状态异常, 拒绝请求: $reponse"
                 }
-                return deviceStatuses[0].status
+                deviceState = deviceStatuses[0].status
             } else {
-                runOnUiThread {
-                    Toast.makeText(this, "获取设备状态失败", Toast.LENGTH_SHORT).show()
-                }
-                return -1
+                msg = "获取设备状态失败"
             }
+            block?.invoke(deviceState == 0, msg)
         }
-        return -1
     }
 
     /**
