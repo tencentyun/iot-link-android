@@ -89,7 +89,7 @@ jobs:
 
       - name: Video-->Publish aar to Maven
         if: ${{contains(env.curr_tag, 'video')}}
-        run: ./gradlew :sdk:video-link-android:publish
+        run: ./gradlew :sdk:video-link-android:publishToMavenCentral
 
       - name: Link-->Build Link with Gradle
         if: ${{!contains(env.curr_tag, 'video')}}
@@ -101,7 +101,7 @@ jobs:
 
       - name: Link-->Publish aar to Maven
         if: ${{!contains(env.curr_tag, 'video')}}
-        run: ./gradlew :sdk:explorer-link-android:publish :sdk:explorer-link-rtc:publish
+        run: ./gradlew :sdk:explorer-link-android:publishToMavenCentral  :sdk:explorer-link-rtc:publishToMavenCentral
 
       - name: Link-->Update iot-version-android.txt in iot-version repo
         if: ${{!contains(env.curr_tag, 'video')}}
