@@ -55,19 +55,12 @@ public class TipShareDevDialog extends IosCenterStyleDialog implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_ok:
-                if (onDismisListener != null) {
-                    onDismisListener.onOkClicked();
-                }
-                break;
-            case R.id.tip_layout:
-            case R.id.tv_more_info_tip:
-                return;
-            case R.id.tv_cancel:
-            case R.id.dialog_layout:
-            default:
-                break;
+        if (v.getId() == R.id.tv_ok) {
+            if (onDismisListener != null) {
+                onDismisListener.onOkClicked();
+            }
+        }else  if (v.getId() == R.id.tip_layout || v.getId() == R.id.tv_more_info_tip) {
+            return;
         }
         dismiss();
     }

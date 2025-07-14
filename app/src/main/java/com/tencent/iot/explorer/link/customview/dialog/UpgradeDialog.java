@@ -76,23 +76,18 @@ public class UpgradeDialog extends IosCenterStyleDialog implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.upgrade_dialog_layout:
-            case R.id.tv_next:
-                if (!mIsForceUpgrade) {
-                    dismiss();
-                    dialogShowing = false;
-                }
-                break;
-            case R.id.tv_upgrade_now:
-                if (onDismisListener != null) {
-                    onDismisListener.OnClickUpgrade(info.getUrl());
-                    dismiss();
-                    dialogShowing = false;
-                }
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.upgrade_dialog_layout || id == R.id.tv_next) {
+            if (!mIsForceUpgrade) {
+                dismiss();
+                dialogShowing = false;
+            }
+        } else if (id == R.id.tv_upgrade_now) {
+            if (onDismisListener != null) {
+                onDismisListener.OnClickUpgrade(info.getUrl());
+                dismiss();
+                dialogShowing = false;
+            }
         }
     }
 

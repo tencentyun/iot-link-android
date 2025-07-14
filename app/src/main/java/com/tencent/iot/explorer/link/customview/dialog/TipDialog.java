@@ -39,14 +39,10 @@ public class TipDialog extends IosCenterStyleDialog implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_confirm:
-                if (onDismisListener != null) {
-                    onDismisListener.onDismised();
-                }
-                break;
-            default:
-                break;
+        if (v.getId() == R.id.tv_confirm) {
+            if (onDismisListener != null) {
+                onDismisListener.onDismised();
+            }
         }
         dismiss();
     }

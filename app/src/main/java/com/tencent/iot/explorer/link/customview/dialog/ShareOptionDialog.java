@@ -36,18 +36,15 @@ public class ShareOptionDialog extends IosCenterStyleDialog {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.layout_copy_link:
-                    if (onDismisListener != null) {
-                        onDismisListener.onCopyLinkClicked();
-                    }
-                    break;
-                case R.id.layout_wechat_share:
-                    if (onDismisListener != null) {
-                        onDismisListener.onShareWechatClicked();
-                    }
-                    break;
+            int id = v.getId();
+            if (id == R.id.layout_copy_link) {
+                if (onDismisListener != null) {
+                    onDismisListener.onCopyLinkClicked();
+                }
+            } else if (id == R.id.layout_wechat_share) {
+                if (onDismisListener != null) {
+                    onDismisListener.onShareWechatClicked();
+                }
             }
             dismiss();
         }

@@ -115,22 +115,17 @@ public class InputBirthdayDialog extends IosCenterStyleDialog implements View.On
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_ok:
-                if (onDismisListener != null) {
-                    onDismisListener.onOkClicked(yearPicker.getCurrentItemPosition() + MIN_YEAR,
-                            monthPicker.getCurrentItemPosition() + 1, dayPicker.getCurrentItemPosition() + 1);
-                }
-                break;
-            case R.id.tip_layout:
-                return;
-            case R.id.tv_cancel:
-            case R.id.outside_dialog_layout:
-                if (onDismisListener != null) {
-                    onDismisListener.onCancelClicked();
-                }
-            default:
-                break;
+        if (v.getId() == R.id.tv_ok) {
+            if (onDismisListener != null) {
+                onDismisListener.onOkClicked(yearPicker.getCurrentItemPosition() + MIN_YEAR,
+                        monthPicker.getCurrentItemPosition() + 1, dayPicker.getCurrentItemPosition() + 1);
+            }
+        }else  if (v.getId() == R.id.tip_layout) {
+            return;
+        }else if (v.getId() == R.id.tv_cancel || v.getId() == R.id.outside_dialog_layout) {
+            if (onDismisListener != null) {
+                onDismisListener.onCancelClicked();
+            }
         }
         dismiss();
     }

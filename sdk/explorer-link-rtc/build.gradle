@@ -53,8 +53,7 @@ dependencies {
 def libVersion = rootProject.ext.android.sdkSnapshotVersion + '-SNAPSHOT'
 ext.isReleaseVersion = !libVersion.endsWith("SNAPSHOT")
 mavenPublishing {
-
-    coordinates("com.tencent.iot.thirdparty.android", "ijkplayer-arm64", libVersion)
+    coordinates("com.tencent.iot.explorer", "explorer-link-trtc", libVersion)
     publishToMavenCentral()
     signAllPublications()
 

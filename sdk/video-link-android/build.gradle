@@ -68,7 +68,7 @@ def libVersion = rootProject.ext.android.videoSdkSnapshotVersion + '-SNAPSHOT'
 ext.isReleaseVersion = !libVersion.endsWith("SNAPSHOT")
 mavenPublishing {
 
-    coordinates("com.tencent.iot.video.android", "video-link-android", libVersion)
+    coordinates("com.tencent.iot.video", "video-link-android", libVersion)
     publishToMavenCentral()
     signAllPublications()
 

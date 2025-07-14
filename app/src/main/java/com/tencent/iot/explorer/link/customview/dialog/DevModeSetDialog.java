@@ -40,7 +40,6 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
     private Context context;
     private List<KeyBooleanValue> content = new ArrayList<>();
     private TextView title;
-    private TextView currentProgress;
     private String titleStr;
     private ImageView increase;
     private ImageView decrease;
@@ -90,7 +89,6 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
         bar = view.findViewById(R.id.bar_score_progrss);
         decrease = view.findViewById(R.id.iv_decrease);
         increase = view.findViewById(R.id.iv_increase);
-        currentProgress = view.findViewById(R.id.progress);
         tvGr = view.findViewById(R.id.tv_gr);
         tvEq = view.findViewById(R.id.tv_eq);
         tvLt = view.findViewById(R.id.tv_lt);
@@ -186,48 +184,43 @@ public class DevModeSetDialog extends IosCenterStyleDialog {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.tv_ok:
-                    if (onDismisListener != null && adapter != null) {
-                        onDismisListener.onSaveClicked();
-                    }
-                    break;
-                case R.id.tv_cancel:
-                    if (onDismisListener != null) {
-                        onDismisListener.onCancelClicked();
-                    }
-                    break;
-                case R.id.iv_increase:
-                    if (progress >= bar.getMaxProgress()) {
-                        return;
-                    }
-
-                    progress += modeInt.getStep();
-                    bar.setProgress(progress);
+            int id = v.getId();
+            if (id == R.id.tv_ok) {
+                if (onDismisListener != null && adapter != null) {
+                    onDismisListener.onSaveClicked();
+                }
+            } else if (id == R.id.tv_cancel) {
+                if (onDismisListener != null) {
+                    onDismisListener.onCancelClicked();
+                }
+            } else if (id == R.id.iv_increase) {
+                if (progress >= bar.getMaxProgress()) {
                     return;
-                case R.id.iv_decrease:
-                    if (progress <= bar.getMinProgress()) {
-                        return;
-                    }
-
-                    progress -= modeInt.getStep();
-                    bar.setProgress(progress);
+                }
+                progress += modeInt.getStep();
+                bar.setProgress(progress);
+                return;
+            } else if (id == R.id.iv_decrease) {
+                if (progress <= bar.getMinProgress()) {
                     return;
-                case R.id.layout_inside:
-                    return;
-                case R.id.tv_gr:
-                    modeInt.setOp(OpValue.OP_GR);
-                    resetStartEqBtnStatus();
-                    return;
-                case R.id.tv_eq:
-                    modeInt.setOp(OpValue.OP_EQ);
-                    resetStartEqBtnStatus();
-                    return;
-                case R.id.tv_lt:
-                    modeInt.setOp(OpValue.OP_LT);
-                    resetStartEqBtnStatus();
-                    return;
+                }
+                progress -= modeInt.getStep();
+                bar.setProgress(progress);
+                return;
+            } else if (id == R.id.layout_inside) {
+                return;
+            } else if (id == R.id.tv_gr) {
+                modeInt.setOp(OpValue.OP_GR);
+                resetStartEqBtnStatus();
+                return;
+            } else if (id == R.id.tv_eq) {
+                modeInt.setOp(OpValue.OP_EQ);
+                resetStartEqBtnStatus();
+                return;
+            } else if (id == R.id.tv_lt) {
+                modeInt.setOp(OpValue.OP_LT);
+                resetStartEqBtnStatus();
+                return;
             }
             dismiss();
         }

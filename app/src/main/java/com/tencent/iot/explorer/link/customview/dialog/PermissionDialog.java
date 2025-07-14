@@ -43,21 +43,16 @@ public class PermissionDialog extends IosCenterStyleDialog implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_refuse:
-                dismiss();
-                if (onDismisListener != null) {
-                    onDismisListener.OnClickRefuse();
-                }
-                break;
-            case R.id.tv_ok:
-                dismiss();
-                if (onDismisListener != null) {
-                    onDismisListener.OnClickOK();
-                }
-                break;
-            default:
-                break;
+        if (v.getId() == R.id.tv_refuse) {
+            dismiss();
+            if (onDismisListener != null) {
+                onDismisListener.OnClickRefuse();
+            }
+        } else if (v.getId() == R.id.tv_ok) {
+            dismiss();
+            if (onDismisListener != null) {
+                onDismisListener.OnClickOK();
+            }
         }
     }
 
