@@ -117,6 +117,9 @@ android {
             }
         }
     }
+    packagingOptions {
+        exclude 'META-INF/maven/com.belerweb/pinyin4j/pom.xml'
+    }
 }
 
 dependencies {
