@@ -2,99 +2,215 @@ package com.tencent.iot.explorer.link.demo.video.playback
 
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.tencent.iot.explorer.link.demo.R
+import androidx.viewbinding.ViewBinding
 import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.layout_control
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.layout_video
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.palayback_video
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.playback_control
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.playback_control_orientation
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.v_space
-import kotlinx.android.synthetic.main.fragment_video_local_playback.*
+import com.tencent.iot.explorer.link.demo.databinding.FragmentVideoCloudPlaybackBinding
+import com.tencent.iot.explorer.link.demo.databinding.FragmentVideoLocalPlaybackBinding
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-open class VideoPlaybackBaseFragment: BaseFragment(), CoroutineScope by MainScope() {
+abstract class VideoPlaybackBaseFragment<VB : ViewBinding> : BaseFragment<VB>(),
+    CoroutineScope by MainScope() {
     var dateFormat = SimpleDateFormat(CalendarView.SECOND_DATE_FORMAT_PATTERN, Locale.getDefault())
+
     @Volatile
     var portrait = true
     var onOrientationChangedListener: OnOrientationChangedListener? = null
-    private var job : Job? = null
-
-    override fun getContentView(): Int {
-        return R.layout.fragment_video_cloud_playback
-    }
+    private var job: Job? = null
 
     override fun startHere(view: View) {
-        playback_control.visibility = View.GONE
-        top_control_layout?.visibility = View.GONE
-        playback_control_orientation.setOnClickListener {
-            portrait = !portrait
-            onOrientationChangedListener?.onOrientationChanged(portrait)
-            var moreSpace = 12
-            var marginWidth = 0
-            var topMoreSpace = 12
-            if (portrait) {
-                layout_control.visibility = View.VISIBLE
-                v_space.visibility = View.VISIBLE
-            } else {
-                layout_control.visibility = View.GONE
-                v_space.visibility = View.GONE
-                moreSpace = 32
-                marginWidth = 73
-                topMoreSpace = 32
-            }
+//        playbackControl.visibility = View.GONE
+//        top_control_layout?.visibility = View.GONE
+//        playbackControlOrientation.setOnClickListener {
+//            portrait = !portrait
+//            onOrientationChangedListener?.onOrientationChanged(portrait)
+//            var moreSpace = 12
+//            var marginWidth = 0
+//            var topMoreSpace = 12
+//            if (portrait) {
+//                layoutControl.visibility = View.VISIBLE
+//                vSpace.visibility = View.VISIBLE
+//            } else {
+//                layoutControl.visibility = View.GONE
+//                vSpace.visibility = View.GONE
+//                moreSpace = 32
+//                marginWidth = 73
+//                topMoreSpace = 32
+//            }
+//
+//            var btnLayoutParams =
+//                playbackControlOrientation.layoutParams as ConstraintLayout.LayoutParams
+//            btnLayoutParams.bottomMargin = dp2px(moreSpace)
+//            playbackControlOrientation.layoutParams = btnLayoutParams
+//
+//            iv_video_record?.let {
+//                var spaceParams = iv_video_record.layoutParams as ConstraintLayout.LayoutParams
+//                spaceParams.topMargin = dp2px(topMoreSpace)
+//                iv_video_record.layoutParams = spaceParams
+//            }
+//
+//            videoViewNeeResize(dp2px(marginWidth), dp2px(marginWidth))
+//
+//            if (!portrait) {
+//                iv_video_back?.visibility = View.VISIBLE
+//                tv_video_title?.visibility = View.VISIBLE
+//            } else {
+//                iv_video_back?.visibility = View.GONE
+//                tv_video_title?.visibility = View.GONE
+//            }
+//        }
+//
+//        layoutVideo.setOnClickListener {
+//            if (playbackControl.visibility == View.VISIBLE) {
+//                playbackControl.visibility = View.GONE
+//                top_control_layout?.visibility = View.GONE
+//                job?.let {
+//                    it.cancel()
+//                }
+//            } else {
+//                playbackControl.visibility = View.VISIBLE
+//                top_control_layout?.visibility = View.GONE  // 暂时屏蔽录像/拍照/倍速的功能
+//                if (!portrait) {
+//                    iv_video_back?.visibility = View.VISIBLE
+//                    tv_video_title?.visibility = View.VISIBLE
+//                } else {
+//                    iv_video_back?.visibility = View.GONE
+//                    tv_video_title?.visibility = View.GONE
+//                }
+//                job = launch {
+//                    delay(5 * 1000)
+//                    playbackControl.visibility = View.GONE
+//                    top_control_layout?.visibility = View.GONE
+//                }
+//            }
+//        }
+    }
 
-            var btnLayoutParams = playback_control_orientation.layoutParams as ConstraintLayout.LayoutParams
-            btnLayoutParams.bottomMargin = dp2px(moreSpace)
-            playback_control_orientation.layoutParams = btnLayoutParams
+    protected fun initVideoPlaybackView(vBinding: ViewBinding) {
+        when(vBinding) {
+            is FragmentVideoLocalPlaybackBinding -> initVideoLocalPlaybackView(vBinding)
+            is FragmentVideoCloudPlaybackBinding -> initVideoCloudPlaybackView(vBinding)
+        }
+    }
 
-            iv_video_record?.let {
-                var spaceParams = iv_video_record.layoutParams as ConstraintLayout.LayoutParams
+    private fun initVideoLocalPlaybackView(vBinding: FragmentVideoLocalPlaybackBinding) {
+        with(vBinding) {
+            playbackControl.visibility = View.GONE
+            topControlLayout.visibility = View.GONE
+
+            playbackControlOrientation.setOnClickListener {
+                portrait = !portrait
+                onOrientationChangedListener?.onOrientationChanged(portrait)
+                var moreSpace = 12
+                var marginWidth = 0
+                var topMoreSpace = 12
+                if (portrait) {
+                    layoutControl.visibility = View.VISIBLE
+                    vSpace.visibility = View.VISIBLE
+                } else {
+                    layoutControl.visibility = View.GONE
+                    vSpace.visibility = View.GONE
+                    moreSpace = 32
+                    marginWidth = 73
+                    topMoreSpace = 32
+                }
+
+                var btnLayoutParams =
+                    playbackControlOrientation.layoutParams as ConstraintLayout.LayoutParams
+                btnLayoutParams.bottomMargin = dp2px(moreSpace)
+                playbackControlOrientation.layoutParams = btnLayoutParams
+
+                var spaceParams = ivVideoRecord.layoutParams as ConstraintLayout.LayoutParams
                 spaceParams.topMargin = dp2px(topMoreSpace)
-                iv_video_record.layoutParams = spaceParams
+                ivVideoRecord.layoutParams = spaceParams
+
+                videoViewNeeResize(dp2px(marginWidth), dp2px(marginWidth))
+
+                if (!portrait) {
+                    ivVideoBack.visibility = View.VISIBLE
+                    tvVideoTitle.visibility = View.VISIBLE
+                } else {
+                    ivVideoBack.visibility = View.GONE
+                    tvVideoTitle.visibility = View.GONE
+                }
             }
 
-            videoViewNeeResize(dp2px(marginWidth), dp2px(marginWidth))
+            layoutVideo.setOnClickListener {
+                if (playbackControl.visibility == View.VISIBLE) {
+                    playbackControl.visibility = View.GONE
+                    topControlLayout.visibility = View.GONE
+                    job?.cancel()
+                } else {
+                    playbackControl.visibility = View.VISIBLE
+                    topControlLayout.visibility = View.GONE  // 暂时屏蔽录像/拍照/倍速的功能
+                    if (!portrait) {
+                        ivVideoBack.visibility = View.VISIBLE
+                        tvVideoTitle.visibility = View.VISIBLE
+                    } else {
+                        ivVideoBack.visibility = View.GONE
+                        tvVideoTitle.visibility = View.GONE
+                    }
 
-            if (!portrait) {
-                iv_video_back?.visibility = View.VISIBLE
-                tv_video_title?.visibility = View.VISIBLE
-            } else {
-                iv_video_back?.visibility = View.GONE
-                tv_video_title?.visibility = View.GONE
+                    job = launch {
+                        delay(5 * 1000)
+                        playbackControl.visibility = View.GONE
+                        topControlLayout.visibility = View.GONE
+                    }
+                }
             }
         }
+    }
 
-        layout_video.setOnClickListener {
-            if (playback_control.visibility == View.VISIBLE) {
-                playback_control.visibility = View.GONE
-                top_control_layout?.visibility = View.GONE
-                job?.let {
-                    it.cancel()
-                }
-            } else {
-                playback_control.visibility = View.VISIBLE
-                top_control_layout?.visibility = View.GONE  // 暂时屏蔽录像/拍照/倍速的功能
-                if (!portrait) {
-                    iv_video_back?.visibility = View.VISIBLE
-                    tv_video_title?.visibility = View.VISIBLE
+    private fun initVideoCloudPlaybackView(vBinding: FragmentVideoCloudPlaybackBinding) {
+        with(vBinding) {
+            playbackControl.visibility = View.GONE
+
+            playbackControlOrientation.setOnClickListener {
+                portrait = !portrait
+                onOrientationChangedListener?.onOrientationChanged(portrait)
+                var moreSpace = 12
+                var marginWidth = 0
+                var topMoreSpace = 12
+                if (portrait) {
+                    layoutControl.visibility = View.VISIBLE
+                    vSpace.visibility = View.VISIBLE
                 } else {
-                    iv_video_back?.visibility = View.GONE
-                    tv_video_title?.visibility = View.GONE
+                    layoutControl.visibility = View.GONE
+                    vSpace.visibility = View.GONE
+                    moreSpace = 32
+                    marginWidth = 73
+                    topMoreSpace = 32
                 }
-                job = launch {
-                    delay(5 * 1000)
-                    playback_control.visibility = View.GONE
-                    top_control_layout?.visibility = View.GONE
+
+                var btnLayoutParams =
+                    playbackControlOrientation.layoutParams as ConstraintLayout.LayoutParams
+                btnLayoutParams.bottomMargin = dp2px(moreSpace)
+                playbackControlOrientation.layoutParams = btnLayoutParams
+
+                videoViewNeeResize(dp2px(marginWidth), dp2px(marginWidth))
+            }
+
+            layoutVideo.setOnClickListener {
+                if (playbackControl.visibility == View.VISIBLE) {
+                    playbackControl.visibility = View.GONE
+                    job?.cancel()
+                } else {
+                    playbackControl.visibility = View.VISIBLE
+
+                    job = launch {
+                        delay(5 * 1000)
+                        playbackControl.visibility = View.GONE
+                    }
                 }
             }
         }
     }
 
     open fun videoViewNeeResize(marginStart: Int, marginEnd: Int) {}
+
+    abstract fun getLayoutVideo(): ConstraintLayout
 
     override fun onDestroy() {
         super.onDestroy()

@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.tencent.iot.explorer.link.demo.DataHolder
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment<VB: ViewBinding> : Fragment() {
+
+    private var _binding: VB? = null
+    protected val binding get() = _binding!!
 
     /**
      * 数据共享角色
@@ -18,8 +21,7 @@ abstract class BaseFragment : Fragment() {
         DataHolder.instance.register(this.activity!!)
     }
 
-    @LayoutRes
-    abstract fun getContentView(): Int
+    abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
 
     abstract fun startHere(view: View)
 
@@ -28,10 +30,8 @@ abstract class BaseFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        if (getContentView() != 0) {
-            return inflater.inflate(getContentView(), container, false)
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
+        _binding = getViewBinding(inflater, container)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -80,6 +80,11 @@ abstract class BaseFragment : Fragment() {
         super.onDestroy()
         //清除管理权限内的DataHolder中存放的数据
         DataHolder.instance.unregister(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     open fun jumpActivity(clazz: Class<*>) {

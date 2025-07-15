@@ -19,13 +19,12 @@ import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.core.link.entity.FamilyInfoEntity
 import com.tencent.iot.explorer.link.demo.BaseActivity
-import kotlinx.android.synthetic.main.activity_family.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityFamilyBinding
 
 /**
  * 家庭详情
  */
-class FamilyActivity : BaseActivity(), MyCallback {
+class FamilyActivity : BaseActivity<ActivityFamilyBinding>(), MyCallback {
 
     private lateinit var adapter: MemberAdapter
 
@@ -38,44 +37,44 @@ class FamilyActivity : BaseActivity(), MyCallback {
     private var deleteFamilyPopup: CommonPopupWindow? = null
     private var exitFamilyPopup: CommonPopupWindow? = null
 
-    override fun getContentView(): Int {
-        return R.layout.activity_family
-    }
-
     override fun onResume() {
         super.onResume()
         getMemberList()
     }
 
-    override fun initView() {
-        tv_title.text = getString(R.string.family_detail)
-        val layoutManager = GridLayoutManager(this, 3)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (position == 0) 3 else if (position > memberList.size) 3 else 1
-            }
-        }
-        adapter = MemberAdapter(this, memberList)
-        rv_member_list.layoutManager = layoutManager
-        rv_member_list.adapter = adapter
+    override fun getViewBinding(): ActivityFamilyBinding = ActivityFamilyBinding.inflate(layoutInflater)
 
-        family = get<FamilyEntity>("family")
-        family?.run {
-            if (Role == 1) {
-                if (IoTAuth.familyList.size <= 1)
-                    tv_delete_family.alpha = 0.5f
-                getString(R.string.delete_family)
-            } else {
-                getString(R.string.exit_family)
+    override fun initView() {
+        with(binding) {
+            familyMenu.tvTitle.text = getString(R.string.family_detail)
+            val layoutManager = GridLayoutManager(this@FamilyActivity, 3)
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (position == 0) 3 else if (position > memberList.size) 3 else 1
+                }
             }
-            memberList.add(this)
-            getFamilyInfo()
+            adapter = MemberAdapter(this@FamilyActivity, memberList)
+            rvMemberList.layoutManager = layoutManager
+            rvMemberList.adapter = adapter
+
+            family = get<FamilyEntity>("family")
+            family?.run {
+                if (Role == 1) {
+                    if (IoTAuth.familyList.size <= 1)
+                        tvDeleteFamily.alpha = 0.5f
+                    getString(R.string.delete_family)
+                } else {
+                    getString(R.string.exit_family)
+                }
+                memberList.add(this)
+                getFamilyInfo()
+            }
         }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_delete_family.setOnClickListener {
+        binding.familyMenu.ivBack.setOnClickListener { finish() }
+        binding.tvDeleteFamily.setOnClickListener {
             family?.run {
                 if (Role == 1) {
                     if (IoTAuth.familyList.size > 1)
@@ -86,7 +85,7 @@ class FamilyActivity : BaseActivity(), MyCallback {
             }
         }
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 when (position) {
                     -1 -> {
                         showModifyFamilyNamePopup()
@@ -217,8 +216,8 @@ class FamilyActivity : BaseActivity(), MyCallback {
                 family?.FamilyName ?: ""
             )
         }
-        editPopupWindow?.setBg(family_bg)
-        editPopupWindow?.show(family_contain)
+        editPopupWindow?.setBg(binding.familyBg)
+        editPopupWindow?.show(binding.familyContain)
         editPopupWindow?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
             override fun onVerify(text: String) {
                 if (!TextUtils.isEmpty(text)) {
@@ -240,8 +239,8 @@ class FamilyActivity : BaseActivity(), MyCallback {
                 getString(R.string.toast_delete_family_content)
             )
         }
-        deleteFamilyPopup?.setBg(family_bg)
-        deleteFamilyPopup?.show(family_contain)
+        deleteFamilyPopup?.setBg(binding.familyBg)
+        deleteFamilyPopup?.show(binding.familyContain)
         deleteFamilyPopup?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
             override fun cancel(popupWindow: CommonPopupWindow) {
                 popupWindow.dismiss()
@@ -264,8 +263,8 @@ class FamilyActivity : BaseActivity(), MyCallback {
                 getString(R.string.toast_exit_family_content)
             )
         }
-        exitFamilyPopup?.setBg(family_bg)
-        exitFamilyPopup?.show(family_contain)
+        exitFamilyPopup?.setBg(binding.familyBg)
+        exitFamilyPopup?.show(binding.familyContain)
         exitFamilyPopup?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
             override fun cancel(popupWindow: CommonPopupWindow) {
                 popupWindow.dismiss()

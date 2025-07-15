@@ -31,14 +31,15 @@
         app:tabMaxWidth="0dp"
         app:tabMode="fixed">
 
+        <!-- 使用 ViewBinding 时 TabItem 不能绑定 id，否则会报 NPE -->
+        <!-- 详情参考：https://github.com/material-components/material-components-android/issues/1162 -->
+
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/btn_cloud_playback"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/cloud_playback" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/btn_local_playback"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/local_playback" />

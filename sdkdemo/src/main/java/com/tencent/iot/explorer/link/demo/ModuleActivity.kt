@@ -4,10 +4,10 @@ import android.Manifest
 import android.os.Bundle
 import com.tencent.iot.explorer.link.demo.common.util.LogcatHelper
 import com.tencent.iot.explorer.link.demo.core.activity.LoginActivity
+import com.tencent.iot.explorer.link.demo.databinding.ActivityModuleBinding
 import com.tencent.iot.explorer.link.demo.video.VideoOptionsActivity
-import kotlinx.android.synthetic.main.activity_module.*
 
-class ModuleActivity : BaseActivity() {
+class ModuleActivity : BaseActivity<ActivityModuleBinding>() {
 
     private var permissions = arrayOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -15,10 +15,6 @@ class ModuleActivity : BaseActivity() {
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.CAMERA
     )
-
-    override fun getContentView(): Int {
-        return R.layout.activity_module
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,22 +26,26 @@ class ModuleActivity : BaseActivity() {
         LogcatHelper.getInstance(this).stop()
     }
 
+    override fun getViewBinding(): ActivityModuleBinding = ActivityModuleBinding.inflate(layoutInflater)
+
     override fun initView() {}
 
     override fun setListener() {
-        btn_1.setOnClickListener {
-            jumpActivity(LoginActivity::class.java)
-        }
-
-        btn_2.setOnClickListener {
-            if (checkPermissions(permissions)) {
-                jumpActivity(VideoOptionsActivity::class.java)
-            } else {
-                requestPermission(permissions)
+        with(binding) {
+            btn1.setOnClickListener {
+                jumpActivity(LoginActivity::class.java)
             }
-        }
 
-        btn_3.setOnClickListener {}
+            btn2.setOnClickListener {
+                if (checkPermissions(permissions)) {
+                    jumpActivity(VideoOptionsActivity::class.java)
+                } else {
+                    requestPermission(permissions)
+                }
+            }
+
+            btn3.setOnClickListener {}
+        }
     }
 
     override fun permissionAllGranted() {

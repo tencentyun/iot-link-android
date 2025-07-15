@@ -14,13 +14,12 @@ import com.tencent.iot.explorer.link.demo.core.adapter.OnItemListener
 import com.tencent.iot.explorer.link.demo.core.adapter.RoomListAdapter
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_room_list.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityRoomListBinding
 
 /**
  * 房间管理
  */
-class RoomListActivity : BaseActivity(), MyCallback {
+class RoomListActivity : BaseActivity<ActivityRoomListBinding>(), MyCallback {
 
     private lateinit var adapter: RoomListAdapter
     private val roomList = arrayListOf<RoomEntity>()
@@ -30,24 +29,24 @@ class RoomListActivity : BaseActivity(), MyCallback {
         super.onResume()
     }
 
-    override fun getContentView(): Int {
-        return R.layout.activity_room_list
-    }
+    override fun getViewBinding(): ActivityRoomListBinding = ActivityRoomListBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.room_manager)
-        rv_room_list.layoutManager = LinearLayoutManager(this)
-        adapter = RoomListAdapter(this, roomList)
-        rv_room_list.adapter = adapter
+        with(binding) {
+            roomListMenu.tvTitle.text = getString(R.string.room_manager)
+            rvRoomList.layoutManager = LinearLayoutManager(this@RoomListActivity)
+            adapter = RoomListAdapter(this@RoomListActivity, roomList)
+            rvRoomList.adapter = adapter
+        }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_add_room.setOnClickListener {
+        binding.roomListMenu.ivBack.setOnClickListener { finish() }
+        binding.tvAddRoom.setOnClickListener {
             jumpActivity(AddRoomActivity::class.java)
         }
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 put("room", roomList[position])
                 jumpActivity(RoomActivity::class.java)
             }

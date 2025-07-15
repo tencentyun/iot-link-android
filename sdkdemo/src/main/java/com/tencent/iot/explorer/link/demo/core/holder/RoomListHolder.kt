@@ -3,9 +3,9 @@ package com.tencent.iot.explorer.link.demo.core.holder
 import com.tencent.iot.explorer.link.core.auth.entity.RoomEntity
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.databinding.ItemRoomBinding
+import com.tencent.iot.explorer.link.demo.databinding.ItemRoomListBinding
 
-class RoomHolder(binding: ItemRoomBinding) : BaseHolder<RoomEntity, ItemRoomBinding>(binding) {
+class RoomListHolder(binding: ItemRoomListBinding) : BaseHolder<RoomEntity, ItemRoomListBinding>(binding) {
     override fun show(holder: BaseHolder<*, *>, position: Int) {
         with(binding) {
             tvRoomName.text = data.RoomName
@@ -17,7 +17,7 @@ class RoomHolder(binding: ItemRoomBinding) : BaseHolder<RoomEntity, ItemRoomBind
                 }
             )
             tvRoomName.setOnClickListener {
-                clickItem(this@RoomHolder, it, position)
+                clickItem(this@RoomListHolder, it, position)
             }
         }
     }

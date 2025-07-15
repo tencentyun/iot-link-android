@@ -7,9 +7,9 @@ import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.fragment.DeviceFragment
 import com.tencent.iot.explorer.link.demo.core.fragment.MeFragment
-import kotlinx.android.synthetic.main.activity_main.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityMainBinding
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private lateinit var previousTab: TabLayout.Tab
     private val fragments = arrayListOf<Fragment>()
@@ -19,15 +19,15 @@ class MainActivity : BaseActivity() {
         Manifest.permission.RECORD_AUDIO
     )
 
-    override fun getContentView(): Int {
-        return R.layout.activity_main
-    }
+    override fun getViewBinding(): ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
 
     override fun initView() {
         requestPermission(permissions)
-        tb_bottom.addTab(tb_bottom.newTab().setIcon(R.mipmap.main_tab_1_hover).setText("设备"), true)
-        previousTab = tb_bottom.getTabAt(0)!!
-        tb_bottom.addTab(tb_bottom.newTab().setIcon(R.mipmap.main_tab_3_normal).setText("我的"))
+        with(binding) {
+            tbBottom.addTab(tbBottom.newTab().setIcon(R.mipmap.main_tab_1_hover).setText("设备"), true)
+            previousTab = tbBottom.getTabAt(0)!!
+            tbBottom.addTab(tbBottom.newTab().setIcon(R.mipmap.main_tab_3_normal).setText("我的"))
+        }
 
         fragments.clear()
         fragments.add(DeviceFragment())
@@ -39,7 +39,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun setListener() {
-        tb_bottom.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tbBottom.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
 

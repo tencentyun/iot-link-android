@@ -14,34 +14,33 @@ import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.core.response.ShareDeviceListRespone
 import com.tencent.iot.explorer.link.demo.common.customView.MyDivider
-import kotlinx.android.synthetic.main.activity_share_device_list.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityShareDeviceListBinding
 
 /**
  * 共享的设备列表
  */
-class ShareDeviceListActivity : BaseActivity() {
+class ShareDeviceListActivity : BaseActivity<ActivityShareDeviceListBinding>() {
 
     private val shareDeviceList = arrayListOf<DeviceEntity>()
     private lateinit var adapter: DeviceAdapter
 
-    override fun getContentView(): Int {
-        return R.layout.activity_share_device_list
-    }
+    override fun getViewBinding(): ActivityShareDeviceListBinding = ActivityShareDeviceListBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.share_device)
-        adapter = DeviceAdapter(this, shareDeviceList)
-        rv_share_device_list.layoutManager = LinearLayoutManager(this)
-        rv_share_device_list.addItemDecoration(MyDivider(dp2px(16), dp2px(16), dp2px(16)))
-        rv_share_device_list.adapter = adapter
-        getShareDeviceList()
+        with(binding) {
+            menuShareDeviceList.tvTitle.text = getString(R.string.share_device)
+            adapter = DeviceAdapter(this@ShareDeviceListActivity, shareDeviceList)
+            rvShareDeviceList.layoutManager = LinearLayoutManager(this@ShareDeviceListActivity)
+            rvShareDeviceList.addItemDecoration(MyDivider(dp2px(16), dp2px(16), dp2px(16)))
+            rvShareDeviceList.adapter = adapter
+            getShareDeviceList()
+        }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
+        binding.menuShareDeviceList.ivBack.setOnClickListener { finish() }
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 put("device", shareDeviceList[position])
                 put("share", true)
                 jumpActivity(ControlPanelActivity::class.java)
@@ -53,7 +52,7 @@ class ShareDeviceListActivity : BaseActivity() {
      * 更新列表
      */
     private fun showList() {
-        tv_empty_share_device.visibility = if (shareDeviceList.size > 0) View.GONE
+        binding.tvEmptyShareDevice.visibility = if (shareDeviceList.size > 0) View.GONE
         else View.VISIBLE
         adapter.notifyDataSetChanged()
     }

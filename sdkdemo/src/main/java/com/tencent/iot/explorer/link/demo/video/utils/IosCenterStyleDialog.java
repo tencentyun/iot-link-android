@@ -13,33 +13,35 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 
+import androidx.viewbinding.ViewBinding;
+
 import com.tencent.iot.explorer.link.demo.R;
 
-public class IosCenterStyleDialog extends Dialog {
+public class IosCenterStyleDialog<VB extends ViewBinding> extends Dialog {
 
     protected DisplayMetrics displayMetrics;
     protected View view;
+    protected VB binding;
     private Context mContext;
-    private int layoutId;
     private boolean showAnimation;
 
-    public IosCenterStyleDialog(Context context, int layoutId) {
-        this(context, layoutId, true);
+    public IosCenterStyleDialog(Context context, VB binding) {
+        this(context, binding, true);
     }
 
-    public IosCenterStyleDialog(Context context, int layoutId, boolean showAnimation) {
+    public IosCenterStyleDialog(Context context, VB binding, boolean showAnimation) {
         super(context, R.style.iOSDialog);
         mContext = context;
         displayMetrics = context.getResources().getDisplayMetrics();
-        this.layoutId = layoutId;
+        this.binding = binding;
         this.showAnimation = showAnimation;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        view = binding.getRoot();
 
-        view = View.inflate(mContext, this.layoutId, null);
         //设置view 弹出的平移动画，从底部-100% 平移到自身位置
         if (showAnimation) {
             TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,

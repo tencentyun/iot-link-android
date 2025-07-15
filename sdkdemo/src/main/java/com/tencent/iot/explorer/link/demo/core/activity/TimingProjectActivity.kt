@@ -16,28 +16,27 @@ import com.tencent.iot.explorer.link.demo.core.entity.TimingProject
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.core.response.TimingListResponse
-import kotlinx.android.synthetic.main.activity_timing_project.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityTimingProjectBinding
 
 /**
  *  云端定时
  */
-class TimingProjectActivity : BaseActivity() {
+class TimingProjectActivity : BaseActivity<ActivityTimingProjectBinding>() {
 
     private val timingList = arrayListOf<TimingProject>()
     private lateinit var adapter: TimingProjectAdapter
     private var device: DeviceEntity? = null
 
-    override fun getContentView(): Int {
-        return R.layout.activity_timing_project
-    }
+    override fun getViewBinding(): ActivityTimingProjectBinding = ActivityTimingProjectBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = "云端定时"
-        device = get<DeviceEntity>("device")
-        rv_timing_project.layoutManager = LinearLayoutManager(this)
-        adapter = TimingProjectAdapter(this, timingList)
-        rv_timing_project.adapter = adapter
+        with(binding) {
+            menuTimingProject.tvTitle.text = "云端定时"
+            device = get<DeviceEntity>("device")
+            rvTimingProject.layoutManager = LinearLayoutManager(this@TimingProjectActivity)
+            adapter = TimingProjectAdapter(this@TimingProjectActivity, timingList)
+            rvTimingProject.adapter = adapter
+        }
     }
 
     override fun onResume() {
@@ -46,15 +45,15 @@ class TimingProjectActivity : BaseActivity() {
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener {
+        binding.menuTimingProject.ivBack.setOnClickListener {
             finish()
         }
-        tv_add_timing_project.setOnClickListener {
+        binding.tvAddTimingProject.setOnClickListener {
             remove("timing")
             jumpActivity(AddTimingProjectActivity::class.java)
         }
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 when (clickView) {
                     is Switch -> {
                         switchTimingProject(position)
@@ -142,9 +141,9 @@ class TimingProjectActivity : BaseActivity() {
     private fun showTimingList() {
         runOnUiThread {
             if (timingList.isEmpty()){
-                tv_empty_data.visibility = View.VISIBLE
+                binding.tvEmptyData.visibility = View.VISIBLE
             }else{
-                tv_empty_data.visibility = View.GONE
+                binding.tvEmptyData.visibility = View.GONE
             }
             adapter.notifyDataSetChanged()
         }

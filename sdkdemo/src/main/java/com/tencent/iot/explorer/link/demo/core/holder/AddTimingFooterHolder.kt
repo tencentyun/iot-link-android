@@ -1,15 +1,10 @@
 package com.tencent.iot.explorer.link.demo.core.holder
 
-import android.content.Context
-import android.view.ViewGroup
-import kotlinx.android.synthetic.main.foot_add_timing.view.*
+import com.tencent.iot.explorer.link.demo.databinding.FootAddTimingBinding
 
-class AddTimingFooterHolder : BaseHolder<String> {
-
-    constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
-
-    override fun show(holder: BaseHolder<*>, position: Int) {
-        itemView.tv_save_timing_project.setOnClickListener {
+class AddTimingFooterHolder(binding: FootAddTimingBinding) : BaseHolder<String, FootAddTimingBinding>(binding) {
+    override fun show(holder: BaseHolder<*, *>, position: Int) {
+        binding.tvSaveTimingProject.setOnClickListener {
             clickItem(this, it, 0)
         }
     }

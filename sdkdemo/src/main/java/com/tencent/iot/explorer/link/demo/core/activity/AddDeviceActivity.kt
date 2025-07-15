@@ -10,13 +10,12 @@ import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.response.UserInfoResponse
-import kotlinx.android.synthetic.main.activity_add_device.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityAddDeviceBinding
 
 /**
  * 添加设备界面
  */
-class AddDeviceActivity : BaseActivity() {
+class AddDeviceActivity : BaseActivity<ActivityAddDeviceBinding>() {
 
     private var permissions = arrayOf(
         Manifest.permission.ACCESS_WIFI_STATE,
@@ -28,25 +27,25 @@ class AddDeviceActivity : BaseActivity() {
 
     private var type = 0
 
-    override fun getContentView(): Int {
-        return R.layout.activity_add_device
-    }
+    override fun getViewBinding(): ActivityAddDeviceBinding = ActivityAddDeviceBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.add_device)
+        binding.menuAddDevice.tvTitle.text = getString(R.string.add_device)
     }
 
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_add_device_scan_qrcode.setOnClickListener {
-            request(0)
-        }
-        tv_add_device_smart_config.setOnClickListener {
-            request(1)
-        }
-        tv_add_device_soft_ap.setOnClickListener {
-            request(2)
+        with(binding) {
+            menuAddDevice.ivBack.setOnClickListener { finish() }
+            tvAddDeviceScanQrcode.setOnClickListener {
+                request(0)
+            }
+            tvAddDeviceSmartConfig.setOnClickListener {
+                request(1)
+            }
+            tvAddDeviceSoftAp.setOnClickListener {
+                request(2)
+            }
         }
     }
 

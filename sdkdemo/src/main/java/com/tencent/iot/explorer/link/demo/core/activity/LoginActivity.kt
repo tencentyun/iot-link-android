@@ -13,43 +13,43 @@ import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.response.UserInfoResponse
-import kotlinx.android.synthetic.main.activity_login.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityLoginBinding
 
 /**
  * 登录
  */
-class LoginActivity : BaseActivity(), LoginCallback {
+class LoginActivity : BaseActivity<ActivityLoginBinding>(), LoginCallback {
 
     private var account = ""
     private var pwd = ""
     private val countryCode = "86"
 
-    override fun getContentView(): Int {
-        return R.layout.activity_login
-    }
+    override fun getViewBinding(): ActivityLoginBinding = ActivityLoginBinding.inflate(layoutInflater)
 
     override fun initView() {
     }
 
     override fun setListener() {
-        btn_login_commit.setOnClickListener {
-            login()
-        }
-        btn_to_register.setOnClickListener {
-            jumpActivity(RegisterActivity::class.java)
-        }
-        btn_to_forgot.setOnClickListener {
-            jumpActivity(ForgotPasswordActivity::class.java)
+        with(binding) {
+            btnLoginCommit.setOnClickListener {
+                login()
+            }
+            btnToRegister.setOnClickListener {
+                jumpActivity(RegisterActivity::class.java)
+            }
+            btnToForgot.setOnClickListener {
+                jumpActivity(ForgotPasswordActivity::class.java)
+            }
         }
     }
 
     private fun login() {
-        account = et_login_account.text.toString().trim()
+        account = binding.etLoginAccount.text.toString().trim()
         if (TextUtils.isEmpty(account)) {
             Toast.makeText(this, "请求输入手机号/邮箱", Toast.LENGTH_LONG).show()
             return
         }
-        pwd = et_login_pwd.text.toString().trim()
+        pwd = binding.etLoginPwd.text.toString().trim()
         if (pwd.length < 8) {
             Toast.makeText(this, "密码长度至少为8位", Toast.LENGTH_LONG).show()
             return

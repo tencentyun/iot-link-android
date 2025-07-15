@@ -12,65 +12,65 @@ import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoInputAuthorizeBinding
 import com.tencent.iot.video.link.consts.VideoConst
-import kotlinx.android.synthetic.main.activity_video_input_authorize.*
-import kotlinx.android.synthetic.main.blue_title_layout.*
-import kotlinx.android.synthetic.main.input_item_layout.view.*
 import kotlinx.coroutines.*
 
-class VideoInputAuthorizeActivity : VideoBaseActivity(), CoroutineScope by MainScope() {
+class VideoInputAuthorizeActivity : VideoBaseActivity<ActivityVideoInputAuthorizeBinding>(), CoroutineScope by MainScope() {
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_input_authorize
-    }
+    override fun getViewBinding(): ActivityVideoInputAuthorizeBinding =
+        ActivityVideoInputAuthorizeBinding.inflate(layoutInflater)
 
     override fun initView() {
+        with(binding) {
+            vTitle.tvTitle.setText(R.string.iot_demo_name)
+            accessIdLayout.tvTip.setText(R.string.access_id)
+            accessTokenLayout.tvTip.setText(R.string.access_token)
+            productIdLayout.tvTip.setText(R.string.product_id)
+            accessIdLayout.evContent.setHint(R.string.hint_access_id)
+            accessTokenLayout.evContent.setHint(R.string.hint_access_token)
+            productIdLayout.evContent.setHint(R.string.hint_product_id)
+            accessIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
+            accessTokenLayout.ivMore.visibility = View.GONE
+            productIdLayout.ivMore.visibility = View.GONE
 
-        tv_title.setText(R.string.iot_demo_name)
-        access_id_layout.tv_tip.setText(R.string.access_id)
-        access_token_layout.tv_tip.setText(R.string.access_token)
-        product_id_layout.tv_tip.setText(R.string.product_id)
-        access_id_layout.ev_content.setHint(R.string.hint_access_id)
-        access_token_layout.ev_content.setHint(R.string.hint_access_token)
-        product_id_layout.ev_content.setHint(R.string.hint_product_id)
-        access_id_layout.ev_content.inputType = InputType.TYPE_CLASS_TEXT
-        access_token_layout.iv_more.visibility = View.GONE
-        product_id_layout.iv_more.visibility = View.GONE
+            launch(Dispatchers.Main) {
+                val jsonArrStr = SharePreferenceUtil.getString(
+                    this@VideoInputAuthorizeActivity,
+                    VideoConst.VIDEO_CONFIG,
+                    VideoConst.VIDEO_ACCESS_INFOS
+                )
+                jsonArrStr?.let {
+                    val accessInfos = JSONArray.parseArray(jsonArrStr, AccessInfo::class.java)
+                    accessInfos?.let {
+                        if (accessInfos.size > 0) {
+                            val accessInfo = accessInfos.get(accessInfos.size - 1)
+                            accessIdLayout.evContent.setText(accessInfo.accessId)
+                            accessTokenLayout.evContent.setText(accessInfo.accessToken)
+                            productIdLayout.evContent.setText(accessInfo.productId)
+                            accessIdLayout.evContent.setSelection(accessInfo.accessId.length)
+                        }
 
-        launch(Dispatchers.Main) {
-            val jsonArrStr = SharePreferenceUtil.getString(
-                this@VideoInputAuthorizeActivity,
-                VideoConst.VIDEO_CONFIG,
-                VideoConst.VIDEO_ACCESS_INFOS
-            )
-            jsonArrStr?.let {
-                val accessInfos = JSONArray.parseArray(jsonArrStr, AccessInfo::class.java)
-                accessInfos?.let {
-                    if (accessInfos.size > 0) {
-                        val accessInfo = accessInfos.get(accessInfos.size - 1)
-                        access_id_layout.ev_content.setText(accessInfo.accessId)
-                        access_token_layout.ev_content.setText(accessInfo.accessToken)
-                        product_id_layout.ev_content.setText(accessInfo.productId)
-                        access_id_layout.ev_content.setSelection(accessInfo.accessId.length)
+                    } ?: let {
+                        accessIdLayout.evContent.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretId)
+                        accessTokenLayout.evContent.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretKey)
+                        productIdLayout.evContent.setText(BuildConfig.TencentIotLinkVideoSDKDemoProductId)
+                        accessIdLayout.evContent.setSelection(BuildConfig.TencentIotLinkVideoSDKDemoSecretId.length)
                     }
-
-                } ?: let {
-                    access_id_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretId)
-                    access_token_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretKey)
-                    product_id_layout.ev_content.setText(BuildConfig.TencentIotLinkVideoSDKDemoProductId)
-                    access_id_layout.ev_content.setSelection(BuildConfig.TencentIotLinkVideoSDKDemoSecretId.length)
                 }
             }
         }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        btn_login.setOnClickListener(loginClickedListener)
-        access_id_layout.setOnClickListener {
-            val dlg = HistoryAccessInfoDialog(this@VideoInputAuthorizeActivity)
-            dlg.show()
-            dlg.setOnDismissListener(onDlgDismissListener)
+        with(binding) {
+            vTitle.ivBack.setOnClickListener { finish() }
+            btnLogin.setOnClickListener(loginClickedListener)
+            accessIdLayout.root.setOnClickListener {
+                val dlg = HistoryAccessInfoDialog(this@VideoInputAuthorizeActivity)
+                dlg.show()
+                dlg.setOnDismissListener(onDlgDismissListener)
+            }
         }
     }
 
@@ -81,7 +81,7 @@ class VideoInputAuthorizeActivity : VideoBaseActivity(), CoroutineScope by MainS
 
     private var loginClickedListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
-            if (!btn_use_sdk.isChecked) {
+            if (!binding.btnUseSdk.isChecked) {
                 Toast.makeText(
                     this@VideoInputAuthorizeActivity,
                     R.string.please_use_sdk,
@@ -89,7 +89,7 @@ class VideoInputAuthorizeActivity : VideoBaseActivity(), CoroutineScope by MainS
                 ).show()
                 return
             }
-            if (TextUtils.isEmpty(access_id_layout.ev_content.text)) {
+            if (TextUtils.isEmpty(binding.accessIdLayout.evContent.text)) {
                 Toast.makeText(
                     this@VideoInputAuthorizeActivity,
                     R.string.hint_access_id,
@@ -97,7 +97,7 @@ class VideoInputAuthorizeActivity : VideoBaseActivity(), CoroutineScope by MainS
                 ).show()
                 return
             }
-            if (TextUtils.isEmpty(access_token_layout.ev_content.text)) {
+            if (TextUtils.isEmpty(binding.accessTokenLayout.evContent.text)) {
                 Toast.makeText(
                     this@VideoInputAuthorizeActivity,
                     R.string.hint_access_token,
@@ -105,7 +105,7 @@ class VideoInputAuthorizeActivity : VideoBaseActivity(), CoroutineScope by MainS
                 ).show()
                 return
             }
-            if (TextUtils.isEmpty(product_id_layout.ev_content.text)) {
+            if (TextUtils.isEmpty(binding.productIdLayout.evContent.text)) {
                 Toast.makeText(
                     this@VideoInputAuthorizeActivity,
                     R.string.hint_product_id,
@@ -115,9 +115,12 @@ class VideoInputAuthorizeActivity : VideoBaseActivity(), CoroutineScope by MainS
             }
 
             val accessInfo = AccessInfo()
-            accessInfo.accessId = access_id_layout.ev_content.text.toString()
-            accessInfo.accessToken = access_token_layout.ev_content.text.toString()
-            accessInfo.productId = product_id_layout.ev_content.text.toString()
+
+            with(binding) {
+                accessInfo.accessId = accessIdLayout.evContent.text.toString()
+                accessInfo.accessToken = accessTokenLayout.evContent.text.toString()
+                accessInfo.productId = productIdLayout.evContent.text.toString()
+            }
 
             launch(Dispatchers.Main) {
                 checkAccessInfo(accessInfo)
@@ -162,10 +165,12 @@ class VideoInputAuthorizeActivity : VideoBaseActivity(), CoroutineScope by MainS
     private var onDlgDismissListener = object : HistoryAccessInfoDialog.OnDismisListener {
         override fun onOkClicked(accessInfo: AccessInfo?) {
             accessInfo?.let {
-                access_id_layout.ev_content.setText(accessInfo.accessId)
-                access_token_layout.ev_content.setText(accessInfo.accessToken)
-                product_id_layout.ev_content.setText(accessInfo.productId)
-                access_id_layout.ev_content.setSelection(accessInfo.accessId.length);
+                with(binding) {
+                    accessIdLayout.evContent.setText(accessInfo.accessId)
+                    accessTokenLayout.evContent.setText(accessInfo.accessToken)
+                    productIdLayout.evContent.setText(accessInfo.productId)
+                    accessIdLayout.evContent.setSelection(accessInfo.accessId.length);
+                }
             }
         }
 

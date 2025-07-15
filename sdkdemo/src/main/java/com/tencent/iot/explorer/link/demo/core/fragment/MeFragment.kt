@@ -1,6 +1,8 @@
 package com.tencent.iot.explorer.link.demo.core.fragment
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
@@ -9,31 +11,31 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.activity.*
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.core.response.UserInfoResponse
-import kotlinx.android.synthetic.main.fragment_me.*
+import com.tencent.iot.explorer.link.demo.databinding.FragmentMeBinding
 
-class MeFragment : BaseFragment(), MyCallback {
-    override fun getContentView(): Int {
-        return R.layout.fragment_me
-    }
+class MeFragment : BaseFragment<FragmentMeBinding>(), MyCallback {
+    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMeBinding = FragmentMeBinding.inflate(inflater, container, false)
 
     override fun startHere(view: View) {
 
         IoTAuth.userImpl.userInfo(this)
 
-        tv_user_info.setOnClickListener {
-            jumpActivity(PersonalInfoActivity::class.java)
-        }
-        tv_family_manager.setOnClickListener {
-            jumpActivity(FamilyListActivity::class.java)
-        }
-        tv_share_device.setOnClickListener {
-            jumpActivity(ShareDeviceListActivity::class.java)
-        }
-        tv_message_notify.setOnClickListener {
-            jumpActivity(MessageActivity::class.java)
-        }
-        tv_feedback.setOnClickListener {
-            jumpActivity(FeedbackActivity::class.java)
+        with(binding) {
+            tvUserInfo.setOnClickListener {
+                jumpActivity(PersonalInfoActivity::class.java)
+            }
+            tvFamilyManager.setOnClickListener {
+                jumpActivity(FamilyListActivity::class.java)
+            }
+            tvShareDevice.setOnClickListener {
+                jumpActivity(ShareDeviceListActivity::class.java)
+            }
+            tvMessageNotify.setOnClickListener {
+                jumpActivity(MessageActivity::class.java)
+            }
+            tvFeedback.setOnClickListener {
+                jumpActivity(FeedbackActivity::class.java)
+            }
         }
     }
 

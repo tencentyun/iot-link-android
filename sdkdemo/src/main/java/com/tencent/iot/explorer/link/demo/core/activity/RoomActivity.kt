@@ -12,13 +12,12 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_room.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityRoomBinding
 
 /**
  * 房间设置
  */
-class RoomActivity : BaseActivity(), MyCallback {
+class RoomActivity : BaseActivity<ActivityRoomBinding>(), MyCallback {
 
     private var room: RoomEntity? = null
     private var familyId = ""
@@ -27,26 +26,26 @@ class RoomActivity : BaseActivity(), MyCallback {
     private var modifyRoomPopup: EditPopupWindow? = null
     private var modifyRoomName = ""
 
-    override fun getContentView(): Int {
-        return R.layout.activity_room
-    }
+    override fun getViewBinding(): ActivityRoomBinding = ActivityRoomBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.room_setting)
+        binding.roomSettingMenu.tvTitle.text = getString(R.string.room_setting)
         room = get<RoomEntity>("room")
         get<FamilyEntity>("family")?.FamilyId?.let {
             familyId = it
         }
-        tv_room_setting_name.text = room?.RoomName ?: ""
+        binding.tvRoomSettingName.text = room?.RoomName ?: ""
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_room_setting_title.setOnClickListener {
-            showModifyPopup()
-        }
-        tv_delete_room.setOnClickListener {
-            showDeletePopup()
+        with(binding) {
+            roomSettingMenu.ivBack.setOnClickListener { finish() }
+            tvRoomSettingTitle.setOnClickListener {
+                showModifyPopup()
+            }
+            tvDeleteRoom.setOnClickListener {
+                showDeletePopup()
+            }
         }
     }
 
@@ -84,7 +83,7 @@ class RoomActivity : BaseActivity(), MyCallback {
             when (reqCode) {
                 RequestCode.modify_room -> {
                     room?.RoomName = modifyRoomName
-                    runOnUiThread { tv_room_setting_name.text = modifyRoomName }
+                    runOnUiThread { binding.tvRoomSettingName.text = modifyRoomName }
                 }
                 RequestCode.delete_room -> {
                     finish()
@@ -104,8 +103,8 @@ class RoomActivity : BaseActivity(), MyCallback {
                 room!!.RoomName
             )
         }
-        modifyRoomPopup?.setBg(room_bg)
-        modifyRoomPopup?.show(room_contain)
+        modifyRoomPopup?.setBg(binding.roomBg)
+        modifyRoomPopup?.show(binding.roomContain)
         modifyRoomPopup?.onVerifyListener = object : EditPopupWindow.OnVerifyListener {
             override fun onVerify(text: String) {
                 if (TextUtils.isEmpty(text)) {
@@ -130,8 +129,8 @@ class RoomActivity : BaseActivity(), MyCallback {
                 getString(R.string.toast_delete_room_content)
             )
         }
-        deleteRoomPopup?.setBg(room_bg)
-        deleteRoomPopup?.show(room_contain)
+        deleteRoomPopup?.setBg(binding.roomBg)
+        deleteRoomPopup?.show(binding.roomContain)
         deleteRoomPopup?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
             override fun cancel(popupWindow: CommonPopupWindow) {
                 deleteRoomPopup?.dismiss()

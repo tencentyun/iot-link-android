@@ -25,7 +25,7 @@ class App : Application(), PayloadMessageCallback {
 
     companion object {
         val data = AppData.instance
-        var activity by Weak<BaseActivity>()
+        var activity by Weak<BaseActivity<*>>()
         fun appStartBeingCall(callingType: Int, deviceId: String) {
             if (!TRTCUIManager.getInstance().isCalling) { //没有正在通话时，唤起通话页面
                 TRTCUIManager.getInstance().setSessionManager(TRTCSdkDemoSessionManager())

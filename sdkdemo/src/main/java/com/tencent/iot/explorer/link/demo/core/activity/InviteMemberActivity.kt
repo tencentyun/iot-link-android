@@ -9,29 +9,28 @@ import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.core.response.UserInfoResponse
-import kotlinx.android.synthetic.main.activity_invite_member.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityInviteMemberBinding
 
 /**
  * 邀请家庭成员
  */
-class InviteMemberActivity : BaseActivity(), MyCallback {
+class InviteMemberActivity : BaseActivity<ActivityInviteMemberBinding>(), MyCallback {
 
     private var account = ""
 
-    override fun getContentView(): Int {
-        return R.layout.activity_invite_member
-    }
+    override fun getViewBinding(): ActivityInviteMemberBinding = ActivityInviteMemberBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.invite_member)
+        binding.menuInviteMember.tvTitle.text = getString(R.string.invite_member)
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_invite_commit.setOnClickListener {
-            account = et_invite_account.text.toString().trim()
-            findUserID()
+        with(binding) {
+            menuInviteMember.ivBack.setOnClickListener { finish() }
+            tvInviteCommit.setOnClickListener {
+                account = etInviteAccount.text.toString().trim()
+                findUserID()
+            }
         }
     }
 

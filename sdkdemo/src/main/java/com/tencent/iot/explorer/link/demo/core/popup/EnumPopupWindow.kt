@@ -14,12 +14,12 @@ import com.tencent.iot.explorer.link.demo.core.adapter.EnumAdapter
 import com.tencent.iot.explorer.link.demo.core.adapter.OnItemListener
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.core.holder.EnumHolder
-import kotlinx.android.synthetic.main.popup_enum.view.*
+import com.tencent.iot.explorer.link.demo.databinding.PopupEnumBinding
 
 /**
  * 枚举、布尔型弹框
  */
-class EnumPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
+class EnumPopupWindow(activity: Activity) : ParentPopupWindow<PopupEnumBinding>(activity) {
 
     var onUploadListener: OnUploadListener? = null
     var onDeleteListener: OnDeleteListener? = null
@@ -29,9 +29,7 @@ class EnumPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
 
     private var adapter: EnumAdapter? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.popup_enum
-    }
+    override fun getViewBinding(): PopupEnumBinding = PopupEnumBinding.inflate(mInflater)
 
     override fun getAnimation(): Int {
         return R.style.PopupWindowCamera
@@ -40,14 +38,14 @@ class EnumPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
     override fun initView() {
         this.width = ViewGroup.LayoutParams.MATCH_PARENT
         this.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        contentView.run {
-            tv_popup_enum_delete.setOnClickListener { onDeleteListener?.onDelete() }
-            tv_enum_commit.setOnClickListener { onUploadListener?.upload(selectValue) }
+        binding.run {
+            tvPopupEnumDelete.setOnClickListener { onDeleteListener?.onDelete() }
+            tvEnumCommit.setOnClickListener { onUploadListener?.upload(selectValue) }
         }
     }
 
     fun showTitle(title: String) {
-        contentView.tv_popup_enum_title.text = title
+        binding.tvPopupEnumTitle.text = title
     }
 
 
@@ -62,16 +60,16 @@ class EnumPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
         }
         if (adapter == null) {
             adapter = EnumAdapter(mActivity, this, list)
-            contentView.rv_popup_enum.layoutManager = LinearLayoutManager(mActivity)
-            contentView.rv_popup_enum.adapter = adapter
+            binding.rvPopupEnum.layoutManager = LinearLayoutManager(mActivity)
+            binding.rvPopupEnum.adapter = adapter
         }
         adapter?.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 (holder as? EnumHolder)?.run {
                     data.let {
                         if (list[position].value != selectValue) {
                             selectValue = list[position].value
-                            adapter?.notifyDataSetChanged()
+                            adapter.notifyDataSetChanged()
                         }
                     }
                 }
@@ -83,7 +81,7 @@ class EnumPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
      *  显示删除按钮
      */
     fun showDeleteButton(isShow: Boolean) {
-        contentView.tv_popup_enum_delete.visibility = if (isShow) View.VISIBLE else View.INVISIBLE
+        binding.tvPopupEnumDelete.visibility = if (isShow) View.VISIBLE else View.INVISIBLE
     }
 
 

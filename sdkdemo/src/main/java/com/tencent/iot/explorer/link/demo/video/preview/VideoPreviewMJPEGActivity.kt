@@ -28,6 +28,7 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoPreviewBinding
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.VideoPreviewBaseActivity
@@ -47,10 +48,6 @@ import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
 import com.tencent.xnet.annotations.XP2PProtocolType
-import kotlinx.android.synthetic.main.activity_video_preview.*
-import kotlinx.android.synthetic.main.dash_board_layout.*
-import kotlinx.android.synthetic.main.fragment_video_cloud_playback.*
-import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.Runnable
@@ -58,7 +55,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 
-class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
+class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBinding>(), EventView,
     TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), VolumeChangeObserver.VolumeChangeListener {
 
@@ -109,21 +106,24 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
     }
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_preview
-    }
+    override fun getViewBinding(): ActivityVideoPreviewBinding = ActivityVideoPreviewBinding.inflate(layoutInflater)
+
     override fun initView() {
         XP2P.setLogEnable(false, false)
-        tv_title.setText(presenter.getDeviceName())
 
-        adapter = ActionListAdapter(this@VideoPreviewMJPEGActivity, records)
-        list_event.adapter = adapter
+        with(binding) {
+            vTitle.tvTitle.setText(presenter.getDeviceName())
 
-        tv_video_quality.setText(R.string.video_quality_medium_str)
-        today_tip.setText(getString(R.string.today) + " " + CommonUtils.getWeekDay(this@VideoPreviewMJPEGActivity))
-        records.clear()
-        tv_event_status.visibility = View.VISIBLE
-        tv_event_status.setText(R.string.loading)
+            adapter = ActionListAdapter(this@VideoPreviewMJPEGActivity, records)
+            listEvent.adapter = adapter
+
+            tvVideoQuality.setText(R.string.video_quality_medium_str)
+            todayTip.setText(getString(R.string.today) + " " + CommonUtils.getWeekDay(this@VideoPreviewMJPEGActivity))
+            records.clear()
+            tvEventStatus.visibility = View.VISIBLE
+            tvEventStatus.setText(R.string.loading)
+        }
+
         audioRecordUtil =
             AudioRecordUtil(this, "${presenter.getProductId()}/${presenter.getDeviceName()}", 16000)
         getDeviceP2PInfo()
@@ -180,7 +180,7 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     private fun resetPlayer() {
-        when (tv_video_quality.text.toString()) {
+        when (binding.tvVideoQuality.text.toString()) {
             getString(R.string.video_quality_high_str) -> setPlayerUrl(
                 Command.getVideoMJPEGUrlSuffix(
                     presenter.getChannel()
@@ -248,72 +248,74 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        iv_orientation.setOnClickListener {
-            orientationV = !orientationV
-            switchOrientation(orientationV)
-        }
-        tv_video_quality.setOnClickListener(switchVideoQualityListener)
-        radio_talk.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked && checkPermissions(permissions)) {
-                if (!speakAble(true)) radio_talk.isChecked = false
-            } else if (isChecked && !checkPermissions(permissions)) {
-                requestPermission(permissions)
-            } else {
-                speakAble(false)
+        with(binding) {
+            vTitle.ivBack.setOnClickListener { finish() }
+            ivOrientation.setOnClickListener {
+                orientationV = !orientationV
+                switchOrientation(orientationV)
             }
-        }
-        radio_record.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                filePath = CommonUtils.generateFileDefaultPath()
-                var ret = player.startRecord(filePath)
-                if (ret != 0) {
-                    ToastDialog(
-                        this,
-                        ToastDialog.Type.WARNING,
-                        getString(R.string.record_failed),
-                        2000
-                    ).show()
-                    radio_record.isChecked = false
+            tvVideoQuality.setOnClickListener(switchVideoQualityListener)
+            radioTalk.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked && checkPermissions(permissions)) {
+                    if (!speakAble(true)) radioTalk.isChecked = false
+                } else if (isChecked && !checkPermissions(permissions)) {
+                    requestPermission(permissions)
+                } else {
+                    speakAble(false)
                 }
-            } else {
-                player.stopRecord()
-                CommonUtils.refreshVideoList(this@VideoPreviewMJPEGActivity, filePath)
             }
-        }
-        radio_playback.setOnClickListener {
-            var dev = DevInfo()
-            dev.DeviceName = presenter.getDeviceName()
-            dev.mjpeg = 1
-            VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewMJPEGActivity, dev)
-        }
-        radio_photo.setOnClickListener {
-            ImageSelect.saveBitmap(this@VideoPreviewMJPEGActivity, v_preview.bitmap)
-            ToastDialog(
-                this,
-                ToastDialog.Type.SUCCESS,
-                getString(R.string.capture_successed),
-                2000
-            ).show()
-        }
-        iv_up.setOnClickListener(controlListener)
-        iv_down.setOnClickListener(controlListener)
-        iv_right.setOnClickListener(controlListener)
-        iv_left.setOnClickListener(controlListener)
-        adapter?.setOnItemClicked(onItemVideoClicked)
-        v_preview.surfaceTextureListener = this
-        iv_audio.setOnClickListener {
-            audioAble = !audioAble
-            chgAudioStatus(audioAble)
+            radioRecord.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    filePath = CommonUtils.generateFileDefaultPath()
+                    var ret = player.startRecord(filePath)
+                    if (ret != 0) {
+                        ToastDialog(
+                            this@VideoPreviewMJPEGActivity,
+                            ToastDialog.Type.WARNING,
+                            getString(R.string.record_failed),
+                            2000
+                        ).show()
+                        radioRecord.isChecked = false
+                    }
+                } else {
+                    player.stopRecord()
+                    CommonUtils.refreshVideoList(this@VideoPreviewMJPEGActivity, filePath)
+                }
+            }
+            radioPlayback.setOnClickListener {
+                var dev = DevInfo()
+                dev.DeviceName = presenter.getDeviceName()
+                dev.mjpeg = 1
+                VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewMJPEGActivity, dev)
+            }
+            radioPhoto.setOnClickListener {
+                ImageSelect.saveBitmap(this@VideoPreviewMJPEGActivity, vPreview.bitmap)
+                ToastDialog(
+                    this@VideoPreviewMJPEGActivity,
+                    ToastDialog.Type.SUCCESS,
+                    getString(R.string.capture_successed),
+                    2000
+                ).show()
+            }
+            ivUp.setOnClickListener(controlListener)
+            ivDown.setOnClickListener(controlListener)
+            ivRight.setOnClickListener(controlListener)
+            ivLeft.setOnClickListener(controlListener)
+            adapter?.setOnItemClicked(onItemVideoClicked)
+            vPreview.surfaceTextureListener = this@VideoPreviewMJPEGActivity
+            ivAudio.setOnClickListener {
+                audioAble = !audioAble
+                chgAudioStatus(audioAble)
+            }
         }
     }
 
     open fun chgAudioStatus(audioAble: Boolean) {
         if (!audioAble) {
-            iv_audio.setImageResource(R.mipmap.no_audio)
+            binding.ivAudio.setImageResource(R.mipmap.no_audio)
             player.setVolume(0F, 0F)
         } else {
-            iv_audio.setImageResource(R.mipmap.audio)
+            binding.ivAudio.setImageResource(R.mipmap.audio)
             var audioManager = getSystemService(Service.AUDIO_SERVICE) as AudioManager
             var volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
             player.setVolume(volume.toFloat(), volume.toFloat())
@@ -324,10 +326,10 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
         override fun onClick(v: View?) {
             var command = ""
             when (v) {
-                iv_up -> command = Command.getPtzUpCommand(presenter.getChannel())
-                iv_down -> command = Command.getPtzDownCommand(presenter.getChannel())
-                iv_right -> command = Command.getPtzRightCommand(presenter.getChannel())
-                iv_left -> command = Command.getPtzLeftCommand(presenter.getChannel())
+                binding.ivUp-> command = Command.getPtzUpCommand(presenter.getChannel())
+                binding.ivDown-> command = Command.getPtzDownCommand(presenter.getChannel())
+                binding.ivRight-> command = Command.getPtzRightCommand(presenter.getChannel())
+                binding.ivLeft-> command = Command.getPtzLeftCommand(presenter.getChannel())
             }
 
             Thread(Runnable {
@@ -354,7 +356,7 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
 
     private var onItemVideoClicked = object : ActionListAdapter.OnItemClicked {
         override fun onItemVideoClicked(pos: Int) {
-            radio_playback.performClick()
+            binding.radioPlayback.performClick()
         }
     }
 
@@ -381,21 +383,21 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
 
     private fun showHVideoQualityDialog() {
         var pos = -1
-        when (tv_video_quality.text.toString()) {
+        when (binding.tvVideoQuality.text.toString()) {
             getString(R.string.video_quality_high_str) -> pos = 2
             getString(R.string.video_quality_medium_str) -> pos = 1
             getString(R.string.video_quality_low_str) -> pos = 0
         }
         var dlg = VideoQualityDialog(this@VideoPreviewMJPEGActivity, pos)
         dlg.show()
-        btn_layout.visibility = View.GONE
+        binding.btnLayout.visibility = View.GONE
         dlg.setOnDismisListener(object : VideoQualityDialog.OnDismisListener {
             override fun onItemClicked(pos: Int) {
                 chgTextState(pos)
             }
 
             override fun onDismiss() {
-                btn_layout.visibility = View.VISIBLE
+                binding.btnLayout.visibility = View.VISIBLE
             }
         })
     }
@@ -403,17 +405,17 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
     open fun chgTextState(value: Int) {
         when (value) {
             0 -> {
-                tv_video_quality.setText(R.string.video_quality_high_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_high_str)
                 setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
             }
 
             1 -> {
-                tv_video_quality.setText(R.string.video_quality_medium_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_medium_str)
                 setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
             }
 
             2 -> {
-                tv_video_quality.setText(R.string.video_quality_low_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_low_str)
                 setPlayerUrl(Command.getVideoMJPEGUrlSuffix(presenter.getChannel()))
             }
         }
@@ -427,8 +429,10 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
         player.release()
         audioPlayer?.release()
         launch(Dispatchers.Main) {
-            layout_video_preview?.removeView(v_preview)
-            layout_video_preview?.addView(v_preview, 0)
+            with(binding) {
+                layoutVideoPreview.removeView(vPreview)
+                layoutVideoPreview.addView(vPreview, 0)
+            }
 
             player = IjkMediaPlayer()
             player.let {
@@ -497,7 +501,7 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
 
     private fun switchOrientation(orientation: Boolean) {
         var marginWidth = 0
-        var layoutParams = layout_video_preview.layoutParams as ConstraintLayout.LayoutParams
+        var layoutParams = binding.layoutVideoPreview.layoutParams as ConstraintLayout.LayoutParams
         var fitSize = 0
         var visibility = View.VISIBLE
         var moreSpace = 10
@@ -511,48 +515,55 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
             moreSpace = 32
         }
 
-        v_title.visibility = visibility
-        layout_content.visibility = visibility
+        with(binding) {
+            vTitle.root.visibility = visibility
+            layoutContent.visibility = visibility
 
-        layoutParams.height = fitSize
-        layoutParams.width = fitSize
-        layout_video_preview.layoutParams = layoutParams
+            layoutParams.height = fitSize
+            layoutParams.width = fitSize
+            layoutVideoPreview.layoutParams = layoutParams
 
-        var videoLayoutParams = v_preview.layoutParams as ConstraintLayout.LayoutParams
-        videoLayoutParams.marginStart = dp2px(marginWidth)
-        videoLayoutParams.marginEnd = dp2px(marginWidth)
-        v_preview.layoutParams = videoLayoutParams
+            var videoLayoutParams = vPreview.layoutParams as ConstraintLayout.LayoutParams
+            videoLayoutParams.marginStart = dp2px(marginWidth)
+            videoLayoutParams.marginEnd = dp2px(marginWidth)
+            vPreview.layoutParams = videoLayoutParams
 
-        var btnLayoutParams = btn_layout.layoutParams as ConstraintLayout.LayoutParams
-        btnLayoutParams.bottomMargin = dp2px(moreSpace)
-        btn_layout.layoutParams = btnLayoutParams
+            var btnLayoutParams = btnLayout.layoutParams as ConstraintLayout.LayoutParams
+            btnLayoutParams.bottomMargin = dp2px(moreSpace)
+            btnLayout.layoutParams = btnLayoutParams
+        }
     }
 
     override fun eventReady(events: MutableList<ActionRecord>) {
         if (events.size <= 0) {
             launch(Dispatchers.Main) {
-                tv_event_status.setText(R.string.no_data)
+                binding.tvEventStatus.setText(R.string.no_data)
             }
             return
         }
 
         launch(Dispatchers.Main) {
-            tv_event_status.visibility = View.GONE
+            binding.tvEventStatus.visibility = View.GONE
             records.addAll(events)
             adapter?.notifyDataSetChanged()
         }
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
-        val layoutParams = v_preview.layoutParams
+        if (!(player.videoWidth > 0 && player.videoHeight > 0)) {
+            Log.e(TAG, "onSurfaceTextureSizeChanged: player video size param must > 0.")
+            return
+        }
+
+        val layoutParams = binding.vPreview.layoutParams
+
         if (orientationV) {
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
             layoutParams.height = layoutParams.height
         } else {
             layoutParams.width = (player.videoWidth * height) / player.videoHeight
         }
-        v_preview.layoutParams = layoutParams
-
+        binding.vPreview.layoutParams = layoutParams
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
@@ -560,6 +571,11 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+        if (!(player.videoWidth > 0 && player.videoHeight > 0)) {
+            Log.e(TAG, "onSurfaceTextureUpdated: player video size param must > 0.")
+            return
+        }
+
         if (!showTip && startShowVideoTime > 0) {
             showVideoTime = System.currentTimeMillis() - startShowVideoTime
             var content =
@@ -568,10 +584,10 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
             showTip = true
         }
         if (orientationV && firstIn) {
-            val layoutParams = v_preview.layoutParams
+            val layoutParams = binding.vPreview.layoutParams
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
             layoutParams.height = layoutParams.height
-            v_preview.layoutParams = layoutParams
+            binding.vPreview.layoutParams = layoutParams
             firstIn = false
         }
     }
@@ -616,8 +632,8 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
     private fun finishPlayer() {
         mHandler.removeMessages(MSG_UPDATE_HUD)
         player.release()
-        if (radio_talk.isChecked) speakAble(false)
-        if (radio_record.isChecked) {
+        if (binding.radioTalk.isChecked) speakAble(false)
+        if (binding.radioRecord.isChecked) {
             player.stopRecord()
             CommonUtils.refreshVideoList(this@VideoPreviewMJPEGActivity, filePath)
         }
@@ -660,7 +676,7 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
 
     private fun getDeviceStatus(id: String?): Int {
         var command: ByteArray? = null
-        when (tv_video_quality.text.toString()) {
+        when (binding.tvVideoQuality.text.toString()) {
             getString(R.string.video_quality_high_str) -> {
                 command =
                     "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=super".toByteArray()
@@ -759,20 +775,22 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity(), EventView,
         val audioCachedBytes = player.audioCachedBytes
         val tcpSpeed = player.tcpSpeed
 
-        tv_a_cache?.text = String.format(
-            Locale.US, "%s, %s",
-            CommonUtils.formatedDurationMilli(audioCachedDuration),
-            CommonUtils.formatedSize(audioCachedBytes)
-        )
-        tv_v_cache?.text = String.format(
-            Locale.US, "%s, %s",
-            CommonUtils.formatedDurationMilli(videoCachedDuration),
-            CommonUtils.formatedSize(videoCachedBytes)
-        )
-        tv_tcp_speed?.text = String.format(
-            Locale.US, "%s",
-            CommonUtils.formatedSpeed(tcpSpeed, 1000)
-        )
-        tv_video_w_h?.text = "${player.videoWidth} x ${player.videoHeight}"
+        with(binding) {
+            llDashBoard.tvACache.text = String.format(
+                Locale.US, "%s, %s",
+                CommonUtils.formatedDurationMilli(audioCachedDuration),
+                CommonUtils.formatedSize(audioCachedBytes)
+            )
+            llDashBoard.tvVCache.text = String.format(
+                Locale.US, "%s, %s",
+                CommonUtils.formatedDurationMilli(videoCachedDuration),
+                CommonUtils.formatedSize(videoCachedBytes)
+            )
+            llDashBoard.tvTcpSpeed.text = String.format(
+                Locale.US, "%s",
+                CommonUtils.formatedSpeed(tcpSpeed, 1000)
+            )
+            llDashBoard.tvVideoWH.text = "${player.videoWidth} x ${player.videoHeight}"
+        }
     }
 }

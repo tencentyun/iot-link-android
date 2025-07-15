@@ -13,33 +13,31 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.core.link.entity.MemberEntity
 import com.tencent.iot.explorer.link.demo.BaseActivity
-import kotlinx.android.synthetic.main.activity_member.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityMemberBinding
 
 /**
  * 成员详情
  */
-class MemberActivity : BaseActivity(), MyCallback {
+class MemberActivity : BaseActivity<ActivityMemberBinding>(), MyCallback {
 
     private var deleteMemberPopup: CommonPopupWindow? = null
 
     private var member: MemberEntity? = null
     private var role = 0
-
-    override fun getContentView(): Int {
-        return R.layout.activity_member
-    }
+    override fun getViewBinding(): ActivityMemberBinding = ActivityMemberBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.member_setting)
+        binding.menuMember.tvTitle.text = getString(R.string.member_setting)
         member = get("member")
         role = get<FamilyEntity>("family")?.Role ?: 0
         showMemberInfo()
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_delete_member.setOnClickListener { showDeletePopup() }
+        with(binding) {
+            menuMember.ivBack.setOnClickListener { finish() }
+            tvDeleteMember.setOnClickListener { showDeletePopup() }
+        }
 
     }
 
@@ -48,21 +46,23 @@ class MemberActivity : BaseActivity(), MyCallback {
      */
     private fun showMemberInfo() {
         member?.run {
-            tv_member_name.text = NickName
-            tv_member_account.text = UserID
-            tv_member_role.text = if (Role == 1) {
-                getString(R.string.role_owner)
-            } else {
-                getString(R.string.role_member)
+            with(binding) {
+                tvMemberName.text = NickName
+                tvMemberAccount.text = UserID
+                tvMemberRole.text = if (Role == 1) {
+                    getString(R.string.role_owner)
+                } else {
+                    getString(R.string.role_member)
+                }
+                //不是所有者不能展示、是本人也不展示
+                tvDeleteMember.visibility = if (role != 1 || UserID == App.data.userInfo.UserID) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+                if (!TextUtils.isEmpty(Avatar))
+                    Picasso.get().load(Avatar).into(ivMemberPortrait)
             }
-            //不是所有者不能展示、是本人也不展示
-            tv_delete_member.visibility = if (role != 1 || UserID == App.data.userInfo.UserID) {
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
-            if (!TextUtils.isEmpty(Avatar))
-                Picasso.get().load(Avatar).into(iv_member_portrait)
         }
     }
 
@@ -74,8 +74,8 @@ class MemberActivity : BaseActivity(), MyCallback {
                 getString(R.string.toast_delete_member_content)
             )
         }
-        deleteMemberPopup?.setBg(member_bg)
-        deleteMemberPopup?.show(member_contain)
+        deleteMemberPopup?.setBg(binding.memberBg)
+        deleteMemberPopup?.show(binding.memberContain)
         deleteMemberPopup?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
             override fun cancel(popupWindow: CommonPopupWindow) {
                 popupWindow.dismiss()

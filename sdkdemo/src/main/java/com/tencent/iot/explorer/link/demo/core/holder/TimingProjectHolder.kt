@@ -1,38 +1,34 @@
 package com.tencent.iot.explorer.link.demo.core.holder
 
-import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
 import com.tencent.iot.explorer.link.demo.core.entity.TimingProject
-import kotlinx.android.synthetic.main.item_timing_project.view.*
-import java.lang.StringBuilder
+import com.tencent.iot.explorer.link.demo.databinding.ItemTimingProjectBinding
 import java.util.Comparator
 
-class TimingProjectHolder : BaseHolder<TimingProject> {
-    constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
-
-    override fun show(holder: BaseHolder<*>, position: Int) {
-        data.run {
-            itemView.tv_timing_project_name.text = this.TimerName
-            itemView.tv_timing_project_date.text = "${parseDays()} $TimePoint"
-            itemView.tv_timing_project_detail.text = this@TimingProjectHolder.parseData()
-            itemView.switch_timing_project.isChecked = (Status == 1)
-            itemView.timing_list_top_space.visibility =
-                if (position == 0) View.VISIBLE else View.GONE
+class TimingProjectHolder(binding: ItemTimingProjectBinding) : BaseHolder<TimingProject, ItemTimingProjectBinding>(binding) {
+    override fun show(holder: BaseHolder<*, *>, position: Int) {
+        with(binding) {
+            data.run {
+                tvTimingProjectName.text = this.TimerName
+                tvTimingProjectDate.text = "${parseDays()} $TimePoint"
+                tvTimingProjectDetail.text = this@TimingProjectHolder.parseData()
+                switchTimingProject.isChecked = (Status == 1)
+                timingListTopSpace.visibility =
+                    if (position == 0) View.VISIBLE else View.GONE
+            }
+            switchTimingProject.setOnClickListener {
+                clickItem(this@TimingProjectHolder, it, position)
+            }
+            clTimingList.setOnClickListener {
+                clickItem(this@TimingProjectHolder, it, position)
+            }
+            rlDeleteTimingProject.setOnClickListener {
+                clickItem(this@TimingProjectHolder, it, position)
+            }
         }
-        itemView.switch_timing_project.setOnClickListener {
-            clickItem(this, it, position)
-        }
-        itemView.cl_timing_list.setOnClickListener {
-            clickItem(this, it, position)
-        }
-        itemView.rl_delete_timing_project.setOnClickListener {
-            clickItem(this, it, position)
-        }
-
     }
 
     /**

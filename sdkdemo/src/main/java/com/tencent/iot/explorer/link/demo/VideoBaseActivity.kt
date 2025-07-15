@@ -1,9 +1,10 @@
 package com.tencent.iot.explorer.link.demo
 
 import android.os.Bundle
+import androidx.viewbinding.ViewBinding
 import com.tencent.iot.explorer.link.demo.common.util.StatusBarUtil
 
-abstract class VideoBaseActivity : BaseActivity() {
+abstract class VideoBaseActivity<VB: ViewBinding> : BaseActivity<VB>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkStyle()

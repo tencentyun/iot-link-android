@@ -1,30 +1,24 @@
 package com.tencent.iot.explorer.link.demo.core.holder
 
-import android.content.Context
-import android.view.ViewGroup
 import com.tencent.iot.explorer.link.core.auth.entity.Mapping
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.core.popup.EnumPopupWindow
-import kotlinx.android.synthetic.main.item_enum.view.*
+import com.tencent.iot.explorer.link.demo.databinding.ItemEnumBinding
 
-class EnumHolder : BaseHolder<Mapping> {
+class EnumHolder : BaseHolder<Mapping, ItemEnumBinding> {
 
     private var window: EnumPopupWindow
 
-    constructor(context: Context, window: EnumPopupWindow, root: ViewGroup, resLayout: Int) : super(
-        context,
-        root,
-        resLayout
-    ) {
+    constructor(binding: ItemEnumBinding, window: EnumPopupWindow) : super(binding) {
         this.window = window
     }
 
-    override fun show(holder: BaseHolder<*>, position: Int) {
+    override fun show(holder: BaseHolder<*, *>, position: Int) {
         data.run {
             L.e("key=$key,value=$value")
-            itemView.tv_enum_title.text = key
-            itemView.iv_enum_status.setImageResource(
+            binding.tvEnumTitle.text = key
+            binding.ivEnumStatus.setImageResource(
                 if (window.selectValue == value) {
                     R.mipmap.icon_checked
                 } else {

@@ -15,42 +15,39 @@ import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.core.link.entity.ShareUserEntity
 import com.tencent.iot.explorer.link.demo.BaseActivity
-import kotlinx.android.synthetic.main.activity_share_user_list.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityShareUserListBinding
 
 /**
  * 设备分享：用户列表
  */
-class ShareUserListActivity : BaseActivity(), MyCallback {
+class ShareUserListActivity : BaseActivity<ActivityShareUserListBinding>(), MyCallback {
 
     private lateinit var adapter: ShareUserAdapter
     private var device: DeviceEntity? = null
 
     private val userList = arrayListOf<ShareUserEntity>()
 
-    override fun getContentView(): Int {
-        return R.layout.activity_share_user_list
-    }
+    override fun getViewBinding(): ActivityShareUserListBinding = ActivityShareUserListBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.device_share)
-        device = get("device")
-
-        adapter = ShareUserAdapter(this, userList)
-        rv_share_user_list.layoutManager = LinearLayoutManager(this)
-        rv_share_user_list.adapter = adapter
-
-        getShareUserList()
+        with(binding) {
+            menuShareUserList.tvTitle.text = getString(R.string.device_share)
+            device = get("device")
+            adapter = ShareUserAdapter(this@ShareUserListActivity, userList)
+            rvShareUserList.layoutManager = LinearLayoutManager(this@ShareUserListActivity)
+            rvShareUserList.adapter = adapter
+            getShareUserList()
+        }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
+        binding.menuShareUserList.ivBack.setOnClickListener { finish() }
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 deleteShareUser(position)
             }
         })
-        tv_add_device_share.setOnClickListener {
+        binding.tvAddDeviceShare.setOnClickListener {
             jumpActivity(ShareDeviceActivity::class.java)
         }
     }
@@ -117,12 +114,14 @@ class ShareUserListActivity : BaseActivity(), MyCallback {
      */
     private fun showList() {
         runOnUiThread {
-            if (userList.size > 0) {
-                rv_share_user_list.visibility = View.VISIBLE
-                tv_no_device_share.visibility = View.GONE
-            } else {
-                rv_share_user_list.visibility = View.GONE
-                tv_no_device_share.visibility = View.VISIBLE
+            with(binding) {
+                if (userList.size > 0) {
+                    rvShareUserList.visibility = View.VISIBLE
+                    tvNoDeviceShare.visibility = View.GONE
+                } else {
+                    rvShareUserList.visibility = View.GONE
+                    tvNoDeviceShare.visibility = View.VISIBLE
+                }
             }
             adapter.notifyDataSetChanged()
         }

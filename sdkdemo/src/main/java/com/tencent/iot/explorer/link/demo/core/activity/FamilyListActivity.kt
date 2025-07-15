@@ -14,13 +14,12 @@ import com.tencent.iot.explorer.link.demo.core.adapter.FamilyListAdapter
 import com.tencent.iot.explorer.link.demo.core.adapter.OnItemListener
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_family_list.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityFamilyListBinding
 
 /**
  * 家庭列表
  */
-class FamilyListActivity : BaseActivity() {
+class FamilyListActivity : BaseActivity<ActivityFamilyListBinding>() {
 
     private lateinit var adapter: FamilyListAdapter
 
@@ -37,25 +36,25 @@ class FamilyListActivity : BaseActivity() {
         isRefresh = true
     }
 
-    override fun getContentView(): Int {
-        return R.layout.activity_family_list
-    }
+    override fun getViewBinding(): ActivityFamilyListBinding = ActivityFamilyListBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.family_manager)
+        with(binding) {
+            familyListMenu.tvTitle.text = getString(R.string.family_manager)
 
-        rv_family_list.layoutManager = LinearLayoutManager(this)
-        adapter = FamilyListAdapter(this, IoTAuth.familyList)
-        rv_family_list.adapter = adapter
+            rvFamilyList.layoutManager = LinearLayoutManager(this@FamilyListActivity)
+            adapter = FamilyListAdapter(this@FamilyListActivity, IoTAuth.familyList)
+            rvFamilyList.adapter = adapter
+        }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_add_family.setOnClickListener {
+        binding.familyListMenu.ivBack.setOnClickListener { finish() }
+        binding.tvAddFamily.setOnClickListener {
             jumpActivity(AddFamilyActivity::class.java)
         }
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 put("family", IoTAuth.familyList[position])
                 jumpActivity(FamilyActivity::class.java)
             }

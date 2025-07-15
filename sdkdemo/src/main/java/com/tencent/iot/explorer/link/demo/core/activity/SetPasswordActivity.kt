@@ -6,26 +6,25 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_set_password.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivitySetPasswordBinding
 
 /**
  * 修改密码
  */
-class SetPasswordActivity : BaseActivity() {
+class SetPasswordActivity : BaseActivity<ActivitySetPasswordBinding>() {
 
-    override fun getContentView(): Int {
-        return R.layout.activity_set_password
-    }
+    override fun getViewBinding(): ActivitySetPasswordBinding = ActivitySetPasswordBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.modify_password)
+        binding.menuSetPassword.tvTitle.text = getString(R.string.modify_password)
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_commit_password.setOnClickListener {
-            setPwd()
+        with(binding) {
+            menuSetPassword.ivBack.setOnClickListener { finish() }
+            tvCommitPassword.setOnClickListener {
+                setPwd()
+            }
         }
     }
 
@@ -34,9 +33,9 @@ class SetPasswordActivity : BaseActivity() {
     }
 
     private fun setPwd() {
-        val oldPwd = et_old_pwd.text.toString().trim()
-        val newPwd = et_new_pwd.text.toString().trim()
-        val verifyPwd = et_verify_pwd.text.toString().trim()
+        val oldPwd = binding.etOldPwd.text.toString().trim()
+        val newPwd = binding.etNewPwd.text.toString().trim()
+        val verifyPwd = binding.etVerifyPwd.text.toString().trim()
         if (!matches(oldPwd)) {
             show("旧密码为8-20位的字母和数字组成")
             return

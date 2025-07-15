@@ -3,6 +3,7 @@ package com.tencent.iot.explorer.link.demo.core.activity
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewbinding.ViewBinding
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
 import com.tencent.iot.explorer.link.core.auth.entity.DeviceEntity
@@ -15,37 +16,39 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.adapter.BaseAdapter
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_select_room.*
-import kotlinx.android.synthetic.main.item_week_repeat.view.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivitySelectRoomBinding
+import com.tencent.iot.explorer.link.demo.databinding.ItemWeekRepeatBinding
 
 /**
  * 选择房间
  */
-class SelectRoomActivity : BaseActivity(),MyCallback {
+class SelectRoomActivity : BaseActivity<ActivitySelectRoomBinding>(),MyCallback {
 
     private lateinit var selectedRoom: RoomEntity
     private lateinit var device: DeviceEntity
     private val roomList = arrayListOf<RoomEntity>()
 
     private val adapter = object : BaseAdapter(this, roomList) {
-        override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
+        override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*, ItemWeekRepeatBinding> {
+            val holderBinding = ItemWeekRepeatBinding.inflate(layoutInflater)
+
             return object :
-                BaseHolder<RoomEntity>(this@SelectRoomActivity, parent, R.layout.item_week_repeat) {
-                override fun show(holder: BaseHolder<*>, position: Int) {
+                BaseHolder<RoomEntity, ItemWeekRepeatBinding>(holderBinding) {
+                override fun show(holder: BaseHolder<*, *>, position: Int) {
                     data.run {
-                        itemView.tv_week_repeat_title.text = RoomName
-                        itemView.iv_week_repeat_selected.setImageResource(
+                        holderBinding.tvWeekRepeatTitle.text = RoomName
+                        holderBinding.ivWeekRepeatSelected.setImageResource(
                             if (isSelected(position)) R.mipmap.icon_checked
                             else R.mipmap.icon_unchecked
                         )
-                        itemView.tv_week_repeat_commit.visibility =
+                        holderBinding.tvWeekRepeatCommit.visibility =
                             if (position == roomList.size - 1) View.VISIBLE else View.GONE
                     }
-                    itemView.tv_week_repeat_commit.setOnClickListener {
+
+                    holderBinding.tvWeekRepeatCommit.setOnClickListener {
                         save()
                     }
-                    itemView.tv_week_repeat_title.setOnClickListener {
+                    holderBinding.tvWeekRepeatTitle.setOnClickListener {
                         selected(position)
                     }
                 }
@@ -60,21 +63,21 @@ class SelectRoomActivity : BaseActivity(),MyCallback {
         return selectedRoom.RoomId == roomList[position].RoomId
     }
 
-    override fun getContentView(): Int {
-        return R.layout.activity_select_room
-    }
+    override fun getViewBinding(): ActivitySelectRoomBinding = ActivitySelectRoomBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = "选择房间"
-        selectedRoom = get<RoomEntity>("select_room")!!
-        device = get<DeviceEntity>("device")!!
-        rv_select_room.layoutManager = LinearLayoutManager(this)
-        rv_select_room.adapter = adapter
-        refreshRoomList()
+        with(binding) {
+            menuSelectRoom.tvTitle.text = "选择房间"
+            selectedRoom = get<RoomEntity>("select_room")!!
+            device = get<DeviceEntity>("device")!!
+            rvSelectRoom.layoutManager = LinearLayoutManager(this@SelectRoomActivity)
+            rvSelectRoom.adapter = adapter
+            refreshRoomList()
+        }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
+        binding.menuSelectRoom.ivBack.setOnClickListener { finish() }
     }
 
     /**

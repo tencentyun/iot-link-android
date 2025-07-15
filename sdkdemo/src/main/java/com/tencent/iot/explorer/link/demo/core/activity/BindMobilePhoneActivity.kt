@@ -6,30 +6,29 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_bind_mobile_phone.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityBindMobilePhoneBinding
 
-class BindMobilePhoneActivity : BaseActivity() {
+class BindMobilePhoneActivity : BaseActivity<ActivityBindMobilePhoneBinding>() {
 
     private var account = ""
     private val countryCode = "86"
     private var code = ""
 
-    override fun getContentView(): Int {
-        return R.layout.activity_bind_mobile_phone
-    }
+    override fun getViewBinding(): ActivityBindMobilePhoneBinding = ActivityBindMobilePhoneBinding.inflate(layoutInflater)
 
     override fun initView() {
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        btn_bind_phone_get_code.setOnClickListener { getCode() }
-        btn_bind_phone_commit.setOnClickListener { commit() }
+        with(binding) {
+            menuBindPhone.ivBack.setOnClickListener { finish() }
+            btnBindPhoneGetCode.setOnClickListener { getCode() }
+            btnBindPhoneCommit.setOnClickListener { commit() }
+        }
     }
 
     private fun getCode() {
-        account = et_bind_phone.text.trim().toString()
+        account = binding.etBindPhone.text.trim().toString()
         if (account.length != 11) {
             show("手机号不正确")
             return
@@ -51,7 +50,7 @@ class BindMobilePhoneActivity : BaseActivity() {
     }
 
     private fun commit() {
-        code = et_bind_code.text.trim().toString()
+        code = binding.etBindPhone.text.trim().toString()
         if (code.length != 6) {
             show("验证码为6位数字")
             return

@@ -4,18 +4,16 @@ import android.app.Activity
 import android.view.Gravity
 import android.view.View
 import com.tencent.iot.explorer.link.demo.R
-import kotlinx.android.synthetic.main.popup_edit.view.*
+import com.tencent.iot.explorer.link.demo.databinding.PopupEditBinding
 
 /**
  * 文字编辑弹框
  */
-class EditPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
+class EditPopupWindow(activity: Activity) : ParentPopupWindow<PopupEditBinding>(activity) {
 
     var onVerifyListener: OnVerifyListener? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.popup_edit
-    }
+    override fun getViewBinding(): PopupEditBinding = PopupEditBinding.inflate(mInflater)
 
     override fun getAnimation(): Int {
         return R.style.PopupWindowCommon
@@ -25,18 +23,21 @@ class EditPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
         this.isFocusable = true
         this.width = mActivity.resources.displayMetrics.widthPixels - 2 * dp2px(30)
         this.height = dp2px(236)
-        this.contentView.tv_popup_edit_cancel.setOnClickListener { this.dismiss() }
-        this.contentView.tv_popup_edit_finish.setOnClickListener {
-            onVerifyListener?.onVerify(this.contentView.et_popup_edit.text.trim().toString())
+
+        with(binding) {
+            tvPopupEditCancel.setOnClickListener { this@EditPopupWindow.dismiss() }
+            tvPopupEditFinish.setOnClickListener {
+                onVerifyListener?.onVerify(etPopupEdit.text.trim().toString())
+            }
         }
     }
 
 
     fun setShowData(title: String, content: String) {
-        this.contentView.run {
-            tv_popup_edit_title.text = title
-            et_popup_edit.setText(content)
-            et_popup_edit.setSelection(content.length)
+        binding.run {
+            tvPopupEditTitle.text = title
+            etPopupEdit.setText(content)
+            etPopupEdit.setSelection(content.length)
         }
     }
 

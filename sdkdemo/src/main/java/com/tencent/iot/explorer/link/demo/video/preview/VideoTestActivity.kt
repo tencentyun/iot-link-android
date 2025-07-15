@@ -24,6 +24,7 @@ import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoTestBinding
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
@@ -36,28 +37,6 @@ import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
 import com.tencent.xnet.annotations.XP2PProtocolType
-import kotlinx.android.synthetic.main.activity_video_preview.btn_layout
-import kotlinx.android.synthetic.main.activity_video_preview.iv_audio
-import kotlinx.android.synthetic.main.activity_video_preview.iv_down
-import kotlinx.android.synthetic.main.activity_video_preview.iv_left
-import kotlinx.android.synthetic.main.activity_video_preview.iv_orientation
-import kotlinx.android.synthetic.main.activity_video_preview.iv_right
-import kotlinx.android.synthetic.main.activity_video_preview.iv_up
-import kotlinx.android.synthetic.main.activity_video_preview.layout_content
-import kotlinx.android.synthetic.main.activity_video_preview.layout_video_preview
-import kotlinx.android.synthetic.main.activity_video_preview.radio_photo
-import kotlinx.android.synthetic.main.activity_video_preview.radio_playback
-import kotlinx.android.synthetic.main.activity_video_preview.radio_record
-import kotlinx.android.synthetic.main.activity_video_preview.radio_talk
-import kotlinx.android.synthetic.main.activity_video_preview.tv_video_quality
-import kotlinx.android.synthetic.main.activity_video_preview.v_preview
-import kotlinx.android.synthetic.main.activity_video_preview.v_title
-import kotlinx.android.synthetic.main.dash_board_layout.tv_a_cache
-import kotlinx.android.synthetic.main.dash_board_layout.tv_tcp_speed
-import kotlinx.android.synthetic.main.dash_board_layout.tv_v_cache
-import kotlinx.android.synthetic.main.dash_board_layout.tv_video_w_h
-import kotlinx.android.synthetic.main.title_layout.iv_back
-import kotlinx.android.synthetic.main.title_layout.tv_title
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -70,7 +49,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.ref.WeakReference
 import java.util.Locale
 
-class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by MainScope(),
+class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCallback, CoroutineScope by MainScope(),
     TextureView.SurfaceTextureListener, IMediaPlayer.OnInfoListener {
 
     private val tag = VideoTestActivity::class.simpleName
@@ -111,9 +90,7 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
     }
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_test
-    }
+    override fun getViewBinding(): ActivityVideoTestBinding = ActivityVideoTestBinding.inflate(layoutInflater)
 
     override fun initView() {
         productId = intent.getStringExtra("productId")?.toString() ?: ""
@@ -129,8 +106,8 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
         }
 
-        tv_title.text = deviceName
-        tv_video_quality.text = getString(R.string.video_quality_medium_str)
+        binding.vTitle.tvTitle.text = deviceName
+        binding.tvVideoQuality.text = getString(R.string.video_quality_medium_str)
 
         audioRecordUtil = AudioRecordUtil(
             this,
@@ -211,71 +188,73 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        iv_orientation.setOnClickListener {
-            orientationV = !orientationV
-            switchOrientation(orientationV)
-        }
-        tv_video_quality.setOnClickListener(switchVideoQualityListener)
-        radio_talk.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked && checkPermissions(permissions)) {
-                if (!speakAble(true)) radio_talk.isChecked = false
-            } else if (isChecked && !checkPermissions(permissions)) {
-                requestPermission(permissions)
-            } else {
-                speakAble(false)
+        with(binding) {
+            vTitle.ivBack.setOnClickListener { finish() }
+            ivOrientation.setOnClickListener {
+                orientationV = !orientationV
+                switchOrientation(orientationV)
             }
-        }
-        radio_record.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                filePath = CommonUtils.generateFileDefaultPath()
-                val ret = player.startRecord(filePath)
-                if (ret != 0) {
-                    ToastDialog(
-                        this,
-                        ToastDialog.Type.WARNING,
-                        getString(R.string.record_failed),
-                        2000
-                    ).show()
-                    radio_record.isChecked = false
+            tvVideoQuality.setOnClickListener(switchVideoQualityListener)
+            radioTalk.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked && checkPermissions(permissions)) {
+                    if (!speakAble(true)) radioTalk.isChecked = false
+                } else if (isChecked && !checkPermissions(permissions)) {
+                    requestPermission(permissions)
+                } else {
+                    speakAble(false)
                 }
-            } else {
-                player.stopRecord()
-                CommonUtils.refreshVideoList(this@VideoTestActivity, filePath)
             }
-        }
-        radio_playback.setOnClickListener {
-            val dev = DevInfo()
-            dev.DeviceName = deviceName
-            VideoPlaybackActivity.startPlaybackActivity(this@VideoTestActivity, dev)
-        }
-        radio_photo.setOnClickListener {
-            val bitmap = v_preview.getBitmap(player.videoWidth, player.videoHeight)
-            ImageSelect.saveBitmap(this@VideoTestActivity, bitmap)
-            ToastDialog(
-                this,
-                ToastDialog.Type.SUCCESS,
-                getString(R.string.capture_successed),
-                2000
-            ).show()
-        }
-        iv_up.setOnClickListener(controlListener)
-        iv_down.setOnClickListener(controlListener)
-        iv_right.setOnClickListener(controlListener)
-        iv_left.setOnClickListener(controlListener)
-        v_preview.surfaceTextureListener = this
-        iv_audio.setOnClickListener {
-            audioAble = !audioAble
-            chgAudioStatus(audioAble)
+            radioRecord.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    filePath = CommonUtils.generateFileDefaultPath()
+                    val ret = player.startRecord(filePath)
+                    if (ret != 0) {
+                        ToastDialog(
+                            this@VideoTestActivity,
+                            ToastDialog.Type.WARNING,
+                            getString(R.string.record_failed),
+                            2000
+                        ).show()
+                        radioRecord.isChecked = false
+                    }
+                } else {
+                    player.stopRecord()
+                    CommonUtils.refreshVideoList(this@VideoTestActivity, filePath)
+                }
+            }
+            radioPlayback.setOnClickListener {
+                val dev = DevInfo()
+                dev.DeviceName = deviceName
+                VideoPlaybackActivity.startPlaybackActivity(this@VideoTestActivity, dev)
+            }
+            radioPhoto.setOnClickListener {
+                val bitmap = vPreview.getBitmap(player.videoWidth, player.videoHeight)
+                ImageSelect.saveBitmap(this@VideoTestActivity, bitmap)
+                ToastDialog(
+                    this@VideoTestActivity,
+                    ToastDialog.Type.SUCCESS,
+                    getString(R.string.capture_successed),
+                    2000
+                ).show()
+            }
+            ivUp.setOnClickListener(controlListener)
+            ivDown.setOnClickListener(controlListener)
+            ivRight.setOnClickListener(controlListener)
+            ivLeft.setOnClickListener(controlListener)
+            vPreview.surfaceTextureListener = this@VideoTestActivity
+            ivAudio.setOnClickListener {
+                audioAble = !audioAble
+                chgAudioStatus(audioAble)
+            }
         }
     }
 
     private fun chgAudioStatus(audioAble: Boolean) {
         if (!audioAble) {
-            iv_audio.setImageResource(R.mipmap.no_audio)
+            binding.ivAudio.setImageResource(R.mipmap.no_audio)
             player.setVolume(0F, 0F)
         } else {
-            iv_audio.setImageResource(R.mipmap.audio)
+            binding.ivAudio.setImageResource(R.mipmap.audio)
             val audioManager = getSystemService(Service.AUDIO_SERVICE) as AudioManager
             val volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
             player.setVolume(volume.toFloat(), volume.toFloat())
@@ -303,28 +282,28 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
 
     private fun showHVideoQualityDialog() {
         var pos = -1
-        when (tv_video_quality.text.toString()) {
+        when (binding.tvVideoQuality.text.toString()) {
             getString(R.string.video_quality_high_str) -> pos = 2
             getString(R.string.video_quality_medium_str) -> pos = 1
             getString(R.string.video_quality_low_str) -> pos = 0
         }
         val dlg = VideoQualityDialog(this, pos)
         dlg.show()
-        btn_layout.visibility = View.GONE
+        binding.btnLayout.visibility = View.GONE
         dlg.setOnDismisListener(object : VideoQualityDialog.OnDismisListener {
             override fun onItemClicked(pos: Int) {
                 chgTextState(pos)
             }
 
             override fun onDismiss() {
-                btn_layout.visibility = View.VISIBLE
+                binding.btnLayout.visibility = View.VISIBLE
             }
         })
     }
 
     private fun switchOrientation(orientation: Boolean) {
         var marginWidth = 0
-        val layoutParams = layout_video_preview.layoutParams as ConstraintLayout.LayoutParams
+        val layoutParams = binding.layoutVideoPreview.layoutParams as ConstraintLayout.LayoutParams
         var fitSize = 0
         var visibility = View.VISIBLE
         var moreSpace = 10
@@ -338,37 +317,39 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             moreSpace = 32
         }
 
-        v_title.visibility = visibility
-        layout_content.visibility = visibility
+        with(binding) {
+            vTitle.root.visibility = visibility
+            layoutContent.visibility = visibility
 
-        layoutParams.height = fitSize
-        layoutParams.width = fitSize
-        layout_video_preview.layoutParams = layoutParams
+            layoutParams.height = fitSize
+            layoutParams.width = fitSize
+            layoutVideoPreview.layoutParams = layoutParams
 
-        val videoLayoutParams = v_preview.layoutParams as ConstraintLayout.LayoutParams
-        videoLayoutParams.marginStart = dp2px(marginWidth)
-        videoLayoutParams.marginEnd = dp2px(marginWidth)
-        v_preview.layoutParams = videoLayoutParams
+            val videoLayoutParams = vPreview.layoutParams as ConstraintLayout.LayoutParams
+            videoLayoutParams.marginStart = dp2px(marginWidth)
+            videoLayoutParams.marginEnd = dp2px(marginWidth)
+            vPreview.layoutParams = videoLayoutParams
 
-        val btnLayoutParams = btn_layout.layoutParams as ConstraintLayout.LayoutParams
-        btnLayoutParams.bottomMargin = dp2px(moreSpace)
-        btn_layout.layoutParams = btnLayoutParams
+            val btnLayoutParams = btnLayout.layoutParams as ConstraintLayout.LayoutParams
+            btnLayoutParams.bottomMargin = dp2px(moreSpace)
+            btnLayout.layoutParams = btnLayoutParams
+        }
     }
 
     private fun chgTextState(value: Int) {
         val url = when (value) {
             0 -> {
-                tv_video_quality.setText(R.string.video_quality_high_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_high_str)
                 Command.getVideoSuperQualityUrlSuffix(channel)
             }
 
             1 -> {
-                tv_video_quality.setText(R.string.video_quality_medium_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_medium_str)
                 Command.getVideoHightQualityUrlSuffix(channel)
             }
 
             2 -> {
-                tv_video_quality.setText(R.string.video_quality_low_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_low_str)
                 Command.getVideoStandardQualityUrlSuffix(channel)
             }
 
@@ -382,10 +363,10 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         override fun onClick(v: View?) {
             var command = ""
             when (v) {
-                iv_up -> command = Command.getPtzUpCommand(channel)
-                iv_down -> command = Command.getPtzDownCommand(channel)
-                iv_right -> command = Command.getPtzRightCommand(channel)
-                iv_left -> command = Command.getPtzLeftCommand(channel)
+                binding.ivUp-> command = Command.getPtzUpCommand(channel)
+                binding.ivDown-> command = Command.getPtzDownCommand(channel)
+                binding.ivRight-> command = Command.getPtzRightCommand(channel)
+                binding.ivLeft-> command = Command.getPtzLeftCommand(channel)
             }
 
             Thread(Runnable {
@@ -444,7 +425,7 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
     }
 
     private fun resetPlayer() {
-        val url = when (tv_video_quality.text.toString()) {
+        val url = when (binding.tvVideoQuality.text.toString()) {
             getString(R.string.video_quality_high_str) ->
                 Command.getVideoSuperQualityUrlSuffix(channel)
 
@@ -555,14 +536,14 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
         Log.d(tag, "onSurfaceTextureSizeChanged")
-        val layoutParams = v_preview.layoutParams
+        val layoutParams = binding.vPreview.layoutParams
         if (orientationV) {
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
             layoutParams.height = layoutParams.height
         } else {
             layoutParams.width = (player.videoWidth * height) / player.videoHeight
         }
-        v_preview.layoutParams = layoutParams
+        binding.vPreview.layoutParams = layoutParams
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
@@ -579,10 +560,10 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
             showTip = true
         }
         if (orientationV && firstIn) {
-            val layoutParams = v_preview.layoutParams
+            val layoutParams = binding.vPreview.layoutParams
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
             layoutParams.height = layoutParams.height
-            v_preview.layoutParams = layoutParams
+            binding.vPreview.layoutParams = layoutParams
             firstIn = false
         }
     }
@@ -600,7 +581,7 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
 
     private fun getDeviceStatus(id: String?, block: ((Boolean, String) -> Unit)? = null) {
         var command: ByteArray? = null
-        when (tv_video_quality.text.toString()) {
+        when (binding.tvVideoQuality.text.toString()) {
             getString(R.string.video_quality_high_str) -> {
                 command =
                     "action=inner_define&channel=0&cmd=get_device_st&type=live&quality=super".toByteArray()
@@ -672,21 +653,23 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
         val audioCachedBytes = player.audioCachedBytes
         val tcpSpeed = player.tcpSpeed
 
-        tv_a_cache?.text = String.format(
-            Locale.US, "%s, %s",
-            CommonUtils.formatedDurationMilli(audioCachedDuration),
-            CommonUtils.formatedSize(audioCachedBytes)
-        )
-        tv_v_cache?.text = String.format(
-            Locale.US, "%s, %s",
-            CommonUtils.formatedDurationMilli(videoCachedDuration),
-            CommonUtils.formatedSize(videoCachedBytes)
-        )
-        tv_tcp_speed?.text = String.format(
-            Locale.US, "%s",
-            CommonUtils.formatedSpeed(tcpSpeed, 1000)
-        )
-        tv_video_w_h?.text = "${player.videoWidth} x ${player.videoHeight}"
+        with(binding) {
+            llDashBoard.tvACache.text = String.format(
+                Locale.US, "%s, %s",
+                CommonUtils.formatedDurationMilli(audioCachedDuration),
+                CommonUtils.formatedSize(audioCachedBytes)
+            )
+            llDashBoard.tvVCache.text = String.format(
+                Locale.US, "%s, %s",
+                CommonUtils.formatedDurationMilli(videoCachedDuration),
+                CommonUtils.formatedSize(videoCachedBytes)
+            )
+            llDashBoard.tvTcpSpeed.text = String.format(
+                Locale.US, "%s",
+                CommonUtils.formatedSpeed(tcpSpeed, 1000)
+            )
+            llDashBoard.tvVideoWH.text = "${player.videoWidth} x ${player.videoHeight}"
+        }
     }
 
     override fun onDestroy() {
@@ -699,8 +682,8 @@ class VideoTestActivity : VideoBaseActivity(), XP2PCallback, CoroutineScope by M
 
     private fun finishPlayer() {
         mHandler.removeMessages(MSG_UPDATE_HUD)
-        if (radio_talk.isChecked) speakAble(false)
-        if (radio_record.isChecked) {
+        if (binding.radioTalk.isChecked) speakAble(false)
+        if (binding.radioRecord.isChecked) {
             player.stopRecord()
             CommonUtils.refreshVideoList(this, filePath)
         }

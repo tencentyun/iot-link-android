@@ -9,21 +9,13 @@ import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoDetectDevsBinding
 import com.tencent.iot.explorer.link.demo.video.preview.WlanVideoPreviewActivity
 import com.tencent.iot.video.link.callback.OnWlanDevicesDetectedCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.entity.DeviceServerInfo
 import com.tencent.iot.video.link.entity.WlanDetectBody
 import com.tencent.iot.video.link.entity.WlanRespBody
-import kotlinx.android.synthetic.main.activity_video_detect_devs.btn_detect
-import kotlinx.android.synthetic.main.activity_video_detect_devs.client_token_layout
-import kotlinx.android.synthetic.main.activity_video_detect_devs.devs_lv
-import kotlinx.android.synthetic.main.activity_video_detect_devs.product_id_layout
-import kotlinx.android.synthetic.main.blue_title_layout.iv_back
-import kotlinx.android.synthetic.main.blue_title_layout.tv_title
-import kotlinx.android.synthetic.main.input_item_layout.view.ev_content
-import kotlinx.android.synthetic.main.input_item_layout.view.iv_more
-import kotlinx.android.synthetic.main.input_item_layout.view.tv_tip
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -31,51 +23,54 @@ import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScope() {
+class VideoWlanDetectActivity : VideoBaseActivity<ActivityVideoDetectDevsBinding>() , CoroutineScope by MainScope() {
 
     var datas: MutableList<DeviceServerInfo> = ArrayList()
     var adapter: WlanDevsAdapter? = null
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_detect_devs
-    }
+    override fun getViewBinding(): ActivityVideoDetectDevsBinding = ActivityVideoDetectDevsBinding.inflate(layoutInflater)
 
     override fun initView() {
+        with(binding) {
+            vTitle.tvTitle.setText(R.string.video_wlan)
+            productIdLayout.tvTip.setText(R.string.product_id)
+            productIdLayout.evContent.setHint(R.string.hint_product_id)
+            productIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
+            productIdLayout.ivMore.visibility = View.GONE
 
-        tv_title.setText(R.string.video_wlan)
-        product_id_layout.tv_tip.setText(R.string.product_id)
-        product_id_layout.ev_content.setHint(R.string.hint_product_id)
-        product_id_layout.ev_content.inputType = InputType.TYPE_CLASS_TEXT
-        product_id_layout.iv_more.visibility = View.GONE
+            clientTokenLayout.tvTip.setText(R.string.video_client_token)
+            clientTokenLayout.evContent.setHint(R.string.hint_client_token)
+            clientTokenLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
+            clientTokenLayout.ivMore.visibility = View.GONE
 
-        client_token_layout.tv_tip.setText(R.string.video_client_token)
-        client_token_layout.ev_content.setHint(R.string.hint_client_token)
-        client_token_layout.ev_content.inputType = InputType.TYPE_CLASS_TEXT
-        client_token_layout.iv_more.visibility = View.GONE
-
-        launch (Dispatchers.Main) {
-            val jsonArrStr = SharePreferenceUtil.getString(this@VideoWlanDetectActivity, VideoConst.VIDEO_WLAN_CONFIG, VideoConst.VIDEO_ACCESS_INFOS)
-            jsonArrStr?.let {
-                val accessInfos = JSONArray.parseArray(jsonArrStr, AccessInfo::class.java)
-                accessInfos?.let {
-                    if (accessInfos.size > 0) {
-                        val accessInfo = accessInfos.get(accessInfos.size - 1)
-                        client_token_layout.ev_content.setText(accessInfo.accessToken)
-                        product_id_layout.ev_content.setText(accessInfo.productId)
+            launch(Dispatchers.Main) {
+                val jsonArrStr = SharePreferenceUtil.getString(
+                    this@VideoWlanDetectActivity,
+                    VideoConst.VIDEO_WLAN_CONFIG,
+                    VideoConst.VIDEO_ACCESS_INFOS
+                )
+                jsonArrStr?.let {
+                    val accessInfos = JSONArray.parseArray(jsonArrStr, AccessInfo::class.java)
+                    accessInfos?.let {
+                        if (accessInfos.size > 0) {
+                            val accessInfo = accessInfos.get(accessInfos.size - 1)
+                            clientTokenLayout.evContent.setText(accessInfo.accessToken)
+                            productIdLayout.evContent.setText(accessInfo.productId)
+                        }
                     }
                 }
             }
-        }
 
-        adapter = WlanDevsAdapter(this@VideoWlanDetectActivity, datas)
-        devs_lv.adapter = adapter
-        adapter?.setOnItemClicked(onItemClicked)
+            adapter = WlanDevsAdapter(this@VideoWlanDetectActivity, datas)
+            devsLv.adapter = adapter
+            adapter?.setOnItemClicked(onItemClicked)
+        }
     }
 
     private var onItemClicked = object : WlanDevsAdapter.OnItemClicked {
         override fun onItemClicked(pos: Int) {
             App.data.accessInfo = AccessInfo()
-            App.data.accessInfo?.productId = product_id_layout.ev_content.text.toString()
+            App.data.accessInfo?.productId = binding.productIdLayout.evContent.text.toString()
 
             val dev = DevInfo()
             dev.DeviceName = datas.get(pos).deviceName
@@ -86,8 +81,8 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        btn_detect.setOnClickListener(searchClickedListener)
+        binding.vTitle.ivBack.setOnClickListener { finish() }
+        binding.btnDetect.setOnClickListener(searchClickedListener)
     }
 
     override fun onDestroy() {
@@ -101,19 +96,19 @@ class VideoWlanDetectActivity : VideoBaseActivity() , CoroutineScope by MainScop
 
     private var searchClickedListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
-            if (TextUtils.isEmpty(product_id_layout.ev_content.text)) {
+            if (TextUtils.isEmpty(binding.productIdLayout.evContent.text)) {
                 Toast.makeText(this@VideoWlanDetectActivity, R.string.hint_product_id, Toast.LENGTH_SHORT).show()
                 return
             }
 
-            if (TextUtils.isEmpty(client_token_layout.ev_content.text)) {
+            if (TextUtils.isEmpty(binding.clientTokenLayout.evContent.text)) {
                 Toast.makeText(this@VideoWlanDetectActivity, R.string.hint_client_token, Toast.LENGTH_SHORT).show()
                 return
             }
 
             val accessInfo = AccessInfo()
-            accessInfo.accessToken = client_token_layout.ev_content.text.toString()
-            accessInfo.productId = product_id_layout.ev_content.text.toString()
+            accessInfo.accessToken = binding.clientTokenLayout.evContent.text.toString()
+            accessInfo.productId = binding.productIdLayout.evContent.text.toString()
 
             launch (Dispatchers.Main) {
                 checkAccessInfo(accessInfo)

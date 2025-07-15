@@ -7,21 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import com.tencent.iot.explorer.link.demo.R
-import kotlinx.android.synthetic.main.popup_number.view.*
+import com.tencent.iot.explorer.link.demo.databinding.PopupNumberBinding
 
 /**
  * 设置进度弹框
  */
-class NumberPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
+class NumberPopupWindow(activity: Activity) : ParentPopupWindow<PopupNumberBinding>(activity) {
 
     var onUploadListener: OnUploadListener? = null
     var onDeleteListener: OnDeleteListener? = null
     private var progress = 0
     private var unit = "%"
 
-    override fun getLayoutId(): Int {
-        return R.layout.popup_number
-    }
+    override fun getViewBinding(): PopupNumberBinding = PopupNumberBinding.inflate(mInflater)
 
     override fun getAnimation(): Int {
         return R.style.PopupWindowCamera
@@ -30,43 +28,46 @@ class NumberPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
     override fun initView() {
         this.width = ViewGroup.LayoutParams.MATCH_PARENT
         this.height = dp2px(226)
-        contentView.sp_popup_seek_progress.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
 
-            }
+        with(binding) {
+            spPopupSeekProgress.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-            }
+                }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                progress = seekBar.progress
-                contentView.tv_number_value.text = "$progress$unit"
-            }
-        })
-        contentView.tv_number_commit.setOnClickListener { onUploadListener?.upload(progress) }
-        contentView.tv_number_delete.setOnClickListener { onDeleteListener?.onDelete() }
+                override fun onStartTrackingTouch(seekBar: SeekBar) {
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    progress = seekBar.progress
+                    tvNumberValue.text = "$progress$unit"
+                }
+            })
+            tvNumberCommit.setOnClickListener { onUploadListener?.upload(progress) }
+            tvNumberDelete.setOnClickListener { onDeleteListener?.onDelete() }
+        }
     }
 
     fun setProgress(progress: Int) {
         this.progress = progress
-        contentView.sp_popup_seek_progress.progress = progress
-        contentView.tv_number_value.text = "$progress$unit"
+        binding.spPopupSeekProgress.progress = progress
+        binding.tvNumberValue.text = "$progress$unit"
     }
 
     fun setBackground(drawable: Drawable) {
-        contentView.number_popup.background = drawable
+        binding.numberPopup.background = drawable
     }
 
     fun showTitle(title: String) {
-        contentView.tv_number_title.text = title
+        binding.tvNumberTitle.text = title
     }
 
     /**
      *  显示删除按钮
      */
     fun showDeleteButton(isShow: Boolean) {
-        contentView.tv_number_delete.visibility = if (isShow) View.VISIBLE else View.INVISIBLE
+        binding.tvNumberDelete.visibility = if (isShow) View.VISIBLE else View.INVISIBLE
     }
 
     override fun show(parentView: View) {

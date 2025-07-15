@@ -6,33 +6,31 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.demo.R
-import kotlinx.android.synthetic.main.popup_common.view.*
+import com.tencent.iot.explorer.link.demo.databinding.PopupCommonBinding
 
-class CommonPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
+class CommonPopupWindow(activity: Activity) : ParentPopupWindow<PopupCommonBinding>(activity) {
 
     var onKeyListener: OnKeyListener? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.popup_common
-    }
+    override fun getViewBinding(): PopupCommonBinding = PopupCommonBinding.inflate(mInflater)
 
     override fun getAnimation(): Int {
         return R.style.PopupWindowCommon
     }
 
     fun setCommonParams(title: String, content: String) {
-        contentView.let {
-            it.tv_common_popup_title.text = title
-            it.tv_common_popup_content.text = content
+        binding.let {
+            it.tvCommonPopupTitle.text = title
+            it.tvCommonPopupContent.text = content
         }
     }
 
     fun setMenuText(cancel: String, confirm: String) {
-        contentView.let {
+        binding.let {
             if (!TextUtils.isEmpty(cancel))
-                it.tv_common_popup_cancel.text = cancel
+                it.tvCommonPopupCancel.text = cancel
             if (!TextUtils.isEmpty(confirm))
-                it.tv_common_popup_confirm.text = confirm
+                it.tvCommonPopupConfirm.text = confirm
         }
     }
 
@@ -44,17 +42,15 @@ class CommonPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
     override fun initView() {
         this.width = mActivity.resources.displayMetrics.widthPixels - 2 * dp2px(30)
         this.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        this.contentView.tv_common_popup_cancel.setOnClickListener {
+        this.binding.tvCommonPopupCancel.setOnClickListener {
             onKeyListener?.let {
                 it.cancel(this)
                 return@setOnClickListener
             }
             this.dismiss()
         }
-        this.contentView.tv_common_popup_confirm.setOnClickListener {
-            onKeyListener?.let {
-                it.confirm(this)
-            }
+        this.binding.tvCommonPopupConfirm.setOnClickListener {
+            onKeyListener?.confirm(this)
         }
     }
 

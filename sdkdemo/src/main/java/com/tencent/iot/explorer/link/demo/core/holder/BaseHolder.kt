@@ -7,23 +7,21 @@ import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.tencent.iot.explorer.link.demo.core.adapter.BaseAdapter
 
-abstract class BaseHolder<T : Any> : RecyclerView.ViewHolder {
+abstract class BaseHolder<T : Any, VB : ViewBinding>(protected val binding: VB)
+    : RecyclerView.ViewHolder(binding.root) {
 
     internal lateinit var adapter: BaseAdapter
 
     lateinit var data: T
 
-    constructor(
-        context: Context, root: ViewGroup, @LayoutRes resLayout: Int
-    ) : super(LayoutInflater.from(context).inflate(resLayout, root, false))
-
     fun setAdapter(adapter: BaseAdapter) {
         this.adapter = adapter
     }
 
-    abstract fun show(holder: BaseHolder<*>, position: Int)
+    abstract fun show(holder: BaseHolder<*, *>, position: Int)
 
     fun parseData(any: Any): Boolean {
         (any as? T)?.run {
@@ -40,7 +38,7 @@ abstract class BaseHolder<T : Any> : RecyclerView.ViewHolder {
     /**
      * 点击回调
      */
-    fun clickItem(holder: BaseHolder<*>, clickView: View, position: Int) {
+    fun clickItem(holder: BaseHolder<*, *>, clickView: View, position: Int) {
         adapter.onClickItem(holder, clickView, position)
     }
 

@@ -3,12 +3,10 @@ package com.tencent.iot.explorer.link.demo.video.preview
 import android.content.Context
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.iot.explorer.link.demo.R
+import com.tencent.iot.explorer.link.demo.databinding.ItemDevPreviewBinding
 
 class DevPreviewAdapter(context: Context, list: MutableList<DevUrl2Preview>) : RecyclerView.Adapter<DevPreviewAdapter.ViewHolder>() {
     var list: MutableList<DevUrl2Preview> = ArrayList()
@@ -19,21 +17,11 @@ class DevPreviewAdapter(context: Context, list: MutableList<DevUrl2Preview>) : R
         this.context = context
     }
 
-    class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
-        var devName: TextView
-        var videoView: TextureView
-        var offlineTip: TextView
-
-        init {
-            devName = layoutView.findViewById(R.id.tv_dev_name)
-            videoView = layoutView.findViewById(R.id.preview_dev)
-            offlineTip = layoutView.findViewById(R.id.tv_offline)
-        }
-    }
+    class ViewHolder(val binding: ItemDevPreviewBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_dev_preview, parent, false)
-        return ViewHolder(view)
+        val binding = ItemDevPreviewBinding.inflate(LayoutInflater.from(parent.context))
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -41,13 +29,13 @@ class DevPreviewAdapter(context: Context, list: MutableList<DevUrl2Preview>) : R
         if(!TextUtils.isEmpty(list.get(position).channel2DevName)) {
             str2Show += "_" + list.get(position).channel2DevName
         }
-        holder.devName.text = str2Show
+        holder.binding.tvDevName.text = str2Show
         if (list.get(position).Status == 1) {
-            holder.offlineTip.visibility = View.GONE
+            holder.binding.tvOffline.visibility = View.GONE
         } else {
-            holder.offlineTip.visibility = View.VISIBLE
+            holder.binding.tvOffline.visibility = View.VISIBLE
         }
-        holder.videoView.surfaceTextureListener = list.get(position).surfaceTextureListener
+        holder.binding.previewDev.surfaceTextureListener = list.get(position).surfaceTextureListener
     }
 
     override fun getItemCount(): Int {

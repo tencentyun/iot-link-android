@@ -4,37 +4,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.iot.explorer.link.demo.R;
+import com.tencent.iot.explorer.link.demo.databinding.ItemOptionBinding;
+
 import java.util.List;
 
 public class ListOptionsAdapter extends RecyclerView.Adapter<ListOptionsAdapter.ViewHolder> {
     List<String> options;
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        View layout;
-        View line;
-        TextView option;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ItemOptionBinding binding;
 
-        ViewHolder(View view) {
-            super(view);
-            layout = view;
-            option = view.findViewById(R.id.tv_option);
-            line = view.findViewById(R.id.v_line);
+        ViewHolder(ItemOptionBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
+        public View getView() {
+            return binding.getRoot();
+        }
     }
 
     public ListOptionsAdapter(List<String> options) {
         this.options = options;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_option, parent, false);
-        final ViewHolder holder = new ViewHolder(view);
+        ItemOptionBinding binding = ItemOptionBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        final ViewHolder holder = new ViewHolder(binding);
 
-        holder.layout.setOnClickListener(new View.OnClickListener() {
+        holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
@@ -49,11 +53,11 @@ public class ListOptionsAdapter extends RecyclerView.Adapter<ListOptionsAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.option.setText(options.get(position));
+        holder.binding.tvOption.setText(options.get(position));
         if (position == options.size() - 1) {
-            holder.line.setVisibility(View.GONE);
+            holder.binding.vLine.setVisibility(View.GONE);
         } else {
-            holder.line.setVisibility(View.VISIBLE);
+            holder.binding.vLine.setVisibility(View.VISIBLE);
         }
     }
 
@@ -63,7 +67,7 @@ public class ListOptionsAdapter extends RecyclerView.Adapter<ListOptionsAdapter.
     }
 
     public interface OnItemClicked {
-        void onItemClicked(int postion, String option);
+        void onItemClicked(int position, String option);
     }
 
     private OnItemClicked onItemClicked;

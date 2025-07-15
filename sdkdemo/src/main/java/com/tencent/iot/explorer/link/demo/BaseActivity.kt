@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.viewbinding.ViewBinding
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.Watermark
 import com.tencent.iot.explorer.link.demo.core.activity.MainActivity
@@ -17,7 +18,7 @@ import com.tencent.xnet.XP2P
 /**
  * baseActivity
  */
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     val TAG: String by lazy {
         this.packageName.let {
@@ -32,6 +33,8 @@ abstract class BaseActivity : AppCompatActivity() {
         DataHolder.instance.register(this)
     }
 
+    protected val binding by lazy { getViewBinding() }
+
     fun getMyColor(colorRes: Int): Int {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             resources.getColor(colorRes, null)
@@ -40,7 +43,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    abstract fun getContentView(): Int
+    abstract fun getViewBinding(): VB
 
     open fun performInitView(){}
 
@@ -56,7 +59,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        super.setContentView(getContentView())
+        super.setContentView(binding.root)
         App.data.activityList.add(this)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //在setContentView()后调用

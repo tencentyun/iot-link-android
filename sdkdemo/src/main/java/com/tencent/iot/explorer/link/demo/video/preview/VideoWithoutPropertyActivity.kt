@@ -25,6 +25,7 @@ import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoWithoutPropertyBinding
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.VideoPreviewBaseActivity
@@ -47,10 +48,6 @@ import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
 import com.tencent.xnet.annotations.XP2PProtocolType
-import kotlinx.android.synthetic.main.activity_video_preview.tv_video_quality
-import kotlinx.android.synthetic.main.activity_video_without_property.*
-import kotlinx.android.synthetic.main.dash_board_layout.*
-import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.io.IOException
@@ -59,7 +56,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.Executors
 
-open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
+open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity<ActivityVideoWithoutPropertyBinding>(), EventView,
     TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), SurfaceHolder.Callback, OnEncodeListener {
 
@@ -132,18 +129,17 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
     }
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_without_property
-    }
-
     override fun onResume() {
         super.onResume()
         startPlayer()
         holder?.addCallback(this)
     }
 
+    override fun getViewBinding(): ActivityVideoWithoutPropertyBinding =
+        ActivityVideoWithoutPropertyBinding.inflate(layoutInflater)
+
     override fun initView() {
-        tv_title.setText(presenter.getDeviceName())
+        binding.vTitle.tvTitle.setText(presenter.getDeviceName())
 
         XP2P.setCallback(this)
         getDeviceP2PInfo()
@@ -156,7 +152,7 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
         screenWidth = (width / density).toInt() // 屏幕宽度(dp)
         screenHeight = (height / density).toInt() // 屏幕高度(dp)
 
-        holder = sv_camera_view.holder
+        holder = binding.svCameraView.holder
     }
 
     private fun startService() {
@@ -263,8 +259,10 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        v_preview.surfaceTextureListener = this
+        with(binding) {
+            vTitle.ivBack.setOnClickListener { finish() }
+            vPreview.surfaceTextureListener = this@VideoWithoutPropertyActivity
+        }
     }
 
     open fun setPlayerUrl(suffix: String) {
@@ -272,8 +270,10 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
         startShowVideoTime = System.currentTimeMillis()
         player.release()
         launch(Dispatchers.Main) {
-            layout_video_preview?.removeView(v_preview)
-            layout_video_preview?.addView(v_preview, 0)
+            with(binding) {
+                layoutVideoPreview.removeView(vPreview)
+                layoutVideoPreview.addView(vPreview, 0)
+            }
 
             player = IjkMediaPlayer()
             player.let {
@@ -344,18 +344,23 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
+        if (!(player.videoWidth > 0 && player.videoHeight > 0)) {
+            Log.e(TAG, "onSurfaceTextureSizeChanged: player video size param must > 0.")
+            return
+        }
+
         Log.e(
             tag,
             "width=${width}, height=${height}, player.videoWidth=${player.videoWidth}, player.videoHeight=${player.videoHeight}"
         )
-        val layoutParams = v_preview.layoutParams
+        val layoutParams = binding.vPreview.layoutParams
         if (orientationV) {
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
             layoutParams.height = layoutParams.height
         } else {
             layoutParams.width = (player.videoWidth * height) / player.videoHeight
         }
-        v_preview.layoutParams = layoutParams
+        binding.vPreview.layoutParams = layoutParams
 
     }
 
@@ -364,6 +369,11 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
     }
 
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+        if (!(player.videoWidth > 0 && player.videoHeight > 0)) {
+            Log.e(TAG, "onSurfaceTextureUpdated: player video size param must > 0.")
+            return
+        }
+
         if (!showTip && startShowVideoTime > 0) {
             showVideoTime = System.currentTimeMillis() - startShowVideoTime
             var content =
@@ -372,10 +382,10 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
             showTip = true
         }
         if (orientationV && firstIn) {
-            val layoutParams = v_preview.layoutParams
+            val layoutParams = binding.vPreview.layoutParams
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
             layoutParams.height = layoutParams.height
-            v_preview.layoutParams = layoutParams
+            binding.vPreview.layoutParams = layoutParams
             firstIn = false
         }
     }
@@ -514,21 +524,23 @@ open class VideoWithoutPropertyActivity : VideoPreviewBaseActivity(), EventView,
         val audioCachedBytes = player.audioCachedBytes
         val tcpSpeed = player.tcpSpeed
 
-        tv_a_cache?.text = String.format(
-            Locale.US, "%s, %s",
-            CommonUtils.formatedDurationMilli(audioCachedDuration),
-            CommonUtils.formatedSize(audioCachedBytes)
-        )
-        tv_v_cache?.text = String.format(
-            Locale.US, "%s, %s",
-            CommonUtils.formatedDurationMilli(videoCachedDuration),
-            CommonUtils.formatedSize(videoCachedBytes)
-        )
-        tv_tcp_speed?.text = String.format(
-            Locale.US, "%s",
-            CommonUtils.formatedSpeed(tcpSpeed, 1000)
-        )
-        tv_video_w_h?.text = "${player.videoWidth} x ${player.videoHeight}"
+        with(binding.llDashBoard) {
+            tvACache.text = String.format(
+                Locale.US, "%s, %s",
+                CommonUtils.formatedDurationMilli(audioCachedDuration),
+                CommonUtils.formatedSize(audioCachedBytes)
+            )
+            tvVCache.text = String.format(
+                Locale.US, "%s, %s",
+                CommonUtils.formatedDurationMilli(videoCachedDuration),
+                CommonUtils.formatedSize(videoCachedBytes)
+            )
+            tvTcpSpeed.text = String.format(
+                Locale.US, "%s",
+                CommonUtils.formatedSpeed(tcpSpeed, 1000)
+            )
+            tvVideoWH.text = "${player.videoWidth} x ${player.videoHeight}"
+        }
     }
 
     /**

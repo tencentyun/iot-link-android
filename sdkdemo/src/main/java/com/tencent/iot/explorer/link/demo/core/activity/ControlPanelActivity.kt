@@ -33,17 +33,16 @@ import com.tencent.iot.explorer.link.demo.core.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.demo.common.customView.MyDivider
+import com.tencent.iot.explorer.link.demo.databinding.ActivityControlPanelBinding
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
 import com.tencent.iot.explorer.link.rtc.ui.videocall.TRTCVideoCallActivity
-import kotlinx.android.synthetic.main.activity_control_panel.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
 
 /**
  * 控制面板
  */
-class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCallback {
+class ControlPanelActivity : BaseActivity<ActivityControlPanelBinding>(), ControlPanelCallback, ActivePushCallback {
 
     private var device: DeviceEntity? = null
 
@@ -57,37 +56,37 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
     private var editPopupWindow: EditPopupWindow? = null
     private var commonPopupWindow: CommonPopupWindow? = null
 
-    override fun getContentView(): Int {
-        return R.layout.activity_control_panel
-    }
+    override fun getViewBinding(): ActivityControlPanelBinding = ActivityControlPanelBinding.inflate(layoutInflater)
 
     override fun initView() {
-        device = get("device")
-        hasShare = get("share") ?: false
-        tv_title.text = device?.getAlias() ?: "控制面板"
-        device?.run {
-            //注册设备订阅
-            IoTAuth.registerActivePush(ArrayString(DeviceId), null)
-            //添加设备监听回调
-            IoTAuth.addActivePushCallback(this@ControlPanelActivity)
-            //获取面板数据
-            IoTAuth.deviceImpl.controlPanel(ProductId, DeviceName, this@ControlPanelActivity)
+        with(binding) {
+            device = get("device")
+            hasShare = get("share") ?: false
+            menuControlPanel.tvTitle.text = device?.getAlias() ?: "控制面板"
+            device?.run {
+                //注册设备订阅
+                IoTAuth.registerActivePush(ArrayString(DeviceId), null)
+                //添加设备监听回调
+                IoTAuth.addActivePushCallback(this@ControlPanelActivity)
+                //获取面板数据
+                IoTAuth.deviceImpl.controlPanel(ProductId, DeviceName, this@ControlPanelActivity)
+            }
+            rvControlPanel.layoutManager = LinearLayoutManager(this@ControlPanelActivity)
+            adapter = ControlPanelAdapter(this@ControlPanelActivity, panelList)
+            rvControlPanel.adapter = adapter
+            rvControlPanel.addItemDecoration(MyDivider(dp2px(16), dp2px(16), dp2px(20)))
         }
-        rv_control_panel.layoutManager = LinearLayoutManager(this)
-        adapter = ControlPanelAdapter(this, panelList)
-        rv_control_panel.adapter = adapter
-        rv_control_panel.addItemDecoration(MyDivider(dp2px(16), dp2px(16), dp2px(20)))
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_delete_device.setOnClickListener {
+        binding.menuControlPanel.ivBack.setOnClickListener { finish() }
+        binding.tvDeleteDevice.setOnClickListener {
             if (!hasShare)
                 showDeletePopup()
             else show("共享设备无法删除")
         }
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 (holder as? ControlPanelHolder)?.data?.run {
                     when {
                         id == "tp" -> jumpActivity(TimingProjectActivity::class.java)
@@ -150,33 +149,35 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
      */
     private fun showNavBarAndTheme() {
         IoTAuth.deviceImpl.panelConfig()?.Panel?.standard?.run {
-            navBar.run {
-                //显示nav bar
-                card_nav_bar.visibility = if (isShowNavBar()) View.VISIBLE else View.GONE
-                //显示template
-                ll_template.visibility = if (isShowTemplate()) View.VISIBLE else View.GONE
-                tv_template_name.text =
-                        IoTAuth.deviceImpl.product()?.myTemplate?.getTemplateName(templateId) ?: ""
-                iv_timing_project.setOnClickListener {
-                    jumpActivity(TimingProjectActivity::class.java)
-                }
-                panelList.forEach {
-                    if (it.id == templateId) {
-                        val panel = it
-                        iv_template.setOnClickListener {
-                            when {
-                                panel.isBoolType() or panel.isEnumType() -> {
-                                    showEnumPopup(panel)
-                                }
-                                panel.isNumberType() -> {
-                                    showNumberPopup(panel)
+            with(binding) {
+                navBar.run {
+                    //显示nav bar
+                    cardNavBar.visibility = if (isShowNavBar()) View.VISIBLE else View.GONE
+                    //显示template
+                    llTemplate.visibility = if (isShowTemplate()) View.VISIBLE else View.GONE
+                    tvTemplateName.text =
+                            IoTAuth.deviceImpl.product()?.myTemplate?.getTemplateName(templateId) ?: ""
+                    ivTimingProject.setOnClickListener {
+                        jumpActivity(TimingProjectActivity::class.java)
+                    }
+                    panelList.forEach {
+                        if (it.id == templateId) {
+                            val panel = it
+                            ivTemplate.setOnClickListener {
+                                when {
+                                    panel.isBoolType() or panel.isEnumType() -> {
+                                        showEnumPopup(panel)
+                                    }
+                                    panel.isNumberType() -> {
+                                        showNumberPopup(panel)
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                tvPanelTheme.text = "$theme"
             }
-            tv_panel_theme.text = "$theme"
         }
     }
 
@@ -276,8 +277,8 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
                 commitAlias(entity)
             }
         }
-        editPopupWindow!!.setBg(control_panel_bg)
-        editPopupWindow!!.show(control_panel)
+        editPopupWindow!!.setBg(binding.controlPanelBg)
+        editPopupWindow!!.show(binding.controlPanel)
     }
 
     private fun showDeletePopup() {
@@ -289,8 +290,8 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
                 getString(R.string.delete_toast_content)
         )
         commonPopupWindow?.setMenuText("", getString(R.string.delete))
-        commonPopupWindow?.setBg(control_panel_bg)
-        commonPopupWindow?.show(control_panel)
+        commonPopupWindow?.setBg(binding.controlPanelBg)
+        commonPopupWindow?.show(binding.controlPanel)
         commonPopupWindow?.onKeyListener = object : CommonPopupWindow.OnKeyListener {
             override fun confirm(popupWindow: CommonPopupWindow) {
                 popupWindow.dismiss()
@@ -322,8 +323,8 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
         } else {
             numberPopup!!.setProgress(0)
         }
-        numberPopup?.setBg(control_panel_bg)
-        numberPopup?.show(control_panel)
+        numberPopup?.setBg(binding.controlPanelBg)
+        numberPopup?.show(binding.controlPanel)
     }
 
     /**
@@ -385,8 +386,8 @@ class ControlPanelActivity : BaseActivity(), ControlPanelCallback, ActivePushCal
         enumPopup!!.showTitle(entity.name)
         enumPopup!!.selectValue = entity.value
         enumPopup!!.setList(entity.define)
-        enumPopup?.setBg(control_panel_bg)
-        enumPopup?.show(control_panel)
+        enumPopup?.setBg(binding.controlPanelBg)
+        enumPopup?.show(binding.controlPanel)
     }
 
     /**

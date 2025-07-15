@@ -4,23 +4,22 @@ import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
-import kotlinx.android.synthetic.main.popup_select_camera.view.*
+import com.tencent.iot.explorer.link.demo.databinding.PopupSelectCameraBinding
 
 /**
  * 选择相机或相册弹框
  */
-class CameraPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
+class CameraPopupWindow(activity: Activity) : ParentPopupWindow<PopupSelectCameraBinding>(activity) {
 
 
     private var count = 1
 
-    override fun getLayoutId(): Int {
-        return R.layout.popup_select_camera
-    }
+    override fun getViewBinding(): PopupSelectCameraBinding = PopupSelectCameraBinding.inflate(mInflater)
 
     override fun getAnimation(): Int {
         return R.style.PopupWindowCamera
@@ -29,15 +28,20 @@ class CameraPopupWindow(activity: Activity) : ParentPopupWindow(activity) {
     override fun initView() {
         this.width = ViewGroup.LayoutParams.MATCH_PARENT
         this.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        contentView.popup_take_photo.setOnClickListener {
-            ImageSelect.showCamera(mActivity)
-            dismiss()
+
+        with(binding) {
+            popupTakePhoto.setOnClickListener {
+                ImageSelect.showCamera(mActivity)
+                dismiss()
+            }
+
+            popupSelectLocalAlbum.setOnClickListener {
+                ImageSelect.showSingle(mActivity)
+                dismiss()
+            }
+
+            tvPopupSelectCancel.setOnClickListener { dismiss() }
         }
-        contentView.popup_select_local_album.setOnClickListener {
-            ImageSelect.showSingle(mActivity)
-            dismiss()
-        }
-        contentView.tv_popup_select_cancel.setOnClickListener { dismiss() }
     }
 
     fun show(parentView: View, count: Int) {

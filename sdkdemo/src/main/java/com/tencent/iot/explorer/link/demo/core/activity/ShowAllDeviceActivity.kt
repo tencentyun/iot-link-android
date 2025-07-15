@@ -10,29 +10,28 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_show_all_device.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityShowAllDeviceBinding
 
-class ShowAllDeviceActivity : BaseActivity(), MyCallback {
-    override fun getContentView(): Int {
-        return R.layout.activity_show_all_device
-    }
+class ShowAllDeviceActivity : BaseActivity<ActivityShowAllDeviceBinding>(), MyCallback {
+    override fun getViewBinding(): ActivityShowAllDeviceBinding = ActivityShowAllDeviceBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.show_all_device)
+        binding.menuAllDevice.tvTitle.text = getString(R.string.show_all_device)
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        btn_search.setOnClickListener {
-            tv_all_devices.text = ""
-            var token = IoTAuth.user.Token
-            var platformId = ev_platformId_2_search.text.toString()
-            if (!TextUtils.isEmpty(ev_token_2_search.text.toString())) {
-                token = ev_token_2_search.text.toString()
-            }
+        with(binding) {
+            menuAllDevice.ivBack.setOnClickListener { finish() }
+            btnSearch.setOnClickListener {
+                tvAllDevices.text = ""
+                var token = IoTAuth.user.Token
+                var platformId = evPlatformId2Search.text.toString()
+                if (!TextUtils.isEmpty(evToken2Search.text.toString())) {
+                    token = evToken2Search.text.toString()
+                }
 
-            IoTAuth.deviceImpl.allDevices(token, platformId, 0, 99, this)
+                IoTAuth.deviceImpl.allDevices(token, platformId, 0, 99, this@ShowAllDeviceActivity)
+            }
         }
     }
 
@@ -56,10 +55,10 @@ class ShowAllDeviceActivity : BaseActivity(), MyCallback {
                     for (item in it.virtualBindDeviceList) {
                         content2Show += item.deviceName + "\n"
                     }
-                    tv_all_devices.text = content2Show
+                    binding.tvAllDevices.text = content2Show
                 }
             } else {
-                Toast.makeText(this@ShowAllDeviceActivity, response?.msg, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ShowAllDeviceActivity, response.msg, Toast.LENGTH_SHORT).show()
             }
         }
     }

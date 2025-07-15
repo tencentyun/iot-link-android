@@ -4,14 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.demo.R
-import kotlinx.android.synthetic.main.fragment_video_device.*
+import com.tencent.iot.explorer.link.demo.databinding.ItemVideoListDevBinding
 
 class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.Adapter<DevsAdapter.ViewHolder>() {
     private var ITEM_MAX_NUM = 4
@@ -30,28 +28,13 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
         this.context = context
     }
 
-    class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
-        var devName: TextView
-        var statusTv: TextView
-        var devImg: ImageView
-        var more: ImageView
-        var checked: ImageView
-        var backgroundLayout: ConstraintLayout
-
-        init {
-            devName = layoutView.findViewById(R.id.tv_dev_name)
-            devImg = layoutView.findViewById(R.id.iv_dev)
-            statusTv = layoutView.findViewById(R.id.tv_dev_status)
-            more = layoutView.findViewById(R.id.iv_more)
-            checked = layoutView.findViewById(R.id.iv_select)
-            backgroundLayout = layoutView.findViewById(R.id.item_layout_background)
-        }
-    }
+    class ViewHolder(val binding: ItemVideoListDevBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video_list_dev, parent, false)
-        val holder = ViewHolder(view)
-        view.setOnClickListener {
+        val binding = ItemVideoListDevBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val holder = ViewHolder(binding)
+
+        binding.root.setOnClickListener {
             if (showCheck) return@setOnClickListener
             val position = holder.adapterPosition
             if (position < list.size && position >= 0) {
@@ -62,64 +45,66 @@ class DevsAdapter(context: Context, list: MutableList<DevInfo>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.devName.setText(list.get(position)?.DeviceName)
+        with(holder.binding) {
+            tvDevName.setText(list.get(position).DeviceName)
 
-        videoProductInfo?.let {
-            when(it.DeviceType ) {
-                VideoProductInfo.DEV_TYPE_IPC -> {
-                    Picasso.get().load(R.mipmap.ipc).into(holder.devImg)
+            videoProductInfo?.let {
+                when(it.DeviceType ) {
+                    VideoProductInfo.DEV_TYPE_IPC -> {
+                        Picasso.get().load(R.mipmap.ipc).into(ivDev)
+                    }
+                    VideoProductInfo.DEV_TYPE_NVR -> {
+                        Picasso.get().load(R.mipmap.nvr).into(ivDev)
+                    }
                 }
-                VideoProductInfo.DEV_TYPE_NVR -> {
-                    Picasso.get().load(R.mipmap.nvr).into(holder.devImg)
+            }
+
+            ivSelect.visibility = View.GONE
+            tipText?.visibility = View.GONE
+            if (showCheck) {
+                ivSelect.visibility = View.VISIBLE
+                tipText?.visibility = View.VISIBLE
+                tipText?.setText(context?.getString(R.string.devs_checked, checkedIds?.size))
+            }
+
+            if (list.get(position)?.Online == 1) {
+                itemLayoutBackground.visibility = View.GONE
+                tvDevStatus.setText(R.string.online)
+                context?.let {
+                    tvDevStatus.setTextColor(it.resources.getColor(R.color.green_29CC85))
+                    tvDevName.setTextColor(it.resources.getColor(R.color.black_15161A))
                 }
-            }
-        }
 
-        holder.checked.visibility = View.GONE
-        tipText?.visibility = View.GONE
-        if (showCheck) {
-            holder.checked.visibility = View.VISIBLE
-            tipText?.visibility = View.VISIBLE
-            tipText?.setText(context?.getString(R.string.devs_checked, checkedIds?.size))
-        }
-
-        if (list.get(position)?.Online == 1) {
-            holder.backgroundLayout.visibility = View.GONE
-            holder.statusTv.setText(R.string.online)
-            context?.let {
-                holder.statusTv.setTextColor(it.resources.getColor(R.color.green_29CC85))
-                holder.devName.setTextColor(it.resources.getColor(R.color.black_15161A))
-            }
-
-        } else {
-            holder.backgroundLayout.visibility = View.VISIBLE
-            holder.statusTv.setText(R.string.offline)
-            context?.let {
-                holder.statusTv.setTextColor(it.resources.getColor(R.color.gray_C2C5CC))
-                holder.devName.setTextColor(it.resources.getColor(R.color.gray_C2C5CC))
-            }
-        }
-
-        if (checkedIds.contains(position)) {
-            holder.checked.setImageResource(R.mipmap.selected)
-        } else {
-            holder.checked.setImageResource(R.mipmap.unchecked)
-        }
-
-        holder.more.visibility = View.VISIBLE
-        holder.checked.setOnClickListener {
-            if (checkedIds.contains(position)) {
-                checkedIds.remove(position)
-                onItemClicked?.onItemCheckedClicked(position, false)
             } else {
-                if (maxNum > 0 && checkedIds.size >= maxNum) {
-                    onItemClicked?.onItemCheckedLimited()
-                    return@setOnClickListener
+                itemLayoutBackground.visibility = View.VISIBLE
+                tvDevStatus.setText(R.string.offline)
+                context?.let {
+                    tvDevStatus.setTextColor(it.resources.getColor(R.color.gray_C2C5CC))
+                    tvDevName.setTextColor(it.resources.getColor(R.color.gray_C2C5CC))
                 }
-                checkedIds.add(position)
-                onItemClicked?.onItemCheckedClicked(position, true)
             }
-            this.notifyDataSetChanged()
+
+            if (checkedIds.contains(position)) {
+                ivSelect.setImageResource(R.mipmap.selected)
+            } else {
+                ivSelect.setImageResource(R.mipmap.unchecked)
+            }
+
+            ivMore.visibility = View.VISIBLE
+            ivSelect.setOnClickListener {
+                if (checkedIds.contains(position)) {
+                    checkedIds.remove(position)
+                    onItemClicked?.onItemCheckedClicked(position, false)
+                } else {
+                    if (maxNum > 0 && checkedIds.size >= maxNum) {
+                        onItemClicked?.onItemCheckedLimited()
+                        return@setOnClickListener
+                    }
+                    checkedIds.add(position)
+                    onItemClicked?.onItemCheckedClicked(position, true)
+                }
+                this@DevsAdapter.notifyDataSetChanged()
+            }
         }
     }
 

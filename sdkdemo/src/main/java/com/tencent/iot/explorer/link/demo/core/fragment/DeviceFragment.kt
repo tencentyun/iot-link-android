@@ -2,7 +2,9 @@ package com.tencent.iot.explorer.link.demo.core.fragment
 
 import android.content.Intent
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
 import com.tencent.iot.explorer.link.core.auth.callback.DeviceCallback
@@ -24,34 +26,34 @@ import com.tencent.iot.explorer.link.demo.core.adapter.OnItemListener
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.customView.MyDivider
 import com.tencent.iot.explorer.link.demo.core.activity.ShowAllDeviceActivity
-import kotlinx.android.synthetic.main.fragment_device.*
+import com.tencent.iot.explorer.link.demo.databinding.FragmentDeviceBinding
 
-class DeviceFragment : BaseFragment(), MyCallback {
+class DeviceFragment : BaseFragment<FragmentDeviceBinding>(), MyCallback {
 
     private lateinit var familyAdapter: FamilyAdapter
     private lateinit var roomAdapter: RoomAdapter
     private lateinit var deviceAdapter: DeviceAdapter
 
-    override fun getContentView(): Int {
-        return R.layout.fragment_device
-    }
+    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentDeviceBinding = FragmentDeviceBinding.inflate(inflater, container, false)
 
     override fun startHere(view: View) {
-        familyAdapter = FamilyAdapter(context!!, IoTAuth.familyList)
-        rv_family.adapter = familyAdapter
-        rv_family.layoutManager =
-            LinearLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
+        with(binding) {
+            familyAdapter = FamilyAdapter(context!!, IoTAuth.familyList)
+            rvFamily.adapter = familyAdapter
+            rvFamily.layoutManager =
+                LinearLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
 
-        roomAdapter = RoomAdapter(context!!, IoTAuth.roomList)
-        rv_room.adapter = roomAdapter
-        rv_room.layoutManager =
-            LinearLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
+            roomAdapter = RoomAdapter(context!!, IoTAuth.roomList)
+            rvRoom.adapter = roomAdapter
+            rvRoom.layoutManager =
+                LinearLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
 
-        deviceAdapter = DeviceAdapter(context!!, IoTAuth.deviceList)
-        rv_device.adapter = deviceAdapter
-        rv_device.layoutManager = LinearLayoutManager(context!!)
-        val myDivider = MyDivider(dp2px(16), dp2px(16), dp2px(16))
-        rv_device.addItemDecoration(myDivider)
+            deviceAdapter = DeviceAdapter(context!!, IoTAuth.deviceList)
+            rvDevice.adapter = deviceAdapter
+            rvDevice.layoutManager = LinearLayoutManager(context!!)
+            val myDivider = MyDivider(dp2px(16), dp2px(16), dp2px(16))
+            rvDevice.addItemDecoration(myDivider)
+        }
 
         setListener()
     }
@@ -62,14 +64,14 @@ class DeviceFragment : BaseFragment(), MyCallback {
     }
 
     private fun setListener() {
-        tv_show_all_device.setOnClickListener {
+        binding.tvShowAllDevice.setOnClickListener {
             jumpActivity(ShowAllDeviceActivity::class.java)
         }
-        tv_add_device.setOnClickListener {
+        binding.tvAddDevice.setOnClickListener {
             jumpActivity(AddDeviceActivity::class.java)
         }
         familyAdapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 App.data.tabFamily(position)
                 showFamily()
                 refreshRoomList()
@@ -77,7 +79,7 @@ class DeviceFragment : BaseFragment(), MyCallback {
             }
         })
         roomAdapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 App.data.tabRoom(position)
                 showRoom()
                 Log.e("onItemClick", "切换房间更新设备列表")
@@ -86,7 +88,7 @@ class DeviceFragment : BaseFragment(), MyCallback {
             }
         })
         deviceAdapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 put("device", IoTAuth.deviceList[position])
                 put("share", App.data.getCurrentFamily().Role != 1)
                 jumpActivity(ControlPanelActivity::class.java)

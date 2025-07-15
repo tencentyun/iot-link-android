@@ -8,36 +8,36 @@ import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
-import kotlinx.android.synthetic.main.activity_forgot_password.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityForgotPasswordBinding
 
 /**
  * 注册
  */
-class ForgotPasswordActivity : BaseActivity(), MyCallback {
+class ForgotPasswordActivity : BaseActivity<ActivityForgotPasswordBinding>(), MyCallback {
 
     private var account = ""
     private var pwd = ""
     private val countryCode = "86"
     private var code = ""
 
-    override fun getContentView(): Int {
-        return R.layout.activity_forgot_password
-    }
+    override fun getViewBinding(): ActivityForgotPasswordBinding = ActivityForgotPasswordBinding.inflate(layoutInflater)
 
     override fun initView() {
     }
 
     override fun setListener() {
-        btn_forgot_get_code.setOnClickListener {
-            getCode()
-        }
-        btn_forgot_commit.setOnClickListener {
-            checkCode()
+        with(binding) {
+            btnForgotGetCode.setOnClickListener {
+                getCode()
+            }
+            btnForgotCommit.setOnClickListener {
+                checkCode()
+            }
         }
     }
 
     private fun getCode() {
-        account = et_forgot_account.text.toString().trim()
+        account = binding.etForgotAccount.text.toString().trim()
         if (TextUtils.isEmpty(account)) {
             Toast.makeText(this, "请求输入手机号/邮箱", Toast.LENGTH_LONG).show()
             return
@@ -49,16 +49,17 @@ class ForgotPasswordActivity : BaseActivity(), MyCallback {
     }
 
     private fun checkCode() {
-        pwd = et_forgot_pwd.text.toString().trim()
+        pwd = binding.etForgotPwd.text.toString().trim()
         if (pwd.length < 8) {
             Toast.makeText(this, "密码长度至少为8位", Toast.LENGTH_LONG).show()
             return
         }
-        code = et_forgot_code.text.toString().trim()
+        code = binding.etForgotCode.text.toString().trim()
         if (code.length != 6) {
             Toast.makeText(this, "验证码长为6位数字", Toast.LENGTH_LONG).show()
             return
         }
+
         when (account.contains("@")) {
             true -> IoTAuth.passwordImpl.checkEmailCode(account, code, this)
             else -> IoTAuth.passwordImpl.checkPhoneCode(countryCode, account, code, this)

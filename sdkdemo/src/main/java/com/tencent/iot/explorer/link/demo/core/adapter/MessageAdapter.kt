@@ -8,6 +8,9 @@ import com.tencent.iot.explorer.link.demo.core.holder.MessageDeviceHolder
 import com.tencent.iot.explorer.link.demo.core.holder.MessageFamilyHolder
 import com.tencent.iot.explorer.link.demo.core.holder.MessageNotifyHolder
 import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
+import com.tencent.iot.explorer.link.demo.databinding.ItemMessageDeviceBinding
+import com.tencent.iot.explorer.link.demo.databinding.ItemMessageFamilyBinding
+import com.tencent.iot.explorer.link.demo.databinding.ItemMessageNotifyBinding
 
 class MessageAdapter : BaseAdapter {
 
@@ -23,11 +26,22 @@ class MessageAdapter : BaseAdapter {
         }
     }
 
-    override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
+    override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*, *> {
         return when (viewType) {
-            0 -> MessageDeviceHolder(mContext, parent, R.layout.item_message_device)
-            1 -> MessageFamilyHolder(mContext, parent, R.layout.item_message_family)
-            else -> MessageNotifyHolder(mContext, parent, R.layout.item_message_notify)
+            0 -> {
+                val binding = ItemMessageDeviceBinding.inflate(mInflater, parent, false)
+                MessageDeviceHolder(binding)
+            }
+
+            1 -> {
+                val binding = ItemMessageFamilyBinding.inflate(mInflater, parent, false)
+                MessageFamilyHolder(binding)
+            }
+
+            else -> {
+                val binding = ItemMessageNotifyBinding.inflate(mInflater, parent, false)
+                MessageNotifyHolder(binding)
+            }
         }
     }
 }

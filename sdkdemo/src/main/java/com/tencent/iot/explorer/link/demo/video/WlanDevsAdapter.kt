@@ -1,13 +1,10 @@
 package com.tencent.iot.explorer.link.demo.video
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.iot.explorer.link.demo.R
+import com.tencent.iot.explorer.link.demo.databinding.ItemWlanDeviceBinding
 import com.tencent.iot.video.link.entity.DeviceServerInfo
 
 class WlanDevsAdapter(context: Context, list: MutableList<DeviceServerInfo>) : RecyclerView.Adapter<WlanDevsAdapter.ViewHolder>() {
@@ -19,29 +16,21 @@ class WlanDevsAdapter(context: Context, list: MutableList<DeviceServerInfo>) : R
         this.context = context
     }
 
-    class ViewHolder(layoutView: View) : RecyclerView.ViewHolder(layoutView) {
-        var devName: TextView
-        var port: TextView
-        var start: TextView
-
-        init {
-            devName = layoutView.findViewById(R.id.tv_dev_name)
-            port = layoutView.findViewById(R.id.tv_dev_port)
-            start = layoutView.findViewById(R.id.start_tv)
-        }
-    }
+    class ViewHolder(val binding: ItemWlanDeviceBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_wlan_device, parent, false)
-        val holder = ViewHolder(view)
+        val binding = ItemWlanDeviceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val holder = ViewHolder(binding)
         return holder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.devName.setText(list.get(position)?.deviceName)
-        holder.port.setText(list.get(position)?.port.toString())
-        holder.start.setOnClickListener {
-            onItemClicked?.onItemClicked(position)
+        with(holder.binding) {
+            tvDevName.setText(list.get(position)?.deviceName)
+            tvDevPort.setText(list.get(position)?.port.toString())
+            startTv.setOnClickListener {
+                onItemClicked?.onItemClicked(position)
+            }
         }
     }
 

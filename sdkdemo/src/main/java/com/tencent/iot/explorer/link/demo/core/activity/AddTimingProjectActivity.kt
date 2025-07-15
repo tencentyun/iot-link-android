@@ -25,15 +25,14 @@ import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.demo.core.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.NumberPopupWindow
-import kotlinx.android.synthetic.main.activity_add_timing_project.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityAddTimingProjectBinding
 import java.lang.StringBuilder
 import java.util.*
 
 /**
  * 添加定时
  */
-class AddTimingProjectActivity : BaseActivity(), MyCallback {
+class AddTimingProjectActivity : BaseActivity<ActivityAddTimingProjectBinding>(), MyCallback {
 
     private lateinit var mTimingProject: TimingProject
     private lateinit var adapter: AddTimingProjectAdapter
@@ -46,26 +45,26 @@ class AddTimingProjectActivity : BaseActivity(), MyCallback {
     private var enumPopupWindow: EnumPopupWindow? = null
     private var boolPopupWindow: EnumPopupWindow? = null
 
-    override fun getContentView(): Int {
-        return R.layout.activity_add_timing_project
-    }
+    override fun getViewBinding(): ActivityAddTimingProjectBinding = ActivityAddTimingProjectBinding.inflate(layoutInflater)
 
     override fun initView() {
-        mTimingProject = get<TimingProject>("timing") ?: createTimingProject()
-        deviceAction = JSON.parseObject(mTimingProject.Data)
-        tv_title.text = if (mTimingProject.TimerId == "") getString(R.string.add_timer) else
-            getString(R.string.modify_timer)
-        rv_add_timing_project.layoutManager = LinearLayoutManager(this)
-        adapter = AddTimingProjectAdapter(this, mList)
-        adapter.deviceAction = deviceAction
-        rv_add_timing_project.adapter = adapter
-        getList()
+        with(binding) {
+            mTimingProject = get<TimingProject>("timing") ?: createTimingProject()
+            deviceAction = JSON.parseObject(mTimingProject.Data)
+            menuAddTimingProject.tvTitle.text = if (mTimingProject.TimerId == "") getString(R.string.add_timer) else
+                getString(R.string.modify_timer)
+            rvAddTimingProject.layoutManager = LinearLayoutManager(this@AddTimingProjectActivity)
+            adapter = AddTimingProjectAdapter(this@AddTimingProjectActivity, mList)
+            adapter.deviceAction = deviceAction
+            rvAddTimingProject.adapter = adapter
+            getList()
+        }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
+        binding.menuAddTimingProject.ivBack.setOnClickListener { finish() }
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 when (holder) {
                     is AddTimingHeaderHolder -> {
                         when (position) {
@@ -216,8 +215,8 @@ class AddTimingProjectActivity : BaseActivity(), MyCallback {
                 showList()
             }
         }
-        editPopupWindow!!.setBg(add_timing_project_bg)
-        editPopupWindow!!.show(add_timing_project)
+        editPopupWindow!!.setBg(binding.addTimingProjectBg)
+        editPopupWindow!!.show(binding.addTimingProject)
     }
 
     /**
@@ -248,8 +247,8 @@ class AddTimingProjectActivity : BaseActivity(), MyCallback {
                 }
             }
             boolPopupWindow!!.showTitle(entity.name)
-            boolPopupWindow!!.setBg(add_timing_project_bg)
-            boolPopupWindow!!.show(add_timing_project)
+            boolPopupWindow!!.setBg(binding.addTimingProjectBg)
+            boolPopupWindow!!.show(binding.addTimingProject)
         }
     }
 
@@ -281,8 +280,8 @@ class AddTimingProjectActivity : BaseActivity(), MyCallback {
                 }
             }
             enumPopupWindow!!.showTitle(entity.name)
-            enumPopupWindow!!.setBg(add_timing_project_bg)
-            enumPopupWindow!!.show(add_timing_project)
+            enumPopupWindow!!.setBg(binding.addTimingProjectBg)
+            enumPopupWindow!!.show(binding.addTimingProject)
         }
     }
 
@@ -298,8 +297,8 @@ class AddTimingProjectActivity : BaseActivity(), MyCallback {
         entity.run {
             numberPopupWindow!!.showTitle(this.name)
             numberPopupWindow!!.setProgress(mTimingProject.getIntForData(id))
-            numberPopupWindow!!.setBg(add_timing_project_bg)
-            numberPopupWindow!!.show(add_timing_project)
+            numberPopupWindow!!.setBg(binding.addTimingProjectBg)
+            numberPopupWindow!!.show(binding.addTimingProject)
             numberPopupWindow!!.onDeleteListener = object : NumberPopupWindow.OnDeleteListener {
                 override fun onDelete() {
                     deviceAction.remove(id)

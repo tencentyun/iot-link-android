@@ -6,18 +6,19 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.PopupWindow
+import androidx.viewbinding.ViewBinding
 
-abstract class ParentPopupWindow : PopupWindow {
+abstract class ParentPopupWindow<VB: ViewBinding>(val mActivity: Activity) : PopupWindow(mActivity) {
 
-    var mActivity: Activity
-    private var bg: View? = null
-
-    constructor(activity: Activity) : super(activity) {
-        this.mActivity = activity
-        init(activity)
+    init {
+        init(mActivity)
     }
 
-    abstract fun getLayoutId(): Int
+    private var bg: View? = null
+    protected val binding by lazy { getViewBinding() }
+    protected val mInflater: LayoutInflater by lazy { LayoutInflater.from(mActivity) }
+
+    abstract fun getViewBinding(): VB
     abstract fun getAnimation(): Int
     abstract fun initView()
     open fun show(parentView: View) {
@@ -36,7 +37,7 @@ abstract class ParentPopupWindow : PopupWindow {
     }
 
     private fun init(context: Context) {
-        this.contentView = LayoutInflater.from(context).inflate(getLayoutId(), null)
+        this.contentView = binding.root
         this.setBackgroundDrawable(ColorDrawable())
         this.isOutsideTouchable = false
         if (getAnimation() > 0) {

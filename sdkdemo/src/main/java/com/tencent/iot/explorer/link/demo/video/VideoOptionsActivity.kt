@@ -2,21 +2,19 @@ package com.tencent.iot.explorer.link.demo.video
 
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
-import kotlinx.android.synthetic.main.activity_video_options.btn_video
-import kotlinx.android.synthetic.main.activity_video_options.btn_video_link
-import kotlinx.android.synthetic.main.activity_video_options.btn_video_wlan
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoOptionsBinding
 
-class VideoOptionsActivity : VideoBaseActivity() {
-    override fun getContentView(): Int {
-        return R.layout.activity_video_options
-    }
+class VideoOptionsActivity : VideoBaseActivity<ActivityVideoOptionsBinding>() {
+    override fun getViewBinding(): ActivityVideoOptionsBinding = ActivityVideoOptionsBinding.inflate(layoutInflater)
 
     override fun initView() {}
 
     override fun setListener() {
-        btn_video.setOnClickListener { jumpActivity(VideoInputAuthorizeActivity::class.java) }
-        btn_video_wlan.setOnClickListener { jumpActivity(VideoWlanDetectActivity::class.java) }
-        btn_video_link.setOnClickListener { jumpActivity(VideoTestInputActivity::class.java) }
+        with(binding) {
+            btnVideo.setOnClickListener { jumpActivity(VideoInputAuthorizeActivity::class.java) }
+            btnVideoWlan.setOnClickListener { jumpActivity(VideoWlanDetectActivity::class.java) }
+            btnVideoLink.setOnClickListener { jumpActivity(VideoTestInputActivity::class.java) }
+        }
     }
 
 }

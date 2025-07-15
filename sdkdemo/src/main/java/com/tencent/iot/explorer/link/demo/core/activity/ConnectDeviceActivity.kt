@@ -26,13 +26,13 @@ import com.tencent.iot.explorer.link.core.link.exception.TCLinkException
 import com.tencent.iot.explorer.link.core.link.listener.SmartConfigListener
 import com.tencent.iot.explorer.link.core.link.listener.SoftAPListener
 import com.tencent.iot.explorer.link.demo.BaseActivity
-import kotlinx.android.synthetic.main.activity_connect_device.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityConnectDeviceBinding
+import androidx.core.view.isVisible
 
 /**
  * 智能配网
  */
-class ConnectDeviceActivity : BaseActivity() {
+class ConnectDeviceActivity : BaseActivity<ActivityConnectDeviceBinding>() {
 
     private val task = LinkTask()
 
@@ -50,9 +50,7 @@ class ConnectDeviceActivity : BaseActivity() {
 
     private var type = 1
 
-    override fun getContentView(): Int {
-        return R.layout.activity_connect_device
-    }
+    override fun getViewBinding(): ActivityConnectDeviceBinding = ActivityConnectDeviceBinding.inflate(layoutInflater)
 
     override fun initView() {
         type = get<Int>("type") ?: 1
@@ -62,7 +60,7 @@ class ConnectDeviceActivity : BaseActivity() {
             showSoftAP()
             retryJob = RetryJob()
         }
-        tv_progress_hint.text = "未开始"
+        binding.tvProgressHint.text = "未开始"
     }
 
     override fun onResume() {
@@ -70,62 +68,71 @@ class ConnectDeviceActivity : BaseActivity() {
         (applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.connectionInfo?.let {
             L.d("当前WIFI名：${it.ssid}")
             var ssidName = it.ssid.replace("\"", "")
-            tv_select_wifi.text = ssidName
-            if (type == 1) {
-                task.mSsid = ssidName
-                task.mBssid = it.bssid ?: ""
-                task.mAccessToken = App.data.bindDeviceToken
-            } else {
-                if (tv_select_hotspot.visibility == View.VISIBLE) {
+
+            with(binding) {
+                tvSelectWifi.text = ssidName
+                if (type == 1) {
                     task.mSsid = ssidName
                     task.mBssid = it.bssid ?: ""
                     task.mAccessToken = App.data.bindDeviceToken
                 } else {
-                    tv_reselect_hotspot.visibility = View.VISIBLE
-                    tv_start_connect.visibility = View.VISIBLE
-                    iv_select_wifi.visibility = View.GONE
-                    et_select_wifi_pwd.visibility = View.INVISIBLE
-                    smart_second_wifi_pwd.visibility = View.INVISIBLE
+                    if (tvSelectHotspot.isVisible) {
+                        task.mSsid = ssidName
+                        task.mBssid = it.bssid ?: ""
+                        task.mAccessToken = App.data.bindDeviceToken
+                    } else {
+                        tvReselectHotspot.visibility = View.VISIBLE
+                        tvStartConnect.visibility = View.VISIBLE
+                        ivSelectWifi.visibility = View.GONE
+                        etSelectWifiPwd.visibility = View.INVISIBLE
+                        smartSecondWifiPwd.visibility = View.INVISIBLE
+                    }
                 }
             }
         }
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_start_connect.setOnClickListener {
-            task.mPassword = et_select_wifi_pwd.text.trim().toString()
-            if (type == 1) {
-                smartConfig()
-            } else {
-                softAP()
+        with(binding) {
+            menuSmartConfig.ivBack.setOnClickListener { finish() }
+            tvStartConnect.setOnClickListener {
+                task.mPassword = etSelectWifiPwd.text.trim().toString()
+                if (type == 1) {
+                    smartConfig()
+                } else {
+                    softAP()
+                }
+                it.isClickable = false
+                it.alpha = 0.6f
+                tvReselectHotspot.visibility = View.INVISIBLE
             }
-            it.isClickable = false
-            it.alpha = 0.6f
-            tv_reselect_hotspot.visibility = View.INVISIBLE
-        }
-        iv_select_wifi.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
-        }
-        tv_select_hotspot.setOnClickListener {
-            tv_select_hotspot.visibility = View.GONE
-            startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
-        }
-        tv_reselect_hotspot.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+            ivSelectWifi.setOnClickListener {
+                startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+            }
+            tvSelectHotspot.setOnClickListener {
+                tvSelectHotspot.visibility = View.GONE
+                startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+            }
+            tvReselectHotspot.setOnClickListener {
+                startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+            }
         }
     }
 
     private fun showSmartConfig() {
-        tv_title.text = "智能配网"
-        tv_reselect_hotspot.visibility = View.INVISIBLE
-        tv_select_hotspot.visibility = View.INVISIBLE
+        with(binding) {
+            menuSmartConfig.tvTitle.text = "智能配网"
+            tvReselectHotspot.visibility = View.INVISIBLE
+            tvSelectHotspot.visibility = View.INVISIBLE
+        }
     }
 
     private fun showSoftAP() {
-        tv_title.text = "自助配网"
-        tv_select_hotspot.visibility = View.VISIBLE
-        tv_start_connect.visibility = View.INVISIBLE
+        with(binding) {
+            menuSmartConfig.tvTitle.text = "自助配网"
+            tvSelectHotspot.visibility = View.VISIBLE
+            tvStartConnect.visibility = View.INVISIBLE
+        }
     }
 
     /**
@@ -201,7 +208,7 @@ class ConnectDeviceActivity : BaseActivity() {
     }
 
     private fun showProgressText(test: String?) {
-        tv_progress_hint.text = test ?: ""
+        binding.tvProgressHint.text = test ?: ""
     }
 
     override fun onDestroy() {

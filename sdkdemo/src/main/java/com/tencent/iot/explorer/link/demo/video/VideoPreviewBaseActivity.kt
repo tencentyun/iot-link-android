@@ -2,6 +2,7 @@ package com.tencent.iot.explorer.link.demo.video
 
 import android.os.Bundle
 import android.text.TextUtils
+import androidx.viewbinding.ViewBinding
 import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
@@ -15,7 +16,7 @@ import com.tencent.iot.video.link.service.VideoBaseService
 import org.json.JSONObject
 import java.util.Date
 
-abstract class VideoPreviewBaseActivity : VideoBaseActivity(), EventView, VideoCallback {
+abstract class VideoPreviewBaseActivity<VB: ViewBinding> : VideoBaseActivity<VB>(), EventView, VideoCallback {
 
     protected lateinit var presenter: EventPresenter
     protected var xp2pInfo: String = ""

@@ -1,9 +1,7 @@
 package com.tencent.iot.explorer.link.demo.core.adapter
 
-import android.content.Context
-import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 
-abstract class ListHolder<T : Any> : BaseHolder<T> {
-    constructor(context: Context, root: ViewGroup, resLayout: Int) : super(context, root, resLayout)
+abstract class ListHolder<T : Any, VB: ViewBinding>(binding: VB) : BaseHolder<T, VB>(binding) {
 }

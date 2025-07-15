@@ -1,22 +1,25 @@
 package com.tencent.iot.explorer.link.demo.core.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 
 /**
  * 列表Adapter,不允许有空的元素，否则会不显示
  */
 abstract class BaseAdapter(context: Context, list: List<Any>) :
-    RecyclerView.Adapter<BaseHolder<*>>() {
+    RecyclerView.Adapter<BaseHolder<*, *>>() {
 
     private val mList = list
     private var itemListener: OnItemListener? = null
     val mContext = context
+    protected val mInflater by lazy { LayoutInflater.from(mContext) }
 
-    abstract fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*>
+    abstract fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*, *>
 
 
     fun setOnItemListener(onItemListener: OnItemListener) {
@@ -26,7 +29,7 @@ abstract class BaseAdapter(context: Context, list: List<Any>) :
     /**
      * 调用点击
      */
-    fun onClickItem(holder: BaseHolder<*>, clickView: View, position: Int) {
+    fun onClickItem(holder: BaseHolder<*, *>, clickView: View, position: Int) {
         itemListener?.onItemClick(holder, clickView, position)
     }
 
@@ -40,7 +43,7 @@ abstract class BaseAdapter(context: Context, list: List<Any>) :
     /**
      * 创建ViewHolder
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder<*, *> {
         val holder = createHolder(parent, viewType)
         holder.setAdapter(this)
         return holder
@@ -49,7 +52,7 @@ abstract class BaseAdapter(context: Context, list: List<Any>) :
     /**
      * 显示
      */
-    override fun onBindViewHolder(holder: BaseHolder<*>, position: Int) {
+    override fun onBindViewHolder(holder: BaseHolder<*, *>, position: Int) {
         //不为空才会显示
         if (position < mList.size && holder.parseData(data(position)))
             holder.show(holder, position)
@@ -62,7 +65,7 @@ abstract class BaseAdapter(context: Context, list: List<Any>) :
 }
 
 interface OnItemListener {
-    fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int)
+    fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int)
 }
 
 

@@ -2,7 +2,9 @@ package com.tencent.iot.explorer.link.demo.video
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.fastjson.JSON
@@ -15,6 +17,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
+import com.tencent.iot.explorer.link.demo.databinding.FragmentVideoDeviceBinding
 import com.tencent.iot.explorer.link.demo.video.nvr.VideoNvrActivity
 import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.demo.video.preview.DevUrl2Preview
@@ -28,54 +31,48 @@ import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.consts.VideoRequestCode
 import com.tencent.iot.video.link.service.VideoBaseService
-import kotlinx.android.synthetic.main.fragment_video_device.gv_devs
-import kotlinx.android.synthetic.main.fragment_video_device.radio_complete
-import kotlinx.android.synthetic.main.fragment_video_device.radio_edit
-import kotlinx.android.synthetic.main.fragment_video_device.rg_edit_dev
-import kotlinx.android.synthetic.main.fragment_video_device.smart_refresh_layout
-import kotlinx.android.synthetic.main.fragment_video_device.tv_tip_txt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemClicked,
+class VideoDeviceFragment : BaseFragment<FragmentVideoDeviceBinding>(), VideoCallback, DevsAdapter.OnItemClicked,
     CoroutineScope by MainScope() {
     private var devs: MutableList<DevInfo> = ArrayList()
     private var adapter: DevsAdapter? = null
     private var videoProductInfo: VideoProductInfo? = null
 
-    override fun getContentView(): Int {
-        return R.layout.fragment_video_device
-    }
+    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentVideoDeviceBinding = FragmentVideoDeviceBinding.inflate(inflater, container, false)
 
     override fun startHere(view: View) {
         setListener()
-
         val devGridLayoutManager = GridLayoutManager(context, 2)
-        context?.let {
-            adapter = DevsAdapter(it, devs)
-            adapter?.let {
-                it.setOnItemClicked(this)
-                it.tipText = tv_tip_txt
-            }
-            adapter?.radioComplete = radio_complete
-            adapter?.radioEdit = radio_edit
-            gv_devs.layoutManager = devGridLayoutManager
-            gv_devs.adapter = adapter
-            loadAllVideoInfo()
-        }
-        adapter?.switchBtnStatus(false)
 
-        smart_refresh_layout.setEnableRefresh(true)
-        smart_refresh_layout.setRefreshHeader(ClassicsHeader(context))
-        smart_refresh_layout.setEnableLoadMore(false)
-        smart_refresh_layout.setRefreshFooter(ClassicsFooter(context))
+        with(binding) {
+            context?.let {
+                adapter = DevsAdapter(it, devs)
+                adapter?.let {
+                    it.setOnItemClicked(this@VideoDeviceFragment)
+                    it.tipText = tvTipTxt
+                }
+                adapter?.radioComplete = radioComplete
+                adapter?.radioEdit = radioEdit
+                gvDevs.layoutManager = devGridLayoutManager
+                gvDevs.adapter = adapter
+                loadAllVideoInfo()
+            }
+
+            adapter?.switchBtnStatus(false)
+            smartRefreshLayout.setEnableRefresh(true)
+            smartRefreshLayout.setRefreshHeader(ClassicsHeader(context))
+            smartRefreshLayout.setEnableLoadMore(false)
+            smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
+        }
     }
 
     private fun setListener() {
-        radio_edit.setOnClickListener {
+        binding.radioEdit.setOnClickListener {
             val options = arrayListOf(getString(R.string.edit_devs_2_show))
             val dlg = ListOptionsDialog(context, options)
             dlg.show()
@@ -84,12 +81,12 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
             }
         }
 
-        radio_complete.setOnClickListener {
+        binding.radioComplete.setOnClickListener {
             adapter?.switchBtnStatus(false)
             startMultiPreview()
         }
 
-        smart_refresh_layout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+        binding.smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
             override fun onLoadMore(refreshLayout: RefreshLayout) {}
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 loadAllVideoInfo()
@@ -208,7 +205,7 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
     override fun fail(msg: String?, reqCode: Int) {
         launch(Dispatchers.Main) {
             adapter?.notifyDataSetChanged()
-            smart_refresh_layout?.finishRefresh()
+            binding.smartRefreshLayout.finishRefresh()
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
     }
@@ -231,11 +228,11 @@ class VideoDeviceFragment : BaseFragment(), VideoCallback, DevsAdapter.OnItemCli
                     adapter?.videoProductInfo = videoProductInfo
                     adapter?.notifyDataSetChanged()
                     if (adapter?.videoProductInfo?.DeviceType == VideoProductInfo.DEV_TYPE_IPC) {
-                        rg_edit_dev.visibility = View.VISIBLE
+                        binding.rgEditDev.visibility = View.VISIBLE
                     } else {
-                        rg_edit_dev.visibility = View.GONE
+                        binding.rgEditDev.visibility = View.GONE
                     }
-                    smart_refresh_layout?.finishRefresh()
+                    binding.smartRefreshLayout.finishRefresh()
                 }
             }
 

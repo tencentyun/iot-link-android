@@ -3,13 +3,15 @@ package com.tencent.iot.explorer.link.demo.video.utils;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.iot.explorer.link.demo.R;
+import com.tencent.iot.explorer.link.demo.databinding.PopupToastLayoutBinding;
 
 
-public class ToastDialog extends IosCenterStyleDialog {
+public class ToastDialog extends IosCenterStyleDialog<PopupToastLayoutBinding> {
 
     public enum Type {
         SUCCESS, WARNING
@@ -31,7 +33,7 @@ public class ToastDialog extends IosCenterStyleDialog {
      * @param duration 对话框展示时长，单位ms
      */
     public ToastDialog(Context context, Type type, String content, long duration) {
-        super(context, R.layout.popup_toast_layout);
+        super(context, PopupToastLayoutBinding.inflate(LayoutInflater.from(context)));
         this.type = type;
         this.content = content;
         this.duration = duration;
@@ -45,10 +47,8 @@ public class ToastDialog extends IosCenterStyleDialog {
             }
         }, duration);
 
-        ImageView iv = view.findViewById(R.id.iv_status);
-        TextView tv = view.findViewById(R.id.tv_content);
-        tv.setText(content);
-        iv.setImageResource(icons[type.ordinal()]);
+        binding.tvContent.setText(content);
+        binding.ivStatus.setImageResource(icons[type.ordinal()]);
     }
 
     @Override

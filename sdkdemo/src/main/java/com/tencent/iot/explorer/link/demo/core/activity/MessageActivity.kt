@@ -15,37 +15,35 @@ import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.core.link.entity.MessageEntity
 import com.tencent.iot.explorer.link.demo.BaseActivity
-import kotlinx.android.synthetic.main.activity_message.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityMessageBinding
 
 /**
  * 消息通知
  */
-class MessageActivity : BaseActivity(), MyCallback {
+class MessageActivity : BaseActivity<ActivityMessageBinding>(), MyCallback {
 
     val messageList = arrayListOf<MessageEntity>()
     //1设备 2家庭 3通知
     private var msgCategory = 1
     private lateinit var adapter: MessageAdapter
 
-
-    override fun getContentView(): Int {
-        return R.layout.activity_message
-    }
+    override fun getViewBinding(): ActivityMessageBinding = ActivityMessageBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.message_notify)
+        with(binding) {
+            menuMessage.tvTitle.text = getString(R.string.message_notify)
 
-        rv_message_list.layoutManager = LinearLayoutManager(this)
-        adapter = MessageAdapter(this, messageList)
-        rv_message_list.adapter = adapter
+            rvMessageList.layoutManager = LinearLayoutManager(this@MessageActivity)
+            adapter = MessageAdapter(this@MessageActivity, messageList)
+            rvMessageList.adapter = adapter
+        }
 
         requestMessage()
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tab_message.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.menuMessage.ivBack.setOnClickListener { finish() }
+        binding.tabMessage.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
 
@@ -58,7 +56,7 @@ class MessageActivity : BaseActivity(), MyCallback {
             }
         })
         adapter.setOnItemListener(object : OnItemListener {
-            override fun onItemClick(holder: BaseHolder<*>, clickView: View, position: Int) {
+            override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 when (clickView.tag) {
                     0 -> {
                         refuseInvite(position)
@@ -164,13 +162,16 @@ class MessageActivity : BaseActivity(), MyCallback {
 
     private fun showMessage() {
         runOnUiThread {
-            if (messageList.isNotEmpty()) {
-                rv_message_list.visibility = View.VISIBLE
-                tv_empty_message.visibility = View.GONE
-            } else {
-                rv_message_list.visibility = View.GONE
-                tv_empty_message.visibility = View.VISIBLE
+            with(binding) {
+                if (messageList.isNotEmpty()) {
+                    rvMessageList.visibility = View.VISIBLE
+                    tvEmptyMessage.visibility = View.GONE
+                } else {
+                    rvMessageList.visibility = View.GONE
+                    tvEmptyMessage.visibility = View.VISIBLE
+                }
             }
+            // todo 可优化
             adapter.notifyDataSetChanged()
         }
     }

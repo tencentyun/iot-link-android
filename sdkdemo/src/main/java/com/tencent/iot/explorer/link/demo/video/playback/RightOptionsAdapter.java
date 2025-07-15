@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.iot.explorer.link.demo.R;
+import com.tencent.iot.explorer.link.demo.databinding.ItemRightOptionBinding;
 
 import java.util.List;
 
@@ -17,16 +19,17 @@ public class RightOptionsAdapter extends RecyclerView.Adapter<RightOptionsAdapte
     private int index = -1;
     private Context context;
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        View layout;
-        TextView option;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ItemRightOptionBinding binding;
 
-        ViewHolder(View view) {
-            super(view);
-            layout = view;
-            option = view.findViewById(R.id.tv_option);
+        ViewHolder(ItemRightOptionBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
+        public View getView() {
+            return binding.getRoot();
+        }
     }
 
     public RightOptionsAdapter(Context context, List<String> options, int index) {
@@ -35,12 +38,13 @@ public class RightOptionsAdapter extends RecyclerView.Adapter<RightOptionsAdapte
         this.context = context;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_right_option, parent, false);
-        final ViewHolder holder = new ViewHolder(view);
+        ItemRightOptionBinding binding = ItemRightOptionBinding.inflate(LayoutInflater.from(parent.getContext()));
+        final ViewHolder holder = new ViewHolder(binding);
 
-        holder.layout.setOnClickListener(new View.OnClickListener() {
+        holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
@@ -57,11 +61,11 @@ public class RightOptionsAdapter extends RecyclerView.Adapter<RightOptionsAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.option.setText(options.get(position));
+        holder.binding.tvOption.setText(options.get(position));
         if (position == index) {
-            holder.option.setTextColor(context.getResources().getColor(R.color.green_0ABF5B));
+            holder.binding.tvOption.setTextColor(context.getResources().getColor(R.color.green_0ABF5B));
         } else {
-            holder.option.setTextColor(context.getResources().getColor(R.color.white));
+            holder.binding.tvOption.setTextColor(context.getResources().getColor(R.color.white));
         }
     }
 
@@ -71,7 +75,7 @@ public class RightOptionsAdapter extends RecyclerView.Adapter<RightOptionsAdapte
     }
 
     public interface OnItemClicked {
-        void onItemClicked(int postion, String option);
+        void onItemClicked(int position, String option);
     }
 
     private OnItemClicked onItemClicked;

@@ -5,52 +5,47 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.core.link.configNetwork.TIoTCoreUtil
 import com.tencent.iot.explorer.link.core.link.listener.WiredConfigListener
 import com.tencent.iot.explorer.link.demo.BaseActivity
-import kotlinx.android.synthetic.main.activity_ap_config_net.btn_start_config_net
-import kotlinx.android.synthetic.main.activity_ap_config_net.tv_status
-import kotlinx.android.synthetic.main.activity_qrcode_config_net.ev_token
-import kotlinx.android.synthetic.main.activity_wired_config_net.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityWiredConfigNetBinding
 
-class WiredConfigNetActivity : BaseActivity() {
+class WiredConfigNetActivity : BaseActivity<ActivityWiredConfigNetBinding>() {
 
     var handler = Handler()
     var tIoTCoreUtil = TIoTCoreUtil()
 
-    override fun getContentView(): Int {
-        return R.layout.activity_wired_config_net
-    }
+    override fun getViewBinding(): ActivityWiredConfigNetBinding = ActivityWiredConfigNetBinding.inflate(layoutInflater)
 
     override fun initView() {
     }
 
     override fun setListener() {
-        btn_start_config_net.setOnClickListener {
-            tIoTCoreUtil.groupAddress = ev_group_address.text.toString()
-            tIoTCoreUtil.configNetByWired(ev_token.text.toString(), listener)
+        binding.btnStartConfigNet.setOnClickListener {
+            tIoTCoreUtil.groupAddress = binding.evGroupAddress.text.toString()
+            tIoTCoreUtil.configNetByWired(binding.evToken.text.toString(), listener)
         }
     }
 
     var listener = object: WiredConfigListener {
         override fun onStartConfigNet() {
             handler.post {
-                tv_status.setText("start config net")
+                binding.tvStatus.setText("start config net")
             }
         }
 
         override fun onSuccess(productId: String, deviceName: String) {
             handler.post {
-                tv_status.setText("confignet success productId " + productId + ", deviceName " + deviceName)
+                binding.tvStatus.setText("confignet success productId " + productId + ", deviceName " + deviceName)
             }
         }
 
         override fun onFail() {
             handler.post {
-                tv_status.setText("config net failed")
+                binding.tvStatus.setText("config net failed")
             }
         }
 
         override fun onConfiging() {
             handler.post {
-                tv_status.setText("configing")
+                binding.tvStatus.setText("configing")
             }
         }
 

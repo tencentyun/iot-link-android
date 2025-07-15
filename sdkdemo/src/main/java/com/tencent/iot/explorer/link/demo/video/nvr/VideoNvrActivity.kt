@@ -9,6 +9,7 @@ import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoNvrDevsBinding
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevsAdapter
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
@@ -23,8 +24,6 @@ import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
-import kotlinx.android.synthetic.main.fragment_video_device.*
-import kotlinx.android.synthetic.main.title_layout.*
 import kotlinx.coroutines.*
 import java.lang.Runnable
 import java.util.concurrent.CountDownLatch
@@ -32,7 +31,7 @@ import java.util.concurrent.TimeUnit
 
 private var countDownLatch = CountDownLatch(1)
 
-class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCallback,
+class VideoNvrActivity : VideoBaseActivity<ActivityVideoNvrDevsBinding>(), DevsAdapter.OnItemClicked, XP2PCallback,
     CoroutineScope by MainScope() {
     private var devs : MutableList<DevInfo> = ArrayList()
     private var adapter : DevsAdapter? = null
@@ -40,25 +39,25 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
     @Volatile
     private var queryJob: Job? = null
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_nvr_devs
-    }
+    override fun getViewBinding(): ActivityVideoNvrDevsBinding = ActivityVideoNvrDevsBinding.inflate(layoutInflater)
 
     override fun initView() {
         var devGridLayoutManager = GridLayoutManager(this@VideoNvrActivity, 2)
         adapter = DevsAdapter(this@VideoNvrActivity, devs)
         adapter?.let {
             it.setOnItemClicked(this)
-            it.tipText = tv_tip_txt
+            it.tipText = binding.devLayout.tvTipTxt
         }
-        tv_my_devs.visibility = View.GONE
-        gv_devs.setLayoutManager(devGridLayoutManager)
-        gv_devs.setAdapter(adapter)
-        adapter?.radioComplete = radio_complete
-        adapter?.radioEdit = radio_edit
-        adapter?.switchBtnStatus(false)
-        smart_refresh_layout.setEnableRefresh(false)
-        smart_refresh_layout.setEnableLoadMore(false)
+        with(binding) {
+            devLayout.tvMyDevs.visibility = View.GONE
+            devLayout.gvDevs.setLayoutManager(devGridLayoutManager)
+            devLayout.gvDevs.setAdapter(adapter)
+            adapter?.radioComplete = devLayout.radioComplete
+            adapter?.radioEdit = devLayout.radioEdit
+            adapter?.switchBtnStatus(false)
+            devLayout.smartRefreshLayout.setEnableRefresh(false)
+            devLayout.smartRefreshLayout.setEnableLoadMore(false)
+        }
 
         App.data.accessInfo?.let {
             XP2P.setQcloudApiCred(it.accessId, it.accessToken)
@@ -72,7 +71,7 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
 
             var devInfo = JSON.parseObject(devInfoStr, DevInfo::class.java)
             devInfo?.let {
-                tv_title.setText(it.DeviceName)
+                binding.vTitle.tvTitle.setText(it.DeviceName)
                 showDev(it.DeviceName)
             }
         }
@@ -105,7 +104,7 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
             for (i in 0 until it.list.size) {
                 if (it.checkedIds.contains(i)) {
                     var dev = DevUrl2Preview()
-                    dev.devName = tv_title.text.toString()
+                    dev.devName = binding.vTitle.tvTitle.text.toString()
                     dev.Status = it.list.get(i).Status
                     dev.channel = it.list.get(i).Channel
                     dev.channel2DevName = it.list.get(i).DeviceName
@@ -126,13 +125,13 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
                     devs.clear()
                     var nvrDevs = JSONArray.parseArray(it, DevInfo::class.java)
                     nvrDevs?.let { devs?.addAll(it) }
-                    rg_edit_dev.visibility = View.VISIBLE
+                    binding.devLayout.rgEditDev.visibility = View.VISIBLE
                     adapter?.videoProductInfo = videoProductInfo
                     adapter?.notifyDataSetChanged()
                 }
             }
 
-            XP2P.stopService("${it.productId}/${tv_title.text}")
+            XP2P.stopService("${it.productId}/${binding.vTitle.tvTitle.text}")
             XP2P.setCallback(null)
         }
     }
@@ -141,7 +140,7 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
         cancel()
 
         App.data.accessInfo?.let {
-            XP2P.stopService("${it.productId}/${tv_title.text}")
+            XP2P.stopService("${it.productId}/${binding.vTitle.tvTitle.text}")
             XP2P.setCallback(null)
         }
 
@@ -149,8 +148,8 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        radio_edit.setOnClickListener {
+        binding.vTitle.ivBack.setOnClickListener { finish() }
+        binding.devLayout.radioEdit.setOnClickListener {
             var options = arrayListOf(getString(R.string.edit_devs_2_show))
             var dlg =
                 ListOptionsDialog(
@@ -163,7 +162,7 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
             }
         }
 
-        radio_complete.setOnClickListener {
+        binding.devLayout.radioComplete.setOnClickListener {
             adapter?.switchBtnStatus(false)
 
             if (adapter?.checkedIds!!.size <= 0) {
@@ -194,7 +193,7 @@ class VideoNvrActivity : VideoBaseActivity(), DevsAdapter.OnItemClicked, XP2PCal
 
     override fun onItemClicked(pos: Int, dev: DevInfo) {
         var devInfo = DevInfo()
-        devInfo.DeviceName = tv_title.text.toString()
+        devInfo.DeviceName = binding.vTitle.tvTitle.text.toString()
         devInfo.Online = dev.Online
         devInfo.Channel = dev.Channel
         var options = arrayListOf(getString(R.string.preview))

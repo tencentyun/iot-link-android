@@ -9,36 +9,37 @@ import com.tencent.iot.explorer.link.demo.core.adapter.BaseAdapter
 import com.tencent.iot.explorer.link.demo.core.entity.TimingProject
 import com.tencent.iot.explorer.link.demo.core.entity.WeekRepeat
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
-import kotlinx.android.synthetic.main.activity_week_repeat.*
-import kotlinx.android.synthetic.main.item_week_repeat.view.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityWeekRepeatBinding
+import com.tencent.iot.explorer.link.demo.databinding.ItemWeekRepeatBinding
 
 /**
  * 重复设置
  */
-class WeekRepeatActivity : BaseActivity() {
+class WeekRepeatActivity : BaseActivity<ActivityWeekRepeatBinding>() {
 
     private val list = arrayListOf<WeekRepeat>()
     private lateinit var days: String
 
     private val adapter = object : BaseAdapter(this, list) {
-        override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
+        override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*, ItemWeekRepeatBinding> {
+            val holderBinding = ItemWeekRepeatBinding.inflate(layoutInflater)
+
             return object :
-                BaseHolder<WeekRepeat>(this@WeekRepeatActivity, parent, R.layout.item_week_repeat) {
-                override fun show(holder: BaseHolder<*>, position: Int) {
+                BaseHolder<WeekRepeat, ItemWeekRepeatBinding>(holderBinding) {
+                override fun show(holder: BaseHolder<*, *>, position: Int) {
                     data.run {
-                        itemView.tv_week_repeat_title.text = text
-                        itemView.iv_week_repeat_selected.setImageResource(
+                        holderBinding.tvWeekRepeatTitle.text = text
+                        holderBinding.ivWeekRepeatSelected.setImageResource(
                             if (value == 1) R.mipmap.icon_checked
                             else R.mipmap.icon_unchecked
                         )
-                        itemView.tv_week_repeat_commit.visibility =
+                        holderBinding.tvWeekRepeatCommit.visibility =
                             if (position == 6) View.VISIBLE else View.GONE
                     }
-                    itemView.tv_week_repeat_commit.setOnClickListener {
+                    holderBinding.tvWeekRepeatCommit.setOnClickListener {
                         save()
                     }
-                    itemView.tv_week_repeat_title.setOnClickListener {
+                    holderBinding.tvWeekRepeatTitle.setOnClickListener {
                         selected(position)
                     }
                 }
@@ -46,15 +47,13 @@ class WeekRepeatActivity : BaseActivity() {
         }
     }
 
-    override fun getContentView(): Int {
-        return R.layout.activity_week_repeat
-    }
+    override fun getViewBinding(): ActivityWeekRepeatBinding = ActivityWeekRepeatBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = "重复"
+        binding.menuWeekRepeat.tvTitle.text = "重复"
         days = get<TimingProject>("repeat")?.Days ?: "0000000"
-        rv_week_repeat.layoutManager = LinearLayoutManager(this)
-        rv_week_repeat.adapter = adapter
+        binding.rvWeekRepeat.layoutManager = LinearLayoutManager(this)
+        binding.rvWeekRepeat.adapter = adapter
         for (i in 0 until days.length) {
             val entity = WeekRepeat()
             when (i) {
@@ -72,7 +71,7 @@ class WeekRepeatActivity : BaseActivity() {
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
+        binding.menuWeekRepeat.ivBack.setOnClickListener { finish() }
     }
 
     /**

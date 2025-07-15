@@ -5,12 +5,14 @@ import android.view.ViewGroup
 import android.widget.TimePicker
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.auth.entity.ControlPanel
-import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.entity.TimingProject
 import com.tencent.iot.explorer.link.demo.core.holder.AddTimingFooterHolder
 import com.tencent.iot.explorer.link.demo.core.holder.AddTimingActionHolder
 import com.tencent.iot.explorer.link.demo.core.holder.AddTimingHeaderHolder
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
+import com.tencent.iot.explorer.link.demo.databinding.FootAddTimingBinding
+import com.tencent.iot.explorer.link.demo.databinding.HeadAddTimingBinding
+import com.tencent.iot.explorer.link.demo.databinding.ItemDeviceActionBinding
 
 class AddTimingProjectAdapter : BaseAdapter {
 
@@ -27,19 +29,22 @@ class AddTimingProjectAdapter : BaseAdapter {
         }
     }
 
-    override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
+    override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*, *> {
         return when (viewType) {
             0 -> {
-                val holder = AddTimingHeaderHolder(mContext, parent, R.layout.head_add_timing)
-                holder.onTimeChangedListener = onTimeChangedListener
-                holder
+                val binding = HeadAddTimingBinding.inflate(mInflater, parent, false)
+                AddTimingHeaderHolder(binding).apply { this.onTimeChangedListener = this@AddTimingProjectAdapter.onTimeChangedListener }
             }
+
             1 -> {
-                val holder = AddTimingActionHolder(mContext, parent, R.layout.item_device_action)
-                holder.deviceAction = deviceAction
-                holder
+                val binding = ItemDeviceActionBinding.inflate(mInflater, parent, false)
+                AddTimingActionHolder(binding).apply { this.deviceAction = this@AddTimingProjectAdapter.deviceAction }
             }
-            else -> AddTimingFooterHolder(mContext, parent, R.layout.foot_add_timing)
+
+            else -> {
+                val binding = FootAddTimingBinding.inflate(mInflater, parent, false)
+                AddTimingFooterHolder(binding)
+            }
         }
     }
 

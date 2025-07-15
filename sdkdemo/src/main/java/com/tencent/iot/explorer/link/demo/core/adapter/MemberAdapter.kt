@@ -6,6 +6,8 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.core.holder.MemberHolder
 import com.tencent.iot.explorer.link.core.link.entity.MemberEntity
+import com.tencent.iot.explorer.link.demo.databinding.ItemFamilyInfoBinding
+import com.tencent.iot.explorer.link.demo.databinding.ItemMemberBinding
 
 class MemberAdapter : BaseAdapter {
 
@@ -19,12 +21,18 @@ class MemberAdapter : BaseAdapter {
         }
     }
 
-    override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
+    override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*, *> {
+        return when(viewType) {
+            1 -> {
+                val binding = ItemMemberBinding.inflate(mInflater, parent, false)
+                MemberHolder(binding)
+            }
 
-        return if (viewType == 1)
-            MemberHolder(mContext, parent, R.layout.item_member)
-        else
-            FamilyInfoHolder(mContext, parent, R.layout.item_family_info)
+            else -> {
+                val binding = ItemFamilyInfoBinding.inflate(mInflater, parent, false)
+                FamilyInfoHolder(binding)
+            }
+        }
     }
 
 }

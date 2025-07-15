@@ -5,12 +5,14 @@ import android.view.ViewGroup
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.core.holder.TimingProjectHolder
+import com.tencent.iot.explorer.link.demo.databinding.ItemTimingProjectBinding
 
 class TimingProjectAdapter : BaseAdapter {
 
     constructor(context: Context, list: List<Any>) : super(context, list)
 
-    override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
-        return TimingProjectHolder(mContext, parent, R.layout.item_timing_project)
+    override fun createHolder(parent: ViewGroup, viewType: Int): BaseHolder<*, *> {
+        val binding = ItemTimingProjectBinding.inflate(mInflater, parent, false)
+        return TimingProjectHolder(binding)
     }
 }

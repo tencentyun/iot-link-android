@@ -20,6 +20,7 @@ import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoPreviewBinding
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
@@ -28,20 +29,6 @@ import com.tencent.iot.video.link.consts.VideoConst
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PCallback
-import kotlinx.android.synthetic.main.activity_video_preview.iv_audio
-import kotlinx.android.synthetic.main.activity_video_preview.iv_down
-import kotlinx.android.synthetic.main.activity_video_preview.iv_left
-import kotlinx.android.synthetic.main.activity_video_preview.iv_right
-import kotlinx.android.synthetic.main.activity_video_preview.iv_up
-import kotlinx.android.synthetic.main.activity_video_preview.layout_video_preview
-import kotlinx.android.synthetic.main.activity_video_preview.radio_talk
-import kotlinx.android.synthetic.main.activity_video_preview.tv_video_quality
-import kotlinx.android.synthetic.main.activity_video_preview.v_preview
-import kotlinx.android.synthetic.main.dash_board_layout.tv_a_cache
-import kotlinx.android.synthetic.main.dash_board_layout.tv_tcp_speed
-import kotlinx.android.synthetic.main.dash_board_layout.tv_v_cache
-import kotlinx.android.synthetic.main.title_layout.iv_back
-import kotlinx.android.synthetic.main.title_layout.tv_title
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -52,7 +39,7 @@ import java.nio.charset.StandardCharsets
 import java.util.Locale
 
 
-class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTextureListener,
+class WlanVideoPreviewActivity : VideoBaseActivity<ActivityVideoPreviewBinding>(), TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope() {
 
     var tag = WlanVideoPreviewActivity::class.simpleName
@@ -83,15 +70,13 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
     var address = ""
     var channel = 0
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_preview
-    }
-
     override fun onResume() {
         super.onResume()
         XP2P.setCallback(this)
         startPlayer()
     }
+
+    override fun getViewBinding(): ActivityVideoPreviewBinding = ActivityVideoPreviewBinding.inflate(layoutInflater)
 
     override fun initView() {
         val bundle = intent.getBundleExtra(VideoConst.VIDEO_CONFIG)
@@ -100,7 +85,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
             if (TextUtils.isEmpty(videoConfig)) return@let
             val devInfo = JSON.parseObject(videoConfig, DevUrl2Preview::class.java)
             devInfo?.let {
-                tv_title.setText(it.devName)
+                binding.vTitle.tvTitle.text = it.devName
                 deviceName = it.devName
                 channel = it.channel
                 address = it.address
@@ -108,7 +93,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
             }
         }
 
-        tv_video_quality.setText(R.string.video_quality_medium_str)
+        binding.tvVideoQuality.setText(R.string.video_quality_medium_str)
         App.data.accessInfo?.let {
             productId = it.productId
             audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${deviceName}", 16000)
@@ -174,34 +159,36 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_video_quality.setOnClickListener(switchVideoQualityListener)
-        radio_talk.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked && checkPermissions(permissions)) {
-                if (!speakAble(true)) radio_talk.isChecked = false
-            } else if (isChecked && !checkPermissions(permissions)) {
-                requestPermission(permissions)
-            } else {
-                speakAble(false)
+        with(binding) {
+            vTitle.ivBack.setOnClickListener { finish() }
+            tvVideoQuality.setOnClickListener(switchVideoQualityListener)
+            radioTalk.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked && checkPermissions(permissions)) {
+                    if (!speakAble(true)) radioTalk.isChecked = false
+                } else if (isChecked && !checkPermissions(permissions)) {
+                    requestPermission(permissions)
+                } else {
+                    speakAble(false)
+                }
             }
-        }
-        iv_up.setOnClickListener(controlListener)
-        iv_down.setOnClickListener(controlListener)
-        iv_right.setOnClickListener(controlListener)
-        iv_left.setOnClickListener(controlListener)
-        v_preview.surfaceTextureListener = this
-        iv_audio.setOnClickListener {
-            audioAble = !audioAble
-            chgAudioStatus(audioAble)
+            ivUp.setOnClickListener(controlListener)
+            ivDown.setOnClickListener(controlListener)
+            ivRight.setOnClickListener(controlListener)
+            ivLeft.setOnClickListener(controlListener)
+            vPreview.surfaceTextureListener = this@WlanVideoPreviewActivity
+            ivAudio.setOnClickListener {
+                audioAble = !audioAble
+                chgAudioStatus(audioAble)
+            }
         }
     }
 
     private fun chgAudioStatus(audioAble: Boolean) {
         if (!audioAble) {
-            iv_audio.setImageResource(R.mipmap.no_audio)
+            binding.ivAudio.setImageResource(R.mipmap.no_audio)
             player.setVolume(0F, 0F)
         } else {
-            iv_audio.setImageResource(R.mipmap.audio)
+            binding.ivAudio.setImageResource(R.mipmap.audio)
             val audioManager = getSystemService(Service.AUDIO_SERVICE) as AudioManager
             val volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
             player.setVolume(volume.toFloat(), volume.toFloat())
@@ -213,10 +200,10 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
             val id = "${productId}/${deviceName}"
             var command = XP2P.getLanUrl(id) + "command?_protocol=tcp&"
             when (v) {
-                iv_up -> command += Command.getPtzUpCommand(channel)
-                iv_down -> command += Command.getPtzDownCommand(channel)
-                iv_right -> command += Command.getPtzRightCommand(channel)
-                iv_left -> command += Command.getPtzLeftCommand(channel)
+                binding.ivUp-> command += Command.getPtzUpCommand(channel)
+                binding.ivDown-> command += Command.getPtzDownCommand(channel)
+                binding.ivRight-> command += Command.getPtzRightCommand(channel)
+                binding.ivLeft-> command += Command.getPtzLeftCommand(channel)
             }
             Log.e(tag, "command $command")
 
@@ -249,19 +236,19 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
         var command = ""
         when (value) {
             0 -> {
-                tv_video_quality.setText(R.string.video_quality_high_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_high_str)
                 command =
                     "ipc.flv?action=live&_protocol=tcp&quality=super&_crypto=off&_port=$port&channel=${channel}"
             }
 
             1 -> {
-                tv_video_quality.setText(R.string.video_quality_medium_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_medium_str)
                 command =
                     "ipc.flv?action=live&_protocol=tcp&quality=high&_crypto=off&_port=$port&channel=${channel}"
             }
 
             2 -> {
-                tv_video_quality.setText(R.string.video_quality_low_str)
+                binding.tvVideoQuality.setText(R.string.video_quality_low_str)
                 command =
                     "ipc.flv?action=live&_protocol=tcp&quality=standard&_crypto=off&_port=$port&channel=${channel}"
             }
@@ -274,8 +261,10 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
     private fun setPlayerUrl(suffix: String) {
         player.release()
         launch(Dispatchers.Main) {
-            layout_video_preview?.removeView(v_preview)
-            layout_video_preview?.addView(v_preview, 0)
+            with(binding) {
+                layoutVideoPreview.removeView(vPreview)
+                layoutVideoPreview.addView(vPreview, 0)
+            }
         }
 
         player = IjkMediaPlayer()
@@ -366,7 +355,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
 
     private fun finishPlayer() {
         player.release()
-        if (radio_talk.isChecked) speakAble(false)
+        if (binding.radioTalk.isChecked) speakAble(false)
         App.data.accessInfo?.let {
             XP2P.stopService("${productId}/${deviceName}")
         }
@@ -412,23 +401,23 @@ class WlanVideoPreviewActivity : VideoBaseActivity(), TextureView.SurfaceTexture
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 MSG_UPDATE_HUD -> {
-                    val videoCachedDuration = player?.videoCachedDuration
-                    val audioCachedDuration = player?.audioCachedDuration
-                    val videoCachedBytes = player?.videoCachedBytes
-                    val audioCachedBytes = player?.audioCachedBytes
-                    val tcpSpeed = player?.tcpSpeed
+                    val videoCachedDuration = player.videoCachedDuration
+                    val audioCachedDuration = player.audioCachedDuration
+                    val videoCachedBytes = player.videoCachedBytes
+                    val audioCachedBytes = player.audioCachedBytes
+                    val tcpSpeed = player.tcpSpeed
 
-                    tv_a_cache?.text = String.format(
+                    binding.llDashBoard.tvACache.text = String.format(
                         Locale.US, "%s, %s",
                         CommonUtils.formatedDurationMilli(audioCachedDuration),
                         CommonUtils.formatedSize(audioCachedBytes)
                     )
-                    tv_v_cache?.text = String.format(
+                    binding.llDashBoard.tvVCache.text = String.format(
                         Locale.US, "%s, %s",
                         CommonUtils.formatedDurationMilli(videoCachedDuration),
                         CommonUtils.formatedSize(videoCachedBytes)
                     )
-                    tv_tcp_speed?.text = String.format(
+                    binding.llDashBoard.tvTcpSpeed.text = String.format(
                         Locale.US, "%s",
                         CommonUtils.formatedSpeed(tcpSpeed, 1000)
                     )

@@ -8,25 +8,24 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_add_room.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityAddRoomBinding
 
-class AddRoomActivity : BaseActivity(), MyCallback {
-    override fun getContentView(): Int {
-        return R.layout.activity_add_room
-    }
+class AddRoomActivity : BaseActivity<ActivityAddRoomBinding>(), MyCallback {
+    override fun getViewBinding(): ActivityAddRoomBinding = ActivityAddRoomBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.add_room)
+        binding.addRoomMenu.tvTitle.text = getString(R.string.add_room)
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        btn_add_room.setOnClickListener { addRoom() }
+        with(binding) {
+            addRoomMenu.ivBack.setOnClickListener { finish() }
+            btnAddRoom.setOnClickListener { addRoom() }
+        }
     }
 
     private fun addRoom() {
-        val familyName = et_room_name.text.toString().trim()
+        val familyName = binding.etRoomName.text.toString().trim()
         if (TextUtils.isEmpty(familyName)) {
             show(getString(R.string.empty_room))
             return

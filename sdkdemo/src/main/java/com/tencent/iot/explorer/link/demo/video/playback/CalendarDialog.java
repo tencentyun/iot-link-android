@@ -1,6 +1,7 @@
 package com.tencent.iot.explorer.link.demo.video.playback;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -8,20 +9,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.tencent.iot.explorer.link.demo.R;
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView;
+import com.tencent.iot.explorer.link.demo.databinding.PopupCalendarLayoutBinding;
 import com.tencent.iot.explorer.link.demo.video.utils.IosCenterStyleDialog;
 
 import java.util.List;
 
-public class CalendarDialog extends IosCenterStyleDialog implements View.OnClickListener{
+public class CalendarDialog extends IosCenterStyleDialog<PopupCalendarLayoutBinding> implements View.OnClickListener{
 
-    private CalendarView calendar;
-    private TextView month2Show;
-    private View lastMonth;
-    private View nextMonth;
-    private TextView cancel;
-    private TextView ok;
-    private ConstraintLayout outsideLayout;
-    private ConstraintLayout insideLayout;
     private OnClickedListener onClickedListener;
     private OnMonthChanged onMonthChanged;
     private List<String> allDate2Tag;
@@ -32,9 +26,7 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
 
     public void addTagDates(List<String> tagDates) {
         allDate2Tag.addAll(tagDates);
-        if (calendar != null) {
-            calendar.invalidate();
-        }
+        binding.calendarView.invalidate();
     }
 
     public void setOnClickedListener(OnClickedListener onClickedListener) {
@@ -46,7 +38,7 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
     }
 
     public CalendarDialog(Context context, List<String> allDate2Tag) {
-        super(context, R.layout.popup_calendar_layout);
+        super(context, PopupCalendarLayoutBinding.inflate(LayoutInflater.from(context)));
         this.allDate2Tag = allDate2Tag;
     }
 
@@ -57,24 +49,15 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
 
     @Override
     public void initView() {
-        calendar = view.findViewById(R.id.calendar_view);
-        month2Show = view.findViewById(R.id.tv_month_tip);
-        lastMonth = view.findViewById(R.id.btn_last_month);
-        nextMonth = view.findViewById(R.id.btn_next_month);
-        cancel = view.findViewById(R.id.tv_cancel);
-        ok = view.findViewById(R.id.tv_ok);
-        outsideLayout = view.findViewById(R.id.outside_dialog_layout);
-        insideLayout = view.findViewById(R.id.inside_layout);
-
-        lastMonth.setOnClickListener(this);
-        nextMonth.setOnClickListener(this);
-        cancel.setOnClickListener(this);
-        ok.setOnClickListener(this);
-        outsideLayout.setOnClickListener(this);
-        insideLayout.setOnClickListener(this);
+        binding.btnLastMonth.setOnClickListener(this);
+        binding.btnNextMonth.setOnClickListener(this);
+        binding.tvCancel.setOnClickListener(this);
+        binding.tvOk.setOnClickListener(this);
+        binding.outsideDialogLayout.setOnClickListener(this);
+        binding.insideLayout.setOnClickListener(this);
 
         setCurDate();
-        calendar.setSelectDate(allDate2Tag);
+        binding.calendarView.setSelectDate(allDate2Tag);
     }
 
     @Override
@@ -83,20 +66,20 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
     }
 
     public void next(){
-        calendar.nextMonth();
+        binding.calendarView.nextMonth();
         setCurDate();
     }
 
     public void last(){
-        calendar.lastMonth();
+        binding.calendarView.lastMonth();
         setCurDate();
     }
 
     private void setCurDate() {
-        month2Show.setText(getContext().getString(R.string.year_and_month_unit,
-                String.valueOf(calendar.getYear()), String.valueOf((calendar.getMonth() + 1))));
+        binding.tvMonthTip.setText(getContext().getString(R.string.year_and_month_unit,
+                String.valueOf(binding.calendarView.getYear()), String.valueOf((binding.calendarView.getMonth() + 1))));
         if (onMonthChanged != null) {
-            onMonthChanged.onMonthChanged(this, String.format("%04d-%02d", calendar.getYear(), calendar.getMonth() + 1));
+            onMonthChanged.onMonthChanged(this, String.format("%04d-%02d", binding.calendarView.getYear(), binding.calendarView.getMonth() + 1));
         }
     }
 
@@ -110,7 +93,7 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
             dismiss();
         } else if (v.getId() == R.id.tv_ok) {
             if (onClickedListener != null) {
-                if (calendar.getCheckedDate() == null || calendar.getCheckedDate().size() <= 0) {
+                if (binding.calendarView.getCheckedDate() == null || binding.calendarView.getCheckedDate().size() <= 0) {
                     onClickedListener.onOkClickedWithoutDateChecked();
                     return;
                 }
@@ -119,7 +102,7 @@ public class CalendarDialog extends IosCenterStyleDialog implements View.OnClick
 //                        onClickedListener.onOkClickedCheckedDateWithoutData();
 //                        return;
 //                    }
-                onClickedListener.onOkClicked(calendar.getCheckedDate());
+                onClickedListener.onOkClicked(binding.calendarView.getCheckedDate());
             }
             dismiss();
         }

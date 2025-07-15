@@ -7,16 +7,13 @@ import com.google.android.material.tabs.TabLayout
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoMainBinding
 import com.tencent.iot.video.link.consts.VideoConst
-import kotlinx.android.synthetic.main.activity_main.tb_bottom
-import kotlinx.android.synthetic.main.title_layout.tv_title
 
-class VideoMainActivity : VideoBaseActivity() {
+class VideoMainActivity : VideoBaseActivity<ActivityVideoMainBinding>() {
     private val fragments = arrayListOf<Fragment>()
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_main
-    }
+    override fun getViewBinding(): ActivityVideoMainBinding = ActivityVideoMainBinding.inflate(layoutInflater)
 
     override fun initView() {
         intent?.let {
@@ -31,8 +28,8 @@ class VideoMainActivity : VideoBaseActivity() {
             }
         }
 
-        tv_title.setText(R.string.iot_demo_name)
-        tb_bottom.visibility = View.GONE
+        binding.vTitle.tvTitle.setText(R.string.iot_demo_name)
+        binding.tbBottom.visibility = View.GONE
         fragments.clear()
         fragments.add(VideoDeviceFragment())
         this.supportFragmentManager.beginTransaction()
@@ -42,7 +39,7 @@ class VideoMainActivity : VideoBaseActivity() {
     }
 
     override fun setListener() {
-        tb_bottom.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tbBottom.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {}
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabSelected(tab: TabLayout.Tab) {}

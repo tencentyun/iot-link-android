@@ -8,36 +8,34 @@ import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
 import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
-import kotlinx.android.synthetic.main.activity_register.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityRegisterBinding
 
 /**
  * 注册
  */
-class RegisterActivity : BaseActivity(), MyCallback {
+class RegisterActivity : BaseActivity<ActivityRegisterBinding>(), MyCallback {
 
     private var account = ""
     private var pwd = ""
     private val countryCode = "86"
     private var code = ""
 
-    override fun getContentView(): Int {
-        return R.layout.activity_register
-    }
+    override fun getViewBinding(): ActivityRegisterBinding = ActivityRegisterBinding.inflate(layoutInflater)
 
     override fun initView() {
     }
 
     override fun setListener() {
-        btn_register_get_code.setOnClickListener {
+        binding.btnRegisterGetCode.setOnClickListener {
             getCode()
         }
-        btn_register_commit.setOnClickListener {
+        binding.btnRegisterCommit.setOnClickListener {
             checkCode()
         }
     }
 
     private fun getCode() {
-        account = et_register_account.text.toString().trim()
+        account = binding.etRegisterAccount.text.toString().trim()
         if (TextUtils.isEmpty(account)) {
             Toast.makeText(this, "请求输入手机号/邮箱", Toast.LENGTH_LONG).show()
             return
@@ -49,12 +47,12 @@ class RegisterActivity : BaseActivity(), MyCallback {
     }
 
     private fun checkCode() {
-        pwd = et_register_pwd.text.toString().trim()
+        pwd = binding.etRegisterPwd.text.toString().trim()
         if (pwd.length < 8) {
             Toast.makeText(this, "密码长度至少为8位", Toast.LENGTH_LONG).show()
             return
         }
-        code = et_register_code.text.toString().trim()
+        code = binding.etRegisterCode.text.toString().trim()
         if (code.length != 6) {
             Toast.makeText(this, "验证码长为6位数字", Toast.LENGTH_LONG).show()
             return

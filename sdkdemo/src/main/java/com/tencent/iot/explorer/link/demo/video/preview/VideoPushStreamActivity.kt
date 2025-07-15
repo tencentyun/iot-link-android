@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
+import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoPushStreamBinding
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.VideoPreviewBaseActivity
@@ -44,9 +45,6 @@ import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
 import com.tencent.xnet.annotations.XP2PProtocolType
-import kotlinx.android.synthetic.main.activity_video_push_stream.sv_camera_view
-import kotlinx.android.synthetic.main.title_layout.iv_back
-import kotlinx.android.synthetic.main.title_layout.tv_title
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -56,7 +54,7 @@ import java.io.IOException
 import java.util.Date
 import java.util.concurrent.Executors
 
-class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
+class VideoPushStreamActivity : VideoPreviewBaseActivity<ActivityVideoPushStreamBinding>(), EventView,
     TextureView.SurfaceTextureListener,
     XP2PCallback, CoroutineScope by MainScope(), SurfaceHolder.Callback, OnEncodeListener {
 
@@ -107,20 +105,18 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
     }
 
-    override fun getContentView(): Int {
-        return R.layout.activity_video_push_stream
-    }
-
     override fun onResume() {
         super.onResume()
         holder?.addCallback(this)
     }
 
+    override fun getViewBinding(): ActivityVideoPushStreamBinding = ActivityVideoPushStreamBinding.inflate(layoutInflater)
+
     override fun initView() {
-        tv_title.setText(presenter.getDeviceName())
+        binding.vTitle.tvTitle.setText(presenter.getDeviceName())
         XP2P.setCallback(this)
         getDeviceP2PInfo()
-        holder = sv_camera_view.holder
+        holder = binding.svCameraView.holder
     }
 
     private fun startService() {
@@ -262,7 +258,7 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity(), EventView,
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {}
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
+        binding.vTitle.ivBack.setOnClickListener { finish() }
     }
 
     open fun setPlayerUrl(suffix: String) {

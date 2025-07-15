@@ -21,14 +21,13 @@ import com.tencent.iot.explorer.link.demo.core.response.UserInfoResponse
 import com.tencent.iot.explorer.link.demo.core.upload.UploadImpl
 import com.tencent.iot.explorer.link.demo.core.upload.UploadService
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
-import kotlinx.android.synthetic.main.activity_personal_info.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityPersonalInfoBinding
 import java.io.File
 
 /**
  * 个人信息
  */
-class PersonalInfoActivity : BaseActivity(), MyCallback {
+class PersonalInfoActivity : BaseActivity<ActivityPersonalInfoBinding>(), MyCallback {
 
     private var popupWindow: CameraPopupWindow? = null
     private var editPopupWindow: EditPopupWindow? = null
@@ -41,38 +40,38 @@ class PersonalInfoActivity : BaseActivity(), MyCallback {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
-    override fun getContentView(): Int {
-        return R.layout.activity_personal_info
-    }
+    override fun getViewBinding(): ActivityPersonalInfoBinding = ActivityPersonalInfoBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = getString(R.string.personal_info)
+        binding.menuPersonalInfo.tvTitle.text = getString(R.string.personal_info)
         IoTAuth.userImpl.userInfo(this)
         uploadImpl = UploadService()
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        tv_title_nick.setOnClickListener {
-            showEditPopup()
-        }
-        tv_title_telephone_number.setOnClickListener {
-
-        }
-        tv_title_modify_password.setOnClickListener {
-            if (TextUtils.isEmpty(App.data.userInfo.PhoneNumber)) {
-                showCommonPopup()
-            } else {
-                jumpActivity(SetPasswordActivity::class.java)
+        with(binding) {
+            menuPersonalInfo.ivBack.setOnClickListener { finish() }
+            tvTitleNick.setOnClickListener {
+                showEditPopup()
             }
-        }
-        user_info_portrait.setOnClickListener {
-            if (checkPermissions(permissions))
-                showCameraPopup()
-            else requestPermission(permissions)
-        }
-        tv_user_info_logout.setOnClickListener {
-            IoTAuth.userImpl.logout(this)
+            tvTitleTelephoneNumber.setOnClickListener {
+
+            }
+            tvTitleModifyPassword.setOnClickListener {
+                if (TextUtils.isEmpty(App.data.userInfo.PhoneNumber)) {
+                    showCommonPopup()
+                } else {
+                    jumpActivity(SetPasswordActivity::class.java)
+                }
+            }
+            userInfoPortrait.setOnClickListener {
+                if (checkPermissions(permissions))
+                    showCameraPopup()
+                else requestPermission(permissions)
+            }
+            tvUserInfoLogout.setOnClickListener {
+                IoTAuth.userImpl.logout(this@PersonalInfoActivity)
+            }
         }
     }
 
@@ -121,10 +120,10 @@ class PersonalInfoActivity : BaseActivity(), MyCallback {
 
     private fun showUserInfo() {
         App.data.userInfo.let {
-            tv_nick.text = it.NickName
-            tv_telephone_number.text = it.PhoneNumber
+            binding.tvNick.text = it.NickName
+            binding.tvTelephoneNumber.text = it.PhoneNumber
             if (!TextUtils.isEmpty(it.Avatar))
-                Picasso.get().load(it.Avatar).into(user_info_portrait)
+                Picasso.get().load(it.Avatar).into(binding.userInfoPortrait)
         }
     }
 
@@ -132,15 +131,15 @@ class PersonalInfoActivity : BaseActivity(), MyCallback {
         if (popupWindow == null) {
             popupWindow = CameraPopupWindow(this)
         }
-        popupWindow?.setBg(personal_info_popup_bg)
-        popupWindow?.show(personal_info)
+        popupWindow?.setBg(binding.personalInfoPopupBg)
+        popupWindow?.show(binding.personalInfo)
     }
 
     private fun showCommonPopup() {
         if (commonPopupWindow == null) {
             commonPopupWindow = CommonPopupWindow(this)
         }
-        commonPopupWindow?.setBg(personal_info_popup_bg)
+        commonPopupWindow?.setBg(binding.personalInfoPopupBg)
         commonPopupWindow?.setCommonParams(
             "请先绑定手机号",
             "当前未绑定手机号，无法进行修改密码"
@@ -156,7 +155,7 @@ class PersonalInfoActivity : BaseActivity(), MyCallback {
                 popupWindow.dismiss()
             }
         }
-        commonPopupWindow?.show(personal_info)
+        commonPopupWindow?.show(binding.personalInfo)
     }
 
     private fun showEditPopup() {
@@ -177,8 +176,8 @@ class PersonalInfoActivity : BaseActivity(), MyCallback {
                 editPopupWindow?.dismiss()
             }
         }
-        editPopupWindow?.setBg(personal_info_popup_bg)
-        editPopupWindow?.show(personal_info)
+        editPopupWindow?.setBg(binding.personalInfoPopupBg)
+        editPopupWindow?.show(binding.personalInfo)
     }
 
     override fun fail(msg: String?, reqCode: Int) {

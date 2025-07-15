@@ -1,14 +1,15 @@
 package com.tencent.iot.explorer.link.demo.video.playback;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.iot.explorer.link.demo.R;
+import com.tencent.iot.explorer.link.demo.databinding.ItemGridOptionBinding;
 
 import java.util.List;
 
@@ -16,16 +17,17 @@ public class GridOptionsAdapter extends RecyclerView.Adapter<GridOptionsAdapter.
     private List<String> options;
     private int index = -1;
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        View layout;
-        TextView option;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ItemGridOptionBinding binding;
 
-        ViewHolder(View view) {
-            super(view);
-            layout = view;
-            option = view.findViewById(R.id.tv_option);
+        ViewHolder(ItemGridOptionBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
+        public View getView() {
+            return binding.getRoot();
+        }
     }
 
     public GridOptionsAdapter(List<String> options, int index) {
@@ -33,12 +35,13 @@ public class GridOptionsAdapter extends RecyclerView.Adapter<GridOptionsAdapter.
         this.index = index;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_option, parent, false);
-        final ViewHolder holder = new ViewHolder(view);
+        ItemGridOptionBinding binding = ItemGridOptionBinding.inflate(LayoutInflater.from(parent.getContext()));
+        final ViewHolder holder = new ViewHolder(binding);
 
-        holder.layout.setOnClickListener(new View.OnClickListener() {
+        holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
@@ -53,11 +56,11 @@ public class GridOptionsAdapter extends RecyclerView.Adapter<GridOptionsAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.option.setText(options.get(position));
+        holder.binding.tvOption.setText(options.get(position));
         if (position == index) {
-            holder.option.setBackgroundResource(R.drawable.background_blue_cell);
+            holder.binding.tvOption.setBackgroundResource(R.drawable.background_blue_cell);
         } else {
-            holder.option.setBackgroundResource(R.drawable.background_gray_cell);
+            holder.binding.tvOption.setBackgroundResource(R.drawable.background_gray_cell);
         }
     }
 
@@ -67,7 +70,7 @@ public class GridOptionsAdapter extends RecyclerView.Adapter<GridOptionsAdapter.
     }
 
     public interface OnItemClicked {
-        void onItemClicked(int postion, String option);
+        void onItemClicked(int position, String option);
     }
 
     private OnItemClicked onItemClicked;

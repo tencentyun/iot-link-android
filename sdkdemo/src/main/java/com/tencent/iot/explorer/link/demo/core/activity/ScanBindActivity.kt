@@ -8,31 +8,28 @@ import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
-import kotlinx.android.synthetic.main.activity_scan_bind.*
-import kotlinx.android.synthetic.main.menu_back_layout.*
+import com.tencent.iot.explorer.link.demo.databinding.ActivityScanBindBinding
 
 /**
  * 扫码绑定设备
  */
-class ScanBindActivity : BaseActivity() {
+class ScanBindActivity : BaseActivity<ActivityScanBindBinding>() {
 
-    override fun getContentView(): Int {
-        return R.layout.activity_scan_bind
-    }
+    override fun getViewBinding(): ActivityScanBindBinding = ActivityScanBindBinding.inflate(layoutInflater)
 
     override fun initView() {
-        tv_title.text = "扫码绑定"
+        binding.menuScanBind.tvTitle.text = "扫码绑定"
     }
 
     override fun setListener() {
-        iv_back.setOnClickListener { finish() }
-        btn_scan_bind.setOnClickListener {
+        binding.menuScanBind.ivBack.setOnClickListener { finish() }
+        binding.btnScanBind.setOnClickListener {
             bindDevice()
         }
     }
 
     private fun bindDevice() {
-        val signature = et_scan_signature.text.trim().toString()
+        val signature = binding.etScanSignature.text.trim().toString()
         if (TextUtils.isEmpty(signature)) {
             show("请输入设备签名")
             return

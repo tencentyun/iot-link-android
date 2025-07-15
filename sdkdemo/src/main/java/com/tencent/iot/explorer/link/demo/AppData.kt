@@ -29,7 +29,7 @@ class AppData private constructor() {
 
     var bindDeviceToken = ""
 
-    val activityList = LinkedList<BaseActivity>()
+    val activityList = LinkedList<BaseActivity<*>>()
 
     var callingDeviceId = "" //主动呼叫的设备的id
 
