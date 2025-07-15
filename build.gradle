@@ -37,3 +37,11 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+gradle.projectsEvaluated {
+    allprojects {
+        repositories.all { repo ->
+            println "REPO: ${repo.name} (${repo.hasProperty('url') ? repo.url : 'no url'})"
+        }
+    }
+}
+
