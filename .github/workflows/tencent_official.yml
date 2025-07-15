@@ -81,6 +81,10 @@ jobs:
         run: |
           export VIDEO_TAG=${{env.curr_tag}}
           bash .github/scripts/updateVideoSDKVersion.sh
+      - name: Debug-->grep maven
+        run: |
+          grep -rn "maven" .
+          grep -rn "flatDir" .
 
       - name: Video-->Build Video with Gradle
         if: ${{contains(env.curr_tag, 'video')}}
