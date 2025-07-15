@@ -38,9 +38,6 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    repositories {
-        flatDir { dirs 'libs' }
-    }
 }
 
 dependencies {
