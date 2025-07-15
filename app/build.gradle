@@ -103,9 +103,6 @@ android {
         abortOnError false
     }
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
-    repositories {
-        flatDir { dirs 'libs' }
-    }
     applicationVariants.all { variant ->
         variant.outputs.all {
             def date = new Date().format("yyyyMMddHH" , TimeZone.getTimeZone("GMT+08"))
