@@ -344,6 +344,7 @@ internal class WSClientManager private constructor() {
             client?.run {
                 if (isConnected) {
                     send(message)
+                    L.d("sendMessage:$message")
                     return
                 }
             }
@@ -389,12 +390,15 @@ internal class WSClientManager private constructor() {
         client?.run {
             confirmQueue.forEach {
                 send(it.iotMsg.toString())
+                L.d("send text:${it.iotMsg}")
             }
             while (requestQueue.isNotEmpty()) {
                 send(requestQueue.poll()?.iotMsg.toString())
+                L.d("send text:${requestQueue.poll()?.iotMsg}")
             }
             while (messageList.isNotEmpty()) {
                 send(messageList.poll())
+                L.d("send text:${messageList.poll()}")
             }
         }
     }

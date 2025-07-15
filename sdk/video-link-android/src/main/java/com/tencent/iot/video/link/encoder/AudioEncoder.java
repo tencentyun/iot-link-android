@@ -9,6 +9,7 @@ import android.media.audiofx.AutomaticGainControl;
 import android.os.Build;
 import android.util.Log;
 
+import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 import com.tencent.iot.video.link.listener.OnEncodeListener;
 import com.tencent.iot.video.link.param.AudioEncodeParam;
 import com.tencent.iot.video.link.param.MicParam;
@@ -228,6 +229,28 @@ public class AudioEncoder {
                     readSize = audioRecord.read(inputBuffer, bufferSizeInBytes);
                 }
                 if (readSize >= 0) {
+//                    // 1. 取出录音PCM数据
+//                    byte[] micPcmBytes = new byte[readSize];
+//                    inputBuffer.position(0);
+//                    inputBuffer.get(micPcmBytes, 0, readSize);
+//                    inputBuffer.position(0); // 重置position
+//
+//                    // 2. 获取扬声器播放的PCM
+//                    byte[] playerPcmBytes = onReadPlayerPlayPcm(readSize);
+//
+//                    // 3. 回声消除
+//                    byte[] aecPcmBytes = null;
+//                    if (playerPcmBytes != null && playerPcmBytes.length == readSize) {
+//                        aecPcmBytes = GvoiceJNIBridge.cancellation(micPcmBytes, playerPcmBytes);
+//                    } else {
+//                        aecPcmBytes = micPcmBytes; // 没有播放数据就直接用原始
+//                    }
+//
+//                    // 4. 把消除后的PCM写回inputBuffer
+//                    inputBuffer.clear();
+//                    inputBuffer.put(aecPcmBytes, 0, aecPcmBytes.length);
+//                    inputBuffer.position(0);
+
                     audioCodec.queueInputBuffer(audioInputBufferId, 0, readSize, System.nanoTime() / 1000, 0);
                 }
             }
