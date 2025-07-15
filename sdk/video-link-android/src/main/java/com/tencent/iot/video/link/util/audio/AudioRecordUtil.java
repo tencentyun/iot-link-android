@@ -525,7 +525,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             }
             return res;
         } else {
-            return new byte[length];
+            return null;
         }
     }
 
