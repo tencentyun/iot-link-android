@@ -38,6 +38,8 @@ import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 
 
 public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Callback {
+
+    private static final int AEC_PCM_MIN_FRAME_SIZE = 640;
     private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
     private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
     private static final String TAG = AudioRecordUtil.class.getName();
@@ -454,7 +456,17 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                     if (buffer != null && pcmEncoder != null) {
                         byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
                         if (playerPcmBytes != null && playerPcmBytes.length > 0) {
-                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
+                            byte[] expandBuffer = buffer;
+                            if (buffer.length < AEC_PCM_MIN_FRAME_SIZE) {
+                                expandBuffer = new byte[AEC_PCM_MIN_FRAME_SIZE];
+                                System.arraycopy(buffer, 0, expandBuffer, 0, buffer.length);
+                            }
+                            byte[] expandPlayerPcmBytes = playerPcmBytes;
+                            if (playerPcmBytes.length < AEC_PCM_MIN_FRAME_SIZE) {
+                                expandPlayerPcmBytes = new byte[AEC_PCM_MIN_FRAME_SIZE];
+                                System.arraycopy(playerPcmBytes, 0, expandPlayerPcmBytes, 0, playerPcmBytes.length);
+                            }
+                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(expandBuffer, expandPlayerPcmBytes);
                             if (isRecord) {
                                 writePcmBytesToFile(buffer, playerPcmBytes, aecPcmBytes);
                             }
