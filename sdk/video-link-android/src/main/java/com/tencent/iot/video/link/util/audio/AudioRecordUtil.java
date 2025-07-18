@@ -200,9 +200,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             this.encodeBit = 8;
         }
         Log.e(TAG, "recordMinBufferSize is: "+ recordMinBufferSize);
-        if (sampleRate != 8000) {
+        if (sampleRate == 8000) {
+            recordMinBufferSize = (sampleRate * this.channelCount * this.encodeBit / 8) / 1000 * 40; //40ms数据长度
+            Log.e(TAG, "40ms recordMinBufferSize is: "+ recordMinBufferSize);
+        } else {
             recordMinBufferSize = (sampleRate * this.channelCount * this.encodeBit / 8) / 1000 * 20; //20ms数据长度
-            Log.e(TAG, "20ms recordMinBufferSize is: " + recordMinBufferSize);
+            Log.e(TAG, "20ms recordMinBufferSize is: "+ recordMinBufferSize);
         }
         Log.e(TAG, "AudioRecordUtil init Pitch is: "+ pitch);
         GvoiceJNIBridge.init(context);
