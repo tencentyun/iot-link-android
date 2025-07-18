@@ -75,7 +75,7 @@ jobs:
       - name: Package apk and aar with Gradle
         run: ./gradlew assembleOpensource
       - name: Publish aar to Maven
-        run: ./gradlew publishToMavenCentral
+        run: ./gradlew publishToMavenCentral -info
       - name: Archive the apk
         uses: actions/upload-artifact@v4
         with:
