@@ -200,8 +200,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             this.encodeBit = 8;
         }
         Log.e(TAG, "recordMinBufferSize is: "+ recordMinBufferSize);
-        recordMinBufferSize = (sampleRate*this.channelCount*this.encodeBit/8)/1000*20; //20ms数据长度
-        Log.e(TAG, "20ms recordMinBufferSize is: "+ recordMinBufferSize);
+        if (sampleRate != 8000) {
+            recordMinBufferSize = (sampleRate * this.channelCount * this.encodeBit / 8) / 1000 * 20; //20ms数据长度
+            Log.e(TAG, "20ms recordMinBufferSize is: " + recordMinBufferSize);
+        }
         Log.e(TAG, "AudioRecordUtil init Pitch is: "+ pitch);
         GvoiceJNIBridge.init(context);
     }
@@ -456,17 +458,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                     if (buffer != null && pcmEncoder != null) {
                         byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
                         if (playerPcmBytes != null && playerPcmBytes.length > 0) {
-                            byte[] expandBuffer = buffer;
-                            if (buffer.length < AEC_PCM_MIN_FRAME_SIZE) {
-                                expandBuffer = new byte[AEC_PCM_MIN_FRAME_SIZE];
-                                System.arraycopy(buffer, 0, expandBuffer, 0, buffer.length);
-                            }
-                            byte[] expandPlayerPcmBytes = playerPcmBytes;
-                            if (playerPcmBytes.length < AEC_PCM_MIN_FRAME_SIZE) {
-                                expandPlayerPcmBytes = new byte[AEC_PCM_MIN_FRAME_SIZE];
-                                System.arraycopy(playerPcmBytes, 0, expandPlayerPcmBytes, 0, playerPcmBytes.length);
-                            }
-                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(expandBuffer, expandPlayerPcmBytes);
+                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
                             if (isRecord) {
                                 writePcmBytesToFile(buffer, playerPcmBytes, aecPcmBytes);
                             }
