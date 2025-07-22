@@ -42,6 +42,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private static final int AEC_PCM_MIN_FRAME_SIZE = 640;
     private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
     private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
+    private static final int DEFAULT_AUDIO_SAMPLE_RATE = 16000; //音频数据16000采样率。保证设备支持。
     private static final String TAG = AudioRecordUtil.class.getName();
     private static final int MSG_START = 1;
     private static final int MSG_STOP = 2;
@@ -137,6 +138,15 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     }
     private final Handler mHandler = new MyHandler();
 
+    public AudioRecordUtil(Context ctx, String id) {
+        context = ctx;
+        deviceId = id;
+        init(DEFAULT_AUDIO_SAMPLE_RATE, DEFAULT_CHANNEL_CONFIG, DEFAULT_AUDIO_FORMAT);
+        readThread = new HandlerThread(TAG);
+        readThread.start();
+        mReadHandler = new ReadHandler(readThread.getLooper(), this);
+    }
+
     public AudioRecordUtil(Context ctx, String id, int sampleRate) {
         context = ctx;
         deviceId = id;
@@ -199,16 +209,16 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else if (bitDepth == AudioFormat.ENCODING_PCM_8BIT) {
             this.encodeBit = 8;
         }
-        Log.e(TAG, "recordMinBufferSize is: "+ recordMinBufferSize);
-        if (sampleRate == 8000) {
-            recordMinBufferSize = (sampleRate * this.channelCount * this.encodeBit / 8) / 1000 * 40; //40ms数据长度
-            Log.e(TAG, "40ms recordMinBufferSize is: "+ recordMinBufferSize);
-        } else {
-            recordMinBufferSize = (sampleRate * this.channelCount * this.encodeBit / 8) / 1000 * 20; //20ms数据长度
-            Log.e(TAG, "20ms recordMinBufferSize is: "+ recordMinBufferSize);
-        }
-        Log.e(TAG, "AudioRecordUtil init Pitch is: "+ pitch);
+        Log.e(TAG, "recordMinBufferSize is: " + recordMinBufferSize);
+        recordMinBufferSize = (sampleRate * this.channelCount * this.encodeBit / 8) / 1000 * 20; //20ms数据长度
+        Log.e(TAG, "20ms recordMinBufferSize is: " + recordMinBufferSize);
+        Log.e(TAG, "AudioRecordUtil init Pitch is: " + pitch);
         GvoiceJNIBridge.init(context);
+    }
+
+    private boolean isEnable8kEncode = false;
+    public void isEnable8kEncode(boolean isEnable8kEncode) {
+        this.isEnable8kEncode = isEnable8kEncode;
     }
 
     public void recordSpeakFlv(boolean isRecord) {
@@ -325,7 +335,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else {
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
         }
-        pcmEncoder = new PCMEncoder(sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
+        pcmEncoder = new PCMEncoder(isEnable8kEncode ? 8000 : sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
         Log.e(TAG, "reset new FLVPacker");
         flvPacker = new FLVPacker(this, true, false);
         int audioSessionId = audioRecord.getAudioSessionId();
@@ -465,14 +475,32 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                             if (isRecord) {
                                 writePcmBytesToFile(buffer, playerPcmBytes, aecPcmBytes);
                             }
+                            if (isEnable8kEncode) {
+                                aecPcmBytes = downSample16kTo8k(aecPcmBytes);
+                            }
                             pcmEncoder.encodeData(aecPcmBytes);
                         } else {
-                            pcmEncoder.encodeData(buffer);
+                            if (isEnable8kEncode) {
+                                byte[] sample8kPcmBytes = downSample16kTo8k(buffer);
+                                pcmEncoder.encodeData(sample8kPcmBytes);
+                            } else {
+                                pcmEncoder.encodeData(buffer);
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    public byte[] downSample16kTo8k(byte[] pcm16k) {
+        int len8k = pcm16k.length / 4; // 2字节一个采样，丢一半
+        byte[] pcm8k = new byte[len8k * 2];
+        for (int i = 0; i < len8k; i++) {
+            pcm8k[i * 2] = pcm16k[i * 4];
+            pcm8k[i * 2 + 1] = pcm16k[i * 4 + 1];
+        }
+        return pcm8k;
     }
 
     public boolean isDevicesSupportAEC() {
