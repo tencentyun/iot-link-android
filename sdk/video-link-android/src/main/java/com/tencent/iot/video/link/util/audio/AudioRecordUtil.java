@@ -274,6 +274,11 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         this.speakFlvFilePath = path;
     }
 
+    public void setSpeakPcmFilePath(String path) {
+        Log.e(TAG, "setSpeakPcmFilePath is: " + path);
+        this.speakPcmFilePath = path;
+    }
+
     // start之前设置有效 start过程中无法改变本次对讲音调
     public void setPitch(int pitch) {
         Log.e(TAG, "setPitch is: "+ pitch);
