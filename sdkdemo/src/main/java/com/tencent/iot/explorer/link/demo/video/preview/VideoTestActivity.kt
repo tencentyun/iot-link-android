@@ -10,7 +10,6 @@ import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
@@ -22,6 +21,8 @@ import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
 import com.tencent.iot.explorer.link.demo.common.log.L
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoTestBinding
@@ -158,7 +159,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
     }
 
     private fun checkDeviceState() {
-        Log.d(tag, "====检测设备状态===")
+        ld { "====检测设备状态===" }
         launch(Dispatchers.IO) {
             getDeviceStatus("${productId}/${deviceName}") { isOnline, msg ->
                 launch(Dispatchers.Main) {
@@ -467,7 +468,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             player.setMaxPacketNum(2)
             while (!::surface.isInitialized) {
                 delay(50)
-                L.e("delay for waiting surface.")
+                le { "delay for waiting surface." }
             }
             player.setSurface(surface)
             player.dataSource = url
@@ -479,13 +480,13 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
     override fun fail(msg: String?, errorCode: Int) {}
 
     override fun commandRequest(id: String?, msg: String?) {
-        Log.e(tag, "xp2pEventNotify id:$id  msg:$msg")
+        le { "xp2pEventNotify id:$id  msg:$msg" }
     }
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-        Log.e(tag, "xp2pEventNotify id:$id  msg:$msg  event:$event")
+        le { "xp2pEventNotify id:$id  msg:$msg  event:$event" }
         if (event == 1003) {
-            Log.e(tag, "====event === 1003")
+            le { "====event === 1003" }
             startShowVideoTime = 0L
             launch(Dispatchers.Main) {
                 val content = getString(R.string.disconnected_and_reconnecting, id)
@@ -502,25 +503,25 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         } else if (event == 1004 || event == 1005) {
             connectTime = System.currentTimeMillis() - connectStartTime
             if (event == 1004) {
-                Log.e(tag, "====event === 1004")
+                le { "====event === 1004" }
                 checkDeviceState()
 //                delegateHttpFlv()
             }
         } else if (event == 1010) {
-            Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
+            le { "====event === 1010, 校验失败，info撞库防止串流： $msg" }
         }
     }
 
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {
-        Log.e(tag, "avDataRecvHandle id:$id  data:$data  len:$data")
+        le { "avDataRecvHandle id:$id  data:$data  len:$data" }
     }
 
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {
-        Log.e(tag, "avDataCloseHandle id:$id  msg:$msg  errorCode:$errorCode")
+        le { "avDataCloseHandle id:$id  msg:$msg  errorCode:$errorCode" }
     }
 
     override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
-        Log.e(tag, "onDeviceMsgArrived id:$id  data:$data  len:$len")
+        le { "onDeviceMsgArrived id:$id  data:$data  len:$len" }
         val reply = JSONObject()
         reply.put("code", "0")
         reply.put("msg", "test command reply")
@@ -535,7 +536,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
-        Log.d(tag, "onSurfaceTextureSizeChanged")
+        ld { "onSurfaceTextureSizeChanged" }
         val layoutParams = binding.vPreview.layoutParams
         if (orientationV) {
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
@@ -547,7 +548,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-        Log.d(tag, "onSurfaceTextureDestroyed")
+        ld { "onSurfaceTextureDestroyed" }
         return false
     }
 

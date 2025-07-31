@@ -1,13 +1,12 @@
 package com.tencent.iot.explorer.link.demo.video.utils;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.tencent.iot.explorer.link.demo.R;
+import com.tencent.iot.explorer.link.demo.common.log.L;
 import com.tencent.iot.explorer.link.demo.databinding.PopupMultipleChannelLayoutBinding;
 
 import java.util.ArrayList;
@@ -29,8 +28,10 @@ public class MultipleChannelChooseDialog extends IosCenterStyleDialog<PopupMulti
         if (view.getId() == R.id.tv_multiple_cancel) {
             dismiss();
         } else if (view.getId() == R.id.tv_multiple_confirm) {
-            Log.d("MultipleChannelChoose", "checkbox selected: channel0: " + binding.cbChannel1.isChecked()
-                    + ",  channel1: " + binding.cbChannel2.isChecked() + ",  channel2: " + binding.cbChannel3.isChecked() + ",  channel3: " + binding.cbChannel4.isChecked());
+            L.INSTANCE.d(() -> "MultipleChannelChoose",
+                    () -> "checkbox selected: channel0: " + binding.cbChannel1.isChecked() + ",  channel1: " + binding.cbChannel2.isChecked()
+                            + ",  channel2: " + binding.cbChannel3.isChecked() + ",  channel3: " + binding.cbChannel4.isChecked());
+
             ArrayList<Integer> selectChannels = new ArrayList<>();
             if (binding.cbChannel1.isChecked()) selectChannels.add(1);
             if (binding.cbChannel2.isChecked()) selectChannels.add(2);

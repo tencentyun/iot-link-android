@@ -40,7 +40,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>(), MyCallback {
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        L.e(msg ?: "")
+        L.e { msg ?: "" }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
@@ -49,7 +49,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>(), MyCallback {
                 App.data.userInfo.update(it)
             }
         } else {
-            L.e(response.msg)
+            L.e { response.msg }
         }
     }
 

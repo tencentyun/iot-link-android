@@ -78,7 +78,7 @@ internal class UploadService : BaseService(), UploadImpl {
         param["path"] = "iotexplorer-app-logs/user_{uin}/"
         tokenAppCosAuth(param, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                L.d("获取签名失败:${msg ?: ""}")
+                L.d { "获取签名失败:${msg ?: ""}" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
@@ -94,7 +94,7 @@ internal class UploadService : BaseService(), UploadImpl {
                         }
                     }
                 }
-                L.d("获取签名返回:${JsonManager.toJson(response)}")
+                L.d { "获取签名返回:${JsonManager.toJson(response)}" }
             }
         }, app_cos_auth) //上传图片
     }
@@ -120,10 +120,10 @@ internal class UploadService : BaseService(), UploadImpl {
             //上传对象
             transferManager.upload(bucket, cosPath, srcPath, uploadId).let {
                 entity.task = it
-                L.d("开始上传：$srcPath")
+                L.d { "开始上传：$srcPath" }
                 it.setCosXmlResultListener(object : CosXmlResultListener {
                     override fun onSuccess(request: CosXmlRequest, result: CosXmlResult) {
-                        L.d("上传成功")
+                        L.d { "上传成功" }
                         entity.url = result.accessUrl
                         onSuccess(entity, callback)
                     }

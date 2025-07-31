@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.TextureView
@@ -23,6 +22,8 @@ import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoPushStreamBinding
 import com.tencent.iot.explorer.link.demo.video.Command
 import com.tencent.iot.explorer.link.demo.video.DevInfo
@@ -130,7 +131,7 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity<ActivityVideoPushStream
     }
 
     private fun checkDeviceState() {
-        Log.d(tag, "====检测设备状态===")
+        ld { "====检测设备状态===" }
         launch(Dispatchers.IO) {
             getDeviceStatus("${presenter.getProductId()}/${presenter.getDeviceName()}") { isOnline, msg ->
                 launch(Dispatchers.Main) {
@@ -316,9 +317,9 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity<ActivityVideoPushStream
     }
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-        Log.e(tag, "id=${id}, event=${event}")
+        le { "id=${id}, event=${event}" }
         if (event == 1003) {
-            Log.e(tag, "====event === 1003")
+            le { "====event === 1003" }
             launch(Dispatchers.Main) {
                 var content = getString(R.string.disconnected_and_reconnecting, id)
                 Toast.makeText(this@VideoPushStreamActivity, content, Toast.LENGTH_SHORT).show()
@@ -327,11 +328,11 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity<ActivityVideoPushStream
         } else if (event == 1004 || event == 1005) {
             connectTime = System.currentTimeMillis() - connectStartTime
             if (event == 1004) {
-                Log.e(tag, "====event === 1004")
+                le { "====event === 1004" }
                 checkDeviceState()
             }
         } else if (event == 1010) {
-            Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
+            le { "====event === 1010, 校验失败，info撞库防止串流： $msg" }
         }
     }
 
@@ -463,16 +464,16 @@ class VideoPushStreamActivity : VideoPreviewBaseActivity<ActivityVideoPushStream
     }
 
     override fun surfaceCreated(p0: SurfaceHolder?) {
-        Log.d(tag, "surfaceCreated")
+        ld { "surfaceCreated" }
         openCamera()
     }
 
     override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, p2: Int, p3: Int) {
-        Log.d(tag, "surfaceChanged")
+        ld { "surfaceChanged" }
     }
 
     override fun surfaceDestroyed(p0: SurfaceHolder?) {
-        Log.d(tag, "surfaceDestroyed")
+        ld { "surfaceDestroyed" }
         p0?.removeCallback(this)
     }
 

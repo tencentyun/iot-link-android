@@ -178,7 +178,7 @@ class AddTimingProjectActivity : BaseActivity<ActivityAddTimingProjectBinding>()
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        L.e(msg ?: "")
+        L.e { msg ?: "" }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {

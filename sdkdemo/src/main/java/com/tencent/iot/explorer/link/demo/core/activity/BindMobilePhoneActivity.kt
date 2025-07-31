@@ -35,7 +35,7 @@ class BindMobilePhoneActivity : BaseActivity<ActivityBindMobilePhoneBinding>() {
         }
         IoTAuth.userImpl.sendBindPhoneCode(countryCode, account, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                L.d(msg ?: "")
+                L.d { msg ?: "" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
@@ -57,7 +57,7 @@ class BindMobilePhoneActivity : BaseActivity<ActivityBindMobilePhoneBinding>() {
         }
         IoTAuth.userImpl.checkBindPhoneCode(countryCode, account, code, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                L.d(msg ?: "")
+                L.d { msg ?: "" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
@@ -73,7 +73,7 @@ class BindMobilePhoneActivity : BaseActivity<ActivityBindMobilePhoneBinding>() {
     private fun bindPhone() {
         IoTAuth.userImpl.bindPhone(countryCode, account, code, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                L.d(msg ?: "")
+                L.d { msg ?: "" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {

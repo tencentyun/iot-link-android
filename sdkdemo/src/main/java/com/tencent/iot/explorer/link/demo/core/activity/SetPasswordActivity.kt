@@ -54,7 +54,7 @@ class SetPasswordActivity : BaseActivity<ActivitySetPasswordBinding>() {
         }
         IoTAuth.passwordImpl.resetPassword(oldPwd, newPwd, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                L.d(msg ?: "")
+                L.d { msg ?: "" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {

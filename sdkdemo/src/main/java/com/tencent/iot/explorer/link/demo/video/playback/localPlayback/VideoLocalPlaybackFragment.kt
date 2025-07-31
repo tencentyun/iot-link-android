@@ -3,7 +3,6 @@ package com.tencent.iot.explorer.link.demo.video.playback.localPlayback
 import android.graphics.SurfaceTexture
 import android.os.Environment
 import android.text.TextUtils
-import android.util.Log
 import android.view.*
 import android.widget.SeekBar
 import android.widget.Toast
@@ -12,13 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
-import com.tencent.iot.explorer.link.core.log.L
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineViewChangeListener
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.databinding.FragmentVideoLocalPlaybackBinding
@@ -104,7 +104,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
         } else {
             player.let {
                 if (currentPlayerState) {
-                    Log.d(TAG, "setUserVisibleHint playVideo isVisibleToUser $isVisibleToUser")
+                    ld { "setUserVisibleHint playVideo isVisibleToUser $isVisibleToUser" }
                     // 滑动该页面时，如果处于播放状态，暂停播放
                     launch(Dispatchers.Main) {
                         binding.ivStart.performClick()
@@ -113,7 +113,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
             }
         }
         isShowing = isVisibleToUser
-        Log.d(TAG, "setUserVisibleHint isShowing $isShowing")
+        ld { "setUserVisibleHint isShowing $isShowing" }
     }
 
     override fun startHere(view: View) {
@@ -154,7 +154,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
      * 开启xp2p服务
      */
     private fun startService() {
-        Log.d(TAG, "startService")
+        ld { "startService" }
         if (App.data.accessInfo == null || devInfo == null || TextUtils.isEmpty(devInfo?.DeviceName)) return
         val xP2PAppConfig = XP2PAppConfig().apply {
             appKey = BuildConfig.TencentIotLinkSDKDemoAppkey
@@ -169,7 +169,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
 
     private var onCompletionListener = object : IMediaPlayer.OnCompletionListener {
         override fun onCompletion(mp: IMediaPlayer?) {
-            Log.d(TAG, "onCompletion")
+            ld { "onCompletion" }
             binding.ivStart.setImageResource(R.mipmap.start)
             binding.pauseTipLayout.visibility = View.VISIBLE
             seekBarJob?.cancel()
@@ -309,7 +309,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
 
             launch(Dispatchers.Main) {
                 var resp = requestTagDateInfo(it)
-                Log.d(TAG, "resp $resp")
+                ld { "resp $resp" }
                 if (TextUtils.isEmpty(resp)) return@launch
 
                 try {
@@ -405,7 +405,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                 if (TextUtils.isEmpty(tvAllTime.text.toString())) return@setOnClickListener
 
                 var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
-                Log.d(TAG, "setOnClickListener currentPlayerState $currentPlayerState")
+                ld { "setOnClickListener currentPlayerState $currentPlayerState" }
 
                 if (currentPlayerState) {
                     launch(Dispatchers.IO) {
@@ -550,7 +550,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
 
         var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
         var timeStr = formateDateParam(dateStr)
-        Log.d(TAG, "request timeStr $timeStr")
+        ld { "request timeStr $timeStr" }
         var command = Command.getMonthDates(devInfo!!.Channel, timeStr)
         if (TextUtils.isEmpty(command)) return ""
         return sendCmd(id, command)
@@ -580,15 +580,15 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     }
 
     private fun playVideo(startTime: Long, endTime: Long, offset: Long) {
-        Log.d(TAG, "startTime $startTime endTime $endTime offset $offset")
+        ld { "startTime $startTime endTime $endTime offset $offset" }
         keepStartTime = startTime
         keepEndTime = endTime
         devInfo?.let {
-            Log.d(TAG, "isShowing $isShowing")
+            ld { "isShowing $isShowing" }
             launch(Dispatchers.Main) {
                 delay(1000)
                 if (!isShowing) currentPlayerState = false
-                Log.d(TAG, "playVideo currentPlayerState $currentPlayerState")
+                ld { "playVideo currentPlayerState $currentPlayerState" }
                 setPlayerUrl(Command.getLocalVideoUrl(it.Channel, startTime, endTime), offset)
                 binding.tvAllTime.text = CommonUtils.formatTime(endTime * 1000 - startTime * 1000)
                 binding.videoSeekbar.max = (endTime - startTime).toInt()
@@ -609,7 +609,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
         player.setOnCompletionListener(onCompletionListener)
         player.let {
             var url = urlPrefix + suffix
-            Log.d(TAG, "setPlayerUrl url $url")
+            ld { "setPlayerUrl url $url" }
             it.reset()
 
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
@@ -642,7 +642,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
 
                     var seekResp = sendCmd(id, seekCommand)
                     var commandResp = JSON.parseObject(seekResp, CommandResp::class.java)
-                    L.e(TAG, "seekCommandResp code " + commandResp?.status)
+                    le { "seekCommandResp code ${commandResp?.status}" }
                 }
             }
 
@@ -687,9 +687,9 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
         val file = File(path)
         if (!file.exists()) {
             if (file.mkdirs()) {
-                L.d("创建本地回放存储路径成功")
+                ld { "创建本地回放存储路径成功" }
             } else {
-                L.e("创建本地回放存储路径失败")
+                le { "创建本地回放存储路径失败" }
                 Toast.makeText(context, getString(R.string.fail_to_create_path), Toast.LENGTH_SHORT)
                     .show()
                 return -1L
@@ -743,7 +743,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {
         out?.write(data)
-        L.d("==== data len: $len")
+        ld { "==== data len: $len" }
     }
 
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
@@ -752,7 +752,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     }
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-        Log.e(TAG, "id=${id}, event=${event}")
+        le { "id=${id}, event=${event}" }
         if (event == 1003) {
             if (isDownloading) {
                 launch(Dispatchers.Main) {
@@ -763,7 +763,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                 }
             } // 唤醒守护线程
             currentPostion = player.currentPosition / 1000
-            L.e(TAG, "xp2pEventNotify currentPostion $currentPostion")
+            le { "xp2pEventNotify currentPostion $currentPostion" }
             launch(Dispatchers.Main) {
                 Toast.makeText(
                     context,
@@ -795,7 +795,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                 ).show()
             }
         } else if (event == 1010) {
-            Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
+            le { "====event === 1010, 校验失败，info撞库防止串流： $msg" }
         }
     }
 

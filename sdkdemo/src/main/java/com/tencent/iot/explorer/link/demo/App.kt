@@ -16,6 +16,8 @@ import com.tencent.iot.explorer.link.core.auth.socket.callback.PayloadMessageCal
 import com.tencent.iot.explorer.link.core.auth.util.Weak
 import com.tencent.iot.explorer.link.demo.common.log.L
 import com.tencent.iot.explorer.link.core.link.entity.TRTCParamsEntity
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.rtc.TRTCSdkDemoSessionManager
 import com.tencent.iot.explorer.link.rtc.model.*
 import com.tencent.iot.explorer.link.rtc.ui.audiocall.TRTCAudioCallActivity
@@ -56,7 +58,7 @@ class App : Application(), PayloadMessageCallback {
         IoTAuth.init(APP_KEY, APP_SECRET)
         IoTAuth.addLoginExpiredListener(object : LoginExpiredListener {
             override fun expired(user: User) {
-                L.d("用户登录过期")
+                ld { "用户登录过期" }
             }
         })
         IoTAuth.registerSharedBugly(this) //接入共享式bugly
@@ -83,7 +85,9 @@ class App : Application(), PayloadMessageCallback {
     private fun trtcCallDevice(callingType: Int) {
         IoTAuth.deviceImpl.trtcCallDevice(data.callingDeviceId, object: MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                if (msg != null) L.e(msg)
+                msg?.let {
+                    le { it }
+                }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {

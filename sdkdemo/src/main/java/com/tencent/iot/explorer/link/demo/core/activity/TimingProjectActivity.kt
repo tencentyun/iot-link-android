@@ -75,7 +75,7 @@ class TimingProjectActivity : BaseActivity<ActivityTimingProjectBinding>() {
         device?.run {
             IoTAuth.timingImpl.timeList(ProductId, DeviceName, 0, object : MyCallback {
                 override fun fail(msg: String?, reqCode: Int) {
-                    L.e(msg ?: "")
+                    L.e { msg ?: "" }
                 }
 
                 override fun success(response: BaseResponse, reqCode: Int) {
@@ -86,7 +86,7 @@ class TimingProjectActivity : BaseActivity<ActivityTimingProjectBinding>() {
                             showTimingList()
                         }
                     } else {
-                        L.e(response.msg)
+                        L.e { response.msg }
                     }
                 }
             })
@@ -102,7 +102,7 @@ class TimingProjectActivity : BaseActivity<ActivityTimingProjectBinding>() {
             IoTAuth.timingImpl.modifyTimerStatus(ProductId, DeviceName, TimerId, status,
                 object : MyCallback {
                     override fun fail(msg: String?, reqCode: Int) {
-                        L.e(msg ?: "")
+                        L.e { msg ?: "" }
                     }
 
                     override fun success(response: BaseResponse, reqCode: Int) {
@@ -124,7 +124,7 @@ class TimingProjectActivity : BaseActivity<ActivityTimingProjectBinding>() {
             IoTAuth.timingImpl.deleteTimer(ProductId, DeviceName, TimerId,
                 object : MyCallback {
                     override fun fail(msg: String?, reqCode: Int) {
-                        L.e(msg ?: "")
+                        L.e { msg ?: "" }
                     }
 
                     override fun success(response: BaseResponse, reqCode: Int) {

@@ -83,7 +83,7 @@ class MessageActivity : BaseActivity<ActivityMessageBinding>(), MyCallback {
     private fun deleteMessage(position: Int) {
         IoTAuth.messageImpl.deleteMessage(messageList[position].MsgID, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                L.e(msg ?: "")
+                L.e { msg ?: "" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
@@ -135,7 +135,7 @@ class MessageActivity : BaseActivity<ActivityMessageBinding>(), MyCallback {
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        L.e(msg ?: "")
+        L.e { msg ?: "" }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {

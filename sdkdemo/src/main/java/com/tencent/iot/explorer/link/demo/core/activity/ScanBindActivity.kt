@@ -37,7 +37,7 @@ class ScanBindActivity : BaseActivity<ActivityScanBindBinding>() {
         App.data.getCurrentFamily().run {
             IoTAuth.deviceImpl.scanBindDevice(FamilyId, signature, object : MyCallback {
                 override fun fail(msg: String?, reqCode: Int) {
-                    L.e(msg ?: "")
+                    L.e { msg ?: "" }
                     show(msg ?: "绑定失败")
                 }
 
