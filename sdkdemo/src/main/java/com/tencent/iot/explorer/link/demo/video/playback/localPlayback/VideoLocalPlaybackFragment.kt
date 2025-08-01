@@ -27,6 +27,8 @@ import com.tencent.iot.explorer.link.demo.video.CommandResp
 import com.tencent.iot.explorer.link.demo.video.DevInfo
 import com.tencent.iot.explorer.link.demo.video.playback.*
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
+import com.tencent.iot.video.link.callback.VideoCallback
+import com.tencent.iot.video.link.service.VideoBaseService
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
 import com.tencent.xnet.XP2PCallback
@@ -36,22 +38,14 @@ import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
-import java.util.concurrent.CountDownLatch
 import kotlin.collections.ArrayList
 
-private var countDownLatchs: MutableMap<String, CountDownLatch> = ConcurrentHashMap()
-private var keepConnectThreadLock = Object()
-
-@Volatile
-private var keepAliveThreadRuning = true
-
-class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalPlaybackBinding>(), TextureView.SurfaceTextureListener,
-    XP2PCallback {
+class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalPlaybackBinding>(),
+    TextureView.SurfaceTextureListener,
+    XP2PCallback, VideoCallback {
     private var TAG = VideoLocalPlaybackFragment::class.java.simpleName
     var devInfo: DevInfo? = null
     private var player: IjkMediaPlayer = IjkMediaPlayer()
@@ -84,9 +78,12 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     private var playbacks: MutableList<PlaybackFile> = ArrayList()
 
     private var out: FileOutputStream? = null
+
     @Volatile
     private var isDownloading = false
     private lateinit var toastDialog: ToastDialog
+
+    private var xp2pInfo: String? = null
 
     private fun sendCmd(id: String, cmd: String): String {
         if (connected)
@@ -102,7 +99,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        if (isVisibleToUser) {
+        if (isVisibleToUser && connected) {
             refreshDateTime(Date())
         } else {
             player.let {
@@ -120,7 +117,6 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     }
 
     override fun startHere(view: View) {
-//        super.startHere(view)
         with(binding) {
             initVideoPlaybackView(this)
             IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG)
@@ -132,15 +128,8 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
             listLocalPlayback.adapter = adapter
 
             setListener()
-            launch(Dispatchers.Main) {
-                delay(100)  // 延迟一秒再进行连接，保证存在设备信息
-//                startConnect()
-            }
-
-            App.data.accessInfo?.let {
-                XP2P.setQcloudApiCred(it.accessId, it.accessToken)
-                XP2P.setCallback(this@VideoLocalPlaybackFragment)
-            }
+            getDeviceP2PInfo()
+            XP2P.setCallback(this@VideoLocalPlaybackFragment)
 
             dlg = CalendarDialog(context, ArrayList(), onMonthChanged)
             dlg?.setOnClickedListener(dlgOnClickedListener)
@@ -148,49 +137,34 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
             recordView()
             localPalaybackVideo.surfaceTextureListener = this@VideoLocalPlaybackFragment
             timeLine.setTimelineChangeListener(timeLineViewChangeListener)
-
-            ivStart.setOnClickListener {
-                devInfo ?: let { return@setOnClickListener }
-                if (TextUtils.isEmpty(tvAllTime.text.toString())) return@setOnClickListener
-
-                var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
-                Log.d(TAG, "setOnClickListener currentPlayerState $currentPlayerState")
-
-                if (currentPlayerState) {
-                    launch(Dispatchers.IO) {
-                        var stopCommand = Command.pauseLocalVideoUrl(devInfo!!.Channel)
-                        var resp = sendCmd(id, stopCommand)
-                        var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
-                        if (commandResp != null && commandResp.status == 0) {
-                            launch(Dispatchers.Main) {
-                                ivStart.setImageResource(R.mipmap.start)
-                                pauseTipLayout.visibility = View.VISIBLE
-                                seekBarJob?.cancel()
-                                currentPlayerState = false
-                                player.pause()
-                            }
-                        }
-                    }
-
-                } else {
-                    launch(Dispatchers.IO) {
-                        var startCommand = Command.resumeLocalVideoUrl(devInfo!!.Channel)
-                        var resp = sendCmd(id, startCommand)
-                        var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
-                        if (commandResp != null && commandResp.status == 0) {
-                            launch(Dispatchers.Main) {
-                                ivStart.setImageResource(R.mipmap.stop)
-                                pauseTipLayout.visibility = View.GONE
-                                startJobRereshTimeAndProgress()
-                                currentPlayerState = true
-                                player.start()
-                            }
-                        }
-                    }
-                }
-            }
             videoSeekbar.setOnSeekBarChangeListener(onSeekBarChangeListener)
         }
+    }
+
+    private fun getDeviceP2PInfo() {
+        if (devInfo?.DeviceName.isNullOrEmpty()) return
+        App.data.accessInfo?.let {
+            VideoBaseService(it.accessId, it.accessToken).getDeviceXp2pInfo(
+                it.productId, devInfo?.DeviceName!!, this
+            )
+        }
+    }
+
+    /**
+     * 开启xp2p服务
+     */
+    private fun startService() {
+        Log.d(TAG, "startService")
+        if (App.data.accessInfo == null || devInfo == null || TextUtils.isEmpty(devInfo?.DeviceName)) return
+        val xP2PAppConfig = XP2PAppConfig().apply {
+            appKey = BuildConfig.TencentIotLinkSDKDemoAppkey
+            appSecret = BuildConfig.TencentIotLinkSDKDemoAppSecret
+            autoConfigFromDevice = false
+            type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
+        }
+        XP2P.startService(
+            context, App.data.accessInfo?.productId, devInfo?.DeviceName, xp2pInfo, xP2PAppConfig
+        )
     }
 
     private var onCompletionListener = object : IMediaPlayer.OnCompletionListener {
@@ -226,7 +200,8 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     }
 
     override fun videoViewNeeResize(marginStart: Int, marginEnd: Int) {
-        var videoLayoutParams = binding.localPalaybackVideo.layoutParams as ConstraintLayout.LayoutParams
+        val videoLayoutParams =
+            binding.localPalaybackVideo.layoutParams as ConstraintLayout.LayoutParams
         videoLayoutParams.marginStart = marginStart
         videoLayoutParams.marginEnd = marginEnd
         binding.localPalaybackVideo.layoutParams = videoLayoutParams
@@ -309,11 +284,21 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
         }
 
         override fun onOkClickedCheckedDateWithoutData() {
-            ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.checked_date_no_video), 2000).show()
+            ToastDialog(
+                context,
+                ToastDialog.Type.WARNING,
+                getString(R.string.checked_date_no_video),
+                2000
+            ).show()
         }
 
         override fun onOkClickedWithoutDateChecked() {
-            ToastDialog(context, ToastDialog.Type.WARNING, getString(R.string.checked_date_first), 2000).show()
+            ToastDialog(
+                context,
+                ToastDialog.Type.WARNING,
+                getString(R.string.checked_date_first),
+                2000
+            ).show()
         }
     }
 
@@ -350,7 +335,10 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
         }
     }
 
-    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentVideoLocalPlaybackBinding =
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentVideoLocalPlaybackBinding =
         FragmentVideoLocalPlaybackBinding.inflate(inflater, container, false)
 
     private fun setListener() {
@@ -379,7 +367,10 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
             }
 
             ivVideoPhoto.setOnClickListener {
-                ImageSelect.saveBitmap(this@VideoLocalPlaybackFragment.context, localPalaybackVideo.bitmap)
+                ImageSelect.saveBitmap(
+                    this@VideoLocalPlaybackFragment.context,
+                    localPalaybackVideo.bitmap
+                )
                 ToastDialog(
                     context,
                     ToastDialog.Type.SUCCESS,
@@ -409,6 +400,46 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                     }
                 }
             }
+            ivStart.setOnClickListener {
+                devInfo ?: let { return@setOnClickListener }
+                if (TextUtils.isEmpty(tvAllTime.text.toString())) return@setOnClickListener
+
+                var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
+                Log.d(TAG, "setOnClickListener currentPlayerState $currentPlayerState")
+
+                if (currentPlayerState) {
+                    launch(Dispatchers.IO) {
+                        var stopCommand = Command.pauseLocalVideoUrl(devInfo!!.Channel)
+                        var resp = sendCmd(id, stopCommand)
+                        var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
+                        if (commandResp != null && commandResp.status == 0) {
+                            launch(Dispatchers.Main) {
+                                ivStart.setImageResource(R.mipmap.start)
+                                pauseTipLayout.visibility = View.VISIBLE
+                                seekBarJob?.cancel()
+                                currentPlayerState = false
+                                player.pause()
+                            }
+                        }
+                    }
+
+                } else {
+                    launch(Dispatchers.IO) {
+                        var startCommand = Command.resumeLocalVideoUrl(devInfo!!.Channel)
+                        var resp = sendCmd(id, startCommand)
+                        var commandResp = JSONObject.parseObject(resp, CommandResp::class.java)
+                        if (commandResp != null && commandResp.status == 0) {
+                            launch(Dispatchers.Main) {
+                                ivStart.setImageResource(R.mipmap.stop)
+                                pauseTipLayout.visibility = View.GONE
+                                startJobRereshTimeAndProgress()
+                                currentPlayerState = true
+                                player.start()
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         adapter?.setOnDownloadClickedListenter(onDownloadClickedListener)
@@ -422,17 +453,26 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                     val offset = initDownload(playbacks[pos])
                     if (offset >= 0) {
                         XP2P.startAvRecvService(
-                            "${App.data.accessInfo!!.productId}/${devInfo?.DeviceName}",
+                            "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}",
                             "action=download&channel=0&file_name=${playbacks[pos].file_name}&offset=${offset}",
                             false
                         )
                         isDownloading = true
-                        toastDialog = ToastDialog(context, ToastDialog.Type.SUCCESS, getString(R.string.downloading), 600000)
+                        toastDialog = ToastDialog(
+                            context,
+                            ToastDialog.Type.SUCCESS,
+                            getString(R.string.downloading),
+                            600000
+                        )
                         toastDialog.setCancelable(false)
                         toastDialog.show()
                     }
                 } else {
-                    Toast.makeText(context, getString(R.string.download_one_at_a_time), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.download_one_at_a_time),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -573,7 +613,7 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
             it.reset()
 
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
-            it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)
+            it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024)
             it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
             if (!currentPlayerState) {
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 0)
@@ -634,101 +674,14 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
         }
     }
 
-    private fun startConnect() {
-        if (App.data.accessInfo == null || devInfo == null ||
-            TextUtils.isEmpty(devInfo?.DeviceName)
-        ) return
-
-        Thread(Runnable {
-            var id = "${App.data.accessInfo?.productId}/${devInfo?.DeviceName}"
-            val xP2PAppConfig = XP2PAppConfig().apply {
-                appKey = BuildConfig.TencentIotLinkSDKDemoAppkey
-                appSecret = BuildConfig.TencentIotLinkSDKDemoAppSecret
-                autoConfigFromDevice = false
-                type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
-            }
-
-            var started = XP2P.startService(context,
-                id,
-                App.data.accessInfo?.productId, devInfo?.DeviceName, xP2PAppConfig
-            )
-
-            launch(Dispatchers.Main) {
-                    var errInfo = getString(R.string.error_with_code, id, started.toString())
-                    Toast.makeText(context, errInfo, Toast.LENGTH_SHORT).show()
-            }
-
-            devInfo?.let {
-//                var tmpCountDownLatch = CountDownLatch(1)
-//                countDownLatchs.put("${App.data.accessInfo!!.productId}/${it.deviceName}", tmpCountDownLatch)
-//                tmpCountDownLatch.await()
-                urlPrefix =
-                    XP2P.delegateHttpFlv("${App.data.accessInfo!!.productId}/${it.DeviceName}")
-
-                // 启动成功后，开始开启守护线程
-//                keepConnect(id)
-            }
-        }).start()
-    }
-
-    private fun keepConnect(id: String?) {
-        if (TextUtils.isEmpty(id)) return
-
-        // 开启守护线程
-        Thread {
-            var objectLock = Object()
-            while (true) {
-                var tmpCountDownLatch = CountDownLatch(1)
-                countDownLatchs.put(id!!, tmpCountDownLatch)
-
-                Log.d(TAG, "id=${id} keepConnect wait disconnected msg")
-                synchronized(keepConnectThreadLock) {
-                    keepConnectThreadLock.wait()
-                }
-                Log.d(TAG, "id=${id} keepConnect do not wait and keepAliveThreadRuning=${keepAliveThreadRuning}")
-                if (!keepAliveThreadRuning) break //锁被释放后，检查守护线程是否继续运行
-
-                // 发现断开尝试恢复视频，每隔一秒尝试一次
-                XP2P.stopService(id)
-//                XP2P.startService(context,
-//                    id,
-//                    App.data.accessInfo!!.productId,
-//                    devInfo?.DeviceName,
-//                    XP2PAppConfig()
-//                )
-//                while (
-//                ) {
-//                    XP2P.stopService(id)
-//                    synchronized(objectLock) {
-//                        objectLock.wait(1000)
-//                    }
-//                    Log.d(TAG, "id=${id}, try to call startServiceWithXp2pInfo")
-//                }
-
-                Log.d(TAG, "id=${id}, call startServiceWithXp2pInfo successed")
-                countDownLatchs.put(id!!, tmpCountDownLatch)
-                Log.d(TAG, "id=${id}, tmpCountDownLatch start wait")
-                tmpCountDownLatch.await()
-                Log.d(TAG, "id=${id}, tmpCountDownLatch do not wait any more")
-
-                urlPrefix = XP2P.delegateHttpFlv(id)
-                if (TextUtils.isEmpty(urlPrefix)) continue
-                if (currentPostion >= 0) { // 尝试从上次断掉的时间节点开始恢复录像
-                    playVideo(keepStartTime, keepEndTime, currentPostion)
-                } else {
-                    playVideo(keepStartTime, keepEndTime, 0)
-                }
-            }
-        }.start()
-    }
-
     private fun initDownload(playbackFile: PlaybackFile): Long {
         var offset = 0L
-        val path: String = if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) { // 优先保存到SD卡中
-            Environment.getExternalStorageDirectory().absolutePath + File.separator + "local_playback"
-        } else { // 如果SD卡不存在，就保存到本应用的目录下
-            context?.filesDir?.absolutePath + File.separator + "local_playback"
-        }
+        val path: String =
+            if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) { // 优先保存到SD卡中
+                Environment.getExternalStorageDirectory().absolutePath + File.separator + "local_playback"
+            } else { // 如果SD卡不存在，就保存到本应用的目录下
+                context?.filesDir?.absolutePath + File.separator + "local_playback"
+            }
 
         //创建下载目录
         val file = File(path)
@@ -737,7 +690,8 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                 L.d("创建本地回放存储路径成功")
             } else {
                 L.e("创建本地回放存储路径失败")
-                Toast.makeText(context, getString(R.string.fail_to_create_path), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.fail_to_create_path), Toast.LENGTH_SHORT)
+                    .show()
                 return -1L
             }
         }
@@ -748,7 +702,11 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
         if (videoFile.exists()) {
             offset = if (playbackFile.file_size - videoFile.length() == 0L) {
                 launch(Dispatchers.Main) {
-                    Toast.makeText(context, getString(R.string.do_not_download_repeat), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.do_not_download_repeat),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 -2L // 已经下载过该文件，不需要重复下载
             } else {
@@ -774,6 +732,14 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
 
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
     override fun fail(msg: String?, errorCode: Int) {}
+    override fun success(response: String?, reqCode: Int) {
+        response?.let {
+            val responseObject = org.json.JSONObject(it).getJSONObject("Response")
+            xp2pInfo = responseObject.getString("P2PInfo")
+            startService()
+        }
+    }
+
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {
         out?.write(data)
@@ -795,11 +761,6 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                     toastDialog.dismiss()
                     isDownloading = false
                 }
-            }
-            keepConnectThreadLock?.let {
-                synchronized(it) {
-                    it.notify()
-                }
             } // 唤醒守护线程
             currentPostion = player.currentPosition / 1000
             L.e(TAG, "xp2pEventNotify currentPostion $currentPostion")
@@ -813,14 +774,12 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
             connected = false
 
         } else if (event == 1004 || event == 1005) {
-            countDownLatchs.get(id)?.let {
-                Log.d(tag, "id=${id}, countDownLatch=${it}, countDownLatch.count=${it.count}")
-                it.countDown()
-            }
-
             launch(Dispatchers.Main) {
                 Toast.makeText(context, getString(R.string.connected, id), Toast.LENGTH_SHORT)
                     .show()
+            }
+            if (!connected && isShowing) {
+                refreshDateTime(Date())
             }
             connected = true
         } else if (event == 1009) { //设备停止推流，下载结束
@@ -828,7 +787,12 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                 out?.flush()
                 toastDialog.dismiss()
                 isDownloading = false
-                ToastDialog(context, ToastDialog.Type.SUCCESS, getString(R.string.download_complete), 2000).show()
+                ToastDialog(
+                    context,
+                    ToastDialog.Type.SUCCESS,
+                    getString(R.string.download_complete),
+                    2000
+                ).show()
             }
         } else if (event == 1010) {
             Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
@@ -855,8 +819,8 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     private fun finishAll() {
         player?.release()
         out?.close()
-        isDownloading =false
-
+        isDownloading = false
+        connected = false
         if (recordingState) {
             player.stopRecord()
             context?.let {
@@ -866,19 +830,10 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
 
         App.data.accessInfo?.let { access ->
             devInfo?.let {
-//                XP2P.stopService("${access.productId}/${it.DeviceName}")
+                XP2P.stopService("${access.productId}/${it.DeviceName}")
             }
         }
         XP2P.setCallback(null)
-
-        countDownLatchs.clear()
-        // 关闭守护线程
-        keepAliveThreadRuning = false
-        keepConnectThreadLock?.let {
-            synchronized(it) {
-                it.notify()
-            }
-        }
         cancel()
     }
 }
