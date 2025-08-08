@@ -49,7 +49,8 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.lang.ref.WeakReference
 import java.util.Locale
 
-class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCallback, CoroutineScope by MainScope(),
+class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCallback,
+    CoroutineScope by MainScope(),
     TextureView.SurfaceTextureListener, IMediaPlayer.OnInfoListener {
 
     private val tag = VideoTestActivity::class.simpleName
@@ -90,7 +91,8 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
     }
 
-    override fun getViewBinding(): ActivityVideoTestBinding = ActivityVideoTestBinding.inflate(layoutInflater)
+    override fun getViewBinding(): ActivityVideoTestBinding =
+        ActivityVideoTestBinding.inflate(layoutInflater)
 
     override fun initView() {
         productId = intent.getStringExtra("productId")?.toString() ?: ""
@@ -108,19 +110,6 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
 
         binding.vTitle.tvTitle.text = deviceName
         binding.tvVideoQuality.text = getString(R.string.video_quality_medium_str)
-
-        audioRecordUtil = AudioRecordUtil(
-            this,
-            "${productId}/${deviceName}",
-            16000,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT
-        )
-//        //变调可以传入pitch参数
-//        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
-//        //变调可以传入pitch参数
-//        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
-//        audioRecordUtil.recordSpeakFlv(true)
 
         XP2P.setCallback(this)
         val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
@@ -196,6 +185,20 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             }
             tvVideoQuality.setOnClickListener(switchVideoQualityListener)
             radioTalk.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (audioRecordUtil == null) {
+                    audioRecordUtil = AudioRecordUtil(
+                        this@VideoTestActivity,
+                        "${productId}/${deviceName}",
+                        16000,
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT
+                    )
+                    //        //变调可以传入pitch参数
+                    //        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
+                    //        //变调可以传入pitch参数
+                    //        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
+                }
+                //        audioRecordUtil.recordSpeakFlv(true)
                 if (isChecked && checkPermissions(permissions)) {
                     if (!speakAble(true)) radioTalk.isChecked = false
                 } else if (isChecked && !checkPermissions(permissions)) {
@@ -363,10 +366,10 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         override fun onClick(v: View?) {
             var command = ""
             when (v) {
-                binding.ivUp-> command = Command.getPtzUpCommand(channel)
-                binding.ivDown-> command = Command.getPtzDownCommand(channel)
-                binding.ivRight-> command = Command.getPtzRightCommand(channel)
-                binding.ivLeft-> command = Command.getPtzLeftCommand(channel)
+                binding.ivUp -> command = Command.getPtzUpCommand(channel)
+                binding.ivDown -> command = Command.getPtzDownCommand(channel)
+                binding.ivRight -> command = Command.getPtzRightCommand(channel)
+                binding.ivLeft -> command = Command.getPtzLeftCommand(channel)
             }
 
             Thread(Runnable {

@@ -75,7 +75,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     @Volatile
     var audioAble = true
     var filePath: String? = null
-    lateinit var audioRecordUtil: AudioRecordUtil
+    var audioRecordUtil: AudioRecordUtil? = null
     var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
 
     @Volatile
@@ -132,18 +132,6 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
             tvEventStatus.visibility = View.VISIBLE
             tvEventStatus.setText(R.string.loading)
         }
-        audioRecordUtil = AudioRecordUtil(
-            this,
-            "${presenter.getProductId()}/${presenter.getDeviceName()}",
-            16000,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT
-        )
-//        //变调可以传入pitch参数
-//        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
-//        //变调可以传入pitch参数
-//        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
-//        audioRecordUtil.recordSpeakFlv(true)
         getDeviceP2PInfo()
         XP2P.setCallback(this)
         //实例化对象并设置监听器
@@ -249,14 +237,14 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
                             Command.getTwoWayRadio(presenter.getChannel()),
                             true
                         )
-                        audioRecordUtil.start()
+                        audioRecordUtil?.start()
                         speakAble = true
                         return true
                     }
                 }
             } else {
                 speakAble = false
-                audioRecordUtil.stop()
+                audioRecordUtil?.stop()
                 XP2P.stopSendService("${accessInfo.productId}/${presenter.getDeviceName()}", null)
                 return true
             }
@@ -274,6 +262,19 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
             }
             tvVideoQuality.setOnClickListener(switchVideoQualityListener)
             radioTalk.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (audioRecordUtil == null) {
+                    audioRecordUtil = AudioRecordUtil(
+                        this@VideoPreviewActivity,
+                        "${presenter.getProductId()}/${presenter.getDeviceName()}",
+                        16000,
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT
+                    )
+                    //        //变调可以传入pitch参数
+                    //        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6) //        //变调可以传入pitch参数 //        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
+
+                }
+                //        audioRecordUtil.recordSpeakFlv(true)
                 if (isChecked && checkPermissions(permissions)) {
                     if (!speakAble(true)) radioTalk.isChecked = false
                 } else if (isChecked && !checkPermissions(permissions)) {
@@ -777,7 +778,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
 
     override fun onInfoAudioPcmData(mp: IMediaPlayer?, arrPcm: ByteArray?, length: Int) {
 //        if (audioRecordUtil != null && length > 0 && speakAble) {
-//            audioRecordUtil.setPlayerPcmData(arrPcm);
+//            audioRecordUtil?.setPlayerPcmData(arrPcm);
 //        }
     }
 }

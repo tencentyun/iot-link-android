@@ -73,7 +73,7 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity<ActivityVideoPreviewB
     @Volatile
     var urlPrefix = ""
     var filePath: String? = null
-    lateinit var audioRecordUtil: AudioRecordUtil
+    var audioRecordUtil: AudioRecordUtil? = null
     var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
 
     @Volatile
@@ -124,8 +124,6 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity<ActivityVideoPreviewB
             tvEventStatus.setText(R.string.loading)
         }
 
-        audioRecordUtil =
-            AudioRecordUtil(this, "${presenter.getProductId()}/${presenter.getDeviceName()}", 16000)
         getDeviceP2PInfo()
         XP2P.setCallback(this)
 
@@ -208,8 +206,12 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity<ActivityVideoPreviewB
         }
     }
 
-    open fun speakAble(able: Boolean): Boolean {
+    private fun speakAble(able: Boolean): Boolean {
         App.data.accessInfo?.let { accessInfo ->
+            if (audioRecordUtil == null){
+                audioRecordUtil =
+                    AudioRecordUtil(this, "${presenter.getProductId()}/${presenter.getDeviceName()}", 16000)
+            }
             if (able) {
                 var command = Command.getNvrIpcStatus(presenter.getChannel(), 0)
                 var repStatus = XP2P.postCommandRequestSync(
@@ -233,13 +235,13 @@ class VideoPreviewMJPEGActivity : VideoPreviewBaseActivity<ActivityVideoPreviewB
                             Command.getTwoWayRadio(presenter.getChannel()),
                             true
                         )
-                        audioRecordUtil.start()
+                        audioRecordUtil?.start()
                         return true
                     }
                 }
 
             } else {
-                audioRecordUtil.stop()
+                audioRecordUtil?.stop()
                 XP2P.stopSendService("${accessInfo.productId}/${presenter.getDeviceName()}", null)
                 return true
             }
