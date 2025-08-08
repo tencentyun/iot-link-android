@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.viewbinding.ViewBinding
-import com.tencent.iot.explorer.link.demo.common.log.L
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.common.util.Watermark
 import com.tencent.iot.explorer.link.demo.core.activity.MainActivity
 import com.tencent.xnet.XP2P
@@ -78,10 +78,10 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     protected fun checkPermissions(permissions: Array<String>): Boolean {
         for (p in permissions) {
             if (ActivityCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_DENIED) {
-                L.e(p + "被拒绝")
+                le { "${p}被拒绝" }
                 return false
             }
-            L.e(p + "已经申请成功")
+            le { p + "已经申请成功" }
         }
         return true
     }

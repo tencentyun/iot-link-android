@@ -67,14 +67,14 @@ class FamilyListActivity : BaseActivity<ActivityFamilyListBinding>() {
     private fun refreshFamilyList() {
         IoTAuth.familyImpl.familyList(0, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                L.e(msg ?: "")
+                L.e { msg ?: "" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
                 if (response.isSuccess()) {
                     IoTAuth.familyList.clear()
                     response.parse(FamilyListResponse::class.java)?.run {
-                        L.e("家庭列表：${JsonManager.toJson(FamilyList)}")
+                        L.e { "家庭列表：${JsonManager.toJson(FamilyList)}" }
                         IoTAuth.familyList.addAll(FamilyList)
                         App.data.getCurrentFamily()
                         showFamilyList()

@@ -153,7 +153,7 @@ class FamilyActivity : BaseActivity<ActivityFamilyBinding>(), MyCallback {
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        L.d(msg ?: "")
+        L.d { msg ?: "" }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {

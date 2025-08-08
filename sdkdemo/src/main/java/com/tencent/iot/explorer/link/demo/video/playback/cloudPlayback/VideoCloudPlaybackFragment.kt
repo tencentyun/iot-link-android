@@ -2,7 +2,6 @@ package com.tencent.iot.explorer.link.demo.video.playback.cloudPlayback
 
 import android.graphics.SurfaceTexture
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.TextureView
@@ -19,6 +18,8 @@ import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.customView.CalendarView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineView
 import com.tencent.iot.explorer.link.demo.common.customView.timeline.TimeLineViewChangeListener
+import com.tencent.iot.explorer.link.demo.common.log.L
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.core.entity.BaseResponse
 import com.tencent.iot.explorer.link.demo.core.entity.VideoHistory
@@ -314,7 +315,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment<FragmentVideoCloudPl
 
                 override fun success(response: String?, reqCode: Int) {
                     var json = JSONObject.parseObject(response)
-                    Log.d("响应mjpeg===>url", response)
+                    L.d({ "响应mjpeg===>url" }, { response.toString() })
 
                     json?.let {
                         it.getJSONObject("Response")?.let {
@@ -332,7 +333,7 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment<FragmentVideoCloudPl
     }
 
     private fun startMJPEGVideo(vUrl: String, aUrl: String) {
-        Log.d(tag, "响应mjpeg===>vUrl=${vUrl} \nand aURL===>${aUrl} \nand duration===>${cloudVideoDuration}")
+        ld { "响应mjpeg===>vUrl=${vUrl} \nand aURL===>${aUrl} \nand duration===>${cloudVideoDuration}" }
         player.reset()
         player.setSurface(this.surface)
         player.dataSource = vUrl

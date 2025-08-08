@@ -72,7 +72,7 @@ class RoomActivity : BaseActivity<ActivityRoomBinding>(), MyCallback {
      * 请求失败
      */
     override fun fail(msg: String?, reqCode: Int) {
-        L.e(msg ?: "")
+        L.e { msg ?: "" }
     }
 
     /**

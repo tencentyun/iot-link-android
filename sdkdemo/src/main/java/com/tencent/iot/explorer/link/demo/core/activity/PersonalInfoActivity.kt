@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
 import android.text.TextUtils
-import android.util.Log
 import com.tencent.iot.explorer.link.demo.core.popup.EditPopupWindow
 import com.squareup.picasso.Picasso
 import com.tencent.iot.explorer.link.core.auth.IoTAuth
@@ -15,6 +14,8 @@ import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BaseActivity
 import com.tencent.iot.explorer.link.demo.R
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.core.popup.CameraPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.CommonPopupWindow
 import com.tencent.iot.explorer.link.demo.core.response.UserInfoResponse
@@ -82,12 +83,12 @@ class PersonalInfoActivity : BaseActivity<ActivityPersonalInfoBinding>(), MyCall
         uploadImpl.uploadSingleFile(this, file.absolutePath, object :
             UploadCallback {
             override fun onSuccess(url: String, filePath: String, isOver: Boolean) {
-                Log.d(TAG, "上传成功：$url")
+                ld { "上传成功：$url" }
                 modifyAvatar(url)
             }
 
             override fun onFail(filePath: String, isOver: Boolean) {
-                Log.d(TAG, "上传失败：$filePath")
+                ld { "上传失败：$filePath" }
             }
         })
     }
@@ -95,7 +96,7 @@ class PersonalInfoActivity : BaseActivity<ActivityPersonalInfoBinding>(), MyCall
     private fun modifyAvatar(url: String) {
         IoTAuth.userImpl.modifyPortrait(url, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                Log.d(TAG, "头像修改失败")
+                ld { "头像修改失败" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
@@ -108,7 +109,7 @@ class PersonalInfoActivity : BaseActivity<ActivityPersonalInfoBinding>(), MyCall
     private fun modifyNick(nick: String) {
         IoTAuth.userImpl.modifyAlias(nick, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                Log.d(TAG, "昵称修改失败")
+                ld { "昵称修改失败" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
@@ -181,7 +182,7 @@ class PersonalInfoActivity : BaseActivity<ActivityPersonalInfoBinding>(), MyCall
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        Log.e(TAG, msg ?: "")
+        le { msg ?: "" }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {
@@ -196,7 +197,7 @@ class PersonalInfoActivity : BaseActivity<ActivityPersonalInfoBinding>(), MyCall
                 RequestCode.logout -> logout()
             }
         } else {
-            Log.e(TAG, response.msg)
+            le { response.msg }
         }
     }
 

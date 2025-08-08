@@ -66,7 +66,7 @@ class ConnectDeviceActivity : BaseActivity<ActivityConnectDeviceBinding>() {
     override fun onResume() {
         super.onResume()
         (applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.connectionInfo?.let {
-            L.d("当前WIFI名：${it.ssid}")
+            L.d { "当前WIFI名：${it.ssid}" }
             var ssidName = it.ssid.replace("\"", "")
 
             with(binding) {
@@ -187,7 +187,7 @@ class ConnectDeviceActivity : BaseActivity<ActivityConnectDeviceBinding>() {
         override fun onSuccess(deviceInfo: DeviceInfo) {
             this@ConnectDeviceActivity.deviceInfo = deviceInfo
             this.onStep(SoftAPStep.STEP_DEVICE_BOUND)
-            L.e("开始绑定设备")
+            L.e { "开始绑定设备" }
         }
 
         override fun reconnectedSuccess(deviceInfo: DeviceInfo) {

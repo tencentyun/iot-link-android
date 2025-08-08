@@ -25,6 +25,7 @@ import com.tencent.iot.explorer.link.demo.core.activity.ControlPanelActivity
 import com.tencent.iot.explorer.link.demo.core.adapter.OnItemListener
 import com.tencent.iot.explorer.link.demo.core.holder.BaseHolder
 import com.tencent.iot.explorer.link.demo.common.customView.MyDivider
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.core.activity.ShowAllDeviceActivity
 import com.tencent.iot.explorer.link.demo.databinding.FragmentDeviceBinding
 
@@ -82,7 +83,7 @@ class DeviceFragment : BaseFragment<FragmentDeviceBinding>(), MyCallback {
             override fun onItemClick(holder: BaseHolder<*, *>, clickView: View, position: Int) {
                 App.data.tabRoom(position)
                 showRoom()
-                Log.e("onItemClick", "切换房间更新设备列表")
+                le({ "onItemClick" }, { "切换房间更新设备列表" })
                 refreshDeviceList()
                 showDevice()
             }
@@ -139,7 +140,7 @@ class DeviceFragment : BaseFragment<FragmentDeviceBinding>(), MyCallback {
                     }
 
                     override fun fail(message: String) {
-                        Log.e("deviceList", message)
+                        le({ "deviceList" }, { message })
                     }
                 })
         }
@@ -185,13 +186,13 @@ class DeviceFragment : BaseFragment<FragmentDeviceBinding>(), MyCallback {
                     response.parse(RoomListResponse::class.java)?.run {
                         IoTAuth.roomList.addAll(Roomlist)
                         showRoom()
-                        Log.e("success", "首次更新房间列表，更新设备列表")
+                        le({ "success" }, { "首次更新房间列表，更新设备列表" })
                         refreshDeviceList()
                     }
                 }
             }
         } else {
-            Log.e("DeviceFragment", response.msg)
+            le { response.msg }
         }
     }
 }

@@ -16,7 +16,7 @@ class EnumHolder : BaseHolder<Mapping, ItemEnumBinding> {
 
     override fun show(holder: BaseHolder<*, *>, position: Int) {
         data.run {
-            L.e("key=$key,value=$value")
+            L.e { "key=$key,value=$value" }
             binding.tvEnumTitle.text = key
             binding.ivEnumStatus.setImageResource(
                 if (window.selectValue == value) {

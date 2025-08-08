@@ -13,7 +13,6 @@ import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
@@ -26,6 +25,8 @@ import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.BuildConfig
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.common.log.L
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.common.util.ImageSelect
 import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoPreviewBinding
@@ -114,7 +115,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     }
 
     override fun updateXp2pInfo(xp2pInfo: String) {
-        Log.d(tag, "update xp2p2Info:$xp2pInfo")
+        ld { "update xp2p2Info:$xp2pInfo" }
         startService()
     }
 
@@ -163,7 +164,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     }
 
     private fun startService() {
-        Log.d(tag, "startService")
+        ld { "startService" }
         XP2P.startService(
             this,
             presenter.getProductId(),
@@ -174,7 +175,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     }
 
     private fun checkDeviceState() {
-        Log.d(tag, "====检测设备状态===")
+        ld { "====检测设备状态===" }
         launch(Dispatchers.IO) {
             getDeviceStatus("${presenter.getProductId()}/${presenter.getDeviceName()}") { isOnline, msg ->
                 launch(Dispatchers.Main) {
@@ -191,7 +192,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     }
 
     private fun restartService() {
-        Log.d(tag, "====开始重连===")
+        ld { "====开始重连===" }
         XP2P.stopService("${presenter.getProductId()}/${presenter.getDeviceName()}")
         getDeviceP2PInfo()
     }
@@ -218,7 +219,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
-        Log.d(tag, "onSurfaceTextureAvailable")
+        ld { "onSurfaceTextureAvailable" }
         surface?.let {
             this.surface = Surface(surface)
             player.setSurface(this.surface)
@@ -465,7 +466,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
             player.setFrameSpeed(1.5f)
             while (!::surface.isInitialized) {
                 delay(50)
-                L.e("delay for waiting surface.")
+                le { "delay for waiting surface." }
             }
             player.setSurface(surface)
             player.dataSource = url
@@ -526,11 +527,11 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
         if (!(player.videoWidth > 0 && player.videoHeight > 0)) {
-            Log.e(TAG, "onSurfaceTextureSizeChanged: player video size param must > 0.")
+            le { "onSurfaceTextureSizeChanged: player video size param must > 0." }
             return
         }
 
-        Log.d(tag, "onSurfaceTextureSizeChanged")
+        ld { "onSurfaceTextureSizeChanged" }
         val layoutParams = binding.vPreview.layoutParams
         if (orientationV) {
             layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
@@ -543,13 +544,13 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-        Log.d(tag, "onSurfaceTextureDestroyed")
+        ld { "onSurfaceTextureDestroyed" }
         return false
     }
 
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
         if (!(player.videoWidth > 0 && player.videoHeight > 0)) {
-            Log.e(TAG, "onSurfaceTextureUpdated: player video size param must > 0.")
+            le { "onSurfaceTextureUpdated: player video size param must > 0." }
             return
         }
 
@@ -578,9 +579,9 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     }
 
     override fun xp2pEventNotify(id: String?, msg: String?, event: Int) {
-        Log.e(tag, "id=${id}, event=${event}")
+        le { "id=${id}, event=${event}" }
         if (event == 1003) {
-            Log.e(tag, "====event === 1003")
+            le { "====event === 1003" }
             startShowVideoTime = 0L
             launch(Dispatchers.Main) {
                 val content = getString(R.string.disconnected_and_reconnecting, id)
@@ -593,11 +594,11 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
         } else if (event == 1004 || event == 1005) {
             connectTime = System.currentTimeMillis() - connectStartTime
             if (event == 1004) {
-                Log.e(tag, "====event === 1004")
+                le { "====event === 1004" }
                 checkDeviceState()
             }
         } else if (event == 1010) {
-            Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")
+            le { "====event === 1010, 校验失败，info撞库防止串流： $msg" }
         }
     }
 

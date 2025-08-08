@@ -3,6 +3,9 @@ package com.tencent.iot.explorer.link.demo.common.util;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+
+import com.tencent.iot.explorer.link.demo.common.log.L;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,12 +33,12 @@ public class LogcatHelper {
         File file = new File(PATH_LOGCAT);
         if (!file.exists()) {
             if (file.mkdirs()) {
-                Log.e(TAG, "创建日志目录成功，目录为：" + PATH_LOGCAT);
+                L.INSTANCE.e(() -> "创建日志目录成功，目录为：" + PATH_LOGCAT);
             } else {
-                Log.e(TAG, "创建日志目录失败");
+                L.INSTANCE.e(() -> "创建日志目录失败");
             }
         }else {
-            Log.e(TAG, "日志目录已存在，目录为：" + PATH_LOGCAT);
+            L.INSTANCE.e(() -> "日志目录已存在，目录为：" + PATH_LOGCAT);
         }
     }
 

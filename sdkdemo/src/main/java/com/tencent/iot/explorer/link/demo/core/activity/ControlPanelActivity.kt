@@ -33,6 +33,7 @@ import com.tencent.iot.explorer.link.demo.core.popup.EditPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.EnumPopupWindow
 import com.tencent.iot.explorer.link.demo.core.popup.NumberPopupWindow
 import com.tencent.iot.explorer.link.demo.common.customView.MyDivider
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
 import com.tencent.iot.explorer.link.demo.databinding.ActivityControlPanelBinding
 import com.tencent.iot.explorer.link.rtc.model.RoomKey
 import com.tencent.iot.explorer.link.rtc.model.TRTCUIManager
@@ -185,7 +186,7 @@ class ControlPanelActivity : BaseActivity<ActivityControlPanelBinding>(), Contro
      * 控制设备
      */
     private fun controlDevice(id: String, value: String) {
-        L.d("上报数据:id=$id value=$value")
+        L.d { "上报数据:id=$id value=$value" }
         var data = "{\"$id\":\"$value\"}"
         if (id == TRTC_VIDEO_CALL_STATUS || id == TRTC_AUDIO_CALL_STATUS) { //如果点击选择的是trtc设备的呼叫状态
             if (value == "1") { //并且状态值为1，代表应用正在call设备
@@ -198,11 +199,11 @@ class ControlPanelActivity : BaseActivity<ActivityControlPanelBinding>(), Contro
             IoTAuth.deviceImpl.controlDevice(it.ProductId, it.DeviceName, data,
                     object : MyCallback {
                         override fun fail(msg: String?, reqCode: Int) {
-                            L.e(msg ?: "")
+                            L.e { msg ?: "" }
                         }
 
                         override fun success(response: BaseResponse, reqCode: Int) {
-                            L.e(response.msg)
+                            L.e { response.msg }
                         }
                     })
         }
@@ -217,7 +218,7 @@ class ControlPanelActivity : BaseActivity<ActivityControlPanelBinding>(), Contro
             IoTAuth.deviceImpl.modifyDeviceAlias(it.ProductId, it.getAlias(), entity.value,
                     object : MyCallback {
                         override fun fail(msg: String?, reqCode: Int) {
-                            L.e(msg ?: "")
+                            L.e { msg ?: "" }
                         }
 
                         override fun success(response: BaseResponse, reqCode: Int) {
@@ -405,7 +406,7 @@ class ControlPanelActivity : BaseActivity<ActivityControlPanelBinding>(), Contro
      * 设备监听成功回调（内部解析成功）
      */
     override fun success(payload: Payload) {
-        L.e("Payoad", payload.toString())
+        L.e({ "Payoad" }, { payload.toString() })
         JSON.parseObject(payload.data).run {
             keys.forEachIndexed { _, id ->
                 run setData@{
@@ -425,15 +426,15 @@ class ControlPanelActivity : BaseActivity<ActivityControlPanelBinding>(), Contro
      * 设备监听成功回调（内部解析失败）
      */
     override fun unknown(json: String, errorMessage: String) {
-        L.e("unknown-json", json)
-        L.e("unknown-errorMessage", errorMessage)
+        L.e({ "unknown-json" }, { json })
+        L.e({ "unknown-errorMessage" }, { errorMessage })
     }
 
     /**
      * 面板数据返回成功
      */
     override fun success(panelList: List<ControlPanel>) {
-        L.d("面板数据返回成功", JsonManager.toJson(panelList))
+        L.d({ "面板数据返回成功" }, { JsonManager.toJson(panelList) })
         runOnUiThread {
             this.panelList.addAll(panelList)
             showTimingProject()
@@ -446,14 +447,14 @@ class ControlPanelActivity : BaseActivity<ActivityControlPanelBinding>(), Contro
      * 面板数据更新时
      */
     override fun refresh() {
-        L.e("面板数据更新时 refresh()")
+        L.e { "面板数据更新时 refresh()" }
         runOnUiThread {
             adapter.notifyDataSetChanged()
         }
     }
 
     override fun fail(msg: String) {
-        L.d(TAG, msg)
+        ld { msg }
     }
 
     override fun onBackPressed() {

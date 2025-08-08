@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
-import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
@@ -19,6 +18,8 @@ import com.alibaba.fastjson.JSON
 import com.tencent.iot.explorer.link.demo.App
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
+import com.tencent.iot.explorer.link.demo.common.log.L.ld
+import com.tencent.iot.explorer.link.demo.common.log.L.le
 import com.tencent.iot.explorer.link.demo.common.util.CommonUtils
 import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoPreviewBinding
 import com.tencent.iot.explorer.link.demo.video.Command
@@ -102,17 +103,14 @@ class WlanVideoPreviewActivity : VideoBaseActivity<ActivityVideoPreviewBinding>(
 
     private fun startPlayer() {
         player = IjkMediaPlayer()
-        Log.e(
-            tag,
-            "start startPlayer productid ${App.data.accessInfo?.productId} devname ${deviceName}"
-        )
+        le { "start startPlayer productid ${App.data.accessInfo?.productId} devname ${deviceName}" }
         if (App.data.accessInfo == null || TextUtils.isEmpty(deviceName)) return
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_HUD, 500)
 
         Thread(Runnable {
             val id = "${productId}/${deviceName}"
             val started = XP2P.startLanService(id, productId, deviceName, address, port.toString())
-            Log.e(tag, "===================== after startLanService =====================")
+            le { "===================== after startLanService =====================" }
             if (started != 0) {
                 launch(Dispatchers.Main) {
                     var errInfo = ""
@@ -143,13 +141,13 @@ class WlanVideoPreviewActivity : VideoBaseActivity<ActivityVideoPreviewBinding>(
                 val port = XP2P.getLanProxyPort(id)
                 val command =
                     XP2P.getLanUrl(id) + "voice?_protocol=tcp&_port=$port&channel=${channel}"
-                Log.e(tag, "start radio url $command")
-                Log.e(tag, "speakAble id $id")
+                le { "start radio url $command" }
+                le { "speakAble id $id" }
                 XP2P.runSendService(id, command, true)
                 audioRecordUtil.start()
                 return true
             } else {
-                Log.e(tag, "stop radio")
+                le { "stop radio" }
                 audioRecordUtil.stop()
                 XP2P.stopSendService(id, null)
                 return true
@@ -205,7 +203,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity<ActivityVideoPreviewBinding>(
                 binding.ivRight-> command += Command.getPtzRightCommand(channel)
                 binding.ivLeft-> command += Command.getPtzLeftCommand(channel)
             }
-            Log.e(tag, "command $command")
+            le { "command $command" }
 
             Thread(Runnable {
                 App.data.accessInfo?.let {
@@ -214,7 +212,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity<ActivityVideoPreviewBinding>(
                         "${productId}/${deviceName}",
                         command.toByteArray(), command.toByteArray().size.toLong(), 2 * 1000 * 1000
                     ) ?: ""
-                    Log.d(tag, "command result -> $retContent")
+                    ld { "command result -> $retContent" }
                     launch(Dispatchers.Main) {
                         if (TextUtils.isEmpty(retContent)) {
                             retContent = getString(R.string.command_with_error, command)
@@ -288,7 +286,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity<ActivityVideoPreviewBinding>(
             )
 
             it.setSurface(this.surface)
-            Log.e(tag, "switch url $url")
+            le { "switch url $url" }
             it.dataSource = url
 
             it.prepareAsync()
@@ -316,7 +314,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity<ActivityVideoPreviewBinding>(
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
     override fun onDeviceMsgArrived(id: String?, data: ByteArray?, len: Int): String {
-        Log.d(tag, "==onDeviceMsgArrived: ${data?.let { String(it, StandardCharsets.UTF_8) }}")
+        ld { "==onDeviceMsgArrived: ${data?.let { String(it, StandardCharsets.UTF_8) }}" }
         return "app reply to device"
     }
 
@@ -326,7 +324,7 @@ class WlanVideoPreviewActivity : VideoBaseActivity<ActivityVideoPreviewBinding>(
                 var url = XP2P.getLanUrl(id)
                 val port = XP2P.getLanProxyPort(id)
                 url += "ipc.flv?action=live&_protocol=tcp&quality=high&_crypto=off&_port=$port&channel=${channel}"
-                Log.e(tag, "proxy ===================== $url")
+                le { "proxy ===================== $url" }
                 it.reset()
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100)
                 it.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 25 * 1024)

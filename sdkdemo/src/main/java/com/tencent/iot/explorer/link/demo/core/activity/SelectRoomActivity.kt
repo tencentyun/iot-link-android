@@ -99,7 +99,7 @@ class SelectRoomActivity : BaseActivity<ActivitySelectRoomBinding>(),MyCallback 
                 FamilyId, selectedRoom.RoomId, device.ProductId, device.DeviceName,
                 object : MyCallback {
                     override fun fail(msg: String?, reqCode: Int) {
-                        L.e(msg ?: "")
+                        L.e { msg ?: "" }
                     }
 
                     override fun success(response: BaseResponse, reqCode: Int) {
@@ -129,7 +129,7 @@ class SelectRoomActivity : BaseActivity<ActivitySelectRoomBinding>(),MyCallback 
     }
 
     override fun fail(msg: String?, reqCode: Int) {
-        L.e(msg ?: "")
+        L.e { msg ?: "" }
     }
 
     override fun success(response: BaseResponse, reqCode: Int) {

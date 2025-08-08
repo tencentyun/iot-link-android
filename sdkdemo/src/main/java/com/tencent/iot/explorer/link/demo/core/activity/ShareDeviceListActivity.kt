@@ -63,7 +63,7 @@ class ShareDeviceListActivity : BaseActivity<ActivityShareDeviceListBinding>() {
     private fun getShareDeviceList() {
         IoTAuth.shareImpl.shareDeviceList(0, object : MyCallback {
             override fun fail(msg: String?, reqCode: Int) {
-                L.d(msg ?: "")
+                L.d { msg ?: "" }
             }
 
             override fun success(response: BaseResponse, reqCode: Int) {
