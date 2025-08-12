@@ -448,19 +448,15 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment<FragmentVideoCloudPl
 
     private var onInfoListener = object : IMediaPlayer.OnInfoListener {
         override fun onInfo(mp: IMediaPlayer?, what: Int, extra: Int): Boolean {
-            with(binding) {
-                mp?.let {
-                    if (it.isPlaying) {
-                        ivStart.setImageResource(R.mipmap.stop)
-                        pauseTipLayout.visibility = View.GONE
-                        return true
-                    }
+            mp?.let {
+                if (it.isPlaying) {
+                    binding.ivStart.setImageResource(R.mipmap.stop)
+                    binding.pauseTipLayout.visibility = View.GONE
+                    return true
                 }
-
-                ivStart.setImageResource(R.mipmap.start)
-                pauseTipLayout.visibility = View.VISIBLE
             }
-
+            binding.ivStart.setImageResource(R.mipmap.start)
+            binding.pauseTipLayout.visibility = View.VISIBLE
             return true
         }
 
@@ -481,6 +477,8 @@ class VideoCloudPlaybackFragment: VideoPlaybackBaseFragment<FragmentVideoCloudPl
 
     override fun onDestroy() {
         super.onDestroy()
+        player.stop()
+        player.release()
         cancel()
     }
 
