@@ -58,7 +58,6 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
     private var currentPlayerState = true
     private var dateDataSet: MutableSet<String> = CopyOnWriteArraySet()
     private var dlg: CalendarDialog? = null
-    private var urlPrefix = ""
 
     @Volatile
     private var recordingState = false
@@ -589,14 +588,15 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
                 delay(1000)
                 if (!isShowing) currentPlayerState = false
                 Log.d(TAG, "playVideo currentPlayerState $currentPlayerState")
-                setPlayerUrl(Command.getLocalVideoUrl(it.Channel, startTime, endTime), offset)
+                val urlPrefix = XP2P.delegateHttpFlv("${App.data.accessInfo?.productId}/${devInfo?.DeviceName}")
+                setPlayerUrl(urlPrefix + Command.getLocalVideoUrl(it.Channel, startTime, endTime), offset)
                 binding.tvAllTime.text = CommonUtils.formatTime(endTime * 1000 - startTime * 1000)
                 binding.videoSeekbar.max = (endTime - startTime).toInt()
             }
         }
     }
 
-    private fun setPlayerUrl(suffix: String, offset: Long) {
+    private fun setPlayerUrl(url: String, offset: Long) {
         player.release()
         launch(Dispatchers.Main) {
             binding.layoutVideo.removeView(binding.localPalaybackVideo)
@@ -608,7 +608,6 @@ class VideoLocalPlaybackFragment : VideoPlaybackBaseFragment<FragmentVideoLocalP
         player.setOnErrorListener(onErrorListener)
         player.setOnCompletionListener(onCompletionListener)
         player.let {
-            var url = urlPrefix + suffix
             Log.d(TAG, "setPlayerUrl url $url")
             it.reset()
 
