@@ -32,10 +32,10 @@ public class MultipleChannelChooseDialog extends IosCenterStyleDialog<PopupMulti
             Log.d("MultipleChannelChoose", "checkbox selected: channel0: " + binding.cbChannel1.isChecked()
                     + ",  channel1: " + binding.cbChannel2.isChecked() + ",  channel2: " + binding.cbChannel3.isChecked() + ",  channel3: " + binding.cbChannel4.isChecked());
             ArrayList<Integer> selectChannels = new ArrayList<>();
-            if (binding.cbChannel1.isChecked()) selectChannels.add(1);
-            if (binding.cbChannel2.isChecked()) selectChannels.add(2);
-            if (binding.cbChannel3.isChecked()) selectChannels.add(3);
-            if (binding.cbChannel4.isChecked()) selectChannels.add(4);
+            if (binding.cbChannel1.isChecked()) selectChannels.add(0);
+            if (binding.cbChannel2.isChecked()) selectChannels.add(1);
+            if (binding.cbChannel3.isChecked()) selectChannels.add(2);
+            if (binding.cbChannel4.isChecked()) selectChannels.add(3);
             if (selectChannels.size() != 0) {
                 if (onDismisListener != null) {
                     onDismisListener.onDismissed(selectChannels);

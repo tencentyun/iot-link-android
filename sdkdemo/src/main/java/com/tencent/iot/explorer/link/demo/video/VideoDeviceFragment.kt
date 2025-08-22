@@ -21,11 +21,13 @@ import com.tencent.iot.explorer.link.demo.databinding.FragmentVideoDeviceBinding
 import com.tencent.iot.explorer.link.demo.video.nvr.VideoNvrActivity
 import com.tencent.iot.explorer.link.demo.video.playback.VideoPlaybackActivity
 import com.tencent.iot.explorer.link.demo.video.preview.DevUrl2Preview
+import com.tencent.iot.explorer.link.demo.video.preview.VideoMultiPreviewActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPreviewMJPEGActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoPushStreamActivity
 import com.tencent.iot.explorer.link.demo.video.preview.VideoWithoutPropertyActivity
 import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
+import com.tencent.iot.explorer.link.demo.video.utils.MultipleChannelChooseDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.callback.VideoCallback
 import com.tencent.iot.video.link.consts.VideoConst
@@ -37,13 +39,17 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class VideoDeviceFragment : BaseFragment<FragmentVideoDeviceBinding>(), VideoCallback, DevsAdapter.OnItemClicked,
+class VideoDeviceFragment : BaseFragment<FragmentVideoDeviceBinding>(), VideoCallback,
+    DevsAdapter.OnItemClicked,
     CoroutineScope by MainScope() {
     private var devs: MutableList<DevInfo> = ArrayList()
     private var adapter: DevsAdapter? = null
     private var videoProductInfo: VideoProductInfo? = null
 
-    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentVideoDeviceBinding = FragmentVideoDeviceBinding.inflate(inflater, container, false)
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentVideoDeviceBinding = FragmentVideoDeviceBinding.inflate(inflater, container, false)
 
     override fun startHere(view: View) {
         setListener()
@@ -165,22 +171,16 @@ class VideoDeviceFragment : BaseFragment<FragmentVideoDeviceBinding>(), VideoCal
                 4 -> {
                     VideoPushStreamActivity.startPreviewActivity(context, dev)
                 }
-//                5 -> {
-//                    val multipleChannelChooseDialog = MultipleChannelChooseDialog(context)
-//                    multipleChannelChooseDialog.show()
-//                    multipleChannelChooseDialog.setOnDismisListener { selectChannels ->
-//                        var allUrl = ArrayList<DevUrl2Preview>()
-//                        for (i in 0 until selectChannels.size) {
-//                            var device = DevUrl2Preview()
-//                            device.devName = dev.DeviceName
-//                            device.Status = 1
-//                            device.channel = selectChannels[i]
-//                            allUrl.add(device)
-//                        }
-//
-//                        VideoMultiPreviewActivity.startMultiPreviewActivity(context, allUrl)
-//                    }
-//                }
+
+                5 -> {
+                    val multipleChannelChooseDialog = MultipleChannelChooseDialog(context)
+                    multipleChannelChooseDialog.show()
+                    multipleChannelChooseDialog.setOnDismisListener { selectChannels ->
+                        VideoMultiPreviewActivity.startMultiPreviewActivity(
+                            context, dev, selectChannels
+                        )
+                    }
+                }
             }
         }
     }

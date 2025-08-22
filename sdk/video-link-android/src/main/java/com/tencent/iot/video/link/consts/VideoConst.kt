@@ -26,4 +26,5 @@ object VideoConst {
     const val VIDEO_WLAN_PARAMS = "params"
     const val VIDEO_WLAN_DEV_NAMES = "deviceName"
     const val MULTI_VIDEO_P2P_INFO = "p2pInfo"
+    const val VIDEO_DEV_CHANNELS = "VideoDevChannels"
 }

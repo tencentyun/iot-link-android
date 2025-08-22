@@ -12,8 +12,6 @@ class DevUrl2Preview {
     var channel2DevName = ""
     var surfaceTextureListener : TextureView.SurfaceTextureListener? = null
     var player: IjkMediaPlayer? = null
-    var lock: Object = Object()
-    var keepAliveThreadRuning = true
     var surface: Surface? = null
     var address = ""
     var port = 0

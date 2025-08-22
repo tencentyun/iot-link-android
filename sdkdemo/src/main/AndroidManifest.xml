@@ -66,9 +66,9 @@
         <activity
             android:name=".video.playback.VideoPlaybackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <!--        <activity-->
-        <!--            android:name=".video.preview.VideoMultiPreviewActivity"-->
-        <!--            android:configChanges="orientation|keyboardHidden|screenSize" />-->
+        <activity
+            android:name=".video.preview.VideoMultiPreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".video.preview.VideoPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
