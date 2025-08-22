@@ -1,11 +1,13 @@
 package com.tencent.iot.explorer.link.demo.video
 
+import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.tencent.iot.explorer.link.core.utils.SharePreferenceUtil
@@ -16,7 +18,8 @@ import com.tencent.iot.explorer.link.demo.databinding.ActivityVideoInputAuthoriz
 import com.tencent.iot.video.link.consts.VideoConst
 import kotlinx.coroutines.*
 
-class VideoInputAuthorizeActivity : VideoBaseActivity<ActivityVideoInputAuthorizeBinding>(), CoroutineScope by MainScope() {
+class VideoInputAuthorizeActivity : VideoBaseActivity<ActivityVideoInputAuthorizeBinding>(),
+    CoroutineScope by MainScope() {
 
     override fun getViewBinding(): ActivityVideoInputAuthorizeBinding =
         ActivityVideoInputAuthorizeBinding.inflate(layoutInflater)
@@ -30,9 +33,11 @@ class VideoInputAuthorizeActivity : VideoBaseActivity<ActivityVideoInputAuthoriz
             accessIdLayout.evContent.setHint(R.string.hint_access_id)
             accessTokenLayout.evContent.setHint(R.string.hint_access_token)
             productIdLayout.evContent.setHint(R.string.hint_product_id)
+            productIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             accessIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             accessTokenLayout.ivMore.visibility = View.GONE
             productIdLayout.ivMore.visibility = View.GONE
+            accessIdLayout.ivMore.visibility = View.VISIBLE
 
             launch(Dispatchers.Main) {
                 val jsonArrStr = SharePreferenceUtil.getString(
@@ -50,7 +55,6 @@ class VideoInputAuthorizeActivity : VideoBaseActivity<ActivityVideoInputAuthoriz
                             productIdLayout.evContent.setText(accessInfo.productId)
                             accessIdLayout.evContent.setSelection(accessInfo.accessId.length)
                         }
-
                     } ?: let {
                         accessIdLayout.evContent.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretId)
                         accessTokenLayout.evContent.setText(BuildConfig.TencentIotLinkVideoSDKDemoSecretKey)
@@ -70,6 +74,19 @@ class VideoInputAuthorizeActivity : VideoBaseActivity<ActivityVideoInputAuthoriz
                 val dlg = HistoryAccessInfoDialog(this@VideoInputAuthorizeActivity)
                 dlg.show()
                 dlg.setOnDismissListener(onDlgDismissListener)
+            }
+            btnPaste.setOnClickListener {
+                val clipboard = ContextCompat.getSystemService(this@VideoInputAuthorizeActivity, ClipboardManager::class.java);
+                if (clipboard != null && clipboard.hasPrimaryClip()) {
+                    clipboard.primaryClip?.getItemAt(0)?.text.toString().split("\n")
+                        .forEachIndexed { index, s ->
+                            when (index) {
+                                0 -> accessIdLayout.evContent.setText(s)
+                                1 -> accessTokenLayout.evContent.setText(s)
+                                2 -> productIdLayout.evContent.setText(s)
+                            }
+                        }
+                }
             }
         }
     }

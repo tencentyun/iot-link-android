@@ -48,7 +48,7 @@ class VideoTestInputActivity : VideoBaseActivity<ActivityVideoTestInputBinding>(
                 productIdLayout.evContent.setText(productId)
             }
             productIdLayout.evContent.setHint(R.string.hint_product_id)
-            p2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
+            productIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             if (deviceName.isNotEmpty()) {
                 deviceNameLayout.evContent.setText(deviceName)
             }
