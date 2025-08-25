@@ -55,9 +55,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="是否开启双中转:"
+        android:text="是否开启跟随设备配置:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/p2p_info_layout" />
+
 
     <Switch
         android:id="@+id/swt_cross"
@@ -68,6 +69,35 @@
         app:layout_constraintTop_toTopOf="@+id/tv_cross"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
+    <Button
+        android:id="@+id/btn_app_paste"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_blue_cell"
+        android:text="粘贴"
+        android:textColor="@color/blue_0052D9"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_cross" />
+
+    <include
+        android:id="@+id/app_key_layout"
+        layout="@layout/input_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/btn_app_paste" />
+
+    <include
+        android:id="@+id/app_Secret_layout"
+        layout="@layout/input_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/app_key_layout" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -76,7 +106,7 @@
         android:layout_marginTop="8dp"
         android:text="选择协议："
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_cross" />
+        app:layout_constraintTop_toBottomOf="@+id/app_Secret_layout" />
 
     <RadioGroup
         android:id="@+id/rg_protocol"
@@ -115,7 +145,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/background_blue_btn"
         android:text="@string/login"
@@ -123,7 +153,7 @@
         android:textSize="@dimen/ts_17"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_cross" />
+        app:layout_constraintTop_toBottomOf="@id/rg_protocol" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

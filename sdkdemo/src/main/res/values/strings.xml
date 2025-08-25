@@ -204,4 +204,12 @@
     <string name="multiple_channel_choose">多通道选择</string>
     <string name="channel_choose">通道选择: </string>
 
+    <string name="product_id_text">Product ID *</string>
+    <string name="device_name_text">Device Name *</string>
+    <string name="p2p_info_text">P2P INFO *</string>
+    <string name="app_key_text">App Key *</string>
+    <string name="hint_app_key">请输入App Key</string>
+    <string name="app_secret">App Secret *</string>
+    <string name="hint_app_secret">请输入App Secret</string>
+
 </resources>

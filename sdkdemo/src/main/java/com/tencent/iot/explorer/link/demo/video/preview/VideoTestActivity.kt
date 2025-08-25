@@ -32,6 +32,7 @@ import com.tencent.iot.explorer.link.demo.video.utils.ListOptionsDialog
 import com.tencent.iot.explorer.link.demo.video.utils.TipToastDialog
 import com.tencent.iot.explorer.link.demo.video.utils.ToastDialog
 import com.tencent.iot.video.link.entity.DeviceStatus
+import com.tencent.iot.video.link.util.JsonManager
 import com.tencent.iot.video.link.util.audio.AudioRecordUtil
 import com.tencent.xnet.XP2P
 import com.tencent.xnet.XP2PAppConfig
@@ -98,6 +99,10 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         productId = intent.getStringExtra("productId")?.toString() ?: ""
         deviceName = intent.getStringExtra("deviceName")?.toString() ?: ""
         xp2pInfo = intent.getStringExtra("p2pInfo")?.toString() ?: ""
+        val appKey = intent.getStringExtra("appKey")?.toString() ?: ""
+        val appSecret = intent.getStringExtra("appSecret")?.toString() ?: ""
+        xP2PAppConfig.appKey = appKey
+        xP2PAppConfig.appSecret = appSecret
         xP2PAppConfig.autoConfigFromDevice = intent.getBooleanExtra("isStartCross", false)
         val protocol = intent.getStringExtra("protocol")?.toString() ?: "auto"
         if (protocol == "udp") {
@@ -107,7 +112,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         } else {
             xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
         }
-
+        Log.d(TAG, "init params productId:${productId} deviceName:${deviceName} xp2pInfo:${xp2pInfo} xP2PAppConfig:${JsonManager.toJson(xP2PAppConfig)}")
         binding.vTitle.tvTitle.text = deviceName
         binding.tvVideoQuality.text = getString(R.string.video_quality_medium_str)
 
