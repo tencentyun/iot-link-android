@@ -90,6 +90,12 @@ android {
             useLegacyPackaging true
         }
     }
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def newApkName = "VideoLinkDemo-${variant.buildType.name}-${variant.versionName}.apk"
+            outputFileName = newApkName
+        }
+    }
 }
 
 dependencies {
