@@ -471,8 +471,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             player.setOption(
                 IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1
             )
-            player.setFrameSpeed(1.5f)
-            player.setMaxPacketNum(2)
+            player.setMaxPacketNum(10001)
             while (!::surface.isInitialized) {
                 delay(50)
                 L.e("delay for waiting surface.")

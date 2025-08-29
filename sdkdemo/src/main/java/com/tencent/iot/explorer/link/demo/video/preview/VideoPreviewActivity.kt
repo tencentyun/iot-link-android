@@ -274,7 +274,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
                     //        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6) //        //变调可以传入pitch参数 //        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
 
                 }
-                //        audioRecordUtil.recordSpeakFlv(true)
+                audioRecordUtil?.recordSpeakFlv(true)
                 if (isChecked && checkPermissions(permissions)) {
                     if (!speakAble(true)) radioTalk.isChecked = false
                 } else if (isChecked && !checkPermissions(permissions)) {
@@ -454,7 +454,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 50 * 1024)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
-            player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 1)
+            player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 2)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
@@ -464,6 +464,7 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
                 1
             )
             player.setFrameSpeed(1.5f)
+            player.setMaxPacketNum(10001)
             while (!::surface.isInitialized) {
                 delay(50)
                 L.e("delay for waiting surface.")
@@ -777,8 +778,8 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
     }
 
     override fun onInfoAudioPcmData(mp: IMediaPlayer?, arrPcm: ByteArray?, length: Int) {
-//        if (audioRecordUtil != null && length > 0 && speakAble) {
-//            audioRecordUtil?.setPlayerPcmData(arrPcm);
-//        }
+        if (audioRecordUtil != null && length > 0 && speakAble) {
+            audioRecordUtil?.setPlayerPcmData(arrPcm);
+        }
     }
 }

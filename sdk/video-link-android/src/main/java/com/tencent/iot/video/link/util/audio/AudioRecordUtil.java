@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.iot.soundtouch.interfaces.SoundTouch;
 import com.iot.voice.changer.VoiceChangerJNIBridge;
+import com.neil.hy.aeclib4.AecLibJNIBridge;
 import com.tencent.iot.thirdparty.flv.FLVListener;
 import com.tencent.iot.thirdparty.flv.FLVPacker;
 import com.tencent.xnet.XP2P;
@@ -34,7 +35,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import com.iot.gvoice.interfaces.GvoiceJNIBridge;
+//import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 
 
 public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Callback {
@@ -213,7 +214,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         recordMinBufferSize = (sampleRate * this.channelCount * this.encodeBit / 8) / 1000 * 20; //20ms数据长度
         Log.e(TAG, "20ms recordMinBufferSize is: " + recordMinBufferSize);
         Log.e(TAG, "AudioRecordUtil init Pitch is: " + pitch);
-        GvoiceJNIBridge.init(context);
+//        GvoiceJNIBridge.init(context);
+        AecLibJNIBridge.getInstance().initAecm(sampleRate);
+        AecLibJNIBridge.getInstance().setConfigAecm(3,40);
     }
 
     private boolean isEnable8kEncode = false;
@@ -476,7 +479,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                     if (buffer != null && pcmEncoder != null) {
                         byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
                         if (playerPcmBytes != null && playerPcmBytes.length > 0) {
-                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
+                            byte[] aecPcmBytes = AecLibJNIBridge.getInstance().cancellation(playerPcmBytes, buffer);
+                            Log.e(TAG, "aecPcmBytes  aecPcmBytes.length： " + aecPcmBytes.length);
                             if (isRecord) {
                                 writePcmBytesToFile(buffer, playerPcmBytes, aecPcmBytes);
                             }
