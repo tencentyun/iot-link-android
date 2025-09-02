@@ -57,6 +57,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
+import java.io.File
 import java.lang.ref.WeakReference
 import java.util.Locale
 
@@ -135,9 +136,13 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
         }
         getDeviceP2PInfo()
         XP2P.setCallback(this)
-//        val path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath +"/data_video.data"
+//        val path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath +"/neil/ttt/"
 //        Log.d(tag, "====保存裸流===$path")
-//        XP2P.recordstreamPath(path) //自定义采集裸流路径
+//        val file = File(path)
+//        if (!file.exists()){
+//            file.mkdirs()
+//        }
+//        XP2P.recordstreamPath(path+"data_video.data") //自定义采集裸流路径
         //实例化对象并设置监听器
         volumeChangeObserver = VolumeChangeObserver(this)
         volumeChangeObserver?.volumeChangeListener = this
