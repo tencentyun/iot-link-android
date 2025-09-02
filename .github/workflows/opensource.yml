@@ -88,7 +88,7 @@ jobs:
       - name: Deploy App to fir
         run: |
           apk=$(ls app/build/outputs/apk/opensource/release/*.apk)
-          demoApk=$(ls sdkdemo/build/outputs/apk/release/sdkdemo-release.apk)
+          demoApk=$(ls sdkdemo/build/outputs/apk/release/*.apk)
 
           rc=$(git rev-parse --short HEAD)
           rl=$(git log --pretty=format:"%s" $rc -1)
