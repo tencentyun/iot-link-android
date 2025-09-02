@@ -9,6 +9,7 @@ import android.graphics.SurfaceTexture
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
@@ -134,6 +135,9 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
         }
         getDeviceP2PInfo()
         XP2P.setCallback(this)
+//        val path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath +"/data_video.data"
+//        Log.d(tag, "====保存裸流===$path")
+//        XP2P.recordstreamPath(path) //自定义采集裸流路径
         //实例化对象并设置监听器
         volumeChangeObserver = VolumeChangeObserver(this)
         volumeChangeObserver?.volumeChangeListener = this
@@ -186,7 +190,6 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
 
     private fun delegateHttpFlv() {
         val id = "${presenter.getProductId()}/${presenter.getDeviceName()}"
-//        XP2P.recordstreamPath("/storage/emulated/0/data_video.flv") //自定义采集裸流路径
 //        XP2P.recordstream(id) //开启自定义采集裸流
         val prefix = XP2P.delegateHttpFlv(id)
         if (prefix.isNotEmpty()) {
