@@ -22,6 +22,7 @@ import java.util.*
 internal class WSClientManager private constructor() {
 
     private var TAG = WSClientManager.javaClass.simpleName
+    private val scope = CoroutineScope(Dispatchers.IO)
     private var hasListener = false
     private var job: Job? = null
     private lateinit var heartJob: Job
@@ -185,21 +186,23 @@ internal class WSClientManager private constructor() {
      */
     @Synchronized
     private fun createSocketClient() {
-        val myHost = if (debugTag.isNotEmpty())
-            host + debugTag
-        else
-            host
-        //创建WebSocket
-        client = JWebSocketClient(URI(myHost), handler, connectListener)
-        client!!.connectionLostTimeout = 0
-        client!!.connect()
+        scope.launch(Dispatchers.Main) {
+            val myHost = if (debugTag.isNotEmpty())
+                host + debugTag
+            else
+                host
+            //创建WebSocket
+            client = JWebSocketClient(URI(myHost), handler, connectListener)
+            client?.connectionLostTimeout = 0
+            client?.connect()
+        }
     }
 
     /**
      * 发送心跳包
      */
     private fun startHeartJob() {
-        heartJob = CoroutineScope(Dispatchers.IO).launch {
+        heartJob = scope.launch(Dispatchers.IO) {
             while (isKeep) {
                 sendMessage(param)
                 if (heartMessageList.isNotEmpty() && heartCount == 5) {
@@ -227,13 +230,15 @@ internal class WSClientManager private constructor() {
         hasListener = true
         L.e("开始重连")
         if (job == null) {
-            job = CoroutineScope(Dispatchers.IO).launch {
+            job = scope.launch(Dispatchers.IO) {
                 while (hasListener) {
                     try {
                         if (WifiUtil.ping("www.baidu.com") || WifiUtil.ping("iot.cloud.tencent.com")) {
                             if (client != null) {
-                                client?.destroy()
-                                client = null
+                                scope.launch(Dispatchers.Main) {
+                                    client?.destroy()
+                                    client = null
+                                }
                             }
                             createSocketClient()
                             L.d("正在尝试重新连接wss://iot.cloud.tencent.com")
@@ -279,11 +284,16 @@ internal class WSClientManager private constructor() {
         }
 
         override fun disconnected() {
-            L.d("连接断开")
-            client?.destroy()
-            client = null
-            startJob()
-            socketCallback?.disconnected()
+            val destroyJob = scope.launch(Dispatchers.Main) {
+                L.d("连接断开")
+                client?.destroy()
+                client = null
+            }
+            scope.launch {
+                destroyJob.join()
+                socketCallback?.disconnected()
+                startJob()
+            }
         }
 
         override fun onOpen() {
@@ -436,12 +446,14 @@ internal class WSClientManager private constructor() {
      * 销毁
      */
     fun destroy() {
-        hasListener = false
-        isKeep = false
-        client?.destroy()
-        client = null
-        stopHeartJob()
-        stopJob()
+        scope.launch(Dispatchers.Main) {
+            hasListener = false
+            isKeep = false
+            client?.destroy()
+            client = null
+            stopHeartJob()
+            stopJob()
+        }
     }
 
 }
