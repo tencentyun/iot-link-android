@@ -19,7 +19,7 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v2
@@ -81,9 +81,9 @@ jobs:
       - name: Package apk and aar with Gradle
         run: ./gradlew assembleOpensource
       - name: Publish aar to Maven
-        run: ./gradlew publish
+        run: ./gradlew publishToMavenCentral -info
       - name: Archive the apk
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: app/build/outputs/apk/opensource/release/*.apk
       - name: Build demo apk
