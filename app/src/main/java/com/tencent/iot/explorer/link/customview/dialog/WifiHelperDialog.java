@@ -38,18 +38,15 @@ public class WifiHelperDialog extends IosCenterStyleDialog {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.tv_cancel:
-                    if (onDismisListener != null) {
-                        onDismisListener.onCancelClicked();
-                    }
-                    break;
-                case R.id.tv_to_set:
-                    if (onDismisListener != null) {
-                        onDismisListener.onOkClicked();
-                    }
-                    break;
+            int id = v.getId();
+            if (id == R.id.tv_cancel) {
+                if (onDismisListener != null) {
+                    onDismisListener.onCancelClicked();
+                }
+            } else if (id == R.id.tv_to_set) {
+                if (onDismisListener != null) {
+                    onDismisListener.onOkClicked();
+                }
             }
             dismiss();
         }
