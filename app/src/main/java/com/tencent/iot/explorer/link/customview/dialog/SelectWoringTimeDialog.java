@@ -295,83 +295,79 @@ public class SelectWoringTimeDialog extends IosCenterStyleDialog {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.layout_defination_default:
-                    workTimeMode.setTimeType(0);
-                    resetModeTime();
+            int id = v.getId();
+            if (id == R.id.layout_defination_default) {
+                workTimeMode.setTimeType(0);
+                resetModeTime();
+                showView(startLayout);
+                return;
+            } else if (id == R.id.iv_back_dialog_defination_time_by_user) {
+                // 点击返回按钮，不会改变界面状态，也不会改变之前的显示状况
+                showView(startLayout);
+                return;
+            } else if (id == R.id.layout_defination_by_user) {
+                // 点击自定义不一定使用自定义，当点击自定义的时候不切换状态
+                showView(definationTimeLayout);
+                return;
+            } else if (id == R.id.iv_back_dialog_defination_day_by_user) {
+                showView(startLayout);
+                return;
+            } else if (id == R.id.tv_cancel) {
+                if (definationTimeLayout.getVisibility() == View.VISIBLE) {
                     showView(startLayout);
-                    return;
-                case R.id.iv_back_dialog_defination_time_by_user:
-                    // 点击返回按钮，不会改变界面状态，也不会改变之前的显示状况
+                } else if (definationDayLayout.getVisibility() == View.VISIBLE) {
                     showView(startLayout);
-                    return;
-                case R.id.layout_defination_by_user:
-                    // 点击自定义不一定使用自定义，当点击自定义的时候不切换状态
-                    showView(definationTimeLayout);
-                    return;
-                case R.id.iv_back_dialog_defination_day_by_user:
-                    showView(startLayout);
-                    return;
-                case R.id.tv_cancel:
-                    if (definationTimeLayout.getVisibility() == View.VISIBLE) {
-                        showView(startLayout);
-                    } else if (definationDayLayout.getVisibility() == View.VISIBLE) {
-                        showView(startLayout);
-                        dayAdapter.setSelectOption(tmpStatusSaved);
-                        tmpStatusSaved.clear();
-                    } else if (startLayout.getVisibility() == View.VISIBLE) {
-                        dismiss();
-                    }
-                    break;
-                case R.id.tv_ok:
-                    if (definationTimeLayout.getVisibility() == View.VISIBLE) {
-                        WorkTimeMode tag = new WorkTimeMode();
-                        tag.setStartTimeHour(startHourPicker.getCurrentItemPosition());
-                        tag.setStartTimerMin(startMinPicker.getCurrentItemPosition());
-                        tag.setEndTimeHour(endHourPicker.getCurrentItemPosition());
-                        tag.setEndTimeMin(endMinPicker.getCurrentItemPosition());
-                        if (!WorkTimeMode.Companion.ifTimeLegal(tag)) {
-                            T.show(getContext().getString(R.string.end_time_earlier_start_time));
-                            return;
-                        }
-
-                        if (WorkTimeMode.Companion.isAllDay(tag)) {
-                            workTimeMode.setTimeType(0);
-                            resetModeTime();
-                            showView(startLayout);
-                            return;
-                        }
-                        // 点击保存，界面处于自定义选择框时，保存当前选择的内容
-                        workTimeMode.setTimeType(1);
-                        setModeTime(startHourPicker.getCurrentItemPosition(), startMinPicker.getCurrentItemPosition(),
-                                endHourPicker.getCurrentItemPosition(), endMinPicker.getCurrentItemPosition());
-                        showView(startLayout);
-                    } else if (definationDayLayout.getVisibility() == View.VISIBLE) {
-                        String days = WorkTimeMode.Companion.convetDaySet2Days(dayAdapter.getIndex());
-                        int dayType = WorkTimeMode.Companion.getDayType(days);
-                        if (dayType < 0) {
-                            T.show(context.getString(R.string.at_least_select_one_day));
-                            return;
-                        } else {
-                            workTimeMode.setWorkDayType(dayType);
-                            workTimeMode.setWorkDays(days);
-                            adapter.setIndex(new HashSet<Integer>() {{
-                                add(workTimeMode.getWorkDayType());
-                            }});
-                            adapter.notifyDataSetChanged();
-                        }
-                        showView(startLayout);
-                    } else if (onDismisListener != null && startLayout.getVisibility() == View.VISIBLE) {
-                        onDismisListener.onSaveClicked(workTimeMode);
-                        dismiss();
-                    }
-                    break;
-                case R.id.outside_dialog_layout:
+                    dayAdapter.setSelectOption(tmpStatusSaved);
+                    tmpStatusSaved.clear();
+                } else if (startLayout.getVisibility() == View.VISIBLE) {
                     dismiss();
-                    break;
-                case R.id.layout_all:
-                    break;
+                }
+            } else if (id == R.id.tv_ok) {
+                if (definationTimeLayout.getVisibility() == View.VISIBLE) {
+                    WorkTimeMode tag = new WorkTimeMode();
+                    tag.setStartTimeHour(startHourPicker.getCurrentItemPosition());
+                    tag.setStartTimerMin(startMinPicker.getCurrentItemPosition());
+                    tag.setEndTimeHour(endHourPicker.getCurrentItemPosition());
+                    tag.setEndTimeMin(endMinPicker.getCurrentItemPosition());
+                    if (!WorkTimeMode.Companion.ifTimeLegal(tag)) {
+                        T.show(getContext().getString(R.string.end_time_earlier_start_time));
+                        return;
+                    }
+
+                    if (WorkTimeMode.Companion.isAllDay(tag)) {
+                        workTimeMode.setTimeType(0);
+                        resetModeTime();
+                        showView(startLayout);
+                        return;
+                    }
+                    // 点击保存，界面处于自定义选择框时，保存当前选择的内容
+                    workTimeMode.setTimeType(1);
+                    setModeTime(startHourPicker.getCurrentItemPosition(), startMinPicker.getCurrentItemPosition(),
+                            endHourPicker.getCurrentItemPosition(), endMinPicker.getCurrentItemPosition());
+                    showView(startLayout);
+                } else if (definationDayLayout.getVisibility() == View.VISIBLE) {
+                    String days = WorkTimeMode.Companion.convetDaySet2Days(dayAdapter.getIndex());
+                    int dayType = WorkTimeMode.Companion.getDayType(days);
+                    if (dayType < 0) {
+                        T.show(context.getString(R.string.at_least_select_one_day));
+                        return;
+                    } else {
+                        workTimeMode.setWorkDayType(dayType);
+                        workTimeMode.setWorkDays(days);
+                        adapter.setIndex(new HashSet<Integer>() {{
+                            add(workTimeMode.getWorkDayType());
+                        }});
+                        adapter.notifyDataSetChanged();
+                    }
+                    showView(startLayout);
+                } else if (onDismisListener != null && startLayout.getVisibility() == View.VISIBLE) {
+                    onDismisListener.onSaveClicked(workTimeMode);
+                    dismiss();
+                }
+            } else if (id == R.id.outside_dialog_layout) {
+                dismiss();
+            } else if (id == R.id.layout_all) {
+                // do nothing
             }
         }
     };

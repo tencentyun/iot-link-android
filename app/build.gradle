@@ -9,6 +9,10 @@ rootProject.ext.configPath = "../app-config.json"
 apply from: "../parse_json.gradle"
 
 android {
+    namespace 'com.tencent.iot.explorer.link'
+    buildFeatures {
+        buildConfig true
+    }
     signingConfigs {
         config {
             storeFile file('../opensource_keystore.jks')

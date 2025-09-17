@@ -28,10 +28,10 @@ jobs:
       - run: |
           rm -rf sdkdemo-config.json
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdkdemo/sdkdemo-config.json.asc > sdkdemo-config.json
-      - name: set up JDK 11
+      - name: set up JDK 17
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
 #      - name: Setup cmake
 #        uses: jwlawson/actions-setup-cmake@v1.5
 #        with:
@@ -41,7 +41,7 @@ jobs:
           cmake --version
 
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches

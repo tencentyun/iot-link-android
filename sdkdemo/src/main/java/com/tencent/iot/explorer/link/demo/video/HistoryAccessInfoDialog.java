@@ -64,21 +64,19 @@ public class HistoryAccessInfoDialog extends IosCenterStyleDialog implements Vie
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_cancel:
-            case R.id.outside_dialog_layout:
-                if (onDismisListener != null) {
-                    onDismisListener.onCancelClicked();
-                }
-                break;
-            case R.id.tv_ok:
-                if (onDismisListener != null && accessInfos != null &&
-                        accessHistoryPicker.getCurrentItemPosition() < accessInfos.size()) {
-                    onDismisListener.onOkClicked(accessInfos.get(accessHistoryPicker.getCurrentItemPosition()));
-                }
-                break;
-            case R.id.tip_layout:
-                return;
+        int id = v.getId();
+
+        if (id == R.id.tv_cancel || id == R.id.outside_dialog_layout) {
+            if (onDismisListener != null) {
+                onDismisListener.onCancelClicked();
+            }
+        } else if (id == R.id.tv_ok) {
+            if (onDismisListener != null && accessInfos != null &&
+                    accessHistoryPicker.getCurrentItemPosition() < accessInfos.size()) {
+                onDismisListener.onOkClicked(accessInfos.get(accessHistoryPicker.getCurrentItemPosition()));
+            }
+        } else if (id == R.id.tip_layout) {
+            return;
         }
         dismiss();
     }

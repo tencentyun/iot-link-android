@@ -125,53 +125,47 @@ public class TimerOptionsDialog extends IosCenterStyleDialog {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.tv_ok:
-                    if (daysLayout.getVisibility() == View.VISIBLE) {
-                        String tmp = TimerExtra.Companion.convetDaySet2Days(adapter.getIndex());
-                        if (TimerExtra.Companion.getDayType(tmp) == 0) {
-                            T.show(getContext().getResources().getString(R.string.at_least_select_one_day));
-                            return;
-                        } else {
-                            timerExtra.setRepeatType(TimerExtra.Companion.getDayType(tmp));
-                            timerExtra.setWorkDays(TimerExtra.Companion.convetDaySet2Days(adapter.getIndex()));
+            if (v.getId() == R.id.tv_ok){
+                if (daysLayout.getVisibility() == View.VISIBLE) {
+                    String tmp = TimerExtra.Companion.convetDaySet2Days(adapter.getIndex());
+                    if (TimerExtra.Companion.getDayType(tmp) == 0) {
+                        T.show(getContext().getResources().getString(R.string.at_least_select_one_day));
+                        return;
+                    } else {
+                        timerExtra.setRepeatType(TimerExtra.Companion.getDayType(tmp));
+                        timerExtra.setWorkDays(TimerExtra.Companion.convetDaySet2Days(adapter.getIndex()));
 
-                        }
-                    } else if (timerTypeLayout.getVisibility() == View.VISIBLE) {
-                        timerExtra.setRepeatType(timerType.getCurrentItemPosition());
-                        if (timerExtra.getRepeatType() == 0) {
-                            timerExtra.setWorkDays("0000000");
-                        } else if (timerExtra.getRepeatType() == 1) {
-                            timerExtra.setWorkDays("1111111");
-                        } else if (timerExtra.getRepeatType() == 2) {
-                            timerExtra.setWorkDays("0111110");
-                        } else if (timerExtra.getRepeatType() == 3) {
-                            timerExtra.setWorkDays("1000001");
-                        }
-                        if (timerType.getCurrentItemPosition() == dayType.size() - 1) {
-                            showView(daysLayout);
-                            return;
-                        }
                     }
-                    if (onDismisListener != null) {
-                        onDismisListener.onSaved(timerExtra);
+                } else if (timerTypeLayout.getVisibility() == View.VISIBLE) {
+                    timerExtra.setRepeatType(timerType.getCurrentItemPosition());
+                    if (timerExtra.getRepeatType() == 0) {
+                        timerExtra.setWorkDays("0000000");
+                    } else if (timerExtra.getRepeatType() == 1) {
+                        timerExtra.setWorkDays("1111111");
+                    } else if (timerExtra.getRepeatType() == 2) {
+                        timerExtra.setWorkDays("0111110");
+                    } else if (timerExtra.getRepeatType() == 3) {
+                        timerExtra.setWorkDays("1000001");
                     }
-                    dismiss();
-                    break;
-                case R.id.tv_cancel:
-                    if (daysLayout.getVisibility() == View.VISIBLE) {
-                        showView(timerTypeLayout);
-                    } else if (timerTypeLayout.getVisibility() == View.VISIBLE) {
-                        dismiss();
+                    if (timerType.getCurrentItemPosition() == dayType.size() - 1) {
+                        showView(daysLayout);
+                        return;
                     }
-                    break;
-                case R.id.outside_dialog_layout:
-                    dismiss();
-                    break;
-                case R.id.iv_back_dialog_defination_day_by_user:
+                }
+                if (onDismisListener != null) {
+                    onDismisListener.onSaved(timerExtra);
+                }
+                dismiss();
+            }else if (v.getId() == R.id.tv_cancel){
+                if (daysLayout.getVisibility() == View.VISIBLE) {
                     showView(timerTypeLayout);
-                    break;
+                } else if (timerTypeLayout.getVisibility() == View.VISIBLE) {
+                    dismiss();
+                }
+            }else if (v.getId() == R.id.outside_dialog_layout){
+                dismiss();
+            }else if (v.getId() == R.id.iv_back_dialog_defination_day_by_user){
+                showView(timerTypeLayout);
             }
         }
     };

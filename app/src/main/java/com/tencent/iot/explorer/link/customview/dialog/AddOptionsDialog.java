@@ -88,11 +88,7 @@ public class AddOptionsDialog extends IosCenterStyleDialog {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.inside_layout:
-                    return;
-            }
+            if (v.getId() == R.id.inside_layout) return;
             dismiss();
             if (onDismisListener != null) {
                 onDismisListener.onDismissed();

@@ -75,15 +75,12 @@ public class MoreOptionDialog extends IosCenterStyleDialog {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.inside_layout:
-                    return;
-                case R.id.tv_space:
-                    if (onDismisListener != null) {
-                        onDismisListener.onGoClicked();
-                    }
-                    break;
+            if (v.getId()== R.id.inside_layout){
+                return;
+            }else if (v.getId()== R.id.tv_space){
+                if (onDismisListener != null) {
+                    onDismisListener.onGoClicked();
+                }
             }
             dismiss();
             if (onDismisListener != null) {

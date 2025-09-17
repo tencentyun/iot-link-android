@@ -53,26 +53,26 @@ public class VideoQualityDialog extends IosCenterStyleDialog {
     }
 
     private View.OnClickListener onClickListener = v -> {
-        switch (v.getId()) {
-            case R.id.tv_video_quality_low:
-                if (onDismisListener != null) {
-                    onDismisListener.onItemClicked(2);
-                }
-                break;
-            case R.id.tv_video_quality_medium:
-                if (onDismisListener != null) {
-                    onDismisListener.onItemClicked(1);
-                }
-                break;
-            case R.id.tv_video_quality_heigh:
-                if (onDismisListener != null) {
-                    onDismisListener.onItemClicked(0);
-                }
-                break;
-            case R.id.inside_layout:
-                return;
+        int id = v.getId();
+
+        if (id == R.id.tv_video_quality_low) {
+            if (onDismisListener != null) {
+                onDismisListener.onItemClicked(2);
+            }
+        } else if (id == R.id.tv_video_quality_medium) {
+            if (onDismisListener != null) {
+                onDismisListener.onItemClicked(1);
+            }
+        } else if (id == R.id.tv_video_quality_heigh) {
+            if (onDismisListener != null) {
+                onDismisListener.onItemClicked(0);
+            }
+        } else if (id == R.id.inside_layout) {
+            return;
         }
+
         dismiss();
+
         if (onDismisListener != null) {
             onDismisListener.onDismiss();
         }
