@@ -5,16 +5,18 @@ on:
     paths-ignore: # 有時候不想要改個文档也触发 github actions
       - '**.md'
       - 'LICENSE'
-    tags-ignore:  # 屏蔽掉发release打tag事件
+    tags-ignore: # 屏蔽掉发release打tag事件
       - '*'
     branches:
       - '*'
 
 env:
-  IOT_SONATYPE_USERNAME: ${{ secrets.NEW_IOT_SONATYPE_USERNAME }}
-  IOT_SONATYPE_PASSWORD: ${{ secrets.NEW_IOT_SONATYPE_PASSWORD }}
-  GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
+  IOT_SONATYPE_USERNAME: ${{ secrets.IOT_SONATYPE_USERNAME }}
+  IOT_SONATYPE_PASSWORD: ${{ secrets.IOT_SONATYPE_PASSWORD }}
   IOT_WECOM_CID_ROBOT_KEY: ${{ secrets.IOT_WECOM_CID_ROBOT_KEY }}
+  GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
+  IOT_GPG_KEYNAME: ${{ secrets.IOT_GPG_KEYNAME }}
+  IOT_GPG_PASSPHRASE: ${{ secrets.IOT_GPG_PASSPHRASE }}
 
 jobs:
   build:
@@ -28,14 +30,17 @@ jobs:
       - run: |
           rm -rf sdkdemo-config.json
           gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdkdemo/sdkdemo-config.json.asc > sdkdemo-config.json
+          # 解密GPG密钥环文件
+          gpg -d --passphrase "$GPG_DECRYPT_PASSPHRASE" --batch --quiet .github/sdk/secring.gpg.asc > secring.gpg
+
       - name: set up JDK 17
         uses: actions/setup-java@v1
         with:
           java-version: 17
-#      - name: Setup cmake
-#        uses: jwlawson/actions-setup-cmake@v1.5
-#        with:
-#          cmake-version: '3.10.2'
+      #      - name: Setup cmake
+      #        uses: jwlawson/actions-setup-cmake@v1.5
+      #        with:
+      #          cmake-version: '3.10.2'
       - name: Use cmake
         run: |
           cmake --version
@@ -70,7 +75,11 @@ jobs:
           sed -i 's#def versionAppName.*#def versionAppName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i 's#def versionSDKDemoName.*#def versionSDKDemoName = \"'$rb'+git.'$rc'\"#g' config.gradle
           sed -i "s#xxx#$rb+git.$rc#g" config.gradle
-
+      - name: Common-->Update Values of Signing
+        run: |
+          export KEY_ID_OF_SIGN=$IOT_GPG_KEYNAME
+          export PASSWORD_OF_SIGN=$IOT_GPG_PASSPHRASE
+          sh .github/scripts/updateValuesForSign.sh
       - name: Update SDK Version
         run: |
           export LATEST_VIDEO_TAG=${{env.latest_video_tag}}
@@ -81,7 +90,10 @@ jobs:
       - name: Package apk and aar with Gradle
         run: ./gradlew assembleOpensource
       - name: Publish aar to Maven
-        run: ./gradlew publishToMavenCentral -info
+        run: |
+          ./gradlew :sdk:explorer-link-android:publishToMavenCentral -info
+          ./gradlew :sdk:explorer-link-rtc:publishToMavenCentral -info
+
       - name: Archive the apk
         uses: actions/upload-artifact@v4
         with:
