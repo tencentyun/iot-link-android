@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.SurfaceTexture
 import android.media.AudioFormat
 import android.media.AudioManager
+import android.os.Environment
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
@@ -117,6 +118,8 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         binding.tvVideoQuality.text = getString(R.string.video_quality_medium_str)
 
         XP2P.setCallback(this)
+//        val filaPath = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath + "/data_video.flv"
+//        XP2P.recordstreamPath(filaPath) //自定义采集裸流路径
         val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()
         wm.defaultDisplay.getMetrics(dm)
@@ -169,7 +172,6 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
 
     private fun delegateHttpFlv() {
         val id = "${productId}/${deviceName}"
-//        XP2P.recordstreamPath("/storage/emulated/0/data_video.flv") //自定义采集裸流路径
 //        XP2P.recordstream(id) //开启自定义采集裸流
         val prefix = XP2P.delegateHttpFlv(id)
         if (prefix.isNotEmpty()) {
