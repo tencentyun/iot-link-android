@@ -577,7 +577,9 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
         }
     }
 
-    override fun fail(msg: String?, errorCode: Int) {}
+    override fun fail(msg: String?, errorCode: Int) {
+        Log.e(tag, "fail: ${msg}, errorCode: ${errorCode}")
+    }
     override fun commandRequest(id: String?, msg: String?) {}
     override fun avDataRecvHandle(id: String?, data: ByteArray?, len: Int) {}
     override fun avDataCloseHandle(id: String?, msg: String?, errorCode: Int) {}
