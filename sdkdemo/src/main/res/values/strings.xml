@@ -211,5 +211,6 @@
     <string name="hint_app_key">请输入App Key</string>
     <string name="app_secret">App Secret *</string>
     <string name="hint_app_secret">请输入App Secret</string>
-
+    <string name="multi_device_connection">多设备直连</string>
+    <string name="multi_device_test">多设备测试</string>
 </resources>

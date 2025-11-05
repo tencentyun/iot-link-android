@@ -59,6 +59,8 @@
             android:name=".video.preview.VideoTestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".video.VideoTestInputActivity" />
+        <activity android:name=".video.MultiVideoTestInputActivity" />
+        <activity android:name=".video.preview.MultiVideoTestActivity" />
         <!--        <activity android:name=".video.preview.WlanVideoPreviewActivity"-->
         <!--            android:configChanges="orientation|keyboardHidden|screenSize"/>-->
         <activity android:name=".video.VideoMainActivity" />
