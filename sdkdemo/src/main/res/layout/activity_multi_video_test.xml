@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- 标题栏 -->
+    <include
+        android:id="@+id/vTitle"
+        layout="@layout/title_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 视频预览区域 - 2x2网格布局 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutVideoPreview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineMiddle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vTitle">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="4dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineRow2"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineCol2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- 设备1视频预览 -->
+            <TextureView
+                android:id="@+id/vPreviewDevice1"
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
+
+            <!-- 设备1状态和操作 -->
+            <TextView
+                android:id="@+id/tvDevice1Status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="设备1: 未连接"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnTestDevice1"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_rad4_color_006eff"
+                android:text="测试设备1"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="4dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineRow2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guidelineCol2"
+            app:layout_constraintTop_toTopOf="parent">
+            <!-- 设备2视频预览 -->
+            <TextureView
+                android:id="@+id/vPreviewDevice2"
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
+            <!-- 设备2状态和操作 -->
+            <TextView
+                android:id="@+id/tvDevice2Status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="设备2: 未连接"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnTestDevice2"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_rad4_color_006eff"
+                android:text="测试设备2"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="4dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineCol2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guidelineRow2">
+
+            <!-- 设备3视频预览 -->
+            <TextureView
+                android:id="@+id/vPreviewDevice3"
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
+
+            <!-- 设备3状态和操作 -->
+            <TextView
+                android:id="@+id/tvDevice3Status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="设备3: 未连接"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnTestDevice3"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_rad4_color_006eff"
+                android:text="测试设备3"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="4dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guidelineCol2"
+            app:layout_constraintTop_toTopOf="@+id/guidelineRow2">
+            <!-- 设备4视频预览 -->
+            <TextureView
+                android:id="@+id/vPreviewDevice4"
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
+
+            <!-- 设备4状态 -->
+            <TextView
+                android:id="@+id/tvDevice4Status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="设备4: 未连接"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <!-- 设备4操作按钮 -->
+            <Button
+                android:id="@+id/btnTestDevice4"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_rad4_color_006eff"
+                android:text="测试设备4"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+
+        <!-- 网格辅助线 -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineCol2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- 中间辅助线 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineMiddle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6" />
+
+    <!-- 停止所有设备按钮 -->
+    <Button
+        android:id="@+id/btnStopAll"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/btn_rad4_color_e54545"
+        android:text="停止所有设备"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutVideoPreview" />
+
+    <!-- 辅助线 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

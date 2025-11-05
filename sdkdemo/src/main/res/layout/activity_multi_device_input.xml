@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/v_title"
+        layout="@layout/title_layout" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_login"
+        app:layout_constraintTop_toBottomOf="@id/v_title">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 设备1 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="设备1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_17"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/device1_product_id_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <include
+                android:id="@+id/device1_device_name_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <include
+                android:id="@+id/device1_p2p_info_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <!-- 设备2 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="设备2"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_17"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/device2_product_id_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <include
+                android:id="@+id/device2_device_name_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <include
+                android:id="@+id/device2_p2p_info_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <!-- 设备3 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="设备3"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_17"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/device3_product_id_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <include
+                android:id="@+id/device3_device_name_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <include
+                android:id="@+id/device3_p2p_info_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <!-- 设备4 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="设备4"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_17"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/device4_product_id_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <include
+                android:id="@+id/device4_device_name_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+            <include
+                android:id="@+id/device4_p2p_info_layout"
+                layout="@layout/input_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/background_blue_btn"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_17"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
