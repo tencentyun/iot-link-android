@@ -13,7 +13,7 @@ class VideoOptionsActivity : VideoBaseActivity<ActivityVideoOptionsBinding>() {
         with(binding) {
             btnVideo.setOnClickListener { jumpActivity(VideoInputAuthorizeActivity::class.java) }
             btnVideoWlan.setOnClickListener { jumpActivity(VideoWlanDetectActivity::class.java) }
-            btnVideoLink.setOnClickListener { showConnectionTypeDialog() }
+            btnVideoLink.setOnClickListener { jumpActivity(VideoTestInputActivity::class.java) }
         }
     }
 
