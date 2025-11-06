@@ -403,6 +403,38 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
         player.setMaxPacketNum(2)
     }
 
+    private fun restartService(id: String?) {
+        when (id) {
+            "${device1Info?.productId}/${device1Info?.deviceName}" -> {
+                threadPool1.submit {
+                    stopDeviceService(device1Info!!, 1)
+                    device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
+                }
+            }
+
+            "${device2Info?.productId}/${device2Info?.deviceName}" -> {
+                threadPool2.submit {
+                    stopDeviceService(device2Info!!, 2)
+                    device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
+                }
+            }
+
+            "${device3Info?.productId}/${device3Info?.deviceName}" -> {
+                threadPool3.submit {
+                    stopDeviceService(device3Info!!, 3)
+                    device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
+                }
+            }
+
+            "${device4Info?.productId}/${device4Info?.deviceName}" -> {
+                threadPool4.submit {
+                    stopDeviceService(device4Info!!, 4)
+                    device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
+                }
+            }
+        }
+    }
+
 
     // IMediaPlayer.OnInfoListener接口实现
     override fun onInfo(p0: IMediaPlayer?, p1: Int, p2: Int): Boolean {
@@ -418,8 +450,11 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     }
 
     // XP2PCallback接口实现
-    override fun fail(msg: String?, errorCode: Int) {
-        Log.e(tag, "XP2P连接失败: $msg, errorCode: $errorCode")
+    override fun fail(id: String?, errorCode: Int) {
+        Log.e(tag, "XP2P连接失败: $id, errorCode: $errorCode")
+        if (-1011 == errorCode) {
+            restartService(id)
+        }
     }
 
     override fun commandRequest(id: String?, msg: String?) {
@@ -433,6 +468,7 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
             1003 -> {
                 // 连接断开，尝试重连
                 Log.e(tag, "XP2P连接断开，尝试重连")
+                restartService(id)
                 coroutineScope.launch(Dispatchers.Main) {
                     Toast.makeText(
                         this@MultiVideoTestActivity,
