@@ -64,6 +64,7 @@
         android:id="@+id/swt_cross"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:checked="true"
         app:layout_constraintBottom_toBottomOf="@+id/tv_cross"
         app:layout_constraintStart_toEndOf="@+id/tv_cross"
         app:layout_constraintTop_toTopOf="@+id/tv_cross"
@@ -87,7 +88,7 @@
         layout="@layout/input_item_layout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/btn_app_paste" />
 
     <include
@@ -95,7 +96,7 @@
         layout="@layout/input_item_layout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/app_key_layout" />
 
     <TextView
