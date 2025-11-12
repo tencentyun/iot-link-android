@@ -118,8 +118,8 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         binding.tvVideoQuality.text = getString(R.string.video_quality_medium_str)
 
         XP2P.setCallback(this)
-//        val filaPath = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath + "/data_video.flv"
-//        XP2P.recordstreamPath(filaPath) //自定义采集裸流路径
+        val filaPath = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath + "/data_video.flv"
+        XP2P.recordstreamPath(filaPath) //自定义采集裸流路径
         val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()
         wm.defaultDisplay.getMetrics(dm)
@@ -172,7 +172,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
 
     private fun delegateHttpFlv() {
         val id = "${productId}/${deviceName}"
-//        XP2P.recordstream(id) //开启自定义采集裸流
+        XP2P.recordstream(id) //开启自定义采集裸流
         val prefix = XP2P.delegateHttpFlv(id)
         if (prefix.isNotEmpty()) {
             urlPrefix = prefix
@@ -466,15 +466,12 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "threads", 2)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sync-av-start", 0)
-            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 5)
-            player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 512 * 1024)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1)
             player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1)
             player.setOption(
                 IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1
             )
-            player.setFrameSpeed(1.5f)
-            player.setMaxPacketNum(2)
+            player.setMaxPacketNum(10001)
             while (!::surface.isInitialized) {
                 delay(50)
                 L.e("delay for waiting surface.")

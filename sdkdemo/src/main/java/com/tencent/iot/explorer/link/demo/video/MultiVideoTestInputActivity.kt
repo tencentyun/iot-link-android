@@ -21,65 +21,65 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
             // 设备1
             device1ProductIdLayout.tvTip.setText(R.string.product_id_text)
             device1ProductIdLayout.evContent.setHint(R.string.hint_product_id)
-            device1ProductIdLayout.evContent.setText("CE3P21B2JW")
+            device1ProductIdLayout.evContent.setText("")
             device1ProductIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             device1DeviceNameLayout.tvTip.setText(R.string.device_name_text)
             device1DeviceNameLayout.evContent.setHint(R.string.hint_device_name)
-            device1DeviceNameLayout.evContent.setText("4C_40300001_152384222_4")
+            device1DeviceNameLayout.evContent.setText("")
             device1DeviceNameLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             device1P2pInfoLayout.tvTip.setText(R.string.p2p_info_text)
             device1P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
-            device1P2pInfoLayout.evContent.setText("XP2P1HNek+BperPLzEXSyb67SI7k%2.4.50")
+            device1P2pInfoLayout.evContent.setText("")
             device1P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             // 设备2
             device2ProductIdLayout.tvTip.setText(R.string.product_id_text)
             device2ProductIdLayout.evContent.setHint(R.string.hint_product_id)
-            device2ProductIdLayout.evContent.setText("CE3P21B2JW")
+            device2ProductIdLayout.evContent.setText("")
             device2ProductIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             device2DeviceNameLayout.tvTip.setText(R.string.device_name_text)
             device2DeviceNameLayout.evContent.setHint(R.string.hint_device_name)
-            device2DeviceNameLayout.evContent.setText("4C_40300001_162157562_78")
+            device2DeviceNameLayout.evContent.setText("")
             device2DeviceNameLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             device2P2pInfoLayout.tvTip.setText(R.string.p2p_info_text)
             device2P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
-            device2P2pInfoLayout.evContent.setText("XP2PiMbQ1FQE+6ovftkH0GeChw==%2.4.50")
+            device2P2pInfoLayout.evContent.setText("")
             device2P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             // 设备3
             device3ProductIdLayout.tvTip.setText(R.string.product_id_text)
             device3ProductIdLayout.evContent.setHint(R.string.hint_product_id)
-            device3ProductIdLayout.evContent.setText("CE3P21B2JW")
+            device3ProductIdLayout.evContent.setText("")
             device3ProductIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             device3DeviceNameLayout.tvTip.setText(R.string.device_name_text)
             device3DeviceNameLayout.evContent.setHint(R.string.hint_device_name)
-            device3DeviceNameLayout.evContent.setText("4C_40300001_162157562_54")
+            device3DeviceNameLayout.evContent.setText("")
             device3DeviceNameLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             device3P2pInfoLayout.tvTip.setText(R.string.p2p_info_text)
             device3P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
-            device3P2pInfoLayout.evContent.setText("XP2Pgvn3TmlXF16x+9WTJvSt96EI%2.4.50")
+            device3P2pInfoLayout.evContent.setText("")
             device3P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             // 设备4
             device4ProductIdLayout.tvTip.setText(R.string.product_id_text)
             device4ProductIdLayout.evContent.setHint(R.string.hint_product_id)
-            device4ProductIdLayout.evContent.setText("CE3P21B2JW")
+            device4ProductIdLayout.evContent.setText("")
             device4ProductIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             device4DeviceNameLayout.tvTip.setText(R.string.device_name_text)
             device4DeviceNameLayout.evContent.setHint(R.string.hint_device_name)
-            device4DeviceNameLayout.evContent.setText("4C_40300001_162157562_57")
+            device4DeviceNameLayout.evContent.setText("")
             device4DeviceNameLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
             device4P2pInfoLayout.tvTip.setText(R.string.p2p_info_text)
             device4P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
-            device4P2pInfoLayout.evContent.setText("XP2PAbTOrSl+BGVu3siirwE+Joda%2.4.50")
+            device4P2pInfoLayout.evContent.setText("")
             device4P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
         }
     }

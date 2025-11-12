@@ -13,14 +13,14 @@ class VideoOptionsActivity : VideoBaseActivity<ActivityVideoOptionsBinding>() {
         with(binding) {
             btnVideo.setOnClickListener { jumpActivity(VideoInputAuthorizeActivity::class.java) }
             btnVideoWlan.setOnClickListener { jumpActivity(VideoWlanDetectActivity::class.java) }
-            btnVideoLink.setOnClickListener { jumpActivity(VideoTestInputActivity::class.java) }
+            btnVideoLink.setOnClickListener { showConnectionTypeDialog() }
         }
     }
 
     private fun showConnectionTypeDialog() {
         val options = arrayOf("单设备直连", "多设备直连")
         AlertDialog.Builder(this)
-            .setTitle("选择连接方式")
+            .setTitle("请选择设备连接方式")
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> jumpActivity(VideoTestInputActivity::class.java)
