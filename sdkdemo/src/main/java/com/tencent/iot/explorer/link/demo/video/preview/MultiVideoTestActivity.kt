@@ -28,10 +28,7 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     IMediaPlayer.OnInfoListener {
 
     private val tag = MultiVideoTestActivity::class.simpleName
-    private val threadPool1 = Executors.newSingleThreadExecutor()
-    private val threadPool2 = Executors.newSingleThreadExecutor()
-    private val threadPool3 = Executors.newSingleThreadExecutor()
-    private val threadPool4 = Executors.newSingleThreadExecutor()
+    private val taskThread = Executors.newSingleThreadExecutor()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -251,22 +248,22 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
 
             // 单个设备测试按钮
             btnTestDevice1.setOnClickListener {
-                threadPool1.submit {
+                taskThread.submit {
                     device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
                 }
             }
             btnTestDevice2.setOnClickListener {
-                threadPool2.submit {
+                taskThread.submit {
                     device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
                 }
             }
             btnTestDevice3.setOnClickListener {
-                threadPool3.submit {
+                taskThread.submit {
                     device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
                 }
             }
             btnTestDevice4.setOnClickListener {
-                threadPool4.submit {
+                taskThread.submit {
                     device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
                 }
             }
@@ -279,7 +276,12 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     }
 
     private fun startMultiDeviceServices() {
-
+        taskThread.submit {
+            device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
+            device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
+            device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
+            device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
+        }
 
 //        runOnUiThread {
 //            Toast.makeText(this, "开始启动4个设备连接...", Toast.LENGTH_SHORT).show()
@@ -404,30 +406,25 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     }
 
     private fun restartService(id: String?) {
-        when (id) {
-            "${device1Info?.productId}/${device1Info?.deviceName}" -> {
-                threadPool1.submit {
+        taskThread.submit {
+            when (id) {
+                "${device1Info?.productId}/${device1Info?.deviceName}" -> {
                     stopDeviceService(device1Info!!, 1)
                     device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
                 }
-            }
 
-            "${device2Info?.productId}/${device2Info?.deviceName}" -> {
-                threadPool2.submit {
+                "${device2Info?.productId}/${device2Info?.deviceName}" -> {
                     stopDeviceService(device2Info!!, 2)
                     device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
                 }
-            }
 
-            "${device3Info?.productId}/${device3Info?.deviceName}" -> {
-                threadPool3.submit {
+                "${device3Info?.productId}/${device3Info?.deviceName}" -> {
                     stopDeviceService(device3Info!!, 3)
                     device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
-                }
-            }
 
-            "${device4Info?.productId}/${device4Info?.deviceName}" -> {
-                threadPool4.submit {
+                }
+
+                "${device4Info?.productId}/${device4Info?.deviceName}" -> {
                     stopDeviceService(device4Info!!, 4)
                     device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
                 }
