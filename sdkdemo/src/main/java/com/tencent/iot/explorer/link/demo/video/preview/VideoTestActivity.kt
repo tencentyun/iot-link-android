@@ -97,15 +97,15 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         ActivityVideoTestBinding.inflate(layoutInflater)
 
     override fun initView() {
-        productId = intent.getStringExtra("productId")?.toString() ?: ""
-        deviceName = intent.getStringExtra("deviceName")?.toString() ?: ""
-        xp2pInfo = intent.getStringExtra("p2pInfo")?.toString() ?: ""
-        val appKey = intent.getStringExtra("appKey")?.toString() ?: ""
-        val appSecret = intent.getStringExtra("appSecret")?.toString() ?: ""
-        xP2PAppConfig.appKey = appKey
-        xP2PAppConfig.appSecret = appSecret
+        productId = (intent.getStringExtra("productId") ?: "").trim()
+        deviceName = (intent.getStringExtra("deviceName") ?: "").trim()
+        xp2pInfo = (intent.getStringExtra("p2pInfo") ?: "").trim()
+        val appKey = intent.getStringExtra("appKey") ?: ""
+        val appSecret = intent.getStringExtra("appSecret") ?: ""
+        xP2PAppConfig.appKey = appKey.trim()
+        xP2PAppConfig.appSecret = appSecret.trim()
         xP2PAppConfig.autoConfigFromDevice = intent.getBooleanExtra("isStartCross", false)
-        val protocol = intent.getStringExtra("protocol")?.toString() ?: "auto"
+        val protocol = intent.getStringExtra("protocol") ?: "auto"
         if (protocol == "udp") {
             xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_UDP
         } else if (protocol == "tcp") {
@@ -511,7 +511,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             if (event == 1004) {
                 Log.e(tag, "====event === 1004")
                 checkDeviceState()
-//                delegateHttpFlv()
+                delegateHttpFlv()
             }
         } else if (event == 1010) {
             Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")

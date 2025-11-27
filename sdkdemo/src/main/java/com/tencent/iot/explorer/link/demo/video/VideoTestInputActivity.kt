@@ -42,6 +42,11 @@ class VideoTestInputActivity : VideoBaseActivity<ActivityVideoTestInputBinding>(
                 VideoConst.VIDEO_CONFIG,
                 VideoConst.MULTI_VIDEO_P2P_INFO
             )
+            val isStartCross = SharePreferenceUtil.getInt(
+                this@VideoTestInputActivity,
+                VideoConst.VIDEO_CONFIG,
+                "isStartCross"
+            ) == 1
             val appKey = SharePreferenceUtil.getString(
                 this@VideoTestInputActivity,
                 VideoConst.VIDEO_CONFIG,
@@ -76,6 +81,7 @@ class VideoTestInputActivity : VideoBaseActivity<ActivityVideoTestInputBinding>(
             if (appKey.isNotEmpty()) {
                 appKeyLayout.evContent.setText(appKey)
             }
+            swtCross.isChecked = isStartCross
             appKeyLayout.evContent.setHint(R.string.hint_app_key)
             appKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             if (appSecret.isNotEmpty()) {
@@ -162,6 +168,12 @@ class VideoTestInputActivity : VideoBaseActivity<ActivityVideoTestInputBinding>(
                     show(getString(R.string.hint_p2p_info))
                     return
                 }
+                SharePreferenceUtil.saveInt(
+                    this@VideoTestInputActivity,
+                    VideoConst.VIDEO_CONFIG,
+                    "isStartCross",
+                    if (isStartCross) 1 else 0
+                )
                 if (isStartCross) {
                     if (appKeyLayout.evContent.text.isNullOrEmpty()) {
                         show(getString(R.string.hint_app_key))
@@ -186,12 +198,6 @@ class VideoTestInputActivity : VideoBaseActivity<ActivityVideoTestInputBinding>(
                         )
                     }
                 }
-                SharePreferenceUtil.saveString(
-                    this@VideoTestInputActivity,
-                    VideoConst.VIDEO_CONFIG,
-                    VideoConst.MULTI_VIDEO_P2P_INFO,
-                    p2pInfoLayout.evContent.text.toString()
-                )
                 val intent = Intent(this@VideoTestInputActivity, VideoTestActivity::class.java)
                 intent.putExtra("productId", productIdLayout.evContent.text.toString())
                 intent.putExtra("deviceName", deviceNameLayout.evContent.text.toString())
