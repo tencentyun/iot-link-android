@@ -82,6 +82,9 @@ class VideoTestInputActivity : VideoBaseActivity<ActivityVideoTestInputBinding>(
                 appKeyLayout.evContent.setText(appKey)
             }
             swtCross.isChecked = isStartCross
+            btnAppPaste.isVisible = isStartCross
+            appKeyLayout.root.isVisible = isStartCross
+            appSecretLayout.root.isVisible = isStartCross
             appKeyLayout.evContent.setHint(R.string.hint_app_key)
             appKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             if (appSecret.isNotEmpty()) {
