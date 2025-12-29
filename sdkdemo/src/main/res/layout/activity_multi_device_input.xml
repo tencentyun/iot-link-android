@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="#F5F7FA">
 
     <include
         android:id="@+id/v_title"
@@ -13,145 +13,502 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@id/btn_login"
         app:layout_constraintTop_toBottomOf="@id/v_title">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="12dp">
 
-            <!-- 设备1 -->
-            <TextView
+            <!-- 设备1卡片 -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="设备1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_17"
-                android:textStyle="bold" />
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
 
-            <include
-                android:id="@+id/device1_product_id_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <include
-                android:id="@+id/device1_device_name_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-            <include
-                android:id="@+id/device1_p2p_info_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="📱 设备1"
+                            android:textColor="#1A1A1A"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-            <!-- 设备2 -->
-            <TextView
+                        <Button
+                            android:id="@+id/btn_paste_device1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:background="@drawable/btn_rad4_color_006eff"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:text="📋 粘贴"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <include
+                        android:id="@+id/device1_product_id_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/device1_device_name_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/device1_p2p_info_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⚙️ 跟随设备配置"
+                            android:textColor="#666666"
+                            android:textSize="14sp" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_device1_follow_config"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_device1_app_config"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <include
+                            android:id="@+id/device1_app_key_layout"
+                            layout="@layout/input_item_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp" />
+
+                        <include
+                            android:id="@+id/device1_app_secret_layout"
+                            layout="@layout/input_item_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 设备2卡片 -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="设备2"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_17"
-                android:textStyle="bold" />
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
 
-            <include
-                android:id="@+id/device2_product_id_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <include
-                android:id="@+id/device2_device_name_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-            <include
-                android:id="@+id/device2_p2p_info_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="📱 设备2"
+                            android:textColor="#1A1A1A"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-            <!-- 设备3 -->
-            <TextView
+                        <Button
+                            android:id="@+id/btn_paste_device2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:background="@drawable/btn_rad4_color_006eff"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:text="📋 粘贴"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <include
+                        android:id="@+id/device2_product_id_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/device2_device_name_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/device2_p2p_info_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⚙️ 跟随设备配置"
+                            android:textColor="#666666"
+                            android:textSize="14sp" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_device2_follow_config"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_device2_app_config"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <include
+                            android:id="@+id/device2_app_key_layout"
+                            layout="@layout/input_item_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp" />
+
+                        <include
+                            android:id="@+id/device2_app_secret_layout"
+                            layout="@layout/input_item_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 设备3卡片 -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="设备3"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_17"
-                android:textStyle="bold" />
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
 
-            <include
-                android:id="@+id/device3_product_id_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <include
-                android:id="@+id/device3_device_name_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-            <include
-                android:id="@+id/device3_p2p_info_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="📱 设备3"
+                            android:textColor="#1A1A1A"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-            <!-- 设备4 -->
-            <TextView
+                        <Button
+                            android:id="@+id/btn_paste_device3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:background="@drawable/btn_rad4_color_006eff"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:text="📋 粘贴"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <include
+                        android:id="@+id/device3_product_id_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/device3_device_name_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/device3_p2p_info_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⚙️ 跟随设备配置"
+                            android:textColor="#666666"
+                            android:textSize="14sp" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_device3_follow_config"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_device3_app_config"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <include
+                            android:id="@+id/device3_app_key_layout"
+                            layout="@layout/input_item_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp" />
+
+                        <include
+                            android:id="@+id/device3_app_secret_layout"
+                            layout="@layout/input_item_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 设备4卡片 -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="设备4"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_17"
-                android:textStyle="bold" />
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
 
-            <include
-                android:id="@+id/device4_product_id_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <include
-                android:id="@+id/device4_device_name_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-            <include
-                android:id="@+id/device4_p2p_info_layout"
-                layout="@layout/input_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="📱 设备4"
+                            android:textColor="#1A1A1A"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btn_paste_device4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:background="@drawable/btn_rad4_color_006eff"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:text="📋 粘贴"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <include
+                        android:id="@+id/device4_product_id_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/device4_device_name_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/device4_p2p_info_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⚙️ 跟随设备配置"
+                            android:textColor="#666666"
+                            android:textSize="14sp" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_device4_follow_config"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_device4_app_config"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <include
+                            android:id="@+id/device4_app_key_layout"
+                            layout="@layout/input_item_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp" />
+
+                        <include
+                            android:id="@+id/device4_app_secret_layout"
+                            layout="@layout/input_item_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
 
         </LinearLayout>
     </ScrollView>
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/background_blue_btn"
-        android:text="@string/login"
+        android:elevation="4dp"
+        android:text="🚀 开始连接"
         android:textColor="@color/white"
-        android:textSize="@dimen/ts_17"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

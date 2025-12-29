@@ -28,7 +28,6 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     IMediaPlayer.OnInfoListener {
 
     private val tag = MultiVideoTestActivity::class.simpleName
-    private val taskThread = Executors.newSingleThreadExecutor()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -92,7 +91,6 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
         initDeviceInfoFromIntent()
         initView()
         setListener()
-        startMultiDeviceServices()
     }
 
     private fun initDeviceInfoFromIntent() {
@@ -126,10 +124,10 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
             vTitle.tvTitle.setText(R.string.multi_device_test)
 
             // 显示设备连接状态
-            tvDevice1Status.text = "设备1: ${device1Info?.deviceName}"
-            tvDevice2Status.text = "设备2: ${device2Info?.deviceName}"
-            tvDevice3Status.text = "设备3: ${device3Info?.deviceName}"
-            tvDevice4Status.text = "设备4: ${device4Info?.deviceName}"
+            tvDevice1Status.text = device1Info?.deviceName ?: "未配置"
+            tvDevice2Status.text = device2Info?.deviceName ?: "未配置"
+            tvDevice3Status.text = device3Info?.deviceName ?: "未配置"
+            tvDevice4Status.text = device4Info?.deviceName ?: "未配置"
 
             // 设置SurfaceTextureListener
             vPreviewDevice1.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
@@ -246,25 +244,47 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
         with(binding) {
             vTitle.ivBack?.setOnClickListener { finish() }
 
-            // 单个设备测试按钮
+            // 设备1测试按钮
             btnTestDevice1.setOnClickListener {
-                taskThread.submit {
-                    device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
+                Log.d(tag, "设备1测试按钮被点击")
+                device1Info?.let {
+                    updateDeviceStatus(1, "连接中...", StatusType.CONNECTING)
+                    startSingleDeviceTest(it, xP2PAppConfig1)
+                } ?: run {
+                    Toast.makeText(this@MultiVideoTestActivity, "设备1信息为空", Toast.LENGTH_SHORT).show()
                 }
             }
+
+            // 设备2测试按钮
             btnTestDevice2.setOnClickListener {
-                taskThread.submit {
-                    device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
+                Log.d(tag, "设备2测试按钮被点击")
+                device2Info?.let {
+                    updateDeviceStatus(2, "连接中...", StatusType.CONNECTING)
+                    startSingleDeviceTest(it, xP2PAppConfig2)
+                } ?: run {
+                    Toast.makeText(this@MultiVideoTestActivity, "设备2信息为空", Toast.LENGTH_SHORT).show()
                 }
             }
+
+            // 设备3测试按钮
             btnTestDevice3.setOnClickListener {
-                taskThread.submit {
-                    device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
+                Log.d(tag, "设备3测试按钮被点击")
+                device3Info?.let {
+                    updateDeviceStatus(3, "连接中...", StatusType.CONNECTING)
+                    startSingleDeviceTest(it, xP2PAppConfig3)
+                } ?: run {
+                    Toast.makeText(this@MultiVideoTestActivity, "设备3信息为空", Toast.LENGTH_SHORT).show()
                 }
             }
+
+            // 设备4测试按钮
             btnTestDevice4.setOnClickListener {
-                taskThread.submit {
-                    device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
+                Log.d(tag, "设备4测试按钮被点击")
+                device4Info?.let {
+                    updateDeviceStatus(4, "连接中...", StatusType.CONNECTING)
+                    startSingleDeviceTest(it, xP2PAppConfig4)
+                } ?: run {
+                    Toast.makeText(this@MultiVideoTestActivity, "设备4信息为空", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -276,12 +296,10 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     }
 
     private fun startMultiDeviceServices() {
-        taskThread.submit {
-            device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
-            device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
-            device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
-            device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
-        }
+        device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
+        device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
+        device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
+        device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
 
 //        runOnUiThread {
 //            Toast.makeText(this, "开始启动4个设备连接...", Toast.LENGTH_SHORT).show()
@@ -289,12 +307,38 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
 //        updateDeviceStatus(deviceIndex, "连接成功")
     }
 
-    private fun updateDeviceStatus(deviceIndex: Int, status: String) {
-        when (deviceIndex) {
-            1 -> binding.tvDevice1Status.text = "设备1: ${device1Info?.deviceName} - $status"
-            2 -> binding.tvDevice2Status.text = "设备2: ${device2Info?.deviceName} - $status"
-            3 -> binding.tvDevice3Status.text = "设备3: ${device3Info?.deviceName} - $status"
-            4 -> binding.tvDevice4Status.text = "设备4: ${device4Info?.deviceName} - $status"
+    // 状态类型枚举
+    enum class StatusType {
+        IDLE, CONNECTING, CONNECTED, ERROR
+    }
+
+    private fun updateDeviceStatus(deviceIndex: Int, status: String, statusType: StatusType = StatusType.IDLE) {
+        runOnUiThread {
+            val indicatorRes = when (statusType) {
+                StatusType.IDLE -> R.drawable.shape_circle_gray
+                StatusType.CONNECTING -> R.drawable.shape_circle_yellow
+                StatusType.CONNECTED -> R.drawable.shape_circle_green
+                StatusType.ERROR -> R.drawable.shape_circle_red
+            }
+
+            when (deviceIndex) {
+                1 -> {
+                    binding.tvDevice1Status.text = status
+                    binding.statusIndicator1.setBackgroundResource(indicatorRes)
+                }
+                2 -> {
+                    binding.tvDevice2Status.text = status
+                    binding.statusIndicator2.setBackgroundResource(indicatorRes)
+                }
+                3 -> {
+                    binding.tvDevice3Status.text = status
+                    binding.statusIndicator3.setBackgroundResource(indicatorRes)
+                }
+                4 -> {
+                    binding.tvDevice4Status.text = status
+                    binding.statusIndicator4.setBackgroundResource(indicatorRes)
+                }
+            }
         }
     }
 
@@ -307,10 +351,10 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
         device4Info?.let { stopDeviceService(it, 4) }
 
         runOnUiThread {
-            updateDeviceStatus(1, "已停止")
-            updateDeviceStatus(2, "已停止")
-            updateDeviceStatus(3, "已停止")
-            updateDeviceStatus(4, "已停止")
+            updateDeviceStatus(1, "已停止", StatusType.IDLE)
+            updateDeviceStatus(2, "已停止", StatusType.IDLE)
+            updateDeviceStatus(3, "已停止", StatusType.IDLE)
+            updateDeviceStatus(4, "已停止", StatusType.IDLE)
             Toast.makeText(this, "所有设备连接已停止", Toast.LENGTH_SHORT).show()
         }
     }
@@ -325,6 +369,7 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     }
 
     private fun startSingleDeviceTest(deviceInfo: DeviceInfo, xP2PAppConfig: XP2PAppConfig) {
+        Log.d(tag, "开始启动设备:${deviceInfo.productId}/${deviceInfo.deviceName}")
         XP2P.startService(
             this@MultiVideoTestActivity,
             deviceInfo.productId, deviceInfo.deviceName,
@@ -406,28 +451,26 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     }
 
     private fun restartService(id: String?) {
-        taskThread.submit {
-            when (id) {
-                "${device1Info?.productId}/${device1Info?.deviceName}" -> {
-                    stopDeviceService(device1Info!!, 1)
-                    device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
-                }
+        when (id) {
+            "${device1Info?.productId}/${device1Info?.deviceName}" -> {
+                stopDeviceService(device1Info!!, 1)
+                device1Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig1) }
+            }
 
-                "${device2Info?.productId}/${device2Info?.deviceName}" -> {
-                    stopDeviceService(device2Info!!, 2)
-                    device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
-                }
+            "${device2Info?.productId}/${device2Info?.deviceName}" -> {
+                stopDeviceService(device2Info!!, 2)
+                device2Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig2) }
+            }
 
-                "${device3Info?.productId}/${device3Info?.deviceName}" -> {
-                    stopDeviceService(device3Info!!, 3)
-                    device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
+            "${device3Info?.productId}/${device3Info?.deviceName}" -> {
+                stopDeviceService(device3Info!!, 3)
+                device3Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig3) }
 
-                }
+            }
 
-                "${device4Info?.productId}/${device4Info?.deviceName}" -> {
-                    stopDeviceService(device4Info!!, 4)
-                    device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
-                }
+            "${device4Info?.productId}/${device4Info?.deviceName}" -> {
+                stopDeviceService(device4Info!!, 4)
+                device4Info?.let { it1 -> startSingleDeviceTest(it1, xP2PAppConfig4) }
             }
         }
     }
@@ -465,8 +508,8 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
             1003 -> {
                 // 连接断开，尝试重连
                 Log.e(tag, "XP2P连接断开，尝试重连")
-                restartService(id)
                 coroutineScope.launch(Dispatchers.Main) {
+                    restartService(id)
                     Toast.makeText(
                         this@MultiVideoTestActivity,
                         "连接断开，正在重连...",
@@ -600,7 +643,7 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
                     player.prepareAsync()
                     player.start()
 
-                    updateDeviceStatus(deviceIndex, "视频流播放中")
+                    updateDeviceStatus(deviceIndex, "播放中", StatusType.CONNECTED)
                     Toast.makeText(
                         this@MultiVideoTestActivity,
                         "设备$deviceIndex 视频流开始播放",
@@ -609,7 +652,7 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
                 }
             } else {
                 coroutineScope.launch(Dispatchers.Main) {
-                    updateDeviceStatus(deviceIndex, "获取流地址失败")
+                    updateDeviceStatus(deviceIndex, "获取流地址失败", StatusType.ERROR)
                     Toast.makeText(
                         this@MultiVideoTestActivity,
                         "设备$deviceIndex 获取流地址失败",
@@ -620,7 +663,7 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
         } catch (e: Exception) {
             Log.e(tag, "设备$deviceIndex 启动视频流失败", e)
             coroutineScope.launch(Dispatchers.Main) {
-                updateDeviceStatus(deviceIndex, "视频流失败: ${e.message}")
+                updateDeviceStatus(deviceIndex, "连接失败", StatusType.ERROR)
                 Toast.makeText(
                     this@MultiVideoTestActivity,
                     "设备$deviceIndex 视频流失败: ${e.message}",
