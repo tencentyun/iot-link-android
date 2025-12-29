@@ -24,6 +24,50 @@
             android:orientation="vertical"
             android:padding="12dp">
 
+            <!-- 统一配置卡片 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="⚙️ 统一配置（跟随设备配置）"
+                        android:textColor="#1A1A1A"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="#E8E8E8" />
+
+                    <include
+                        android:id="@+id/app_key_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+
+                    <include
+                        android:id="@+id/app_secret_layout"
+                        layout="@layout/input_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
             <!-- 设备1卡片 -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -108,7 +152,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="⚙️ 跟随设备配置"
+                            android:text="⚙️ 使用统一配置"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
@@ -117,26 +161,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="false" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_device1_app_config"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <include
-                            android:id="@+id/device1_app_key_layout"
-                            layout="@layout/input_item_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp" />
-
-                        <include
-                            android:id="@+id/device1_app_secret_layout"
-                            layout="@layout/input_item_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -225,7 +249,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="⚙️ 跟随设备配置"
+                            android:text="⚙️ 使用统一配置"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
@@ -234,26 +258,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="false" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_device2_app_config"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <include
-                            android:id="@+id/device2_app_key_layout"
-                            layout="@layout/input_item_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp" />
-
-                        <include
-                            android:id="@+id/device2_app_secret_layout"
-                            layout="@layout/input_item_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -342,7 +346,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="⚙️ 跟随设备配置"
+                            android:text="⚙️ 使用统一配置"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
@@ -351,26 +355,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="false" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_device3_app_config"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <include
-                            android:id="@+id/device3_app_key_layout"
-                            layout="@layout/input_item_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp" />
-
-                        <include
-                            android:id="@+id/device3_app_secret_layout"
-                            layout="@layout/input_item_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -459,7 +443,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="⚙️ 跟随设备配置"
+                            android:text="⚙️ 使用统一配置"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
@@ -468,26 +452,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="false" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_device4_app_config"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <include
-                            android:id="@+id/device4_app_key_layout"
-                            layout="@layout/input_item_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp" />
-
-                        <include
-                            android:id="@+id/device4_app_secret_layout"
-                            layout="@layout/input_item_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

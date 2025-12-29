@@ -73,41 +73,14 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
             device4P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
             device4P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
-            // 设备1跟随设备配置
-            device1AppKeyLayout.tvTip.setText("AppKey")
-            device1AppKeyLayout.evContent.setHint("请输入AppKey")
-            device1AppKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
+            // 统一配置
+            appKeyLayout.tvTip.setText("AppKey")
+            appKeyLayout.evContent.setHint("请输入AppKey（可选）")
+            appKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
             
-            device1AppSecretLayout.tvTip.setText("AppSecret")
-            device1AppSecretLayout.evContent.setHint("请输入AppSecret")
-            device1AppSecretLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
-            // 设备2跟随设备配置
-            device2AppKeyLayout.tvTip.setText("AppKey")
-            device2AppKeyLayout.evContent.setHint("请输入AppKey")
-            device2AppKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
-            device2AppSecretLayout.tvTip.setText("AppSecret")
-            device2AppSecretLayout.evContent.setHint("请输入AppSecret")
-            device2AppSecretLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
-            // 设备3跟随设备配置
-            device3AppKeyLayout.tvTip.setText("AppKey")
-            device3AppKeyLayout.evContent.setHint("请输入AppKey")
-            device3AppKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
-            device3AppSecretLayout.tvTip.setText("AppSecret")
-            device3AppSecretLayout.evContent.setHint("请输入AppSecret")
-            device3AppSecretLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
-            // 设备4跟随设备配置
-            device4AppKeyLayout.tvTip.setText("AppKey")
-            device4AppKeyLayout.evContent.setHint("请输入AppKey")
-            device4AppKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
-            device4AppSecretLayout.tvTip.setText("AppSecret")
-            device4AppSecretLayout.evContent.setHint("请输入AppSecret")
-            device4AppSecretLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
+            appSecretLayout.tvTip.setText("AppSecret")
+            appSecretLayout.evContent.setHint("请输入AppSecret（可选）")
+            appSecretLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
         }
     }
 
@@ -121,26 +94,6 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
             btnPasteDevice2.setOnClickListener { pasteDeviceInfo(2) }
             btnPasteDevice3.setOnClickListener { pasteDeviceInfo(3) }
             btnPasteDevice4.setOnClickListener { pasteDeviceInfo(4) }
-            
-            // 设备1跟随设备配置开关
-            switchDevice1FollowConfig.setOnCheckedChangeListener { _, isChecked ->
-                layoutDevice1AppConfig.visibility = if (isChecked) View.VISIBLE else View.GONE
-            }
-            
-            // 设备2跟随设备配置开关
-            switchDevice2FollowConfig.setOnCheckedChangeListener { _, isChecked ->
-                layoutDevice2AppConfig.visibility = if (isChecked) View.VISIBLE else View.GONE
-            }
-            
-            // 设备3跟随设备配置开关
-            switchDevice3FollowConfig.setOnCheckedChangeListener { _, isChecked ->
-                layoutDevice3AppConfig.visibility = if (isChecked) View.VISIBLE else View.GONE
-            }
-            
-            // 设备4跟随设备配置开关
-            switchDevice4FollowConfig.setOnCheckedChangeListener { _, isChecked ->
-                layoutDevice4AppConfig.visibility = if (isChecked) View.VISIBLE else View.GONE
-            }
         }
     }
 
@@ -164,14 +117,18 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                 // 跳转到多设备测试页面
                 val intent = Intent(this@MultiVideoTestInputActivity, MultiVideoTestActivity::class.java)
                 
+                // 获取统一的配置信息
+                val appKey = appKeyLayout.evContent.text.toString()
+                val appSecret = appSecretLayout.evContent.text.toString()
+                
                 // 传递设备1信息
                 intent.putExtra("device1_productId", device1ProductIdLayout.evContent.text.toString())
                 intent.putExtra("device1_deviceName", device1DeviceNameLayout.evContent.text.toString())
                 intent.putExtra("device1_p2pInfo", device1P2pInfoLayout.evContent.text.toString())
                 intent.putExtra("device1_followConfig", switchDevice1FollowConfig.isChecked)
                 if (switchDevice1FollowConfig.isChecked) {
-                    intent.putExtra("device1_appKey", device1AppKeyLayout.evContent.text.toString())
-                    intent.putExtra("device1_appSecret", device1AppSecretLayout.evContent.text.toString())
+                    intent.putExtra("device1_appKey", appKey)
+                    intent.putExtra("device1_appSecret", appSecret)
                 }
                 
                 // 传递设备2信息
@@ -180,8 +137,8 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                 intent.putExtra("device2_p2pInfo", device2P2pInfoLayout.evContent.text.toString())
                 intent.putExtra("device2_followConfig", switchDevice2FollowConfig.isChecked)
                 if (switchDevice2FollowConfig.isChecked) {
-                    intent.putExtra("device2_appKey", device2AppKeyLayout.evContent.text.toString())
-                    intent.putExtra("device2_appSecret", device2AppSecretLayout.evContent.text.toString())
+                    intent.putExtra("device2_appKey", appKey)
+                    intent.putExtra("device2_appSecret", appSecret)
                 }
                 
                 // 传递设备3信息
@@ -190,8 +147,8 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                 intent.putExtra("device3_p2pInfo", device3P2pInfoLayout.evContent.text.toString())
                 intent.putExtra("device3_followConfig", switchDevice3FollowConfig.isChecked)
                 if (switchDevice3FollowConfig.isChecked) {
-                    intent.putExtra("device3_appKey", device3AppKeyLayout.evContent.text.toString())
-                    intent.putExtra("device3_appSecret", device3AppSecretLayout.evContent.text.toString())
+                    intent.putExtra("device3_appKey", appKey)
+                    intent.putExtra("device3_appSecret", appSecret)
                 }
                 
                 // 传递设备4信息
@@ -200,8 +157,8 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                 intent.putExtra("device4_p2pInfo", device4P2pInfoLayout.evContent.text.toString())
                 intent.putExtra("device4_followConfig", switchDevice4FollowConfig.isChecked)
                 if (switchDevice4FollowConfig.isChecked) {
-                    intent.putExtra("device4_appKey", device4AppKeyLayout.evContent.text.toString())
-                    intent.putExtra("device4_appSecret", device4AppSecretLayout.evContent.text.toString())
+                    intent.putExtra("device4_appKey", appKey)
+                    intent.putExtra("device4_appSecret", appSecret)
                 }
                 
                 startActivity(intent)
@@ -224,7 +181,7 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
         
         if (clipData != null && clipData.itemCount > 0) {
             val text = clipData.getItemAt(0).text.toString()
-            val lines = text.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
+            val lines = text.split("\\n").map { it.trim() }.filter { it.isNotEmpty() }
             
             if (lines.size >= 3) {
                 val productId = lines[0]
@@ -239,15 +196,15 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                             device1ProductIdLayout.evContent.setText(productId)
                             device1DeviceNameLayout.evContent.setText(deviceName)
                             device1P2pInfoLayout.evContent.setText(p2pInfo)
-                            // 如果有appKey和appSecret，自动打开跟随配置开关
+                            // 如果有appKey和appSecret，填充到统一配置区域并打开开关
                             if (appKey.isNotEmpty() || appSecret.isNotEmpty()) {
-                                switchDevice1FollowConfig.isChecked = true
                                 if (appKey.isNotEmpty()) {
-                                    device1AppKeyLayout.evContent.setText(appKey)
+                                    appKeyLayout.evContent.setText(appKey)
                                 }
                                 if (appSecret.isNotEmpty()) {
-                                    device1AppSecretLayout.evContent.setText(appSecret)
+                                    appSecretLayout.evContent.setText(appSecret)
                                 }
+                                switchDevice1FollowConfig.isChecked = true
                             }
                         }
                         2 -> {
@@ -255,13 +212,13 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                             device2DeviceNameLayout.evContent.setText(deviceName)
                             device2P2pInfoLayout.evContent.setText(p2pInfo)
                             if (appKey.isNotEmpty() || appSecret.isNotEmpty()) {
-                                switchDevice2FollowConfig.isChecked = true
                                 if (appKey.isNotEmpty()) {
-                                    device2AppKeyLayout.evContent.setText(appKey)
+                                    appKeyLayout.evContent.setText(appKey)
                                 }
                                 if (appSecret.isNotEmpty()) {
-                                    device2AppSecretLayout.evContent.setText(appSecret)
+                                    appSecretLayout.evContent.setText(appSecret)
                                 }
+                                switchDevice2FollowConfig.isChecked = true
                             }
                         }
                         3 -> {
@@ -269,13 +226,13 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                             device3DeviceNameLayout.evContent.setText(deviceName)
                             device3P2pInfoLayout.evContent.setText(p2pInfo)
                             if (appKey.isNotEmpty() || appSecret.isNotEmpty()) {
-                                switchDevice3FollowConfig.isChecked = true
                                 if (appKey.isNotEmpty()) {
-                                    device3AppKeyLayout.evContent.setText(appKey)
+                                    appKeyLayout.evContent.setText(appKey)
                                 }
                                 if (appSecret.isNotEmpty()) {
-                                    device3AppSecretLayout.evContent.setText(appSecret)
+                                    appSecretLayout.evContent.setText(appSecret)
                                 }
+                                switchDevice3FollowConfig.isChecked = true
                             }
                         }
                         4 -> {
@@ -283,13 +240,13 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                             device4DeviceNameLayout.evContent.setText(deviceName)
                             device4P2pInfoLayout.evContent.setText(p2pInfo)
                             if (appKey.isNotEmpty() || appSecret.isNotEmpty()) {
-                                switchDevice4FollowConfig.isChecked = true
                                 if (appKey.isNotEmpty()) {
-                                    device4AppKeyLayout.evContent.setText(appKey)
+                                    appKeyLayout.evContent.setText(appKey)
                                 }
                                 if (appSecret.isNotEmpty()) {
-                                    device4AppSecretLayout.evContent.setText(appSecret)
+                                    appSecretLayout.evContent.setText(appSecret)
                                 }
+                                switchDevice4FollowConfig.isChecked = true
                             }
                         }
                     }
@@ -301,7 +258,7 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                 }
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "粘贴板格式错误，请每行输入一个字段：\n第一行：产品ID\n第二行：设备名称\n第三行：P2P信息\n第四行：AppKey（可选）\n第五行：AppSecret（可选）", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "粘贴板格式错误，请每行输入一个字段：\\n第一行：产品ID\\n第二行：设备名称\\n第三行：P2P信息\\n第四行：AppKey（可选）\\n第五行：AppSecret（可选）", Toast.LENGTH_LONG).show()
             }
         } else {
             Toast.makeText(this, "粘贴板为空", Toast.LENGTH_SHORT).show()

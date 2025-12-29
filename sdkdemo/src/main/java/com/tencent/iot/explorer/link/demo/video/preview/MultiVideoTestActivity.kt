@@ -94,29 +94,105 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     }
 
     private fun initDeviceInfoFromIntent() {
+        // 获取设备1的跟随配置信息
+        val device1FollowConfig = intent.getBooleanExtra("device1_followConfig", false)
+        val device1AppKey = if (device1FollowConfig) {
+            intent.getStringExtra("device1_appKey") ?: ""
+        } else ""
+        val device1AppSecret = if (device1FollowConfig) {
+            intent.getStringExtra("device1_appSecret") ?: ""
+        } else ""
+
         device1Info = DeviceInfo(
             productId = intent.getStringExtra("device1_productId") ?: "",
             deviceName = intent.getStringExtra("device1_deviceName") ?: "",
-            p2pInfo = intent.getStringExtra("device1_p2pInfo") ?: ""
+            p2pInfo = intent.getStringExtra("device1_p2pInfo") ?: "",
+            followConfig = device1FollowConfig,
+            appKey = device1AppKey,
+            appSecret = device1AppSecret
         )
+
+        // 如果设备1有配置，更新XP2PAppConfig
+        if (device1FollowConfig && device1AppKey.isNotEmpty() && device1AppSecret.isNotEmpty()) {
+            xP2PAppConfig1.appKey = device1AppKey
+            xP2PAppConfig1.appSecret = device1AppSecret
+            Log.d(tag, "设备1 使用跟随配置: appKey=$device1AppKey")
+        }
+
+        // 获取设备2的跟随配置信息
+        val device2FollowConfig = intent.getBooleanExtra("device2_followConfig", false)
+        val device2AppKey = if (device2FollowConfig) {
+            intent.getStringExtra("device2_appKey") ?: ""
+        } else ""
+        val device2AppSecret = if (device2FollowConfig) {
+            intent.getStringExtra("device2_appSecret") ?: ""
+        } else ""
 
         device2Info = DeviceInfo(
             productId = intent.getStringExtra("device2_productId") ?: "",
             deviceName = intent.getStringExtra("device2_deviceName") ?: "",
-            p2pInfo = intent.getStringExtra("device2_p2pInfo") ?: ""
+            p2pInfo = intent.getStringExtra("device2_p2pInfo") ?: "",
+            followConfig = device2FollowConfig,
+            appKey = device2AppKey,
+            appSecret = device2AppSecret
         )
+
+        // 如果设备2有配置，更新XP2PAppConfig
+        if (device2FollowConfig && device2AppKey.isNotEmpty() && device2AppSecret.isNotEmpty()) {
+            xP2PAppConfig2.appKey = device2AppKey
+            xP2PAppConfig2.appSecret = device2AppSecret
+            Log.d(tag, "设备2 使用跟随配置: appKey=$device2AppKey")
+        }
+
+        // 获取设备3的跟随配置信息
+        val device3FollowConfig = intent.getBooleanExtra("device3_followConfig", false)
+        val device3AppKey = if (device3FollowConfig) {
+            intent.getStringExtra("device3_appKey") ?: ""
+        } else ""
+        val device3AppSecret = if (device3FollowConfig) {
+            intent.getStringExtra("device3_appSecret") ?: ""
+        } else ""
 
         device3Info = DeviceInfo(
             productId = intent.getStringExtra("device3_productId") ?: "",
             deviceName = intent.getStringExtra("device3_deviceName") ?: "",
-            p2pInfo = intent.getStringExtra("device3_p2pInfo") ?: ""
+            p2pInfo = intent.getStringExtra("device3_p2pInfo") ?: "",
+            followConfig = device3FollowConfig,
+            appKey = device3AppKey,
+            appSecret = device3AppSecret
         )
+
+        // 如果设备3有配置，更新XP2PAppConfig
+        if (device3FollowConfig && device3AppKey.isNotEmpty() && device3AppSecret.isNotEmpty()) {
+            xP2PAppConfig3.appKey = device3AppKey
+            xP2PAppConfig3.appSecret = device3AppSecret
+            Log.d(tag, "设备3 使用跟随配置: appKey=$device3AppKey")
+        }
+
+        // 获取设备4的跟随配置信息
+        val device4FollowConfig = intent.getBooleanExtra("device4_followConfig", false)
+        val device4AppKey = if (device4FollowConfig) {
+            intent.getStringExtra("device4_appKey") ?: ""
+        } else ""
+        val device4AppSecret = if (device4FollowConfig) {
+            intent.getStringExtra("device4_appSecret") ?: ""
+        } else ""
 
         device4Info = DeviceInfo(
             productId = intent.getStringExtra("device4_productId") ?: "",
             deviceName = intent.getStringExtra("device4_deviceName") ?: "",
-            p2pInfo = intent.getStringExtra("device4_p2pInfo") ?: ""
+            p2pInfo = intent.getStringExtra("device4_p2pInfo") ?: "",
+            followConfig = device4FollowConfig,
+            appKey = device4AppKey,
+            appSecret = device4AppSecret
         )
+
+        // 如果设备4有配置，更新XP2PAppConfig
+        if (device4FollowConfig && device4AppKey.isNotEmpty() && device4AppSecret.isNotEmpty()) {
+            xP2PAppConfig4.appKey = device4AppKey
+            xP2PAppConfig4.appSecret = device4AppSecret
+            Log.d(tag, "设备4 使用跟随配置: appKey=$device4AppKey")
+        }
     }
 
     override fun initView() {
@@ -414,7 +490,10 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
     data class DeviceInfo(
         val productId: String,
         val deviceName: String,
-        val p2pInfo: String
+        val p2pInfo: String,
+        val followConfig: Boolean = false,
+        val appKey: String = "",
+        val appSecret: String = ""
     )
 
     // 播放器初始化方法
