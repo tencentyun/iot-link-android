@@ -180,9 +180,7 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
         val clipData = clipboard.primaryClip
         
         if (clipData != null && clipData.itemCount > 0) {
-            val text = clipData.getItemAt(0).text.toString()
-            val lines = text.split("\\n").map { it.trim() }.filter { it.isNotEmpty() }
-            
+            val lines = clipData.getItemAt(0)?.text.toString().split("\n")
             if (lines.size >= 3) {
                 val productId = lines[0]
                 val deviceName = lines[1]
