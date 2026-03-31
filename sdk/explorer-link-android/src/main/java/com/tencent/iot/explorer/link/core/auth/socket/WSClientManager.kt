@@ -27,6 +27,13 @@ internal class WSClientManager private constructor() {
     private var job: Job? = null
     private lateinit var heartJob: Job
 
+    // 重连策略参数
+    private var retryCount = 0
+    private val maxRetryCount = 15              // 最大重试次数
+    private val baseDelayMs = 2000L             // 初始延迟 2s
+    private val maxDelayMs = 60_000L            // 最大延迟 60s
+    private val jitterRange = 500L              // 随机抖动范围
+
     private var heartMessageList = ArrayString()
     private var heartCount = 0
 
@@ -221,16 +228,31 @@ internal class WSClientManager private constructor() {
     }
 
     /**
+     * 计算指数退避延迟（含随机抖动）
+     * 2s, 4s, 8s, 16s, 32s, 60s, 60s, ...
+     */
+    private fun getRetryDelay(): Long {
+        val exponentialDelay = baseDelayMs * (1L shl minOf(retryCount, 5))
+        val delay = minOf(exponentialDelay, maxDelayMs)
+        val jitter = (Math.random() * jitterRange).toLong()
+        return delay + jitter
+    }
+
+    /**
      * 开始重连
      */
     private fun startJob() {
         hasListener = true
+        retryCount = 0
         L.e("开始重连")
         if (job == null) {
             job = CoroutineScope(Dispatchers.IO).launch {
-                while (hasListener) {
+                while (hasListener && retryCount < maxRetryCount) {
                     try {
-                        if (WifiUtil.ping("www.baidu.com") || WifiUtil.ping("iot.cloud.tencent.com")) {
+                        val currentDelay = getRetryDelay()
+                        L.d("第 ${retryCount + 1}/$maxRetryCount 次重连，延迟 ${currentDelay}ms")
+
+                        if (WifiUtil.ping("iot.cloud.tencent.com") || WifiUtil.ping("www.baidu.com")) {
                             if (client != null) {
                                 client?.destroy()
                                 client = null
@@ -238,12 +260,21 @@ internal class WSClientManager private constructor() {
                             createSocketClient()
                             L.d("正在尝试重新连接wss://iot.cloud.tencent.com")
                         } else {
-                            L.d("无法连接wss://iot.cloud.tencent.com")
+                            L.d("网络不可达，等待下次重试")
                         }
-                        delay(2000)
+
+                        retryCount++
+                        delay(currentDelay)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
+                }
+
+                if (retryCount >= maxRetryCount) {
+                    L.e("重连已达上限 $maxRetryCount 次，停止重连")
+                    hasListener = false
+                    job = null
+                    socketCallback?.disconnected()
                 }
             }
         } else {
@@ -269,6 +300,7 @@ internal class WSClientManager private constructor() {
     private val connectListener = object : ConnectionCallback {
 
         override fun connected() {
+            retryCount = 0
             resend()
             if (job != null) {
                 activePushCallbacks.forEach {
@@ -393,12 +425,14 @@ internal class WSClientManager private constructor() {
                 L.d("send text:${it.iotMsg}")
             }
             while (requestQueue.isNotEmpty()) {
-                send(requestQueue.poll()?.iotMsg.toString())
-                L.d("send text:${requestQueue.poll()?.iotMsg}")
+                val entity = requestQueue.poll()
+                send(entity?.iotMsg.toString())
+                L.d("send text:${entity?.iotMsg}")
             }
             while (messageList.isNotEmpty()) {
-                send(messageList.poll())
-                L.d("send text:${messageList.poll()}")
+                val msg = messageList.poll()
+                send(msg)
+                L.d("send text:$msg")
             }
         }
     }
@@ -410,8 +444,9 @@ internal class WSClientManager private constructor() {
     private fun getRequestEntity(reqId: Int): RequestEntity? {
         val iterator = confirmQueue.iterator()
         while (iterator.hasNext()) {
-            if (iterator.next().reqId == reqId) {
-                return iterator.next()
+            val entity = iterator.next()
+            if (entity.reqId == reqId) {
+                return entity
             }
         }
         return null
@@ -430,10 +465,14 @@ internal class WSClientManager private constructor() {
     fun destroy() {
         hasListener = false
         isKeep = false
+
+        // 停止重连和心跳
+        stopJob()
+        stopHeartJob()
+
+        // 销毁连接
         client?.destroy()
         client = null
-        stopHeartJob()
-        stopJob()
     }
 
 }
