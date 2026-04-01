@@ -34,6 +34,11 @@ internal class WSClientManager private constructor() {
     private val maxDelayMs = 60_000L            // 最大延迟 60s
     private val jitterRange = 500L              // 随机抖动范围
 
+    // 队列上限参数
+    private val maxMessageQueueSize = 120
+    private val maxRequestQueueSize = 60
+    private val queueLogThreshold = 20
+
     private var heartMessageList = ArrayString()
     private var heartCount = 0
 
@@ -97,9 +102,16 @@ internal class WSClientManager private constructor() {
      * 初始化
      */
     fun init() {
+        if (isKeep) {
+            L.w("WS init ignored, already initialized")
+            logQueueState("init_skip")
+            return
+        }
+
         isKeep = true
         createSocketClient()
         startHeartJob()
+        logQueueState("init")
     }
 
     /**
@@ -136,8 +148,9 @@ internal class WSClientManager private constructor() {
      * 移除
      */
     fun removeDeviceIds(ids: ArrayString) {
-        for (i in 0 until ids.size())
+        for (i in 0 until ids.size()) {
             heartMessageList.remove(ids.getValue(i))
+        }
     }
 
     /**
@@ -147,6 +160,7 @@ internal class WSClientManager private constructor() {
         override fun yunMessage(reqId: String, message: String, response: RespSuccessMessage) {
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
+                logQueueState("resp_success")
                 messageCallback?.success(reqId, message, response)
             }
         }
@@ -154,6 +168,7 @@ internal class WSClientManager private constructor() {
         override fun yunMessageFail(reqId: String, message: String, response: RespFailMessage) {
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
+                logQueueState("resp_fail")
                 messageCallback?.fail(reqId, message, response)
             }
         }
@@ -179,6 +194,7 @@ internal class WSClientManager private constructor() {
         override fun unknownMessage(reqId: String, json: String) {
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
+                logQueueState("resp_unknown")
                 messageCallback?.unknownMessage(reqId, json)
             }
         }
@@ -227,7 +243,38 @@ internal class WSClientManager private constructor() {
      */
     private fun stopHeartJob() {
         isKeep = false
-        heartJob.cancel()
+        if (::heartJob.isInitialized && heartJob.isActive) {
+            heartJob.cancel()
+        }
+    }
+
+    private fun logQueueState(scene: String) {
+        val log =
+            "WS queue[$scene] message=${messageList.size}, request=${requestQueue.size}, confirm=${confirmQueue.size}, retry=$retryCount, connected= ${client?.isConnected == true}"
+
+        if (messageList.size >= queueLogThreshold || requestQueue.size >= queueLogThreshold || confirmQueue.size >= queueLogThreshold) {
+            L.w(log)
+        } else {
+            L.d(log)
+        }
+    }
+
+    private fun enqueueMessage(message: String, reason: String) {
+        if (messageList.size >= maxMessageQueueSize) {
+            messageList.pollFirst()
+            L.w("WS message queue full, drop oldest, reason=$reason")
+        }
+        messageList.addLast(message)
+        logQueueState("enqueue_message_$reason")
+    }
+
+    private fun enqueueRequest(entity: RequestEntity, reason: String) {
+        if (requestQueue.size >= maxRequestQueueSize) {
+            requestQueue.pollFirst()
+            L.w("WS request queue full, drop oldest, reason=$reason")
+        }
+        requestQueue.addLast(entity)
+        logQueueState("enqueue_request_$reason")
     }
 
     /**
@@ -248,6 +295,7 @@ internal class WSClientManager private constructor() {
         hasListener = true
         retryCount = 0
         L.e("开始重连")
+        logQueueState("start_retry")
         if (job == null) {
             job = scope.launch(Dispatchers.IO) {
                 while (hasListener && retryCount < maxRetryCount) {
@@ -283,8 +331,9 @@ internal class WSClientManager private constructor() {
                 }
             }
         } else {
-            if (!job!!.isActive)
+            if (!job!!.isActive) {
                 job?.start()
+            }
         }
     }
 
@@ -306,7 +355,9 @@ internal class WSClientManager private constructor() {
 
         override fun connected() {
             retryCount = 0
+            logQueueState("connected_before_resend")
             resend()
+            logQueueState("connected_after_resend")
             if (job != null) {
                 activePushCallbacks.forEach {
                     it.reconnected()
@@ -318,6 +369,7 @@ internal class WSClientManager private constructor() {
         override fun disconnected() {
             val destroyJob = scope.launch(Dispatchers.Main) {
                 L.d("连接断开")
+                logQueueState("disconnected")
                 client?.destroy()
                 client = null
             }
@@ -398,7 +450,7 @@ internal class WSClientManager private constructor() {
             e.printStackTrace()
             connectListener.disconnected()
         }
-        messageList.addLast(message)
+        enqueueMessage(message, "not_connected")
     }
 
     /**
@@ -414,19 +466,30 @@ internal class WSClientManager private constructor() {
      */
     @Synchronized
     fun sendRequestMessage(iotMsg: IotMsg, messageCallback: MessageCallback?) {
-        if (requestSuq >= Int.MAX_VALUE - 1000)
+        if (requestSuq >= Int.MAX_VALUE - 1000) {
             requestSuq = 0
+        }
+
         val reqId = UUID.randomUUID().toString()
         val entity = RequestEntity(reqId, iotMsg)
         entity.messageCallback = messageCallback
+
         client?.run {
             if (isConnected) {
-                confirmQueue.addLast(entity)
-                sendMessage(iotMsg)
-                return
+                try {
+                    confirmQueue.addLast(entity)
+                    send(iotMsg.toString())
+                    logQueueState("send_request_direct")
+                    return
+                } catch (e: Exception) {
+                    confirmQueue.remove(entity)
+                    e.printStackTrace()
+                    connectListener.disconnected()
+                }
             }
         }
-        requestQueue.addLast(entity)
+
+        enqueueRequest(entity, "not_connected")
     }
 
     /**
@@ -440,14 +503,19 @@ internal class WSClientManager private constructor() {
                     send(content)
                 }
             }
+
             while (requestQueue.isNotEmpty()) {
-                requestQueue.poll()?.iotMsg.toString()?.let { content ->  // 避免发送空内容
-                    send(content)
+                val entity = requestQueue.poll()
+                if (entity != null) {
+                    confirmQueue.addLast(entity)
+                    send(entity.iotMsg.toString())
                 }
             }
+
             while (messageList.isNotEmpty()) {
-                messageList.poll()?.let { content ->  // 避免发送空内容
-                    send(content)
+                val msg = messageList.poll()
+                if (msg != null) {
+                    send(msg)
                 }
             }
         }
@@ -490,7 +558,12 @@ internal class WSClientManager private constructor() {
             // 销毁连接
             client?.destroy()
             client = null
+
+            messageList.clear()
+            requestQueue.clear()
+            confirmQueue.clear()
+            heartMessageList.clear()
+            logQueueState("destroy")
         }
     }
-
 }
