@@ -19,6 +19,7 @@ class JWebSocketClient(serverUri: URI, handler: DispatchMsgHandler, connectionCa
     override fun onOpen(handshakedata: ServerHandshake) {
         isConnected = true
         isActiveClose = false
+        connectListener.connected()
         connectListener.onOpen()
     }
 
@@ -42,21 +43,17 @@ class JWebSocketClient(serverUri: URI, handler: DispatchMsgHandler, connectionCa
     }
 
     override fun onMessage(message: String) {
-        isConnected = true
-        connectListener.connected()
         dispatchMsgHandler.dispatch(message)
     }
 
     override fun onError(ex: Exception?) {
         L.e("onError exception:${ex?.message}")
-        // onError 之后通常会紧跟 onClose 回调，由 onClose 统一决定是否重连
-        // 这里不再调用 disconnect()，避免重复触发重连
+        isConnected = false
     }
 
     fun destroy() {
         isActiveClose = true
         isConnected = false
-        this.close()
+        close()
     }
-
 }
