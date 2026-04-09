@@ -17,6 +17,7 @@ public class PCMEncoder {
     private static final int KEY_MAX_INPUT_SIZE = 1024 * 1024;
     public static final int AAC_FORMAT = 0;
     public static final int G711_FORMAT = 1;
+    public static final int PCM_FORMAT = 2;
     private MediaCodec mediaCodec;
     private ByteBuffer[] encodeInputBuffers;
     private ByteBuffer[] encodeOutputBuffers;
@@ -54,9 +55,14 @@ public class PCMEncoder {
     }
 
     /**
-     * 初始化AAC编码器
+     * 初始化编码器，PCM模式下跳过MediaCodec初始化
      */
     private void init() {
+        if (encodeType == PCM_FORMAT) {
+            // PCM直通模式，不需要初始化MediaCodec
+            return;
+        }
+
         try {
             //参数对应-> mime type、采样率、声道数
             MediaFormat encodeFormat = MediaFormat.createAudioFormat(MediaFormat.MIMETYPE_AUDIO_AAC,
@@ -78,11 +84,19 @@ public class PCMEncoder {
     }
 
     /**
-     * PCM 转 AAC
+     * 编码数据，PCM模式直接回调原始数据，AAC模式走MediaCodec编码
      *
      * @param data PCM数据
      */
     public void encodeData(byte[] data) {
+        if (encodeType == PCM_FORMAT) {
+            // PCM直通模式，直接回调原始PCM数据
+            if (encoderListener != null) {
+                encoderListener.encodePCM(data);
+            }
+            return;
+        }
+
         //dequeueInputBuffer（time）需要传入一个时间值，-1表示一直等待，0表示不等待有可能会丢帧，其他表示等待多少毫秒
         //获取输入缓存的index
         int inputIndex = mediaCodec.dequeueInputBuffer(-1);

@@ -69,6 +69,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private VoiceChangerMode mode = VoiceChangerMode.VOICE_CHANGER_MODE_NONE;
     private boolean enableAEC = false;
     private boolean enableAGC = false;
+    private int audioEncodeFormat = PCMEncoder.AAC_FORMAT; //音频编码格式，默认AAC
 
     private boolean isRecord = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -192,6 +193,29 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         readThread = new HandlerThread(TAG);
         readThread.start();
         mReadHandler = new ReadHandler(readThread.getLooper(), this);
+    }
+
+    public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch, boolean enableAEC, boolean enableAGC, int audioEncodeFormat) {
+        context = ctx;
+        deviceId = id;
+        this.pitch = pitch;
+        this.enableAEC = enableAEC;
+        this.enableAGC = enableAGC;
+        this.audioEncodeFormat = audioEncodeFormat;
+        init(sampleRate, channel, bitDepth);
+        readThread = new HandlerThread(TAG);
+        readThread.start();
+        mReadHandler = new ReadHandler(readThread.getLooper(), this);
+    }
+
+    /**
+     * 设置音频编码格式
+     * @param audioEncodeFormat PCMEncoder.AAC_FORMAT 或 PCMEncoder.PCM_FORMAT
+     * 注意：需要在 start() 之前调用
+     */
+    public void setAudioEncodeFormat(int audioEncodeFormat) {
+        Log.e(TAG, "setAudioEncodeFormat is: " + audioEncodeFormat);
+        this.audioEncodeFormat = audioEncodeFormat;
     }
 
     private void init(int sampleRate, int channel, int bitDepth) {
@@ -340,9 +364,13 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else {
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
         }
-        pcmEncoder = new PCMEncoder(isEnable8kEncode ? 8000 : sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
-        Log.e(TAG, "reset new FLVPacker");
-        flvPacker = new FLVPacker(this, true, false);
+        pcmEncoder = new PCMEncoder(isEnable8kEncode ? 8000 : sampleRate, channelCount, this, audioEncodeFormat);
+        if (audioEncodeFormat == PCMEncoder.AAC_FORMAT) {
+            Log.e(TAG, "reset new FLVPacker");
+            flvPacker = new FLVPacker(this, true, false);
+        } else {
+            flvPacker = null;
+        }
         int audioSessionId = audioRecord.getAudioSessionId();
         if (enableAEC) {
             Log.e(TAG, "=====initAEC result: " + initAEC(audioSessionId));
@@ -419,6 +447,13 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
 
     @Override
     public void encodeG711(byte[] data) { }
+
+    @Override
+    public void encodePCM(byte[] data) {
+        if (recorderState && data != null && data.length > 0) {
+            XP2P.dataSend(deviceId, data, data.length);
+        }
+    }
 
     @Override
     public void onFLV(byte[] data) {
