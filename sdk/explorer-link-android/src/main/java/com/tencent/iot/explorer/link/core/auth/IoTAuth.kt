@@ -2,11 +2,14 @@ package com.tencent.iot.explorer.link.core.auth
 
 import android.content.Context
 import android.text.TextUtils
+import com.tencent.iot.explorer.link.core.auth.callback.MyCallback
+import com.tencent.iot.explorer.link.core.auth.consts.RequestCode
 import com.tencent.iot.explorer.link.core.auth.entity.*
 import com.tencent.iot.explorer.link.core.auth.impl.*
 import com.tencent.iot.explorer.link.core.auth.listener.LoginExpiredListener
 import com.tencent.iot.explorer.link.core.auth.message.upload.ActivePushMessage
 import com.tencent.iot.explorer.link.core.auth.message.upload.ArrayString
+import com.tencent.iot.explorer.link.core.auth.response.BaseResponse
 import com.tencent.iot.explorer.link.core.auth.service.*
 import com.tencent.iot.explorer.link.core.auth.socket.WSClientManager
 import com.tencent.iot.explorer.link.core.auth.socket.callback.ActivePushCallback
@@ -276,6 +279,46 @@ object IoTAuth {
     }
 
     /**
+     * 退出当前账号并重置长连接状态，供切换账号前调用。
+     *
+     * 调用完成后：
+     * 1. 旧账号的 WebSocket 连接会被主动关闭
+     * 2. 本地用户态和订阅状态会被清空
+     * 3. SDK 会重新初始化 WebSocket，进入可重新登录的干净状态
+     *
+     * 如当前 token 仍有效，会先尝试调用服务端退出接口；无论接口成功还是失败，
+     * 最终都会执行本地清理，避免旧账号连接残留影响下一个账号。
+     */
+    fun logoutAndResetConnection(callback: MyCallback? = null) {
+        val hasValidToken = !user.isExpire()
+
+        // 先主动断开旧连接，避免旧账号的 socket 在切账号窗口继续重连或发送订阅。
+        WSClientManager.instance.destroy()
+
+        if (!hasValidToken) {
+            finishLogoutReset(callback, null, null)
+            return
+        }
+
+        userImpl.logout(object : MyCallback {
+            override fun fail(msg: String?, reqCode: Int) {
+                finishLogoutReset(callback, msg, null)
+            }
+
+            override fun success(response: BaseResponse, reqCode: Int) {
+                finishLogoutReset(callback, null, response)
+            }
+        })
+    }
+
+    /**
+     * 切换账号前的安全重置入口。
+     */
+    fun switchAccount(callback: MyCallback? = null) {
+        logoutAndResetConnection(callback)
+    }
+
+    /**
      * 退出登录
      */
     fun logout() {
@@ -290,9 +333,40 @@ object IoTAuth {
      */
     fun destroy() {
         logout()
+        loginExpiredListener = null
         APP_KEY = ""
         APP_SECRET = ""
         WSClientManager.instance.destroy()
+    }
+
+    private fun finishLogoutReset(
+        callback: MyCallback?,
+        errorMessage: String?,
+        response: BaseResponse?
+    ) {
+        logout()
+
+        if (APP_KEY.isNotEmpty() && APP_SECRET.isNotEmpty()) {
+            WSClientManager.instance.init()
+        }
+
+        if (callback == null) {
+            return
+        }
+
+        if (response != null) {
+            callback.success(response, RequestCode.logout)
+            return
+        }
+
+        if (errorMessage != null) {
+            callback.fail(errorMessage, RequestCode.logout)
+            return
+        }
+
+        val successResponse = BaseResponse()
+        successResponse.code = 0
+        callback.success(successResponse, RequestCode.logout)
     }
 
 }

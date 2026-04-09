@@ -79,6 +79,26 @@ interface LoginCallback {
 }
 ```
 
+切换账号时，不要只清空页面态或者只调用`IoTAuth.destroy()`。推荐在旧账号退出后，统一调用：
+
+```
+IoTAuth.switchAccount(object : MyCallback {
+    override fun fail(msg: String?, reqCode: Int) {
+        // 服务端退出失败也已经完成本地清理，可继续进入登录页
+    }
+
+    override fun success(response: BaseResponse, reqCode: Int) {
+        // SDK 已重置旧账号长连接状态，此时可安全登录新账号
+    }
+})
+```
+
+该接口会完成以下步骤：
+* 主动断开旧账号 WebSocket 长连接
+* 清空本地用户态、设备订阅态和缓存列表
+* 尝试调用服务端退出登录接口
+* 重新初始化 WebSocket，进入可重新登录的干净状态
+
 关于SDK登录过期，SDK内部有过期处理机制，可以在Application中注册登录过期监听回调：
 
 ```

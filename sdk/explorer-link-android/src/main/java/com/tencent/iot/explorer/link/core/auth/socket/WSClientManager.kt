@@ -532,6 +532,8 @@ internal class WSClientManager private constructor() {
     fun destroy() {
         hasListener = false
         isKeep = false
+        retryCount = 0
+        heartCount = 0
 
         // 停止重连和心跳
         stopJob()
