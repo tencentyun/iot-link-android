@@ -25,6 +25,7 @@ open class DispatchMsgHandler {
     @Synchronized
     fun dispatch(message: String) {
         try {
+            L.d("WS raw recv:$message")
             JSON.parseObject(message).run {
                 when {
                     getString("action") == "DeviceChange" -> {
@@ -46,7 +47,7 @@ open class DispatchMsgHandler {
 
     private fun parseYunMessage(reqId: Int, message: String) {
         when (reqId) {
-            MessageConst.HEART_ID -> {
+            MessageConst.HELLO_REQ_ID -> {
                 try {
                     heartCallback?.response(
                         reqId, JSON.parseObject(message, HeartMessage::class.java)

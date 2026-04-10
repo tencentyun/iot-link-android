@@ -68,7 +68,7 @@ internal class WSClientManager private constructor() {
     //保活相关参数
     private var isKeep = false
     private val delayMills = 10 * 1000L
-    private var param = "{\"action\":\"Hello\",\"reqId\":${MessageConst.HEART_ID}}"
+    private var param = "{\"action\":\"Hello\",\"reqId\":${MessageConst.HELLO_REQ_ID}}"
 
     //enterRoom监听使能参数
     public var enablePayloadMessageCallback = true
@@ -158,6 +158,7 @@ internal class WSClientManager private constructor() {
      */
     private val callback = object : DispatchCallback {
         override fun yunMessage(reqId: Int, message: String, response: RespSuccessMessage) {
+            L.d("WS resp success reqId=$reqId message=$message")
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
                 logQueueState("resp_success")
@@ -166,6 +167,7 @@ internal class WSClientManager private constructor() {
         }
 
         override fun yunMessageFail(reqId: Int, message: String, response: RespFailMessage) {
+            L.w("WS resp fail reqId=$reqId code=${response.Error?.Code} message=$message")
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
                 logQueueState("resp_fail")
@@ -192,6 +194,7 @@ internal class WSClientManager private constructor() {
         }
 
         override fun unknownMessage(reqId: Int, json: String) {
+            L.w("WS resp unknown reqId=$reqId json=$json")
             getRequestEntity(reqId)?.run {
                 confirmQueue.remove(this)
                 logQueueState("resp_unknown")
@@ -455,7 +458,9 @@ internal class WSClientManager private constructor() {
         if (requestSuq >= Int.MAX_VALUE - 1000) {
             requestSuq = 0
         }
-        val entity = RequestEntity(requestSuq++, iotMsg)
+        val requestId = if (iotMsg.reqId >= 0) iotMsg.reqId else requestSuq++
+        iotMsg.reqId = requestId
+        val entity = RequestEntity(requestId, iotMsg)
         entity.messageCallback = messageCallback
 
         client?.run {
@@ -463,6 +468,7 @@ internal class WSClientManager private constructor() {
                 try {
                     confirmQueue.addLast(entity)
                     send(iotMsg.toString())
+                    L.d("sendRequestMessage action=${iotMsg.getMyAction()} reqId=$requestId")
                     logQueueState("send_request_direct")
                     return
                 } catch (e: Exception) {
@@ -473,6 +479,7 @@ internal class WSClientManager private constructor() {
             }
         }
 
+        L.d("enqueueRequestMessage action=${iotMsg.getMyAction()} reqId=$requestId")
         enqueueRequest(entity, "not_connected")
     }
 

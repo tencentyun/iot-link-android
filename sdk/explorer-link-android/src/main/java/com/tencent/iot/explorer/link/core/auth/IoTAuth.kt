@@ -232,12 +232,14 @@ object IoTAuth {
      */
     fun registerActivePush(deviceIds: ArrayString, callback: MessageCallback?) {
         val msg = ActivePushMessage(deviceIds)
+        L.d("registerActivePush deviceIds=$deviceIds, wsConnected=${WSClientManager.instance.isConnected()}, callback=${callback != null}")
         if (callback == null)
             WSClientManager.instance.sendMessage(msg.toString())
         else
             WSClientManager.instance.sendRequestMessage(msg, callback)
         WSClientManager.instance.addDeviceIds(deviceIds)
         WSClientManager.instance.sendHeartMessage()
+        L.d("registerActivePush heartbeat_sent deviceIds=$deviceIds")
     }
 
     /**

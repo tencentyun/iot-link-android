@@ -2,7 +2,9 @@ package com.tencent.iot.explorer.link.core.auth.message
 
 object MessageConst {
 
-    const val HEART_ID = 1
+    const val HELLO_REQ_ID = 1
+    const val ACTIVE_PUSH_REQ_ID = 2
+    const val HEARTBEAT_REQ_ID = 3
 
     const val DEVICE_CHANGE = "DeviceChange"
     const val REQ_ID = "reqId"
