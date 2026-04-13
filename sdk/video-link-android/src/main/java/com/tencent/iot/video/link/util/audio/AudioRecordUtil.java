@@ -27,12 +27,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.RejectedExecutionException;
 
 import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 
@@ -50,7 +51,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private static final int MSG_RELEASE = 4;
     private final HandlerThread readThread;
     private final ReadHandler mReadHandler;
-    private volatile boolean recorderState = true; //录制状态
+    private volatile boolean recorderState = false; //录制状态
     private byte[] buffer;
     private AudioRecord audioRecord;
     private volatile AcousticEchoCanceler canceler;
@@ -71,7 +72,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private boolean enableAGC = false;
 
     private boolean isRecord = false;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private volatile ExecutorService executor = Executors.newSingleThreadExecutor();
     private String speakFlvFilePath = "/storage/emulated/0/speak.flv";
     private FileOutputStream fos;
     private FileOutputStream fos1;
@@ -80,6 +81,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private String speakPcmFilePath = "/storage/emulated/0/speak_pcm_";
 
     private SoundTouch st;
+    private volatile RecordThread recordThread;
 
     private static final int SAVE_PCM_DATA = 1;
 
@@ -223,23 +225,35 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
 
     public void recordSpeakFlv(boolean isRecord) {
         this.isRecord = isRecord;
-        if (isRecord && !TextUtils.isEmpty(speakFlvFilePath)) {
-            File file = new File(speakFlvFilePath);
-            Log.i(TAG, "speak cache flv file path:" + speakFlvFilePath);
-            if (file.exists()) {
-                file.delete();
-            }
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fos = new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Log.e(TAG, "临时缓存文件未找到");
-            }
+        if (isRecord) {
+            openSpeakFlvFile();
+        } else {
+            closeQuietly(fos);
+            fos = null;
+        }
+    }
+
+    private void openSpeakFlvFile() {
+        if (TextUtils.isEmpty(speakFlvFilePath)) {
+            return;
+        }
+        closeQuietly(fos);
+        File file = new File(speakFlvFilePath);
+        Log.i(TAG, "speak cache flv file path:" + speakFlvFilePath);
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        try {
+            fos = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.e(TAG, "临时缓存文件未找到");
         }
     }
 
@@ -310,7 +324,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     }
 
     private void startInternal() {
+        if (recorderState) {
+            Log.w(TAG, "startInternal ignored, recorder is already running");
+            return;
+        }
         if (isRecord) {
+            openSpeakFlvFile();
             fos1 = createFiles("near");
             fos2 = createFiles("far");
             fos3 = createFiles("aec");
@@ -329,8 +348,19 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         }
         recorderState = true;
         Log.e(TAG, "turn recorderState : " + recorderState);
-        audioRecord.startRecording();
-        new RecordThread().start();
+        if (executor == null || executor.isShutdown()) {
+            executor = Executors.newSingleThreadExecutor();
+        }
+        try {
+            audioRecord.startRecording();
+            RecordThread thread = new RecordThread();
+            recordThread = thread;
+            thread.start();
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "startRecording failed", e);
+            recorderState = false;
+            cleanupAudioResources(true);
+        }
     }
 
     private void reset() {
@@ -363,18 +393,52 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private void stopInternal() {
         recorderState = false;
         Log.e(TAG, "turn recorderState : " + recorderState);
-        try {
-            Thread.sleep(200);
-            Log.e(TAG, "Thread.sleep 200 turn recorderState : " + recorderState);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        cleanupAudioResources(false);
+    }
+
+    public void release() {
+        Log.i(TAG, "release");
+        mReadHandler.obtainMessage(MSG_RELEASE).sendToTarget();
+    }
+
+    private void releaseInternal() {
+        cleanupAudioResources(true);
+        mReadHandler.removeCallbacksAndMessages(null);
+        readThread.quitSafely();
+    }
+
+    private void cleanupAudioResources(boolean releaseExecutor) {
+        AudioRecord currentAudioRecord = audioRecord;
+        if (currentAudioRecord != null) {
+            try {
+                currentAudioRecord.stop();
+            } catch (IllegalStateException e) {
+                Log.w(TAG, "audioRecord stop ignored", e);
+            }
         }
-        if (audioRecord != null) {
-            audioRecord.stop();
+
+        RecordThread currentRecordThread = recordThread;
+        if (currentRecordThread != null && currentRecordThread != Thread.currentThread()) {
+            try {
+                currentRecordThread.join(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                Log.w(TAG, "join recordThread interrupted", e);
+            }
         }
-        executor.shutdown();
+        recordThread = null;
+
+        if (currentAudioRecord != null) {
+            try {
+                currentAudioRecord.release();
+            } catch (IllegalStateException e) {
+                Log.w(TAG, "audioRecord release ignored", e);
+            }
+        }
         audioRecord = null;
+        buffer = null;
         pcmEncoder = null;
+
         if (flvPacker != null) {
             flvPacker.release();
             flvPacker = null;
@@ -398,16 +462,39 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else {
             VoiceChangerJNIBridge.destory();
         }
+        closeOutputStreams();
+        playPcmData.clear();
+
+        ExecutorService currentExecutor = executor;
+        if (currentExecutor != null && currentExecutor.isShutdown()) {
+            executor = null;
+        } else if (releaseExecutor && currentExecutor != null) {
+            currentExecutor.shutdownNow();
+            executor = null;
+        }
 //                GvoiceJNIBridge.destory();
     }
 
-    public void release() {
-        Log.i(TAG, "release");
-        mReadHandler.obtainMessage(MSG_STOP).sendToTarget();
+    private void closeOutputStreams() {
+        closeQuietly(fos);
+        closeQuietly(fos1);
+        closeQuietly(fos2);
+        closeQuietly(fos3);
+        fos = null;
+        fos1 = null;
+        fos2 = null;
+        fos3 = null;
     }
 
-    private void releaseInternal() {
-        audioRecord.release();
+    private void closeQuietly(FileOutputStream outputStream) {
+        if (outputStream == null) {
+            return;
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            Log.w(TAG, "close output stream failed", e);
+        }
     }
 
     @Override
@@ -426,8 +513,12 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
 //            Log.d(TAG, "===== XP2P.dataSend dataLen:" + data.length);
             XP2P.dataSend(deviceId, data, data.length);
 
-            if (executor.isShutdown()) return;
-            executor.submit(() -> {
+            ExecutorService currentExecutor = executor;
+            if (currentExecutor == null || currentExecutor.isShutdown()) {
+                return;
+            }
+            try {
+                currentExecutor.submit(() -> {
                 if (fos != null) {
                     try {
                         fos.write(data);
@@ -436,7 +527,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                         e.printStackTrace();
                     }
                 }
-            });
+                });
+            } catch (RejectedExecutionException e) {
+                Log.w(TAG, "executor rejected flv write task", e);
+            }
         }
     }
 
@@ -459,26 +553,31 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         @Override
         public void run() {
             while (recorderState) {
-                int read = audioRecord.read(buffer, 0, buffer.length);
-                Log.e(TAG, "audioRecord.read: "+read + "， buffer.length： " + buffer.length + ", recorderState: " + recorderState);
+                AudioRecord currentAudioRecord = audioRecord;
+                byte[] currentBuffer = buffer;
+                if (currentAudioRecord == null || currentBuffer == null) {
+                    break;
+                }
+                int read = currentAudioRecord.read(currentBuffer, 0, currentBuffer.length);
+                Log.e(TAG, "audioRecord.read: "+read + "， buffer.length： " + currentBuffer.length + ", recorderState: " + recorderState);
                 if (!VoiceChangerJNIBridge.isAvailable()) {
                     if (pitch != 0 && st != null) {
-                        st.putBytes(buffer);
-                        int bytesReceived = st.getBytes(buffer);
+                        st.putBytes(currentBuffer);
+                        int bytesReceived = st.getBytes(currentBuffer);
                     }
                 } else {
                     if (pitch != 0) {
-                        VoiceChangerJNIBridge.voiceChangerRun(buffer, buffer, buffer.length/(encodeBit/8));
+                        VoiceChangerJNIBridge.voiceChangerRun(currentBuffer, currentBuffer, currentBuffer.length/(encodeBit/8));
                     }
                 }
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
-                    if (buffer != null && pcmEncoder != null) {
-                        byte [] playerPcmBytes = onReadPlayerPlayPcm(buffer.length);
+                    if (pcmEncoder != null) {
+                        byte [] playerPcmBytes = onReadPlayerPlayPcm(currentBuffer.length);
                         if (playerPcmBytes != null && playerPcmBytes.length > 0) {
-                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(buffer, playerPcmBytes);
+                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(currentBuffer, playerPcmBytes);
                             if (isRecord) {
-                                writePcmBytesToFile(buffer, playerPcmBytes, aecPcmBytes);
+                                writePcmBytesToFile(currentBuffer, playerPcmBytes, aecPcmBytes);
                             }
                             if (isEnable8kEncode) {
                                 aecPcmBytes = downSample16kTo8k(aecPcmBytes);
@@ -486,10 +585,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                             pcmEncoder.encodeData(aecPcmBytes);
                         } else {
                             if (isEnable8kEncode) {
-                                byte[] sample8kPcmBytes = downSample16kTo8k(buffer);
+                                byte[] sample8kPcmBytes = downSample16kTo8k(currentBuffer);
                                 pcmEncoder.encodeData(sample8kPcmBytes);
                             } else {
-                                pcmEncoder.encodeData(buffer);
+                                pcmEncoder.encodeData(currentBuffer);
                             }
                         }
                     }
