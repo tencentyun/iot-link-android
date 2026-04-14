@@ -34,6 +34,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 
@@ -462,17 +463,34 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else {
             VoiceChangerJNIBridge.destory();
         }
-        closeOutputStreams();
         playPcmData.clear();
 
-        ExecutorService currentExecutor = executor;
-        if (currentExecutor != null && currentExecutor.isShutdown()) {
-            executor = null;
-        } else if (releaseExecutor && currentExecutor != null) {
-            currentExecutor.shutdownNow();
+        shutdownWriteExecutor();
+        closeOutputStreams();
+
+        if (releaseExecutor) {
             executor = null;
         }
 //                GvoiceJNIBridge.destory();
+    }
+
+    private void shutdownWriteExecutor() {
+        ExecutorService currentExecutor = executor;
+        if (currentExecutor == null || currentExecutor.isShutdown()) {
+            return;
+        }
+
+        currentExecutor.shutdown();
+        try {
+            if (!currentExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
+                Log.w(TAG, "executor did not finish flv write tasks in time");
+                currentExecutor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            Log.w(TAG, "await executor termination interrupted", e);
+            currentExecutor.shutdownNow();
+        }
     }
 
     private void closeOutputStreams() {
@@ -509,16 +527,21 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
 
     @Override
     public void onFLV(byte[] data) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+
         if (recorderState) {
 //            Log.d(TAG, "===== XP2P.dataSend dataLen:" + data.length);
             XP2P.dataSend(deviceId, data, data.length);
+        }
 
-            ExecutorService currentExecutor = executor;
-            if (currentExecutor == null || currentExecutor.isShutdown()) {
-                return;
-            }
-            try {
-                currentExecutor.submit(() -> {
+        ExecutorService currentExecutor = executor;
+        if (currentExecutor == null || currentExecutor.isShutdown()) {
+            return;
+        }
+        try {
+            currentExecutor.submit(() -> {
                 if (fos != null) {
                     try {
                         fos.write(data);
@@ -527,10 +550,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                         e.printStackTrace();
                     }
                 }
-                });
-            } catch (RejectedExecutionException e) {
-                Log.w(TAG, "executor rejected flv write task", e);
-            }
+            });
+        } catch (RejectedExecutionException e) {
+            Log.w(TAG, "executor rejected flv write task", e);
         }
     }
 
@@ -685,16 +707,28 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         }
 
         public void runAndWaitDone(final Runnable runnable) {
-            final CountDownLatch countDownLatch = new CountDownLatch(1);
-            post(() -> {
+            if (Looper.myLooper() == getLooper()) {
                 runnable.run();
-                countDownLatch.countDown();
+                return;
+            }
+
+            final CountDownLatch countDownLatch = new CountDownLatch(1);
+            boolean posted = post(() -> {
+                try {
+                    runnable.run();
+                } finally {
+                    countDownLatch.countDown();
+                }
             });
+
+            if (!posted) {
+                countDownLatch.countDown();
+            }
 
             try {
                 countDownLatch.await();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
