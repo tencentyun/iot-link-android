@@ -1,0 +1,5 @@
+# 换行符统一
+
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
