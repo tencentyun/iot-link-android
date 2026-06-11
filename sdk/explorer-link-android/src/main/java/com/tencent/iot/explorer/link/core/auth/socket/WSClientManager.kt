@@ -132,6 +132,12 @@ internal class WSClientManager private constructor() {
         for (i in 0 until ids.size()) {
             val id = ids.getValue(i)
             if (!heartMessageList.contains(id)) {
+                // 如果 id 为空则不添加
+                if (id == "") {
+                    L.w(TAG, "addDeviceIds, the id is empty, please check it!")
+                    return
+                }
+
                 heartMessageList.addValue(id)
             }
         }
@@ -141,6 +147,11 @@ internal class WSClientManager private constructor() {
      * 发送设备订阅心跳
      */
     fun sendHeartMessage() {
+        if (heartMessageList.isEmpty() || heartMessageList == null) {
+            L.w(TAG, "sendHeartMessage, heartMessageList is empty, return")
+            return
+        }
+
         sendMessage(HeartMessage(heartMessageList))
     }
 
