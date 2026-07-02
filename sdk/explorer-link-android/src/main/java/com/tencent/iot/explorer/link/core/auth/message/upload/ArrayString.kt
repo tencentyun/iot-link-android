@@ -1,8 +1,10 @@
 package com.tencent.iot.explorer.link.core.auth.message.upload
 
+import java.util.concurrent.CopyOnWriteArrayList
+
 class ArrayString {
 
-    private var array = ArrayList<String>()
+    private val array = CopyOnWriteArrayList<String>()
 
     constructor()
 
