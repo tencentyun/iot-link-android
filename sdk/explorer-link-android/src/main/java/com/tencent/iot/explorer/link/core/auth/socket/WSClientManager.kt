@@ -225,10 +225,16 @@ internal class WSClientManager private constructor() {
                 host + debugTag
             else
                 host
-            //创建WebSocket
-            client = JWebSocketClient(URI(myHost), handler, connectListener)
-            client?.connectionLostTimeout = 0
-            client?.connect()
+            try {
+                //创建WebSocket
+                client = JWebSocketClient(URI(myHost), handler, connectListener)
+                client?.connectionLostTimeout = 0
+                client?.connect()
+            } catch (e: Exception) {
+                // 防止父类 WebSocketClient 构造或 URI 解析异常导致崩溃，
+                // 同时打印 myHost 便于排查地址合法性
+                L.e("createSocketClient failed, host=$myHost, exception: $e")
+            }
         }
     }
 
