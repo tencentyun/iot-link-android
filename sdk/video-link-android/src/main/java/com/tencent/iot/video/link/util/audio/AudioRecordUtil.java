@@ -219,11 +219,6 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         GvoiceJNIBridge.init(context);
     }
 
-    private boolean isEnable8kEncode = false;
-    public void isEnable8kEncode(boolean isEnable8kEncode) {
-        this.isEnable8kEncode = isEnable8kEncode;
-    }
-
     public void recordSpeakFlv(boolean isRecord) {
         this.isRecord = isRecord;
         if (isRecord) {
@@ -371,7 +366,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else {
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
         }
-        pcmEncoder = new PCMEncoder(isEnable8kEncode ? 8000 : sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
+        pcmEncoder = new PCMEncoder(sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
         Log.e(TAG, "reset new FLVPacker");
         flvPacker = new FLVPacker(this, true, false);
         int audioSessionId = audioRecord.getAudioSessionId();
@@ -595,23 +590,19 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     if (pcmEncoder != null) {
-                        byte [] playerPcmBytes = onReadPlayerPlayPcm(currentBuffer.length);
+                        boolean needResample = (sampleRate == 8000);
+                        byte[] playerPcmBytes = onReadPlayerPlayPcm(currentBuffer.length);
                         if (playerPcmBytes != null && playerPcmBytes.length > 0) {
-                            byte[] aecPcmBytes = GvoiceJNIBridge.cancellation(currentBuffer, playerPcmBytes);
+                            byte[] micPcm16k = needResample ? upSample8kTo16k(currentBuffer) : currentBuffer;
+                            byte[] farPcm16k = needResample ? upSample8kTo16k(playerPcmBytes) : playerPcmBytes;
+                            byte[] aecPcm16k = GvoiceJNIBridge.cancellation(micPcm16k, farPcm16k);
                             if (isRecord) {
-                                writePcmBytesToFile(currentBuffer, playerPcmBytes, aecPcmBytes);
+                                writePcmBytesToFile(micPcm16k, farPcm16k, aecPcm16k);
                             }
-                            if (isEnable8kEncode) {
-                                aecPcmBytes = downSample16kTo8k(aecPcmBytes);
-                            }
-                            pcmEncoder.encodeData(aecPcmBytes);
+                            byte[] toEncode = needResample ? downSample16kTo8k(aecPcm16k) : aecPcm16k;
+                            pcmEncoder.encodeData(toEncode);
                         } else {
-                            if (isEnable8kEncode) {
-                                byte[] sample8kPcmBytes = downSample16kTo8k(currentBuffer);
-                                pcmEncoder.encodeData(sample8kPcmBytes);
-                            } else {
-                                pcmEncoder.encodeData(currentBuffer);
-                            }
+                            pcmEncoder.encodeData(currentBuffer);
                         }
                     }
                 }
@@ -627,6 +618,30 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             pcm8k[i * 2 + 1] = pcm16k[i * 4 + 1];
         }
         return pcm8k;
+    }
+
+    /**
+     * 8k PCM 上采样到 16k：在相邻采样点之间用线性插值补一个新采样点
+     * 输入约定：16bit、小端序、单声道 PCM 字节流
+     * 输出长度是入参的 2 倍（采样点数翻倍）
+     */
+    public byte[] upSample8kTo16k(byte[] pcm8k) {
+        if (pcm8k == null || pcm8k.length < 2) {
+            return pcm8k;
+        }
+        int sampleCount = pcm8k.length / 2;              // 8k 采样点数
+        byte[] pcm16k = new byte[sampleCount * 4];       // 16k 字节数 = 8k 字节数 * 2
+        short prev = 0;
+        for (int i = 0; i < sampleCount; i++) {
+            short cur = (short) ((pcm8k[i * 2] & 0xFF) | (pcm8k[i * 2 + 1] << 8));
+            short mid = (short) ((prev + cur) / 2);
+            pcm16k[i * 4]     = (byte) (mid & 0xFF);
+            pcm16k[i * 4 + 1] = (byte) ((mid >> 8) & 0xFF);
+            pcm16k[i * 4 + 2] = (byte) (cur & 0xFF);
+            pcm16k[i * 4 + 3] = (byte) ((cur >> 8) & 0xFF);
+            prev = cur;
+        }
+        return pcm16k;
     }
 
     public boolean isDevicesSupportAEC() {
