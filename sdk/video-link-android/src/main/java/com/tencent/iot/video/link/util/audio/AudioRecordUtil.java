@@ -67,6 +67,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private int bitDepth;
     private int channelCount; //声道数
     private int encodeBit; //位深
+    private int encodeSampleRate;
+    private int encodeChannelCount;
     private int pitch = 0; //变调【-12~12】
     private VoiceChangerMode mode = VoiceChangerMode.VOICE_CHANGER_MODE_NONE;
     private boolean enableAEC = false;
@@ -212,6 +214,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else if (bitDepth == AudioFormat.ENCODING_PCM_8BIT) {
             this.encodeBit = 8;
         }
+        this.encodeSampleRate = sampleRate;
+        this.encodeChannelCount = this.channelCount;
         Log.e(TAG, "recordMinBufferSize is: " + recordMinBufferSize);
         recordMinBufferSize = (sampleRate * this.channelCount * this.encodeBit / 8) / 1000 * 20; //20ms数据长度
         Log.e(TAG, "20ms recordMinBufferSize is: " + recordMinBufferSize);
@@ -311,6 +315,26 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         mReadHandler.obtainMessage(MSG_REC_PLAY_PCM, pcmData).sendToTarget();
     }
 
+    public void setPlayerPcmData(byte[] pcmData, int farSampleRate, int farChannelCount) {
+        if (pcmData == null || pcmData.length == 0) {
+            return;
+        }
+        byte[] normalized = normalizeTo16kMono(pcmData, farSampleRate, farChannelCount);
+        mReadHandler.obtainMessage(MSG_REC_PLAY_PCM, normalized).sendToTarget();
+    }
+
+    public void setEncodeFormat(int encodeSampleRate, int encodeChannelCount) {
+        if (encodeSampleRate <= 0 || (encodeChannelCount != 1 && encodeChannelCount != 2)) {
+            Log.e(TAG, "setEncodeFormat invalid params, sampleRate=" + encodeSampleRate
+                    + ", channelCount=" + encodeChannelCount);
+            return;
+        }
+        this.encodeSampleRate = encodeSampleRate;
+        this.encodeChannelCount = encodeChannelCount;
+        Log.i(TAG, "setEncodeFormat sampleRate=" + encodeSampleRate
+                + ", channelCount=" + encodeChannelCount);
+    }
+
     /**
      * 开始录制
      */
@@ -366,7 +390,9 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else {
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channel, bitDepth, recordMinBufferSize);
         }
-        pcmEncoder = new PCMEncoder(sampleRate, channelCount, this, PCMEncoder.AAC_FORMAT);
+        pcmEncoder = new PCMEncoder(encodeSampleRate, encodeChannelCount, this, PCMEncoder.AAC_FORMAT);
+        Log.i(TAG, "reset PCMEncoder encodeSampleRate=" + encodeSampleRate
+                + ", encodeChannelCount=" + encodeChannelCount);
         Log.e(TAG, "reset new FLVPacker");
         flvPacker = new FLVPacker(this, true, false);
         int audioSessionId = audioRecord.getAudioSessionId();
@@ -590,16 +616,14 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                     //获取到的pcm数据就是buffer了
                     if (pcmEncoder != null) {
-                        boolean needResample = (sampleRate == 8000);
-                        byte[] playerPcmBytes = onReadPlayerPlayPcm(currentBuffer.length);
-                        if (playerPcmBytes != null && playerPcmBytes.length > 0) {
-                            byte[] micPcm16k = needResample ? upSample8kTo16k(currentBuffer) : currentBuffer;
-                            byte[] farPcm16k = needResample ? upSample8kTo16k(playerPcmBytes) : playerPcmBytes;
+                        byte[] micPcm16k = normalizeTo16kMono(currentBuffer, sampleRate, channelCount);
+                        byte[] farPcm16k = onReadPlayerPlayPcm(micPcm16k.length);
+                        if (farPcm16k != null && farPcm16k.length > 0) {
                             byte[] aecPcm16k = GvoiceJNIBridge.cancellation(micPcm16k, farPcm16k);
                             if (isRecord) {
                                 writePcmBytesToFile(micPcm16k, farPcm16k, aecPcm16k);
                             }
-                            byte[] toEncode = needResample ? downSample16kTo8k(aecPcm16k) : aecPcm16k;
+                            byte[] toEncode = convertFromAec(aecPcm16k, encodeSampleRate, encodeChannelCount);
                             pcmEncoder.encodeData(toEncode);
                         } else {
                             pcmEncoder.encodeData(currentBuffer);
@@ -618,6 +642,124 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             pcm8k[i * 2 + 1] = pcm16k[i * 4 + 1];
         }
         return pcm8k;
+    }
+
+    /**
+     * 立体声(16bit LE) -> 单声道：左右声道采样点取均值
+     */
+    public static byte[] stereoToMono(byte[] stereo) {
+        if (stereo == null || stereo.length < 4) {
+            return stereo;
+        }
+        int frames = stereo.length / 4; // 每帧 = L(2字节) + R(2字节)
+        byte[] mono = new byte[frames * 2];
+        for (int i = 0; i < frames; i++) {
+            short l = (short) ((stereo[i * 4] & 0xFF) | (stereo[i * 4 + 1] << 8));
+            short r = (short) ((stereo[i * 4 + 2] & 0xFF) | (stereo[i * 4 + 3] << 8));
+            short m = (short) ((l + r) >> 1);
+            mono[i * 2] = (byte) (m & 0xFF);
+            mono[i * 2 + 1] = (byte) ((m >> 8) & 0xFF);
+        }
+        return mono;
+    }
+
+    /**
+     * 单声道(16bit LE) -> 立体声：把单声道数据同时拷贝到左右声道
+     */
+    public static byte[] monoToStereo(byte[] mono) {
+        if (mono == null || mono.length < 2) {
+            return mono;
+        }
+        int frames = mono.length / 2;
+        byte[] stereo = new byte[frames * 4];
+        for (int i = 0; i < frames; i++) {
+            byte lo = mono[i * 2];
+            byte hi = mono[i * 2 + 1];
+            stereo[i * 4] = lo;
+            stereo[i * 4 + 1] = hi;
+            stereo[i * 4 + 2] = lo;
+            stereo[i * 4 + 3] = hi;
+        }
+        return stereo;
+    }
+
+    /**
+     * 通用线性插值重采样（单声道 16bit LE）：支持任意采样率之间的转换
+     * @param pcm      单声道 PCM（16bit LE）
+     * @param srcRate  源采样率
+     * @param dstRate  目标采样率
+     */
+    public static byte[] resampleLinear(byte[] pcm, int srcRate, int dstRate) {
+        if (pcm == null || pcm.length < 2 || srcRate == dstRate) {
+            return pcm;
+        }
+        int srcSamples = pcm.length / 2;
+        int dstSamples = (int) ((long) srcSamples * dstRate / srcRate);
+        if (dstSamples <= 0) {
+            return new byte[0];
+        }
+        byte[] out = new byte[dstSamples * 2];
+        double step = (double) srcRate / dstRate;
+        for (int i = 0; i < dstSamples; i++) {
+            double srcIdx = i * step;
+            int i0 = (int) srcIdx;
+            int i1 = Math.min(i0 + 1, srcSamples - 1);
+            double frac = srcIdx - i0;
+            short s0 = (short) ((pcm[i0 * 2] & 0xFF) | (pcm[i0 * 2 + 1] << 8));
+            short s1 = (short) ((pcm[i1 * 2] & 0xFF) | (pcm[i1 * 2 + 1] << 8));
+            short v = (short) (s0 + (s1 - s0) * frac);
+            out[i * 2] = (byte) (v & 0xFF);
+            out[i * 2 + 1] = (byte) ((v >> 8) & 0xFF);
+        }
+        return out;
+    }
+
+    /**
+     * 把任意采样率 / 任意声道的 PCM 归一化为 16kHz / 单声道（GVoice AEC 的固定输入格式）
+     * @param pcm         输入 PCM（16bit LE）
+     * @param srcRate     源采样率
+     * @param srcChannels 源声道数（1 或 2）
+     */
+    public byte[] normalizeTo16kMono(byte[] pcm, int srcRate, int srcChannels) {
+        if (pcm == null || pcm.length == 0) {
+            return pcm;
+        }
+        // 1) 多声道 -> 单声道
+        byte[] mono = (srcChannels == 2) ? stereoToMono(pcm) : pcm;
+        // 2) 采样率 -> 16k
+        if (srcRate == 16000) {
+            return mono;
+        }
+        if (srcRate == 8000) {
+            return upSample8kTo16k(mono);
+        }
+        return resampleLinear(mono, srcRate, 16000);
+    }
+
+    /**
+     * 把 16k/单声道的 AEC 输出转换为目标采样率 / 声道数，用于送入编码器。
+     * @param aecPcm16kMono AEC 输出（16k / 单声道 / 16bit LE）
+     * @param dstRate       目标采样率
+     * @param dstChannels   目标声道数（1 或 2）
+     */
+    public byte[] convertFromAec(byte[] aecPcm16kMono, int dstRate, int dstChannels) {
+        if (aecPcm16kMono == null || aecPcm16kMono.length == 0) {
+            return aecPcm16kMono;
+        }
+        // 1) 采样率 16k -> dstRate
+        byte[] resampled;
+        if (dstRate == 16000) {
+            resampled = aecPcm16kMono;
+        } else if (dstRate == 8000) {
+            resampled = downSample16kTo8k(aecPcm16kMono);
+        } else {
+            resampled = resampleLinear(aecPcm16kMono, 16000, dstRate);
+        }
+        // 2) 单声道 -> 目标声道数
+        if (dstChannels == 2) {
+            return monoToStereo(resampled);
+        }
+        return resampled;
     }
 
     /**
