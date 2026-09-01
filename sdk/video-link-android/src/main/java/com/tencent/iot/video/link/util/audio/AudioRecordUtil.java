@@ -70,6 +70,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private int encodeSampleRate;
     private int encodeChannelCount;
     private int pitch = 0; //变调【-12~12】
+    private volatile float micVolumeGain = 1.0f; //麦克风采集音量增益系数（1.0=原声，>1.0=放大，<1.0=减小）
+    private static final float MAX_MIC_VOLUME_GAIN = 8.0f; //增益上限，+18dB，防止严重爆音
     private VoiceChangerMode mode = VoiceChangerMode.VOICE_CHANGER_MODE_NONE;
     private boolean enableAEC = false;
     private boolean enableAGC = false;
@@ -141,6 +143,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             }
         }
     }
+
     private final Handler mHandler = new MyHandler();
 
     public AudioRecordUtil(Context ctx, String id) {
@@ -160,6 +163,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         readThread.start();
         mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
+
     public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth) {
         context = ctx;
         deviceId = id;
@@ -168,6 +172,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         readThread.start();
         mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
+
     public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch) {
         context = ctx;
         deviceId = id;
@@ -177,6 +182,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         readThread.start();
         mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
+
     public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, boolean enableAEC, boolean enableAGC) {
         context = ctx;
         deviceId = id;
@@ -187,6 +193,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         readThread.start();
         mReadHandler = new ReadHandler(readThread.getLooper(), this);
     }
+
     public AudioRecordUtil(Context ctx, String id, int sampleRate, int channel, int bitDepth, int pitch, boolean enableAEC, boolean enableAGC) {
         context = ctx;
         deviceId = id;
@@ -260,7 +267,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     private FileOutputStream createFiles(String format) {
 
         if (!TextUtils.isEmpty(speakPcmFilePath)) {
-            File file1 = new File(speakPcmFilePath+format+".pcm");
+            File file1 = new File(speakPcmFilePath + format + ".pcm");
             Log.i(TAG, "speak cache pcm file path:" + speakPcmFilePath);
             if (file1.exists()) {
                 file1.delete();
@@ -293,14 +300,13 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         this.speakPcmFilePath = path;
     }
 
-    // start之前设置有效 start过程中无法改变本次对讲音调
     public void setPitch(int pitch) {
-        Log.e(TAG, "setPitch is: "+ pitch);
+        Log.e(TAG, "setPitch is: " + pitch);
         this.pitch = pitch;
     }
 
     public void setMode(VoiceChangerMode mode) {
-        Log.e(TAG, "setMode is: "+ mode);
+        Log.e(TAG, "setMode is: " + mode);
         this.mode = mode;
         if (mode == VoiceChangerMode.VOICE_CHANGER_MODE_MAN) {
             this.pitch = -6;
@@ -309,6 +315,25 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         } else {
             this.pitch = 0;
         }
+    }
+
+    public void setMicVolumeGain(float gain) {
+        if (Float.isNaN(gain) || gain < 0f) {
+            Log.w(TAG, "setMicVolumeGain ignored, invalid gain=" + gain);
+            return;
+        }
+        float clamped = Math.min(gain, MAX_MIC_VOLUME_GAIN);
+        this.micVolumeGain = clamped;
+        Log.i(TAG, "setMicVolumeGain gain=" + clamped);
+    }
+
+    public void setMicVolumeGainDb(float db) {
+        if (Float.isNaN(db)) {
+            Log.w(TAG, "setMicVolumeGainDb ignored, invalid db=" + db);
+            return;
+        }
+        float gain = (float) Math.pow(10.0, db / 20.0);
+        setMicVolumeGain(gain);
     }
 
     public void setPlayerPcmData(byte[] pcmData) {
@@ -360,10 +385,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         reset();
         if (!VoiceChangerJNIBridge.isAvailable()) {
             if (st == null && pitch != 0) {
-                st = new SoundTouch(0,channelCount,sampleRate,bitDepth,1.0f, pitch);
+                st = new SoundTouch(0, channelCount, sampleRate, bitDepth, 1.0f, pitch);
             }
         } else {
-            VoiceChangerJNIBridge.init(sampleRate,channelCount);
+            VoiceChangerJNIBridge.init(sampleRate, channelCount);
             VoiceChangerJNIBridge.setMode(this.mode.getValue());
         }
         recorderState = true;
@@ -544,7 +569,8 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     }
 
     @Override
-    public void encodeG711(byte[] data) { }
+    public void encodeG711(byte[] data) {
+    }
 
     @Override
     public void onFLV(byte[] data) {
@@ -602,7 +628,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                     break;
                 }
                 int read = currentAudioRecord.read(currentBuffer, 0, currentBuffer.length);
-                Log.e(TAG, "audioRecord.read: "+read + "， buffer.length： " + currentBuffer.length + ", recorderState: " + recorderState);
+                Log.e(TAG, "audioRecord.read: " + read + "， buffer.length： " + currentBuffer.length + ", recorderState: " + recorderState);
+                if (read > 0) {
+                    applyMicVolumeGain(currentBuffer, read);
+                }
                 if (!VoiceChangerJNIBridge.isAvailable()) {
                     if (pitch != 0 && st != null) {
                         st.putBytes(currentBuffer);
@@ -610,7 +639,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                     }
                 } else {
                     if (pitch != 0) {
-                        VoiceChangerJNIBridge.voiceChangerRun(currentBuffer, currentBuffer, currentBuffer.length/(encodeBit/8));
+                        VoiceChangerJNIBridge.voiceChangerRun(currentBuffer, currentBuffer, currentBuffer.length / (encodeBit / 8));
                     }
                 }
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
@@ -631,6 +660,25 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                     }
                 }
             }
+        }
+    }
+
+    private void applyMicVolumeGain(byte[] pcm, int length) {
+        float gain = micVolumeGain;
+        if (gain == 1.0f || pcm == null || length < 2) {
+            return;
+        }
+        int end = Math.min(length, pcm.length) & ~1;
+        for (int i = 0; i < end; i += 2) {
+            int sample = (short) ((pcm[i] & 0xFF) | (pcm[i + 1] << 8));
+            int scaled = Math.round(sample * gain);
+            if (scaled > Short.MAX_VALUE) {
+                scaled = Short.MAX_VALUE;
+            } else if (scaled < Short.MIN_VALUE) {
+                scaled = Short.MIN_VALUE;
+            }
+            pcm[i] = (byte) (scaled & 0xFF);
+            pcm[i + 1] = (byte) ((scaled >> 8) & 0xFF);
         }
     }
 
@@ -685,9 +733,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
 
     /**
      * 通用线性插值重采样（单声道 16bit LE）：支持任意采样率之间的转换
-     * @param pcm      单声道 PCM（16bit LE）
-     * @param srcRate  源采样率
-     * @param dstRate  目标采样率
+     *
+     * @param pcm     单声道 PCM（16bit LE）
+     * @param srcRate 源采样率
+     * @param dstRate 目标采样率
      */
     public static byte[] resampleLinear(byte[] pcm, int srcRate, int dstRate) {
         if (pcm == null || pcm.length < 2 || srcRate == dstRate) {
@@ -716,6 +765,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
 
     /**
      * 把任意采样率 / 任意声道的 PCM 归一化为 16kHz / 单声道（GVoice AEC 的固定输入格式）
+     *
      * @param pcm         输入 PCM（16bit LE）
      * @param srcRate     源采样率
      * @param srcChannels 源声道数（1 或 2）
@@ -738,6 +788,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
 
     /**
      * 把 16k/单声道的 AEC 输出转换为目标采样率 / 声道数，用于送入编码器。
+     *
      * @param aecPcm16kMono AEC 输出（16k / 单声道 / 16bit LE）
      * @param dstRate       目标采样率
      * @param dstChannels   目标声道数（1 或 2）
@@ -777,7 +828,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         for (int i = 0; i < sampleCount; i++) {
             short cur = (short) ((pcm8k[i * 2] & 0xFF) | (pcm8k[i * 2 + 1] << 8));
             short mid = (short) ((prev + cur) / 2);
-            pcm16k[i * 4]     = (byte) (mid & 0xFF);
+            pcm16k[i * 4] = (byte) (mid & 0xFF);
             pcm16k[i * 4 + 1] = (byte) ((mid >> 8) & 0xFF);
             pcm16k[i * 4 + 2] = (byte) (cur & 0xFF);
             pcm16k[i * 4 + 3] = (byte) ((cur >> 8) & 0xFF);
@@ -789,9 +840,10 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
     public boolean isDevicesSupportAEC() {
         return AcousticEchoCanceler.isAvailable();
     }
+
     private boolean initAEC(int audioSession) {
         boolean isDevicesSupportAEC = isDevicesSupportAEC();
-        Log.e(TAG, "isDevicesSupportAEC: "+isDevicesSupportAEC);
+        Log.e(TAG, "isDevicesSupportAEC: " + isDevicesSupportAEC);
         if (!isDevicesSupportAEC) {
             return false;
         }
@@ -806,12 +858,14 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             return false;
         }
     }
+
     public boolean isDevicesSupportAGC() {
         return AutomaticGainControl.isAvailable();
     }
+
     private boolean initAGC(int audioSession) {
         boolean isDevicesSupportAGC = isDevicesSupportAGC();
-        Log.e(TAG, "isDevicesSupportAGC: "+isDevicesSupportAGC);
+        Log.e(TAG, "isDevicesSupportAGC: " + isDevicesSupportAGC);
         if (!isDevicesSupportAGC) {
             return false;
         }
@@ -831,14 +885,14 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         if (playPcmData.size() > length) {
             byte[] res = new byte[length];
             try {
-                for (int i = 0 ; i < length ; i++) {
+                for (int i = 0; i < length; i++) {
                     res[i] = playPcmData.take();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Log.e(TAG, "onReadPlayerPlayPcm  playPcmData.length： " + playPcmData.size());
-            if (playPcmData.size()>20000) {
+            if (playPcmData.size() > 20000) {
                 playPcmData.clear();
             }
             return res;
@@ -847,7 +901,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
         }
     }
 
-    private void recPlayPcmInternal(byte [] pcmData) {
+    private void recPlayPcmInternal(byte[] pcmData) {
         if (pcmData != null && pcmData.length > 0 && recorderState) {
             List<Byte> tmpList = new ArrayList<>();
             for (byte b : pcmData) {
