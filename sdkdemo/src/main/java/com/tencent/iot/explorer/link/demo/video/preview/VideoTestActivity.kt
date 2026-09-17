@@ -16,6 +16,7 @@ import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.WindowManager
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.alibaba.fastjson.JSONArray
@@ -159,6 +160,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         launch(Dispatchers.IO) {
             getDeviceStatus("${productId}/${deviceName}") { isOnline, msg ->
                 launch(Dispatchers.Main) {
+                    Log.d(tag, "====检测设备状态 isOnline:${isOnline} msg:${msg}")
                     Toast.makeText(this@VideoTestActivity, msg, Toast.LENGTH_SHORT).show()
                     if (isOnline) {
                         delegateHttpFlv()
@@ -205,6 +207,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
                     //        //变调可以传入pitch参数
                     //        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, 0, this)
                 }
+                applyMicGain(binding.sbGain.progress)
                 //        audioRecordUtil.recordSpeakFlv(true)
                 if (isChecked && checkPermissions(permissions)) {
                     if (!speakAble(true)) radioTalk.isChecked = false
@@ -256,6 +259,17 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
                 audioAble = !audioAble
                 chgAudioStatus(audioAble)
             }
+            sbGain.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    applyMicGain(progress)
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            })
+            // 初始化时主动刷新一次数值显示（默认 100 -> 1.0x）
+            applyMicGain(binding.sbGain.progress)
         }
     }
 
@@ -269,6 +283,12 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             val volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
             player.setVolume(volume.toFloat(), volume.toFloat())
         }
+    }
+
+    private fun applyMicGain(progress: Int) {
+        val gain = progress / 100f
+        binding.tvGainValue.text = String.format(Locale.US, "%.1fx", gain)
+        audioRecordUtil?.setMicVolumeGain(gain)
     }
 
     private var switchVideoQualityListener = View.OnClickListener {
@@ -511,7 +531,6 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             if (event == 1004) {
                 Log.e(tag, "====event === 1004")
                 checkDeviceState()
-                delegateHttpFlv()
             }
         } else if (event == 1010) {
             Log.e(tag, "====event === 1010, 校验失败，info撞库防止串流： $msg")

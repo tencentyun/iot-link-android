@@ -265,6 +265,55 @@
             app:layout_constraintTop_toTopOf="@id/v_btn_back"
             app:layout_constraintVertical_bias="0.88" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_gain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_btn_back">
+
+            <TextView
+                android:id="@+id/tv_gain_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/talk_gain"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_15"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <SeekBar
+                android:id="@+id/sb_gain"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:max="300"
+                android:progress="100"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_gain_value"
+                app:layout_constraintStart_toEndOf="@id/tv_gain_label"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/tv_gain_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/talk_gain_default"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_12"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

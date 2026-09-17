@@ -8,7 +8,7 @@ on:
     tags-ignore:  # 屏蔽掉发release打tag事件
       - '*'
     branches:
-      - '*'
+      - '**'
 
 env:
   IOT_SONATYPE_USERNAME: ${{ secrets.IOT_SONATYPE_USERNAME }}
