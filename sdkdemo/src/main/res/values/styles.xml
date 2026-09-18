@@ -18,6 +18,12 @@
         <item name="android:windowExitAnimation">@anim/common_out</item>
     </style>
 
+    <!-- 底部弹窗动画 -->
+    <style name="BottomSheetAnim" parent="android:Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
     <style name="iOSDialog" parent="@android:style/Theme.Translucent">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>//无标题

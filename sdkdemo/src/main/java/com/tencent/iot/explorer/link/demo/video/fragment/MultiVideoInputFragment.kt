@@ -7,7 +7,9 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
 import com.tencent.iot.explorer.link.demo.databinding.FragmentMultiVideoInputBinding
@@ -17,6 +19,17 @@ import com.tencent.iot.explorer.link.demo.video.preview.MultiVideoTestActivity
  * 多设备直连参数输入
  */
 class MultiVideoInputFragment : BaseFragment<FragmentMultiVideoInputBinding>() {
+
+    private var protocol1 = "auto"
+    private var protocol2 = "auto"
+    private var protocol3 = "auto"
+    private var protocol4 = "auto"
+
+    /** 当前选择的设备数量（2/3/4），0 表示尚未选择，决定显示几张设备卡片 */
+    private var deviceCount = 0
+
+    /** 请求宿主 Activity 弹出设备数量选择 */
+    var onRequestSelectCount: (() -> Unit)? = null
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -85,12 +98,14 @@ class MultiVideoInputFragment : BaseFragment<FragmentMultiVideoInputBinding>() {
 
             // 统一配置
             appKeyLayout.tvTip.setText("AppKey")
-            appKeyLayout.evContent.setHint("请输入AppKey（可选）")
+            appKeyLayout.evContent.setHint("请输入AppKey")
             appKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
 
             appSecretLayout.tvTip.setText("AppSecret")
-            appSecretLayout.evContent.setHint("请输入AppSecret（可选）")
+            appSecretLayout.evContent.setHint("请输入AppSecret")
             appSecretLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
+
+            updateDeviceCountUi()
         }
     }
 
@@ -103,11 +118,74 @@ class MultiVideoInputFragment : BaseFragment<FragmentMultiVideoInputBinding>() {
             btnPasteDevice2.setOnClickListener { pasteDeviceInfo(2) }
             btnPasteDevice3.setOnClickListener { pasteDeviceInfo(3) }
             btnPasteDevice4.setOnClickListener { pasteDeviceInfo(4) }
+
+            // 跟随设备配置开关：联动统一配置与各设备协议显隐
+            switchDevice1FollowConfig.setOnCheckedChangeListener { _, _ -> updateFollowConfigUi() }
+            switchDevice2FollowConfig.setOnCheckedChangeListener { _, _ -> updateFollowConfigUi() }
+            switchDevice3FollowConfig.setOnCheckedChangeListener { _, _ -> updateFollowConfigUi() }
+            switchDevice4FollowConfig.setOnCheckedChangeListener { _, _ -> updateFollowConfigUi() }
+
+            // 各设备传输协议
+            rgProtocolDevice1.setOnCheckedChangeListener { group, checkedId ->
+                protocol1 = group.findViewById<RadioButton>(checkedId).tag.toString()
+            }
+            rgProtocolDevice2.setOnCheckedChangeListener { group, checkedId ->
+                protocol2 = group.findViewById<RadioButton>(checkedId).tag.toString()
+            }
+            rgProtocolDevice3.setOnCheckedChangeListener { group, checkedId ->
+                protocol3 = group.findViewById<RadioButton>(checkedId).tag.toString()
+            }
+            rgProtocolDevice4.setOnCheckedChangeListener { group, checkedId ->
+                protocol4 = group.findViewById<RadioButton>(checkedId).tag.toString()
+            }
         }
+    }
+
+    /** 该设备是否在已选择的设备数量范围内（未选择时都不显示） */
+    private fun isDeviceSelected(index: Int): Boolean = deviceCount > 0 && index <= deviceCount
+
+    /** 设备数量联动：只显示已选择数量的设备卡片 */
+    private fun updateDeviceCountUi() {
+        with(binding) {
+            deviceCard1.isVisible = isDeviceSelected(1)
+            deviceCard2.isVisible = isDeviceSelected(2)
+            deviceCard3.isVisible = isDeviceSelected(3)
+            deviceCard4.isVisible = isDeviceSelected(4)
+        }
+        updateFollowConfigUi()
+    }
+
+    /**
+     * 跟随设备配置联动（仅统计已选择的设备）：
+     * 1. 任一已选设备开启“使用统一配置”时才显示统一配置卡片；
+     * 2. 单个设备开启后隐藏该设备的传输协议（协议由设备侧决定）。
+     */
+    private fun updateFollowConfigUi() {
+        with(binding) {
+            protocolLayoutDevice1.isVisible = !switchDevice1FollowConfig.isChecked
+            protocolLayoutDevice2.isVisible = !switchDevice2FollowConfig.isChecked
+            protocolLayoutDevice3.isVisible =
+                isDeviceSelected(3) && !switchDevice3FollowConfig.isChecked
+            protocolLayoutDevice4.isVisible =
+                isDeviceSelected(4) && !switchDevice4FollowConfig.isChecked
+
+            unifiedConfigCard.isVisible = isFollowingConfig()
+        }
+    }
+
+    private fun isFollowingConfig(): Boolean = with(binding) {
+        switchDevice1FollowConfig.isChecked || switchDevice2FollowConfig.isChecked ||
+                (isDeviceSelected(3) && switchDevice3FollowConfig.isChecked) ||
+                (isDeviceSelected(4) && switchDevice4FollowConfig.isChecked)
     }
 
     private var loginClickedListener = object : View.OnClickListener {
         override fun onClick(v: View?) {
+            // 未选择设备数量时先弹出选择
+            if (deviceCount <= 0) {
+                onRequestSelectCount?.invoke()
+                return
+            }
             with(binding) {
                 // 验证设备1信息
                 if (device1ProductIdLayout.evContent.text.isNullOrEmpty()) {
@@ -123,52 +201,68 @@ class MultiVideoInputFragment : BaseFragment<FragmentMultiVideoInputBinding>() {
                     return
                 }
 
-                // 跳转到多设备测试页面
-                val intent = Intent(requireContext(), MultiVideoTestActivity::class.java)
-
                 // 获取统一的配置信息
                 val appKey = appKeyLayout.evContent.text.toString()
                 val appSecret = appSecretLayout.evContent.text.toString()
 
-                // 传递设备1信息
-                intent.putExtra("device1_productId", device1ProductIdLayout.evContent.text.toString())
-                intent.putExtra("device1_deviceName", device1DeviceNameLayout.evContent.text.toString())
-                intent.putExtra("device1_p2pInfo", device1P2pInfoLayout.evContent.text.toString())
-                intent.putExtra("device1_followConfig", switchDevice1FollowConfig.isChecked)
-                if (switchDevice1FollowConfig.isChecked) {
-                    intent.putExtra("device1_appKey", appKey)
-                    intent.putExtra("device1_appSecret", appSecret)
+                // 有设备使用统一配置时，AppKey / AppSecret 必填
+                if (isFollowingConfig()) {
+                    if (appKey.isEmpty()) {
+                        show("请填写统一配置的 AppKey")
+                        return
+                    }
+                    if (appSecret.isEmpty()) {
+                        show("请填写统一配置的 AppSecret")
+                        return
+                    }
                 }
 
-                // 传递设备2信息
-                intent.putExtra("device2_productId", device2ProductIdLayout.evContent.text.toString())
-                intent.putExtra("device2_deviceName", device2DeviceNameLayout.evContent.text.toString())
-                intent.putExtra("device2_p2pInfo", device2P2pInfoLayout.evContent.text.toString())
-                intent.putExtra("device2_followConfig", switchDevice2FollowConfig.isChecked)
-                if (switchDevice2FollowConfig.isChecked) {
-                    intent.putExtra("device2_appKey", appKey)
-                    intent.putExtra("device2_appSecret", appSecret)
-                }
+                // 跳转到多设备测试页面
+                val intent = Intent(requireContext(), MultiVideoTestActivity::class.java)
 
-                // 传递设备3信息
-                intent.putExtra("device3_productId", device3ProductIdLayout.evContent.text.toString())
-                intent.putExtra("device3_deviceName", device3DeviceNameLayout.evContent.text.toString())
-                intent.putExtra("device3_p2pInfo", device3P2pInfoLayout.evContent.text.toString())
-                intent.putExtra("device3_followConfig", switchDevice3FollowConfig.isChecked)
-                if (switchDevice3FollowConfig.isChecked) {
-                    intent.putExtra("device3_appKey", appKey)
-                    intent.putExtra("device3_appSecret", appSecret)
-                }
+                // 设备1、2 始终参与
+                intent.putDevice(
+                    1,
+                    device1ProductIdLayout.evContent.text.toString(),
+                    device1DeviceNameLayout.evContent.text.toString(),
+                    device1P2pInfoLayout.evContent.text.toString(),
+                    switchDevice1FollowConfig.isChecked,
+                    if (switchDevice1FollowConfig.isChecked) "auto" else protocol1,
+                    appKey, appSecret
+                )
+                intent.putDevice(
+                    2,
+                    device2ProductIdLayout.evContent.text.toString(),
+                    device2DeviceNameLayout.evContent.text.toString(),
+                    device2P2pInfoLayout.evContent.text.toString(),
+                    switchDevice2FollowConfig.isChecked,
+                    if (switchDevice2FollowConfig.isChecked) "auto" else protocol2,
+                    appKey, appSecret
+                )
 
-                // 传递设备4信息
-                intent.putExtra("device4_productId", device4ProductIdLayout.evContent.text.toString())
-                intent.putExtra("device4_deviceName", device4DeviceNameLayout.evContent.text.toString())
-                intent.putExtra("device4_p2pInfo", device4P2pInfoLayout.evContent.text.toString())
-                intent.putExtra("device4_followConfig", switchDevice4FollowConfig.isChecked)
-                if (switchDevice4FollowConfig.isChecked) {
-                    intent.putExtra("device4_appKey", appKey)
-                    intent.putExtra("device4_appSecret", appSecret)
-                }
+                // 设备3 仅在选中数量时才参与
+                val selected3 = isDeviceSelected(3)
+                intent.putDevice(
+                    3,
+                    if (selected3) device3ProductIdLayout.evContent.text.toString() else "",
+                    if (selected3) device3DeviceNameLayout.evContent.text.toString() else "",
+                    if (selected3) device3P2pInfoLayout.evContent.text.toString() else "",
+                    selected3 && switchDevice3FollowConfig.isChecked,
+                    if (switchDevice3FollowConfig.isChecked) "auto" else protocol3,
+                    appKey, appSecret
+                )
+
+                // 设备4 仅在选中数量时才参与
+                val selected4 = isDeviceSelected(4)
+                intent.putDevice(
+                    4,
+                    if (selected4) device4ProductIdLayout.evContent.text.toString() else "",
+                    if (selected4) device4DeviceNameLayout.evContent.text.toString() else "",
+                    if (selected4) device4P2pInfoLayout.evContent.text.toString() else "",
+                    selected4 && switchDevice4FollowConfig.isChecked,
+                    if (switchDevice4FollowConfig.isChecked) "auto" else protocol4,
+                    appKey, appSecret
+                )
 
                 startActivity(intent)
             }
@@ -275,5 +369,33 @@ class MultiVideoInputFragment : BaseFragment<FragmentMultiVideoInputBinding>() {
     private fun show(text: String?) {
         if (text.isNullOrEmpty()) return
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+    }
+
+    /** 由宿主在切换前设置设备数量 */
+    fun setDeviceCount(count: Int) {
+        deviceCount = count
+        if (view != null) updateDeviceCountUi()
+    }
+
+    /** 按设备序号写入参数，跟随配置时才附带 AppKey / AppSecret */
+    private fun Intent.putDevice(
+        index: Int,
+        productId: String,
+        deviceName: String,
+        p2pInfo: String,
+        follow: Boolean,
+        protocol: String,
+        appKey: String,
+        appSecret: String
+    ) {
+        putExtra("device${index}_productId", productId)
+        putExtra("device${index}_deviceName", deviceName)
+        putExtra("device${index}_p2pInfo", p2pInfo)
+        putExtra("device${index}_followConfig", follow)
+        putExtra("device${index}_protocol", protocol)
+        if (follow) {
+            putExtra("device${index}_appKey", appKey)
+            putExtra("device${index}_appSecret", appSecret)
+        }
     }
 }

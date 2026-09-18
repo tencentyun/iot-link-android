@@ -1,50 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/black">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gl_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RadioGroup
-        android:id="@+id/rg_orientation"
+    <!-- 横竖屏切换（胶囊样式） -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="34dp"
         android:layout_marginEnd="16dp"
-        android:orientation="horizontal" >
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/background_black_translucent_radius"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <RadioButton
-            android:id="@+id/radio_orientation_h"
+        <RadioGroup
+            android:id="@+id/rg_orientation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:textSize="@dimen/ts_15"
-            android:button="@null"
-            android:drawablePadding="8dp"
-            android:textColor="@color/white"
-            android:drawableLeft="@mipmap/orientation"
-            android:text="@string/switc_orientation_h" />
-        <RadioButton
-            android:id="@+id/radio_orientation_v"
-            android:layout_marginStart="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/ts_15"
-            android:button="@null"
-            android:drawablePadding="8dp"
-            android:drawableLeft="@mipmap/orientation"
-            android:textColor="@color/white"
-            android:text="@string/switc_orientation_v" />
-    </RadioGroup>
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_orientation_h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="true"
+                android:drawableLeft="@mipmap/orientation"
+                android:drawablePadding="8dp"
+                android:text="@string/switc_orientation_h"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_15" />
+
+            <RadioButton
+                android:id="@+id/radio_orientation_v"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:button="@null"
+                android:drawableLeft="@mipmap/orientation"
+                android:drawablePadding="8dp"
+                android:text="@string/switc_orientation_v"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_15" />
+        </RadioGroup>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

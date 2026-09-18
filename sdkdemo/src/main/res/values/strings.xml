@@ -107,6 +107,7 @@
     <string name="no_data">没有数据</string>
     <string name="paused">已暂停</string>
     <string name="capture_successed">已保存至相册</string>
+    <string name="video_not_ready">视频尚未就绪，请稍后再试</string>
     <string name="devs_checked">已选择 %d 台设备</string>
     <string name="query_failed">查询失败</string>
     <string name="record_failed">该音视频格式不支持录像</string>

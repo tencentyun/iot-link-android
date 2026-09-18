@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.alibaba.fastjson.JSONArray
 import com.tencent.iot.explorer.link.demo.R
 import com.tencent.iot.explorer.link.demo.VideoBaseActivity
@@ -103,21 +104,23 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
             intent.getStringExtra("device1_appSecret") ?: ""
         } else ""
 
-        device1Info = DeviceInfo(
-            productId = intent.getStringExtra("device1_productId") ?: "",
-            deviceName = intent.getStringExtra("device1_deviceName") ?: "",
-            p2pInfo = intent.getStringExtra("device1_p2pInfo") ?: "",
-            followConfig = device1FollowConfig,
-            appKey = device1AppKey,
-            appSecret = device1AppSecret
-        )
+        val device1ProductId = intent.getStringExtra("device1_productId") ?: ""
+        device1Info = if (device1ProductId.isNotEmpty()) {
+            DeviceInfo(
+                productId = device1ProductId,
+                deviceName = intent.getStringExtra("device1_deviceName") ?: "",
+                p2pInfo = intent.getStringExtra("device1_p2pInfo") ?: "",
+                followConfig = device1FollowConfig,
+                appKey = device1AppKey,
+                appSecret = device1AppSecret
+            )
+        } else null
 
-        // 如果设备1有配置，更新XP2PAppConfig
-        if (device1FollowConfig && device1AppKey.isNotEmpty() && device1AppSecret.isNotEmpty()) {
-            xP2PAppConfig1.appKey = device1AppKey
-            xP2PAppConfig1.appSecret = device1AppSecret
-            Log.d(tag, "设备1 使用跟随配置: appKey=$device1AppKey")
-        }
+        // 应用设备1的跟随配置与传输协议
+        applyDeviceConfig(
+            xP2PAppConfig1, device1FollowConfig, device1AppKey, device1AppSecret,
+            intent.getStringExtra("device1_protocol") ?: "auto"
+        )
 
         // 获取设备2的跟随配置信息
         val device2FollowConfig = intent.getBooleanExtra("device2_followConfig", false)
@@ -128,21 +131,23 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
             intent.getStringExtra("device2_appSecret") ?: ""
         } else ""
 
-        device2Info = DeviceInfo(
-            productId = intent.getStringExtra("device2_productId") ?: "",
-            deviceName = intent.getStringExtra("device2_deviceName") ?: "",
-            p2pInfo = intent.getStringExtra("device2_p2pInfo") ?: "",
-            followConfig = device2FollowConfig,
-            appKey = device2AppKey,
-            appSecret = device2AppSecret
-        )
+        val device2ProductId = intent.getStringExtra("device2_productId") ?: ""
+        device2Info = if (device2ProductId.isNotEmpty()) {
+            DeviceInfo(
+                productId = device2ProductId,
+                deviceName = intent.getStringExtra("device2_deviceName") ?: "",
+                p2pInfo = intent.getStringExtra("device2_p2pInfo") ?: "",
+                followConfig = device2FollowConfig,
+                appKey = device2AppKey,
+                appSecret = device2AppSecret
+            )
+        } else null
 
-        // 如果设备2有配置，更新XP2PAppConfig
-        if (device2FollowConfig && device2AppKey.isNotEmpty() && device2AppSecret.isNotEmpty()) {
-            xP2PAppConfig2.appKey = device2AppKey
-            xP2PAppConfig2.appSecret = device2AppSecret
-            Log.d(tag, "设备2 使用跟随配置: appKey=$device2AppKey")
-        }
+        // 应用设备2的跟随配置与传输协议
+        applyDeviceConfig(
+            xP2PAppConfig2, device2FollowConfig, device2AppKey, device2AppSecret,
+            intent.getStringExtra("device2_protocol") ?: "auto"
+        )
 
         // 获取设备3的跟随配置信息
         val device3FollowConfig = intent.getBooleanExtra("device3_followConfig", false)
@@ -153,21 +158,23 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
             intent.getStringExtra("device3_appSecret") ?: ""
         } else ""
 
-        device3Info = DeviceInfo(
-            productId = intent.getStringExtra("device3_productId") ?: "",
-            deviceName = intent.getStringExtra("device3_deviceName") ?: "",
-            p2pInfo = intent.getStringExtra("device3_p2pInfo") ?: "",
-            followConfig = device3FollowConfig,
-            appKey = device3AppKey,
-            appSecret = device3AppSecret
-        )
+        val device3ProductId = intent.getStringExtra("device3_productId") ?: ""
+        device3Info = if (device3ProductId.isNotEmpty()) {
+            DeviceInfo(
+                productId = device3ProductId,
+                deviceName = intent.getStringExtra("device3_deviceName") ?: "",
+                p2pInfo = intent.getStringExtra("device3_p2pInfo") ?: "",
+                followConfig = device3FollowConfig,
+                appKey = device3AppKey,
+                appSecret = device3AppSecret
+            )
+        } else null
 
-        // 如果设备3有配置，更新XP2PAppConfig
-        if (device3FollowConfig && device3AppKey.isNotEmpty() && device3AppSecret.isNotEmpty()) {
-            xP2PAppConfig3.appKey = device3AppKey
-            xP2PAppConfig3.appSecret = device3AppSecret
-            Log.d(tag, "设备3 使用跟随配置: appKey=$device3AppKey")
-        }
+        // 应用设备3的跟随配置与传输协议
+        applyDeviceConfig(
+            xP2PAppConfig3, device3FollowConfig, device3AppKey, device3AppSecret,
+            intent.getStringExtra("device3_protocol") ?: "auto"
+        )
 
         // 获取设备4的跟随配置信息
         val device4FollowConfig = intent.getBooleanExtra("device4_followConfig", false)
@@ -178,20 +185,51 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
             intent.getStringExtra("device4_appSecret") ?: ""
         } else ""
 
-        device4Info = DeviceInfo(
-            productId = intent.getStringExtra("device4_productId") ?: "",
-            deviceName = intent.getStringExtra("device4_deviceName") ?: "",
-            p2pInfo = intent.getStringExtra("device4_p2pInfo") ?: "",
-            followConfig = device4FollowConfig,
-            appKey = device4AppKey,
-            appSecret = device4AppSecret
-        )
+        val device4ProductId = intent.getStringExtra("device4_productId") ?: ""
+        device4Info = if (device4ProductId.isNotEmpty()) {
+            DeviceInfo(
+                productId = device4ProductId,
+                deviceName = intent.getStringExtra("device4_deviceName") ?: "",
+                p2pInfo = intent.getStringExtra("device4_p2pInfo") ?: "",
+                followConfig = device4FollowConfig,
+                appKey = device4AppKey,
+                appSecret = device4AppSecret
+            )
+        } else null
 
-        // 如果设备4有配置，更新XP2PAppConfig
-        if (device4FollowConfig && device4AppKey.isNotEmpty() && device4AppSecret.isNotEmpty()) {
-            xP2PAppConfig4.appKey = device4AppKey
-            xP2PAppConfig4.appSecret = device4AppSecret
-            Log.d(tag, "设备4 使用跟随配置: appKey=$device4AppKey")
+        // 应用设备4的跟随配置与传输协议
+        applyDeviceConfig(
+            xP2PAppConfig4, device4FollowConfig, device4AppKey, device4AppSecret,
+            intent.getStringExtra("device4_protocol") ?: "auto"
+        )
+    }
+
+    /**
+     * 应用单个设备的跟随配置与传输协议：
+     * - 开启跟随配置：使用统一 AppKey/AppSecret，由设备侧自动下发配置（协议由设备决定）
+     * - 未开启：按所选协议直连
+     */
+    private fun applyDeviceConfig(
+        appConfig: XP2PAppConfig,
+        followConfig: Boolean,
+        appKey: String,
+        appSecret: String,
+        protocol: String
+    ) {
+        if (followConfig) {
+            if (appKey.isNotEmpty()) appConfig.appKey = appKey
+            if (appSecret.isNotEmpty()) appConfig.appSecret = appSecret
+            appConfig.autoConfigFromDevice = true
+            appConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
+            Log.d(tag, "跟随设备配置: appKey=$appKey, type=AUTO")
+        } else {
+            appConfig.autoConfigFromDevice = false
+            appConfig.type = when (protocol) {
+                "udp" -> XP2PProtocolType.XP2P_PROTOCOL_UDP
+                "tcp" -> XP2PProtocolType.XP2P_PROTOCOL_TCP
+                else -> XP2PProtocolType.XP2P_PROTOCOL_AUTO
+            }
+            Log.d(tag, "直连: protocol=$protocol")
         }
     }
 
@@ -204,6 +242,10 @@ class MultiVideoTestActivity : VideoBaseActivity<ActivityMultiVideoTestBinding>(
             tvDevice2Status.text = device2Info?.deviceName ?: "未配置"
             tvDevice3Status.text = device3Info?.deviceName ?: "未配置"
             tvDevice4Status.text = device4Info?.deviceName ?: "未配置"
+
+            // 未选择的设备不显示预览区域
+            tileCard3.isVisible = device3Info != null
+            tileCard4.isVisible = device4Info != null
 
             // 设置SurfaceTextureListener
             vPreviewDevice1.surfaceTextureListener = object : TextureView.SurfaceTextureListener {

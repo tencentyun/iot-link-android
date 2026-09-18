@@ -26,6 +26,12 @@ class SingleVideoInputFragment : BaseFragment<FragmentSingleVideoInputBinding>()
     private var isStartCross = false
     private var protocol = "auto"
 
+    /** 是否保存裸流 */
+    private var saveRawAv = false
+
+    /** 对讲是否开启回音消除 */
+    private var enableAec = false
+
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -109,6 +115,8 @@ class SingleVideoInputFragment : BaseFragment<FragmentSingleVideoInputBinding>()
             }
             appSecretLayout.evContent.setHint(R.string.hint_app_secret)
             appSecretLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
+            swtSaveRawAv.isChecked = saveRawAv
+            swtEnableAec.isChecked = enableAec
         }
     }
 
@@ -159,6 +167,8 @@ class SingleVideoInputFragment : BaseFragment<FragmentSingleVideoInputBinding>()
             rgProtocol.setOnCheckedChangeListener { group, checkedId ->
                 protocol = group.findViewById<RadioButton>(checkedId).tag.toString()
             }
+            swtSaveRawAv.setOnCheckedChangeListener { _, checked -> saveRawAv = checked }
+            swtEnableAec.setOnCheckedChangeListener { _, checked -> enableAec = checked }
         }
     }
 
@@ -229,6 +239,8 @@ class SingleVideoInputFragment : BaseFragment<FragmentSingleVideoInputBinding>()
                 intent.putExtra("isStartCross", isStartCross)
                 // 跟随设备配置时协议由设备侧决定，避免隐藏后的旧选择仍生效
                 intent.putExtra("protocol", if (isStartCross) "auto" else protocol)
+                intent.putExtra("saveRawAv", saveRawAv)
+                intent.putExtra("enableAec", enableAec)
                 startActivity(intent)
             }
         }

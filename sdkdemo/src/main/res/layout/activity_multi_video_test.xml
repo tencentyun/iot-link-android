@@ -31,6 +31,7 @@
 
         <!-- 设备1卡片 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/tile_card_1"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="4dp"
@@ -131,6 +132,7 @@
 
         <!-- 设备2卡片 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/tile_card_2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="4dp"
@@ -226,6 +228,7 @@
 
         <!-- 设备3卡片 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/tile_card_3"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="4dp"
@@ -321,6 +324,7 @@
 
         <!-- 设备4卡片 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/tile_card_4"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="4dp"

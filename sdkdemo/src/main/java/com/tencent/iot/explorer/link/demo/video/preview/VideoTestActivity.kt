@@ -67,6 +67,12 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
     private var urlPrefix = ""
     private var audioRecordUtil: AudioRecordUtil? = null
 
+    /** 是否保存裸流 */
+    private var saveRawAv = false
+
+    /** 对讲是否开启回音消除 */
+    private var enableAec = false
+
     private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
     private var showTip = false
     private var connectStartTime = 0L
@@ -107,6 +113,8 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         xP2PAppConfig.appSecret = appSecret.trim()
         xP2PAppConfig.autoConfigFromDevice = intent.getBooleanExtra("isStartCross", false)
         val protocol = intent.getStringExtra("protocol") ?: "auto"
+        saveRawAv = intent.getBooleanExtra("saveRawAv", false)
+        enableAec = intent.getBooleanExtra("enableAec", false)
         if (protocol == "udp") {
             xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_UDP
         } else if (protocol == "tcp") {
@@ -114,13 +122,21 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
         } else {
             xP2PAppConfig.type = XP2PProtocolType.XP2P_PROTOCOL_AUTO
         }
-        Log.d(TAG, "init params productId:${productId} deviceName:${deviceName} xp2pInfo:${xp2pInfo} xP2PAppConfig:${JsonManager.toJson(xP2PAppConfig)}")
+        Log.d(
+            TAG,
+            "init params productId:${productId} deviceName:${deviceName} xp2pInfo:${xp2pInfo} xP2PAppConfig:${
+                JsonManager.toJson(xP2PAppConfig)
+            }"
+        )
         binding.vTitle.tvTitle.text = deviceName
         binding.tvVideoQuality.text = getString(R.string.video_quality_medium_str)
 
         XP2P.setCallback(this)
-        val filaPath = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath + "/data_video.flv"
-        XP2P.recordstreamPath(filaPath) //自定义采集裸流路径
+        if (saveRawAv) {
+            val filePath =
+                getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath + "/data_video.flv"
+            XP2P.recordstreamPath(filePath) //自定义采集裸流路径
+        }
         val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()
         wm.defaultDisplay.getMetrics(dm)
@@ -174,7 +190,9 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
 
     private fun delegateHttpFlv() {
         val id = "${productId}/${deviceName}"
-        XP2P.recordstream(id) //开启自定义采集裸流
+        if (saveRawAv) {
+            XP2P.recordstream(id) //开启自定义采集裸流
+        }
         val prefix = XP2P.delegateHttpFlv(id)
         if (prefix.isNotEmpty()) {
             urlPrefix = prefix
@@ -195,12 +213,15 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             tvVideoQuality.setOnClickListener(switchVideoQualityListener)
             radioTalk.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (audioRecordUtil == null) {
+                    // enableAEC 控制是否开启回音消除（GVoice），enableAGC 关闭
                     audioRecordUtil = AudioRecordUtil(
                         this@VideoTestActivity,
                         "${productId}/${deviceName}",
                         16000,
                         AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT
+                        AudioFormat.ENCODING_PCM_16BIT,
+                        enableAec,
+                        false
                     )
                     //        //变调可以传入pitch参数
                     //        audioRecordUtil = AudioRecordUtil(this, "${it.productId}/${presenter.getDeviceName()}", 16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, -6)
@@ -241,7 +262,18 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
                 VideoPlaybackActivity.startPlaybackActivity(this@VideoTestActivity, dev)
             }
             radioPhoto.setOnClickListener {
-                val bitmap = vPreview.getBitmap(player.videoWidth, player.videoHeight)
+                val videoWidth = player.videoWidth
+                val videoHeight = player.videoHeight
+                if (videoWidth <= 0 || videoHeight <= 0) {
+                    ToastDialog(
+                        this@VideoTestActivity,
+                        ToastDialog.Type.WARNING,
+                        getString(R.string.video_not_ready),
+                        2000
+                    ).show()
+                    return@setOnClickListener
+                }
+                val bitmap = vPreview.getBitmap(videoWidth, videoHeight)
                 ImageSelect.saveBitmap(this@VideoTestActivity, bitmap)
                 ToastDialog(
                     this@VideoTestActivity,
@@ -260,7 +292,11 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
                 chgAudioStatus(audioAble)
             }
             sbGain.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
                     applyMicGain(progress)
                 }
 
@@ -561,13 +597,18 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
-        Log.d(tag, "onSurfaceTextureSizeChanged")
+        Log.d(tag, "onSurfaceTextureSizeChanged size:${width}x${height}")
+        val videoWidth = player.videoWidth
+        val videoHeight = player.videoHeight
+        // 视频信息尚未就绪（宽高为 0）时直接返回，避免除零崩溃
+        if (videoWidth <= 0 || videoHeight <= 0) return
         val layoutParams = binding.vPreview.layoutParams
         if (orientationV) {
-            layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
+            layoutParams.width = (videoWidth * (screenWidth * 16 / 9)) / videoHeight
             layoutParams.height = layoutParams.height
         } else {
-            layoutParams.width = (player.videoWidth * height) / player.videoHeight
+            if (height <= 0) return
+            layoutParams.width = (videoWidth * height) / videoHeight
         }
         binding.vPreview.layoutParams = layoutParams
     }
@@ -586,11 +627,15 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             showTip = true
         }
         if (orientationV && firstIn) {
-            val layoutParams = binding.vPreview.layoutParams
-            layoutParams.width = (player.videoWidth * (screenWidth * 16 / 9)) / player.videoHeight
-            layoutParams.height = layoutParams.height
-            binding.vPreview.layoutParams = layoutParams
-            firstIn = false
+            val videoWidth = player.videoWidth
+            val videoHeight = player.videoHeight
+            if (videoWidth > 0 && videoHeight > 0) {
+                val layoutParams = binding.vPreview.layoutParams
+                layoutParams.width = (videoWidth * (screenWidth * 16 / 9)) / videoHeight
+                layoutParams.height = layoutParams.height
+                binding.vPreview.layoutParams = layoutParams
+                firstIn = false
+            }
         }
     }
 
@@ -603,6 +648,9 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
     }
 
     override fun onInfoAudioPcmData(p0: IMediaPlayer?, p1: ByteArray?, p2: Int) {
+        if (audioRecordUtil != null && p2 > 0 && speakAble) {
+            audioRecordUtil?.setPlayerPcmData(p1)
+        }
     }
 
     private fun getDeviceStatus(id: String?, block: ((Boolean, String) -> Unit)? = null) {

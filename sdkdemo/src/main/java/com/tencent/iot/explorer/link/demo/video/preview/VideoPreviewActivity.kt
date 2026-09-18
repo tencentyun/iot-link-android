@@ -309,7 +309,19 @@ class VideoPreviewActivity : VideoPreviewBaseActivity<ActivityVideoPreviewBindin
                 VideoPlaybackActivity.startPlaybackActivity(this@VideoPreviewActivity, dev)
             }
             radioPhoto.setOnClickListener {
-                val bitmap = vPreview.getBitmap(player.videoWidth, player.videoHeight)
+                val videoWidth = player.videoWidth
+                val videoHeight = player.videoHeight
+                // 视频信息尚未就绪时截图会因宽高为 0 抛异常
+                if (videoWidth <= 0 || videoHeight <= 0) {
+                    ToastDialog(
+                        this@VideoPreviewActivity,
+                        ToastDialog.Type.WARNING,
+                        getString(R.string.video_not_ready),
+                        2000
+                    ).show()
+                    return@setOnClickListener
+                }
+                val bitmap = vPreview.getBitmap(videoWidth, videoHeight)
                 ImageSelect.saveBitmap(this@VideoPreviewActivity, bitmap)
                 ToastDialog(
                     this@VideoPreviewActivity,
