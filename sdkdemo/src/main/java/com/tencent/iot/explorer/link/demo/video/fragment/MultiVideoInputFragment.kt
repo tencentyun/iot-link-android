@@ -1,94 +1,103 @@
-package com.tencent.iot.explorer.link.demo.video
+package com.tencent.iot.explorer.link.demo.video.fragment
 
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.text.InputType
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.tencent.iot.explorer.link.demo.R
-import com.tencent.iot.explorer.link.demo.VideoBaseActivity
-import com.tencent.iot.explorer.link.demo.databinding.ActivityMultiDeviceInputBinding
+import com.tencent.iot.explorer.link.demo.core.fragment.BaseFragment
+import com.tencent.iot.explorer.link.demo.databinding.FragmentMultiVideoInputBinding
 import com.tencent.iot.explorer.link.demo.video.preview.MultiVideoTestActivity
 
+/**
+ * 多设备直连参数输入
+ */
+class MultiVideoInputFragment : BaseFragment<FragmentMultiVideoInputBinding>() {
 
-class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBinding>() {
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentMultiVideoInputBinding =
+        FragmentMultiVideoInputBinding.inflate(inflater, container, false)
 
-    override fun getViewBinding(): ActivityMultiDeviceInputBinding =
-        ActivityMultiDeviceInputBinding.inflate(layoutInflater)
+    override fun startHere(view: View) {
+        initView()
+        setListener()
+    }
 
-    override fun initView() {
+    private fun initView() {
         with(binding) {
-            vTitle.tvTitle.setText(R.string.multi_device_connection)
-            
             // 设备1
             device1ProductIdLayout.tvTip.setText(R.string.product_id_text)
             device1ProductIdLayout.evContent.setHint(R.string.hint_product_id)
             device1ProductIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             device1DeviceNameLayout.tvTip.setText(R.string.device_name_text)
             device1DeviceNameLayout.evContent.setHint(R.string.hint_device_name)
             device1DeviceNameLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             device1P2pInfoLayout.tvTip.setText(R.string.p2p_info_text)
             device1P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
             device1P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             // 设备2
             device2ProductIdLayout.tvTip.setText(R.string.product_id_text)
             device2ProductIdLayout.evContent.setHint(R.string.hint_product_id)
             device2ProductIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             device2DeviceNameLayout.tvTip.setText(R.string.device_name_text)
             device2DeviceNameLayout.evContent.setHint(R.string.hint_device_name)
             device2DeviceNameLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             device2P2pInfoLayout.tvTip.setText(R.string.p2p_info_text)
             device2P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
             device2P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             // 设备3
             device3ProductIdLayout.tvTip.setText(R.string.product_id_text)
             device3ProductIdLayout.evContent.setHint(R.string.hint_product_id)
             device3ProductIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             device3DeviceNameLayout.tvTip.setText(R.string.device_name_text)
             device3DeviceNameLayout.evContent.setHint(R.string.hint_device_name)
             device3DeviceNameLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             device3P2pInfoLayout.tvTip.setText(R.string.p2p_info_text)
             device3P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
             device3P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             // 设备4
             device4ProductIdLayout.tvTip.setText(R.string.product_id_text)
             device4ProductIdLayout.evContent.setHint(R.string.hint_product_id)
             device4ProductIdLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             device4DeviceNameLayout.tvTip.setText(R.string.device_name_text)
             device4DeviceNameLayout.evContent.setHint(R.string.hint_device_name)
             device4DeviceNameLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             device4P2pInfoLayout.tvTip.setText(R.string.p2p_info_text)
             device4P2pInfoLayout.evContent.setHint(R.string.hint_p2p_info)
             device4P2pInfoLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             // 统一配置
             appKeyLayout.tvTip.setText("AppKey")
             appKeyLayout.evContent.setHint("请输入AppKey（可选）")
             appKeyLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
-            
+
             appSecretLayout.tvTip.setText("AppSecret")
             appSecretLayout.evContent.setHint("请输入AppSecret（可选）")
             appSecretLayout.evContent.inputType = InputType.TYPE_CLASS_TEXT
         }
     }
 
-    override fun setListener() {
+    private fun setListener() {
         with(binding) {
-            vTitle.ivBack.setOnClickListener { finish() }
             btnLogin.setOnClickListener(loginClickedListener)
-            
+
             // 粘贴按钮点击事件
             btnPasteDevice1.setOnClickListener { pasteDeviceInfo(1) }
             btnPasteDevice2.setOnClickListener { pasteDeviceInfo(2) }
@@ -115,12 +124,12 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                 }
 
                 // 跳转到多设备测试页面
-                val intent = Intent(this@MultiVideoTestInputActivity, MultiVideoTestActivity::class.java)
-                
+                val intent = Intent(requireContext(), MultiVideoTestActivity::class.java)
+
                 // 获取统一的配置信息
                 val appKey = appKeyLayout.evContent.text.toString()
                 val appSecret = appSecretLayout.evContent.text.toString()
-                
+
                 // 传递设备1信息
                 intent.putExtra("device1_productId", device1ProductIdLayout.evContent.text.toString())
                 intent.putExtra("device1_deviceName", device1DeviceNameLayout.evContent.text.toString())
@@ -130,7 +139,7 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                     intent.putExtra("device1_appKey", appKey)
                     intent.putExtra("device1_appSecret", appSecret)
                 }
-                
+
                 // 传递设备2信息
                 intent.putExtra("device2_productId", device2ProductIdLayout.evContent.text.toString())
                 intent.putExtra("device2_deviceName", device2DeviceNameLayout.evContent.text.toString())
@@ -140,7 +149,7 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                     intent.putExtra("device2_appKey", appKey)
                     intent.putExtra("device2_appSecret", appSecret)
                 }
-                
+
                 // 传递设备3信息
                 intent.putExtra("device3_productId", device3ProductIdLayout.evContent.text.toString())
                 intent.putExtra("device3_deviceName", device3DeviceNameLayout.evContent.text.toString())
@@ -150,7 +159,7 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                     intent.putExtra("device3_appKey", appKey)
                     intent.putExtra("device3_appSecret", appSecret)
                 }
-                
+
                 // 传递设备4信息
                 intent.putExtra("device4_productId", device4ProductIdLayout.evContent.text.toString())
                 intent.putExtra("device4_deviceName", device4DeviceNameLayout.evContent.text.toString())
@@ -160,12 +169,12 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                     intent.putExtra("device4_appKey", appKey)
                     intent.putExtra("device4_appSecret", appSecret)
                 }
-                
+
                 startActivity(intent)
             }
         }
     }
-    
+
     /**
      * 粘贴设备信息
      * 格式: 每行一个字段，按顺序为：
@@ -176,9 +185,9 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
      * appSecret (可选)
      */
     private fun pasteDeviceInfo(deviceIndex: Int) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = clipboard.primaryClip
-        
+
         if (clipData != null && clipData.itemCount > 0) {
             val lines = clipData.getItemAt(0)?.text.toString().split("\n")
             if (lines.size >= 3) {
@@ -187,7 +196,7 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                 val p2pInfo = lines[2]
                 val appKey = if (lines.size >= 4) lines[3] else ""
                 val appSecret = if (lines.size >= 5) lines[4] else ""
-                
+
                 with(binding) {
                     when (deviceIndex) {
                         1 -> {
@@ -254,16 +263,17 @@ class MultiVideoTestInputActivity : VideoBaseActivity<ActivityMultiDeviceInputBi
                 } else {
                     "设备$deviceIndex 信息已粘贴"
                 }
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "粘贴板格式错误，请每行输入一个字段：\\n第一行：产品ID\\n第二行：设备名称\\n第三行：P2P信息\\n第四行：AppKey（可选）\\n第五行：AppSecret（可选）", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "粘贴板格式错误，请每行输入一个字段：\n第一行：产品ID\n第二行：设备名称\n第三行：P2P信息\n第四行：AppKey（可选）\n第五行：AppSecret（可选）", Toast.LENGTH_LONG).show()
             }
         } else {
-            Toast.makeText(this, "粘贴板为空", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "粘贴板为空", Toast.LENGTH_SHORT).show()
         }
     }
-    
-    override fun onDestroy() {
-        super.onDestroy()
+
+    private fun show(text: String?) {
+        if (text.isNullOrEmpty()) return
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 }

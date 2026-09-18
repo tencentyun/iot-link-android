@@ -55,7 +55,7 @@
                     android:gravity="center"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:text="📱 设备1"
+                    android:text="设备1"
                     android:textColor="#1A1A1A"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -154,7 +154,7 @@
                     android:gravity="center"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:text="📱 设备2"
+                    android:text="设备2"
                     android:textColor="#1A1A1A"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -249,7 +249,7 @@
                     android:gravity="center"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:text="📱 设备3"
+                    android:text="设备3"
                     android:textColor="#1A1A1A"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -344,7 +344,7 @@
                     android:gravity="center"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:text="📱 设备4"
+                    android:text="设备4"
                     android:textColor="#1A1A1A"
                     android:textSize="14sp"
                     android:textStyle="bold" />

@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
-
-    <include
-        android:id="@+id/v_title"
-        layout="@layout/title_layout" />
+    android:background="@color/white">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,7 +11,7 @@
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@id/btn_login"
-        app:layout_constraintTop_toBottomOf="@id/v_title">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,9 +24,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/gray_F7F9FA"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -42,9 +37,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⚙️ 统一配置（跟随设备配置）"
-                        android:textColor="#1A1A1A"
-                        android:textSize="16sp"
+                        android:text="统一配置（跟随设备配置）"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/ts_16"
                         android:textStyle="bold" />
 
                     <View
@@ -52,7 +47,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <include
                         android:id="@+id/app_key_layout"
@@ -73,9 +68,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/gray_F7F9FA"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -93,21 +88,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📱 设备1"
-                            android:textColor="#1A1A1A"
-                            android:textSize="18sp"
+                            android:text="设备1"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/ts_17"
                             android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/btn_paste_device1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="32dp"
-                            android:background="@drawable/btn_rad4_color_006eff"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="12dp"
-                            android:text="📋 粘贴"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/background_blue_cell"
+                            android:text="粘贴"
+                            android:textColor="@color/blue_0052D9" />
                     </LinearLayout>
 
                     <View
@@ -115,7 +107,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <include
                         android:id="@+id/device1_product_id_layout"
@@ -140,7 +132,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -152,9 +144,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="⚙️ 使用统一配置"
-                            android:textColor="#666666"
-                            android:textSize="14sp" />
+                            android:text="使用统一配置"
+                            android:textColor="@color/black_888888"
+                            android:textSize="@dimen/ts_14" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_device1_follow_config"
@@ -170,9 +162,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/gray_F7F9FA"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -190,21 +182,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📱 设备2"
-                            android:textColor="#1A1A1A"
-                            android:textSize="18sp"
+                            android:text="设备2"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/ts_17"
                             android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/btn_paste_device2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="32dp"
-                            android:background="@drawable/btn_rad4_color_006eff"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="12dp"
-                            android:text="📋 粘贴"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/background_blue_cell"
+                            android:text="粘贴"
+                            android:textColor="@color/blue_0052D9" />
                     </LinearLayout>
 
                     <View
@@ -212,7 +201,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <include
                         android:id="@+id/device2_product_id_layout"
@@ -237,7 +226,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -249,9 +238,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="⚙️ 使用统一配置"
-                            android:textColor="#666666"
-                            android:textSize="14sp" />
+                            android:text="使用统一配置"
+                            android:textColor="@color/black_888888"
+                            android:textSize="@dimen/ts_14" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_device2_follow_config"
@@ -267,9 +256,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/gray_F7F9FA"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -287,21 +276,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📱 设备3"
-                            android:textColor="#1A1A1A"
-                            android:textSize="18sp"
+                            android:text="设备3"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/ts_17"
                             android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/btn_paste_device3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="32dp"
-                            android:background="@drawable/btn_rad4_color_006eff"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="12dp"
-                            android:text="📋 粘贴"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/background_blue_cell"
+                            android:text="粘贴"
+                            android:textColor="@color/blue_0052D9" />
                     </LinearLayout>
 
                     <View
@@ -309,7 +295,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <include
                         android:id="@+id/device3_product_id_layout"
@@ -334,7 +320,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -346,9 +332,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="⚙️ 使用统一配置"
-                            android:textColor="#666666"
-                            android:textSize="14sp" />
+                            android:text="使用统一配置"
+                            android:textColor="@color/black_888888"
+                            android:textSize="@dimen/ts_14" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_device3_follow_config"
@@ -364,9 +350,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/gray_F7F9FA"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -384,21 +370,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📱 设备4"
-                            android:textColor="#1A1A1A"
-                            android:textSize="18sp"
+                            android:text="设备4"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/ts_17"
                             android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/btn_paste_device4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="32dp"
-                            android:background="@drawable/btn_rad4_color_006eff"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="12dp"
-                            android:text="📋 粘贴"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/background_blue_cell"
+                            android:text="粘贴"
+                            android:textColor="@color/blue_0052D9" />
                     </LinearLayout>
 
                     <View
@@ -406,7 +389,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <include
                         android:id="@+id/device4_product_id_layout"
@@ -431,7 +414,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E8E8E8" />
+                        android:background="@color/black_1A000000" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -443,9 +426,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="⚙️ 使用统一配置"
-                            android:textColor="#666666"
-                            android:textSize="14sp" />
+                            android:text="使用统一配置"
+                            android:textColor="@color/black_888888"
+                            android:textSize="@dimen/ts_14" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_device4_follow_config"
@@ -463,16 +446,14 @@
     <Button
         android:id="@+id/btn_login"
         android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/background_blue_btn"
-        android:elevation="4dp"
-        android:text="🚀 开始连接"
+        android:text="开始连接"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textSize="@dimen/ts_17"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
