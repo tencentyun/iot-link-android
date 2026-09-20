@@ -50,12 +50,11 @@ dependencies {
 //    api('com.tencent.iot.thirdparty.android:xp2p-sdk:latest.integration') {
 //        changing = true
 //    }
-
     api 'com.tencent.iot.thirdparty.android:xp2p-sdk:2.4.72'
-    api 'com.tencent.iot.thirdparty.android:iot-gvoice-android:+'
-    api 'com.tencent.iot.thirdparty.android:media-server:+'
-    api 'com.tencent.iot.thirdparty.android:iot-soundtouch:+'
-    api 'com.tencent.iot.thirdparty.android:iot-voice-changer:+'
+    api 'com.tencent.iot.thirdparty.android:iot-gvoice-android:1.0.4'
+    api 'com.tencent.iot.thirdparty.android:media-server:1.0.8'
+    api 'com.tencent.iot.thirdparty.android:iot-soundtouch:1.0.2'
+    api 'com.tencent.iot.thirdparty.android:iot-voice-changer:1.0.1'
 }
 
 configurations.all {
