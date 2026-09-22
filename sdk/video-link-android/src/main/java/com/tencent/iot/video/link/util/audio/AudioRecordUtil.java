@@ -42,6 +42,8 @@ import com.iot.gvoice.interfaces.GvoiceJNIBridge;
 public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Callback {
 
     private static final int AEC_PCM_MIN_FRAME_SIZE = 640;
+    private static final int AEC_SAMPLE_RATE = 16000;
+    private static final int AEC_CHANNEL_COUNT = 1;
     private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO; //设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
     private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT; //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
     private static final int DEFAULT_AUDIO_SAMPLE_RATE = 16000; //音频数据16000采样率。保证设备支持。
@@ -383,14 +385,18 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             playPcmData.clear();
         }
         reset();
+        int changerSampleRate = enableAEC ? AEC_SAMPLE_RATE : sampleRate;
+        int changerChannelCount = enableAEC ? AEC_CHANNEL_COUNT : channelCount;
         if (!VoiceChangerJNIBridge.isAvailable()) {
             if (st == null && pitch != 0) {
-                st = new SoundTouch(0, channelCount, sampleRate, bitDepth, 1.0f, pitch);
+                st = new SoundTouch(0, changerChannelCount, changerSampleRate, bitDepth, 1.0f, pitch);
             }
         } else {
-            VoiceChangerJNIBridge.init(sampleRate, channelCount);
+            VoiceChangerJNIBridge.init(changerSampleRate, changerChannelCount);
             VoiceChangerJNIBridge.setMode(this.mode.getValue());
         }
+        Log.i(TAG, "voice changer format: " + changerSampleRate + "Hz/" + changerChannelCount
+                + "ch, enableAEC=" + enableAEC);
         recorderState = true;
         Log.e(TAG, "turn recorderState : " + recorderState);
         if (executor == null || executor.isShutdown()) {
@@ -629,21 +635,7 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                 }
                 int read = currentAudioRecord.read(currentBuffer, 0, currentBuffer.length);
                 Log.e(TAG, "audioRecord.read: " + read + "， buffer.length： " + currentBuffer.length + ", recorderState: " + recorderState);
-                if (read > 0) {
-                    applyMicVolumeGain(currentBuffer, read);
-                }
-                if (!VoiceChangerJNIBridge.isAvailable()) {
-                    if (pitch != 0 && st != null) {
-                        st.putBytes(currentBuffer);
-                        int bytesReceived = st.getBytes(currentBuffer);
-                    }
-                } else {
-                    if (pitch != 0) {
-                        VoiceChangerJNIBridge.voiceChangerRun(currentBuffer, currentBuffer, currentBuffer.length / (encodeBit / 8));
-                    }
-                }
                 if (AudioRecord.ERROR_INVALID_OPERATION != read) {
-                    //获取到的pcm数据就是buffer了
                     if (pcmEncoder != null) {
                         byte[] micPcm16k = normalizeTo16kMono(currentBuffer, sampleRate, channelCount);
                         byte[] farPcm16k = onReadPlayerPlayPcm(micPcm16k.length);
@@ -652,9 +644,15 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
                             if (isRecord) {
                                 writePcmBytesToFile(micPcm16k, farPcm16k, aecPcm16k);
                             }
+                            applyMicVolumeGain(aecPcm16k, aecPcm16k == null ? 0 : aecPcm16k.length);
+                            applyVoiceChanger(aecPcm16k);
                             byte[] toEncode = convertFromAec(aecPcm16k, encodeSampleRate, encodeChannelCount);
                             pcmEncoder.encodeData(toEncode);
                         } else {
+                            if (read > 0) {
+                                applyMicVolumeGain(currentBuffer, read);
+                            }
+                            applyVoiceChanger(currentBuffer);
                             pcmEncoder.encodeData(currentBuffer);
                         }
                     }
@@ -679,6 +677,20 @@ public class AudioRecordUtil implements EncoderListener, FLVListener, Handler.Ca
             }
             pcm[i] = (byte) (scaled & 0xFF);
             pcm[i + 1] = (byte) ((scaled >> 8) & 0xFF);
+        }
+    }
+
+    private void applyVoiceChanger(byte[] pcm) {
+        if (pcm == null || pcm.length < 2 || pitch == 0) {
+            return;
+        }
+        if (!VoiceChangerJNIBridge.isAvailable()) {
+            if (st != null) {
+                st.putBytes(pcm);
+                st.getBytes(pcm);
+            }
+        } else {
+            VoiceChangerJNIBridge.voiceChangerRun(pcm, pcm, pcm.length / (encodeBit / 8));
         }
     }
 

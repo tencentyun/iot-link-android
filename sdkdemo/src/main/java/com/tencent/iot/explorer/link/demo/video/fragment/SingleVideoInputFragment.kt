@@ -25,11 +25,7 @@ class SingleVideoInputFragment : BaseFragment<FragmentSingleVideoInputBinding>()
 
     private var isStartCross = false
     private var protocol = "auto"
-
-    /** 是否保存裸流 */
     private var saveRawAv = false
-
-    /** 对讲是否开启回音消除 */
     private var enableAec = false
 
     override fun getViewBinding(

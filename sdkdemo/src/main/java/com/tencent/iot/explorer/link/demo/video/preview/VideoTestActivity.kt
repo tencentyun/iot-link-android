@@ -66,11 +66,7 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
     private val channel: Int = 0
     private var urlPrefix = ""
     private var audioRecordUtil: AudioRecordUtil? = null
-
-    /** 是否保存裸流 */
     private var saveRawAv = false
-
-    /** 对讲是否开启回音消除 */
     private var enableAec = false
 
     private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
@@ -213,7 +209,6 @@ class VideoTestActivity : VideoBaseActivity<ActivityVideoTestBinding>(), XP2PCal
             tvVideoQuality.setOnClickListener(switchVideoQualityListener)
             radioTalk.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (audioRecordUtil == null) {
-                    // enableAEC 控制是否开启回音消除（GVoice），enableAGC 关闭
                     audioRecordUtil = AudioRecordUtil(
                         this@VideoTestActivity,
                         "${productId}/${deviceName}",
